@@ -1,5 +1,3 @@
-
-
 const severity = {
   severeWarning: {
     id: 1,

@@ -15,16 +15,16 @@
     maxResolution: 800
   })
 
-  var stationsWMS = new ol.layer.Tile({
-    source: new ol.source.TileWMS({
-      params: {
-        'LAYERS': 'flood:stations',
-        'FORMAT': 'image/png'
-      },
-      url: '/ows'
-    }),
-    maxResolution: 400
-  })
+  // var stationsWMS = new ol.layer.Tile({
+  //   source: new ol.source.TileWMS({
+  //     params: {
+  //       'LAYERS': 'flood:stations',
+  //       'FORMAT': 'image/png'
+  //     },
+  //     url: '/ows'
+  //   }),
+  //   maxResolution: 400
+  // })
 
   var road = new ol.layer.Tile({
     ref: 'bing-road',

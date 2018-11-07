@@ -1,5 +1,5 @@
-const util = require('../../util')
-const config = require('../../config')
+const util = require('../util')
+const config = require('../config')
 const serviceUrl = config.serviceUrl
 
 module.exports = {

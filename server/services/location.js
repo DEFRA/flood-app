@@ -76,4 +76,5 @@ async function suggest (query) {
 
   return data
 }
+
 module.exports = { find, suggest }
