@@ -1,0 +1,10 @@
+.govuk-list--warning,
+.govuk-list--river-level {
+    @include govuk-responsive-margin(3, "bottom");
+    li {
+        @include govuk-responsive-margin(1, "bottom");
+    }
+    li:last-child {
+        margin-bottom:0;
+    }
+}

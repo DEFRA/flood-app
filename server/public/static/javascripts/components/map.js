@@ -1,0 +1,1996 @@
+(function (window, flood) {
+  var ol = window.ol
+
+  function Map (element, options) {
+    //
+    // Reference to instance
+    //
+
+    var self = this
+
+    //
+    // Options
+    //
+
+    var defaults = {
+      type: 'now',
+      featuresUrl: '/get-features', // Must return GeoJSON
+      buttonText: 'Show map',
+      lonLat: [0, 0],
+      zoom: 14,
+      minIconResolution: 200,
+      hasZoomReset: false,
+      hasKey: false,
+      hasKeyOpen: false,
+      hasSearch: false,
+      outlookStartDate: new Date(),
+      outlookRiskLevels: [0, 0, 0, 0, 0],
+      showLocation: false,
+      locationName: '',
+      hasTargetAreas: true,
+      hasImpacts: false,
+      showImpacts: false,
+      hasLevels: false,
+      showLevels: false,
+      activeFeatureId: ''
+    }
+    self.options = Object.assign({}, defaults, options)
+
+    //
+    // Key configuration
+    //
+
+    self.configKey = {
+      'sections': [
+        {
+          'items': [
+            {
+              'id': 'mapView',
+              'layers': 'mapView',
+              'name': 'Map view',
+              'formType': 'radio',
+              'group': 'mapView',
+              'checked': 'checked'
+            },
+            {
+              'id': 'satteliteView',
+              'layers': 'satteliteView',
+              'name': 'Satellite view',
+              'formType': 'radio',
+              'group': 'mapView',
+              'checked': 'checked'
+            }
+          ]
+        }
+      ]
+    }
+
+    var activeFeature = {
+      'items': [
+        {
+          'id': 'mapActiveFeature',
+          'layers': 'layerTargetAreaPolygons,layerTargetAreaPoints',
+          'states': 'active',
+          'name': '[Name]',
+          'formType': 'checkbox',
+          'checked': 'checked',
+          'backgroundPosition': '-2px -602px',
+          'backgroundSize': '120px',
+          'backgroundPositionOffset': '-83px -602px'
+        }
+      ]
+    }
+
+    var warnings = {
+      'items': [
+        {
+          'id': 'mapWarnings',
+          'layers': 'layerTargetAreaPolygons,layerTargetAreaPoints',
+          'states': 'warning,severe',
+          'name': self.options.activeFeatureId == '' ? 'Flood warnings' : 'All flood warnings',
+          'formType': 'checkbox',
+          'checked': self.options.activeFeatureId == '' ? 'checked' : '',
+          'subgroup': [
+            {
+              'id': '',
+              'name': 'Severe warning',
+              'formType': '',
+              'backgroundPosition': '-2px -522px',
+              'backgroundSize': '120px',
+              'backgroundPositionOffset': '-83px -522px'
+            },
+            {
+              'id': '',
+              'name': 'Warning',
+              'formType': 'checkbox',
+              'backgroundPosition': '-2px -562px',
+              'backgroundSize': '120px',
+              'backgroundPositionOffset': '-83px -562px'
+            }
+          ]
+        }
+      ]
+    }
+
+    var alerts = {
+      'items': [
+        {
+          'id': 'mapAlerts',
+          'layers': 'layerTargetAreaPolygons,layerTargetAreaPoints',
+          'states': 'alert',
+          'name': self.options.activeFeatureId == '' ? 'Flood alert' : 'All flood alerts',
+          'formType': 'checkbox',
+          'checked': self.options.activeFeatureId == '' ? 'checked' : '',
+          'backgroundPosition': '-2px -602px',
+          'backgroundSize': '120px',
+          'backgroundPositionOffset': '-83px -602px'
+        }
+      ]
+    }
+
+    var concern = {
+      'items': [
+        {
+          'id': 'mapConcern',
+          'layers': 'layerTargetAreaPolygons,layerTargetAreaPoints',
+          'states': 'concern',
+          'name': 'Area of concern',
+          'formType': 'checkbox',
+          'checked': 'checked',
+          'backgroundPosition': '-2px -642px',
+          'backgroundSize': '120px',
+          'backgroundPositionOffset': '-83px -642px'
+        }
+      ]
+    }
+
+    var removed = {
+      'items': [
+        {
+          'id': 'mapRemoved',
+          'layers': 'layerTargetAreaPolygons,layerTargetAreaPoints',
+          'states': 'removed',
+          'name': self.options.activeFeatureId == '' ? 'Warning no longer inforce' : 'All warnings no longer inforce',
+          'formType': 'checkbox',
+          'checked': '',
+          'backgroundPosition': '-2px -682px',
+          'backgroundSize': '120px',
+          'backgroundPositionOffset': '-83px -682px'
+        }
+      ]
+    }
+
+    var levels = {
+      'items': [
+        {
+          'id': 'mapLevels',
+          'layers': 'layerLevels',
+          'name': 'River and sea levels',
+          'formType': 'checkbox',
+          'checked': '',
+          'subgroup': [
+            {
+              'id': '',
+              'name': 'Above typical range',
+              'formType': '',
+              'backgroundPosition': '2px -121px',
+              'backgroundSize': '120px'
+            },
+            {
+              'id': '',
+              'name': 'Above typical range <span class="map-key-features__item-nowrap">(within 36hrs)</span>',
+              'formType': '',
+              'backgroundPosition': '2px -81px',
+              'backgroundSize': '120px'
+            },
+            {
+              'id': '',
+              'name': 'Within or below typical range',
+              'formType': '',
+              'backgroundPosition': '2px -41px',
+              'backgroundSize': '120px'
+            }
+          ]
+        }
+      ]
+    }
+    // Set initial visibility
+    if (self.options.showLevels) {
+      levels.items[0].checked = 'checked'
+    }
+
+    var impacts = {
+      'items': [
+        {
+          'id': 'mapImpacts',
+          'layers': 'layerImpacts',
+          'name': 'Impacts',
+          'formType': 'checkbox',
+          'checked': '',
+          'subgroup': [
+            {
+              'id': '',
+              'name': 'Possible now',
+              'formType': '',
+              'backgroundPosition': '0px -279px',
+              'backgroundSize': '120px'
+            },
+            {
+              'id': '',
+              'name': 'Possible within 12 hrs',
+              'formType': '',
+              'backgroundPosition': '0px -239px',
+              'backgroundSize': '120px'
+            },
+            {
+              'id': '',
+              'name': 'Possible within 24 hrs',
+              'formType': '',
+              'backgroundPosition': '0px -199px',
+              'backgroundSize': '120px'
+            }
+          ]
+        }
+      ]
+    }
+    // Set initial visibility
+    if (self.options.showImpacts) {
+      impacts.items[0].checked = 'checked'
+    }
+
+    if (self.options.activeFeatureId != '') {
+      self.configKey.sections.push(activeFeature)
+    }
+
+    if (self.options.hasTargetAreas) {
+      self.configKey.sections.push(warnings)
+      self.configKey.sections.push(alerts)
+      // self.configKey.sections.push(concern)
+      self.configKey.sections.push(removed)
+    }
+
+    if (self.options.hasLevels) {
+      self.configKey.sections.push(levels)
+    }
+
+    if (self.options.hasImpacts) {
+      self.configKey.sections.push(impacts)
+    }
+
+    //
+    // Public properties
+    //
+
+    self.isFullScreen = false,
+    self.isKeyOpen = false,
+    self.selectedFeature = null
+
+    //
+    // Public objects
+    //
+
+    self.map
+
+    //
+    // Map to DOM container elements
+    //
+
+    self.elementMap = element
+    self.elementMapContainer = element.firstElementChild
+    self.elementMapContainerInner = element.firstElementChild.firstElementChild
+
+    //
+    // Create additional DOM elements
+    //
+
+    self.elementKey,
+    self.elementKeyToggle,
+    self.elementZoom,
+    self.elementZoomReset,
+    self.elementFullScreen,
+    self.elementShowMap,
+    self.elementSearch
+
+    // Private properties
+    var sourceConcernAreas,
+      sourceImpacts,
+      sourceLevels
+
+    //
+    // Style features - one function for all features
+    //
+
+    // Fill patterns
+
+    var patternFill = function (state, isSelected = false) {
+      // var pixelRatio = window.devicePixelRatio
+      var canvas = document.createElement('canvas')
+      var context = canvas.getContext('2d')
+      if (state == 'severe') {
+        canvas.width = 10
+        canvas.height = 10
+        isSelected ? context.fillStyle = '#B6000C' : context.fillStyle = '#E3000F'
+        context.fillRect(0, 0, 10, 10)
+        context.beginPath()
+        context.lineCap = 'square'
+        isSelected ? context.strokeStyle = '#C1666C' : context.strokeStyle = '#F17F87'
+        context.lineWidth = 1
+        context.moveTo(0, 0)
+        context.lineTo(10, 10)
+        context.stroke()
+        context.moveTo(0, 10)
+        context.lineTo(10, 0)
+        context.stroke()
+      } else if (state == 'warning') {
+        canvas.width = 7
+        canvas.height = 7
+        isSelected ? context.fillStyle = '#C1666C' : context.fillStyle = '#F17F87'
+        context.fillRect(0, 0, 7, 7)
+        context.beginPath()
+        context.lineCap = 'square'
+        isSelected ? context.strokeStyle = '#B6000C' : context.strokeStyle = '#E3000F'
+        context.lineWidth = 6
+        context.moveTo(3, 0)
+        context.lineTo(3, 10)
+        context.stroke()
+      } else if (state == 'alert') {
+        canvas.width = 10
+        canvas.height = 10
+        isSelected ? context.fillStyle = '#DEAF72' : context.fillStyle = '#F8C37F'
+        context.fillRect(0, 0, 10, 10)
+        context.beginPath()
+        context.lineCap = 'square'
+        isSelected ? context.strokeStyle = '#D87900' : context.strokeStyle = '#F18700'
+        context.lineWidth = 6
+        context.moveTo(0, 5)
+        context.lineTo(5, 0)
+        context.stroke()
+        context.moveTo(5, 10)
+        context.lineTo(10, 5)
+        context.stroke()
+      } else if (state == 'removed') {
+        canvas.width = 7
+        canvas.height = 7
+        isSelected ? context.fillStyle = '#929597' : context.fillStyle = '#B7BBBD'
+        context.fillRect(0, 0, 7, 7)
+        context.beginPath()
+        context.lineCap = 'square'
+        isSelected ? context.strokeStyle = '#595F62' : context.strokeStyle = '#6F777B'
+        context.lineWidth = 6
+        context.moveTo(0, 3)
+        context.lineTo(10, 3)
+        context.stroke()
+      }
+      /*
+            else if (style == 'dots') {
+                canvas.width = 10
+                canvas.height = 10
+                context.fillStyle = colour
+                context.fillRect(0,0,10,10)
+                context.fill()
+                context.beginPath()
+                context.arc(2,2,2,0,2*Math.PI)
+                context.fillStyle = '#ffffff'
+                context.fill()
+            }
+            */
+      context.restore()
+      return context.createPattern(canvas, 'repeat')
+    }
+
+    self.styleFeatures = function (feature, resolution) {
+      if (feature.get('isVisible')) {
+        // Defaults
+        var strokeColour = 'transparent'
+        var fillColour = 'transparent'
+        var strokeWidth = 0
+        var zIndex = 1
+        var source = '/public/images/icon-map-features-2x.png' // Icon sprite image source
+        var offset = [0, 0] // Icon sprite offset
+        var image = null
+        var text = null
+        var opacity = 1
+        var lineDash = [0, 0]
+
+        //
+        // Location
+        //
+
+        if (feature.get('type') == 'location') {
+          offset = [0, 1800]
+
+          // Feature is also slected
+          if (feature.get('isSelected') == true) {
+            offset[0] += 100
+          }
+
+          // Define icon
+          image = new ol.style.Icon({
+            src: source,
+            size: [66, 84],
+            anchor: [0.5, 0.92],
+            scale: 0.5,
+            offset: offset
+          })
+        }
+
+        //
+        // Target areas
+        //
+
+        else if (feature.get('type') == 'targetArea') {
+          strokeWidth = 3
+
+          // Severe warning area
+          if (feature.get('state') == 'severe') {
+            // Polygon
+            // strokeColour = '#e3000f'
+            fillColour = patternFill('severe')
+            zIndex = 5
+            // Point
+            offset = [0, 1300]
+            // Feature is also slected
+            if (feature.get('isSelected') == true) {
+              fillColour = patternFill('severe', true)
+              zIndex = 6
+              // Point
+              offset[0] += 100
+            }
+          }
+
+          // Warning area
+          else if (feature.get('state') == 'warning') {
+            // Polygon
+            fillColour = patternFill('warning')
+            zIndex = 4
+            // Point
+            offset = [0, 1400]
+            // Feature is also slected
+            if (feature.get('isSelected') == true) {
+              fillColour = patternFill('warning', true)
+              zIndex = 6
+              // Point
+              offset[0] += 100
+            }
+          }
+
+          // Alert area
+          else if (feature.get('state') == 'alert') {
+            // Polygon
+            fillColour = patternFill('alert')
+            // fillColour = '#f18700'
+            zIndex = 2
+            // Point
+            offset = [0, 1500]
+            // Feature is also slected
+            if (feature.get('isSelected') == true) {
+              fillColour = patternFill('alert', true)
+              // Point
+              offset[0] += 100
+            }
+          }
+
+          // Concern area
+          else if (feature.get('state') == 'concern') {
+            // Polygon
+            // strokeColour = '#6f777b'
+            fillColour = patternFill('concern')
+            // fillColour = '#6f777b'
+            zIndex = 2
+            // Point
+            offset = [0, 1600]
+            // Feature is also slected
+            if (feature.get('isSelected') == true) {
+              fillColour = patternFill('concern', true)
+              // Point
+              offset[0] += 100
+            }
+          }
+
+          // Warning removed area
+          else if (feature.get('state') == 'removed') {
+            // Polygon
+            // strokeColour = '#6f777b'
+            fillColour = patternFill('removed')
+            // fillColour = '#6f777b'
+            zIndex = 3
+            // Point
+            offset = [0, 1700]
+            // Feature is also slected
+            if (feature.get('isSelected') == true) {
+              fillColour = patternFill('removed', true)
+              zIndex = 6
+              // Point
+              offset[0] += 100
+            }
+          }
+
+          // Toggle display of icon/polygon features depending on resolution
+          if (resolution <= self.options.minIconResolution) {
+            if (feature.get('geometryType') == 'point') {
+              return null
+            }
+          } else {
+            if (feature.get('geometryType') == 'polygon') {
+              return null
+            }
+          }
+
+          // Define icon
+          image = new ol.style.Icon({
+            src: source,
+            size: [86, 86],
+            anchor: [0.5, 0.75],
+            scale: 0.5,
+            offset: offset
+          })
+        }
+
+        //
+        // Concern areas
+        //
+
+        else if (feature.get('type') == 'concernArea') {
+          if (feature.get('isVisible') == true) {
+            strokeColour = '#6f777b'
+            strokeWidth = 2
+            zIndex = feature.get('z-index')
+            lineDash = [2, 3]
+
+            fillColour = '#85994b'
+
+            if (feature.get('risk-level') == 2) {
+              fillColour = '#ffbf47'
+            } else if (feature.get('risk-level') == 3) {
+              fillColour = '#F47738'
+            } else if (feature.get('risk-level') == 4) {
+              fillColour = '#df3034'
+            }
+          } else {
+            return null
+          }
+        }
+
+        //
+        // Impacts and incidents
+        //
+
+        else if (feature.get('type') == 'impact') {
+          // Impact forecast (within 12hrs)
+          offset = [0, 500]
+
+          // Impact forecast (within 6hrs)
+          if (feature.get('state') == 'near') {
+            offset = [0, 600]
+            zIndex = 2
+          }
+
+          // Impact is now a recorded incident
+          else if (feature.get('state') == 'incident') {
+            offset = [0, 700]
+            zIndex = 3
+          }
+
+          // Feature is also slected
+          if (feature.get('isSelected') == true) {
+            offset[0] += 100
+            zIndex = 4
+          }
+
+          // Define icon
+          image = new ol.style.Icon({
+            src: source,
+            size: [74, 74],
+            anchor: [0.5, 0.75],
+            scale: 0.5,
+            offset: offset
+          })
+        }
+
+        //
+        // River levels
+        //
+
+        else if (feature.get('type') == 'level') {
+          offset = [0, 100]
+
+          // Above
+          if (feature.get('state') == 'above') {
+            offset = [0, 300]
+            zIndex = 4
+          }
+
+          // Forecast above
+          else if (feature.get('state') == 'forecastAbove') {
+            offset = [0, 200]
+            zIndex = 3
+          }
+
+          // Normal
+          else if (feature.get('state') == 'disabled') {
+            offset = [0, 0]
+            zIndex = 2
+          }
+
+          // Disabled
+          if (feature.get('isSelected') == true) {
+            offset[0] += 100
+            zIndex = 5
+          } else if (feature.get('isTrigger') == true) {
+            offset[0] += 200
+          }
+
+          // Define icon
+          image = new ol.style.Icon({
+            src: source,
+            size: [66, 84],
+            anchor: [0.5, 0.92],
+            scale: 0.5,
+            offset: offset
+          })
+        }
+
+        // Generate style
+        var style = new ol.style.Style({
+          fill: new ol.style.Fill({ color: fillColour }),
+          stroke: new ol.style.Stroke({
+            color: strokeColour,
+            width: strokeWidth,
+            miterLimit: 2,
+            lineJoin: 'round',
+            lineDash: lineDash
+          }),
+          lineDash: lineDash,
+          image: image,
+          text: text,
+          opacity: opacity,
+          zIndex: zIndex
+        })
+
+        return style
+      }
+
+      // Feature not visible
+      else {
+        return null
+      }
+    }
+
+    // Get query string parameter
+    self.getParameterByName = function (name) {
+      var v = window.location.search.match(new RegExp('(?:[\?\&]' + name + '=)([^&]+)'))
+      return v ? v[1] : null
+    }
+
+    // Add or update a querystring parameter
+    self.addOrUpdateParameter = function (uri, paramKey, paramVal, fragment) {
+      var re = new RegExp('([?&])' + paramKey + '=[^&#]*', 'i')
+      if (re.test(uri)) {
+        uri = uri.replace(re, '$1' + paramKey + '=' + paramVal)
+      } else {
+        var separator = /\?/.test(uri) ? '&' : '?'
+        uri = uri + separator + paramKey + '=' + paramVal
+      }
+      return uri + fragment
+    }
+
+    // Set fullscreen state
+    self.setFullScreen = function () {
+      self.elementMap.classList.add('map--fullscreen')
+      self.elementFullScreen.classList.add('ol-full-screen-back')
+      self.elementFullScreen.title = 'Go back'
+      self.isFullScreen = true
+      window.activeMap = self
+      self.map.updateSize()
+    }
+
+    // Remove fullscreen state
+    self.removeFullScreen = function () {
+      self.closeKey()
+      self.elementMap.classList.remove('map--fullscreen')
+      self.elementFullScreen.classList.remove('ol-full-screen-back')
+      self.elementFullScreen.title = 'Make the map fill the screen'
+      self.isFullScreen = false
+      window.activeMap = self
+      self.map.updateSize()
+    }
+
+    // Open key
+    self.openKey = function () {
+      if (!self.isFullScreen) {
+        self.elementFullScreen.click()
+      }
+      self.elementMap.classList.add('map--key-open')
+      self.elementKeyToggle.innerHTML = 'Close'
+      self.isKeyOpen = true
+      window.activeMap = self
+    }
+
+    // Close key
+    self.closeKey = function () {
+      self.elementMap.classList.remove('map--key-open')
+      self.elementKeyToggle.innerHTML = 'Key'
+      self.isKeyOpen = false
+      window.activeMap = self
+    }
+
+    // Show overlay
+    self.showOverlay = function (feature, coorindate) {
+      // Add class to map
+      self.elementMap.classList.add('map--overlay-open')
+      // Add feature html
+      self.elementOverlayInner.innerHTML = feature.get('html')
+      // Set icon resolution class
+      var icon = self.elementOverlayInner.querySelector('.ol-overlay__symbol')
+      if (icon) {
+        if (self.map.getView().getResolution() <= self.options.minIconResolution) {
+          icon.classList.add('ol-overlay__symbol--zoomin')
+        } else {
+          icon.classList.remove('ol-overlay__symbol--zoomin')
+        }
+      }
+      // Create overlay object
+      self.overlay = new ol.Overlay({
+        element: self.elementOverlayInner,
+        positioning: 'bottom-left',
+        insertFirst: false,
+        className: 'ol-overlay'
+      })
+      /*
+            // Feature is a Point
+            if (feature.getGeometry().getType() == 'Point') {
+                coorindate = feature.getGeometry().getCoordinates()
+                self.overlay.element.classList.add('ol-overlay-offset-pin')
+            }
+            // Feature is polygon or multip polygon
+            else {
+                self.overlay.element.classList.remove('ol-overlay-offset-pin')
+            }
+            // Position overlay
+            self.overlay.setPosition([0,0])
+            // Add overlay element
+            */
+      self.overlay.element.style.display = 'block'
+      self.map.addOverlay(self.overlay)
+      // Hide Outlook day control
+      if (self.options.type == 'outlook') {
+        self.elementMap.classList.remove('map--outlook-control-open')
+      }
+    }
+
+    // Hide overlay
+    self.hideOverlay = function () {
+      // Add class to map
+      self.elementMap.classList.remove('map--overlay-open')
+      // Disable last selected feature
+      if (self.selectedFeature) {
+        // Target areas have two point and polygon on different layers
+        self.selectedFeature.set('isSelected', false)
+        self.selectedFeature = null
+      }
+      // Remove overlay object
+      if (self.overlay) {
+        console.log('Remove overlay')
+        self.map.removeOverlay(self.overlay)
+      }
+      // Show Outlook day control
+      if (self.options.type == 'outlook') {
+        self.elementMap.classList.add('map--outlook-control-open')
+      }
+    }
+
+    // Update trigger levels
+    self.updateTriggersForFeature = function () {
+      // Dont hide triggers if another trigger is selected
+      var selectedFeature = self.selectedFeature
+      if (selectedFeature) {
+        // Toggle triggered
+        sourceLevels.getFeatures().forEach((level) => {
+          // Selected feature is an impact with trigger levels
+          if (selectedFeature.get('type') == 'impact' && selectedFeature.get('triggerLevel')) {
+            // Level is a trigger for impact
+            if (selectedFeature.get('triggerLevel').toString().indexOf(level.getId().toString()) > -1) {
+              level.set('isTrigger', true)
+            }
+            // Level isnt a trigger for impact
+            else {
+              level.set('isTrigger', false)
+            }
+          }
+          // Selected feature isn't an impactor is missing trigger levels
+          else {
+            level.set('isTrigger', false)
+          }
+          level.setStyle(self.styleFeatures)
+        })
+      }
+      // Clear triggers if map backgroud is clicked
+      else {
+        sourceLevels.getFeatures().forEach((level) => {
+          level.set('isTrigger', false)
+          level.setStyle(self.styleFeatures)
+        })
+      }
+    }
+
+    // Main setup method
+    self.init = function () {
+      // Add styling class for when search and key are both enabled
+      if (self.options.hasKey && self.options.hasSearch) {
+        self.elementMap.classList.add('map--has-key-and-search')
+      }
+
+      //
+      // Set flags
+      //
+
+      if (self.getParameterByName('view') == 'map-' + self.options.type) {
+        self.isFullScreen = true
+        window.activeMap = self
+      }
+
+      if (self.options.hasKeyOpen) {
+        self.isKeyOpen = true
+      }
+
+      //
+      // Feature loader
+      //
+
+      var featureLoader = function (extent, resolution, projection) {
+        var source = this
+        var format = new ol.format.GeoJSON()
+        var xhr = new XMLHttpRequest()
+        xhr.open('GET', self.options.featuresUrl + '?lonLat=' + self.options.lonLat + '&collection=' + self.options.type)
+        xhr.onload = function () {
+          if (xhr.status == 200) {
+            var features = format.readFeatures(
+              xhr.responseText, { featureProjection: 'EPSG:3857' }
+            )
+            features.forEach((feature) => {
+              // Target areas
+              if (feature.get('type') == 'targetArea' && feature.get('isRelevant')) {
+                // Set initial visiblity
+                if (self.options.hasKey) {
+                  var checkbox = self.elementKey.querySelector('input[type="checkbox"][data-states*="' + feature.get('state') + '"]:checked')
+                  checkbox ? feature.set('isVisible', true) : feature.set('isVisible', false)
+                } else {
+                  feature.set('isVisible', true)
+                }
+                // Points and polygons split into sperate features
+                var point = feature.getGeometry().getGeometries()[0].getCoordinates()
+                var pointFeature = feature.clone()
+                pointFeature.setGeometry(new ol.geom.Point(point))
+                pointFeature.setId(feature.getId() + 'pt')
+                pointFeature.set('geometryType', 'point')
+                var multiPolygon = feature.getGeometry().getGeometries()[1].getCoordinates()
+                var polygonFeature = feature.clone()
+                polygonFeature.setGeometry(new ol.geom.MultiPolygon(multiPolygon))
+                polygonFeature.setId(feature.getId())
+                polygonFeature.set('geometryType', 'polygon')
+                // Add points and polygons to seperate source
+                sourceTargetAreaPolygons.addFeature(polygonFeature)
+                sourceTargetAreaPoints.addFeature(pointFeature)
+              }
+              // Impact features
+              else if (feature.get('type') == 'impact' && feature.get('isRelevant')) {
+                // Points and polygons split into sperate features
+                var point = feature.getGeometry().getGeometries()[0].getCoordinates()
+                var pointFeature = feature.clone()
+                pointFeature.setGeometry(new ol.geom.Point(point))
+                pointFeature.set('geometryType', 'point')
+                pointFeature.setId(feature.getId())
+                pointFeature.set('isVisible', true)
+                sourceImpacts.addFeature(pointFeature)
+              }
+              // River and sea levels
+              else if (feature.get('type') == 'level') {
+                feature.set('isVisible', true)
+                feature.set('geometryType', 'point')
+                sourceLevels.addFeature(feature)
+              }
+              // Concern areas
+              else if (feature.get('type') == 'concernArea') {
+                // Add the day 1 smoothed feature to the source
+                feature.set('geometryType', 'polygon')
+                if (feature.get('order') == 1) {
+                  feature.set('isVisible', true)
+                }
+                sourceConcernAreas.addFeature(feature)
+              }
+            })
+          } else {
+            source.removeLoadedExtent(extent)
+          }
+        }
+        xhr.send()
+      }
+
+      //
+      // Define sources
+      //
+
+      // Outlook sources
+      if (self.options.type == 'outlook') {
+        // Concern areas
+        sourceConcernAreas = new ol.source.Vector({
+          format: new ol.format.GeoJSON(),
+          loader: featureLoader,
+          projection: 'EPSG:3857'
+        })
+      }
+
+      // Now sources
+      if (self.options.type == 'now') {
+        // Target area polygon sources
+        sourceTargetAreaPolygons = new ol.source.Vector({
+          format: new ol.format.GeoJSON(),
+          loader: featureLoader,
+          projection: 'EPSG:3857'
+        })
+        sourceTargetAreaPoints = new ol.source.Vector({
+          format: new ol.format.GeoJSON(),
+          loader: featureLoader,
+          projection: 'EPSG:3857'
+        })
+        // Impacts source
+        sourceImpacts = new ol.source.Vector({
+          format: new ol.format.GeoJSON(),
+          loader: featureLoader,
+          projection: 'EPSG:3857'
+        })
+        // River levels source
+        sourceLevels = new ol.source.Vector({
+          format: new ol.format.GeoJSON(),
+          loader: featureLoader,
+          projection: 'EPSG:3857'
+        })
+      }
+
+      // Location source
+      if (self.options.showLocation) {
+        sourceLocation = new ol.source.Vector({
+          features: [
+            new ol.Feature({
+              geometry: new ol.geom.Point(ol.proj.transform(self.options.lonLat, 'EPSG:4326', 'EPSG:3857')),
+              type: 'location',
+              isVisible: true,
+              html: self.options.locationName
+            })
+          ]
+        })
+      }
+
+      // Selected feature source
+      sourceSelectedFeature = new ol.source.Vector({
+        format: new ol.format.GeoJSON(),
+        projection: 'EPSG:3857'
+      })
+
+      //
+      // Define layers
+      //
+
+      // Outlook layers
+      if (self.options.type == 'outlook') {
+        // Stylised layer for national context
+        self.layerStamen = new ol.layer.Tile({
+          source: new ol.source.Stamen({
+            // layer: 'terrain-background'
+            layer: 'terrain'
+          }),
+          zIndex: 0
+        })
+        // Concern areas layer
+        self.layerConcernAreas = new ol.layer.Vector({
+          renderMode: 'hybrid',
+          source: sourceConcernAreas,
+          style: self.styleFeatures,
+          zIndex: 1,
+          opacity: 0.75
+        })
+      }
+
+      // Now layers
+      if (self.options.type == 'now') {
+        // Background map layer
+        /*
+                self.layerTile = new ol.layer.Tile({
+                    source: new ol.source.OSM(),
+                    zIndex : 0
+                })
+                */
+        self.layerTile = new ol.layer.Tile({
+          source: new ol.source.BingMaps({
+            key: 'AvRzILjH5stoE_Mt6C08M051nlcQL9vWaWlMrcIjktGcFBgvjTV0TWULhTYL-4-s ',
+            imagerySet: 'RoadOnDemand'
+            // use maxZoom 19 to see stretched tiles instead of the BingMaps
+            // "no photos at this zoom level" tiles
+            // maxZoom: 19
+          })
+        })
+        // Target area layers
+        self.layerTargetAreaPolygons = new ol.layer.Vector({
+          renderMode: 'hybrid',
+          source: sourceTargetAreaPolygons,
+          style: self.styleFeatures,
+          zIndex: 1,
+          visible: true
+        })
+        self.layerTargetAreaPoints = new ol.layer.Vector({
+          renderMode: 'hybrid',
+          source: sourceTargetAreaPoints,
+          style: self.styleFeatures,
+          zIndex: 4,
+          visible: true
+        })
+        // River levels layer
+        self.layerImpacts = new ol.layer.Vector({
+          source: sourceImpacts,
+          style: self.styleFeatures,
+          zIndex: 3,
+          visible: false
+        })
+        // River levels layer
+        self.layerLevels = new ol.layer.Vector({
+          source: sourceLevels,
+          style: self.styleFeatures,
+          zIndex: 2,
+          visible: false
+        })
+      }
+
+      // Location layer
+      if (self.options.showLocation) {
+        self.layerLocation = new ol.layer.Vector({
+          renderMode: 'hybrid',
+          source: sourceLocation,
+          style: self.styleFeatures,
+          zIndex: 2
+        })
+      }
+
+      // Selected feature layer
+      self.layerSelectedFeature = new ol.layer.Vector({
+        renderMode: 'hybrid',
+        source: sourceSelectedFeature,
+        style: self.styleFeatures,
+        zIndex: 5
+      })
+
+      //
+      // Define buttons
+      //
+
+      // Show map (mobile only)
+      self.elementShowMap = document.createElement('button')
+      self.elementShowMap.innerText = self.options.buttonText
+      self.elementShowMap.className = 'govuk-button govuk-button--secondary govuk-button--show-map'
+      self.elementShowMap.addEventListener('click', function (e) {
+        e.preventDefault()
+        self.setFullScreen()
+        var view = 'map-' + self.options.type
+        var state = { 'view': view, 'a': 'b' }
+        var url = self.addOrUpdateParameter(location.pathname + location.search, 'view', view, '#' + self.options.type)
+        var title = document.title
+        history.pushState(state, title, url)
+        self.elementFullScreen.classList.add('ol-full-screen-back')
+      })
+      self.elementMap.parentNode.insertBefore(self.elementShowMap, self.elementMap)
+
+      // Search component
+      self.elementSearch = document.createElement('div')
+      self.elementSearch.innerHTML =
+                '<div class="map-search__container">' +
+                '<label class="map-search__label" for="search">Find location</label>' +
+                '<div class="map-search__input-wrapper">' +
+                '<input class="map-search__input" id="search" type="search" title="Find location">' +
+                '<div class="map-search__submit-wrapper">' +
+                '<button class="map-search__submit" type="submit">Search</button>' +
+                '</div>' +
+                '</div>'
+      self.elementSearch.className = 'map-search'
+
+      // Key component
+      var keyTemplate = `
+            <div class="map-key__container">
+                <div class="map-key__heading">
+                    <h2 class="map-key__title">Key</h2>
+                </div>
+                <div class="map-key__features">
+                    ${self.configKey.sections.map(section => `
+                    <ul class="map-key-features__section">
+                        ${section.items.map(item => `
+                        <li class="map-key-features__item">
+                            ${item.formType == 'radio' ? `
+                            <div class="govuk-radios__item govuk-radios__item--map-key">
+                                <input class="govuk-radios__input" id="${item.id}" data-layers="${item.layers}" ${item.hasOwnProperty('states') ? `data-states="${item.states}"` : 'data-states=""'} name="${item.group}" type="${item.formType}" ${item.checked}>
+                                <label class="govuk-label govuk-radios__label" for="${item.id}">` : ``}
+                            ${item.formType == 'checkbox' ? `
+                            <div class="govuk-checkboxes__item govuk-checkboxes__item--map-key">
+                                <input class="govuk-checkboxes__input" id="${item.id}" data-layers="${item.layers}" ${item.hasOwnProperty('states') ? `data-states="${item.states}"` : 'data-states=""'} name="${item.id}" type="checkbox" value="flood-zones" ${item.checked}>
+                                <label class="govuk-label govuk-checkboxes__label" for="${item.id}">` : ``}
+                            ${item.formType != 'checkbox' && item.formType != 'radio' ? `
+                            <label>` : ``}
+                                ${item.hasOwnProperty('backgroundPosition') ? `
+                                <span class="govuk-label__inner">
+                                    <span class="key-symbol" style="background-position:${item.backgroundPosition};background-size:${item.backgroundSize}" ${item.hasOwnProperty('backgroundPositionOffset') ? `data-style="background-position:${item.backgroundPosition};background-size:${item.backgroundSize}" data-style-offset="background-position:${item.backgroundPositionOffset};background-size:${item.backgroundSize}"` : ''}></span>
+                                    ${item.name}
+                                </span>` : `${item.name}`}    
+                            </label>
+                            ${(item.formType == 'checkbox' || item.formType == 'radio') ? `
+                            </div>` : ``}
+                            ${item.hasOwnProperty('subgroup') ? `
+                            <ul class="map-key-features__subgroup">
+                                ${item.subgroup.map(subgroupItem => `
+                                <li class="map-key-features__subgroup-item">
+                                    <span class="map-key-features__item-inner">
+                                        <span class="key-symbol" style="background-position:${subgroupItem.backgroundPosition};background-size:${subgroupItem.backgroundSize}" ${subgroupItem.hasOwnProperty('backgroundPositionOffset') ? `data-style="background-position:${subgroupItem.backgroundPosition};background-size:${subgroupItem.backgroundSize}" data-style-offset="background-position:${subgroupItem.backgroundPositionOffset};background-size:${subgroupItem.backgroundSize}"` : ''}></span>
+                                        ${subgroupItem.name}
+                                    </span>
+                                </li>`).join('')}
+                            </ul>` : ``}
+                        </li>`).join('')}
+                    </ul>`).join('')}
+                </div>
+                <div class="map-key__copyright">
+                    © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors
+                </div>
+            </div>`
+      self.elementKey = document.createElement('div')
+      self.elementKey.innerHTML = keyTemplate
+      self.elementKey.className = 'map-key'
+
+      // Key toggle button
+      self.elementKeyToggle = document.createElement('button')
+      self.elementKeyToggle.innerHTML = 'Key'
+      self.elementKeyToggle.title = 'Add or remove information from the map'
+      self.elementKeyToggle.className = 'map-key__toggle'
+      self.elementKeyToggle.addEventListener('click', function (e) {
+        // Open key
+        if (!self.isKeyOpen) {
+          self.openKey()
+        }
+        // Close key
+        else {
+          self.closeKey()
+        }
+      })
+
+      // Overlay component
+      self.elementOverlayInner = document.createElement('div')
+      self.elementOverlayInner.classList.add('ol-overlay-inner')
+
+      // Outlook day component
+      self.elementOutlook = document.createElement('div')
+      self.elementOutlook.className = 'map__outlook-control'
+      var elementOutlookInner = document.createElement('div')
+      elementOutlookInner.className = 'map__outlook-control__inner'
+      for (var i = 0; i < 5; i++) {
+        var day = document.createElement('div')
+        day.className = 'map__outlook-control__day'
+        var button = document.createElement('button')
+        button.innerHTML = `
+                    ${self.options.outlookStartDate.toLocaleDateString('en-GB', { 'weekday': 'short' })}
+                    ${self.options.outlookStartDate.getDate()}
+                    <span class="map__outlook-control__icon map__outlook-control__icon--risk-level-${self.options.outlookRiskLevels[i]}"></span>
+                `
+        button.className = 'map__outlook-control__button'
+        button.setAttribute('aria-selected', false)
+        button.dataset.order = i + 1
+        button.addEventListener('click', function (e) {
+          var button = this
+          // Set selected state of buttons
+          for (var i = 0; i < elementOutlookInner.children.length; i++) {
+            elementOutlookInner.children[i].firstChild.setAttribute('aria-selected', false)
+          }
+          button.setAttribute('aria-selected', true)
+          button.focus()
+          // Set visibility of features
+          sourceConcernAreas.getFeatures().forEach((feature) => {
+            if (feature.get('order').toString() == button.dataset.order.toString()) {
+              feature.set('isVisible', true)
+            } else {
+              feature.set('isVisible', false)
+            }
+          })
+          self.map.updateSize()
+          e.preventDefault()
+        })
+        day.appendChild(button)
+        elementOutlookInner.appendChild(day)
+        // Increment date
+        self.options.outlookStartDate.setDate(self.options.outlookStartDate.getDate() + 1)
+      }
+      // Set initial selected button
+      elementOutlookInner.firstChild.firstChild.setAttribute('aria-selected', true)
+      self.elementOutlook.appendChild(elementOutlookInner)
+
+      // Zoom buttons
+      self.elementZoom = document.createElement('button')
+      self.elementZoom.appendChild(document.createTextNode('Zoom'))
+      self.elementZoom.className = 'ol-zoom'
+      var zoom = new ol.control.Zoom({
+        element: self.elementZoom
+      })
+
+      // Zoom reset button
+      self.elementZoomReset = document.createElement('button')
+      self.elementZoomReset.appendChild(document.createTextNode('Zoom reset'))
+      self.elementZoomReset.className = 'ol-zoom-reset'
+      self.elementZoomReset.setAttribute('title', 'Reset location')
+      self.elementZoomReset.addEventListener('click', function (e) {
+        e.preventDefault()
+      })
+      var zoomReset = new ol.control.Control({
+        element: self.elementZoomReset
+      })
+
+      // Fullscreen button
+      self.elementFullScreen = document.createElement('button')
+      self.elementFullScreen.className = 'ol-full-screen'
+      self.elementFullScreen.title = 'Make the map fill the screen'
+      self.elementFullScreen.appendChild(document.createTextNode('Full screen'))
+      self.elementFullScreen.addEventListener('click', function (e) {
+        e.preventDefault()
+        // Fullscreen view
+        if (self.isFullScreen) {
+          // self.removeFullScreen()
+          history.back()
+        }
+        // Default view
+        else {
+          self.setFullScreen()
+          var view = 'map-' + self.options.type
+          var state = { 'view': view, 'a': 'b' }
+          var url = self.addOrUpdateParameter(location.pathname + location.search, 'view', view, '#' + self.options.type)
+          var title = document.title
+          history.pushState(state, title, url)
+          this.classList.add('ol-full-screen-back')
+        }
+      })
+      var fullScreen = new ol.control.Control({ // Use fullscreen for HTML Fullscreen API
+        element: self.elementFullScreen
+      })
+
+      //
+      // Setup map
+      //
+
+      // Define view object
+      //   var view = new ol.View({
+      //       center: ol.proj.fromLonLat(options.lonLat),
+      //       enableRotation: false,
+      //       zoom: options.zoom
+      //   })
+
+      //   // Constrain zoom for large scale map
+      //   if (self.options.type == 'outlook') {
+      //       view.setMinZoom(6)
+      //       view.setMaxZoom(8)
+      //   }
+      var view = self.options.view
+
+      // Add key
+      if (self.options.hasKey) {
+        self.elementMapContainerInner.appendChild(self.elementKey)
+        self.elementKey.insertBefore(self.elementKeyToggle, self.elementKey.firstChild)
+      }
+
+      // Add fullscreen control
+      if (self.options.hasKey) {
+        self.elementKey.prepend(self.elementFullScreen)
+      } else {
+        self.elementMapContainerInner.prepend(self.elementFullScreen)
+      }
+
+      // Add search control
+      if (self.options.hasSearch) {
+        self.elementMapContainerInner.appendChild(self.elementSearch)
+      }
+
+      // Add outlook control
+      if (self.options.type == 'outlook') {
+        self.elementMap.classList.add('map--outlook-control-open')
+        self.elementMapContainerInner.appendChild(self.elementOutlook)
+      }
+
+      // Add remianing controls
+      var customControls = []
+      if (self.options.hasZoomReset) {
+        customControls.push(zoomReset)
+      }
+      customControls.push(zoom)
+      if (self.options.hasDrawing) {
+        customControls.push(deleteFeature)
+      }
+      var controls = ol.control.defaults({
+        zoom: false,
+        rotate: false,
+        attribution: false
+      }).extend(customControls)
+
+      // Add layers to map
+      var layers = self.options.layers
+      //   if (self.options.type == 'now') {
+      //       layers.push(self.layerTile)
+      //       layers.push(self.layerTargetAreaPolygons)
+      //       layers.push(self.layerTargetAreaPoints)
+      //       layers.push(self.layerLevels)
+      //       layers.push(self.layerImpacts)
+      //   }
+      //   if (self.options.type == 'outlook') {
+      //       layers.push(self.layerStamen)
+      //       layers.push(self.layerConcernAreas)
+      //   }
+      //   if (self.options.showLocation) {
+      //       layers.push(self.layerLocation)
+      //   }
+      //   layers.push(self.layerSelectedFeature)
+
+      // Render map
+      self.map = new ol.Map({
+        target: self.elementMapContainerInner,
+        controls: controls,
+        layers: layers,
+        view: view
+      })
+
+      // Set and toggle visibility
+      if (self.options.hasKey) {
+        var checkboxes = self.elementKey.querySelectorAll('input[type="checkbox"]')
+        checkboxes.forEach((checkbox) => {
+          var layers = checkbox.dataset.layers.split(',')
+          var states = []
+          if (checkbox.dataset.states.length) {
+            states = checkbox.dataset.states.split(',')
+          }
+          // Show layer or feature if checked
+          if (checkbox.checked) {
+            // Show layers
+            layers.map(function (layer) {
+              self[layer].setVisible(true)
+            })
+          }
+          // Show layers if toggling feature visiblity
+          else if (states.length) {
+            layers.map(function (layer) {
+              self[layer].setVisible(true)
+            })
+          }
+          // Toggle visibility
+          checkbox.addEventListener('click', function (e) {
+            layers.map(function (layer) {
+              // Toggle feature visibility
+              if (states.length) {
+                self[layer].getSource().forEachFeature(function (feature) {
+                  states.map(function (state) {
+                    if (feature.get('state') == state) {
+                      feature.get('isVisible') ? feature.set('isVisible', false) : feature.set('isVisible', true)
+                    }
+                  })
+                })
+              }
+              // Toggle layer visiblity
+              else {
+                self[layer].getVisible() ? self[layer].setVisible(false) : self[layer].setVisible(true)
+              }
+            })
+          })
+        })
+      }
+
+      // Set fullscreen before map is rendered
+      if (self.isFullScreen) {
+        self.setFullScreen()
+      }
+
+      // Open key
+      if (self.isKeyOpen) {
+        self.openKey()
+      }
+
+      //
+      // Map events
+      //
+
+      // Set focus element if map is fullscreen
+      window.onload = function (e) {
+        if (self.isFullScreen) {
+          focusElement = self.elementMapContainerInner.querySelectorAll('button:not(:disabled), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')[0]
+          focusElement.focus()
+        }
+      }
+
+      // Close key or place locator if map is clicked
+      self.map.on('click', function (e) {
+        // Hide overlay if exists
+        self.hideOverlay()
+        // Remove feature from selected layer
+        self.layerSelectedFeature.getSource().clear()
+        // Clear selected feature if set
+        if (self.selectedFeature) {
+          self.selectedFeature.set('isSelected', false)
+          self.selectedFeature = null
+        }
+        // Get mouse coordinates and check for feature
+        var feature = self.map.forEachFeatureAtPixel(e.pixel, function (feature) {
+          return feature
+        })
+        // A new feature has been selected
+        if (feature) {
+          // Target areas have a point and polygon on differet layers
+          feature.set('isSelected', true)
+          // Store selected feature
+          self.selectedFeature = feature
+          // Move point feature to selected/top layer
+          if (feature.get('geometryType') == 'point') {
+            self.layerSelectedFeature.getSource().addFeature(feature)
+          }
+          // Show overlay
+          self.showOverlay(self.selectedFeature, e.coordinate)
+        }
+        // No feature has been selected
+        else {
+          // Close key
+          if (self.options.hasKey && self.isKeyOpen) {
+            self.closeKey()
+            return
+          }
+        }
+        // Update triggers for now map
+        if (self.options.type == 'now') {
+          self.updateTriggersForFeature()
+        }
+      })
+
+      // Show cursor when hovering over features
+      self.map.on('pointermove', function (e) {
+        var mouseCoordInMapPixels = [e.originalEvent.offsetX, e.originalEvent.offsetY]
+        // Detect feature at mouse coords
+        var hit = self.map.forEachFeatureAtPixel(mouseCoordInMapPixels, function (feature, layer) {
+          return true
+        })
+        if (hit) {
+          self.map.getTarget().style.cursor = 'pointer'
+        } else {
+          self.map.getTarget().style.cursor = ''
+        }
+      })
+
+      // Use global reference to active map
+      if (!window.hasOwnProperty('activeMap')) {
+        // Set here prevent event listener duplication
+        window.activeMap = self
+        // Keyboard controls
+        document.addEventListener('keydown', function (e) {
+          // Constrain tab key to 'key' when its open
+          if (e.keyCode === 9) {
+            var context
+            // Context is map key
+            if (window.activeMap.isKeyOpen) {
+              context = window.activeMap.elementKey
+            }
+            // Context is map fullscreen view
+            else if (window.activeMap.isFullScreen) {
+              context = window.activeMap.elementMapContainerInner
+            }
+            // Context is default
+            else {
+              context = null
+            }
+            // If dialog context is open
+            if (context) {
+              var focusableElements = context.querySelectorAll('button:not(:disabled), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+              // Filter only visible elements
+              var visibleFocusableElements = []
+              for (i = 0; i < focusableElements.length; i++) {
+                if (getComputedStyle(focusableElements[i], null).display != 'none') {
+                  visibleFocusableElements.push(focusableElements[i])
+                }
+              }
+              // Set first and last element
+              var firstFocusableElement = visibleFocusableElements[0]
+              var lastFocusableElement = visibleFocusableElements[visibleFocusableElements.length - 1]
+              // Shift tab (backwards)
+              if (e.shiftKey) {
+                if (document.activeElement === firstFocusableElement) {
+                  e.preventDefault()
+                  lastFocusableElement.focus()
+                }
+              }
+              // Tab (forwards)
+              else {
+                if (document.activeElement === lastFocusableElement) {
+                  e.preventDefault()
+                  firstFocusableElement.focus()
+                }
+              }
+            }
+          }
+        })
+
+        // Search input hide label
+        document.addEventListener('keyup', function (e) {
+          if (e.target.classList.contains('map-search__input')) {
+            if (e.target.value.length) {
+              e.target.classList.add('map-search__input--has-value')
+            } else {
+              e.target.classList.remove('map-search__input--has-value')
+            }
+          }
+        })
+      }
+
+      // Toggle fullscreen view on browser history change
+      window.onpopstate = function (e) {
+        if (window.activeMap) {
+          if (e && e.state) {
+            window.activeMap.setFullScreen()
+          } else {
+            window.activeMap.removeFullScreen()
+          }
+          window.activeMap.map.updateSize()
+        }
+      }
+
+      // Map resolution settings
+      self.map.on('moveend', function () {
+        resolution = self.map.getView().getResolution()
+
+        if (self.options.type == 'now') {
+          // Update layer opacity setting for different map resolutions
+          if (resolution > 20) {
+            layerOpacity = 1
+          } else if (resolution > 10) {
+            layerOpacity = 0.8
+          } else if (resolution > 5) {
+            layerOpacity = 0.6
+          } else {
+            layerOpacity = 0.4
+          }
+          self.layerTargetAreaPolygons.setOpacity(layerOpacity)
+
+          // Swap layer order when target area polygons are used
+          if (resolution <= self.options.minIconResolution) {
+            // Levels and impacts on top
+            self.layerLevels.setZIndex(4)
+            self.layerImpacts.setZIndex(5)
+          } else {
+            // Warning icons on top
+            self.layerLevels.setZIndex(1)
+            self.layerImpacts.setZIndex(2)
+          }
+
+          // Toggle key icons
+          if (resolution <= self.options.minIconResolution) {
+            // Key polygons
+            self.elementKey.querySelectorAll('[data-style]').forEach((symbol) => {
+              symbol.style = symbol.getAttribute('data-style-offset')
+            })
+          } else {
+            // Key icons
+            self.elementKey.querySelectorAll('[data-style]').forEach((symbol) => {
+              symbol.style = symbol.getAttribute('data-style')
+            })
+          }
+
+          // Toggle overlay icons
+          var icon = self.elementOverlayInner.querySelector('.ol-overlay__symbol')
+          if (icon) {
+            if (resolution <= self.options.minIconResolution) {
+              icon.classList.add('ol-overlay__symbol--zoomin')
+            } else {
+              icon.classList.remove('ol-overlay__symbol--zoomin')
+            }
+          }
+
+          // Reposition overlay over marker
+          /*
+                    if (self.selectedFeature && self.selectedFeature.getGeometry().getType() == 'GeometryCollection') {
+                        var coorindates = self.selectedFeature.getGeometry().getGeometries()[0].getCoordinates()
+                        if (resolution > self.options.minIconResolution) {
+                            // Check if feature has point and polygon/multipolygon
+                            self.overlay.element.classList.add('ol-overlay-offset-pin')
+                            self.overlay.setPosition(coorindates)
+                        }
+                    }
+                    */
+        }
+      })
+    }
+
+    self.init()
+
+    return self.map
+  }
+
+  var extent = ol.proj.transformExtent([
+    -5.75447130203247,
+    49.9302711486816,
+    1.79968345165253,
+    55.8409309387207
+  ], 'EPSG:4326', 'EPSG:3857')
+
+  var center = [
+    -1.4758,
+    52.9219
+  ]
+
+  function floodsCentroidStyle (feature, resolution) {
+    if (/* feature.get('isVisible') */true) {
+      // Defaults
+      var strokeColour = 'transparent'
+      var fillColour = 'transparent'
+      var strokeWidth = 3
+      var zIndex = 1
+      var source = '/assets/images/icon-map-features-2x.png' // Icon sprite image source
+      var offset = [0, 0] // Icon sprite offset
+      var image = null
+      var text = null
+      var opacity = 1
+      var lineDash = [0, 0]
+
+      strokeWidth = 3
+
+      if (feature.get('severity') === 1) {
+        strokeColour = '#e3000f'
+        zIndex = 5
+        offset = [0, 1300]
+        if (feature.get('isSelected') === true) {
+          zIndex = 6
+          offset[0] += 100
+        }
+      } else if (feature.get('severity') === 2) {
+        zIndex = 4
+        offset = [0, 1400]
+        if (feature.get('isSelected') === true) {
+          zIndex = 6
+          offset[0] += 100
+        }
+      } else if (feature.get('severity') === 3) {
+        fillColour = '#f18700'
+        zIndex = 2
+        offset = [0, 1500]
+        if (feature.get('isSelected') === true) {
+          offset[0] += 100
+        }
+      } else if (feature.get('severity') === 4) {
+        fillColour = '#6f777b'
+        zIndex = 3
+        offset = [0, 1700]
+        if (feature.get('isSelected') === true) {
+          zIndex = 6
+          offset[0] += 100
+        }
+      }
+
+      // Toggle display of icon/polygon features depending on resolution
+      // if (resolution <= self.options.minIconResolution) {
+      //   if (feature.get('geometryType') === 'point') {
+      //     return null
+      //   }
+      // } else {
+      //   if (feature.get('geometryType') === 'polygon') {
+      //     return null
+      //   }
+      // }
+
+      // Define icon
+      image = new ol.style.Icon({
+        src: source,
+        size: [86, 86],
+        anchor: [0.5, 0.75],
+        scale: 0.5,
+        offset: offset
+      })
+
+      // Generate style
+      var style = new ol.style.Style({
+        fill: new ol.style.Fill({ color: fillColour }),
+        stroke: new ol.style.Stroke({
+          color: strokeColour,
+          width: strokeWidth,
+          miterLimit: 2,
+          lineJoin: 'round',
+          lineDash: lineDash
+        }),
+        lineDash: lineDash,
+        image: image,
+        text: text,
+        opacity: opacity,
+        zIndex: zIndex
+      })
+
+      return style
+    } else {
+      return null
+    }
+  }
+
+  function stationStyle (feature, resolution) {
+    if (/* feature.get('isVisible') */true) {
+      // Defaults
+      var strokeColour = 'transparent'
+      var fillColour = 'transparent'
+      var strokeWidth = 3
+      var zIndex = 1
+      var source = '/assets/images/icon-map-features-2x.png' // Icon sprite image source
+      var offset = [0, 0] // Icon sprite offset
+      var image = null
+      var text = null
+      var opacity = 1
+      var lineDash = [0, 0]
+
+      strokeWidth = 3
+
+      offset = [0, 100]
+
+      // Above
+      if (feature.get('state') === 'above') {
+        offset = [0, 300]
+        zIndex = 4
+      } else if (feature.get('state') === 'forecastAbove') {
+        offset = [0, 200]
+        zIndex = 3
+      } else if (feature.get('state') === 'disabled') {
+        offset = [0, 0]
+        zIndex = 2
+      }
+
+      // Disabled
+      if (feature.get('isSelected') == true) {
+        offset[0] += 100
+        zIndex = 5
+      } else if (feature.get('isTrigger') == true) {
+        offset[0] += 200
+      }
+
+      // Define icon
+      image = new ol.style.Icon({
+        src: source,
+        size: [66, 84],
+        anchor: [0.5, 0.92],
+        scale: 0.5,
+        offset: offset
+      })
+
+      // Toggle display of icon/polygon features depending on resolution
+      // if (resolution <= self.options.minIconResolution) {
+      //   if (feature.get('geometryType') === 'point') {
+      //     return null
+      //   }
+      // } else {
+      //   if (feature.get('geometryType') === 'polygon') {
+      //     return null
+      //   }
+      // }
+
+      // Define icon
+      image = new ol.style.Icon({
+        src: source,
+        size: [86, 86],
+        anchor: [0.5, 0.75],
+        scale: 0.5,
+        offset: offset
+      })
+
+      // Generate style
+      var style = new ol.style.Style({
+        fill: new ol.style.Fill({ color: fillColour }),
+        stroke: new ol.style.Stroke({
+          color: strokeColour,
+          width: strokeWidth,
+          miterLimit: 2,
+          lineJoin: 'round',
+          lineDash: lineDash
+        }),
+        lineDash: lineDash,
+        image: image,
+        text: text,
+        opacity: opacity,
+        zIndex: zIndex
+      })
+
+      return style
+    } else {
+      return null
+    }
+  }
+
+  function stationsStyle (feature, resolution) {
+    var featureId = feature.getId()
+    if (!featureId) {
+      return
+    }
+
+    var id = parseInt(featureId.split('stations.')[1], 10)
+    var props = feature.getProperties()
+    var source = '/assets/images/icon-map-features-2x.png'
+    var offset
+
+    if (resolution <= 200) {
+      switch (true) {
+        case props.status === 'Suspended' || props.status === 'Closed':
+          offset = [0, 0]
+          break
+        case props.atrisk && props.type !== 'C' && props.type !== 'G':
+          offset = [0, 300]
+          break
+        default:
+          offset = [0, 100]
+          break
+      }
+
+      return [
+        new ol.style.Style({
+          image: new ol.style.Icon({
+            src: source,
+            size: [86, 86],
+            anchor: [0.5, 0.75],
+            scale: 0.5,
+            offset: offset
+          })
+        })
+      ]
+    } else if (resolution > 200) {
+      switch (true) {
+        case props.status === 'Suspended' || props.status === 'Closed':
+          return [
+            new ol.style.Style({
+              image: new ol.style.Circle({
+                fill: new ol.style.Fill({
+                  color: '#6e777b'
+                }),
+                radius: 5,
+                stroke: new ol.style.Stroke({
+                  color: '#fff'
+                })
+              })
+            })
+          ]
+        case props.atrisk && props.type !== 'C' && props.type !== 'G':
+          return [
+            new ol.style.Style({
+              image: new ol.style.Circle({
+                fill: new ol.style.Fill({
+                  color: '#b10d1e'
+                }),
+                radius: 5,
+                stroke: new ol.style.Stroke({
+                  color: '#fff'
+                })
+              })
+            })
+          ]
+        default:
+          return [
+            new ol.style.Style({
+              image: new ol.style.Circle({
+                fill: new ol.style.Fill({
+                  color: '#006436'
+                }),
+                radius: 5,
+                stroke: new ol.style.Stroke({
+                  color: '#fff'
+                })
+              })
+            })
+          ]
+      }
+    }
+    // else {
+    //   // resolution <= 200
+    //   switch (true) {
+    //     case props.status === 'Suspended' || props.status === 'Closed':
+    //       return [
+    //         new ol.style.Style({
+    //           image: new ol.style.Icon({
+    //             anchor: [0.5, 21],
+    //             anchorXUnits: 'fraction',
+    //             anchorYUnits: 'pixels',
+    //             src: '/public/images/icon-pin-grey-hl.png'
+    //           })
+    //         })
+    //       ]
+    //     case props.atrisk && props.type !== 'C' && props.type !== 'G':
+    //       return [
+    //         new ol.style.Style({
+    //           image: new ol.style.Icon({
+    //             anchor: [0.5, 21],
+    //             anchorXUnits: 'fraction',
+    //             anchorYUnits: 'pixels',
+    //             src: '/public/images/icon-pin-amber-hl.png'
+    //           })
+    //         })
+    //       ]
+    //     default:
+    //       return [
+    //         new ol.style.Style({
+    //           image: new ol.style.Icon({
+    //             anchor: [0.5, 21],
+    //             anchorXUnits: 'fraction',
+    //             anchorYUnits: 'pixels',
+    //             src: '/public/images/icon-pin-blue-hl.png'
+    //           })
+    //         })
+    //       ]
+    //   }
+    // }
+  }
+
+  function locationStyle (feature, resolution) {
+    if (/* feature.get('isVisible') */true) {
+      // Defaults
+      var strokeColour = 'transparent'
+      var fillColour = 'transparent'
+      var strokeWidth = 3
+      var zIndex = 1
+      var source = '/assets/images/icon-map-features-2x.png' // Icon sprite image source
+      var offset = [0, 0] // Icon sprite offset
+      var image = null
+      var text = null
+      var opacity = 1
+      var lineDash = [0, 0]
+
+      strokeWidth = 3
+
+      offset = [0,1800]
+
+      // Feature is also slected
+      if (feature.get('isSelected') == true) {
+          offset[0] += 100
+      }
+
+
+      // Toggle display of icon/polygon features depending on resolution
+      // if (resolution <= self.options.minIconResolution) {
+      //   if (feature.get('geometryType') === 'point') {
+      //     return null
+      //   }
+      // } else {
+      //   if (feature.get('geometryType') === 'polygon') {
+      //     return null
+      //   }
+      // }
+
+      // Define icon 
+      image = new ol.style.Icon({
+        src: source,
+        size: [66, 84],
+        anchor: [0.5, 0.92],
+        scale: 0.5,
+        offset: offset
+    })
+
+      // Generate style
+      var style = new ol.style.Style({
+        fill: new ol.style.Fill({ color: fillColour }),
+        stroke: new ol.style.Stroke({
+          color: strokeColour,
+          width: strokeWidth,
+          miterLimit: 2,
+          lineJoin: 'round',
+          lineDash: lineDash
+        }),
+        lineDash: lineDash,
+        image: image,
+        text: text,
+        opacity: opacity,
+        zIndex: zIndex
+      })
+
+      return style
+    } else {
+      return null
+    }
+  }
+
+  Map.extent = extent
+  Map.center = center
+  Map.stationsStyle = stationsStyle
+  Map.locationStyle = locationStyle
+  Map.floodsCentroidStyle = floodsCentroidStyle
+
+  flood.Map = Map
+})(window, window.Flood)

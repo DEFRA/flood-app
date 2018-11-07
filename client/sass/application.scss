@@ -1,0 +1,113 @@
+// $govuk-assets-path: "/govuk/assets/";
+// $govuk-images-path: "/govuk/assets/images/";
+// $govuk-fonts-path: "/govuk/assets/fonts/";
+// $govuk-images-path: "/assets/images/";
+$govuk-global-styles: true;
+
+@import "node_modules/govuk-frontend/all";
+// @import "node_modules/digital-form-builder-designer/client/index";
+
+// Patterns that aren't in Frontend
+@import "patterns/check-your-answers";
+@import "patterns/task-list";
+@import "patterns/related-items";
+
+// Custom patterns that aren't in Frontend or prorotpye kit
+@import "patterns/risk-detail"; // Dan Leech
+
+// Custom objects overides for existing components
+@import "objects/warning-text"; // Dan Leech (modifiers for govuk-warning-text)
+@import "objects/details"; // Dan Leech (modifier for govuk-details)
+@import "objects/lists"; // Dan Leech (modifier for govuk-list)
+@import "objects/header"; // Dan Leech (modifier to remove border when banner in use)
+@import "objects/main"; // Dan Leech (modifier to remove margins when a warning is used)
+
+// Components that aren't in Frontend
+@import "components/cookie-banner";
+
+// Custom components that aren't in Frontend or prorotpye kit
+@import "components/accordion"; // Dan Leech
+@import "components/map"; // Dan Leech
+@import "components/tabs"; // Dan Leech (modifier link display to improve affordance issues)
+@import "components/banners"; // Dan Leech (Warnings and alert banners)
+@import "components/buttons"; // Dan Leech (Button overides)
+
+
+.nojs-hidden {
+  display: none;
+}
+
+.js-enabled .nojs-hidden {
+  display: block;
+}
+
+.check-your-answers {
+  td {
+    vertical-align: top;
+
+    &.required {
+      color: $govuk-error-colour;
+    }
+  }
+
+  .change-answer {
+    text-align: right;
+    padding-right: 0;
+  }
+}
+
+.govuk-prose-scope {
+
+  // @extend inheritance
+
+  // Contextual heading and paragraph combinations are inherited
+  // through the use of @extend
+
+  h1 {
+    @extend %govuk-heading-xl;
+  }
+
+  h2 {
+    @extend %govuk-heading-l;
+  }
+
+  h3 {
+    @extend %govuk-heading-m;
+  }
+
+  h4 {
+    @extend %govuk-heading-s;
+  }
+
+  p {
+    @extend %govuk-body-m;
+  }
+
+  strong,
+  b {
+    @include govuk-typography-weight-bold;
+  }
+
+  ul,
+  ol {
+    @extend %govuk-list;
+  }
+
+  ol {
+    @extend %govuk-list--number;
+  }
+
+  ul {
+    @extend %govuk-list--bullet;
+  }
+
+  a {
+    @extend %govuk-link;
+  }
+
+  hr {
+    @extend %govuk-section-break;
+    @extend %govuk-section-break--visible;
+    @extend %govuk-section-break--xl;
+  }
+}

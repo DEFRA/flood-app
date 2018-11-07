@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Enter a location</h1>
+    <form method="post">
+      <div class="govuk-form-group">
+        <label class="govuk-label govuk-label--m" for="location">City, town or postcode</label>
+        <span id="location-hint" class="govuk-hint">For example Bakewell or SW1A 2AA</span>
+        <div id="my-autocomplete-container"></div>
+        <input class="govuk-input govuk-!-width-two-thirds" id="location" name="location" value="" type="text"
+          aria-describedby="location-hint">
+      </div>
+      <button type="submit" class="govuk-button">Continue</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{assetPath}}/accessible-autocomplete.min.css" />
+  <script src="{{assetPath}}/accessible-autocomplete.min.js"></script>
+  <script>
+    function suggest (query, populateResults) {
+      fetch('/suggest?q=' + query)
+        .then(res => response.json())
+        .then(res => {
+          populateResults(res)
+        })
+        .catch()
+    }
+
+    accessibleAutocomplete({
+      element: document.querySelector('#my-autocomplete-container'),
+      id: 'location', // To match it to the existing <label>.
+      source: suggest
+    })
+  </script>
+{% endblock %}

@@ -1,0 +1,144 @@
+{
+  "@context": "http://environment.data.gov.uk/flood-monitoring/meta/context.jsonld",
+  "meta": {
+    "publisher": "Environment Agency",
+    "licence": "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+    "documentation": "http://environment.data.gov.uk/flood-monitoring/doc/reference",
+    "version": "0.9",
+    "comment": "Status: Beta service",
+    "hasFormat": [
+      "http://environment.data.gov.uk/flood-monitoring/id/floods.csv",
+      "http://environment.data.gov.uk/flood-monitoring/id/floods.rdf",
+      "http://environment.data.gov.uk/flood-monitoring/id/floods.ttl",
+      "http://environment.data.gov.uk/flood-monitoring/id/floods.html"
+    ]
+  },
+  "items": [
+    {
+      "@id": "http://environment.data.gov.uk/flood-monitoring/id/floods/104460",
+      "description": "North Sea coast from Staithes to Whitby including tidal River Esk",
+      "eaAreaName": "Yorkshire",
+      "eaRegionName": "North East",
+      "floodArea": {
+        "@id": "http://environment.data.gov.uk/flood-monitoring/id/floodAreas/122WAC952",
+        "county": "North Yorkshire, Redcar and Cleveland",
+        "notation": "122WAC952",
+        "polygon": "http://environment.data.gov.uk/flood-monitoring/id/floodAreas/122WAC952/polygon",
+        "riverOrSea": "North Sea"
+      },
+      "floodAreaID": "122WAC952",
+      "isTidal": true,
+      "message": "Winds and tides are now reducing.",
+      "severity": "Warning no longer in force",
+      "severityLevel": 4,
+      "timeMessageChanged": "2018-10-30T11:12:00",
+      "timeRaised": "2018-10-30T11:12:00",
+      "timeSeverityChanged": "2018-10-30T11:12:00"
+    },
+    {
+      "@id": "http://environment.data.gov.uk/flood-monitoring/id/floods/104459",
+      "description": "North Sea coast at Hornsea",
+      "eaAreaName": "Yorkshire",
+      "eaRegionName": "North East",
+      "floodArea": {
+        "@id": "http://environment.data.gov.uk/flood-monitoring/id/floodAreas/122WAC955",
+        "county": "East Riding of Yorkshire",
+        "notation": "122WAC955",
+        "polygon": "http://environment.data.gov.uk/flood-monitoring/id/floodAreas/122WAC955/polygon",
+        "riverOrSea": "North Sea"
+      },
+      "floodAreaID": "122WAC955",
+      "isTidal": true,
+      "message": "Winds and tide levels are now reducing.",
+      "severity": "Warning no longer in force",
+      "severityLevel": 4,
+      "timeMessageChanged": "2018-10-30T11:18:00",
+      "timeRaised": "2018-10-30T11:18:00",
+      "timeSeverityChanged": "2018-10-30T11:18:00"
+    },
+    {
+      "@id": "http://environment.data.gov.uk/flood-monitoring/id/floods/104461",
+      "description": "North Sea coast from Whitby to Filey",
+      "eaAreaName": "Yorkshire",
+      "eaRegionName": "North East",
+      "floodArea": {
+        "@id": "http://environment.data.gov.uk/flood-monitoring/id/floodAreas/122WAC953",
+        "county": "East Riding of Yorkshire, North Yorkshire",
+        "notation": "122WAC953",
+        "polygon": "http://environment.data.gov.uk/flood-monitoring/id/floodAreas/122WAC953/polygon",
+        "riverOrSea": "North Sea"
+      },
+      "floodAreaID": "122WAC953",
+      "isTidal": true,
+      "message": "Winds and tide levels are now reducing.",
+      "severity": "Warning no longer in force",
+      "severityLevel": 4,
+      "timeMessageChanged": "2018-10-30T11:16:00",
+      "timeRaised": "2018-10-30T11:16:00",
+      "timeSeverityChanged": "2018-10-30T11:16:00"
+    },
+    {
+      "@id": "http://environment.data.gov.uk/flood-monitoring/id/floods/104462",
+      "description": "North Sea coast at Bridlington",
+      "eaAreaName": "Yorkshire",
+      "eaRegionName": "North East",
+      "floodArea": {
+        "@id": "http://environment.data.gov.uk/flood-monitoring/id/floodAreas/122WAC954",
+        "county": "East Riding of Yorkshire",
+        "notation": "122WAC954",
+        "polygon": "http://environment.data.gov.uk/flood-monitoring/id/floodAreas/122WAC954/polygon",
+        "riverOrSea": "North Sea"
+      },
+      "floodAreaID": "122WAC954",
+      "isTidal": true,
+      "message": "Winds and tide levels are now reducing.",
+      "severity": "Warning no longer in force",
+      "severityLevel": 4,
+      "timeMessageChanged": "2018-10-30T12:28:00",
+      "timeRaised": "2018-10-30T12:28:00",
+      "timeSeverityChanged": "2018-10-30T12:28:00"
+    },
+    {
+      "@id": "http://environment.data.gov.uk/flood-monitoring/id/floods/104463",
+      "description": "North Sea coast at Withernsea, Easington and Kilnsea",
+      "eaAreaName": "Yorkshire",
+      "eaRegionName": "North East",
+      "floodArea": {
+        "@id": "http://environment.data.gov.uk/flood-monitoring/id/floodAreas/122WAC956",
+        "county": "East Riding of Yorkshire",
+        "notation": "122WAC956",
+        "polygon": "http://environment.data.gov.uk/flood-monitoring/id/floodAreas/122WAC956/polygon",
+        "riverOrSea": "North Sea"
+      },
+      "floodAreaID": "122WAC956",
+      "isTidal": true,
+      "message": "Winds and tide levels are now reducing.",
+      "severity": "Warning no longer in force",
+      "severityLevel": 4,
+      "timeMessageChanged": "2018-10-30T11:21:00",
+      "timeRaised": "2018-10-30T11:21:00",
+      "timeSeverityChanged": "2018-10-30T11:21:00"
+    },
+    {
+      "@id": "http://environment.data.gov.uk/flood-monitoring/id/floods/104465",
+      "description": "The tidal River Yare from Thorpe St Andrew to Breydon Water",
+      "eaAreaName": "Eastern",
+      "eaRegionName": "Anglian",
+      "floodArea": {
+        "@id": "http://environment.data.gov.uk/flood-monitoring/id/floodAreas/054WATBT2",
+        "county": "Norfolk",
+        "notation": "054WATBT2",
+        "polygon": "http://environment.data.gov.uk/flood-monitoring/id/floodAreas/054WATBT2/polygon",
+        "riverOrSea": "River Yare"
+      },
+      "floodAreaID": "054WATBT2",
+      "isTidal": true,
+      "message": "This message has been issued because there is a possibility of some minor flooding to riverside roads and footpaths. in the early hours of Wednesday 31st October  The forecast tides at Lowestoft and Great Yarmouth will restrict the freshwater river drainage out to sea resulting in higher than normal water levels within the Broads until the current high tides pass. The detailed forecast for those that use it is for a peak level at Great Yarmouth of 1.26mAOD, on Wednesday 31st October, which is 0.38m above tide tables, wind Force 6, west south-westerly. (mAODN is height above average sea level, for more info refer to local tide tables). We are not currently expecting the situation to escalate, or to issue any further warning messages for this area at this time. Take care on waterside roads and footpaths and don't put yourself in unnecessary danger. We are monitoring the situation and will update this message as necessary.",
+      "severity": "Flood Alert",
+      "severityLevel": 3,
+      "timeMessageChanged": "2018-10-30T10:33:00",
+      "timeRaised": "2018-10-30T10:33:00",
+      "timeSeverityChanged": "2018-10-30T10:33:00"
+    }
+  ]
+}
