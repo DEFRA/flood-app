@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<project name="lfwm" basedir="." default="package">
+<property file="build.properties"/>
+<!-- **************************ZIP_FLOOD_APP****************************** -->
+        <target name="flood-app">
+                <zip destfile="deploy/flood-app.zip" basedir="" update="false"/>
+        </target>
+</project>
