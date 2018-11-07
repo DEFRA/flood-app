@@ -3,6 +3,6 @@
 <property file="build.properties"/>
 <!-- **************************ZIP_FLOOD_APP****************************** -->
         <target name="flood-app">
-                <zip destfile="flood-app.zip" basedir="flood-app" update="false"/>
+                <zip destfile="flood-app.zip" basedir="" update="false"/>
         </target>
 </project>
