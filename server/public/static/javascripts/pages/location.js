@@ -143,10 +143,8 @@
       52.9219
     ],
     hasKey: true,
-    hasSearch: false,
     hasLevels: true,
     showLevels: true,
-    hasImpacts: false,
     view: view,
     layers: [
       road,

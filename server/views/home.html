@@ -8,9 +8,9 @@
       <div class="govuk-form-group">
         <label class="govuk-label govuk-label--m" for="location">City, town or postcode</label>
         <span id="location-hint" class="govuk-hint">For example Bakewell or SW1A 2AA</span>
-        <div id="my-autocomplete-container"></div>
         <input class="govuk-input govuk-!-width-two-thirds" id="location" name="location" value="" type="text"
           aria-describedby="location-hint">
+        <div id="autocomplete-container" class="govuk-body"></div>
       </div>
       <button type="submit" class="govuk-button">Continue</button>
     </form>
@@ -19,23 +19,29 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  {{ super() }}
-  <!-- <link rel="stylesheet" href="{{assetPath}}/accessible-autocomplete.min.css" />
-  <script src="{{assetPath}}/accessible-autocomplete.min.js"></script>
-  <script>
-    function suggest (query, populateResults) {
-      fetch('/suggest?q=' + query)
-        .then(res => response.json())
-        .then(res => {
-          populateResults(res)
-        })
-        .catch()
-    }
+{{ super() }}
+<link rel="stylesheet" href="{{assetPath}}/accessible-autocomplete.min.css" />
+<script src="{{assetPath}}/accessible-autocomplete.min.js"></script>
+<script>
+  function suggest(query, populate) {
+    window.Flood.utils.xhr('/suggest?q=' + query, function (err, results) {
+      if (err) {
+        console.error(err)
+        return
+      }
 
-    accessibleAutocomplete({
-      element: document.querySelector('#my-autocomplete-container'),
-      id: 'location', // To match it to the existing <label>.
-      source: suggest
+      populate(results)
     })
-  </script> -->
+  }
+
+  accessibleAutocomplete({
+    element: document.getElementById('autocomplete-container'),
+    id: 'location',
+    name: 'location',
+    source: suggest
+  })
+
+  // Remove the original input
+  document.getElementById('location').remove()
+</script>
 {% endblock %}
