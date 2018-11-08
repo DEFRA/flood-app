@@ -4,7 +4,7 @@ const { getJson } = require('../util')
 async function find (location) {
   const query = encodeURIComponent(location)
   // const url = `http://dev.virtualearth.net/REST/v1/Locations?query=${query}&include=ciso2&c=en-GB&maxResults=1&userIP=127.0.0.1&key=${bingKey}`
-  const url = `http://dev.virtualearth.net/REST/v1/Locations/UK/${query}?key=${bingKey}&maxResults=1&userIP=127.0.0.1`
+  const url = `https://dev.virtualearth.net/REST/v1/Locations/UK/${query}?key=${bingKey}&maxResults=1&userIP=127.0.0.1`
 
   let data = await getJson(url, true)
 
@@ -45,7 +45,7 @@ async function find (location) {
 
 async function suggest (query) {
   // const url = `http://dev.virtualearth.net/REST/v1/Autosuggest?query=${query}&userLocation=<lat,long,confidence_radius>&userCircularMapView=<lat,long,radius>&userMapView=<nw_lat,nw_long,se_lat,se_long>&maxResults=5>&includeEntityTypes=<Place,Address,Business>&culture=<culture_code>&userRegion=<country_code>&countryFilter=<country_code_or_none>&key=<BingMapKey>`
-  const url = `http://dev.virtualearth.net/REST/v1/Autosuggest?query=${query}&maxResults=5&includeEntityTypes=Address,Place,Business&culture=en-GB&userRegion=GB&countryFilter=GB&key=${bingKey}`
+  const url = `https://dev.virtualearth.net/REST/v1/Autosuggest?query=${query}&maxResults=5&includeEntityTypes=Address,Place,Business&culture=en-GB&userRegion=GB&countryFilter=GB&key=${bingKey}`
 
   let data = await getJson(url, true)
 
