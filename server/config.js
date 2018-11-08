@@ -9,7 +9,8 @@ const schema = {
   bingKey: joi.string().required(),
   date: joi.number().optional(),
   ordnanceSurveyKey: joi.string().optional(),
-  browserRefreshUrl: joi.string().optional()
+  browserRefreshUrl: joi.string().optional(),
+  httpProxy: joi.string().uri().default('')
 }
 
 // Build config
@@ -19,7 +20,8 @@ const config = {
   date: process.env.FLOOD_APP_DATE,
   serviceUrl: process.env.FLOOD_APP_SERVICE_URL,
   geoserverUrl: process.env.FLOOD_APP_GEOSERVER_URL,
-  bingKey: process.env.FLOOD_APP_BING_KEY
+  bingKey: process.env.FLOOD_APP_BING_KEY,
+  httpProxy: process.env.HTTP_PROXY
 }
 
 // Validate config
