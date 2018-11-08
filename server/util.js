@@ -1,9 +1,19 @@
+const HttpsProxyAgent = require('https-proxy-agent')
+const config = require('./config')
 const wreck = require('wreck').defaults({
   timeout: 10000
 })
+let wreckExt
+if (config.httpProxy) {
+  wreckExt = require('wreck').defaults({
+    timeout: config.httpTimeoutMs,
+    agent: new HttpsProxyAgent(config.http_proxy)
+  })
+}
 
-function request (method, url, options) {
-  return wreck[method](url, options)
+function request (method, url, options, ext = false) {
+  const thisWreck = (ext && wreckExt) ? wreckExt : wreck
+  return thisWreck[method](url, options)
     .then(response => {
       const res = response.res
       const payload = response.payload
@@ -17,8 +27,8 @@ function request (method, url, options) {
     })
 }
 
-function get (url, options) {
-  return request('get', url, options)
+function get (url, options, ext = false) {
+  return request('get', url, options, ext)
 }
 
 function post (url, options) {
@@ -32,8 +42,8 @@ function postJson (url, options) {
   return post(url, options)
 }
 
-function getJson (url) {
-  return get(url, { json: true })
+function getJson (url, ext = false) {
+  return get(url, { json: true }, ext)
 }
 
 module.exports = {
