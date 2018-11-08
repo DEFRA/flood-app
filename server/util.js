@@ -1,4 +1,4 @@
-const HttpsProxyAgent = require('https-proxy-agent')
+const HttpProxyAgent = require('http-proxy-agent')
 const config = require('./config')
 const wreck = require('wreck').defaults({
   timeout: 10000
@@ -7,7 +7,7 @@ let wreckExt
 if (config.httpProxy) {
   wreckExt = require('wreck').defaults({
     timeout: config.httpTimeoutMs,
-    agent: new HttpsProxyAgent(config.httpProxy)
+    agent: new HttpProxyAgent(config.httpProxy)
   })
 }
 

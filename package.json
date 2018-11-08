@@ -28,6 +28,7 @@
     "h2o2": "8.1.2",
     "hapi": "17.6.0",
     "hoek": "5.0.4",
+    "http-proxy-agent": "^2.1.0",
     "https-proxy-agent": "^2.2.1",
     "inert": "5.1.0",
     "joi": "14.0.0",
