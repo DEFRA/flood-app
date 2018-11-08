@@ -36,15 +36,13 @@
     zIndex: 0
   })
 
-  // var satellite = new ol.layer.Tile({
-  //   ref: 'bing-road',
-  //   source: new ol.source.BingMaps({
-  //     key: 'Ajou-3bB1TMVLPyXyNvMawg4iBPqYYhAN4QMXvOoZvs47Qmrq7L5zio0VsOOAHUr',
-  //     imagerySet: 'road'
-  //   }),
-  //   visible: true,
-  //   zIndex: 0
-  // })
+  var satellite = new ol.layer.Tile({
+    ref: 'bing-aerial',
+    source: new ol.source.BingMaps({
+      key: 'Ajou-3bB1TMVLPyXyNvMawg4iBPqYYhAN4QMXvOoZvs47Qmrq7L5zio0VsOOAHUr',
+      imagerySet: 'AerialWithLabels'
+    })
+  })
 
   var floods = new ol.layer.Image({
     ref: 'alert-polygons',
@@ -97,32 +95,32 @@
     ]
   }
 
-  var geoJson1 = new window.ol.format.GeoJSON()
-  var searchAreaFeature = geoJson1.readFeatures(searchArea, {
-    dataProjection: 'EPSG:4326',
-    featureProjection: 'EPSG:3857'
-  })
+  // var geoJson1 = new window.ol.format.GeoJSON()
+  // var searchAreaFeature = geoJson1.readFeatures(searchArea, {
+  //   dataProjection: 'EPSG:4326',
+  //   featureProjection: 'EPSG:3857'
+  // })
 
-  var searchAreaLayer = new window.ol.layer.Vector({
-    source: new window.ol.source.Vector({
-      format: geoJson1,
-      features: searchAreaFeature
-    })
-  })
+  // var searchAreaLayer = new window.ol.layer.Vector({
+  //   source: new window.ol.source.Vector({
+  //     format: geoJson1,
+  //     features: searchAreaFeature
+  //   })
+  // })
 
-  var searchArea1 = flood.model.floods[0].extent
-  var geoJson2 = new window.ol.format.GeoJSON()
-  var searchAreaFeature1 = geoJson1.readFeatures(searchArea1, {
-    dataProjection: 'EPSG:4326',
-    featureProjection: 'EPSG:3857'
-  })
+  // var searchArea1 = flood.model.floods[0].extent
+  // var geoJson2 = new window.ol.format.GeoJSON()
+  // var searchAreaFeature1 = geoJson1.readFeatures(searchArea1, {
+  //   dataProjection: 'EPSG:4326',
+  //   featureProjection: 'EPSG:3857'
+  // })
 
-  var searchAreaLayer1 = new window.ol.layer.Vector({
-    source: new window.ol.source.Vector({
-      format: geoJson2,
-      features: searchAreaFeature1
-    })
-  })
+  // var searchAreaLayer1 = new window.ol.layer.Vector({
+  //   source: new window.ol.source.Vector({
+  //     format: geoJson2,
+  //     features: searchAreaFeature1
+  //   })
+  // })
 
   var view = new ol.View({
     center: ol.proj.transform(window.Flood.model.place.center, 'EPSG:4326', 'EPSG:3857'),
@@ -148,8 +146,8 @@
     view: view,
     layers: [
       road,
-      searchAreaLayer,
-      searchAreaLayer1,
+      // searchAreaLayer,
+      // searchAreaLayer1,
       locationLayer,
       floods,
       stations,
@@ -167,5 +165,4 @@
   // map.zoomToExtent(new OpenLayers.Bounds(minLng,minLat,maxLng,maxLat).transform("EPSG:4326", "EPSG:900913"))
   // var extent = my_vector_layer.getSource().getExtent();
   map.getView().fit(searchExtent, { size: map.getSize(), maxZoom: 16 })
-
 })(window, window.Flood)
