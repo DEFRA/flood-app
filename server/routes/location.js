@@ -7,7 +7,7 @@ module.exports = {
   method: 'GET',
   path: '/location',
   handler: async (request, h) => {
-    const { location } = request.query
+    const { q: location } = request.query
     const place = await locationService.find(location)
     const { floods } = await floodService.getFloodsWithin(place.bbox)
     const model = new ViewModel({ place, floods })
@@ -17,7 +17,7 @@ module.exports = {
   options: {
     validate: {
       query: {
-        location: joi.string().required()
+        q: joi.string().required()
       }
     }
   }

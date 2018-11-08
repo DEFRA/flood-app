@@ -35,7 +35,7 @@ class ViewModel extends BaseViewModel {
         floods: group,
         description: item.subTitle
       }
-    }).filter(panel => panel.floods && panel.floods.length)
+    }) // .filter(panel => panel.floods && panel.floods.length)
   }
 }
 

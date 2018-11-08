@@ -11,7 +11,7 @@ module.exports = [{
   path: '/',
   handler: async (request, h) => {
     const { location } = request.payload
-    return h.redirect(!location ? '/national' : `/location?location=${location}`)
+    return h.redirect(!location ? '/national' : `/location?q=${location}`)
   },
   options: {
     validate: {

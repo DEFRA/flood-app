@@ -62,7 +62,7 @@ async function suggest (query) {
 
   data = set.resources[0]
 
-  return data.value.map(item => item.address.formattedAddress)
+  return data.value.map(item => item.name || item.address.formattedAddress)
 }
 
 module.exports = { find, suggest }
