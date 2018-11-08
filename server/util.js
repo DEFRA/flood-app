@@ -7,7 +7,7 @@ let wreckExt
 if (config.httpProxy) {
   wreckExt = require('wreck').defaults({
     timeout: config.httpTimeoutMs,
-    agent: new HttpsProxyAgent(config.http_proxy)
+    agent: new HttpsProxyAgent(config.httpProxy)
   })
 }
 
