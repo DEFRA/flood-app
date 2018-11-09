@@ -13,7 +13,7 @@
       {% if panel.floods %}
         <ul class="govuk-list govuk-list--warning">
           {% for flood in panel.floods %}
-            <li><a href="/target-area/{{flood.fwaCode}}">{{ flood.description }}</a></li>
+            <li><a href="/target-area/{{flood.code}}">{{ flood.description }}</a></li>
           {% endfor %}
         </ul>
       {% endif %}
@@ -100,13 +100,8 @@
       <p>Some places may experience flooding from other sources in the future. <a href="https://flood-warning-information.service.gov.uk/long-term-flood-risk">View
           long term flood risk information</a>.</p>
     </div>
-    <h2 class="govuk-heading-m">What to do before, during and after a flood</h2>
-    <ul class="govuk-list">
-      <li><a class="govuk-link" href="">How to plan ahead for flooding</a></li>
-      <li><a class="govuk-link" href="">What to do in a flood</a></li>
-      <li><a class="govuk-link" href="">How to recover after a flood</a></li>
-    </ul>
 
+    {% include "partials/before-during-after.html" %}
     {% include "partials/floods-description.html" %}
   </div>
 </div>

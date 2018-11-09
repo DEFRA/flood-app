@@ -111,3 +111,35 @@ $govuk-global-styles: true;
     @extend %govuk-section-break--xl;
   }
 }
+
+
+.flood-icon {
+  width: 60px;
+  height: 60px;
+  vertical-align: middle;
+  background: transparent url('#{$govuk-images-path}icon-flood-symbols-2x.png') no-repeat;
+  background-size: 180px;
+  display: inline-block;
+  text-indent:-5000px;
+}
+
+.flood-icon--alert {
+  background-position: -60px -120px;
+  @include mq ($from: tablet) {
+    background-position: -120px -120px;
+  }
+}
+
+.flood-icon--severe {
+  background-position: -60px 0px;
+  @include mq ($from: tablet) {
+      background-position: -120px 0px;
+  }
+}
+
+.flood-icon--warning {
+  background-position: -60px -60px;
+  @include mq ($from: tablet) {
+      background-position: -120px -60px;
+  }
+}

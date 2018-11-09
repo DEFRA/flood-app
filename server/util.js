@@ -1,8 +1,10 @@
+const moment = require('moment-timezone')
 const HttpProxyAgent = require('http-proxy-agent')
 const config = require('./config')
 const wreck = require('wreck').defaults({
-  timeout: 10000
+  timeout: config.httpTimeoutMs
 })
+
 let wreckExt
 if (config.httpProxy) {
   wreckExt = require('wreck').defaults({
@@ -46,10 +48,15 @@ function getJson (url, ext = false) {
   return get(url, { json: true }, ext)
 }
 
+function formatDate (value, format = 'h:mma dddd D MMMM YYYY') {
+  return moment(value).tz('Europe/London').format(format)
+}
+
 module.exports = {
-  get: get,
-  post: post,
-  getJson: getJson,
-  postJson: postJson,
-  request: request
+  get,
+  post,
+  getJson,
+  postJson,
+  request,
+  formatDate
 }

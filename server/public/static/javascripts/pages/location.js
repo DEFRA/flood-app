@@ -69,7 +69,6 @@
       new window.ol.Feature({
         geometry: new window.ol.geom.Point(window.ol.proj.transform(window.Flood.model.place.center, 'EPSG:4326', 'EPSG:3857')),
         type: 'location',
-        isVisible: true,
         html: window.Flood.model.location
       })
     ]

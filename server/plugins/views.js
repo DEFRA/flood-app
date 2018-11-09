@@ -1,4 +1,5 @@
 const nunjucks = require('nunjucks')
+const util = require('../util')
 const config = require('../config')
 const pkg = require('../../package.json')
 const analyticsAccount = config.analyticsAccount
@@ -24,10 +25,7 @@ module.exports = {
             watch: false
           })
 
-          env.addGlobal('getContext', function (component, errors) {
-            const ctx = this.ctx
-            return ctx
-          })
+          env.addFilter('formatDate', util.formatDate)
 
           return next()
         }

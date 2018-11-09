@@ -3,12 +3,7 @@ const BaseViewModel = require('.')
 const severity = require('../severity')
 
 const defaults = {
-  pageTitle: `Flood risk for England - GOV.UK`,
-  serviceName: 'Flood Information Service',
-  metadata: {
-    keywords: '...',
-    description: '...'
-  }
+  pageTitle: `Flood risk for England - GOV.UK`
 }
 
 function groupBy (arr, prop) {
@@ -25,12 +20,11 @@ class ViewModel extends BaseViewModel {
     const { floods } = options
     super(hoek.applyToDefaults(defaults, options))
     const grouped = groupBy(floods, 'severity')
-    this.panels = Object.keys(severity).map(key => {
-      const item = severity[key]
+    this.panels = severity.map(item => {
       const group = grouped[item.id]
       const count = group ? group.length : 0
       return {
-        name: key.toLowerCase(),
+        name: item.id,
         title: `${count} ${count === 1 ? item.title : item.pluralisedTitle}`.toLowerCase(),
         floods: group,
         description: item.subTitle

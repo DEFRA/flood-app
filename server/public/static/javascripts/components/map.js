@@ -202,7 +202,7 @@
       self.overlay.element.style.display = 'block'
       self.map.addOverlay(self.overlay)
       // Hide Outlook day control
-      if (self.options.type == 'outlook') {
+      if (self.options.type === 'outlook') {
         self.elementMap.classList.remove('map--outlook-control-open')
       }
     }
@@ -223,7 +223,7 @@
         self.map.removeOverlay(self.overlay)
       }
       // Show Outlook day control
-      if (self.options.type == 'outlook') {
+      if (self.options.type === 'outlook') {
         self.elementMap.classList.add('map--outlook-control-open')
       }
     }
@@ -319,12 +319,10 @@
       self.elementKeyToggle.title = 'Add or remove information from the map'
       self.elementKeyToggle.className = 'map-key__toggle'
       self.elementKeyToggle.addEventListener('click', function (e) {
-        // Open key
+        // Toggle key
         if (!self.isKeyOpen) {
           self.openKey()
-        }
-        // Close key
-        else {
+        } else {
           self.closeKey()
         }
       })
@@ -566,7 +564,7 @@
           // Store selected feature
           self.selectedFeature = feature
           // Move point feature to selected/top layer
-          if (feature.get('geometryType') == 'point') {
+          if (feature.get('geometryType') === 'point') {
             self.layerSelectedFeature.getSource().addFeature(feature)
           }
           // Show overlay
@@ -576,7 +574,6 @@
           // Close key
           if (self.options.hasKey && self.isKeyOpen) {
             self.closeKey()
-            return
           }
         }
       })
