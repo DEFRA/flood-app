@@ -1,15 +1,15 @@
 const moment = require('moment-timezone')
-const HttpProxyAgent = require('http-proxy-agent')
+const HttpsProxyAgent = require('https-proxy-agent')
 const config = require('./config')
 const wreck = require('wreck').defaults({
   timeout: config.httpTimeoutMs
 })
 
 let wreckExt
-if (config.httpProxy) {
+if (config.httpsProxy) {
   wreckExt = require('wreck').defaults({
     timeout: config.httpTimeoutMs,
-    agent: new HttpProxyAgent(config.httpProxy)
+    agent: new HttpsProxyAgent(config.httpsProxy)
   })
 }
 
