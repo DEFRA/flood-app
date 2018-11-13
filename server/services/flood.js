@@ -20,7 +20,7 @@ module.exports = {
       ? 'warning'
       : 'alert'
 
-    const url = `${serviceUrl}'/flood-area'/${type}/${code}`
+    const url = `${serviceUrl}/flood-area/${type}/${code}`
     return util.getJson(url)
   },
 
