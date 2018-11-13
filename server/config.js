@@ -10,7 +10,7 @@ const schema = {
   date: joi.number().optional(),
   ordnanceSurveyKey: joi.string().optional(),
   browserRefreshUrl: joi.string().optional(),
-  httpProxy: joi.string().uri().default(''),
+  httpsProxy: joi.string().uri().default(''),
   httpTimeoutMs: joi.number().default(10000)
 }
 
@@ -22,7 +22,7 @@ const config = {
   serviceUrl: process.env.FLOOD_APP_SERVICE_URL,
   geoserverUrl: process.env.FLOOD_APP_GEOSERVER_URL,
   bingKey: process.env.FLOOD_APP_BING_KEY,
-  httpProxy: process.env.HTTP_PROXY,
+  httpsProxy: process.env.HTTPS_PROXY,
   httpTimeoutMs: process.env.FLOOD_APP_HTTP_TIMEOUT
 }
 
