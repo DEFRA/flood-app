@@ -1,5 +1,6 @@
 (function (window, flood) {
   var ol = window.ol
+  var MapContainer = flood.MapContainer
 
   var sourceStations = new ol.source.Vector({
     format: new ol.format.GeoJSON(),
@@ -11,7 +12,7 @@
     title: 'stations',
     source: sourceStations,
     visible: true,
-    style: flood.Map.stationsStyle,
+    style: MapContainer.stationsStyle,
     maxResolution: 800
   })
 
@@ -61,7 +62,7 @@
       url: '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert_centroid&maxFeatures=10000&outputFormat=application/json',
       format: new ol.format.GeoJSON()
     }),
-    style: flood.Map.floodsCentroidStyle
+    style: MapContainer.floodsCentroidStyle
   })
 
   var locationPoint = new window.ol.source.Vector({
@@ -77,7 +78,7 @@
   var locationLayer = new window.ol.layer.Vector({
     renderMode: 'hybrid',
     source: locationPoint,
-    style: flood.Map.locationStyle,
+    style: MapContainer.locationStyle,
     zIndex: 2
   })
 
@@ -126,13 +127,13 @@
     zoom: 11,
     minZoom: 6,
     maxZoom: 17,
-    extent: flood.Map.extent
+    extent: MapContainer.extent
   })
 
   var accordionLevels = new flood.Accordion(document.querySelector('#warnings'))
 
   // New instance of Map
-  var map = new flood.Map(document.querySelector('#map-now'), {
+  var map = new MapContainer(document.querySelector('#map-now'), {
     type: 'now',
     buttonText: 'Map showing current risk',
     lonLat: [
@@ -157,7 +158,8 @@
       // poly2,
       // poly3,
       // poly4
-    ]
+    ],
+    onFeatureClick: MapContainer.onFeatureClick
   })
 
   var searchExtent = ol.proj.transformExtent(bbox, 'EPSG:4326', 'EPSG:3857')

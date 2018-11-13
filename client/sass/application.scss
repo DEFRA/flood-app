@@ -21,6 +21,7 @@ $govuk-global-styles: true;
 @import "objects/lists"; // Dan Leech (modifier for govuk-list)
 @import "objects/header"; // Dan Leech (modifier to remove border when banner in use)
 @import "objects/main"; // Dan Leech (modifier to remove margins when a warning is used)
+@import "objects/typography"; // Dan Leech (modifier to remove margins when a warning is used)
 
 // Components that aren't in Frontend
 @import "components/cookie-banner";

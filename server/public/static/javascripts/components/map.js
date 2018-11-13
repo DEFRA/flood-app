@@ -1,7 +1,7 @@
 (function (window, flood) {
   var ol = window.ol
 
-  function Map (element, options) {
+  function MapContainer (element, options) {
     //
     // Reference to instance
     //
@@ -11,6 +11,7 @@
     //
     // Options
     //
+    var noop = function () {}
 
     var defaults = {
       type: 'now',
@@ -32,7 +33,8 @@
       showImpacts: false,
       hasLevels: false,
       showLevels: false,
-      activeFeatureId: ''
+      activeFeatureId: '',
+      onFeatureClick: noop
     }
 
     self.options = Object.assign({}, defaults, options)
@@ -568,6 +570,7 @@
             self.layerSelectedFeature.getSource().addFeature(feature)
           }
           // Show overlay
+          self.options.onFeatureClick(feature)
           self.showOverlay(self.selectedFeature, e.coordinate)
         } else {
           // No feature has been selected
@@ -901,11 +904,55 @@
     }
   }
 
-  Map.extent = extent
-  Map.center = center
-  Map.stationsStyle = stationsStyle
-  Map.locationStyle = locationStyle
-  Map.floodsCentroidStyle = floodsCentroidStyle
+  MapContainer.extent = extent
+  MapContainer.center = center
+  MapContainer.stationsStyle = stationsStyle
+  MapContainer.locationStyle = locationStyle
+  MapContainer.floodsCentroidStyle = floodsCentroidStyle
+  MapContainer.onFeatureClick = onFeatureClick
 
-  flood.Map = Map
+  flood.MapContainer = MapContainer
 })(window, window.Flood)
+
+function onFeatureClick (feature) {
+  var id = feature.getId()
+  var props = feature.getProperties()
+
+  if (!props.html) {
+    if (id.startsWith('stations')) {
+      var stationId = id.substr(9)
+      var symbol = 'normal'
+      if (props.atrisk) {
+        symbol = 'above'
+      } else if (props.status === 'Closed' || props.status === 'Suspended') {
+        symbol = 'disabled'
+      }
+
+      var html = `
+              <p class="govuk-!-margin-bottom-2">
+              <span class="govuk-body-m govuk-!-font-weight-bold">${props.river}</span><br/>
+              <a class="govuk-body-s" href="/station/${stationId}">${props.name}</a>
+          </p>
+          ${props.status === 'Closed' || props.status === 'Suspended' ? `
+          <p class="govuk-body-s">Temporarily out of service</p>
+          ` : `
+          <p class="govuk-body-s hide">
+              <strong class="govuk-font-weight-bold">1.0m</strong> latest recorded<br/>
+              <strong class="govuk-font-weight-bold">0.1 to 1.0m</strong> typical range<br/>
+              <strong class="govuk-font-weight-bold">1.0m</strong> forecast high
+          </p>
+          `}
+          <span class="ol-overlay__symbol ol-overlay__symbol--${symbol}"></span>
+      `
+      feature.set('html', html)
+    } else if (id.startsWith('flood_warning_alert_centroid')) {
+      var html = `
+        <p>
+            <span class="govuk-body-m govuk-!-font-weight-bold">${props.severity_description}</span><br/>
+            <a class="govuk-body-s" href="/target-area/${props.fwa_code}">${props.description}</a>
+        </p>
+        <span class="ol-overlay__symbol ol-overlay__symbol--${props.severity}"></span>`
+      feature.set('html', html)
+    }
+  }
+}

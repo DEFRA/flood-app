@@ -461,22 +461,26 @@
   background-repeat: no-repeat;
 }
 // Target areas
-.ol-overlay__symbol--severe {
+.ol-overlay__symbol--severe,
+.ol-overlay__symbol--1 {
   width:43px;
   height:43px;
   background-position:3px -653px;
 }
-.ol-overlay__symbol--warning {
+.ol-overlay__symbol--warning,
+.ol-overlay__symbol--2 {
   width:43px;
   height:43px;
   background-position:3px -703px;
 }
-.ol-overlay__symbol--alert {
+.ol-overlay__symbol--alert,
+.ol-overlay__symbol--3 {
   width:43px;
   height:43px;
   background-position:3px -753px;
 }
-.ol-overlay__symbol--removed {
+.ol-overlay__symbol--removed,
+.ol-overlay__symbol--4 {
   width:43px;
   height:43px;
   background-position:3px -853px;

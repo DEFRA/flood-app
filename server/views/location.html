@@ -25,16 +25,21 @@
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
       <span class="govuk-caption-xl">Flood risk</span>{{ model.location }}
     </h1>
-    <p class="govuk-body govuk-!-margin-bottom-8"><a href="/">Change location</a> | <a href="/national">Flood
-        risk for England</a></p>
+    <p class="govuk-body govuk-!-margin-bottom-8">
+      <a href="/">Change location</a> | <a href="/national">Flood risk for England</a></p>
   </div>
 </div>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
+    <p class="govuk-body-s govuk-!-margin-top-4">
+      <span class="govuk-body--caption">
+        <time class="form-hint" title="{{model.timestamp | formatDate}}"
+          datetime="{{model.timestamp}}">Last updated {{model.timestamp | formatDate}}</time>
+      </span>
+    </p>
     <div class="govuk-tabs govuk-!-margin-bottom-2" data-module="tabs">
       <h2 class="govuk-tabs__title">Contents</h2>
       <ul class="govuk-tabs__list">

@@ -30,6 +30,8 @@ class ViewModel extends BaseViewModel {
         description: item.subTitle
       }
     }) // .filter(panel => panel.floods && panel.floods.length)
+
+    this.timestamp = Date.now()
   }
 }
 
