@@ -52,11 +52,20 @@ function formatDate (value, format = 'h:mma dddd D MMMM YYYY') {
   return moment(value).tz('Europe/London').format(format)
 }
 
+function toFixed (value, dp) {
+  if (value) {
+    return Number(Math.round(value + 'e' + dp) + 'e-' + dp).toFixed(dp)
+  } else {
+    return value
+  }
+}
+
 module.exports = {
   get,
   post,
   getJson,
   postJson,
   request,
-  formatDate
+  formatDate,
+  toFixed
 }

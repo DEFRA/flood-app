@@ -26,6 +26,7 @@ module.exports = {
           })
 
           env.addFilter('formatDate', util.formatDate)
+          env.addFilter('toFixed', util.toFixed)
 
           return next()
         }

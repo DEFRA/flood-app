@@ -1,0 +1,100 @@
+{% extends 'layout.html' %}
+
+
+{% block head %}
+{{ super() }}
+<link href="{{ assetPath }}/stylesheets/station.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+  {% set station = model.station %}
+  <div id="station-page">
+    {% include "partials/station/header.html" %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <div id="chart-container">
+          <section>
+            {% if station.isMulti %}
+              <p class="govuk-body" id="upstream-downstream-option">
+                {% if station.isDownstream %}
+                  <a id="station-{{station.id}}-u" href="{{station.id}}?direction=u">View upstream data for this station</a>
+                {% endif %}
+                {% if station.isUpstream %}
+                  <a id="station-{{station.id}}-d" href="{{station.id}}?direction=d">View downstream data for this station</a>
+                {% endif %}
+              </p>
+              <details class="govuk-details" id="multiple-stations-info">
+                <summary class="govuk-details__summary" aria-controls="details-content-ud" aria-expanded="false" role="button">
+                  <span class="govuk-details__summary-text">Why are there 2 sets of data for this station?</span>
+                </summary>
+                <div class="govuk-details__text" id="details-content-ud" aria-hidden="true">
+                  Some monitoring stations are located near to a man-made structure which affects the river's flow characteristics, for example a weir, or lock.
+                  For these stations, we provide river levels from both the upstream and downstream sides of the structure.
+                </div>
+              </details>
+            {% endif %}
+            {% if station.isActive %}
+              <h3 class="govuk-heading-m" id="levels-heading">
+                {% if model.isFfoi %}
+                  Levels: last 5 days and next 36 hours
+                {% else %}
+                  {% if station.isGroundwater %}Groundwater{% elif station.isCoastal %}Tidal{% else %}River{% endif %}
+                  levels at this location in the last 5 days
+                {% endif %}
+              </h3>
+              <!-- If status date has changed within last 5 days then show message indicating this fact -->
+              {% if model.outOfDate %}
+                <p>This station&#39;s data feed was recently interrupted. Normal service resumed at {{station.statusDate | formatDate("h:mma")}} on {{station.statusDate | formatDate("dddd D MMMM YYYY")}}.</p>
+              {% endif %}
+              <div class="nojs-hide ie-hide graph">
+                <article>
+                  {% if model.readings %}
+                    {% include "partials/station/chart.html" %}
+                  {% else %}
+                    {% if not outOfDate %}
+                      <p>Sorry no data found</p>
+                    {% else %}
+                      <p>The chart will be visible once the next batch of telemetry data has been imported.</p>
+                    {% endif %}
+                  {% endif %}
+                </article>
+              </div>
+              <div class="ie-show">
+                <p>
+                  <strong>You&#39;re missing out. A graph should be visible here.</strong><br>
+                  <a href="https://www.gov.uk/help/browsers" rel="external">Upgrade your browser to see and use all the features of this service.</a>
+                </p>
+              </div>
+              <div class="nojs-show">
+                <p><strong>You&#39;re missing out. A graph should be visible here.</strong></p>
+                <p>Javascript must be enabled.</p>
+              </div>
+              {% include "partials/station/readings.html" %}
+            {% endif %}
+          </section>
+        </div>
+      
+        <br>
+        {% include "partials/station/more-info.html" %}
+        <br>
+      
+        {% if station.isActive %}
+          {% if model.isFfoi %}
+            {% include "partials/station/levels.html" %}
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block bodyEnd %}
+{{ super() }}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+  window.Flood.model = {{ model | dump(2) | safe }}
+
+  google.charts.load('current', {'packages':['corechart']})
+</script>
+<script src="{{assetPath}}/javascripts/pages/station.js"></script>
+{% endblock %}

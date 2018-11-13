@@ -4,6 +4,7 @@ const routes = [].concat(
   require('../routes/national'),
   require('../routes/outlook'),
   require('../routes/target-area'),
+  require('../routes/station'),
   require('../routes/geo'),
   require('../routes/public')
 )

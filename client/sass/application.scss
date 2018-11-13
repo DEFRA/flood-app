@@ -32,14 +32,7 @@ $govuk-global-styles: true;
 @import "components/banners"; // Dan Leech (Warnings and alert banners)
 @import "components/buttons"; // Dan Leech (Button overides)
 
-
-.nojs-hidden {
-  display: none;
-}
-
-.js-enabled .nojs-hidden {
-  display: block;
-}
+@import "util";
 
 .check-your-answers {
   td {
@@ -112,6 +105,9 @@ $govuk-global-styles: true;
   }
 }
 
+abbr {
+  text-decoration: none;
+}
 
 .flood-icon {
   width: 60px;
