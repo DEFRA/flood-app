@@ -1,6 +1,7 @@
 const util = require('../util')
 const config = require('../config')
 const serviceUrl = config.serviceUrl
+const outlook = require('../models/outlook-11-10-2018')
 
 module.exports = {
   async getFloods () {
@@ -25,8 +26,11 @@ module.exports = {
   },
 
   async getOutlook () {
-    const url = 'https://api.foursources.metoffice.gov.uk/api/public/statements/818.json'
-    return util.getJson(url, true)
+    // const url = 'https://api.foursources.metoffice.gov.uk/api/public/statements/818.json'
+    // return util.getJson(url, true)
+    return Promise.resolve(outlook)
+    // const url = `${serviceUrl}/outlook`
+    // return util.getJson(url)
   },
 
   async getStationById (id, direction) {

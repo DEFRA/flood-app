@@ -34,14 +34,14 @@
 {% endblock %}
 
 {% block beforeContent %}
-  {#
+
     {{ govukPhaseBanner({
     tag: {
-      text: "alpha"
+      text: "Private beta"
     },
-    html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+    html: 'This is a prototype being used for research purposes only. You can <a class="govuk-link" href="https://flood-warning-information.service.gov.uk">view the main flood information service at any time</a>.'
   }) }}
-  {{ govukBackLink({
+  {#{{ govukBackLink({
     href: "javascript:window.history.go(-1)",
     text: "Back"
   }) }}

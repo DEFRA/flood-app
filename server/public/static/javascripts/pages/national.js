@@ -74,6 +74,28 @@
     extent: MapContainer.extent
   })
 
+  var geoJson = new window.ol.format.GeoJSON()
+  var outlookGeoJson = flood.outlook.getGeoJson(flood.model.outlook)
+
+  var areasOfConcernFeatures = geoJson.readFeatures(outlookGeoJson, {
+    dataProjection: 'EPSG:4326',
+    featureProjection: 'EPSG:3857'
+  })
+
+  var areasOfConcern = new window.ol.layer.Vector({
+    zIndex: 200,
+    source: new window.ol.source.Vector({
+      format: geoJson,
+      features: areasOfConcernFeatures
+    })
+  })
+
+  // var sourceConcernAreas = new ol.source.Vector({
+  //   format: new ol.format.GeoJSON(),
+  //   loader: featureLoader,
+  //   projection: 'EPSG:3857'
+  // })
+
   var accordionLevels = new flood.Accordion(document.querySelector('#warnings'))
 
   // New instance of Map
@@ -93,7 +115,8 @@
       road,
       floods,
       stations,
-      floodCentroids
+      floodCentroids,
+      areasOfConcern
       // layer,
       // layer2,
       // stations,

@@ -8,7 +8,7 @@ const defaults = {
   }
 }
 
-class ViewModel extends NationalViewModel {
+class ViewModel extends NationalViewModel { // Inherit from National for now, Base eventually
   constructor ({ place, floods }) {
     const title = place.name
 

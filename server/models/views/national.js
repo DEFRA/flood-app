@@ -17,7 +17,7 @@ function groupBy (arr, prop) {
 
 class ViewModel extends BaseViewModel {
   constructor (options) {
-    const { floods } = options
+    const { floods, outlook } = options
     super(hoek.applyToDefaults(defaults, options))
     const grouped = groupBy(floods, 'severity')
     this.panels = severity.map(item => {
@@ -32,6 +32,7 @@ class ViewModel extends BaseViewModel {
     }) // .filter(panel => panel.floods && panel.floods.length)
 
     this.timestamp = Date.now()
+    this.outlook = outlook
   }
 }
 

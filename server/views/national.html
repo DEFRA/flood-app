@@ -100,6 +100,13 @@
 </div>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-m govuk-!-margin-top-2">Next 5 days</h2>
+    <p class="govuk-body-l">{{model.outlook.headline}}</p>
+    <p>{{model.outlook.public_forecast.english_forecast}}</p>
+  </div>
+</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
     <div class="govuk-inset-text govuk-!-margin-top-4">
       <p>Get flood warnings by phone, text or email. <a href="https://www.gov.uk/sign-up-for-flood-warnings">Sign up
           for flood warnings</a>.</p>
@@ -118,5 +125,9 @@
 <script src="{{assetPath}}/javascripts/ol.js"></script>
 <script src="{{assetPath}}/javascripts/components/map.js"></script>
 <script src="{{assetPath}}/javascripts/components/accordion.js"></script>
+<script>
+  window.Flood.model = {{ model | dump(2) | safe }}
+</script>
+<script src="{{assetPath}}/javascripts/outlook.js"></script>
 <script src="{{assetPath}}/javascripts/pages/national.js"></script>
 {% endblock %}
