@@ -1,0 +1,80 @@
+{
+  "pages": [
+    {
+      "path": "/private-beta",
+      "components": [
+        {
+          "type": "Html",
+          "content": "<div class=\"govuk-prose-scope\">\r\n<p>\r\nThank you for taking part. We’d like you to look at a prototype service we’re working on. You can use it in exactly the same way and for the same reasons you would use the real service.\r\n</p>\r\n\r\n<p>\r\nWe’d like to know about your experience as you use the prototype. You can tell us using the feedback button you’ll see halfway up the right hand edge of the screen.\r\n</p>\r\n\r\n<p>\r\nWhat makes your experience good, or not so good? What frustrates you? What’s missing? How does it make you feel? Be candid - the more honest you are, the more we’ll understand what the service needs to look like and what it needs to do.\r\n</p>\r\n\r\n<p>\r\nEverything we learn will be used to streamline the design and improve the usability of the service.\r\n</p>\r\n\r\n<p>\r\nSelect ‘Start now’ to use the prototype.</p>\r\n</div>",
+          "options": {},
+          "schema": {}
+        },
+        {
+          "type": "Html",
+          "content": "<a href=\"/start\" role=\"button\" draggable=\"false\" class=\"govuk-button govuk-button--start\">\r\n  Start now\r\n</a>",
+          "options": {},
+          "schema": {}
+        },
+        {
+          "type": "Html",
+          "content": "<h3 class=\"govuk-heading-m\">Before you start</h3>",
+          "options": {},
+          "schema": {}
+        },
+        {
+          "type": "Para",
+          "content": "This prototype uses real data to present a picture of what’s going on in any area you select.",
+          "options": {},
+          "schema": {}
+        },
+        {
+          "type": "Para",
+          "content": "By proceeding you are consenting to our use of cookies. These are small files we place onto your computer to collect information about how you browse the service.",
+          "options": {},
+          "schema": {}
+        },
+        {
+          "type": "Para",
+          "content": "<a href=\"https://www.gov.uk/help/cookies\">Find out more about cookies on GOV.UK</a> and <a href=\"https://ico.org.uk/for-the-public/online/cookies/\">how to manage cookies</a>. You can also learn more about how we use cookies and related technologies by reading our <a href=\"/privacy-policy\">privacy policy</a>.",
+          "options": {},
+          "schema": {}
+        },
+        {
+          "type": "Html",
+          "content": "<h3 class=\"govuk-heading-m\">Provide feedback</h3>",
+          "options": {},
+          "schema": {}
+        },
+        {
+          "type": "Para",
+          "content": "It’s important that we learn more about your experience using this prototype. You can contact us by emailing <a href=''mailto:floodresearch@environment-agency.gov.uk\">floodresearch@environment-agency.gov.uk</a>.",
+          "options": {},
+          "schema": {}
+        },
+        {
+          "type": "Para",
+          "content": "You can also leave comments using the feedback button located halfway up the right hand edge of any page you view..",
+          "options": {},
+          "schema": {}
+        },
+        {
+          "type": "Html",
+          "content": "<h3 class=\"govuk-heading-m\">Link to the live service</h3>\r\n<p class=\"govuk-body\">View the <a href=\"https://flood-warning-information.service.gov.uk/warnings\">live flood information service</a>.</p>",
+          "options": {},
+          "schema": {}
+        },
+        {
+          "type": "Html",
+          "content": "<h3 class=\"govuk-heading-m\">Stuff we’re working on</h3>\r\n<p class=\"govuk-body\">View our <a href=\"https://flood-warning-information.service.gov.uk/roadmap\">roadmap</a> here.</p>",
+          "options": {},
+          "schema": {}
+        }
+      ],
+      "next": [],
+      "title": "Floods information service winter user research project"
+    }
+  ],
+  "sections": [],
+  "lists": [],
+  "conditions": []
+}

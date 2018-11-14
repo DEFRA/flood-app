@@ -1,11 +1,13 @@
 const path = require('path')
 const config = require('../../config')
 const { getState, mergeState } = require('../../db')
-const dataFilePath = path.join(__dirname, '../../govsite.flood.json')
+const dataFilePath = path.join(__dirname, '../../flood.json')
 const data = require(dataFilePath)
 const relativeTo = __dirname
 const defaultPageController = './pages'
 const Model = require('./model')
+
+data.conditions = []
 
 const model = new Model(data, {
   getState,
