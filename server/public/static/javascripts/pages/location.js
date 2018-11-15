@@ -1,5 +1,6 @@
 (function (window, flood) {
   var ol = window.ol
+  var Maps = flood.Maps
   var MapContainer = flood.MapContainer
 
   var sourceStations = new ol.source.Vector({
@@ -12,7 +13,7 @@
     title: 'stations',
     source: sourceStations,
     visible: true,
-    style: MapContainer.stationsStyle,
+    style: Maps.stationsStyle,
     maxResolution: 800
   })
 
@@ -62,7 +63,7 @@
       url: '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert_centroid&maxFeatures=10000&outputFormat=application/json',
       format: new ol.format.GeoJSON()
     }),
-    style: MapContainer.floodsCentroidStyle
+    style: Maps.floodsCentroidStyle
   })
 
   var locationPoint = new window.ol.source.Vector({
@@ -78,7 +79,7 @@
   var locationLayer = new window.ol.layer.Vector({
     renderMode: 'hybrid',
     source: locationPoint,
-    style: MapContainer.locationStyle,
+    style: Maps.locationStyle,
     zIndex: 2
   })
 
@@ -127,7 +128,7 @@
     zoom: 11,
     minZoom: 6,
     maxZoom: 17,
-    extent: MapContainer.extent
+    extent: Maps.extent
   })
 
   var accordionLevels = new flood.Accordion(document.querySelector('#warnings'))
@@ -159,7 +160,7 @@
       // poly3,
       // poly4
     ],
-    onFeatureClick: MapContainer.onFeatureClick
+    onFeatureClick: Maps.onFeatureClick
   })
 
   var searchExtent = ol.proj.transformExtent(bbox, 'EPSG:4326', 'EPSG:3857')

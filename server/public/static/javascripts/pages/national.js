@@ -1,5 +1,6 @@
 (function (window, flood) {
   var ol = window.ol
+  var Maps = flood.Maps
   var MapContainer = flood.MapContainer
 
   var sourceStations = new ol.source.Vector({
@@ -12,7 +13,7 @@
     title: 'stations',
     source: sourceStations,
     visible: true,
-    style: MapContainer.stationsStyle,
+    style: Maps.stationsStyle,
     maxResolution: 800
   })
 
@@ -63,15 +64,15 @@
       url: '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert_centroid&maxFeatures=10000&outputFormat=application/json',
       format: new ol.format.GeoJSON()
     }),
-    style: MapContainer.floodsCentroidStyle
+    style: Maps.floodsCentroidStyle
   })
 
   var view = new ol.View({
-    center: ol.proj.transform(MapContainer.center, 'EPSG:4326', 'EPSG:3857'),
+    center: ol.proj.transform(Maps.center, 'EPSG:4326', 'EPSG:3857'),
     zoom: 6,
     minZoom: 6,
     maxZoom: 17,
-    extent: MapContainer.extent
+    extent: Maps.extent
   })
 
   var geoJson = new window.ol.format.GeoJSON()
@@ -124,6 +125,6 @@
       // poly3,
       // poly4
     ],
-    onFeatureClick: MapContainer.onFeatureClick
+    onFeatureClick: Maps.onFeatureClick
   })
 })(window, window.Flood)
