@@ -40,62 +40,24 @@
           datetime="{{model.timestamp}}">Last updated {{model.timestamp | formatDate}}</time>
       </span>
     </p>
-    <div class="govuk-tabs govuk-!-margin-bottom-2" data-module="tabs">
-      <h2 class="govuk-tabs__title">Contents</h2>
-      <ul class="govuk-tabs__list">
-        <li class="govuk-tabs__list-item">
-          <a class="govuk-tabs__tab" href="#now">Now</a>
-        </li>
-        <li class="govuk-tabs__list-item">
-          <a class="govuk-tabs__tab" href="#outlook">Next 5 days</a>
-        </li>
-      </ul>
-      <section class="govuk-tabs__panel govuk-tabs__panel--risk-detail" id="now">
-        <div class="app-risk-detail">
-          <div class="app-risk-detail__copy">
-            <div class="app-risk-detail__copy-container">
-              <div class="app-risk-detail__copy-inner">
-                <div id="warnings" class="accordion govuk-!-margin-bottom-4">
-                  {% for panel in model.panels %}
-                    {{ severity(panel) }}
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="app-risk-detail__vis">
-            <figure class="map map--large" id="map-now">
-              <div class="map__container">
-                <div class="map__container-inner">
-                </div>
-              </div>
-              <figcaption class="govuk-visually-hidden">Flood warnings and river and sea levels</figcaption>
-            </figure>
-          </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div id="warnings" class="accordion govuk-!-margin-bottom-4">
+          {% for panel in model.panels %}
+            {{ severity(panel) }}
+          {% endfor %}
         </div>
-      </section>
-      <section class="govuk-tabs__panel govuk-tabs__panel--risk-detail" id="outlook">
-        <div class="app-risk-detail">
-          <div class="app-risk-detail__copy">
-            <div class="app-risk-detail__copy-container">
-              <div class="app-risk-detail__copy-inner">
-                <h2 class="govuk-heading-m govuk-!-margin-top-2">Next 5 days</h2>
-                {#{% include "includes/location/outlook.html" %}#}
-              </div>
-            </div>
-          </div>
-          <div class="app-risk-detail__vis">
-            <figure class="map map--large" id="map-outlook">
-              <div class="map__container">
-                <div class="map__container-inner">
-                </div>
-              </div>
-              <figcaption class="govuk-visually-hidden">5 day flood forecast</figcaption>
-            </figure>
-          </div>
-        </div>
-      </section>
+      </div>
     </div>
+
+    <figure class="map map--large map--embedded" id="map-now">
+      <div class="map__container">
+        <div class="map__container-inner">
+        </div>
+      </div>
+      <figcaption class="govuk-visually-hidden">Flood warnings and river and sea levels</figcaption>
+    </figure>
   </div>
 </div>
 <div class="govuk-grid-row">

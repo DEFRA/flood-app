@@ -25,97 +25,61 @@
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
-      <span class="govuk-caption-xl">Flood risk</span>England
-    </h1>
-    <p class="govuk-body govuk-!-margin-bottom-8"><a href="/">Refine location</a></p>
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Flood risk for England</h1>
+  </div>
+</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div id="warnings" class="accordion govuk-!-margin-bottom-4">
+      {% for panel in model.panels %}
+        {{ severity(panel) }}
+      {% endfor %}
+    </div>
   </div>
 </div>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
+    <figure class="map map--large map--embedded" id="map-now">
+      <div class="map__container">
+        <div class="map__container-inner">
+        </div>
+      </div>
+      <figcaption class="govuk-visually-hidden">Flood warnings and river and sea levels</figcaption>
+    </figure>
     <p class="govuk-body-s govuk-!-margin-top-4">
       <span class="govuk-body--caption">
         <time class="form-hint" title="{{model.timestamp | formatDate}}"
           datetime="{{model.timestamp}}">Last updated {{model.timestamp | formatDate}}</time>
       </span>
     </p>
-    <div class="govuk-tabs govuk-!-margin-bottom-2" data-module="tabs">
-      <h2 class="govuk-tabs__title">Contents</h2>
-      <ul class="govuk-tabs__list">
-        <li class="govuk-tabs__list-item">
-          <a class="govuk-tabs__tab" href="#now">Now</a>
-        </li>
-        <li class="govuk-tabs__list-item">
-          <a class="govuk-tabs__tab" href="#outlook">Next 5 days</a>
-        </li>
-      </ul>
-      <section class="govuk-tabs__panel govuk-tabs__panel--risk-detail" id="now">
-        <div class="app-risk-detail">
-          <div class="app-risk-detail__copy">
-            <div class="app-risk-detail__copy-container">
-              <div class="app-risk-detail__copy-inner">
-                <h2 class="app-risk-detail__heading govuk-!-margin-top-2">Now</h2>
-                <div id="warnings" class="accordion govuk-!-margin-bottom-4">
-                  {% for panel in model.panels %}
-                    {{ severity(panel) }}
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="app-risk-detail__vis">
-            <figure class="map map--large" id="map-now">
-              <div class="map__container">
-                <div class="map__container-inner">
-                </div>
-              </div>
-              <figcaption class="govuk-visually-hidden">Flood warnings and river and sea levels</figcaption>
-            </figure>
-          </div>
-        </div>
-      </section>
-      <section class="govuk-tabs__panel govuk-tabs__panel--risk-detail" id="outlook">
-        <div class="app-risk-detail">
-          <div class="app-risk-detail__copy">
-            <div class="app-risk-detail__copy-container">
-              <div class="app-risk-detail__copy-inner">
-                <h2 class="govuk-heading-m govuk-!-margin-top-2">Next 5 days</h2>
-                {#{% include "includes/location/outlook.html" %}#}
-              </div>
-            </div>
-          </div>
-          <div class="app-risk-detail__vis">
-            <figure class="map map--large" id="map-outlook">
-              <div class="map__container">
-                <div class="map__container-inner">
-                </div>
-              </div>
-              <figcaption class="govuk-visually-hidden">5 day flood forecast</figcaption>
-            </figure>
-          </div>
-        </div>
-      </section>
+  </div>
+</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-inset-text govuk-inset-text--search govuk-!-margin-top-2">
+      <p>
+        <a href="/">
+          <span class="govuk-inset-text__icon"></span>Check flood warnings and river levels near you
+        </a>
+      </p>
+    </div>
+    <div class="govuk-inset-text govuk-!-margin-top-2 govuk-!-margin-bottom-0">
+      <p>In river and coastal flood risk areas, you can <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
     </div>
   </div>
 </div>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-m govuk-!-margin-top-2">Next 5 days</h2>
-    <p class="govuk-body-l">{{model.outlook.headline}}</p>
+    <h2 class="govuk-heading-m govuk-!-margin-top-6">Next 5 days</h2>
+    <p>{{model.outlook.headline}}</p>
     <p>{{model.outlook.public_forecast.english_forecast}}</p>
+    <p>See a <a href="/outlook">map showing the full 5-day outlook</a></p>
   </div>
 </div>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <div class="govuk-inset-text govuk-!-margin-top-4">
-      <p>Get flood warnings by phone, text or email. <a href="https://www.gov.uk/sign-up-for-flood-warnings">Sign up
-          for flood warnings</a>.</p>
-      <p>Some places may experience flooding from other sources in the future. <a href="https://flood-warning-information.service.gov.uk/long-term-flood-risk">View
-          long term flood risk information</a>.</p>
-    </div>
-
-    {% include "partials/before-during-after.html" %}
-    {% include "partials/floods-description.html" %}
+    <h2 class="govuk-heading-m govuk-!-margin-top-6">Long term</h2>
+    <p>Many areas are vulnerable to flooding in the future. You can <a href="https://flood-warning-information.service.gov.uk/long-term-flood-risk">learn more about the long term flood risk for any location in England</a>.</p>
   </div>
 </div>
 {% endblock %}
