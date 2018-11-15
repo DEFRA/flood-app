@@ -100,7 +100,7 @@
   var accordionLevels = new flood.Accordion(document.querySelector('#warnings'))
 
   // New instance of Map
-  var mapNow = new MapContainer(document.querySelector('#map-now'), {
+  var container = new MapContainer(document.querySelector('#map-now'), {
     type: 'now',
     buttonText: 'Map showing current risk',
     lonLat: [

@@ -134,7 +134,7 @@
   var accordionLevels = new flood.Accordion(document.querySelector('#warnings'))
 
   // New instance of Map
-  var map = new MapContainer(document.querySelector('#map-now'), {
+  var container = new MapContainer(document.querySelector('#map-now'), {
     type: 'now',
     buttonText: 'Map showing current risk',
     lonLat: [
@@ -166,5 +166,8 @@
   var searchExtent = ol.proj.transformExtent(bbox, 'EPSG:4326', 'EPSG:3857')
   // map.zoomToExtent(new OpenLayers.Bounds(minLng,minLat,maxLng,maxLat).transform("EPSG:4326", "EPSG:900913"))
   // var extent = my_vector_layer.getSource().getExtent();
-  map.getView().fit(searchExtent, { size: map.getSize(), maxZoom: 16 })
+  container.map.getView().fit(searchExtent, {
+    maxZoom: 16,
+    size: container.map.getSize()
+  })
 })(window, window.Flood)
