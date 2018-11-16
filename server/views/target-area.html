@@ -22,7 +22,7 @@
       {% if model.flood %}
         <div class="govuk-inset-text">
           {% if model.severity.isActive %}
-            <p><strong class="govuk-!-font-weight-bold">{{model.severity.subTitle}} - {{model.severity.tagline}}</strong></p>
+            <p><strong class="govuk-!-font-weight-bold">{{model.severity.subTitle}} - {{model.severity.tagline.toLowerCase()}}</strong></p>
           {% else %}
             <p>Last time in force: <time datetime="{{model.flood.severityChanged}}">{{model.flood.severityChanged | formatDate}}</time><p>
           {% endif %}

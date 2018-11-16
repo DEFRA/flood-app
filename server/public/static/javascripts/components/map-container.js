@@ -30,13 +30,9 @@
     }.bind(this))
     el.parentNode.insertBefore(this.showMapButton, el)
 
+    var keyEl = document.getElementById('map-key')
     this.keyElement = document.createElement('div')
-    this.keyElement.innerHTML = `
-      <div class="map-key__container">
-        <div class="map-key__heading">
-            <h2 class="map-key__title">Key</h2>
-        </div>
-      </div>`
+    this.keyElement.appendChild(keyEl)
 
     this.keyElement.className = 'map-key'
 

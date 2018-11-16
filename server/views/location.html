@@ -149,36 +149,36 @@
 
 {% if model.rivers %}
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h2 class="govuk-heading-m">River levels that impact this area</h2>
-      <details class="govuk-details">
-        <summary class="govuk-details__summary">
-          <span class="govuk-details__summary-text">View river levels</span>
-        </summary>
-        <div class="govuk-details__text">
-          {% for name, river in model.rivers %}
-            <p class="govuk-body govuk-!-margin-bottom-1">{{name}}</p>
-            <ul class="govuk-list govuk-list--level">
-              {% for station in river %}
-                <li>
-                  <a title="{{station.name}}"
-                    href="/station/{{station.rloi_id}}">{{station.external_name}}</a>
-                </li>
-              {% endfor %}
-            </ul>
-          {% endfor %}
-        </div>
-      </details>
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-m">River levels that impact this area</h2>
+    <details class="govuk-details">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">View river levels</span>
+      </summary>
+      <div class="govuk-details__text">
+        {% for name, river in model.rivers %}
+          <p class="govuk-body govuk-!-margin-bottom-1">{{name}}</p>
+          <ul class="govuk-list govuk-list--level">
+            {% for station in river %}
+              <li>
+                <a title="{{station.name}}"
+                  href="/station/{{station.rloi_id}}">{{station.external_name}}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endfor %}
+      </div>
+    </details>
   </div>
 </div>
 {% endif %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-
     <figure class="map map--large map--embedded" id="map-now">
       <div class="map__container">
         <div class="map__container-inner">
+          {% include "partials/key.html" %}
         </div>
       </div>
       <figcaption class="govuk-visually-hidden">Flood warnings and river and sea levels</figcaption>

@@ -738,13 +738,13 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
 .map-key__features {
   position:absolute;
   top:61px;
-  bottom:44px;
+  bottom:0;
   left:0;
   right:0;
   padding:0;
-  @include mq ($from: tablet) {
-    bottom:49px;
-  }
+  // @include mq ($from: tablet) {
+  //   bottom:49px;
+  // }
   overflow:hidden;
   overflow:auto;
 }

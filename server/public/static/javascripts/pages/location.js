@@ -43,7 +43,8 @@
     source: new ol.source.BingMaps({
       key: 'Ajou-3bB1TMVLPyXyNvMawg4iBPqYYhAN4QMXvOoZvs47Qmrq7L5zio0VsOOAHUr',
       imagerySet: 'AerialWithLabels'
-    })
+    }),
+    visible: false
   })
 
   var floods = new ol.layer.Image({
@@ -131,10 +132,10 @@
     extent: Maps.extent
   })
 
-  var accordionLevels = new flood.Accordion(document.querySelector('#warnings'))
+  var accordionLevels = new flood.Accordion(document.getElementById('warnings'))
 
   // New instance of Map
-  var container = new MapContainer(document.querySelector('#map-now'), {
+  var container = new MapContainer(document.getElementById('map-now'), {
     type: 'now',
     buttonText: 'Map showing current risk',
     lonLat: [
@@ -147,7 +148,8 @@
     view: view,
     layers: [
       road,
-      searchAreaLayer,
+      satellite,
+      // searchAreaLayer,
       // searchAreaLayer1,
       locationLayer,
       floods,
@@ -161,6 +163,50 @@
       // poly4
     ],
     onFeatureClick: Maps.onFeatureClick
+  })
+
+  var keyForm = container.keyElement.querySelector('form')
+
+  function setFloodsVisibility (severity, visible) {
+    floodCentroids.getSource().forEachFeature(function (feature) {
+      if (severity.indexOf(feature.get('severity')) > -1) {
+        feature.setStyle(visible ? null : new ol.style.Style({}))
+      }
+    })
+  }
+
+  keyForm.addEventListener('change', function (e) {
+    const target = e.target
+    const name = target.name
+
+    switch (name) {
+      case 'baseLayer': {
+        if (target.value === 'mapView') {
+          road.setVisible(true)
+          satellite.setVisible(false)
+        } else {
+          road.setVisible(false)
+          satellite.setVisible(true)
+        }
+        break
+      }
+      case 'riverLevels': {
+        stations.setVisible(target.checked)
+        break
+      }
+      case 'floodWarnings': {
+        setFloodsVisibility([1, 2], target.checked)
+        break
+      }
+      case 'floodAlerts': {
+        setFloodsVisibility([3], target.checked)
+        break
+      }
+      case 'floodExpired': {
+        setFloodsVisibility([4], target.checked)
+        break
+      }
+    }
   })
 
   var searchExtent = ol.proj.transformExtent(bbox, 'EPSG:4326', 'EPSG:3857')

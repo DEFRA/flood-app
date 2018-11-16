@@ -97,10 +97,10 @@
   //   projection: 'EPSG:3857'
   // })
 
-  var accordionLevels = new flood.Accordion(document.querySelector('#warnings'))
+  var accordionLevels = new flood.Accordion(document.getElementById('warnings'))
 
   // New instance of Map
-  var container = new MapContainer(document.querySelector('#map-now'), {
+  var container = new MapContainer(document.getElementById('map-now'), {
     type: 'now',
     buttonText: 'Map showing current risk',
     lonLat: [
@@ -126,5 +126,48 @@
       // poly4
     ],
     onFeatureClick: Maps.onFeatureClick
+  })
+  var keyForm = container.keyElement.querySelector('form')
+
+  function setFloodsVisibility (severity, visible) {
+    floodCentroids.getSource().forEachFeature(function (feature) {
+      if (severity.indexOf(feature.get('severity')) > -1) {
+        feature.setStyle(visible ? null : new ol.style.Style({}))
+      }
+    })
+  }
+
+  keyForm.addEventListener('change', function (e) {
+    const target = e.target
+    const name = target.name
+
+    switch (name) {
+      case 'baseLayer': {
+        if (target.value === 'mapView') {
+          road.setVisible(true)
+          satellite.setVisible(false)
+        } else {
+          road.setVisible(false)
+          satellite.setVisible(true)
+        }
+        break
+      }
+      case 'riverLevels': {
+        stations.setVisible(target.checked)
+        break
+      }
+      case 'floodWarnings': {
+        setFloodsVisibility([1, 2], target.checked)
+        break
+      }
+      case 'floodAlerts': {
+        setFloodsVisibility([3], target.checked)
+        break
+      }
+      case 'floodExpired': {
+        setFloodsVisibility([4], target.checked)
+        break
+      }
+    }
   })
 })(window, window.Flood)
