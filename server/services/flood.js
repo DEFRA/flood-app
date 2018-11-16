@@ -38,6 +38,16 @@ module.exports = {
     return util.getJson(url)
   },
 
+  async getStationsWithin (bbox) {
+    const url = `${serviceUrl}/stations-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`
+    return util.getJson(url)
+  },
+
+  async getStationsWithinRadius (lng, lat, radiusM = 10000) {
+    const url = `${serviceUrl}/stations-within/${lng}/${lat}/${radiusM}`
+    return util.getJson(url)
+  },
+
   async getStationTelemetry (id, direction) {
     const url = `${serviceUrl}/station/${id}/${direction}/telemetry`
     return util.getJson(url)

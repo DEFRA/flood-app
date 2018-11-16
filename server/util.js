@@ -60,6 +60,15 @@ function toFixed (value, dp) {
   }
 }
 
+function groupBy (arr, prop) {
+  return arr.reduce(function (groups, item) {
+    const val = item[prop]
+    groups[val] = groups[val] || []
+    groups[val].push(item)
+    return groups
+  }, {})
+}
+
 module.exports = {
   get,
   post,
@@ -67,5 +76,6 @@ module.exports = {
   postJson,
   request,
   formatDate,
-  toFixed
+  toFixed,
+  groupBy
 }

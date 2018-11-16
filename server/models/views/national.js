@@ -1,18 +1,10 @@
 const hoek = require('hoek')
 const BaseViewModel = require('.')
 const severity = require('../severity')
+const { groupBy } = require('../../util')
 
 const defaults = {
   pageTitle: `Flood risk for England - GOV.UK`
-}
-
-function groupBy (arr, prop) {
-  return arr.reduce(function (groups, item) {
-    const val = item[prop]
-    groups[val] = groups[val] || []
-    groups[val].push(item)
-    return groups
-  }, {})
 }
 
 class ViewModel extends BaseViewModel {

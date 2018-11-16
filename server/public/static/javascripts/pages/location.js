@@ -96,18 +96,18 @@
     ]
   }
 
-  // var geoJson1 = new window.ol.format.GeoJSON()
-  // var searchAreaFeature = geoJson1.readFeatures(searchArea, {
-  //   dataProjection: 'EPSG:4326',
-  //   featureProjection: 'EPSG:3857'
-  // })
+  var geoJson1 = new window.ol.format.GeoJSON()
+  var searchAreaFeature = geoJson1.readFeatures(searchArea, {
+    dataProjection: 'EPSG:4326',
+    featureProjection: 'EPSG:3857'
+  })
 
-  // var searchAreaLayer = new window.ol.layer.Vector({
-  //   source: new window.ol.source.Vector({
-  //     format: geoJson1,
-  //     features: searchAreaFeature
-  //   })
-  // })
+  var searchAreaLayer = new window.ol.layer.Vector({
+    source: new window.ol.source.Vector({
+      format: geoJson1,
+      features: searchAreaFeature
+    })
+  })
 
   // var searchArea1 = flood.model.floods[0].extent
   // var geoJson2 = new window.ol.format.GeoJSON()
@@ -147,7 +147,7 @@
     view: view,
     layers: [
       road,
-      // searchAreaLayer,
+      searchAreaLayer,
       // searchAreaLayer1,
       locationLayer,
       floods,

@@ -10,7 +10,8 @@ module.exports = {
     const { q: location } = request.query
     const place = await locationService.find(location)
     const { floods } = await floodService.getFloodsWithin(place.bbox)
-    const model = new ViewModel({ place, floods })
+    const stations = await floodService.getStationsWithin(place.bbox)
+    const model = new ViewModel({ place, floods, stations })
 
     return h.view('location', { model })
   },
