@@ -1,8 +1,12 @@
 (function (window, flood) {
   var ol = window.ol
 
-  function Maps (element, options) {
-  }
+  var Maps = {}
+
+  var lonLat = [
+    -1.4758,
+    52.9219
+  ]
 
   var extent = ol.proj.transformExtent([
     -5.75447130203247,
@@ -336,6 +340,7 @@
     }
   }
 
+  Maps.lonLat = lonLat
   Maps.extent = extent
   Maps.center = center
   Maps.stationsStyle = stationsStyle

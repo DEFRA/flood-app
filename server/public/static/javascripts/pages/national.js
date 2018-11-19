@@ -103,14 +103,8 @@
   var container = new MapContainer(document.getElementById('map-now'), {
     type: 'now',
     buttonText: 'Map showing current risk',
-    lonLat: [
-      -1.4758,
-      52.9219
-    ],
+    lonLat: Maps.lonLat,
     zoom: 14,
-    hasKey: true,
-    hasLevels: true,
-    showLevels: true,
     view: view,
     layers: [
       road,

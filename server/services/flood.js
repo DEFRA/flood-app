@@ -1,7 +1,7 @@
+const moment = require('moment-timezone')
 const util = require('../util')
 const config = require('../config')
 const serviceUrl = config.serviceUrl
-const outlook = require('../models/outlook-11-10-2018')
 
 module.exports = {
   async getFloods () {
@@ -26,9 +26,16 @@ module.exports = {
   },
 
   async getOutlook () {
-    // const url = 'https://api.foursources.metoffice.gov.uk/api/public/statements/818.json'
-    // return util.getJson(url, true)
-    return Promise.resolve(outlook)
+    const marker = {
+      id: 830,
+      date: new Date(2018, 10, 15, 10, 30, 0)
+    }
+
+    const diff = moment(new Date()).diff(marker.date, 'days')
+    const id = 787// marker.id + diff
+    const url = `https://api.foursources.metoffice.gov.uk/api/public/statements/${id}.json`
+    return util.getJson(url, true)
+    // return Promise.resolve(outlook)
     // const url = `${serviceUrl}/outlook`
     // return util.getJson(url)
   },

@@ -9,19 +9,34 @@
   <div class="govuk-grid-column-two-thirds">
     <h2 class="govuk-heading-m govuk-!-margin-top-6">Next 5 days</h2>
     <p>{{model.outlook.headline}}</p>
-    <p>{{model.outlook.public_forecast.english_forecast}}</p> 
+    <details class="govuk-details">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">More</span>
+      </summary>
+      <div class="govuk-details__text">
+          {{model.outlook.public_forecast.english_forecast}}
+      </div>
+    </details>
   </div>
 
   <div class="govuk-grid-column-full">
-      <img src="{{model.outlook.png_thumbnails_with_days_url}}" style="
-      max-width: 100%;
-  ">
-    <figure class="map map--large xmap--outlook-control-open" id="map">
+    <figure class="map map--large map--outlook-control-open" id="map">
       <div class="map__container">
         <div class="map__container-inner">
+            <div class="map__outlook-control">
+              <div class="map__outlook-control__inner">
+                {% for day in model.days %}
+                  <div class="map__outlook-control__day">
+                    <button class="map__outlook-control__button" aria-selected="{{ "true" if not day.idx else "false" }}" data-day="{{day.idx}}">{{day.date | formatDate('ddd D')}}
+                      <span class="map__outlook-control__icon map__outlook-control__icon--risk-level-{{day.level}}"></span>
+                    </button>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
         </div>
       </div>
-      <figcaption class="govuk-visually-hidden">Flood warnings and river and sea levels</figcaption>
+      <figcaption class="govuk-visually-hidden">5 day flood guidance outlook</figcaption>
     </figure>
   </div>
 </div>
@@ -35,6 +50,5 @@
 <script>
   window.Flood.model = {{ model | dump(2) | safe }}
 </script>
-<script src="{{assetPath}}/javascripts/outlook.js"></script>
 <script src="{{assetPath}}/javascripts/pages/outlook.js"></script>
 {% endblock %}

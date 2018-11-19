@@ -18,6 +18,11 @@
 
       xmlhttp.open('GET', url, true)
       xmlhttp.send()
+    },
+    forEach: function (items, callback) {
+      for (var i = 0; i < items.length; i++) {
+        callback.call(items, items[i], i)
+      }
     }
   }
 

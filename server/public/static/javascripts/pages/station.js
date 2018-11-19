@@ -1,5 +1,6 @@
 (function (window, flood) {
   var google = window.google
+  var forEach = flood.utils.forEach
 
   google.charts.setOnLoadCallback(function () {
     var model = flood.model
@@ -29,12 +30,6 @@
       { id: 'RESFW', label: 'RES FW', type: 'number' },
       { id: 'porMaxValue', label: highestLabel, type: 'number' }
     ])
-
-    function forEach (items, callback) {
-      for (var i = 0; i < items.length; i++) {
-        callback.call(items, items[i], i)
-      }
-    }
 
     // Read observed data
     forEach(document.querySelectorAll('table#telemetry tbody tr'), function (item) {

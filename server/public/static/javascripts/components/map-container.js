@@ -16,7 +16,7 @@
     //
     // Map to DOM container elements
     //
-    this.elementMapContainer = el.firstElementChild
+    this.element = el.firstElementChild
     this.mapContainerInnerElement = el.firstElementChild.firstElementChild
 
     // Show map (mobile only)
