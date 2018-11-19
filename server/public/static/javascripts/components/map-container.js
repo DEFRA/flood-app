@@ -32,7 +32,9 @@
 
     var keyEl = document.getElementById('map-key')
     this.keyElement = document.createElement('div')
-    this.keyElement.appendChild(keyEl)
+    if (keyEl) {
+      this.keyElement.appendChild(keyEl)
+    }
 
     this.keyElement.className = 'map-key'
 

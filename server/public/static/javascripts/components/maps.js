@@ -244,13 +244,12 @@
 
       strokeWidth = 3
 
-      offset = [0,1800]
+      offset = [0, 1800]
 
       // Feature is also slected
       if (feature.get('isSelected') == true) {
-          offset[0] += 100
+        offset[0] += 100
       }
-
 
       // Toggle display of icon/polygon features depending on resolution
       // if (resolution <= self.options.minIconResolution) {
@@ -263,14 +262,14 @@
       //   }
       // }
 
-      // Define icon 
+      // Define icon
       image = new ol.style.Icon({
         src: source,
         size: [66, 84],
         anchor: [0.5, 0.92],
         scale: 0.5,
         offset: offset
-    })
+      })
 
       // Generate style
       var style = new ol.style.Style({
@@ -295,6 +294,48 @@
     }
   }
 
+  function onFeatureClick (feature) {
+    var id = feature.getId()
+    var props = feature.getProperties()
+
+    if (!props.html) {
+      if (id.startsWith('stations')) {
+        var stationId = id.substr(9)
+        var symbol = 'normal'
+        if (props.atrisk) {
+          symbol = 'above'
+        } else if (props.status === 'Closed' || props.status === 'Suspended') {
+          symbol = 'disabled'
+        }
+
+        var html = `
+            <p class="govuk-!-margin-bottom-2">
+              <span class="govuk-body-m govuk-!-font-weight-bold">${props.river}</span><br/>
+              <a class="govuk-body-s" href="/station/${stationId}">${props.name}</a>
+            </p>
+            ${props.status === 'Closed' || props.status === 'Suspended' ? `
+            <p class="govuk-body-s">Temporarily out of service</p>
+            ` : `
+            <p class="govuk-body-s">
+              <strong class="govuk-font-weight-bold">${props.value}m</strong> latest recorded<br/>
+              <strong class="govuk-font-weight-bold">${props.percentile_5}m</strong> flooding possible
+            </p>
+            `}
+            <span class="ol-overlay__symbol ol-overlay__symbol--${symbol}"></span>
+        `
+        feature.set('html', html)
+      } else if (id.startsWith('flood_warning_alert_centroid')) {
+        var html = `
+          <p>
+              <span class="govuk-body-m govuk-!-font-weight-bold">${props.severity_description}</span><br/>
+              <a class="govuk-body-s" href="/target-area/${props.fwa_code}">${props.description}</a>
+          </p>
+          <span class="ol-overlay__symbol ol-overlay__symbol--${props.severity}"></span>`
+        feature.set('html', html)
+      }
+    }
+  }
+
   Maps.extent = extent
   Maps.center = center
   Maps.stationsStyle = stationsStyle
@@ -304,46 +345,3 @@
 
   flood.Maps = Maps
 })(window, window.Flood)
-
-function onFeatureClick (feature) {
-  var id = feature.getId()
-  var props = feature.getProperties()
-
-  if (!props.html) {
-    if (id.startsWith('stations')) {
-      var stationId = id.substr(9)
-      var symbol = 'normal'
-      if (props.atrisk) {
-        symbol = 'above'
-      } else if (props.status === 'Closed' || props.status === 'Suspended') {
-        symbol = 'disabled'
-      }
-
-      var html = `
-              <p class="govuk-!-margin-bottom-2">
-              <span class="govuk-body-m govuk-!-font-weight-bold">${props.river}</span><br/>
-              <a class="govuk-body-s" href="/station/${stationId}">${props.name}</a>
-          </p>
-          ${props.status === 'Closed' || props.status === 'Suspended' ? `
-          <p class="govuk-body-s">Temporarily out of service</p>
-          ` : `
-          <p class="govuk-body-s hide">
-              <strong class="govuk-font-weight-bold">1.0m</strong> latest recorded<br/>
-              <strong class="govuk-font-weight-bold">0.1 to 1.0m</strong> typical range<br/>
-              <strong class="govuk-font-weight-bold">1.0m</strong> forecast high
-          </p>
-          `}
-          <span class="ol-overlay__symbol ol-overlay__symbol--${symbol}"></span>
-      `
-      feature.set('html', html)
-    } else if (id.startsWith('flood_warning_alert_centroid')) {
-      var html = `
-        <p>
-            <span class="govuk-body-m govuk-!-font-weight-bold">${props.severity_description}</span><br/>
-            <a class="govuk-body-s" href="/target-area/${props.fwa_code}">${props.description}</a>
-        </p>
-        <span class="ol-overlay__symbol ol-overlay__symbol--${props.severity}"></span>`
-      feature.set('html', html)
-    }
-  }
-}
