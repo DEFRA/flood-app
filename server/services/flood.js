@@ -32,7 +32,7 @@ module.exports = {
     }
 
     const diff = moment(new Date()).diff(marker.date, 'days')
-    const id = 787// marker.id + diff
+    const id = marker.id + diff // 787
     const url = `https://api.foursources.metoffice.gov.uk/api/public/statements/${id}.json`
     return util.getJson(url, true)
     // return Promise.resolve(outlook)

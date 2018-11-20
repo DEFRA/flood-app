@@ -117,7 +117,6 @@
       return
     }
 
-    var id = parseInt(featureId.split('stations.')[1], 10)
     var props = feature.getProperties()
     var source = '/assets/images/icon-map-features-2x.png'
     var offset
@@ -129,6 +128,9 @@
           break
         case props.atrisk && props.type !== 'C' && props.type !== 'G':
           offset = [0, 300]
+          break
+        case props.is_ffoi_at_risk:
+          offset = [0, 200]
           break
         default:
           offset = [0, 100]
@@ -192,44 +194,6 @@
           ]
       }
     }
-    // else {
-    //   // resolution <= 200
-    //   switch (true) {
-    //     case props.status === 'Suspended' || props.status === 'Closed':
-    //       return [
-    //         new ol.style.Style({
-    //           image: new ol.style.Icon({
-    //             anchor: [0.5, 21],
-    //             anchorXUnits: 'fraction',
-    //             anchorYUnits: 'pixels',
-    //             src: '/public/images/icon-pin-grey-hl.png'
-    //           })
-    //         })
-    //       ]
-    //     case props.atrisk && props.type !== 'C' && props.type !== 'G':
-    //       return [
-    //         new ol.style.Style({
-    //           image: new ol.style.Icon({
-    //             anchor: [0.5, 21],
-    //             anchorXUnits: 'fraction',
-    //             anchorYUnits: 'pixels',
-    //             src: '/public/images/icon-pin-amber-hl.png'
-    //           })
-    //         })
-    //       ]
-    //     default:
-    //       return [
-    //         new ol.style.Style({
-    //           image: new ol.style.Icon({
-    //             anchor: [0.5, 21],
-    //             anchorXUnits: 'fraction',
-    //             anchorYUnits: 'pixels',
-    //             src: '/public/images/icon-pin-blue-hl.png'
-    //           })
-    //         })
-    //       ]
-    //   }
-    // }
   }
 
   function locationStyle (feature, resolution) {
@@ -301,6 +265,7 @@
   function onFeatureClick (feature) {
     var id = feature.getId()
     var props = feature.getProperties()
+    var html
 
     if (!props.html) {
       if (id.startsWith('stations')) {
@@ -308,11 +273,13 @@
         var symbol = 'normal'
         if (props.atrisk) {
           symbol = 'above'
+        } else if (props.is_ffoi_at_risk) {
+          symbol = 'forecastAbove'
         } else if (props.status === 'Closed' || props.status === 'Suspended') {
           symbol = 'disabled'
         }
 
-        var html = `
+        html = `
             <p class="govuk-!-margin-bottom-2">
               <span class="govuk-body-m govuk-!-font-weight-bold">${props.river}</span><br/>
               <a class="govuk-body-s" href="/station/${stationId}">${props.name}</a>
@@ -323,20 +290,20 @@
             <p class="govuk-body-s">
               <strong class="govuk-font-weight-bold">${props.value}m</strong> latest recorded<br/>
               <strong class="govuk-font-weight-bold">${props.percentile_5}m</strong> flooding possible
+              ${props.is_ffoi && props.ffoi_max && `<br><strong class="govuk-font-weight-bold">${props.ffoi_max}m</strong> forecast high`}
             </p>
             `}
             <span class="ol-overlay__symbol ol-overlay__symbol--${symbol}"></span>
         `
-        feature.set('html', html)
       } else if (id.startsWith('flood_warning_alert_centroid')) {
-        var html = `
+        html = `
           <p>
-              <span class="govuk-body-m govuk-!-font-weight-bold">${props.severity_description}</span><br/>
-              <a class="govuk-body-s" href="/target-area/${props.fwa_code}">${props.description}</a>
+            <span class="govuk-body-m govuk-!-font-weight-bold">${props.severity_description}</span><br/>
+            <a class="govuk-body-s" href="/target-area/${props.fwa_code}">${props.description}</a>
           </p>
           <span class="ol-overlay__symbol ol-overlay__symbol--${props.severity}"></span>`
-        feature.set('html', html)
       }
+      feature.set('html', html)
     }
   }
 
