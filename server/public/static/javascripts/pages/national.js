@@ -69,13 +69,11 @@
 
   var view = new ol.View({
     center: ol.proj.transform(Maps.center, 'EPSG:4326', 'EPSG:3857'),
-    zoom: 11,
+    zoom: 6,
     minZoom: 6,
-    maxZoom: 17,
+    maxZoom: 14,
     extent: Maps.extent
   })
-
-  var accordionLevels = new flood.Accordion(document.getElementById('warnings'))
 
   // New instance of Map
   var container = new MapContainer(document.getElementById('map-now'), {
