@@ -17,7 +17,8 @@ class ViewModel extends BaseViewModel {
       const count = group ? group.length : 0
       return {
         name: item.id,
-        title: `${count} ${count === 1 ? item.title : item.pluralisedTitle}`.toLowerCase(),
+        severity: item,
+        title: `${count} ${count === 1 ? item.title : item.pluralisedTitle}`,
         floods: group,
         description: item.subTitle
       }

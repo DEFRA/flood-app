@@ -7,7 +7,6 @@ const severity = [{
   subTitle: 'Severe flooding',
   tagline: 'Danger to life',
   description: 'danger to life',
-  icon: 'icon-flood-warning-severe-large',
   isActive: true
 }, {
   id: 2,
@@ -17,7 +16,6 @@ const severity = [{
   hash: 'flood-warning',
   subTitle: 'Flooding is expected',
   tagline: 'Immediate action required',
-  icon: 'icon-flood-warning-large',
   isActive: true
 }, {
   id: 3,
@@ -27,7 +25,6 @@ const severity = [{
   hash: 'flood-alert',
   subTitle: 'Flooding is possible',
   tagline: 'Be prepared',
-  icon: 'icon-flood-alert-large',
   isActive: true
 }, {
   id: 4,
@@ -35,9 +32,8 @@ const severity = [{
   title: 'Flood warning no longer in force',
   pluralisedTitle: 'Flood warnings no longer in force',
   hash: 'expired',
-  subTitle: 'Flood warnings and flood alerts removed in the last 24 hours.',
-  tagline: 'Flood warnings and flood alerts',
-  icon: 'icon-flood-warning-expired-large',
+  subTitle: 'Flood warnings and flood removed in the last 24 hours',
+  tagline: 'Removed in the last 24 hours',
   isActive: false
 }]
 

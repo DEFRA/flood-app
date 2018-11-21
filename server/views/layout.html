@@ -24,7 +24,7 @@
     homepageUrl: "https://www.gov.uk/",
     containerClasses: "govuk-width-container",
     serviceName: serviceName,
-    serviceUrl: "/start"
+    serviceUrl: "/"
   }) }}
 
 {% endblock %}
@@ -52,10 +52,12 @@
 {% endblock %}
 
 {% block bodyEnd %}
+  {#
   <details>
     <summary>DEBUG</summary>
     <pre>{{ model | dump(2) | safe }}</pre>
   </details>
+  #}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script src="{{ assetPath }}/all.js"></script>
   <script src="{{ assetPath }}/javascripts/core.js"></script>

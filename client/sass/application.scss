@@ -31,6 +31,7 @@ $govuk-global-styles: true;
 @import "components/map"; // Dan Leech
 @import "components/tabs"; // Dan Leech (modifier link display to improve affordance issues)
 @import "components/banners"; // Dan Leech (Warnings and alert banners)
+@import "components/warning-overview"; // Dan Leech (Flood warning overview)
 @import "components/buttons"; // Dan Leech (Button overides)
 
 @import "util";

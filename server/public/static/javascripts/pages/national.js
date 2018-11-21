@@ -17,16 +17,16 @@
     maxResolution: 800
   })
 
-  var stationsWMS = new ol.layer.Tile({
-    source: new ol.source.TileWMS({
-      params: {
-        'LAYERS': 'flood:stations',
-        'FORMAT': 'image/png'
-      },
-      url: '/ows'
-    }),
-    maxResolution: 400
-  })
+  // var stationsWMS = new ol.layer.Tile({
+  //   source: new ol.source.TileWMS({
+  //     params: {
+  //       'LAYERS': 'flood:stations',
+  //       'FORMAT': 'image/png'
+  //     },
+  //     url: '/ows'
+  //   }),
+  //   maxResolution: 400
+  // })
 
   var road = new ol.layer.Tile({
     ref: 'bing-road',
@@ -69,33 +69,11 @@
 
   var view = new ol.View({
     center: ol.proj.transform(Maps.center, 'EPSG:4326', 'EPSG:3857'),
-    zoom: 6,
+    zoom: 11,
     minZoom: 6,
-    maxZoom: 14,
+    maxZoom: 17,
     extent: Maps.extent
   })
-
-  var geoJson = new window.ol.format.GeoJSON()
-  var outlookGeoJson = flood.outlook.getGeoJson(flood.model.outlook)
-
-  var areasOfConcernFeatures = geoJson.readFeatures(outlookGeoJson, {
-    dataProjection: 'EPSG:4326',
-    featureProjection: 'EPSG:3857'
-  })
-
-  var areasOfConcern = new window.ol.layer.Vector({
-    zIndex: 200,
-    source: new window.ol.source.Vector({
-      format: geoJson,
-      features: areasOfConcernFeatures
-    })
-  })
-
-  // var sourceConcernAreas = new ol.source.Vector({
-  //   format: new ol.format.GeoJSON(),
-  //   loader: featureLoader,
-  //   projection: 'EPSG:3857'
-  // })
 
   var accordionLevels = new flood.Accordion(document.getElementById('warnings'))
 
@@ -105,22 +83,18 @@
     buttonText: 'Map showing current risk',
     lonLat: Maps.lonLat,
     zoom: 14,
+    hasKey: true,
     view: view,
     layers: [
       road,
+      satellite,
       floods,
       stations,
-      floodCentroids,
-      // areasOfConcern
-      // layer,
-      // layer2,
-      // stations,
-      // poly2,
-      // poly3,
-      // poly4
+      floodCentroids
     ],
     onFeatureClick: Maps.onFeatureClick
   })
+
   var keyForm = container.keyElement.querySelector('form')
 
   function setFloodsVisibility (severity, visible) {

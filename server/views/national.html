@@ -10,13 +10,6 @@
       <p class="accordion__description">{{panel.description}}</p>
     </div>
     <div class="accordion__section-content" id="{{panel.name}}-content">
-      {% if panel.floods %}
-        <ul class="govuk-list govuk-list--warning">
-          {% for flood in panel.floods %}
-            <li><a href="/target-area/{{flood.code}}">{{ flood.description }}</a></li>
-          {% endfor %}
-        </ul>
-      {% endif %}
     </div>
   </div>
 </div>
@@ -28,12 +21,70 @@
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Flood risk for England</h1>
   </div>
 </div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <div class="defra-warning-overview govuk-!-margin-top-0">
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-4 govuk-!-margin-top-6">
+        Current flood warnings and alerts
+      </h2>
+
+      {% for panel in model.panels %}
+        <div class="defra-warning-overview__section">
+          <h3 class="defra-warning-overview__section-title">
+            <span class="defra-warning-overview__icon defra-warning-overview__icon--{{ panel.severity.id }}"></span>
+            {{ panel.title }}
+            <span class="govuk-caption-m">{{ panel.severity.tagline }}</span>
+          </h3>
+        </div>
+      {% endfor %}
+      <!-- <div class="defra-warning-overview__section">
+        <h3 class="defra-warning-overview__section-title">
+          <span class="defra-warning-overview__icon defra-warning-overview__icon--warning"></span>
+          6 Flood warnings
+          <span class="govuk-caption-m">Flooding is expected</span>
+        </h3>
+      </div>
+      <div class="defra-warning-overview__section">
+        <h3 class="defra-warning-overview__section-title">
+          <span class="defra-warning-overview__icon defra-warning-overview__icon--alert"></span>
+          34 Flood alerts
+          <span class="govuk-caption-m">Flooding is possible</span>
+        </h3>
+      </div>
+      <div class="defra-warning-overview__section">
+        <h3 class="defra-warning-overview__section-title">
+          <span class="defra-warning-overview__icon defra-warning-overview__icon--removed"></span>
+          34 Warnings removed
+          <span class="govuk-caption-m">Within the last 24hrs</span>
+        </h3>
+      </div> -->
+    </div>
+  </div>
+</div>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <div id="warnings" class="accordion govuk-!-margin-bottom-4">
-      {% for panel in model.panels %}
-        {{ severity(panel) }}
-      {% endfor %}
+    <div id="warnings" class="govuk-!-margin-bottom-4">
+      <details class="govuk-details">
+        <summary class="govuk-details__summary">
+          <span class="govuk-details__summary-text">
+            View list of flood warnings
+          </span>
+        </summary>
+        <div class="govuk-details__text">
+          {% for panel in model.panels %}
+            {% if panel.floods %}
+              <h3 class="govuk-heading-s govuk-!-margin-bottom-1">{{ panel.severity.pluralisedTitle }}</h3>
+              <ul class="govuk-list govuk-list--warning">
+                {% for flood in panel.floods %}
+                  <li><a href="/target-area/{{flood.code}}">{{ flood.description }}</a></li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </details>
     </div>
   </div>
 </div>
