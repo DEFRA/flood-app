@@ -53,7 +53,7 @@ class ViewModel extends BaseViewModel { // Inherit from National for now, Base e
           return `${accumulator}${(index === arr.length - 1) ? ' and' : ','} ${currentValue}`
         })
 
-        const floodsSummary = `There ${summary[0].count === 1 ? 'is' : 'are'} currently ${floodsSummaryBody} in force in this area`
+        const floodsSummary = `There ${summary[0].count === 1 ? 'is' : 'are'} currently ${floodsSummaryBody} in force in this area.`
         const highestSeverityId = Math.min(...floods.map(flood => flood.severity))
 
         this.highestSeverity = severity[highestSeverityId - 1]
