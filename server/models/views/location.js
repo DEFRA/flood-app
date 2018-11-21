@@ -24,66 +24,47 @@ class ViewModel extends BaseViewModel { // Inherit from National for now, Base e
     // Floods
     if (floods.length) {
       const activeFloods = floods.filter(flood => flood.severity < 4)
+      const hasActiveFloods = !!activeFloods.length
 
-      if (activeFloods.length) {
-        // Primary
-        const primarySeverityId = Math.min(...activeFloods.map(flood => flood.severity))
-        const primaryFloods = activeFloods.filter(flood => flood.severity === primarySeverityId)
+      const inactiveFloods = floods.filter(flood => flood.severity === 4)
+      const hasInactiveFloods = !!inactiveFloods.length
 
-        this.primaryFloods = primaryFloods
-        this.primarySeverity = severity[primarySeverityId - 1]
+      const groups = groupBy(floods, 'severity')
+      const groupedFloods = Object.keys(groups).map(group => {
+        return {
+          floods: groups[group],
+          severity: severity[group - 1]
+        }
+      })
 
-        // Secondary
-        const secondaryFloods = floods.filter(flood => flood.severity !== primarySeverityId)
-        const secondarySeverities = [...new Set(secondaryFloods.map(flood => flood.severity))]
+      if (hasActiveFloods) {
+        const summary = groupedFloods.map(group => {
+          const count = group.floods.length
+          const groupSeverity = group.severity
+          const title = count === 1
+            ? groupSeverity.title
+            : groupSeverity.pluralisedTitle
 
-        this.secondaryFloods = secondaryFloods
-        this.hasSecondaryFloods = !!secondaryFloods.length
-        this.secondaryGroups = secondarySeverities.map(id => {
-          return {
-            severity: severity[id - 1],
-            floods: secondaryFloods.filter(flood => flood.severity === id)
-          }
+          return { count, title }
         })
 
-        const activeSecondaryGroups = this.secondaryGroups
-          .filter(group => group.severity.id !== 4)
-          .sort((a, b) => a.severity.id < b.severity.id ? -1 : 1)
+        const statements = summary.map(item => `${item.count} ${item.title.toLowerCase()}`)
+        const floodsSummaryBody = statements.reduce((accumulator, currentValue, index, arr) => {
+          return `${accumulator}${(index === arr.length - 1) ? ' and' : ','} ${currentValue}`
+        })
 
-        this.activeSecondaryGroups = activeSecondaryGroups
-        this.hasActiveSecondaryFloods = !!activeSecondaryGroups.length
+        const floodsSummary = `There ${summary[0].count === 1 ? 'is' : 'are'} currently ${floodsSummaryBody} in force in this area`
+        const highestSeverityId = Math.min(...floods.map(flood => flood.severity))
 
-        if (this.hasActiveSecondaryFloods) {
-          // There will only ever be, at most, 2 `activeSecondaryGroups`:
-          // "flood warnings" and/or "flood alerts". A simple array join
-          // on the string ' and ' will do.
-          this.secondaryMessage = activeSecondaryGroups
-            .map(group => {
-              const count = group.floods.length
-              const title = count === 1
-                ? group.severity.title
-                : group.severity.pluralisedTitle
-              const subTitle = group.severity.subTitle
-              return `${count} ${title.toLowerCase()} (${subTitle.toLowerCase()})`
-            })
-            .join(' and ') + ' also in force.'
-        }
+        this.highestSeverity = severity[highestSeverityId - 1]
+        this.groupedFloods = groupedFloods
+        this.floodsSummary = floodsSummary
       }
 
-      // Expired floods
-      const inactiveFloods = floods.filter(flood => flood.severity === 4)
+      this.activeFloods = activeFloods
+      this.hasActiveFloods = hasActiveFloods
       this.inactiveFloods = inactiveFloods
-      this.hasInactiveFloods = !!inactiveFloods.length
-
-      if (this.hasInactiveFloods) {
-        const count = inactiveFloods.length
-        const expiredSeverity = severity[3]
-        const expiredTitle = count === 1
-          ? expiredSeverity.title
-          : expiredSeverity.pluralisedTitle
-        this.expiredSeverity = expiredSeverity
-        this.expiredMessage = `${count} ${expiredTitle.toLowerCase()}.`
-      }
+      this.hasInactiveFloods = hasInactiveFloods
     }
 
     // Rivers

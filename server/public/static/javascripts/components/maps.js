@@ -21,94 +21,79 @@
   ]
 
   function floodsCentroidStyle (feature, resolution) {
-    if (/* feature.get('isVisible') */true) {
-      // Defaults
-      var strokeColour = 'transparent'
-      var fillColour = 'transparent'
-      var strokeWidth = 3
-      var zIndex = 1
-      var source = '/assets/images/icon-map-features-2x.png' // Icon sprite image source
-      var offset = [0, 0] // Icon sprite offset
-      var image = null
-      var text = null
-      var opacity = 1
-      var lineDash = [0, 0]
+    // Defaults
+    var strokeColour = 'transparent'
+    var fillColour = 'transparent'
+    var strokeWidth = 3
+    var zIndex = 1
+    var source = '/assets/images/icon-map-features-2x.png' // Icon sprite image source
+    var offset = [0, 0] // Icon sprite offset
+    var image = null
+    var text = null
+    var opacity = 1
+    var lineDash = [0, 0]
 
-      strokeWidth = 3
+    strokeWidth = 3
 
-      if (feature.get('severity') === 1) {
-        strokeColour = '#e3000f'
-        zIndex = 5
-        offset = [0, 1300]
-        if (feature.get('isSelected') === true) {
-          zIndex = 6
-          offset[0] += 100
-        }
-      } else if (feature.get('severity') === 2) {
-        zIndex = 4
-        offset = [0, 1400]
-        if (feature.get('isSelected') === true) {
-          zIndex = 6
-          offset[0] += 100
-        }
-      } else if (feature.get('severity') === 3) {
-        fillColour = '#f18700'
-        zIndex = 2
-        offset = [0, 1500]
-        if (feature.get('isSelected') === true) {
-          offset[0] += 100
-        }
-      } else if (feature.get('severity') === 4) {
-        fillColour = '#6f777b'
-        zIndex = 3
-        offset = [0, 1700]
-        if (feature.get('isSelected') === true) {
-          zIndex = 6
-          offset[0] += 100
-        }
+    if (feature.get('severity') === 1) {
+      strokeColour = '#e3000f'
+      zIndex = 5
+      offset = [0, 1300]
+      if (feature.get('isSelected') === true) {
+        zIndex = 6
+        offset[0] += 100
       }
-
-      // Toggle display of icon/polygon features depending on resolution
-      // if (resolution <= self.options.minIconResolution) {
-      //   if (feature.get('geometryType') === 'point') {
-      //     return null
-      //   }
-      // } else {
-      //   if (feature.get('geometryType') === 'polygon') {
-      //     return null
-      //   }
-      // }
-
-      // Define icon
-      image = new ol.style.Icon({
-        src: source,
-        size: [86, 86],
-        anchor: [0.5, 0.75],
-        scale: 0.5,
-        offset: offset
-      })
-
-      // Generate style
-      var style = new ol.style.Style({
-        fill: new ol.style.Fill({ color: fillColour }),
-        stroke: new ol.style.Stroke({
-          color: strokeColour,
-          width: strokeWidth,
-          miterLimit: 2,
-          lineJoin: 'round',
-          lineDash: lineDash
-        }),
-        lineDash: lineDash,
-        image: image,
-        text: text,
-        opacity: opacity,
-        zIndex: zIndex
-      })
-
-      return style
-    } else {
-      return null
+    } else if (feature.get('severity') === 2) {
+      zIndex = 4
+      offset = [0, 1400]
+      if (feature.get('isSelected') === true) {
+        zIndex = 6
+        offset[0] += 100
+      }
+    } else if (feature.get('severity') === 3) {
+      fillColour = '#f18700'
+      zIndex = 2
+      offset = [0, 1500]
+      if (feature.get('isSelected') === true) {
+        offset[0] += 100
+      }
+    } else if (feature.get('severity') === 4) {
+      fillColour = '#6f777b'
+      zIndex = 3
+      offset = [0, 1700]
+      if (feature.get('isSelected') === true) {
+        zIndex = 6
+        offset[0] += 100
+      }
     }
+
+    // Define icon
+    image = new ol.style.Icon({
+      src: source,
+      size: [86, 86],
+      anchor: [0.5, 0.75],
+      scale: 0.5,
+      offset: offset
+    })
+
+    // Generate style
+    var style = new ol.style.Style({
+      fill: new ol.style.Fill({ color: fillColour }),
+      stroke: new ol.style.Stroke({
+        color: strokeColour,
+        width: strokeWidth,
+        miterLimit: 2,
+        lineJoin: 'round',
+        lineDash: lineDash
+      }),
+      lineDash: lineDash,
+      image: image,
+      text: text,
+      opacity: opacity,
+      zIndex: zIndex
+    })
+
+    return style
   }
 
   function stationsStyle (feature, resolution) {
@@ -135,6 +120,10 @@
         default:
           offset = [0, 100]
           break
+      }
+
+      if (feature.get('isSelected') === true) {
+        offset[0] += 100
       }
 
       return [

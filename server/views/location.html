@@ -37,101 +37,41 @@
   <div class="govuk-grid-column-two-thirds">
     <div id="warnings" class="govuk-!-margin-bottom-4">
       <!-- Headline statement -->
-      {% if model.primarySeverity %}
-        <div class="govuk-warning-text govuk-warning-text--{{model.primarySeverity.hash}}">
+      {% if model.hasActiveFloods %}
+        <div class="govuk-warning-text govuk-warning-text--{{model.highestSeverity.hash}}">
           <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
           <strong class="govuk-warning-text__text">
-            <span class="govuk-warning-text__assistive">{{model.primarySeverity.title}}</span>
-            {{model.primarySeverity.subTitle}}
+            <span class="govuk-warning-text__assistive">{{model.highestSeverity.title}}</span>
+            {{model.highestSeverity.subTitle}} - {{model.highestSeverity.tagline.toLowerCase()}}
           </strong>
         </div>
 
-        <!-- Primary message -->
-        <p>
-          {% if model.primaryFloods.length == 1 %}
-            {{model.primarySeverity.title}} in force for 
-              <a href="/target-area/{{model.primaryFloods[0].code}}">{{ model.primaryFloods[0].description }}</a>.
-          {% elif model.primaryFloods.length == 2 %}
-            {{model.primarySeverity.pluralisedTitle}} in force for 
-              <a href="/target-area/{{model.primaryFloods[0].code}}">{{ model.primaryFloods[0].description }}</a> 
-              and  <a href="/target-area/{{model.primaryFloods[1].code}}">{{ model.primaryFloods[1].description }}</a>.
-          {% else %}
-            {{model.primaryFloods.length}} {{model.primarySeverity.pluralisedTitle.toLowerCase()}} are in force.
-          {% endif %}
+        <p>{{model.floodsSummary}}</p>
 
-          <!-- Primary message action -->
-          {% switch model.primarySeverity.id %}
-            {% case 1 %}
-              You must <a href="/">act now</a> if you live in an affected area.
-            {% case 2 %}
-              You need to <a href="/">take action</a> if you live in an affected area.
-            {% case 3 %}
-              You need to <a href="/">prepare</a> if you live in an affected area.
-          {% endswitch %}
-
-          <!-- Primary floods list -->
-          {% if model.primaryFloods.length > 2 %}
-            <details class="govuk-details">
-              <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">{{model.primarySeverity.pluralisedTitle}}</span>
-              </summary>
-              <div class="govuk-details__text">
-                <ul class="govuk-list govuk-list--warning">
-                  {% for flood in model.primaryFloods %}
-                    <li><a href="/target-area/{{flood.code}}">{{flood.description}}</a></li>
-                  {% endfor %}
-                </ul>
-              </div>
-            </details>
-          {% endif %}
-        </p>
-
-        <!-- Secondary message -->
-        {% if model.secondaryMessage %}
-          <p>
-            {{model.secondaryMessage}}
-          </p>
-        {% endif %}
-
-        <!-- Expired message -->
-        {% if model.expiredMessage %}
-          <p>
-            {{model.expiredMessage}}
-          </p>
-        {% endif %}
-
-        {% if model.hasSecondaryFloods or model.hasInactiveFloods %}
-          <details class="govuk-details govuk-!-margin-bottom-4">
-            <summary class="govuk-details__summary">
-              <span class="govuk-details__summary-text">View additional warnings</span>
-            </summary>
-            <div class="govuk-details__text">
-              {% if model.hasSecondaryFloods %}
-                {% for group in model.activeSecondaryGroups %}
-                <p class="govuk-body govuk-!-margin-bottom-1">{{group.severity.pluralisedTitle}}</p>
-                <ul class="govuk-list govuk-list--warning">
-                  {% for flood in group.floods %}
-                    <li><a href="/target-area/{{flood.code}}">{{flood.description}}</a></li>
-                  {% endfor %}
-                </ul>
-                {% endfor %}
-              {% endif %}
-              {% if model.hasInactiveFloods %}
-                <p class="govuk-body govuk-!-margin-bottom-1">{{model.expiredSeverity.pluralisedTitle}}</p>
-                <ul class="govuk-list govuk-list--warning">
-                  {% for flood in model.inactiveFloods %}
-                    <li><a href="/target-area/{{flood.code}}">{{flood.description}}</a></li>
-                  {% endfor %}
-                </ul>
-              {% endif %}
-            </div>
-          </details>
-        {% endif %}
+        <p>Find out <a href="/what-to-do-in-a-flood">what to do in a flood</a> if you are in this area.</p>
       {% else %}
         <h1 class="govuk-heading-l">No flood warnings in place</h1>
         <p>There are no flood warnings in force in this area.</p>
       {% endif %}
 
+      {% if model.groupedFloods.length %}
+        <details class="govuk-details govuk-!-margin-bottom-4">
+          <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">View details</span>
+          </summary>
+          <div class="govuk-details__text">
+            {% for group in model.groupedFloods %}
+              <p class="govuk-body govuk-!-margin-bottom-1">{{group.severity.pluralisedTitle}}</p>
+              <ul class="govuk-list govuk-list--warning">
+                {% for flood in group.floods %}
+                  <li><a href="/target-area/{{flood.code}}">{{flood.description}}</a></li>
+                {% endfor %}
+              </ul>
+            {% endfor %}
+          </div>
+        </details>
+      {% endif %}
+      
       <p class="govuk-body-s govuk-!-margin-top-4">
         <span class="govuk-body--caption">
           <time class="form-hint" title="{{model.timestamp | formatDate}}"

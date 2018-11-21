@@ -94,7 +94,7 @@
       this.mapContainerInnerElement.prepend(this.fullScreenButton)
     }
 
-    // Add remianing controls
+    // Add remaining controls
     var controls = ol.control.defaults({
       zoom: false,
       rotate: false,
@@ -158,18 +158,18 @@
     }.bind(this))
 
     // Show cursor when hovering over features
-    // this.map.on('pointermove', function (e) {
-    //   var mouseCoordInMapPixels = [e.originalEvent.offsetX, e.originalEvent.offsetY]
-    //   // Detect feature at mouse coords
-    //   var hit = this.map.forEachFeatureAtPixel(mouseCoordInMapPixels, function (feature, layer) {
-    //     return true
-    //   })
-    //   if (hit) {
-    //     this.map.getTarget().style.cursor = 'pointer'
-    //   } else {
-    //     this.map.getTarget().style.cursor = ''
-    //   }
-    // }.bind(this))
+    this.map.on('pointermove', function (e) {
+      var mouseCoordInMapPixels = [e.originalEvent.offsetX, e.originalEvent.offsetY]
+      // Detect feature at mouse coords
+      var hit = this.map.forEachFeatureAtPixel(mouseCoordInMapPixels, function (feature, layer) {
+        return true
+      })
+      if (hit) {
+        this.map.getTarget().style.cursor = 'pointer'
+      } else {
+        this.map.getTarget().style.cursor = ''
+      }
+    }.bind(this))
 
     // Set fullscreen state
     this.setFullScreen = function () {
@@ -222,6 +222,7 @@
           icon.classList.remove('ol-overlay__symbol--zoomin')
         }
       }
+
       // Create overlay object
       this.overlay = new ol.Overlay({
         element: this.overlayInnerElement,
@@ -244,6 +245,7 @@
         this.selectedFeature.set('isSelected', false)
         this.selectedFeature = null
       }
+
       // Remove overlay object
       if (this.overlay) {
         this.map.removeOverlay(this.overlay)
