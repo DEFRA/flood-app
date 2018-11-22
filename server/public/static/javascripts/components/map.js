@@ -16,7 +16,10 @@
     // ol.Layers
     var road = maps.layers.road()
     var satellite = maps.layers.satellite()
-    var floods = maps.layers.floods()
+    var floodsSevere = maps.layers.floodsSevere()
+    var floodsWarning = maps.layers.floodsWarning()
+    var floodsAlert = maps.layers.floodsAlert()
+    var floodsNotInForce = maps.layers.floodsNotInForce()
     var stations = maps.layers.stations()
     var floodCentroids = maps.layers.floodCentroids()
 
@@ -27,7 +30,10 @@
       layers: [
         road,
         satellite,
-        floods,
+        floodsNotInForce,
+        floodsAlert,
+        floodsWarning,
+        floodsSevere,
         stations,
         floodCentroids
       ],
@@ -47,6 +53,7 @@
     var keyForm = container.keyElement.querySelector('form')
 
     function setFloodsVisibility (severity, visible) {
+      // flood centroids
       floodCentroids.getSource().forEachFeature(function (feature) {
         if (severity.indexOf(feature.get('severity')) > -1) {
           feature.setStyle(visible ? null : new ol.style.Style({}))
@@ -75,14 +82,18 @@
             break
           }
           case 'floodWarnings': {
+            floodsSevere.setVisible(target.checked)
+            floodsWarning.setVisible(target.checked)
             setFloodsVisibility([1, 2], target.checked)
             break
           }
           case 'floodAlerts': {
+            floodsAlert.setVisible(target.checked)
             setFloodsVisibility([3], target.checked)
             break
           }
           case 'floodExpired': {
+            floodsNotInForce.setVisible(target.checked)
             setFloodsVisibility([4], target.checked)
             break
           }
