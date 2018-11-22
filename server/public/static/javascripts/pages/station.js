@@ -308,4 +308,4 @@
       }
     }
   })
-})(window, window.Flood)
+})(window, window.flood)

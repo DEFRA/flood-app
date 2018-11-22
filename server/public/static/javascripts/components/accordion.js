@@ -42,4 +42,4 @@
   }
 
   flood.Accordion = Accordion
-})(window.Flood)
+})(window.flood)

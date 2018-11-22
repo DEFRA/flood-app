@@ -92,7 +92,7 @@
 {{ super() }}
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
-  window.Flood.model = {{ model | dump(2) | safe }}
+  window.flood.model = {{ model | dump(2) | safe }}
 
   google.charts.load('current', {'packages':['corechart']})
 </script>

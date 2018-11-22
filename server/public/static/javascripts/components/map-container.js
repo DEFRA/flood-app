@@ -1,5 +1,6 @@
 (function (window, flood) {
   var ol = window.ol
+  var maps = flood.maps
 
   function MapContainer (el, options) {
     var noop = function () {}
@@ -7,7 +8,6 @@
     var defaults = {
       buttonText: 'Show map',
       minIconResolution: 200,
-      hasKey: false,
       onFeatureClick: noop
     }
 
@@ -30,27 +30,28 @@
     }.bind(this))
     el.parentNode.insertBefore(this.showMapButton, el)
 
-    var keyEl = document.getElementById('map-key')
-    this.keyElement = document.createElement('div')
+    var hasKey = false
+    var keyEl = this.mapContainerInnerElement.querySelector('.map-key__container')
     if (keyEl) {
+      hasKey = true
+      this.keyElement = document.createElement('div')
       this.keyElement.appendChild(keyEl)
+      this.keyElement.className = 'map-key'
+
+      // Key toggle button
+      this.keyToggleElement = document.createElement('button')
+      this.keyToggleElement.innerHTML = 'Key'
+      this.keyToggleElement.title = 'Add or remove information from the map'
+      this.keyToggleElement.className = 'map-key__toggle'
+      this.keyToggleElement.addEventListener('click', function (e) {
+        // Toggle key
+        if (!this.isKeyOpen) {
+          this.openKey()
+        } else {
+          this.closeKey()
+        }
+      }.bind(this))
     }
-
-    this.keyElement.className = 'map-key'
-
-    // Key toggle button
-    this.keyToggleElement = document.createElement('button')
-    this.keyToggleElement.innerHTML = 'Key'
-    this.keyToggleElement.title = 'Add or remove information from the map'
-    this.keyToggleElement.className = 'map-key__toggle'
-    this.keyToggleElement.addEventListener('click', function (e) {
-      // Toggle key
-      if (!this.isKeyOpen) {
-        this.openKey()
-      } else {
-        this.closeKey()
-      }
-    }.bind(this))
 
     // Overlay component
     this.overlayInnerElement = document.createElement('div')
@@ -82,13 +83,13 @@
     var view = this.options.view
 
     // Add key
-    if (this.options.hasKey) {
+    if (hasKey) {
       this.mapContainerInnerElement.appendChild(this.keyElement)
       this.keyElement.insertBefore(this.keyToggleElement, this.keyElement.firstChild)
     }
 
     // Add fullscreen control
-    if (this.options.hasKey) {
+    if (hasKey) {
       this.keyElement.prepend(this.fullScreenButton)
     } else {
       this.mapContainerInnerElement.prepend(this.fullScreenButton)
@@ -151,7 +152,7 @@
       } else {
         // No feature has been selected
         // Close key
-        if (this.options.hasKey && this.isKeyOpen) {
+        if (hasKey && this.isKeyOpen) {
           this.closeKey()
         }
       }
@@ -253,5 +254,5 @@
     }
   }
 
-  flood.MapContainer = MapContainer
-})(window, window.Flood)
+  maps.MapContainer = MapContainer
+})(window, window.flood)

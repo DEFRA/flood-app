@@ -38,27 +38,6 @@
           </h3>
         </div>
       {% endfor %}
-      <!-- <div class="defra-warning-overview__section">
-        <h3 class="defra-warning-overview__section-title">
-          <span class="defra-warning-overview__icon defra-warning-overview__icon--warning"></span>
-          6 Flood warnings
-          <span class="govuk-caption-m">Flooding is expected</span>
-        </h3>
-      </div>
-      <div class="defra-warning-overview__section">
-        <h3 class="defra-warning-overview__section-title">
-          <span class="defra-warning-overview__icon defra-warning-overview__icon--alert"></span>
-          34 Flood alerts
-          <span class="govuk-caption-m">Flooding is possible</span>
-        </h3>
-      </div>
-      <div class="defra-warning-overview__section">
-        <h3 class="defra-warning-overview__section-title">
-          <span class="defra-warning-overview__icon defra-warning-overview__icon--removed"></span>
-          34 Warnings removed
-          <span class="govuk-caption-m">Within the last 24hrs</span>
-        </h3>
-      </div> -->
     </div>
   </div>
 </div>
@@ -90,14 +69,7 @@
 </div>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <figure class="map map--large map--embedded" id="map-now">
-      <div class="map__container">
-        <div class="map__container-inner">
-          {% include "partials/key.html" %}
-        </div>
-      </div>
-      <figcaption class="govuk-visually-hidden">Flood warnings and river and sea levels</figcaption>
-    </figure>
+    {% include "partials/map.html" %}
     <p class="govuk-body-s govuk-!-margin-top-4">
       <span class="govuk-body--caption">
         <time class="form-hint" title="{{model.timestamp | formatDate}}"
@@ -140,11 +112,12 @@
 {{ super() }}
 <script src="{{assetPath}}/javascripts/ol.js"></script>
 <script src="{{assetPath}}/javascripts/components/maps.js"></script>
+<script src="{{assetPath}}/javascripts/components/maps-styles.js"></script>
+<script src="{{assetPath}}/javascripts/components/maps-layers.js"></script>
 <script src="{{assetPath}}/javascripts/components/map-container.js"></script>
-<script src="{{assetPath}}/javascripts/components/accordion.js"></script>
+<script src="{{assetPath}}/javascripts/components/map.js"></script>
 <script>
-  window.Flood.model = {{ model | dump(2) | safe }}
+  window.flood.model = {{ model | dump(2) | safe }}
 </script>
-<script src="{{assetPath}}/javascripts/outlook.js"></script>
 <script src="{{assetPath}}/javascripts/pages/national.js"></script>
 {% endblock %}

@@ -24,7 +24,7 @@
 <script src="{{assetPath}}/accessible-autocomplete.min.js"></script>
 <script>
   function suggest(query, populate) {
-    window.Flood.utils.xhr('/suggest?q=' + query, function (err, results) {
+    window.flood.utils.xhr('/suggest?q=' + query, function (err, results) {
       if (err) {
         console.error(err)
         return

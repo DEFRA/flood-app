@@ -26,9 +26,9 @@
     }
   }
 
-  // "Flood" represents the global namespace for
+  // "flood" represents the global namespace for
   // client-side javascript across all our pages
-  window.Flood = {
+  window.flood = {
     utils: utils
   }
 })(window)

@@ -35,7 +35,9 @@
           Could this information be better? <a href="/target-area/{{model.area.code}}/feedback">Tell us how to improve it</a>.
         </p>
       {% endif %}
+    </div>
 
+    <div class="govuk-grid-column-two-thirds">
       {% include "partials/before-during-after.html" %}
 
       <details class="govuk-details">
@@ -60,9 +62,26 @@
       
       {% include "partials/social.html" %}
     </div>
+
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {% include "partials/map.html" %}    
+    </div>
   </div>
 {% endblock %}
 
 {% block bodyEnd %}
 {{ super() }}
+<script src="{{assetPath}}/javascripts/ol.js"></script>
+  <script src="{{assetPath}}/javascripts/components/maps.js"></script>
+  <script src="{{assetPath}}/javascripts/components/maps-styles.js"></script>
+  <script src="{{assetPath}}/javascripts/components/maps-layers.js"></script>
+  <script src="{{assetPath}}/javascripts/components/map-container.js"></script>
+  <script src="{{assetPath}}/javascripts/components/map.js"></script>
+<script>
+  window.flood.model = {{ model | dump(2) | safe }}
+</script>
+<script src="{{assetPath}}/javascripts/pages/target-area.js"></script>
 {% endblock %}

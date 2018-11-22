@@ -103,4 +103,4 @@
   flood.outlook = {
     getGeoJson: getGeoJson
   }
-})(window, window.Flood)
+})(window, window.flood)

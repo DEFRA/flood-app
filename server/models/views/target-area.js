@@ -9,7 +9,11 @@ class ViewModel extends BaseViewModel {
 
     super(hoek.applyToDefaults({
       pageTitle: `Flood information for ${area.description} - GOV.UK`,
-      severity: severityLevel
+      severity: severityLevel,
+      place: {
+        name: area.name,
+        center: JSON.parse(area.centroid).coordinates
+      }
     }, options))
   }
 }

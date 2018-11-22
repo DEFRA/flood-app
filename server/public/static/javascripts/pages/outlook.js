@@ -1,7 +1,7 @@
 (function (window, flood) {
   var ol = window.ol
-  var Maps = flood.Maps
-  var MapContainer = flood.MapContainer
+  var maps = flood.maps
+  var MapContainer = maps.MapContainer
   var forEach = flood.utils.forEach
 
   var road = new ol.layer.Tile({
@@ -24,11 +24,11 @@
   })
 
   var view = new ol.View({
-    center: ol.proj.transform(Maps.center, 'EPSG:4326', 'EPSG:3857'),
+    center: ol.proj.transform(maps.center, 'EPSG:4326', 'EPSG:3857'),
     zoom: 6,
     minZoom: 6,
     maxZoom: 7,
-    extent: Maps.extent
+    extent: maps.extent
   })
 
   var geoJson = new window.ol.format.GeoJSON()
@@ -77,24 +77,15 @@
     style: styleFeature
   })
 
-  // var sourceConcernAreas = new ol.source.Vector({
-  //   format: new ol.format.GeoJSON(),
-  //   loader: featureLoader,
-  //   projection: 'EPSG:3857'
-  // })
-
   // New instance of Map
   var container = new MapContainer(document.getElementById('map'), {
     buttonText: 'Map showing current risk',
-    lonLat: Maps.lonLat,
-    zoom: 14,
     view: view,
     layers: [
       road,
       satellite,
       areasOfConcern
-    ],
-    onFeatureClick: Maps.onFeatureClick
+    ]
   })
 
   var outlookControl = container.element.querySelector('.map__outlook-control')
@@ -120,4 +111,4 @@
       setDay(day)
     })
   })
-})(window, window.Flood)
+})(window, window.flood)
