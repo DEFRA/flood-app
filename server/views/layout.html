@@ -1,6 +1,6 @@
 {% extends "template.njk" %}
 {% from "phase-banner/macro.njk" import govukPhaseBanner %}
-<!-- {% from "back-link/macro.njk" import govukBackLink %} -->
+{% from "footer/macro.njk" import govukFooter %}
 
 {% block head %}
   <!--[if !IE 8]><!-->
@@ -17,6 +17,22 @@
   <!--[if lt IE 9]>
     <script src="/html5-shiv/html5shiv.js"></script>
   <![endif]-->
+
+  <!-- Hotjar Tracking Code for https://flood-private-beta.aws.defra.cloud/warnings -->
+  <script>
+    (function (h, o, t, j, a, r) {
+      h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) }
+        ;
+      h._hjSettings =
+  
+        { hjid: 1036786, hjsv: 6 }
+        ;
+      a = o.getElementsByTagName('head')[0];
+      r = o.createElement('script'); r.async = 1;
+      r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+      a.appendChild(r);
+    })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+  </script>
 {% endblock %}
 
 {% block header %}
@@ -62,8 +78,49 @@
   <script src="{{ assetPath }}/all.js"></script>
   <script src="{{ assetPath }}/javascripts/core.js"></script>
   <script>window.GOVUKFrontend.initAll()</script>
-  {% if BROWSER_REFRESH_URL %}
-    <script src="{{ BROWSER_REFRESH_URL }}"></script>
-  {% endif %}
 {% endblock %}
 
+{% block footer %}
+  {{ govukFooter({
+    meta: {
+      items: [
+        {
+          href: "https://www.gov.uk/help",
+          text: "Help"
+        },
+        {
+          href: "/cookies",
+          text: "Cookies"
+        },
+        {
+          href: "/privacy-policy",
+          text: "Privacy policy"
+        },
+        {
+          href: "/terms-conditions",
+          text: "Terms and conditions"
+        },
+        {
+          href: "https://www.gov.uk/contact",
+          text: "Contact"
+        },
+        {
+          href: "/privacy-policy",
+          text: "Privacy policy"
+        },
+        {
+          href: "/roadmap",
+          text: "Roadmap"
+        },
+        {
+          href: "https://www.gov.uk/cymraeg",
+          text: "Cymraeg"
+        },
+        {
+          href: "https://www.gov.uk/government/organisations/environment-agency",
+          text: "Built by the Environment Agency"
+        }
+      ]
+    }
+  }) }}
+{% endblock %}
