@@ -41,6 +41,7 @@ module.exports = {
     ],
     isCached: !config.isDev,
     context: {
+      env: config.env,
       appVersion: pkg.version,
       assetPath: '/assets',
       serviceName: 'Flood information service',
