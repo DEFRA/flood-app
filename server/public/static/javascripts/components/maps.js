@@ -279,7 +279,7 @@
             <p class="govuk-body-s">
               <strong class="govuk-font-weight-bold">${props.value}m</strong> latest recorded<br/>
               <strong class="govuk-font-weight-bold">${props.percentile_5}m</strong> flooding possible
-              ${props.is_ffoi && props.ffoi_max && `<br><strong class="govuk-font-weight-bold">${props.ffoi_max}m</strong> forecast high`}
+              ${props.is_ffoi && props.ffoi_max ? `<br><strong class="govuk-font-weight-bold">${props.ffoi_max}m</strong> forecast high` : ''}
             </p>
             `}
             <span class="ol-overlay__symbol ol-overlay__symbol--${symbol}"></span>

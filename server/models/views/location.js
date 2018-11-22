@@ -38,15 +38,17 @@ class ViewModel extends BaseViewModel { // Inherit from National for now, Base e
       })
 
       if (hasActiveFloods) {
-        const summary = groupedFloods.map(group => {
-          const count = group.floods.length
-          const groupSeverity = group.severity
-          const title = count === 1
-            ? groupSeverity.title
-            : groupSeverity.pluralisedTitle
+        const summary = groupedFloods
+          .filter(group => group.severity.isActive)
+          .map(group => {
+            const count = group.floods.length
+            const groupSeverity = group.severity
+            const title = count === 1
+              ? groupSeverity.title
+              : groupSeverity.pluralisedTitle
 
-          return { count, title }
-        })
+            return { count, title }
+          })
 
         const statements = summary.map(item => `${item.count} ${item.title.toLowerCase()}`)
         const floodsSummaryBody = statements.reduce((accumulator, currentValue, index, arr) => {
