@@ -1,20 +1,5 @@
 {% extends 'layout.html' %}
 
-{% macro severity(panel) %}
-<div class="accordion__section" id="{{panel.name}}">
-  <div class="accordion__section-container">
-    <div class="accordion__section-header">
-      <h2 class="accordion__section-title">
-        {{panel.title}}
-      </h2>
-      <p class="accordion__description">{{panel.description}}</p>
-    </div>
-    <div class="accordion__section-content" id="{{panel.name}}-content">
-    </div>
-  </div>
-</div>
-{% endmacro %}
-
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -29,12 +14,12 @@
         Current flood warnings and alerts
       </h2>
 
-      {% for panel in model.panels %}
+      {% for group in model.groups %}
         <div class="defra-warning-overview__section">
           <h3 class="defra-warning-overview__section-title">
-            <span class="defra-warning-overview__icon defra-warning-overview__icon--{{ panel.severity.id }}"></span>
-            {{ panel.title }}
-            <span class="govuk-caption-m">{{ panel.severity.tagline }}</span>
+            <span class="defra-warning-overview__icon defra-warning-overview__icon--{{ group.severity.id }}"></span>
+            {{ group.title }}
+            <span class="govuk-caption-m">{{ group.severity.tagline }}</span>
           </h3>
         </div>
       {% endfor %}
@@ -42,31 +27,34 @@
   </div>
 </div>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <div id="warnings" class="govuk-!-margin-bottom-4">
-      <details class="govuk-details">
-        <summary class="govuk-details__summary">
-          <span class="govuk-details__summary-text">
-            View list of flood warnings
-          </span>
-        </summary>
-        <div class="govuk-details__text">
-          {% for panel in model.panels %}
-            {% if panel.floods %}
-              <h3 class="govuk-heading-s govuk-!-margin-bottom-1">{{ panel.severity.pluralisedTitle }}</h3>
-              <ul class="govuk-list govuk-list--warning">
-                {% for flood in panel.floods %}
-                  <li><a href="/target-area/{{flood.code}}">{{ flood.description }}</a></li>
-                {% endfor %}
-              </ul>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </details>
+{% if model.floods.length %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <div id="warnings" class="govuk-!-margin-bottom-4">
+        <details class="govuk-details">
+          <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+              View list of flood warnings
+            </span>
+          </summary>
+          <div class="govuk-details__text">
+            {% for group in model.groups %}
+              {% if group.floods %}
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">{{ group.severity.pluralisedTitle }}</h3>
+                <ul class="govuk-list govuk-list--warning">
+                  {% for flood in group.floods %}
+                    <li><a href="/target-area/{{flood.code}}">{{ flood.description }}</a></li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </details>
+      </div>
     </div>
   </div>
-</div>
+{% endif %}
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     {% include "partials/map.html" %}
@@ -78,6 +66,7 @@
     </p>
   </div>
 </div>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <div class="govuk-inset-text govuk-inset-text--search govuk-!-margin-top-2">
@@ -92,14 +81,15 @@
     </div>
   </div>
 </div>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h2 class="govuk-heading-m govuk-!-margin-top-6">Next 5 days</h2>
     <p>{{model.outlook.headline}}</p>
-    <!-- <p>{{model.outlook.public_forecast.english_forecast}}</p> -->
     <p>See a <a href="/outlook">map showing the full 5-day outlook</a></p>
   </div>
 </div>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h2 class="govuk-heading-m govuk-!-margin-top-6">Long term</h2>
