@@ -7,7 +7,6 @@ const schema = {
   serviceUrl: joi.string().uri().default('http://localhost:8050'),
   geoserverUrl: joi.string().uri().default('http://localhost:8080'),
   bingKey: joi.string().required(),
-  date: joi.number().optional(),
   ordnanceSurveyKey: joi.string().optional(),
   browserRefreshUrl: joi.string().optional(),
   httpsProxy: joi.string().uri().default(''),
@@ -18,7 +17,6 @@ const schema = {
 const config = {
   port: process.env.PORT,
   env: process.env.NODE_ENV,
-  date: process.env.FLOOD_APP_DATE,
   serviceUrl: process.env.FLOOD_APP_SERVICE_URL,
   geoserverUrl: process.env.FLOOD_APP_GEOSERVER_URL,
   bingKey: process.env.FLOOD_APP_BING_KEY,
