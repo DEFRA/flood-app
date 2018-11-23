@@ -137,6 +137,13 @@
       var feature = map.forEachFeatureAtPixel(e.pixel, function (feature) {
         return feature
       })
+      // no wfs/vector feature so check for wms image feature
+      if (!feature) {
+        if (isWmsImage(e.pixel)) {
+
+        }
+      }
+
       // A new feature has been selected
       if (feature) {
         // Target areas have a point and polygon on differet layers
@@ -169,13 +176,7 @@
       })
       // Detect wms image at mouse coords
       if (!hit) {
-        hit = map.forEachLayerAtPixel(mouseCoordInMapPixels, function (layer) {
-          return true
-        }, {
-          layerFilter: function (layer) {
-            return layer.get('ref') === 'alert-polygons'
-          }
-        })
+        hit = isWmsImage(mouseCoordInMapPixels)
       }
       if (hit) {
         map.getTarget().style.cursor = 'pointer'
@@ -183,6 +184,18 @@
         map.getTarget().style.cursor = ''
       }
     })
+
+    // detects if pixel is over a wms image
+    function isWmsImage (pixel) {
+      return map.forEachLayerAtPixel(pixel, function (layer) {
+        return true
+      }, {
+        layerFilter: function (layer) {
+          var ref = layer.get('ref')
+          return (ref && ref.indexOf('floods-') > -1)
+        }
+      })
+    }
 
     // Set fullscreen state
     this.setFullScreen = function () {

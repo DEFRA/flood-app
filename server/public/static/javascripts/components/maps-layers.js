@@ -43,7 +43,7 @@
 
   function floodPolygonsSevere () {
     return new ol.layer.Image({
-      ref: 'alert-polygons',
+      ref: 'floods-severe',
       source: new ol.source.ImageWMS({
         url: '/ows?service=wms',
         serverType: 'geoserver',
@@ -57,7 +57,7 @@
 
   function floodPolygonsWarning () {
     return new ol.layer.Image({
-      ref: 'alert-polygons',
+      ref: 'floods-warning',
       source: new ol.source.ImageWMS({
         url: '/ows?service=wms',
         serverType: 'geoserver',
@@ -71,7 +71,7 @@
 
   function floodPolygonsAlert () {
     return new ol.layer.Image({
-      ref: 'alert-polygons',
+      ref: 'floods-alert',
       source: new ol.source.ImageWMS({
         url: '/ows?service=wms',
         serverType: 'geoserver',
@@ -85,7 +85,7 @@
 
   function floodPolygonsNotInForce () {
     return new ol.layer.Image({
-      ref: 'alert-polygons',
+      ref: 'floods-notinforce',
       source: new ol.source.ImageWMS({
         url: '/ows?service=wms',
         serverType: 'geoserver',
