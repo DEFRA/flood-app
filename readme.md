@@ -39,5 +39,6 @@ Open your browser at
 | FLOOD_APP_GEOSERVER_URL   | Geoserver  |    yes    |         |                             | For maps ows |
 | FLOOD_APP_HTTP_TIMEOUT   | Http timeout  |    no    |  10000 (10s)       |                             | For maps ows |
 | HTTPS_PROXY   | Proxy address |    no    |         |                             | For external api calls |
+| FLOOD_APP_GA_ID   | Google analytics Id |    no    |    ''     |                             |  |
 | FLOOD_APP_FBAPP_ID   | Facebook AppId |    no    |    ''     |                             |  |
 | FLOOD_APP_SITE_URL   | Site Url  |    no    | http://localhost:3009 |                             | For SEO metadata |
