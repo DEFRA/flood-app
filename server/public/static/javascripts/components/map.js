@@ -116,6 +116,14 @@
       setFloodsVisibility([4], false)
     })
 
+    container.map.on('moveend', function (event) {
+      var opacity = container.map.getView().getResolution() <= 25 ? 0.4 : 1
+      floodsSevere.setOpacity(opacity)
+      floodsWarning.setOpacity(opacity)
+      floodsAlert.setOpacity(opacity)
+      floodsNotInForce.setOpacity(opacity)
+    })
+
     this.map = container.map
     this.container = container
   }
