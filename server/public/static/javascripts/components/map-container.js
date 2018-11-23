@@ -106,12 +106,14 @@
     var layers = this.options.layers
 
     // Render map
-    this.map = new ol.Map({
+    var map = new ol.Map({
       target: this.mapContainerInnerElement,
       controls: controls,
       layers: layers,
       view: view
     })
+
+    this.map = map
 
     // Set fullscreen before map is rendered
     if (this.isFullScreen) {
@@ -128,11 +130,11 @@
     //
 
     // Close key or place locator if map is clicked
-    this.map.on('click', function (e) {
+    map.on('click', function (e) {
       // Hide overlay if exists
       this.hideOverlay()
       // Get mouse coordinates and check for feature
-      var feature = this.map.forEachFeatureAtPixel(e.pixel, function (feature) {
+      var feature = map.forEachFeatureAtPixel(e.pixel, function (feature) {
         return feature
       })
       // A new feature has been selected
@@ -159,18 +161,18 @@
     }.bind(this))
 
     // Show cursor when hovering over features
-    this.map.on('pointermove', function (e) {
+    map.on('pointermove', function (e) {
       var mouseCoordInMapPixels = [e.originalEvent.offsetX, e.originalEvent.offsetY]
       // Detect feature at mouse coords
-      var hit = this.map.forEachFeatureAtPixel(mouseCoordInMapPixels, function (feature, layer) {
+      var hit = map.forEachFeatureAtPixel(mouseCoordInMapPixels, function (feature, layer) {
         return true
       })
       if (hit) {
-        this.map.getTarget().style.cursor = 'pointer'
+        map.getTarget().style.cursor = 'pointer'
       } else {
-        this.map.getTarget().style.cursor = ''
+        map.getTarget().style.cursor = ''
       }
-    }.bind(this))
+    })
 
     // Set fullscreen state
     this.setFullScreen = function () {
@@ -178,17 +180,16 @@
       this.fullScreenButton.classList.add('ol-full-screen-back')
       this.fullScreenButton.title = 'Go back'
       this.isFullScreen = true
-      this.map.updateSize()
+      map.updateSize()
     }
 
     // Remove fullscreen state
     this.removeFullScreen = function () {
-      this.closeKey()
       el.classList.remove('map--fullscreen')
       this.fullScreenButton.classList.remove('ol-full-screen-back')
       this.fullScreenButton.title = 'Make the map fill the screen'
       this.isFullScreen = false
-      this.map.updateSize()
+      map.updateSize()
     }
 
     // Open key
@@ -217,7 +218,7 @@
       // Set icon resolution class
       var icon = this.overlayInnerElement.querySelector('.ol-overlay__symbol')
       if (icon) {
-        if (this.map.getView().getResolution() <= this.options.minIconResolution) {
+        if (map.getView().getResolution() <= this.options.minIconResolution) {
           icon.classList.add('ol-overlay__symbol--zoomin')
         } else {
           icon.classList.remove('ol-overlay__symbol--zoomin')
@@ -233,7 +234,7 @@
       })
 
       this.overlay.element.style.display = 'block'
-      this.map.addOverlay(this.overlay)
+      map.addOverlay(this.overlay)
     }
 
     // Hide overlay
@@ -249,7 +250,7 @@
 
       // Remove overlay object
       if (this.overlay) {
-        this.map.removeOverlay(this.overlay)
+        map.removeOverlay(this.overlay)
       }
     }
   }
