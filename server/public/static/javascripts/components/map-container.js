@@ -163,10 +163,20 @@
     // Show cursor when hovering over features
     map.on('pointermove', function (e) {
       var mouseCoordInMapPixels = [e.originalEvent.offsetX, e.originalEvent.offsetY]
-      // Detect feature at mouse coords
+      // Detect vector feature at mouse coords
       var hit = map.forEachFeatureAtPixel(mouseCoordInMapPixels, function (feature, layer) {
         return true
       })
+      // Detect wms image at mouse coords
+      if (!hit) {
+        hit = map.forEachLayerAtPixel(mouseCoordInMapPixels, function (layer) {
+          return true
+        }, {
+          layerFilter: function (layer) {
+            return layer.get('ref') === 'alert-polygons'
+          }
+        })
+      }
       if (hit) {
         map.getTarget().style.cursor = 'pointer'
       } else {
