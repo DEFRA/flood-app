@@ -133,16 +133,14 @@
     map.on('click', function (e) {
       // Hide overlay if exists
       this.hideOverlay()
-      // Get mouse coordinates and check for feature
+      // Get mouse coordinates and check for feature if not the highlighted flood polygon
       var feature = map.forEachFeatureAtPixel(e.pixel, function (feature) {
         return feature
-      })
-      // no wfs/vector feature so check for wms image feature
-      if (!feature) {
-        if (isWmsImage(e.pixel)) {
-
+      }, {
+        layerFilter: function (layer) {
+          return layer.get('ref') !== 'flood-polygon'
         }
-      }
+      })
 
       // A new feature has been selected
       if (feature) {
@@ -158,11 +156,51 @@
         // Show overlay
         this.options.onFeatureClick(feature)
         this.showOverlay(this.selectedFeature, e.coordinate)
+        // TODO: if the feature is a warning triangle, query geoserver for the polygon so it can be highlighted else clear up:        
+        setFloodPolygonSource()
       } else {
-        // No feature has been selected
-        // Close key
-        if (hasKey && this.isKeyOpen) {
-          this.closeKey()
+        var layer = getFloodLayer(e.pixel)
+        if (layer) {
+          var url = layer.getSource().getGetFeatureInfoUrl(e.coordinate, view.getResolution(), 'EPSG:3857', {
+            INFO_FORMAT: 'application/json',
+            FEATURE_COUNT: 1,
+            propertyName: 'fwa_key,fwa_code,severity,geom'
+          })
+          if (url) {
+            flood.utils.xhr(url, function (err, json) {
+              if (err) {
+                console.error(err)
+              }
+              var fwaCode = json.features[0].properties.fwa_code
+
+              setFloodPolygonSource(new ol.source.Vector({
+                features: (new ol.format.GeoJSON()).readFeatures(json, {
+                  featureProjection: 'EPSG:3857'
+                }),
+                format: new ol.format.GeoJSON()
+              }))
+
+              // now get the centroid feature that needs highlighting
+              map.getLayers().forEach(function (layer) {
+                if (layer.get('ref') === 'flood-centroids') {
+                  layer.getSource().getFeatures().forEach(function (feature) {
+                    if (feature.get('fwa_code') === fwaCode) {
+                      // highlight this feature:
+                      console.log(feature)
+                      // TODO create functions for highlight centroid and highlight polygon
+                    }
+                  })
+                }
+              })
+            })
+          }
+        } else {
+          // No feature has been selected
+          // Close key
+          if (hasKey && this.isKeyOpen) {
+            this.closeKey()
+          }
+          setFloodPolygonSource()
         }
       }
     }.bind(this))
@@ -176,7 +214,7 @@
       })
       // Detect wms image at mouse coords
       if (!hit) {
-        hit = isWmsImage(mouseCoordInMapPixels)
+        hit = getFloodLayer(mouseCoordInMapPixels)
       }
       if (hit) {
         map.getTarget().style.cursor = 'pointer'
@@ -185,14 +223,22 @@
       }
     })
 
-    // detects if pixel is over a wms image
-    function isWmsImage (pixel) {
+    // detects if pixel is over a wms image and returns the layer
+    function getFloodLayer (pixel) {
       return map.forEachLayerAtPixel(pixel, function (layer) {
-        return true
+        return layer
       }, {
         layerFilter: function (layer) {
           var ref = layer.get('ref')
           return (ref && ref.indexOf('floods-') > -1)
+        }
+      })
+    }
+
+    function setFloodPolygonSource (source) {
+      map.getLayers().forEach(function (layer) {
+        if (layer.get('ref') === 'flood-polygon') {
+          layer.setSource(source)
         }
       })
     }
@@ -233,7 +279,7 @@
     }
 
     // Show overlay
-    this.showOverlay = function (feature, coorindate) {
+    this.showOverlay = function (feature, coordinate) {
       // Add class to map
       el.classList.add('map--overlay-open')
       // Add feature html

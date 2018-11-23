@@ -97,9 +97,16 @@
     })
   }
 
+  function floodPolygon () {
+    return new ol.layer.Vector({
+      ref: 'flood-polygon',
+      style: maps.styles.floodPolygon
+    })
+  }
+
   function floodCentroids () {
     return new ol.layer.Vector({
-      ref: 'alert-centroids',
+      ref: 'flood-centroids',
       source: new ol.source.Vector({
         url: '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert_centroid&maxFeatures=10000&outputFormat=application/json',
         format: new ol.format.GeoJSON()
@@ -133,6 +140,7 @@
   layers.floodsWarning = floodPolygonsWarning
   layers.floodsAlert = floodPolygonsAlert
   layers.floodsNotInForce = floodPolygonsNotInForce
+  layers.floodPolygon = floodPolygon
   layers.floodCentroids = floodCentroids
   layers.stations = stations
   layers.location = location

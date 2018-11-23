@@ -22,6 +22,7 @@
     var floodsNotInForce = maps.layers.floodsNotInForce()
     var stations = maps.layers.stations()
     var floodCentroids = maps.layers.floodCentroids()
+    var floodPolygon = maps.layers.floodPolygon()
 
     // MapContainer options
     var options = {
@@ -34,6 +35,7 @@
         floodsAlert,
         floodsWarning,
         floodsSevere,
+        floodPolygon,
         stations,
         floodCentroids
       ],
