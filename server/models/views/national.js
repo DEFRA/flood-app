@@ -1,16 +1,12 @@
-const hoek = require('hoek')
-const BaseViewModel = require('.')
 const severity = require('../severity')
 const { groupBy } = require('../../util')
 
-const defaults = {
-  pageTitle: `Flood risk for England - GOV.UK`
-}
-
-class ViewModel extends BaseViewModel {
+class ViewModel {
   constructor (options) {
     const { floods, outlook } = options
-    super(hoek.applyToDefaults(defaults, options))
+    Object.assign(this, {
+      pageTitle: `Flood risk for England - GOV.UK`
+    }, options)
 
     const grouped = groupBy(floods, 'severity')
     this.groups = severity.map(item => {

@@ -1,25 +1,16 @@
-const hoek = require('hoek')
-const BaseViewModel = require('./')
 const severity = require('../severity')
 const { groupBy } = require('../../util')
 
-const defaults = {
-  metadata: {
-    keywords: '...',
-    description: '...'
-  }
-}
-
-class ViewModel extends BaseViewModel { // Inherit from National for now, Base eventually
+class ViewModel {
   constructor ({ place, floods, stations }) {
     const title = place.name
 
-    super(hoek.applyToDefaults(defaults, {
+    Object.assign(this, {
       place,
       floods,
       location: title,
       pageTitle: `${title} flood risk - GOV.UK`
-    }))
+    })
 
     // Floods
     if (floods.length) {

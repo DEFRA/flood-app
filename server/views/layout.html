@@ -2,8 +2,21 @@
 {% from "phase-banner/macro.njk" import govukPhaseBanner %}
 {% from "footer/macro.njk" import govukFooter %}
 
+{% set pageUrl = fullUrl %}
+{% set pageTitle = model.pageTitle | default('Check flood risk - GOV.UK') %}
+{% set pageDescription = model.metadata.description | default('Check your risk of flooding: get current flood warnings, river and sea levels, check the 5-day forecast or use flood risk maps') %}
+{% set pageKeywords = model.metadata.keywords | default('floods,gov.uk,england') %}
+
 {% block head %}
   <meta http-equiv="refresh" content="900"/>
+  <meta property="fb:app_id" content="{{fbAppId}}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="{{pageUrl}}" />
+  <meta property="og:title" content="{{pageTitle}}" />
+  <meta property="og:description" content="{{pageDescription}}" />
+  <meta property="keywords" content="{{pageKeywords}}" />
+  <meta property="description" content="{{pageDescription}}" />
+  <meta name="google-site-verification" content="HjuKUejT64a0rBdUxxtbnIKNB4_cZ3X3hlXOxk4_OX8" />
 
   <!--[if !IE 8]><!-->
     <link href="{{ assetPath }}/stylesheets/application.css" rel="stylesheet" />
@@ -72,12 +85,12 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  {#
+  
   <details>
     <summary>DEBUG</summary>
     <pre>{{ model | dump(2) | safe }}</pre>
   </details>
-  #}
+  
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script src="{{ assetPath }}/all.js"></script>
   <script src="{{ assetPath }}/javascripts/core.js"></script>

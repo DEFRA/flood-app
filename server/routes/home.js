@@ -7,7 +7,7 @@ module.exports = [{
     view: 'start'
   },
   options: {
-    description: 'Temporary start page for private beta'
+    description: 'Temporary start page for private alpha'
   }
 }, {
   method: 'GET',
