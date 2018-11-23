@@ -41,14 +41,57 @@
     })
   }
 
-  function floodPolygons () {
+  function floodPolygonsSevere () {
     return new ol.layer.Image({
       ref: 'alert-polygons',
       source: new ol.source.ImageWMS({
         url: '/ows?service=wms',
         serverType: 'geoserver',
         params: {
-          'LAYERS': 'flood_warning_alert'
+          'LAYERS': 'flood_warning_alert',
+          'CQL_FILTER': 'severity = 1'
+        }
+      })
+    })
+  }
+
+  function floodPolygonsWarning () {
+    return new ol.layer.Image({
+      ref: 'alert-polygons',
+      source: new ol.source.ImageWMS({
+        url: '/ows?service=wms',
+        serverType: 'geoserver',
+        params: {
+          'LAYERS': 'flood_warning_alert',
+          'CQL_FILTER': 'severity = 2'
+        }
+      })
+    })
+  }
+
+  function floodPolygonsAlert () {
+    return new ol.layer.Image({
+      ref: 'alert-polygons',
+      source: new ol.source.ImageWMS({
+        url: '/ows?service=wms',
+        serverType: 'geoserver',
+        params: {
+          'LAYERS': 'flood_warning_alert',
+          'CQL_FILTER': 'severity = 3'
+        }
+      })
+    })
+  }
+
+  function floodPolygonsNotInForce () {
+    return new ol.layer.Image({
+      ref: 'alert-polygons',
+      source: new ol.source.ImageWMS({
+        url: '/ows?service=wms',
+        serverType: 'geoserver',
+        params: {
+          'LAYERS': 'flood_warning_alert',
+          'CQL_FILTER': 'severity = 4'
         }
       })
     })
@@ -86,7 +129,10 @@
 
   layers.road = road
   layers.satellite = satellite
-  layers.floods = floodPolygons
+  layers.floodsSevere = floodPolygonsSevere
+  layers.floodsWarning = floodPolygonsWarning
+  layers.floodsAlert = floodPolygonsAlert
+  layers.floodsNotInForce = floodPolygonsNotInForce
   layers.floodCentroids = floodCentroids
   layers.stations = stations
   layers.location = location

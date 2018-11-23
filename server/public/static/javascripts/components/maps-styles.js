@@ -34,14 +34,14 @@
       }
     } else if (feature.get('severity') === 3) {
       fillColour = '#f18700'
-      zIndex = 2
+      zIndex = 3
       offset = [0, 1500]
       if (feature.get('isSelected') === true) {
         offset[0] += 100
       }
     } else if (feature.get('severity') === 4) {
       fillColour = '#6f777b'
-      zIndex = 3
+      zIndex = 2
       offset = [0, 1700]
       if (feature.get('isSelected') === true) {
         zIndex = 6
