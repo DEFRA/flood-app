@@ -14,9 +14,13 @@
         {% else %}
           <span class="govuk-caption-xl">{{model.severity.title}}</span>
         {% endif %}
+      {% else %}
+        <span class="govuk-caption-xl">
+          There are currently no flood warnings or alerts in force at this location
+        </span>
       {% endif %}
       <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">{{model.area.name}}</h1>
-      <p class="govuk-body-l govuk-!-margin-bottom-0">{{model.area.description}}</p>
+      <p class="govuk-body-l">{{model.area.description}}</p>
     </div>
     <div class="govuk-grid-column-two-thirds">
       {% if model.flood %}
