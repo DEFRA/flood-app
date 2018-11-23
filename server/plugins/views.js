@@ -3,8 +3,8 @@ const util = require('../util')
 const config = require('../config')
 const pkg = require('../../package.json')
 const {
-  fbAppId,
-  analyticsAccount
+  gaAccId,
+  fbAppId
 } = config
 
 module.exports = {
@@ -48,8 +48,8 @@ module.exports = {
       appVersion: pkg.version,
       assetPath: '/assets',
       serviceName: 'Flood information service',
-      fbAppId,
-      analyticsAccount
+      gaAccId,
+      fbAppId
     }
   }
 }

@@ -13,6 +13,7 @@ const schema = {
   browserRefreshUrl: joi.string().optional(),
   httpsProxy: joi.string().uri().default(''),
   httpTimeoutMs: joi.number().default(10000),
+  gaAccId: joi.string().default(''),
   fbAppId: joi.string().default(''),
   siteUrl: joi.string().default(`http://localhost:${defaultPort}`)
 }
@@ -26,6 +27,7 @@ const config = {
   bingKey: process.env.FLOOD_APP_BING_KEY,
   httpsProxy: process.env.HTTPS_PROXY,
   httpTimeoutMs: process.env.FLOOD_APP_HTTP_TIMEOUT,
+  gaAccId: process.env.FLOOD_APP_GA_ID,
   fbAppId: process.env.FLOOD_APP_FBAPP_ID,
   siteUrl: process.env.FLOOD_APP_SITE_URL
 }
