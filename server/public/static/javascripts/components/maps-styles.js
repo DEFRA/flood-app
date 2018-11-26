@@ -185,7 +185,7 @@
     offset = [0, 1800]
 
     // Feature is also slected
-    if (feature.get('isSelected') == true) {
+    if (feature.get('isSelected') === true) {
       offset[0] += 100
     }
 

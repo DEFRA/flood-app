@@ -1,6 +1,5 @@
 // const hoek = require('hoek')
 const moment = require('moment-timezone')
-const BaseViewModel = require('.')
 const config = require('../../config')
 const Station = require('./station-data')
 const Forecast = require('./station-forecast')
@@ -9,11 +8,11 @@ function dateDiff (date1, date2) {
   return moment(date1).diff(moment(date2), 'days')
 }
 
-class ViewModel extends BaseViewModel {
+class ViewModel {
   constructor (options) {
     const { station, telemetry, forecast } = options
 
-    super({
+    Object.assign(this, {
       pageTitle: `Flood information for ${station.name} - GOV.UK`
     })
 

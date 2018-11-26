@@ -1,21 +1,14 @@
-const hoek = require('hoek')
 const turf = require('turf')
 const polygonSmooth = require('@turf/polygon-smooth')
-const BaseViewModel = require('.')
 
-const defaults = {
-  pageTitle: `Outlook for England - GOV.UK`,
-  metadata: {
-    keywords: '...',
-    description: '...'
-  }
-}
-
-class ViewModel extends BaseViewModel {
+class ViewModel {
   constructor (options) {
     const { outlook } = options
     const data = getData(outlook)
-    super(hoek.applyToDefaults(defaults, options))
+
+    Object.assign(this, {
+      pageTitle: `Outlook for England - GOV.UK`
+    }, options)
 
     const issueDate = new Date(outlook.issued_at)
     const date = issueDate.getDate()

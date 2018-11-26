@@ -2,7 +2,10 @@ const nunjucks = require('nunjucks')
 const util = require('../util')
 const config = require('../config')
 const pkg = require('../../package.json')
-const analyticsAccount = config.analyticsAccount
+const {
+  gaAccId,
+  fbAppId
+} = config
 
 module.exports = {
   plugin: require('vision'),
@@ -45,7 +48,8 @@ module.exports = {
       appVersion: pkg.version,
       assetPath: '/assets',
       serviceName: 'Flood information service',
-      analyticsAccount: analyticsAccount
+      gaAccId,
+      fbAppId
     }
   }
 }
