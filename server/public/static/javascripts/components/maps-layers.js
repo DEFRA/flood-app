@@ -7,7 +7,7 @@
       ref: 'bing-road',
       source: new ol.source.BingMaps({
         key: 'Ajou-3bB1TMVLPyXyNvMawg4iBPqYYhAN4QMXvOoZvs47Qmrq7L5zio0VsOOAHUr',
-        imagerySet: 'road'
+        imagerySet: 'RoadOnDemand'
       }),
       visible: true,
       zIndex: 0
@@ -19,7 +19,7 @@
       ref: 'bing-aerial',
       source: new ol.source.BingMaps({
         key: 'Ajou-3bB1TMVLPyXyNvMawg4iBPqYYhAN4QMXvOoZvs47Qmrq7L5zio0VsOOAHUr',
-        imagerySet: 'AerialWithLabels'
+        imagerySet: 'AerialWithLabelsOnDemand'
       }),
       visible: false
     })
@@ -43,7 +43,8 @@
 
   function floodPolygonsSevere () {
     return new ol.layer.Image({
-      ref: 'alert-polygons',
+      ref: 'floods-severe',
+      maxResolution: 200,
       source: new ol.source.ImageWMS({
         url: '/ows?service=wms',
         serverType: 'geoserver',
@@ -57,7 +58,8 @@
 
   function floodPolygonsWarning () {
     return new ol.layer.Image({
-      ref: 'alert-polygons',
+      ref: 'floods-warning',
+      maxResolution: 200,
       source: new ol.source.ImageWMS({
         url: '/ows?service=wms',
         serverType: 'geoserver',
@@ -71,7 +73,8 @@
 
   function floodPolygonsAlert () {
     return new ol.layer.Image({
-      ref: 'alert-polygons',
+      ref: 'floods-alert',
+      maxResolution: 200,
       source: new ol.source.ImageWMS({
         url: '/ows?service=wms',
         serverType: 'geoserver',
@@ -85,7 +88,8 @@
 
   function floodPolygonsNotInForce () {
     return new ol.layer.Image({
-      ref: 'alert-polygons',
+      ref: 'floods-notinforce',
+      maxResolution: 200,
       source: new ol.source.ImageWMS({
         url: '/ows?service=wms',
         serverType: 'geoserver',
@@ -97,9 +101,18 @@
     })
   }
 
+  function floodPolygon () {
+    return new ol.layer.Vector({
+      ref: 'flood-polygon',
+      maxResolution: 200,
+      style: maps.styles.floodPolygon
+    })
+  }
+
   function floodCentroids () {
     return new ol.layer.Vector({
-      ref: 'alert-centroids',
+      ref: 'flood-centroids',
+      minResolution: 200,
       source: new ol.source.Vector({
         url: '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert_centroid&maxFeatures=10000&outputFormat=application/json',
         format: new ol.format.GeoJSON()
@@ -133,6 +146,7 @@
   layers.floodsWarning = floodPolygonsWarning
   layers.floodsAlert = floodPolygonsAlert
   layers.floodsNotInForce = floodPolygonsNotInForce
+  layers.floodPolygon = floodPolygon
   layers.floodCentroids = floodCentroids
   layers.stations = stations
   layers.location = location

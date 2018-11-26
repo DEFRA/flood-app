@@ -22,6 +22,7 @@
     var floodsNotInForce = maps.layers.floodsNotInForce()
     var stations = maps.layers.stations()
     var floodCentroids = maps.layers.floodCentroids()
+    var floodPolygon = maps.layers.floodPolygon()
 
     // MapContainer options
     var options = {
@@ -34,6 +35,7 @@
         floodsAlert,
         floodsWarning,
         floodsSevere,
+        floodPolygon,
         stations,
         floodCentroids
       ],
@@ -52,13 +54,38 @@
     // Handle key interactions
     var keyForm = container.keyElement.querySelector('form')
 
-    function setFloodsVisibility (severity, visible) {
+    options.setFloodsVisibility = function (severity, visible) {
       // flood centroids
       floodCentroids.getSource().forEachFeature(function (feature) {
         if (severity.indexOf(feature.get('severity')) > -1) {
           feature.setStyle(visible ? null : new ol.style.Style({}))
         }
       })
+      // flood polygons
+      severity.forEach(function (severity) {
+        switch (severity) {
+          case 1:
+            floodsSevere.setVisible(visible)
+            break
+          case 2:
+            floodsWarning.setVisible(visible)
+            break
+          case 3:
+            floodsAlert.setVisible(visible)
+            break
+          case 4:
+            floodsNotInForce.setVisible(visible)
+            break
+          default:
+        }
+      })
+    }
+
+    options.setFloodsOpacity = function (opacity) {
+      floodsSevere.setOpacity(opacity)
+      floodsWarning.setOpacity(opacity)
+      floodsAlert.setOpacity(opacity)
+      floodsNotInForce.setOpacity(opacity)
     }
 
     if (keyForm) {
@@ -82,19 +109,15 @@
             break
           }
           case 'floodWarnings': {
-            floodsSevere.setVisible(target.checked)
-            floodsWarning.setVisible(target.checked)
-            setFloodsVisibility([1, 2], target.checked)
+            options.setFloodsVisibility([1, 2], target.checked)
             break
           }
           case 'floodAlerts': {
-            floodsAlert.setVisible(target.checked)
-            setFloodsVisibility([3], target.checked)
+            options.setFloodsVisibility([3], target.checked)
             break
           }
           case 'floodExpired': {
-            floodsNotInForce.setVisible(target.checked)
-            setFloodsVisibility([4], target.checked)
+            options.setFloodsVisibility([4], target.checked)
             break
           }
         }
@@ -109,20 +132,6 @@
         size: container.map.getSize()
       })
     }
-
-    // TODO: this should be performed dynamically from the key selection, or once cookie is impletemented
-    container.map.once('rendercomplete', function (event) {
-      floodsNotInForce.setVisible(false)
-      setFloodsVisibility([4], false)
-    })
-
-    container.map.on('moveend', function (event) {
-      var opacity = container.map.getView().getResolution() <= 25 ? 0.4 : 1
-      floodsSevere.setOpacity(opacity)
-      floodsWarning.setOpacity(opacity)
-      floodsAlert.setOpacity(opacity)
-      floodsNotInForce.setOpacity(opacity)
-    })
 
     this.map = container.map
     this.container = container
