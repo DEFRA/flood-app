@@ -156,7 +156,8 @@
         // Show overlay
         this.options.onFeatureClick(feature)
         this.showOverlay(this.selectedFeature, e.coordinate)
-        // TODO: if the feature is a warning triangle, query geoserver for the polygon so it can be highlighted else clear up:        
+
+        // Clear out pre selected polygon
         this.setFloodPolygonSource()
       } else {
         var layer = this.getFloodLayer(e.pixel)
@@ -317,6 +318,41 @@
         map.removeOverlay(this.overlay)
       }
     }
+
+    // TODO: this should be performed dynamically from the key selection, or once cookie is implemented
+    map.once('rendercomplete', function (event) {
+      options.setFloodsVisibility([4], false)
+    })
+
+    // Reactions based on pan/zoom change on map
+    map.on('moveend', function (event) {
+      // Update layer opacity setting for different map resolutions
+      var resolution = map.getView().getResolution()
+      var layerOpacity = 1
+      if (resolution > 20) {
+        layerOpacity = 1
+      } else if (resolution > 10) {
+        layerOpacity = 0.8
+      } else if (resolution > 5) {
+        layerOpacity = 0.6
+      } else {
+        layerOpacity = 0.4
+      }
+      options.setFloodsOpacity(layerOpacity)
+
+      // Key icons
+      if (resolution <= this.options.minIconResolution) {
+        // Key polygons
+        this.mapContainerInnerElement.querySelectorAll('[data-style]').forEach((symbol) => {
+          symbol.style = symbol.getAttribute('data-style-offset')
+        })
+      } else {
+        // Key icons
+        this.mapContainerInnerElement.querySelectorAll('[data-style]').forEach((symbol) => {
+          symbol.style = symbol.getAttribute('data-style')
+        })
+      }
+    }.bind(this))
   }
 
   maps.MapContainer = MapContainer
