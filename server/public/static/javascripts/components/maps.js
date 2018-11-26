@@ -48,7 +48,7 @@
             `}
             <span class="ol-overlay__symbol ol-overlay__symbol--${symbol}"></span>
         `
-      } else if (id.startsWith('flood_warning_alert_centroid')) {
+      } else if (id.startsWith('flood_warning_alert')) {
         html = `
           <p>
             <span class="govuk-body-m govuk-!-font-weight-bold">${props.severity_description}</span><br/>

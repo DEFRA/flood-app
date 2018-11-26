@@ -22,6 +22,7 @@
     var floodsNotInForce = maps.layers.floodsNotInForce()
     var stations = maps.layers.stations()
     var floodCentroids = maps.layers.floodCentroids()
+    var floodPolygon = maps.layers.floodPolygon()
 
     // MapContainer options
     var options = {
@@ -34,6 +35,7 @@
         floodsAlert,
         floodsWarning,
         floodsSevere,
+        floodPolygon,
         stations,
         floodCentroids
       ],
@@ -110,7 +112,7 @@
       })
     }
 
-    // TODO: this should be performed dynamically from the key selection, or once cookie is impletemented
+    // TODO: this should be performed dynamically from the key selection, or once cookie is implemented
     container.map.once('rendercomplete', function (event) {
       floodsNotInForce.setVisible(false)
       setFloodsVisibility([4], false)

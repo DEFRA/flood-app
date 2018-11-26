@@ -133,20 +133,18 @@
     map.on('click', function (e) {
       // Hide overlay if exists
       this.hideOverlay()
-      // Get mouse coordinates and check for feature
+      // Get mouse coordinates and check for feature if not the highlighted flood polygon
       var feature = map.forEachFeatureAtPixel(e.pixel, function (feature) {
         return feature
-      })
-      // no wfs/vector feature so check for wms image feature
-      if (!feature) {
-        if (isWmsImage(e.pixel)) {
-
+      }, {
+        layerFilter: function (layer) {
+          return layer.get('ref') !== 'flood-polygon'
         }
-      }
+      })
 
       // A new feature has been selected
       if (feature) {
-        // Target areas have a point and polygon on differet layers
+        // Target areas have a point and polygon on different layers
         feature.set('isSelected', true)
         // Store selected feature
         this.selectedFeature = feature
@@ -158,11 +156,45 @@
         // Show overlay
         this.options.onFeatureClick(feature)
         this.showOverlay(this.selectedFeature, e.coordinate)
+        // TODO: if the feature is a warning triangle, query geoserver for the polygon so it can be highlighted else clear up:        
+        this.setFloodPolygonSource()
       } else {
-        // No feature has been selected
-        // Close key
-        if (hasKey && this.isKeyOpen) {
-          this.closeKey()
+        var layer = this.getFloodLayer(e.pixel)
+        if (layer) {
+          var url = layer.getSource().getGetFeatureInfoUrl(e.coordinate, view.getResolution(), 'EPSG:3857', {
+            INFO_FORMAT: 'application/json',
+            FEATURE_COUNT: 1,
+            propertyName: 'fwa_key,fwa_code,severity,severity_description,description,geom'
+          })
+          if (url) {
+            flood.utils.xhr(url, function (err, json) {
+              if (err) {
+                console.error(err)
+              }
+
+              var feature = (new ol.format.GeoJSON()).readFeatures(json, {
+                dataProjection: 'EPSG:4326',
+                featureProjection: 'EPSG:3857'
+              })[0]
+
+              // Add polygon to selection layer
+              this.setFloodPolygonSource(new ol.source.Vector({
+                features: [feature],
+                format: new ol.format.GeoJSON()
+              }))
+
+              this.selectedFeature = feature
+              this.options.onFeatureClick(feature)
+              this.showOverlay(this.selectedFeature, e.coordinate)
+            }.bind(this))
+          }
+        } else {
+          // No feature has been selected
+          // Close key
+          if (hasKey && this.isKeyOpen) {
+            this.closeKey()
+          }
+          this.setFloodPolygonSource()
         }
       }
     }.bind(this))
@@ -176,23 +208,32 @@
       })
       // Detect wms image at mouse coords
       if (!hit) {
-        hit = isWmsImage(mouseCoordInMapPixels)
+        hit = this.getFloodLayer(mouseCoordInMapPixels)
       }
       if (hit) {
         map.getTarget().style.cursor = 'pointer'
       } else {
         map.getTarget().style.cursor = ''
       }
-    })
+    }.bind(this))
 
-    // detects if pixel is over a wms image
-    function isWmsImage (pixel) {
+    // detects if pixel is over a wms image and returns the layer
+    this.getFloodLayer = function (pixel) {
       return map.forEachLayerAtPixel(pixel, function (layer) {
-        return true
+        return layer
       }, {
         layerFilter: function (layer) {
           var ref = layer.get('ref')
           return (ref && ref.indexOf('floods-') > -1)
+        }
+      })
+    }
+
+    // Sets the source of selected warning polygon
+    this.setFloodPolygonSource = function (source) {
+      map.getLayers().forEach(function (layer) {
+        if (layer.get('ref') === 'flood-polygon') {
+          layer.setSource(source)
         }
       })
     }
@@ -233,7 +274,7 @@
     }
 
     // Show overlay
-    this.showOverlay = function (feature, coorindate) {
+    this.showOverlay = function (feature, coordinate) {
       // Add class to map
       el.classList.add('map--overlay-open')
       // Add feature html

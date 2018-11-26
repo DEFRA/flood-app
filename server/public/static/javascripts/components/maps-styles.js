@@ -218,9 +218,19 @@
     return style
   }
 
+  // Style to highlight selected polygon
+  function floodPolygon () {
+    return new ol.style.Style({
+      fill: new ol.style.Fill({
+        color: 'RGB(0, 0, 0, 0.2)'
+      })
+    })
+  }
+
   styles.floods = floods
   styles.stations = stations
   styles.location = location
+  styles.floodPolygon = floodPolygon
 
   maps.styles = styles
 })(window, window.flood.maps)
