@@ -7,7 +7,7 @@
       ref: 'bing-road',
       source: new ol.source.BingMaps({
         key: 'Ajou-3bB1TMVLPyXyNvMawg4iBPqYYhAN4QMXvOoZvs47Qmrq7L5zio0VsOOAHUr',
-        imagerySet: 'road'
+        imagerySet: 'RoadOnDemand'
       }),
       visible: true,
       zIndex: 0
@@ -19,7 +19,7 @@
       ref: 'bing-aerial',
       source: new ol.source.BingMaps({
         key: 'Ajou-3bB1TMVLPyXyNvMawg4iBPqYYhAN4QMXvOoZvs47Qmrq7L5zio0VsOOAHUr',
-        imagerySet: 'AerialWithLabels'
+        imagerySet: 'AerialWithLabelsOnDemand'
       }),
       visible: false
     })
