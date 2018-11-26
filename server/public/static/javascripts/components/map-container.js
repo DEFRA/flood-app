@@ -144,7 +144,7 @@
 
       // A new feature has been selected
       if (feature) {
-        // Target areas have a point and polygon on differet layers
+        // Target areas have a point and polygon on different layers
         feature.set('isSelected', true)
         // Store selected feature
         this.selectedFeature = feature
@@ -157,42 +157,36 @@
         this.options.onFeatureClick(feature)
         this.showOverlay(this.selectedFeature, e.coordinate)
         // TODO: if the feature is a warning triangle, query geoserver for the polygon so it can be highlighted else clear up:        
-        setFloodPolygonSource()
+        this.setFloodPolygonSource()
       } else {
-        var layer = getFloodLayer(e.pixel)
+        var layer = this.getFloodLayer(e.pixel)
         if (layer) {
           var url = layer.getSource().getGetFeatureInfoUrl(e.coordinate, view.getResolution(), 'EPSG:3857', {
             INFO_FORMAT: 'application/json',
             FEATURE_COUNT: 1,
-            propertyName: 'fwa_key,fwa_code,severity,geom'
+            propertyName: 'fwa_key,fwa_code,severity,severity_description,description,geom'
           })
           if (url) {
             flood.utils.xhr(url, function (err, json) {
               if (err) {
                 console.error(err)
               }
-              var fwaCode = json.features[0].properties.fwa_code
 
-              setFloodPolygonSource(new ol.source.Vector({
-                features: (new ol.format.GeoJSON()).readFeatures(json, {
-                  featureProjection: 'EPSG:3857'
-                }),
+              var feature = (new ol.format.GeoJSON()).readFeatures(json, {
+                dataProjection: 'EPSG:4326',
+                featureProjection: 'EPSG:3857'
+              })[0]
+
+              // Add polygon to selection layer
+              this.setFloodPolygonSource(new ol.source.Vector({
+                features: [feature],
                 format: new ol.format.GeoJSON()
               }))
 
-              // now get the centroid feature that needs highlighting
-              map.getLayers().forEach(function (layer) {
-                if (layer.get('ref') === 'flood-centroids') {
-                  layer.getSource().getFeatures().forEach(function (feature) {
-                    if (feature.get('fwa_code') === fwaCode) {
-                      // highlight this feature:
-                      console.log(feature)
-                      // TODO create functions for highlight centroid and highlight polygon
-                    }
-                  })
-                }
-              })
-            })
+              this.selectedFeature = feature
+              this.options.onFeatureClick(feature)
+              this.showOverlay(this.selectedFeature, e.coordinate)
+            }.bind(this))
           }
         } else {
           // No feature has been selected
@@ -200,7 +194,7 @@
           if (hasKey && this.isKeyOpen) {
             this.closeKey()
           }
-          setFloodPolygonSource()
+          this.setFloodPolygonSource()
         }
       }
     }.bind(this))
@@ -214,17 +208,17 @@
       })
       // Detect wms image at mouse coords
       if (!hit) {
-        hit = getFloodLayer(mouseCoordInMapPixels)
+        hit = this.getFloodLayer(mouseCoordInMapPixels)
       }
       if (hit) {
         map.getTarget().style.cursor = 'pointer'
       } else {
         map.getTarget().style.cursor = ''
       }
-    })
+    }.bind(this))
 
     // detects if pixel is over a wms image and returns the layer
-    function getFloodLayer (pixel) {
+    this.getFloodLayer = function (pixel) {
       return map.forEachLayerAtPixel(pixel, function (layer) {
         return layer
       }, {
@@ -235,7 +229,8 @@
       })
     }
 
-    function setFloodPolygonSource (source) {
+    // Sets the source of selected warning polygon
+    this.setFloodPolygonSource = function (source) {
       map.getLayers().forEach(function (layer) {
         if (layer.get('ref') === 'flood-polygon') {
           layer.setSource(source)

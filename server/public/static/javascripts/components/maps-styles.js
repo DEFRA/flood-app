@@ -221,9 +221,8 @@
   // Style to highlight selected polygon
   function floodPolygon () {
     return new ol.style.Style({
-      stroke: new ol.style.Stroke({
-        color: 'orange',
-        width: 2
+      fill: new ol.style.Fill({
+        color: 'RGB(0, 0, 0, 0.2)'
       })
     })
   }

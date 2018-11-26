@@ -112,7 +112,7 @@
       })
     }
 
-    // TODO: this should be performed dynamically from the key selection, or once cookie is impletemented
+    // TODO: this should be performed dynamically from the key selection, or once cookie is implemented
     container.map.once('rendercomplete', function (event) {
       floodsNotInForce.setVisible(false)
       setFloodsVisibility([4], false)

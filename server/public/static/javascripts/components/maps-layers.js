@@ -44,6 +44,7 @@
   function floodPolygonsSevere () {
     return new ol.layer.Image({
       ref: 'floods-severe',
+      maxResolution: 200,
       source: new ol.source.ImageWMS({
         url: '/ows?service=wms',
         serverType: 'geoserver',
@@ -58,6 +59,7 @@
   function floodPolygonsWarning () {
     return new ol.layer.Image({
       ref: 'floods-warning',
+      maxResolution: 200,
       source: new ol.source.ImageWMS({
         url: '/ows?service=wms',
         serverType: 'geoserver',
@@ -72,6 +74,7 @@
   function floodPolygonsAlert () {
     return new ol.layer.Image({
       ref: 'floods-alert',
+      maxResolution: 200,
       source: new ol.source.ImageWMS({
         url: '/ows?service=wms',
         serverType: 'geoserver',
@@ -86,6 +89,7 @@
   function floodPolygonsNotInForce () {
     return new ol.layer.Image({
       ref: 'floods-notinforce',
+      maxResolution: 200,
       source: new ol.source.ImageWMS({
         url: '/ows?service=wms',
         serverType: 'geoserver',
@@ -100,6 +104,7 @@
   function floodPolygon () {
     return new ol.layer.Vector({
       ref: 'flood-polygon',
+      maxResolution: 200,
       style: maps.styles.floodPolygon
     })
   }
@@ -107,6 +112,7 @@
   function floodCentroids () {
     return new ol.layer.Vector({
       ref: 'flood-centroids',
+      minResolution: 200,
       source: new ol.source.Vector({
         url: '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert_centroid&maxFeatures=10000&outputFormat=application/json',
         format: new ol.format.GeoJSON()
