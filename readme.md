@@ -42,3 +42,8 @@ Open your browser at
 | FLOOD_APP_GA_ID   | Google analytics Id |    no    |    ''     |                             |  |
 | FLOOD_APP_FBAPP_ID   | Facebook AppId |    no    |    ''     |                             |  |
 | FLOOD_APP_SITE_URL   | Site Url  |    no    | http://localhost:3009 |                             | For SEO metadata |
+| FLOOD_APP_ERRBIT_POST_ERRORS | Errbit activation |    no    |   true, false   |  |       |
+| FLOOD_APP_ERRBIT_ENV     | Errbit env      |    no    |     ||       |
+| FLOOD_APP_ERRBIT_KEY | Errbit key |    no    |         |  |       |
+| FLOOD_APP_ERRBIT_HOST     | Errbit host      |    no    |     ||       |
+| FLOOD_APP_ERRBIT_PROXY  | Errbit proxy |    no    | ''    ||       |
