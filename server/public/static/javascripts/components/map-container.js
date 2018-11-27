@@ -338,7 +338,7 @@
       } else {
         layerOpacity = 0.4
       }
-      options.setFloodsOpacity(layerOpacity)
+      options.setFloodsOpacity && options.setFloodsOpacity(layerOpacity)
 
       // Key icons
       if (resolution <= this.options.minIconResolution) {

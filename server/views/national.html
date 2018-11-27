@@ -86,7 +86,32 @@
   <div class="govuk-grid-column-two-thirds">
     <h2 class="govuk-heading-m govuk-!-margin-top-6">Next 5 days</h2>
     <p>{{model.outlook.headline}}</p>
-    <p>See a <a href="/outlook">map showing the full 5-day outlook</a></p>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <figure class="map map--large map--outlook-control-open map--embedded" id="map-outlook">
+      <div class="map__container">
+        <div class="map__container-inner">
+          {% include "./partials/outlook-key.html" %}
+          <div class="map__outlook-control">
+            <div class="map__outlook-control__inner">
+              {% for day in model.days %}
+                <div class="map__outlook-control__day">
+                  <button class="map__outlook-control__button"
+                    aria-selected="{{ "true" if not day.idx else "false" }}"
+                    data-day="{{day.idx}}">{{day.date | formatDate('ddd D')}}
+                    <span class="map__outlook-control__icon map__outlook-control__icon--risk-level-{{day.level}}"></span>
+                  </button>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <figcaption class="govuk-visually-hidden">5 day flood guidance outlook</figcaption>
+    </figure>
   </div>
 </div>
 
