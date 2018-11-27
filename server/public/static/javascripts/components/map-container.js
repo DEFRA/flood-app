@@ -1,3 +1,11 @@
+// This file represents the map container.
+// It is responsible for initialising the map
+// using the ol.view, layers and other options passed.
+// It also controls the zoom, full screen controls, responsiveness etc.
+// No implementation details specific to a map should be in here.
+// This is a generic container that could be reused for LTFRI maps, FMfP etc.
+// To include a key, include an element with `.map-key__container` in the main inner element.
+
 (function (window, flood) {
   var ol = window.ol
   var maps = flood.maps
@@ -148,54 +156,15 @@
         feature.set('isSelected', true)
         // Store selected feature
         this.selectedFeature = feature
-        // Move point feature to selected/top layer
-        if (feature.get('geometryType') === 'point') {
-          this.layerSelectedFeature.getSource().addFeature(feature)
-        }
 
         // Show overlay
         this.options.onFeatureClick(feature)
         this.showOverlay(this.selectedFeature, e.coordinate)
-
-        // Clear out pre selected polygon
-        this.setFloodPolygonSource()
       } else {
-        var layer = this.getFloodLayer(e.pixel)
-        if (layer) {
-          var url = layer.getSource().getGetFeatureInfoUrl(e.coordinate, view.getResolution(), 'EPSG:3857', {
-            INFO_FORMAT: 'application/json',
-            FEATURE_COUNT: 1,
-            propertyName: 'fwa_key,fwa_code,severity,severity_description,description,geom'
-          })
-          if (url) {
-            flood.utils.xhr(url, function (err, json) {
-              if (err) {
-                console.error(err)
-              }
-
-              var feature = (new ol.format.GeoJSON()).readFeatures(json, {
-                dataProjection: 'EPSG:4326',
-                featureProjection: 'EPSG:3857'
-              })[0]
-
-              // Add polygon to selection layer
-              this.setFloodPolygonSource(new ol.source.Vector({
-                features: [feature],
-                format: new ol.format.GeoJSON()
-              }))
-
-              this.selectedFeature = feature
-              this.options.onFeatureClick(feature)
-              this.showOverlay(this.selectedFeature, e.coordinate)
-            }.bind(this))
-          }
-        } else {
-          // No feature has been selected
-          // Close key
-          if (hasKey && this.isKeyOpen) {
-            this.closeKey()
-          }
-          this.setFloodPolygonSource()
+        // No feature has been selected
+        // Close key
+        if (hasKey && this.isKeyOpen) {
+          this.closeKey()
         }
       }
     }.bind(this))
@@ -208,36 +177,15 @@
         return true
       })
       // Detect wms image at mouse coords
-      if (!hit) {
-        hit = this.getFloodLayer(mouseCoordInMapPixels)
-      }
+      // if (!hit) {
+      //   hit = this.getFloodLayer(mouseCoordInMapPixels)
+      // }
       if (hit) {
         map.getTarget().style.cursor = 'pointer'
       } else {
         map.getTarget().style.cursor = ''
       }
-    }.bind(this))
-
-    // detects if pixel is over a wms image and returns the layer
-    this.getFloodLayer = function (pixel) {
-      return map.forEachLayerAtPixel(pixel, function (layer) {
-        return layer
-      }, {
-        layerFilter: function (layer) {
-          var ref = layer.get('ref')
-          return (ref && ref.indexOf('floods-') > -1)
-        }
-      })
-    }
-
-    // Sets the source of selected warning polygon
-    this.setFloodPolygonSource = function (source) {
-      map.getLayers().forEach(function (layer) {
-        if (layer.get('ref') === 'flood-polygon') {
-          layer.setSource(source)
-        }
-      })
-    }
+    })
 
     // Set fullscreen state
     this.setFullScreen = function () {
@@ -318,41 +266,6 @@
         map.removeOverlay(this.overlay)
       }
     }
-
-    // TODO: this should be performed dynamically from the key selection, or once cookie is implemented
-    map.once('rendercomplete', function (event) {
-      options.setFloodsVisibility([4], false)
-    })
-
-    // Reactions based on pan/zoom change on map
-    map.on('moveend', function (event) {
-      // Update layer opacity setting for different map resolutions
-      var resolution = map.getView().getResolution()
-      var layerOpacity = 1
-      if (resolution > 20) {
-        layerOpacity = 1
-      } else if (resolution > 10) {
-        layerOpacity = 0.8
-      } else if (resolution > 5) {
-        layerOpacity = 0.6
-      } else {
-        layerOpacity = 0.4
-      }
-      options.setFloodsOpacity && options.setFloodsOpacity(layerOpacity)
-
-      // Key icons
-      if (resolution <= this.options.minIconResolution) {
-        // Key polygons
-        this.mapContainerInnerElement.querySelectorAll('[data-style]').forEach((symbol) => {
-          symbol.style = symbol.getAttribute('data-style-offset')
-        })
-      } else {
-        // Key icons
-        this.mapContainerInnerElement.querySelectorAll('[data-style]').forEach((symbol) => {
-          symbol.style = symbol.getAttribute('data-style')
-        })
-      }
-    }.bind(this))
   }
 
   maps.MapContainer = MapContainer

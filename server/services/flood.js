@@ -26,6 +26,11 @@ module.exports = {
   },
 
   async getOutlook () {
+    // const url = `${serviceUrl}/outlook`
+    // return util.getJson(url)
+
+    // There can be more than one statement per day
+    // This approach, while only temporary, won't do.
     const marker = {
       id: 830,
       date: new Date(2018, 10, 15, 10, 30, 0)
@@ -35,9 +40,8 @@ module.exports = {
     const id = marker.id + diff // 787
     const url = `https://api.foursources.metoffice.gov.uk/api/public/statements/${id}.json`
     return util.getJson(url, true)
+
     // return Promise.resolve(outlook)
-    // const url = `${serviceUrl}/outlook`
-    // return util.getJson(url)
   },
 
   async getStationById (id, direction) {

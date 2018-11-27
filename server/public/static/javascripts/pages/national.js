@@ -1,4 +1,5 @@
 (function (window, flood) {
+  var ol = window.ol
   var maps = flood.maps
   var createMap = maps.createMap
   var MapContainer = maps.MapContainer
@@ -6,7 +7,6 @@
 
   // Flood map
   createMap('map')
-
 
   // Outlook map
   var road = maps.layers.road()

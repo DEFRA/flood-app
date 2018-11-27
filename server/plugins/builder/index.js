@@ -6,6 +6,8 @@ const data = require(dataFilePath)
 const relativeTo = __dirname
 const Model = require('./model')
 
+// Because the json we get is developed using the old FB playground site
+// which doesn't include `conditions`, we need to add it here to pass validation.
 data.conditions = []
 
 const model = new Model(data, {

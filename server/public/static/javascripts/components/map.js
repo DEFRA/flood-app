@@ -1,3 +1,9 @@
+// This file represents the main map used in various pages
+// across the site. It includes flood warnings, river levels
+// and other layers in the future e.g. Impacts.
+
+// It uses the MapContainer
+
 (function (window, flood) {
   var ol = window.ol
   var maps = flood.maps
@@ -26,6 +32,7 @@
 
     // MapContainer options
     var options = {
+      minIconResolution: 200,
       buttonText: 'Map showing current risk',
       view: view,
       layers: [
@@ -50,11 +57,12 @@
     // Create MapContainer
     var containerEl = document.getElementById(containerId)
     var container = new MapContainer(containerEl, options)
+    var map = container.map
 
     // Handle key interactions
     var keyForm = container.keyElement.querySelector('form')
 
-    options.setFloodsVisibility = function (severity, visible) {
+    function setFloodsVisibility (severity, visible) {
       // flood centroids
       floodCentroids.getSource().forEachFeature(function (feature) {
         if (severity.indexOf(feature.get('severity')) > -1) {
@@ -81,49 +89,183 @@
       })
     }
 
-    options.setFloodsOpacity = function (opacity) {
+    function setFloodsOpacity (opacity) {
       floodsSevere.setOpacity(opacity)
       floodsWarning.setOpacity(opacity)
       floodsAlert.setOpacity(opacity)
       floodsNotInForce.setOpacity(opacity)
     }
 
-    if (keyForm) {
-      keyForm.addEventListener('change', function (e) {
-        const target = e.target
-        const name = target.name
-
-        switch (name) {
-          case 'baseLayer': {
-            if (target.value === 'mapView') {
-              road.setVisible(true)
-              satellite.setVisible(false)
-            } else {
-              road.setVisible(false)
-              satellite.setVisible(true)
-            }
-            break
-          }
-          case 'riverLevels': {
-            stations.setVisible(target.checked)
-            break
-          }
-          case 'floodWarnings': {
-            options.setFloodsVisibility([1, 2], target.checked)
-            break
-          }
-          case 'floodAlerts': {
-            options.setFloodsVisibility([3], target.checked)
-            break
-          }
-          case 'floodExpired': {
-            options.setFloodsVisibility([4], target.checked)
-            break
-          }
+    // Detects if pixel is over a wms image and returns the layer
+    function getFloodLayer (pixel) {
+      return map.forEachLayerAtPixel(pixel, function (layer) {
+        return layer
+      }, {
+        layerFilter: function (layer) {
+          var ref = layer.get('ref')
+          return (ref && ref.indexOf('floods-') > -1)
         }
       })
     }
 
+    // Sets the source of selected warning polygon
+    function setFloodPolygonSource (source) {
+      map.getLayers().forEach(function (layer) {
+        if (layer.get('ref') === 'flood-polygon') {
+          layer.setSource(source)
+        }
+      })
+    }
+
+    // TODO: this should be performed dynamically from the key selection, or once cookie is implemented
+    map.once('rendercomplete', function (event) {
+      setFloodsVisibility([4], false)
+    })
+
+    // Reactions based on pan/zoom change on map
+    map.on('moveend', function (event) {
+      // Update layer opacity setting for different map resolutions
+      var resolution = map.getView().getResolution()
+      var layerOpacity = 1
+      if (resolution > 20) {
+        layerOpacity = 1
+      } else if (resolution > 10) {
+        layerOpacity = 0.8
+      } else if (resolution > 5) {
+        layerOpacity = 0.6
+      } else {
+        layerOpacity = 0.4
+      }
+
+      setFloodsOpacity(layerOpacity)
+
+      // Key icons
+      if (resolution <= options.minIconResolution) {
+        // Key polygons
+        keyForm.querySelectorAll('[data-style]').forEach((symbol) => {
+          symbol.style = symbol.getAttribute('data-style-offset')
+        })
+      } else {
+        // Key icons
+        keyForm.querySelectorAll('[data-style]').forEach((symbol) => {
+          symbol.style = symbol.getAttribute('data-style')
+        })
+      }
+    })
+    
+
+
+
+
+
+
+
+    // Close key or place locator if map is clicked
+    map.on('click', function (e) {
+      // Get mouse coordinates and check for feature if not the highlighted flood polygon
+      var feature = map.forEachFeatureAtPixel(e.pixel, function (feature) {
+        return feature
+      }, {
+        layerFilter: function (layer) {
+          return layer.get('ref') !== 'flood-polygon'
+        }
+      })
+
+      // A new feature has been selected
+      if (feature) {
+        // Clear out pre selected polygon
+        setFloodPolygonSource()
+      } else {
+        var layer = getFloodLayer(e.pixel)
+        if (layer) {
+          var url = layer.getSource().getGetFeatureInfoUrl(e.coordinate, view.getResolution(), 'EPSG:3857', {
+            INFO_FORMAT: 'application/json',
+            FEATURE_COUNT: 1,
+            propertyName: 'fwa_key,fwa_code,severity,severity_description,description,geom'
+          })
+
+          if (url) {
+            flood.utils.xhr(url, function (err, json) {
+              if (err) {
+                console.error(err)
+              }
+
+              var feature = (new ol.format.GeoJSON()).readFeatures(json, {
+                dataProjection: 'EPSG:4326',
+                featureProjection: 'EPSG:3857'
+              })[0]
+
+              // Add polygon to selection layer
+              setFloodPolygonSource(new ol.source.Vector({
+                features: [feature],
+                format: new ol.format.GeoJSON()
+              }))
+
+              maps.onFeatureClick(feature)
+            })
+          }
+        } else {
+          setFloodPolygonSource()
+        }
+      }
+    })
+
+    // Show cursor when hovering over features
+    map.on('pointermove', function (e) {
+      var mouseCoordInMapPixels = [e.originalEvent.offsetX, e.originalEvent.offsetY]
+      // Detect vector feature at mouse coords
+      var hit = map.forEachFeatureAtPixel(mouseCoordInMapPixels, function (feature, layer) {
+        return true
+      })
+
+      // Detect wms image at mouse coords
+      if (!hit) {
+        hit = getFloodLayer(mouseCoordInMapPixels)
+      }
+
+      if (hit) {
+        map.getTarget().style.cursor = 'pointer'
+      } else {
+        map.getTarget().style.cursor = ''
+      }
+    })
+
+    // Key form layer toggle
+    keyForm.addEventListener('change', function (e) {
+      const target = e.target
+      const name = target.name
+
+      switch (name) {
+        case 'baseLayer': {
+          if (target.value === 'mapView') {
+            road.setVisible(true)
+            satellite.setVisible(false)
+          } else {
+            road.setVisible(false)
+            satellite.setVisible(true)
+          }
+          break
+        }
+        case 'riverLevels': {
+          stations.setVisible(target.checked)
+          break
+        }
+        case 'floodWarnings': {
+          setFloodsVisibility([1, 2], target.checked)
+          break
+        }
+        case 'floodAlerts': {
+          setFloodsVisibility([3], target.checked)
+          break
+        }
+        case 'floodExpired': {
+          setFloodsVisibility([4], target.checked)
+          break
+        }
+      }
+    })
+
+    // If we have a location, set the map extent
     if (place && place.bbox) {
       var searchExtent = ol.proj.transformExtent(place.bbox, 'EPSG:4326', 'EPSG:3857')
 
@@ -133,7 +275,7 @@
       })
     }
 
-    this.map = container.map
+    this.map = map
     this.container = container
   }
 
