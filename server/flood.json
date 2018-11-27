@@ -1,11 +1,11 @@
 {
   "pages": [
     {
-      "path": "/private-beta",
+      "path": "/alpha-consent",
       "components": [
         {
           "type": "Html",
-          "content": "<div class=\"govuk-prose-scope\">\r\n<p>\r\nThank you for taking part in our research. We’d like you to look at a prototype service we’re working on. You can use it in exactly the same way and for the same reasons you would use the real service.\r\n</p>\r\n\r\n<p>\r\nThis prototype uses real data to present a picture of what’s going on in any area you select. \r\n</p>\r\n<p>\r\nWe’d like to know about your experience as you use it. Tell us about it using the feedback button you’ll see halfway up the right hand edge of the screen. What makes your experience good, or not so good? What frustrates you? What’s missing? How does it make you feel? \r\n</p>\r\n<p>\r\nBe candid - the more honest you are, the more we’ll understand what the service needs to look like and what it needs to do. Everything we learn will be used to streamline the design and improve the usability of the service.\r\n</p>\r\n\r\n<h3 class=\"govuk-heading-m\">Before you start</h3>\r\n<div class=\"govuk-prose-scope\">\r\n\r\n<p>\r\nBy proceeding you are consenting to our use of <a href=\"https://www.gov.uk/help/cookies\">cookies. <a>These are small files we place onto your computer to collect information about how you browse the service.</a>\r\n</p>\r\n<p>\r\nFind out more about cookies on GOV.UK</a> and <a href=\"https://ico.org.uk/for-the-public/online/cookies/\">how to manage cookies</a>. You can also learn more about how we use cookies and related technologies by reading our <a href=\"/privacy-policy\">privacy policy</a> and the <a href=\"https://www.hotjar.com/legal/policies/privacy\">Hotjar privacy policy</a>.\r\n</p>\r\n</div>\r\n\r\n<p>\r\nSelect ‘Consent and go to prototype' to proceed.</p>\r\n</div>",
+          "content": "<div class=\"govuk-prose-scope\">\r\n<p>\r\nThank you for taking part in our research. We’d like you to look at a prototype service we’re working on. You can use it in exactly the same way and for the same reasons you would use the real service.\r\n</p>\r\n\r\n<p>\r\nThis prototype uses real data to provide a picture of flood risk in any area you select. \r\n</p>\r\n<p>\r\nWe’d like to know about your experience as you use it. Tell us about it using the feedback button you’ll see halfway up the right hand edge of the screen. What makes your experience good, or not so good? What frustrates you? What’s missing? How does it make you feel? \r\n</p>\r\n<p>\r\nBe honest.  We want to understand what the service needs to look like and what it needs to do. Everything we learn will be used to streamline the design and improve the usability of the service.\r\n</p>\r\n\r\n<h3 class=\"govuk-heading-m\">Before you start</h3>\r\n<div class=\"govuk-prose-scope\">\r\n\r\n<p>\r\nBy proceeding you are consenting to our use of <a href=\"https://www.gov.uk/help/cookies\">cookies. <a>These are small files we place onto your computer to collect information about how you browse the service.</a>\r\n</p>\r\n<p>\r\nFind out more about cookies on GOV.UK</a> and <a href=\"https://ico.org.uk/for-the-public/online/cookies/\">how to manage cookies</a>. You can also learn more about how we use cookies and related technologies by reading our <a href=\"/privacy-policy\">privacy policy</a> and the <a href=\"https://www.hotjar.com/legal/policies/privacy\">Hotjar privacy policy</a>.\r\n</p>\r\n</div>\r\n\r\n<p>\r\nSelect ‘Consent and go to prototype' to proceed.</p>\r\n</div>",
           "options": {},
           "schema": {}
         },
@@ -23,7 +23,144 @@
         }
       ],
       "next": [],
-      "title": "Give research consent before using the flood information service prototype"
+      "title": "Give your consent before using the flood information service prototype"
+    },
+    {
+      "path": "/alpha-start-page",
+      "title": "Check if a location in England is at risk of flooding now",
+      "section": "floodRisk",
+      "components": [
+        {
+          "type": "Html",
+          "content": "<div class=\"govuk-prose-scope\">\r\n<p>\r\nUse this service to see:\r\n</p>\r\n\r\n<ul class=\"govuk-list govuk-list--bullet\">\r\n  <li>if any local flood warnings are in force</li>\r\n  <li>the flood risk forecast for the next 5 days</li>\r\n  <li>the latest river levels and forecast levels</li>\r\n\r\n</ul>\r\n\r\n</div>",
+          "options": {},
+          "schema": {}
+        },
+        {
+          "type": "InsetText",
+          "content": "This service is for England only. <a href=\"https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area\">Northern Ireland,</a>  <a href=\"https://www.sepa.org.uk/environment/water/flooding/\">Scotland</a> and <a href=\"https://naturalresources.wales/flooding?lang=en\">Wales</a>  have their own flood risk information services.",
+          "options": {},
+          "schema": {}
+        },
+        {
+          "type": "Html",
+          "content": "<a href=\"/start\" role=\"button\" draggable=\"false\" class=\"govuk-button govuk-button--start\">\r\nStart now\r\n</a>",
+          "options": {},
+          "schema": {}
+        },
+        {
+          "type": "Html",
+          "content": "<div class=\"govuk-prose-scope\">\r\n <p>\r\n </p>\r\n<h3 class=\"govuk-heading-l\">The national picture, at a glance</h3>\r\n\r\n<p>You can also <a href=\"https://flood-warning-information.service.gov.uk/england\">look at the latest flood risk situation for all of England</a>, or  <a href=\"https://flood-warning-information.service.gov.uk/england\">see the 5-day outlook.</a>\r\n</p>\r\n\r\n<h3 class=\"govuk-heading-l\">Get flood warnings by text, phone or email</h3>\r\n<p>\r\n<a href=\"https://www.gov.uk/sign-up-for-flood-warnings\">Sign up for flood warnings.</a>  This service is free.\r\n</p>\r\n\r\n<h3 class=\"govuk-heading-l\">Other ways to find out about flood risk</h3>\r\n\r\n<p>For current flood warnings in force please call our 24-hour Floodline on:\r\n</p>\r\n<p>\r\nTelephone: 0345 988 1188\r\n</p>\r\n<p>\r\nType talk: 0345 602 6340 (for the hard of hearing)\r\n</p>\r\n<p>\r\n<a href=\"https://www.gov.uk/call-charges\">Find out more about call charges.</a>\r\n</p>\r\n</div>",
+          "options": {},
+          "schema": {}
+        }
+      ],
+      "next": []
+    },
+    {
+      "path": "/alpha-what-to-do-in-a-flood",
+      "title": "What to do in a flood (1. What the flood warnings mean)",
+      "section": "floodRisk",
+      "components": [
+        {
+          "type": "Html",
+          "content": "<div class=\"govuk-prose-scope\">\r\n<p>\r\nWhat the flood warnings mean\r\n</p>\r\n<p>\r\nWhat to do if you get a flood alert\r\n</p>\r\n<p>\r\nWhat to do if you get a flood warning\r\n</p>\r\n<p>\r\nWhat to do if you get a severe flood warning\r\n</p>\r\n<p>\r\n<h2 class=\"govuk-heading-m\">1. What the flood warnings mean</h2>\r\n</p>\r\n<p>\r\nWe issue 3 levels of flood warning:\r\n</p>\r\n<h3 class=\"govuk-heading-m\">Flood alert - prepare</h3>\r\n<p>image of flood alert symbol\r\n<ul class=\"govuk-list govuk-list--bullet\">\r\n  <li>prepare a bag that includes medicines and insurance documents\r\n</li>\r\n  <li>check flood warnings\r\n</li>\r\n</ul>\r\n</p>\r\n<h3 class=\"govuk-heading-m\">Flood warning - act</h3>\r\n<p>\r\nImage of flood warning symbol\r\n</p>\r\n<ul class=\"govuk-list govuk-list--bullet\">\r\n  <li>turn off gas, water and electricity\r\n</li>\r\n  <li>move things upstairs or to safety\r\n</li>\r\n<li>move family, pets and car to safety</li>\r\n</ul>\r\n\r\n<h3 class=\"govuk-heading-m\">Severe flood warning - survive\r\n</h3>\r\n<p>\r\n\r\nImage of severe flood warning symbol\r\n</p>\r\n\r\n<ul class=\"govuk-list govuk-list--bullet\">\r\n  <li>call 999 if in immediate danger\r\n</li>\r\n  <li>follow advice from emergency services\r\n</li>\r\n  <li>keep yourself and your family safe\r\n</li>\r\n\r\n</ul>\r\n\r\n<p>\r\nSave a copy of this <a href=\"https://flood-warning-information.service.gov.uk/public/pdf/flood_warnings.pdf\">simple flood plan (PDF, 139KB)</a> so you’ll know what to do when there’s a flood warning in your area.\r\n</p>\r\n\r\n\r\n<p><a href=\"/alpha-start-page\r\n\">View current warnings and advice specific to your area.</a>.</p>\r\n\r\n<p>\r\nAll floods are different and you should take advice from the emergency services and your local authority if you’re in a flood.\r\n</p>\r\n</div>",
+          "options": {},
+          "schema": {}
+        }
+      ],
+      "next": []
+    },
+    {
+      "path": "/alpha-location-not-england",
+      "title": "This service provides flood warning information for England only",
+      "section": "floodRisk",
+      "components": [
+        {
+          "type": "Html",
+          "content": "<div class=\"govuk-prose-scope\">\r\n<p>Flood warning information for Northern Ireland is available from <a href=\"https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area\r\n\">Northern Ireland Direct.</a>\r\n</p>\r\n\r\n<p>\r\nFlood warning information for Scotland is available from <a href=\"https://www.sepa.org.uk/environment/water/flooding/\r\n\">the Scottish Environment Protection Agency</a>.\r\n</p>\r\n<p>\r\nFlood warning information for Wales is available from <a href=\"https://naturalresources.wales/flooding?lang=en\r\n\">Natural Resources Wales</a>.</p>\r\n</p>\r\n<p>In England, you can use the <a href=\"https://flood-warning-information.service.gov.uk/warnings\"</a>flood information service.\r\n</p>\r\n<h3 class=\"govuk-heading-m\">How useful was this information?</h3>\r\n<p>Your feedback will help us improve this service</p>\r\n</div>",
+          "options": {},
+          "schema": {}
+        }
+      ],
+      "next": []
+    },
+    {
+      "path": "/alpha-sms-auto-opt-in-info",
+      "title": "This phone number has been automatically opted-in to receive flood warnings",
+      "section": "floodRisk",
+      "components": [
+        {
+          "type": "Html",
+          "content": "<div class=\"govuk-prose-scope\">\r\n<p>\r\nIn England, the Environment Agency sends flood warnings to phone numbers registered in areas at risk of flooding from rivers or the sea. The service is anonymous and free.\r\n</p>\r\n<h3 class=\"govuk-heading-m\">Why did we send you this message?</h3>\r\n<p>\r\nWe have a legal duty to warn people who may be at risk of flooding so they can take action to protect themselves, their family and property.\r\n</p>\r\n\r\n<p>\r\nThis phone number was automatically added to the list of numbers to which we send flood warnings. This is because it was registered in an area that’s at risk of flooding in the future and that may have flooded in the past.\r\n</p>\r\n<h3 class=\"govuk-heading-m\">How did we get your number?</h3>\r\n<p>\r\nWe tell phone companies about areas at risk of flooding. They send us a list of the phone numbers registered in those areas.\r\n</p>\r\n<p>\r\nThey do not give us the names or addresses associated with those numbers. We store the numbers securely, in line with our personal information charter.\r\n</p>\r\n\r\n<h3 class=\"govuk-heading-m\">Do I need to do anything?</h3>\r\n<p>\r\nYou can fully register or stop receiving flood warnings.\r\n</p>\r\n<h3 class=\"govuk-heading-m\">Fully register your details</h3>\r\n<p>\r\nFully register your details now to get the best experience of the flood warnings service. The service is free.\r\n</p>\r\n\r\n<p>\r\nYou can register more than one telephone number. You can also choose to be sent:\r\n</p>\r\n\r\n<ul class=\"govuk-list govuk-list--bullet\">\r\n  <li>flood warnings, which indicate that flooding is expected</li>\r\n  <li>flood alerts, which indicate that flooding is possible</li>\r\n  <li>warnings and alerts by text message, recorded voice message, or email</li>\r\n  <li>warnings and alerts about more than one location</li>\r\n</ul>\r\n\r\n<h3 class=\"govuk-heading-m\">Stop receiving flood warnings</h3>\r\n<p>\r\nTo opt out of the service, you can do any of the following.\r\n</p>\r\n\r\n<ul class=\"govuk-list govuk-list--bullet\">\r\n  <li>send an email to <a href=''mailto:floodresearch@environment-agency.gov.uk\">enquiries@environment-agency.gov.uk</a> including your telephone number</li>\r\n  <li>text ‘REMOVE’ to 60006, using the phone which received the original text</li>\r\n  <li>call Floodline on 0345 988 1188 <a href=\"https://www.gov.uk/call-charges\">(Call charges may apply)</a></li>\r\n</ul>\r\n\r\n<p>\r\nYour number will be removed from the service and you will no longer receive warnings of potential floods.\r\n</p>\r\n\r\n<p>\r\n<h3 class=\"govuk-heading-m\">If you do nothing</h3>\r\n\r\n<p>\r\nYour phone will automatically receive local flood warnings whenever they are issued.\r\n</p>\r\n\r\n<h3 class=\"govuk-heading-m\">If you receive a flood warning or alert</h3>\r\n\r\n<h3 class=\"govuk-heading-m\">Prepare</h3>\r\n\r\n<ul class=\"govuk-list govuk-list--bullet\">\r\n  <li>Prepare a bag that contains medicines and insurance documents</li>\r\n  <li>Get information and advice from the flood information service</li>\r\n</ul>\r\n\r\n<h3 class=\"govuk-heading-m\">Act</h3>\r\n\r\n<ul class=\"govuk-list govuk-list--bullet\">\r\n  <li>Turn off gas, water and electricity</li>\r\n  <li>Move things upstairs or to safety\r\n</li>\r\n  <li>Move family, pets and cars to safety\r\n</li>\r\n</ul>\r\n\r\n<h3 class=\"govuk-heading-m\">Survive</h3>\r\n\r\n<ul class=\"govuk-list govuk-list--bullet\">\r\n  <li>Call 999 if in immediate danger</li>\r\n  <li>Listen to emergency services and evacuate if told to do so\r\n</li>\r\n</ul>\r\n\r\n<h3 class=\"govuk-heading-m\">Flooding can happen anywhere</h3>\r\n\r\n<p>\r\nFlooding puts lives at risk and causes millions of pounds worth of damage every year. Even if you haven’t seen it at your home or business premises, this doesn’t mean flooding won’t happen.\r\n</p>\r\n<p>\r\nYou can find out the likelihood of a property flooding in the future.\r\n</p>\r\n<p>\r\n<h3 class=\"govuk-heading-m\">Learn about your local flood risk</h3>\r\n<p>\r\nGet more information about the flood risk in your area, including:\r\n<ul class=\"govuk-list govuk-list--bullet\">\r\n  <li>details of any current flood alerts or warnings\r\n</li>\r\n  <li>advice about preparing for a flood and help during or after a flood\r\n</li>\r\n  <li>the latest river and sea levels\r\n</li>\r\n  <li>how to get insurance, even if you’ve been flooded before\r\n</li>\r\n</ul>\r\n\r\n<p>Contact the Environment Agency</p>\r\n\r\n<p>For current flood warnings in force please call our 24-hour Floodline on:\r\n</p>\r\n<p>\r\nTelephone: 0345 988 1188\r\n</p>\r\n<p>\r\nType talk: 0345 602 6340 (for the hard of hearing)\r\n</p>\r\n<p>\r\n<a href=\"https://www.gov.uk/call-charges\">Find out more about call charges.</a>\r\n</p>\r\n\r\n<h3 class=\"govuk-heading-l\">How useful was this information?</h3>\r\n\r\n<p>\r\nYour <a href=\"https://flood-warning-information.service.gov.uk/feedback\">feedback</a> will help us improve this service</p>\r\n\r\n\r\n</div>",
+          "options": {},
+          "schema": {}
+        }
+      ],
+      "next": []
+    },
+    {
+      "path": "/alpha-what-to-do-in-a-flood/getting-a-flood-alert",
+      "title": "What to do in a flood (2. What to do if you get a flood alert)",
+      "section": "floodRisk",
+      "components": [],
+      "next": []
+    },
+    {
+      "path": "/alpha-what-to-do-in-a-flood/getting-a-flood-warning",
+      "title": "What to do in a flood (3. What to do if you get a flood warning)",
+      "section": "floodRisk",
+      "components": [],
+      "next": []
+    },
+    {
+      "path": "/alpha-what-to-do-in-a-flood/getting-a-severe-flood-warning",
+      "title": "What to do in a flood (4. What to do if you get a severe flood warning)",
+      "section": "floodRisk",
+      "components": [],
+      "next": []
+    },
+    {
+      "path": "/alpha-plan-ahead-for-flooding",
+      "title": "How to plan ahead for flooding",
+      "section": "floodRisk",
+      "components": [
+        {
+          "type": "Html",
+          "content": "<div class=\"govuk-prose-scope\">\r\nHow to plan ahead for flooding\r\nFind out if you’re at risk of flooding and plan what you’ll do.\r\n\r\nFind out if you’re at risk\r\nEnter your postcode to find out if you’re in an area at risk from flooding.\r\n\r\nSign up for flood warnings\r\nIn many flood risk areas, you can sign up for flood warnings. These warn of the risk of flooding from rivers, the sea and groundwater. You’ll be alerted by phone, email or text when flooding is expected. Flood warnings and alerts are not available in all areas.\r\n\r\nIs this content useful? Is this content about sign up for flooding warnings useful?Yes   No \r\nKnow what to do\r\nThe best way to protect yourself from flooding is to know what to do in advance.\r\n\r\nWe issue 3 levels of flood warning:\r\n\r\nFlood alert - Prepare\r\nImage of flood alert symbol\r\nprepare a bag that includes medicines and insurance documents\r\ncheck flood warnings\r\nFlood warning - Act\r\nImage of flood warning symbol\r\nturn off gas, water and electricity\r\nmove things upstairs or to safety\r\nmove family, pets and car to safety\r\nSevere flood warning - Survive\r\nImage of severe flood warning symbol\r\ncall 999 if in immediate danger\r\nfollow advice from emergency services\r\nkeep yourself and your family safe\r\nSave a copy of this simple flood plan (PDF, 139KB) so you’ll know what to do when there’s a flood warning in your area.\r\n\r\nYou can also use templates to make your own personal flood plan for:\r\n\r\nyour household\r\nyour local community or group\r\nyour business\r\nYou should prepare a bag of essential items to take with you if you have to leave your home. Keep this in a safe place. You could include things like spare medication, glasses, clothing, important documents and contact details such as the number of your insurance company.\r\n\r\nCreate a checklist of things to do to protect your family, such as turning off the electricity and gas to prevent a fire.\r\n\r\nIs this content useful? Is this content about making a flood plan useful?Yes   No \r\nKnow how to turn off your gas, electricity and water\r\nIf you leave your home during a flood you’ll need to turn off your mains water, gas and electricity if it’s safe to do so. You should find out in advance how to do this.\r\n\r\nThe location of water stopcocks, gas shut-off valves and electrical master switches varies between properties. The gas shut-off valve is usually beside the meter. The mains electricity cut-off is usually a big red switch on your fuse box. If you can’t find your water stopcock, ask someone with practical experience or a plumber to help you.\r\n\r\nIs this content useful? Is this content about turning off your gas, electricity and water useful?Yes   No \r\nProtect your property\r\nYou can make changes to your property that will help you to get back to normal more quickly after a flood and reduce the damage flooding can do.\r\n\r\nTo reduce flood damage you can take steps such as laying tiles instead of carpets, moving electrical sockets higher up the wall and fitting non-return valves to stop flood water entering your property through the drains. Bluepages lists suppliers of flood products and services.\r\n\r\nFor more information on advance measures, get the National Flood Forum’s property protection guides for property owners or for local authorities and professionals.\r\n\r\nSimple maintenance like keeping drains and gullies clear of debris will also help to protect your property.\r\n\r\nIs this content useful? Is this content about protecting your property useful?Yes   No \r\nCheck your insurance\r\nMake sure you have insurance to protect your home or business. If you have buildings and contents insurance, check if flood damage is included.\r\n\r\nIf you rent your home, it’s your responsibility to protect your belongings.\r\n\r\nIf you’re finding it difficult to get your property insured for flooding, the National Flood Forum may be able to help.\r\n\r\nThe Flood Re scheme works with some insurance providers to reduce the cost of insuring certain homes against flooding.\r\n\r\nIs this content useful? Is this content about checking your insurance useful?Yes   No \r\nBookmark flood forecasting websites\r\nKeeping a list of useful web pages can save time when you want to check:\r\n\r\nthe weather\r\nflood warnings\r\nlocal river and sea levels\r\nIs this content useful? Is this content about bookmarking flood forecasting websites useful?Yes   No \r\nFind out where you’ll get help\r\nAreas prone to flooding may already have flood groups and community hubs where you can find food, clothing, shelter and advice during a flood. Some areas have community flood wardens - volunteers who monitor a specific local area and inform its residents when flooding is likely.\r\n\r\nVisit the National Flood Forum or call them on 01299 403 055 for help in finding local support. You can also try searching for local flood groups on social media.\r\n\r\nIs this content useful? Is this content about finding out where to get help useful?Yes   No \r\nIf you live near a watercourse\r\nThere is specific guidance If you own property or live beside:\r\n\r\na river\r\na canal\r\nIs this content useful? Is this content about living near a watercourse useful?Yes   No \r\n\r\n</div>",
+          "options": {},
+          "schema": {}
+        }
+      ],
+      "next": []
+    },
+    {
+      "path": "/alpha-what-happens-after-a-flood",
+      "title": "What happens after a flood",
+      "section": "floodRisk",
+      "components": [
+        {
+          "type": "Html",
+          "content": "<div class=\"govuk-prose-scope\">\r\nWhat the different organisations may do - and what you can do - in the days, weeks and months after a flood.\r\n\r\nNot all these measures will apply to every flood. What happens will depend on the location, severity and type of flood, and how long it lasts.\r\n\r\n1 - 3 days after the flood\r\nroads and bridges may be closed due to damage or need to be inspected before they can be reopened\r\npolice will increase vigilance to prevent looting of discarded items or empty properties\r\nvoluntary organisations like the Red Cross or WRVS may arrive in the area to help the recovery – contact them if you want to offer your support\r\nflood management authorities such as the council and the Environment Agency will map affected areas to record the scale and extent of flooding\r\nthe Environment Agency may also send flood support officers to provide advice if you’re affected by floods\r\nIs this content useful? Is this content about one to three days after the flood useful?Yes   No \r\nA week after the flood\r\nloss adjusters may visit properties to assess flooding insurance claims, perhaps earlier if flooding is localised\r\nthe Environment Agency and other flood risk management authorities will be inspecting flood defences for damage and prioritising repairs\r\nyour local authority may establish a flood fund and manage the raising and allocation of funds and donated goods\r\nyour local authority may provide assistance on council tax and other measures if your business is affected by flooding\r\nIs this content useful? Is this content about a week after the flood useful?Yes   No \r\nA month after the flood\r\nwhere there has been serious infrastructure damage, repairs may continue for months or years\r\nyou can contact your local council to find out if flood recovery grants are available and how to apply for them\r\nif flood defences have been damaged, your area may be at greater risk of future floods and flood warnings may be issued a lower levels until defences are repaired\r\nyour local authority may issue an approved trader list to help homeowners and businesses avoid dishonest traders\r\nIs this content useful? Is this content about a month after the flood useful?Yes   No \r\n3 months after the flood\r\nyour local authority may hold a review, with local meetings and business impact surveys, to capture lessons learned and establish an action plan\r\nthere may also be a local authority effort to bring trade back where local economies have been affected by floods\r\nIs this content useful? Is this content about 3 months after the flood useful?Yes   No \r\nA year after the flood\r\nmajor Infrastructure repairs may still be going on after 12 months if damage has been severe\r\nflood risk management authorities may still be planning or have begun building improved flood defences\r\nthe Environment Agency, local authority and community flood action groups may be involved in exercises that test new flood response plans\r\nIs this content useful? Is this content about a year after the flood useful?Yes   No\r\n</div>",
+          "options": {},
+          "schema": {}
+        }
+      ],
+      "next": []
+    },
+    {
+      "path": "/alpha-recovering-after-a-flood",
+      "title": "How to recover after a flood",
+      "section": "floodRisk",
+      "components": [
+        {
+          "type": "Html",
+          "content": "<div class=\"govuk-prose-scope\">\r\nContact your insurance company\r\nIf you’ve been flooded, contact your insurance company and follow their advice. If you haven’t got insurance, the National Flood Forum can offer help and support on 01299 403055.\r\n\r\nIs this content useful? Is this content about contacting your insurance company useful?Yes   No \r\nFind your local flood action group or flood warden\r\nIf there’s been a serious flood, your local authority may have chosen a place like the town hall as a ‘flood hub’ from which to organise recovery efforts. You may also have a nearby flood warden or flood action group. Contact the National Flood Forum for help in finding local support.\r\n\r\nIs this content useful? Is this content about finding your local flood action group or flood warden useful?Yes   No \r\nCheck if you can return home\r\nIf you’ve had to leave your home, check with the emergency services that it’s safe before you return.\r\n\r\nYour home or business may also need a safety inspection by the utility companies before you can turn the water, gas and electricity back on.\r\n\r\nIs this content useful? Is this content about returning home useful?Yes   No \r\nCleaning and repairing your home\r\nTake advice from specialists before starting repairs to your property. Most of the repair work after flooding will need to be undertaken by professionals appointed by your insurers.\r\n\r\nFlood water may contain harmful substances like sewage, chemicals and animal waste which could make you unwell. If you come into contact with flood water, wash your hands thoroughly.\r\n\r\nWhen cleaning your home after a flood always wear gloves, a face mask and sturdy footwear. Find out how to clean up your home safely after a flood.\r\n\r\nBefore you start cleaning, take photographs to document damage and record the flood water height. Ask your insurer before discarding items that cannot be cleaned, like mattresses and carpets.\r\n\r\nIf you use heaters or dehumidifiers to dry out your property, make sure there’s good ventilation. Never use petrol or diesel-powered generators indoors – their exhaust gases are potentially lethal.\r\n\r\nIf you have any questions about recovering from a flood, such as disposing of used sandbags or damaged furniture, contact your local authority. They should help with collecting large flood-damaged items. They’ll tell you where to put them and when they may be collected.\r\n\r\nIs this content useful? Is this content about cleaning and repairing your home useful?Yes   No \r\nProtect your property from future floods\r\nTo reduce flood damage you could take measure such as laying tiles instead of carpets, moving electrical sockets higher up the walls and fitting non-return valves.\r\n\r\nSuppliers of flood products and services can be found on the Bluepages.\r\n\r\nRead the National Flood Forum's advice on how to protect your property from flooding in the future.\r\n\r\nIs this content useful? Is this content about protecting your property from future floods useful?Yes   No \r\nStay healthy\r\nYou can find general advice about staying healthy after a flood at Public Health England.\r\n\r\nIf you notice a change in the colour, taste or smell of your tap water, stop using it and phone your water company.\r\n\r\nYou can get support from your local health protection team to prevent and reduce the effect of diseases.\r\n\r\nDon’t eat food that’s touched flood water. If your electricity is off, don’t eat fresh food from a fridge after 4 hours or from a freezer after 24 hours.\r\n\r\nThe Food Standards Agency offers detailed food safety advice for flood victims.\r\n\r\nIs this content useful? Is this content about staying healthy useful?Yes   No \r\nGet help\r\nThe Environment Agency has specially trained Flood Support Officers across the country who provide information and advice during and after floods. Call Floodline (24-hour service) on 0345 988 1188 or type-talk (for the hard of hearing) on 0345 602 6340 to find out if they’re active in your area.\r\n\r\nIs this content useful? Is this content about specially trained Flood Support Officers useful?Yes   No \r\nGet emotional support\r\nHaving a flooded home is very stressful. If you need emotional support, contact family and friends, your doctor or an organisation like the Red Cross or the Samaritans.\r\n\r\nPublic Health England offers a guide to mental wellbeing after a flood.\r\n\r\nIs this content useful? Is this content about getting emotional support useful?Yes   No \r\nApply for financial aid\r\nYou may be able to get financial aid for flood recovery. Apply to your local council.\r\n\r\nIs this content useful? Is this content about applying for financial aid help useful?Yes   No \r\n</div>",
+          "options": {},
+          "schema": {}
+        }
+      ],
+      "next": []
     }
   ],
   "sections": [
