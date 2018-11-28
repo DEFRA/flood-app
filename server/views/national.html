@@ -27,7 +27,7 @@
         <div class="defra-warning-overview__section">
           <h3 class="defra-warning-overview__section-title">
             <span class="defra-warning-overview__icon defra-warning-overview__icon--{{ group.severity.id }}"></span>
-            {{ group.title }}
+            {{ group.title | lower }}
             <span class="govuk-caption-m">{{ group.severity.tagline }}</span>
           </h3>
         </div>

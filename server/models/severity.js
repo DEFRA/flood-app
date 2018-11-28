@@ -15,7 +15,7 @@ const severity = [{
   pluralisedTitle: 'Flood warnings',
   hash: 'flood-warning',
   subTitle: 'Flooding is expected',
-  tagline: 'Immediate action required',
+  tagline: 'Take action',
   isActive: true
 }, {
   id: 3,
@@ -29,7 +29,7 @@ const severity = [{
 }, {
   id: 4,
   name: 'expired',
-  title: 'Flood warning no longer in force',
+  title: 'Flood warnings removed',
   pluralisedTitle: 'Flood warnings no longer in force',
   hash: 'expired',
   subTitle: 'Flood warnings and flood removed in the last 24 hours',
