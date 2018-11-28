@@ -179,8 +179,6 @@
 
       // A new feature has been selected
       if (feature) {
-        e.stopPropagation()
-
         // Show overlay
         this.options.onFeatureClick(feature)
         this.showOverlay(feature)
