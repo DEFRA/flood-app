@@ -152,13 +152,6 @@
         })
       }
     })
-    
-
-
-
-
-
-
 
     // Close key or place locator if map is clicked
     map.on('click', function (e) {
