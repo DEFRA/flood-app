@@ -9,7 +9,7 @@
   var maps = flood.maps
   var MapContainer = maps.MapContainer
 
-  function Map (containerId, place) {
+  function MainMap (containerId, place) {
     // ol.View
     var view = new ol.View({
       zoom: place ? 11 : 6,
@@ -30,6 +30,51 @@
     var floodCentroids = maps.layers.floodCentroids()
     var floodPolygon = maps.layers.floodPolygon()
 
+    function onFeatureClick (feature) {
+      var id = feature.getId()
+      var props = feature.getProperties()
+      var html
+
+      if (!props.html) {
+        if (id.startsWith('stations')) {
+          var stationId = id.substr(9)
+          var symbol = 'normal'
+          if (props.atrisk) {
+            symbol = 'above'
+          } else if (props.is_ffoi_at_risk) {
+            symbol = 'forecastAbove'
+          } else if (props.status === 'Closed' || props.status === 'Suspended') {
+            symbol = 'disabled'
+          }
+
+          html = `
+            <p class="govuk-!-margin-bottom-2">
+              <span class="govuk-body-m govuk-!-font-weight-bold">${props.river}</span><br/>
+              <a class="govuk-body-s" href="/station/${stationId}">${props.name}</a>
+            </p>
+            ${props.status === 'Closed' || props.status === 'Suspended' ? `
+            <p class="govuk-body-s">Temporarily out of service</p>
+            ` : `
+            <p class="govuk-body-s">
+              ${props.value ? `<strong class="govuk-font-weight-bold">${props.value}m</strong> latest recorded<br>` : ''}
+              ${props.percentile_5 ? `<strong class="govuk-font-weight-bold">${props.percentile_5}m</strong> flooding possible<br>` : ''}
+              ${props.is_ffoi && props.ffoi_max ? `<strong class="govuk-font-weight-bold">${props.ffoi_max}m</strong> forecast high` : ''}
+            </p>
+            `}
+            <span class="ol-overlay__symbol ol-overlay__symbol--${symbol}"></span>
+        `
+        } else if (id.startsWith('flood_warning_alert')) {
+          html = `
+          <p>
+            <span class="govuk-body-m govuk-!-font-weight-bold">${props.severity_description}</span><br/>
+            <a class="govuk-body-s" href="/target-area/${props.fwa_code}">${props.description}</a>
+          </p>
+          <span class="ol-overlay__symbol ol-overlay__symbol--${props.severity}"></span>`
+        }
+        feature.set('html', html)
+      }
+    }
+
     // MapContainer options
     var options = {
       minIconResolution: 200,
@@ -46,7 +91,7 @@
         stations,
         floodCentroids
       ],
-      onFeatureClick: maps.onFeatureClick
+      onFeatureClick: onFeatureClick
     }
 
     // Localised
@@ -273,7 +318,7 @@
     this.container = container
   }
 
-  maps.createMap = function (containerId, place) {
-    return new Map(containerId, place)
+  maps.createMainMap = function (containerId, place) {
+    return new MainMap(containerId, place)
   }
 })(window, window.flood)

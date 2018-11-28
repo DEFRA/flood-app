@@ -1,12 +1,11 @@
 (function (window, flood) {
   var ol = window.ol
   var maps = flood.maps
-  var createMap = maps.createMap
   var MapContainer = maps.MapContainer
   var forEach = flood.utils.forEach
 
   // Flood map
-  createMap('map')
+  maps.createMainMap('map')
 
   // Outlook map
   var road = maps.layers.road()
@@ -65,7 +64,7 @@
     style: styleFeature
   })
 
-  // New instance of Map
+  // New instance of MapContainer
   var container = new MapContainer(document.getElementById('map-outlook'), {
     buttonText: 'Map showing forecast risk',
     progressive: true,
