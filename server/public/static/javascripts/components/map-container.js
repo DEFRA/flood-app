@@ -179,14 +179,11 @@
 
       // A new feature has been selected
       if (feature) {
-        // Target areas have a point and polygon on different layers
-        feature.set('isSelected', true)
-        // Store selected feature
-        this.selectedFeature = feature
+        e.stopPropagation()
 
         // Show overlay
         this.options.onFeatureClick(feature)
-        this.showOverlay(this.selectedFeature, e.coordinate)
+        this.showOverlay(feature)
       } else {
         // No feature has been selected
         // Close key
@@ -250,7 +247,11 @@
     }
 
     // Show overlay
-    this.showOverlay = function (feature, coordinate) {
+    this.showOverlay = function (feature) {
+      feature.set('isSelected', true)
+      // Store selected feature
+      this.selectedFeature = feature
+
       // Add class to map
       el.classList.add('map--overlay-open')
       // Add feature html
