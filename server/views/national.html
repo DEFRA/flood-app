@@ -21,6 +21,10 @@
     <div class="defra-warning-overview govuk-!-margin-top-0">
       <h2 class="govuk-heading-m govuk-!-margin-bottom-4 govuk-!-margin-top-6">
         Current flood warnings and alerts
+        <span class="govuk-caption-s">
+          <time class="form-hint" title="{{model.timestamp | formatDate}}"
+            datetime="{{model.timestamp}}">Last updated {{ model.timestamp | formatDate }}</time>
+        </span>
       </h2>
 
       {% for group in model.groups %}
@@ -67,18 +71,12 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     {% include "partials/map.html" %}
-    <p class="govuk-body-s govuk-!-margin-top-4">
-      <span class="govuk-body--caption">
-        <time class="form-hint" title="{{model.timestamp | formatDate}}"
-          datetime="{{model.timestamp}}">Last updated {{ model.timestamp | formatDate }}</time>
-      </span>
-    </p>
   </div>
 </div>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <div class="govuk-inset-text govuk-!-margin-top-2 govuk-!-margin-bottom-0">
+    <div class="govuk-inset-text govuk-!-margin-top-6 govuk-!-margin-bottom-0">
       <p>In river and coastal flood risk areas, you can <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
     </div>
   </div>
@@ -88,7 +86,12 @@
 
 <section class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-m govuk-!-margin-top-6">Next 5 days</h2>
+    <h2 class="govuk-heading-m govuk-!-margin-top-6">Next 5 days
+      <span class="govuk-caption-s">
+        <time class="form-hint" title="{{model.timestamp | formatDate}}"
+          datetime="{{model.timestamp}}">Last updated &lt;time&gt;</time>
+      </span>
+    </h2>
     <p>{{ model.outlook | safe }}</p>
   </div>
   <div class="govuk-grid-column-full">

@@ -1,3 +1,5 @@
-.govuk-body--caption {
-  color: $govuk-secondary-text-colour;
+.govuk-caption-s {
+  @extend .govuk-caption-m;
+  @include govuk-font($size: 16);
+  @include govuk-responsive-margin(1, "top");
 }
