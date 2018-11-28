@@ -68,6 +68,7 @@
   // New instance of Map
   var container = new MapContainer(document.getElementById('map-outlook'), {
     buttonText: 'Map showing forecast risk',
+    progressive: true,
     view: view,
     layers: [
       road,

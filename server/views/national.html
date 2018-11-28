@@ -3,7 +3,16 @@
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Flood risk for England</h1>
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
+      <span class="govuk-caption-xl">Flood risk</span>England
+    </h1>
+    <div class="defra-search-link govuk-!-margin-top-2">
+      <p>
+        <a href="/">
+          <span class="defra-search-link__icon"></span>Check flood risk for a specific location
+        </a>
+      </p>
+    </div>
   </div>
 </div>
 
@@ -31,7 +40,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <div id="warnings" class="govuk-!-margin-bottom-4">
-        <details class="govuk-details">
+        <details class="govuk-details govuk-!-margin-top-2 govuk-!-margin-bottom-4">
           <summary class="govuk-details__summary">
             <span class="govuk-details__summary-text">
               View list of flood warnings
@@ -61,7 +70,7 @@
     <p class="govuk-body-s govuk-!-margin-top-4">
       <span class="govuk-body--caption">
         <time class="form-hint" title="{{model.timestamp | formatDate}}"
-          datetime="{{model.timestamp}}">Last updated {{model.timestamp | formatDate}}</time>
+          datetime="{{model.timestamp}}">Last updated {{ model.timestamp | formatDate }}</time>
       </span>
     </p>
   </div>
@@ -69,58 +78,71 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <div class="govuk-inset-text govuk-inset-text--search govuk-!-margin-top-2">
-      <p>
-        <a href="/">
-          <span class="govuk-inset-text__icon"></span>Check flood warnings and river levels near you
-        </a>
-      </p>
-    </div>
     <div class="govuk-inset-text govuk-!-margin-top-2 govuk-!-margin-bottom-0">
       <p>In river and coastal flood risk areas, you can <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
     </div>
   </div>
 </div>
 
-<div class="govuk-grid-row">
+<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6">
+
+<section class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h2 class="govuk-heading-m govuk-!-margin-top-6">Next 5 days</h2>
-    <p>{{model.outlook.headline}}</p>
+    <p>{{ model.outlook | safe }}</p>
   </div>
-</div>
-
-<div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <figure class="map map--large map--outlook-control-open map--embedded" id="map-outlook">
-      <div class="map__container">
-        <div class="map__container-inner">
-          {% include "./partials/outlook-key.html" %}
-          <div class="map__outlook-control">
-            <div class="map__outlook-control__inner">
-              {% for day in model.days %}
-                <div class="map__outlook-control__day">
-                  <button class="map__outlook-control__button"
-                    aria-selected="{{ "true" if not day.idx else "false" }}"
-                    data-day="{{day.idx}}">{{day.date | formatDate('ddd D')}}
-                    <span class="map__outlook-control__icon map__outlook-control__icon--risk-level-{{day.level}}"></span>
-                  </button>
+    <div class="app-map">
+      <div class="app-map__container" id="map-outlook-details">
+        <figure class="map map--large map--outlook-control-open map--embedded" id="map-outlook">
+          <div class="map__container">
+            <div class="map__container-inner">
+              {% include "./partials/outlook-key.html" %}
+              <div class="map__outlook-control">
+                <div class="map__outlook-control__inner">
+                  {% for day in model.days %}
+                    <div class="map__outlook-control__day">
+                      <button class="map__outlook-control__button"
+                        aria-selected="{{ "true" if not day.idx else "false" }}"
+                        data-day="{{day.idx}}">{{ day.date | formatDate('ddd D') }}
+                        <span class="map__outlook-control__icon map__outlook-control__icon--risk-level-{{day.level}}"></span>
+                      </button>
+                    </div>
+                  {% endfor %}
                 </div>
-              {% endfor %}
+              </div>
             </div>
           </div>
-        </div>
+          <figcaption class="govuk-visually-hidden">Map showing 5 day forecast</figcaption>
+        </figure>
       </div>
-      <figcaption class="govuk-visually-hidden">5 day flood guidance outlook</figcaption>
-    </figure>
+    </div>
   </div>
-</div>
+</section>
 
-<div class="govuk-grid-row">
+<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6">
+
+<section class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h2 class="govuk-heading-m govuk-!-margin-top-6">Long term</h2>
     <p>Many areas are vulnerable to flooding in the future. You can <a href="https://flood-warning-information.service.gov.uk/long-term-flood-risk">learn more about the long term flood risk for any location in England</a>.</p>
   </div>
-</div>
+</section>
+
+<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-4">
+
+<section class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-m govuk-!-margin-top-6">Other ways to check your current flood risk</h2>
+    <p class="govuk-body">
+      <strong class="govuk-!-font-weight-bold">Floodline</strong><br>
+      Telephone: 0345 988 1188<br>
+      24-hour service<br>
+      <a class="govuk-link" href="#">Learn more about call charges</a>.
+    </p>
+  </div>
+</section>
+
 {% endblock %}
 
 {% block bodyEnd %}

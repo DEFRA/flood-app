@@ -15,6 +15,7 @@
 
     var defaults = {
       buttonText: 'Show map',
+      progressive: false,
       minIconResolution: 200,
       onFeatureClick: noop
     }
@@ -36,7 +37,7 @@
       this.setFullScreen()
       this.fullScreenButton.classList.add('ol-full-screen-back')
     }.bind(this))
-    el.parentNode.insertBefore(this.showMapButton, el)
+    el.parentNode.parentNode.insertBefore(this.showMapButton, el.parentNode)
 
     var hasKey = false
     var keyEl = this.mapContainerInnerElement.querySelector('.map-key__container')
@@ -131,6 +132,32 @@
     // Open key
     if (this.isKeyOpen) {
       this.openKey()
+    }
+
+    // Show map progressive disclosure (desktop only)
+    if (this.options.progressive) {
+      this.progressiveButton = document.createElement('button')
+      this.progressiveButton.innerText = this.options.buttonText
+      this.progressiveButton.className = 'govuk-button govuk-button--progressive'
+      this.progressiveButton.setAttribute('aria-pressed', false)
+      var activeMap = this.map
+      this.progressiveButton.addEventListener('click', function (e) {
+        e.preventDefault()
+        if (this.getAttribute('aria-pressed') === 'true') {
+          this.setAttribute('aria-pressed', false)
+          el.parentNode.setAttribute('aria-expanded', false)
+        } else {
+          this.setAttribute('aria-pressed', true)
+          el.parentNode.setAttribute('aria-expanded', true)
+        }
+        this.focus()
+        activeMap.updateSize()
+      })
+      el.parentNode.parentNode.insertBefore(this.progressiveButton, el.parentNode)
+      // Tablet upwards only
+      if (window.matchMedia && window.matchMedia('(min-width: 40.0625em)').matches) {
+        el.parentNode.setAttribute('aria-expanded', false)
+      }
     }
 
     //

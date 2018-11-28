@@ -14,6 +14,7 @@ $govuk-global-styles: true;
 
 // Custom patterns that aren't in Frontend or prorotpye kit
 @import "patterns/risk-detail"; // Dan Leech
+@import "patterns/map"; // Dan Leech (Pattern for buttons, progressive disclousre and map figure)
 
 // Custom objects overides for existing components
 @import "objects/warning-text"; // Dan Leech (modifiers for govuk-warning-text)
@@ -33,6 +34,7 @@ $govuk-global-styles: true;
 @import "components/banners"; // Dan Leech (Warnings and alert banners)
 @import "components/warning-overview"; // Dan Leech (Flood warning overview)
 @import "components/buttons"; // Dan Leech (Button overides)
+@import "components/search-link"; // Dan Leech (Flood warning overview)
 
 @import "util";
 

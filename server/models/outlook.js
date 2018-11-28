@@ -102,7 +102,12 @@ function processOutlookData (outlook) {
     }
   })
 
-  return { geoJson, riskLevels }
+  let full = outlook.public_forecast.english_forecast
+  full = '<p class="govuk-body">' + full + '</p>'
+  full = full.replace(/\r\n\r\n/g, '</p><p class="govuk-body">').replace(/\n\n/g, '</p><p class="govuk-body">')
+  full = full.replace(/\r\n/g, '<br />').replace(/\n/g, '<br />')
+
+  return { geoJson, riskLevels, full }
 }
 
 module.exports = processOutlookData
