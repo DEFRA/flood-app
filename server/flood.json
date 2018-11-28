@@ -1,7 +1,7 @@
 {
   "pages": [
     {
-      "path": "/alpha-consent",
+      "path": "/consent",
       "components": [
         {
           "type": "Html",
@@ -23,10 +23,11 @@
         }
       ],
       "next": [],
-      "title": "Give your consent before using the flood information service prototype"
+      "title": "Give your consent before using the flood information service prototype",
+      "section": "floodRisk"
     },
     {
-      "path": "/alpha-start-page",
+      "path": "/start-page",
       "title": "Check if a location in England is at risk of flooding now",
       "section": "floodRisk",
       "components": [
@@ -58,7 +59,7 @@
       "next": []
     },
     {
-      "path": "/alpha-what-to-do-in-a-flood",
+      "path": "/what-to-do-in-a-flood",
       "title": "What to do in a flood (1. What the flood warnings mean)",
       "section": "floodRisk",
       "components": [
@@ -72,7 +73,7 @@
       "next": []
     },
     {
-      "path": "/alpha-location-not-england",
+      "path": "/location-not-england",
       "title": "This service provides flood warning information for England only",
       "section": "floodRisk",
       "components": [
@@ -86,7 +87,7 @@
       "next": []
     },
     {
-      "path": "/alpha-sms-auto-opt-in-info",
+      "path": "/sms-auto-opt-in-info",
       "title": "This phone number has been automatically opted-in to receive flood warnings",
       "section": "floodRisk",
       "components": [
@@ -100,28 +101,28 @@
       "next": []
     },
     {
-      "path": "/alpha-what-to-do-in-a-flood/getting-a-flood-alert",
+      "path": "/what-to-do-in-a-flood/getting-a-flood-alert",
       "title": "What to do in a flood (2. What to do if you get a flood alert)",
       "section": "floodRisk",
       "components": [],
       "next": []
     },
     {
-      "path": "/alpha-what-to-do-in-a-flood/getting-a-flood-warning",
+      "path": "/what-to-do-in-a-flood/getting-a-flood-warning",
       "title": "What to do in a flood (3. What to do if you get a flood warning)",
       "section": "floodRisk",
       "components": [],
       "next": []
     },
     {
-      "path": "/alpha-what-to-do-in-a-flood/getting-a-severe-flood-warning",
+      "path": "/what-to-do-in-a-flood/getting-a-severe-flood-warning",
       "title": "What to do in a flood (4. What to do if you get a severe flood warning)",
       "section": "floodRisk",
       "components": [],
       "next": []
     },
     {
-      "path": "/alpha-plan-ahead-for-flooding",
+      "path": "/plan-ahead-for-flooding",
       "title": "How to plan ahead for flooding",
       "section": "floodRisk",
       "components": [
@@ -135,7 +136,7 @@
       "next": []
     },
     {
-      "path": "/alpha-what-happens-after-a-flood",
+      "path": "/what-happens-after-a-flood",
       "title": "What happens after a flood",
       "section": "floodRisk",
       "components": [
@@ -149,7 +150,7 @@
       "next": []
     },
     {
-      "path": "/alpha-recovering-after-a-flood",
+      "path": "/recovering-after-a-flood",
       "title": "How to recover after a flood",
       "section": "floodRisk",
       "components": [
