@@ -2,15 +2,6 @@ const joi = require('joi')
 
 module.exports = [{
   method: 'GET',
-  path: '/start',
-  handler: {
-    view: 'start'
-  },
-  options: {
-    description: 'Temporary start page for private alpha'
-  }
-}, {
-  method: 'GET',
   path: '/',
   handler: {
     view: 'home'
