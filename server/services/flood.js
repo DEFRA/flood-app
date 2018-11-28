@@ -1,7 +1,16 @@
-const moment = require('moment-timezone')
 const util = require('../util')
 const config = require('../config')
 const serviceUrl = config.serviceUrl
+
+// Temporary statement cache
+let cachedOutlook = null
+
+const setOutlook = (outlook) => {
+  cachedOutlook = outlook
+  // Clear after 5 mins
+  setTimeout(() => { cachedOutlook = null }, 5 * 60 * 1000)
+  return outlook
+}
 
 module.exports = {
   async getFloods () {
@@ -29,9 +38,15 @@ module.exports = {
     // const url = `${serviceUrl}/outlook`
     // return util.getJson(url)
 
-    const url = `https://api.ffc-environment-agency.fgs.metoffice.gov.uk/api/public/statements`
-    const result = await util.getJson(url, true)
-    return result.statements[0]
+    // Until we get the FGS feed sorted and returned from
+    // the service, use a temporary cache as this call is slow.
+    if (cachedOutlook) {
+      return Promise.resolve(cachedOutlook)
+    } else {
+      const url = `https://api.ffc-environment-agency.fgs.metoffice.gov.uk/api/public/statements`
+      const result = await util.getJson(url, true)
+      return setOutlook(result.statements[0])
+    }
   },
 
   async getStationById (id, direction) {
