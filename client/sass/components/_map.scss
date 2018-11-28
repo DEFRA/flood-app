@@ -778,6 +778,7 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
   }
 }
 .map-key-features__item {
+  @include govuk-font($size: 16);
   display:block;
   padding:0 15px;
 }
@@ -803,6 +804,10 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
     margin-bottom:10px;
     padding: 5px 10px 4px 0;
   }
+}
+.map-key-features__item-static {
+  @extend .map-key-features__subgroup-item;
+  padding-left: 14px;
 }
 .map-key-features__item-inner {
   position:relative;
