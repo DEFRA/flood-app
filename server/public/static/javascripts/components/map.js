@@ -195,6 +195,7 @@
               }))
 
               maps.onFeatureClick(feature)
+              container.showOverlay(feature)
             })
           }
         } else {
