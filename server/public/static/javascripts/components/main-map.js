@@ -239,7 +239,7 @@
                 format: new ol.format.GeoJSON()
               }))
 
-              maps.onFeatureClick(feature)
+              onFeatureClick(feature)
               container.showOverlay(feature)
             })
           }

@@ -6,7 +6,7 @@ class ViewModel {
     const severityLevel = flood && severity[flood.severity - 1]
 
     Object.assign(this, {
-      pageTitle: `Flood information for ${area.description} - GOV.UK`,
+      pageTitle: `Flood information for ${area.description}`,
       severity: severityLevel,
       place: {
         name: area.name,

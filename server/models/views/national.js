@@ -6,7 +6,7 @@ class ViewModel {
   constructor (options) {
     const { floods, outlook } = options
     Object.assign(this, {
-      pageTitle: `Flood risk for England - GOV.UK`
+      pageTitle: `Flood risk for England`
     }, options)
 
     // Floods
