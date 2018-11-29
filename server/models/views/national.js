@@ -36,6 +36,7 @@ class ViewModel {
     })
 
     this.days = days
+    this.hasOutlookConcern = data.hasOutlookConcern
     this.geoJson = data.geoJson
     this.timestamp = Date.now()
     this.floods = floods

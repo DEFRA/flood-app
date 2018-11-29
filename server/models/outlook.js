@@ -2,6 +2,10 @@ const turf = require('turf')
 const polygonSmooth = require('@turf/polygon-smooth')
 
 function processOutlookData (outlook) {
+
+  // Has concern areas flag
+  let hasOutlookConcern = false
+
   // Highest daily risk
   const riskLevels = [0, 0, 0, 0, 0]
 
@@ -40,6 +44,11 @@ function processOutlookData (outlook) {
         cRisk = lookup[cImpact - 1][cLikelyhood - 1]
       }
       const riskLevel = Math.max(rRisk, sRisk, cRisk)
+
+      // Set hasOutlookConcern flag
+      if (riskLevel > 0) {
+        hasOutlookConcern = true
+      }
 
       // Calculate feature z index
       const zIndex = riskArea.ordering + riskLevel
@@ -107,7 +116,7 @@ function processOutlookData (outlook) {
   full = full.replace(/\r\n\r\n/g, '</p><p class="govuk-body">').replace(/\n\n/g, '</p><p class="govuk-body">')
   full = full.replace(/\r\n/g, '<br />').replace(/\n/g, '<br />')
 
-  return { geoJson, riskLevels, full }
+  return { hasOutlookConcern, geoJson, riskLevels, full }
 }
 
 module.exports = processOutlookData
