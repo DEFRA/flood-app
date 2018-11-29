@@ -5,19 +5,19 @@
       "components": [
         {
           "type": "Html",
-          "content": "<div class=\"govuk-prose-scope\">\r\n<p>\r\nThank you for taking part in our research. We’d like you to look at a prototype service we’re working on. You can use it in exactly the same way and for the same reasons you would use the real service.\r\n</p>\r\n\r\n<p>\r\nThis prototype uses real data to provide a picture of flood risk in any area you select. \r\n</p>\r\n<p>\r\nWe’d like to know about your experience as you use it. Tell us about it using the feedback button you’ll see halfway up the right hand edge of the screen. What makes your experience good, or not so good? What frustrates you? What’s missing? How does it make you feel? \r\n</p>\r\n<p>\r\nBe honest.  We want to understand what the service needs to look like and what it needs to do. Everything we learn will be used to streamline the design and improve the usability of the service.\r\n</p>\r\n\r\n<h3 class=\"govuk-heading-m\">Before you start</h3>\r\n<div class=\"govuk-prose-scope\">\r\n\r\n<p>\r\nBy proceeding you are consenting to our use of <a href=\"https://www.gov.uk/help/cookies\">cookies. <a>These are small files we place onto your computer to collect information about how you browse the service.</a>\r\n</p>\r\n<p>\r\nFind out more about cookies on GOV.UK</a> and <a href=\"https://ico.org.uk/for-the-public/online/cookies/\">how to manage cookies</a>. You can also learn more about how we use cookies and related technologies by reading our <a href=\"/privacy-policy\">privacy policy</a> and the <a href=\"https://www.hotjar.com/legal/policies/privacy\">Hotjar privacy policy</a>.\r\n</p>\r\n</div>\r\n\r\n<p>\r\nSelect ‘Consent and go to prototype' to proceed.</p>\r\n</div>",
+          "content": "<div class=\"govuk-prose-scope\">\r\n<p>\r\nThank you for taking part in our research. We’d like you to look at a prototype service we’re working on. You can use it in exactly the same way and for the same reasons you would use the real service.\r\n</p>\r\n\r\n<p>\r\nThis prototype uses real data to provide a picture of flood risk in any area you select. \r\n</p>\r\n<p>\r\nWe’d like to know about your experience as you use it. Tell us about it using the feedback button you should see on the right hand side of your screen, or by <a href=''mailto:floodresearch@environment-agency.gov.uk\">emailing us</a>. What makes your experience good, or not so good? What frustrates you? What’s missing? How does it make you feel? \r\n</p>\r\n<p>\r\nBe honest.  We want to understand what the service needs to look like and what it needs to do. Everything we learn will be used to streamline the design and improve the usability of the service.\r\n</p>\r\n\r\n<h3 class=\"govuk-heading-m\">Before you start</h3>\r\n\r\n<p>\r\nBy proceeding you are consenting to our use of <a href=\"https://www.gov.uk/help/cookies\">cookies</a>. These are small files we place onto your computer to collect information about how you browse the service.\r\n</p>\r\n<p>\r\nFind out more about cookies on GOV.UK and <a href=\"https://ico.org.uk/for-the-public/online/cookies/\">how to manage cookies</a>. You can also learn more about how we use cookies and related technologies by reading our <a href=\"/privacy-policy\">privacy policy</a> and the <a href=\"https://www.hotjar.com/legal/policies/privacy\">Hotjar privacy policy</a>.\r\n</p>\r\n\r\n<p>\r\nSelect ‘Consent and go to prototype' to proceed.</p>\r\n</div>",
           "options": {},
           "schema": {}
         },
         {
           "type": "Html",
-          "content": "<a href=\"/start\" role=\"button\" draggable=\"false\" class=\"govuk-button govuk-button--start\">\r\nConsent and go to prototype\r\n</a>",
+          "content": "<a href=\"/start-page\" role=\"button\" draggable=\"false\" class=\"govuk-button govuk-button--start\">\r\nConsent and go to prototype\r\n</a>",
           "options": {},
           "schema": {}
         },
         {
           "type": "Para",
-          "content": "<h3 class=\"govuk-heading-m\">Provide feedback</h3>\r\n<div class=\"govuk-prose-scope\">\r\n<p>\r\nIt’s important that we learn more about your experience using this prototype. You can contact us by emailing <a href=''mailto:floodresearch@environment-agency.gov.uk\">floodresearch@environment-agency.gov.uk</a>.\r\n</p>\r\n<p>\r\nYou can also leave comments using the feedback button located halfway up the right hand edge of the screen.\r\n</p>\r\n</div>\r\n\r\n<h3 class=\"govuk-heading-m\">Use the live service instead</h3>\r\n<p class=\"govuk-body\">If you don't want to use this prototype you can view the <a href=\"https://flood-warning-information.service.gov.uk/warnings\">live flood information service at any time.</a>.</p>",
+          "content": "<h3 class=\"govuk-heading-m\">Provide feedback</h3>\r\n<div class=\"govuk-prose-scope\">\r\n<p>\r\nIt’s important that we learn more about your experience using this prototype. You can contact us by emailing <a href=''mailto:floodresearch@environment-agency.gov.uk\">floodresearch@environment-agency.gov.uk</a>.\r\n</p>\r\n<p>\r\nYou can also leave comments using the feedback button located halfway up the right hand edge of the screen.\r\n</p>\r\n</div>\r\n\r\n<h3 class=\"govuk-heading-m\">Use the live service instead</h3>\r\n<p class=\"govuk-body\">If you don't want to use this prototype you can view the <a href=\"https://flood-warning-information.service.gov.uk/warnings\">live flood information service at any time</a>.</p>",
           "options": {},
           "schema": {}
         }
@@ -45,13 +45,13 @@
         },
         {
           "type": "Html",
-          "content": "<a href=\"/start\" role=\"button\" draggable=\"false\" class=\"govuk-button govuk-button--start\">\r\nStart now\r\n</a>",
+          "content": "<a href=\"/\" role=\"button\" draggable=\"false\" class=\"govuk-button govuk-button--start\">\r\nStart now\r\n</a>",
           "options": {},
           "schema": {}
         },
         {
           "type": "Html",
-          "content": "<div class=\"govuk-prose-scope\">\r\n <p>\r\n </p>\r\n<h3 class=\"govuk-heading-l\">The national picture, at a glance</h3>\r\n\r\n<p>You can also <a href=\"https://flood-warning-information.service.gov.uk/england\">look at the latest flood risk situation for all of England</a>, or  <a href=\"https://flood-warning-information.service.gov.uk/england\">see the 5-day outlook.</a>\r\n</p>\r\n\r\n<h3 class=\"govuk-heading-l\">Get flood warnings by text, phone or email</h3>\r\n<p>\r\n<a href=\"https://www.gov.uk/sign-up-for-flood-warnings\">Sign up for flood warnings.</a>  This service is free.\r\n</p>\r\n\r\n<h3 class=\"govuk-heading-l\">Other ways to find out about flood risk</h3>\r\n\r\n<p>For current flood warnings in force please call our 24-hour Floodline on:\r\n</p>\r\n<p>\r\nTelephone: 0345 988 1188\r\n</p>\r\n<p>\r\nType talk: 0345 602 6340 (for the hard of hearing)\r\n</p>\r\n<p>\r\n<a href=\"https://www.gov.uk/call-charges\">Find out more about call charges.</a>\r\n</p>\r\n</div>",
+          "content": "<div class=\"govuk-prose-scope\">\r\n <p>\r\n </p>\r\n<h3 class=\"govuk-heading-l\">The national picture, at a glance</h3>\r\n\r\n<p>You can also <a href=\"/national\">look at the latest flood risk situation for all of England</a>, or  <a href=\"/national#outlook\">see the 5-day outlook.</a>\r\n</p>\r\n\r\n<h3 class=\"govuk-heading-l\">Get flood warnings by text, phone or email</h3>\r\n<p>\r\n<a href=\"/national#outlook\">Sign up for flood warnings.</a>  This service is free.\r\n</p>\r\n\r\n<h3 class=\"govuk-heading-l\">Other ways to find out about flood risk</h3>\r\n\r\n<p>For current flood warnings in force please call our 24-hour Floodline on:\r\n</p>\r\n<p>\r\nTelephone: 0345 988 1188\r\n</p>\r\n<p>\r\nType talk: 0345 602 6340 (for the hard of hearing)\r\n</p>\r\n<p>\r\n<a href=\"https://www.gov.uk/call-charges\">Find out more about call charges.</a>\r\n</p>\r\n</div>",
           "options": {},
           "schema": {}
         }
@@ -170,5 +170,6 @@
       "title": "Flood risk"
     }
   ],
-  "lists": []
+  "lists": [],
+  "conditions": []
 }
