@@ -20,14 +20,14 @@
     if (feature.get('severity') === 1) {
       strokeColour = '#e3000f'
       zIndex = 5
-      offset = [0, 1300]
+      offset = [0, 900]
       if (feature.get('isSelected') === true) {
         zIndex = 6
         offset[0] += 100
       }
     } else if (feature.get('severity') === 2) {
       zIndex = 4
-      offset = [0, 1400]
+      offset = [0, 1000]
       if (feature.get('isSelected') === true) {
         zIndex = 6
         offset[0] += 100
@@ -35,14 +35,14 @@
     } else if (feature.get('severity') === 3) {
       fillColour = '#f18700'
       zIndex = 3
-      offset = [0, 1500]
+      offset = [0, 1100]
       if (feature.get('isSelected') === true) {
         offset[0] += 100
       }
     } else if (feature.get('severity') === 4) {
       fillColour = '#6f777b'
       zIndex = 2
-      offset = [0, 1700]
+      offset = [0, 1200]
       if (feature.get('isSelected') === true) {
         zIndex = 6
         offset[0] += 100
@@ -182,7 +182,7 @@
 
     strokeWidth = 3
 
-    offset = [0, 1800]
+    offset = [0, 1400]
 
     // Feature is also slected
     if (feature.get('isSelected') === true) {
