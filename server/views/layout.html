@@ -2,24 +2,23 @@
 {% from "phase-banner/macro.njk" import govukPhaseBanner %}
 {% from "footer/macro.njk" import govukFooter %}
 
-{% set pageUrl = fullUrl %}
-{% set pageTitle = (pageTitle or model.pageTitle or 'Check flood risk') + ' - GOV.UK' %}
-{% set pageDescription = model.metadata.description | default('Check your risk of flooding: get current flood warnings, river and sea levels, check the 5-day forecast or use flood risk maps') %}
-{% set pageKeywords = model.metadata.keywords | default('floods,gov.uk,england') %}
+{% set metaTitle = (pageTitle or model.pageTitle or 'Check flood risk') + ' - GOV.UK' %}
+{% set metaDescription = model.metadata.description | default('Check your risk of flooding: get current flood warnings, river and sea levels, check the 5-day forecast or use flood risk maps') %}
+{% set metaKeywords = model.metadata.keywords | default('floods,gov.uk,england') %}
 
 {% block pageTitle %}
-  {{ pageTitle }}
+  {{ metaTitle }}
 {% endblock %}
 
 {% block head %}
   <meta http-equiv="refresh" content="900"/>
   <meta property="fb:app_id" content="{{fbAppId}}" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="{{pageUrl}}" />
-  <meta property="og:title" content="{{pageTitle}}" />
-  <meta property="og:description" content="{{pageDescription}}" />
-  <meta property="keywords" content="{{pageKeywords}}" />
-  <meta property="description" content="{{pageDescription}}" />
+  <meta property="og:url" content="{{fullUrl}}" />
+  <meta property="og:title" content="{{metaTitle}}" />
+  <meta property="og:description" content="{{metaDescription}}" />
+  <meta property="keywords" content="{{metaKeywords}}" />
+  <meta property="description" content="{{metaDescription}}" />
   <meta name="google-site-verification" content="HjuKUejT64a0rBdUxxtbnIKNB4_cZ3X3hlXOxk4_OX8" />
 
   <!--[if !IE 8]><!-->
