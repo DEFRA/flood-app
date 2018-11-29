@@ -78,7 +78,7 @@
     // MapContainer options
     var options = {
       minIconResolution: 200,
-      buttonText: 'Map showing current risk',
+      buttonText: 'View map of current situation',
       view: view,
       layers: [
         road,

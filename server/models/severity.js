@@ -32,8 +32,8 @@ const severity = [{
   title: 'Warnings removed',
   pluralisedTitle: 'Warnings removed',
   hash: 'expired',
-  subTitle: 'Within the last 24hrs',
-  tagline: 'Within the last 24hrs',
+  subTitle: 'Within the last 24 hours',
+  tagline: 'Within the last 24 hours',
   isActive: false
 }]
 
