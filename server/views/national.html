@@ -88,8 +88,8 @@
   <div class="govuk-grid-column-two-thirds">
     <h2 class="govuk-heading-m govuk-!-margin-top-6">Next 5 days
       <span class="govuk-caption-s">
-        <time class="form-hint" title="{{model.timestamp | formatDate}}"
-          datetime="{{model.timestamp}}">Last updated &lt;time&gt;</time>
+        <time class="form-hint" title="{{model.timestampOutlook | formatDate}}"
+          datetime="{{ model.timestampOutlook }}">Last updated {{ model.timestampOutlook | formatDate }}</time>
       </span>
     </h2>
     <p>{{ model.outlook | safe }}</p>

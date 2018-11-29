@@ -2,9 +2,11 @@ const turf = require('turf')
 const polygonSmooth = require('@turf/polygon-smooth')
 
 function processOutlookData (outlook) {
-
   // Has concern areas flag
   let hasOutlookConcern = false
+
+  // Issued date
+  const timestampOutlook = (new Date(outlook.issued_at)).getTime()
 
   // Highest daily risk
   const riskLevels = [0, 0, 0, 0, 0]
@@ -116,7 +118,7 @@ function processOutlookData (outlook) {
   full = full.replace(/\r\n\r\n/g, '</p><p class="govuk-body">').replace(/\n\n/g, '</p><p class="govuk-body">')
   full = full.replace(/\r\n/g, '<br />').replace(/\n/g, '<br />')
 
-  return { hasOutlookConcern, geoJson, riskLevels, full }
+  return { timestampOutlook, hasOutlookConcern, geoJson, riskLevels, full }
 }
 
 module.exports = processOutlookData
