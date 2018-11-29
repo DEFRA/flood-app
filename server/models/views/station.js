@@ -13,7 +13,7 @@ class ViewModel {
     const { station, telemetry, forecast } = options
 
     Object.assign(this, {
-      pageTitle: `Flood information for ${station.name} - GOV.UK`
+      pageTitle: `Flood information for ${station.name}`
     })
 
     this.station = new Station(station)
@@ -56,15 +56,15 @@ class ViewModel {
 
     if (this.station.type === 'c') {
       this.title = 'Tidal level'
-      this.pageTitle = 'Tidal level information for ' + this.station.river + ' at ' + this.station.name + ' - GOV.UK'
+      this.pageTitle = 'Tidal level information for ' + this.station.river + ' at ' + this.station.name
       this.postTitle = 'Latest tidal level information for the ' + this.station.river + ' at ' + this.station.name
     } else if (this.station.type === 'g') {
       this.title = 'Groundwater level'
-      this.pageTitle = 'Groundwater level information for ' + this.station.name + ' borehole - GOV.UK'
+      this.pageTitle = 'Groundwater level information for ' + this.station.name + ' borehole'
       this.postTitle = 'Latest groundwater level information for ' + this.station.name + ' borehole'
     } else {
       this.title = 'River level'
-      this.pageTitle = 'River level information for ' + this.station.river + ' at ' + this.station.name + (this.station.isMulti ? ' (' + this.station.direction + ')' : '') + ' - GOV.UK'
+      this.pageTitle = 'River level information for ' + this.station.river + ' at ' + this.station.name + (this.station.isMulti ? ' (' + this.station.direction + ')' : '')
       this.postTitle = 'Latest river level information for the ' + this.station.river + ' at ' + this.station.name + (this.station.isMulti ? ' (' + this.station.direction + ')' : '')
     }
 

@@ -3,7 +3,7 @@
 {% from "footer/macro.njk" import govukFooter %}
 
 {% set pageUrl = fullUrl %}
-{% set pageTitle = pageTitle or model.pageTitle or 'Check flood risk - GOV.UK' %}
+{% set pageTitle = (pageTitle or model.pageTitle or 'Check flood risk') + ' - GOV.UK' %}
 {% set pageDescription = model.metadata.description | default('Check your risk of flooding: get current flood warnings, river and sea levels, check the 5-day forecast or use flood risk maps') %}
 {% set pageKeywords = model.metadata.keywords | default('floods,gov.uk,england') %}
 

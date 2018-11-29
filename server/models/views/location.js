@@ -9,7 +9,7 @@ class ViewModel {
       place,
       floods,
       location: title,
-      pageTitle: `${title} flood risk - GOV.UK`
+      pageTitle: `${title} flood risk`
     })
 
     // Floods
