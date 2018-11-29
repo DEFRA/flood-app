@@ -50,8 +50,9 @@
 
         <p>Find out <a href="/what-to-do-in-a-flood">what to do in a flood</a> if you are in this area.</p>
       {% else %}
-        <h1 class="govuk-heading-l">No flood warnings in place</h1>
-        <p>There are no flood warnings in force in this area.</p>
+        <p class="govuk-!-margin-bottom-0">
+          There are currently no flood warnings in force in this area.
+        </p>
       {% endif %}
 
       {% if model.groupedFloods.length %}
@@ -72,14 +73,14 @@
         </details>
       {% endif %}
       
-      <p class="govuk-body-s govuk-!-margin-top-4">
+      <p class="govuk-body-s govuk-caption--body govuk-!-margin-top-4">
         <span class="govuk-body--caption">
           <time class="form-hint" title="{{model.timestamp | formatDate}}"
             datetime="{{model.timestamp}}">Last updated {{model.timestamp | formatDate}}</time>
         </span>
       </p>
 
-      <div class="govuk-inset-text govuk-!-margin-top-4">
+      <div class="govuk-inset-text govuk-!-margin-top-6">
         <p>If you live in this area you may be able to get flood warnings by phone, text or email. <a href="https://www.gov.uk/sign-up-for-flood-warnings">Sign
             up for flood warnings</a></p>
       </div>
@@ -121,9 +122,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <div class="govuk-inset-text govuk-!-margin-top-4">
-      <p>If you live in this area you may be able to get flood warnings by phone, text or email. <a href="https://www.gov.uk/sign-up-for-flood-warnings">Sign
-          up for flood warnings</a></p>
+    <div class="govuk-inset-text govuk-!-margin-top-6">
       <p>Parts of this area may experience flooding from other sources in the future. <a href="https://flood-warning-information.service.gov.uk/long-term-flood-risk">View
           long term flood risk information for this area</a>.</p>
     </div>
