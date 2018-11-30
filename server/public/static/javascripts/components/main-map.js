@@ -56,9 +56,9 @@
             <p class="govuk-body-s">Temporarily out of service</p>
             ` : `
             <p class="govuk-body-s">
-              ${props.value ? `<strong class="govuk-font-weight-bold">${props.value}m</strong> latest recorded<br>` : ''}
-              ${props.percentile_5 ? `<strong class="govuk-font-weight-bold">${props.percentile_5}m</strong> flooding possible<br>` : ''}
-              ${props.is_ffoi && props.ffoi_max ? `<strong class="govuk-font-weight-bold">${props.ffoi_max}m</strong> forecast high` : ''}
+              ${props.value ? `<strong class="govuk-font-weight-bold">${props.value.toFixed(2)}m</strong> latest recorded level<br>` : ''}
+              ${props.is_ffoi && props.ffoi_max ? `<strong class="govuk-font-weight-bold">${props.ffoi_max.toFixed(2)}m</strong> forecast highest level<br>` : ''}
+              ${props.percentile_5 ? `<strong class="govuk-font-weight-bold">${props.percentile_5.toFixed(2)}m</strong> top of typical range` : ''}
             </p>
             `}
             <span class="ol-overlay__symbol ol-overlay__symbol--${symbol}"></span>
