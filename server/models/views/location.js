@@ -41,7 +41,7 @@ class ViewModel {
             return { count, title, subTitle }
           })
 
-        const statements = summary.map(item => `${item.count} ${item.title.toLowerCase()} (${item.subTitle.toLowerCase()})`)
+        const statements = summary.map(item => `${item.count} ${item.title.toLowerCase()}`)
         const floodsSummaryBody = statements.reduce((accumulator, currentValue, index, arr) => {
           return `${accumulator}${(index === arr.length - 1) ? ' and' : ','} ${currentValue}`
         })
