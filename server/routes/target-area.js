@@ -17,11 +17,9 @@ module.exports = {
 
       return h.view('target-area', { model })
     } catch (err) {
-      if (err.output.statusCode === 404) {
-        return boom.notFound('Failed to get target area', err)
-      } else {
-        return boom.badRequest('Failed to get target area', err)
-      }
+      return err.isBoom
+        ? err
+        : boom.badRequest('Failed to get target area', err)
     }
   },
   options: {

@@ -51,7 +51,9 @@ module.exports = {
         return h.view('station', { model })
       }
     } catch (err) {
-      return boom.badRequest('Failed to get station', err)
+      return err.isBoom
+        ? err
+        : boom.badRequest('Failed to get station', err)
     }
   },
   options: {
