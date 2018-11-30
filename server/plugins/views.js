@@ -23,10 +23,7 @@ module.exports = {
           }
         },
         prepare: (options, next) => {
-          const env = options.compileOptions.environment = nunjucks.configure(options.path, {
-            autoescape: true,
-            watch: false
-          })
+          const env = options.compileOptions.environment = nunjucks.configure(options.path)
 
           env.addFilter('formatDate', util.formatDate)
           env.addFilter('toFixed', util.toFixed)

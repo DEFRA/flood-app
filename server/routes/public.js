@@ -32,7 +32,8 @@ module.exports = [{
           'server/public/static',
           'server/public/build',
           'node_modules/govuk-frontend/assets',
-          'node_modules/accessible-autocomplete/dist'
+          'node_modules/accessible-autocomplete/dist',
+          'node_modules/nunjucks/browser'
         ]
       }
     }

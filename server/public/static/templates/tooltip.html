@@ -1,0 +1,42 @@
+{% if type == 'station' %}
+  {# Icon symbol #}
+  {% set closedOrSuspended = false %}
+  {% set symbol = 'normal' %}
+  {% if props.atrisk %}
+    {% set symbol = 'above' %}
+  {% elif props.is_ffoi_at_risk %}
+    {% set symbol = 'forecastAbove' %}
+  {% elif props.status === 'Closed' or props.status === 'Suspended' %}
+    {% set symbol = 'disabled' %}
+  {% endif %}
+
+  <p class="govuk-!-margin-bottom-2">
+    <span class="govuk-body-m govuk-!-font-weight-bold">{{props.river}}</span><br/>
+    <a class="govuk-body-s" href="/station/{{stationId}}">{{props.name}}</a>
+  </p>
+
+  {% if closedOrSuspended %}
+    <p class="govuk-body-s">Temporarily out of service</p>
+  {% else %}
+    <p class="govuk-body-s">
+      {% if props.value %}
+        <strong class="govuk-font-weight-bold">{{props.value}}m</strong> latest recorded<br>
+      {% endif %}
+      
+      {% if props.percentile_5 %}
+        <strong class="govuk-font-weight-bold">{{props.percentile_5}}m</strong> flooding possible<br>
+      {% endif %}
+
+      {% if props.is_ffoi and props.ffoi_max %}
+        <strong class="govuk-font-weight-bold">{{props.ffoi_max}}m</strong> forecast high
+      {% endif %}
+    </p>
+  {% endif %}
+  <span class="ol-overlay__symbol ol-overlay__symbol--{{symbol}}"></span>
+{% elif type == 'warnings' %}
+  <p>
+    <span class="govuk-body-m govuk-!-font-weight-bold">{{props.severity_description}}</span><br/>
+    <a class="govuk-body-s" href="/target-area/{{props.fwa_code}}">{{props.description}}</a>
+  </p>
+  <span class="ol-overlay__symbol ol-overlay__symbol--{{props.severity}}"></span>
+{% endif %}
