@@ -35,20 +35,19 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <div id="warnings" class="govuk-!-margin-bottom-4">
+    <div id="warnings">
       <!-- Headline statement -->
       {% if model.hasActiveFloods %}
         <div class="govuk-warning-text govuk-warning-text--{{model.highestSeverity.hash}}">
           <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
           <strong class="govuk-warning-text__text">
             <span class="govuk-warning-text__assistive">{{model.highestSeverity.title}}</span>
-            {{model.highestSeverity.subTitle}} - {{model.highestSeverity.tagline.toLowerCase()}}
+            {{model.highestSeverity.subTitle}}<!-- - {{model.highestSeverity.tagline.toLowerCase()}} -->
           </strong>
         </div>
-
         <p>{{model.floodsSummary}}</p>
+        <p>Find out what to do if you live in a flood warning or alert area.</p>
 
-        <p>Find out <a href="/what-to-do-in-a-flood">what to do in a flood</a> if you are in this area.</p>
       {% else %}
         <p class="govuk-!-margin-bottom-0">
           There are currently no flood warnings or alerts in this area
@@ -58,11 +57,11 @@
       {% if model.groupedFloods.length %}
         <details class="govuk-details govuk-!-margin-bottom-4">
           <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">View details</span>
+            <span class="govuk-details__summary-text">View flood warnings and alerts</span>
           </summary>
           <div class="govuk-details__text">
             {% for group in model.groupedFloods %}
-              <p class="govuk-body govuk-!-margin-bottom-1">{{group.severity.pluralisedTitle}}</p>
+              <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{{group.severity.pluralisedTitle}}</h2>
               <ul class="govuk-list govuk-list--warning">
                 {% for flood in group.floods %}
                   <li><a href="/target-area/{{flood.code}}">{{flood.description}}</a></li>
@@ -72,7 +71,11 @@
           </div>
         </details>
       {% endif %}
-      
+
+      <div class="govuk-inset-text govuk-!-margin-top-0">
+        <p>If you live in this area you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
+      </div>
+
       <p class="govuk-body-s govuk-caption--body govuk-!-margin-top-4">
         <span class="govuk-body--caption">
           <time class="form-hint" title="{{model.timestamp | formatDate}}"
@@ -80,10 +83,6 @@
         </span>
       </p>
 
-      <div class="govuk-inset-text govuk-!-margin-top-6">
-        <p>If you live in this area you may be able to get flood warnings by phone, text or email. <a href="https://www.gov.uk/sign-up-for-flood-warnings">Sign
-            up for flood warnings</a></p>
-      </div>
     </div>
   </div>
 </div>
@@ -91,7 +90,7 @@
 {% if model.rivers %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-m">River levels that impact this area</h2>
+    <h2 class="govuk-heading-m govuk-!-margin-top-4">River levels that impact this area</h2>
     <details class="govuk-details">
       <summary class="govuk-details__summary">
         <span class="govuk-details__summary-text">View river levels</span>

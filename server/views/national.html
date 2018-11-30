@@ -98,7 +98,9 @@
     </h2>
     <p>{{ model.outlook | safe }}</p>
   </div>
-  <div class="govuk-grid-column-full">
+
+  {% if model.hasOutlookConcern %}
+  <div class="govuk-grid-column-full govuk-!-margin-bottom-2">
     <div class="app-map">
       <div class="app-map__container" id="map-outlook-details">
         <figure class="map map--large map--outlook-control-open map--embedded" id="map-outlook">
@@ -125,9 +127,10 @@
       </div>
     </div>
   </div>
+  {% endif %}
 </section>
 
-<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6">
+<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-4">
 
 <section id="long-term" class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

@@ -64,20 +64,7 @@
     style: styleFeature
   })
 
-  // New instance of MapContainer
-  var container = new MapContainer(document.getElementById('map-outlook'), {
-    buttonText: 'View map of forecast flood risk',
-    progressive: true,
-    view: view,
-    layers: [
-      road,
-      areasOfConcern
-    ]
-  })
-
-  var outlookControl = container.element.querySelector('.map__outlook-control')
-  var outlookButtons = outlookControl.querySelectorAll('button')
-
+  // Outlook set first day
   function setDay (day) {
     areasOfConcern.getSource().forEachFeature(function (feature) {
       var featureDay = feature.get('day')
@@ -90,12 +77,28 @@
     })
   }
 
-  setDay(1)
-
-  forEach(outlookButtons, function (button) {
-    button.addEventListener('click', function (e) {
-      const day = +button.getAttribute('data-day')
-      setDay(day)
+  // New instance of MapContainer
+  if (document.getElementById('map-outlook')) {
+    var container = new MapContainer(document.getElementById('map-outlook'), {
+      buttonText: 'View map of forecast flood risk',
+      progressive: true,
+      view: view,
+      layers: [
+        road,
+        areasOfConcern
+      ]
     })
-  })
+
+    var outlookControl = container.element.querySelector('.map__outlook-control')
+    var outlookButtons = outlookControl.querySelectorAll('button')
+
+    setDay(1)
+
+    forEach(outlookButtons, function (button) {
+      button.addEventListener('click', function (e) {
+        const day = +button.getAttribute('data-day')
+        setDay(day)
+      })
+    })
+  }
 })(window, window.flood)
