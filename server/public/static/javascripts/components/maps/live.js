@@ -256,8 +256,8 @@
 
     // Key form layer toggle
     keyForm.addEventListener('change', function (e) {
-      const target = e.target
-      const name = target.name
+      var target = e.target
+      var name = target.name
 
       switch (name) {
         case 'baseLayer': {

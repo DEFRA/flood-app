@@ -97,7 +97,7 @@
 
     forEach(outlookButtons, function (button) {
       button.addEventListener('click', function (e) {
-        const day = +button.getAttribute('data-day')
+        var day = +button.getAttribute('data-day')
         setDay(day)
       })
     })
