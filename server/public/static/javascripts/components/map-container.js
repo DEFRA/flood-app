@@ -178,7 +178,7 @@
       })
 
       // A new feature has been selected
-      if (feature) {
+      if (feature && feature.get('type') !== 'concernArea') {
         // Show overlay
         this.options.onFeatureClick(feature)
         this.showOverlay(feature)
@@ -196,7 +196,9 @@
       var mouseCoordInMapPixels = [e.originalEvent.offsetX, e.originalEvent.offsetY]
       // Detect vector feature at mouse coords
       var hit = map.forEachFeatureAtPixel(mouseCoordInMapPixels, function (feature, layer) {
-        return true
+        if (feature.get('type') !== 'concernArea') {
+          return true
+        }
       })
       // Detect wms image at mouse coords
       // if (!hit) {
