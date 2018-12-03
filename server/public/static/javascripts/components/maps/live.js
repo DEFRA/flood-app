@@ -7,16 +7,19 @@
 (function (window, flood) {
   var ol = window.ol
   var maps = flood.maps
+  var forEach = flood.utils.forEach
   var MapContainer = maps.MapContainer
 
-  function MainMap (containerId, place) {
+  function LiveMap (elementId, place) {
     // ol.View
     var view = new ol.View({
       zoom: place ? 11 : 6,
       minZoom: 6,
       maxZoom: 14,
       extent: maps.extent,
-      center: ol.proj.transform(place ? place.center : maps.center, 'EPSG:4326', 'EPSG:3857')
+      center: ol.proj.transform(place
+        ? place.center
+        : maps.center, 'EPSG:4326', 'EPSG:3857')
     })
 
     // ol.Layers
@@ -30,7 +33,7 @@
     var floodCentroids = maps.layers.floodCentroids()
     var floodPolygon = maps.layers.floodPolygon()
 
-    function onFeatureClick (feature) {
+    function ensureFeatureTooltipHtml (feature) {
       var id = feature.getId()
       var props = feature.getProperties()
       var html
@@ -68,8 +71,7 @@
         floodPolygon,
         stations,
         floodCentroids
-      ],
-      onFeatureClick: onFeatureClick
+      ]
     }
 
     // Localised
@@ -78,7 +80,7 @@
     }
 
     // Create MapContainer
-    var containerEl = document.getElementById(containerId)
+    var containerEl = document.getElementById(elementId)
     var container = new MapContainer(containerEl, options)
     var map = container.map
 
@@ -165,12 +167,12 @@
       // Key icons
       if (resolution <= options.minIconResolution) {
         // Key polygons
-        keyForm.querySelectorAll('[data-style]').forEach((symbol) => {
+        forEach(keyForm.querySelectorAll('[data-style]'), function (symbol) {
           symbol.style = symbol.getAttribute('data-style-offset')
         })
       } else {
         // Key icons
-        keyForm.querySelectorAll('[data-style]').forEach((symbol) => {
+        forEach(keyForm.querySelectorAll('[data-style]'), function (symbol) {
           symbol.style = symbol.getAttribute('data-style')
         })
       }
@@ -189,11 +191,17 @@
 
       // A new feature has been selected
       if (feature) {
+        // Notifies the container that something was hit
+        e.hit = true
+        ensureFeatureTooltipHtml(feature)
+        container.showOverlay(feature)
         // Clear out pre selected polygon
         setFloodPolygonSource()
       } else {
         var layer = getFloodLayer(e.pixel)
         if (layer) {
+          // Notifies the container that something was hit
+          e.hit = true
           var url = layer.getSource().getGetFeatureInfoUrl(e.coordinate, view.getResolution(), 'EPSG:3857', {
             INFO_FORMAT: 'application/json',
             FEATURE_COUNT: 1,
@@ -217,7 +225,7 @@
                 format: new ol.format.GeoJSON()
               }))
 
-              onFeatureClick(feature)
+              ensureFeatureTooltipHtml(feature)
               container.showOverlay(feature)
             })
           }
@@ -229,15 +237,14 @@
 
     // Show cursor when hovering over features
     map.on('pointermove', function (e) {
-      var mouseCoordInMapPixels = [e.originalEvent.offsetX, e.originalEvent.offsetY]
       // Detect vector feature at mouse coords
-      var hit = map.forEachFeatureAtPixel(mouseCoordInMapPixels, function (feature, layer) {
+      var hit = map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
         return true
       })
 
       // Detect wms image at mouse coords
       if (!hit) {
-        hit = getFloodLayer(mouseCoordInMapPixels)
+        hit = getFloodLayer(e.pixel)
       }
 
       if (hit) {
@@ -296,7 +303,11 @@
     this.container = container
   }
 
-  maps.createMainMap = function (containerId, place) {
-    return new MainMap(containerId, place)
+  // Export a helper factory to create this map
+  // onto the `maps` object.
+  // (This is done mainly to avoid the rule
+  // "do not use 'new' for side effects. (no-new)")
+  maps.createLiveMap = function (containerId, place) {
+    return new LiveMap(containerId, place)
   }
 })(window, window.flood)

@@ -11,13 +11,10 @@
   var maps = flood.maps
 
   function MapContainer (el, options) {
-    var noop = function () {}
-
     var defaults = {
       buttonText: 'Show map',
       progressive: false,
-      minIconResolution: 200,
-      onFeatureClick: noop
+      minIconResolution: 200
     }
 
     this.options = Object.assign({}, defaults, options)
@@ -164,52 +161,21 @@
     // Map events
     //
 
-    // Close key or place locator if map is clicked
+    // Close key or overlay if map is clicked
     map.on('click', function (e) {
       // Hide overlay if exists
       this.hideOverlay()
-      // Get mouse coordinates and check for feature if not the highlighted flood polygon
-      var feature = map.forEachFeatureAtPixel(e.pixel, function (feature) {
-        return feature
-      }, {
-        layerFilter: function (layer) {
-          return layer.get('ref') !== 'flood-polygon'
-        }
-      })
 
-      // A new feature has been selected
-      if (feature && feature.get('type') !== 'concernArea') {
-        // Show overlay
-        this.options.onFeatureClick(feature)
-        this.showOverlay(feature)
-      } else {
-        // No feature has been selected
-        // Close key
-        if (hasKey && this.isKeyOpen) {
-          this.closeKey()
+      // Set a short timeout to allow downstream events to fire
+      // and set `e.hit`. Hide the key when nothing is clicked (hit).
+      setTimeout(function () {
+        if (!e.hit) {
+          if (hasKey && this.isKeyOpen) {
+            this.closeKey()
+          }
         }
-      }
+      }.bind(this), 100)
     }.bind(this))
-
-    // Show cursor when hovering over features
-    map.on('pointermove', function (e) {
-      var mouseCoordInMapPixels = [e.originalEvent.offsetX, e.originalEvent.offsetY]
-      // Detect vector feature at mouse coords
-      var hit = map.forEachFeatureAtPixel(mouseCoordInMapPixels, function (feature, layer) {
-        if (feature.get('type') !== 'concernArea') {
-          return true
-        }
-      })
-      // Detect wms image at mouse coords
-      // if (!hit) {
-      //   hit = this.getFloodLayer(mouseCoordInMapPixels)
-      // }
-      if (hit) {
-        map.getTarget().style.cursor = 'pointer'
-      } else {
-        map.getTarget().style.cursor = ''
-      }
-    })
 
     // Set fullscreen state
     this.setFullScreen = function () {
