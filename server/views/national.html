@@ -29,13 +29,15 @@
 
       {% if model.floods.length %}
         {% for group in model.groups %}
-          <div class="defra-warning-overview__section">
-            <h3 class="defra-warning-overview__section-title">
-              <span class="defra-warning-overview__icon defra-warning-overview__icon--{{ group.severity.id }}"></span>
-              {{ group.title | lower }}
-              <span class="govuk-caption-m">{{ group.severity.subTitle }}</span>
-            </h3>
-          </div>
+          {% if group.floods %}
+            <div class="defra-warning-overview__section">
+              <h3 class="defra-warning-overview__section-title">
+                <span class="defra-warning-overview__icon defra-warning-overview__icon--{{ group.severity.id }}"></span>
+                {{ group.title | lower }}
+                <span class="govuk-caption-m">{{ group.severity.subTitle }}</span>
+              </h3>
+            </div>
+          {% endif %}
         {% endfor %}
       {% else %}
         <p class="govuk-body">There are currently no flood warnings or alerts</p>
@@ -136,6 +138,19 @@
   <div class="govuk-grid-column-two-thirds">
     <h2 class="govuk-heading-m govuk-!-margin-top-6">Flood risk: longer term</h2>
     <p>Many areas are vulnerable to flooding in the future. You can <a href="https://flood-warning-information.service.gov.uk/long-term-flood-risk">learn more about the long term flood risk for any location in England</a>.</p>
+  </div>
+</section>
+
+<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-4">
+
+<section class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-m govuk-!-margin-top-6">What to do before, during and after a flood</h2>
+    <ul class="govuk-list">
+      <li><a class="govuk-link" href="/plan-ahead-for-flooding">How to plan ahead for flooding</a></li>
+      <li><a class="govuk-link" href="/what-to-do-in-a-flood">What to do in a flood</a></li>
+      <li><a class="govuk-link" href="/recovering-after-a-flood">How to recover after a flood</a></li>
+    </ul>
   </div>
 </section>
 
