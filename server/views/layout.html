@@ -110,9 +110,7 @@
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script src="{{ assetPath }}/all.js"></script>
   <script src="{{ assetPath }}/javascripts/core.js"></script>
-  <script src="{{ assetPath }}/nunjucks.min.js"></script>
   <script>window.GOVUKFrontend.initAll()</script>
-  <script>nunjucks.configure('/assets/templates')</script>
 {% endblock %}
 
 {% block footer %}
