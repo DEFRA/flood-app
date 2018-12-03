@@ -85,12 +85,12 @@
 
 {% block bodyEnd %}
 
-  {# DEBUG #}
+  {# DEBUG 
   <details>
     <summary>DEBUG</summary>
     <pre>{{ model | dump(2) | safe }}</pre>
   </details>
-  
+  #}
 
   {# Google Analytics #}
   {% if gaAccId %}
