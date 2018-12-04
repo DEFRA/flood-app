@@ -53,9 +53,9 @@
     }
     .defra-warning-overview__icon--removed,
     .defra-warning-overview__icon--4 {
-        background-position:-65px -185px;
+        background-position:-65px -245px;
         @include mq ($from: tablet) {
-            background-position:-120px -180px;
+            background-position:-120px -240px;
         }
     }
 }

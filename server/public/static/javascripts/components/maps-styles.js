@@ -42,7 +42,7 @@
     } else if (feature.get('severity') === 4) {
       fillColour = '#6f777b'
       zIndex = 2
-      offset = [0, 1200]
+      offset = [0, 1300]
       if (feature.get('isSelected') === true) {
         zIndex = 6
         offset[0] += 100
