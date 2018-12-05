@@ -33,11 +33,11 @@
           <p>{{model.flood.message}}</p>
           <p class="govuk-body-s">This information was last updated at <time class="govuk-!-font-weight-bold" datetime="{{model.flood.messageChanged}}">{{model.flood.messageChanged | formatDate}}</time></p>
         </div>
-      {% endif %}
-      {% if model.flood %}
-        <p>
-          Could this information be better? <a href="/target-area/{{model.area.code}}/feedback">Tell us how to improve it</a>.
-        </p>
+        {#
+          <p>
+            Could this information be better? <a href="/target-area/{{model.area.code}}/feedback">Tell us how to improve it</a>.
+          </p>
+        #}
       {% endif %}
     </div>
 
