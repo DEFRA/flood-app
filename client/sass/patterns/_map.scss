@@ -1,6 +1,6 @@
 .app-map {
     .govuk-button--show-map {
-        margin-bottom:10px;
+        margin-bottom:0px;
         @include mq ($from: tablet) {
             display:none;
         }
