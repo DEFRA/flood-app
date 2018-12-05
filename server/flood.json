@@ -59,20 +59,6 @@
       "next": []
     },
     {
-      "path": "/what-to-do-in-a-flood-what-flood-warnings-mean",
-      "title": "What to do in a flood",
-      "section": "floodRisk",
-      "components": [
-        {
-          "type": "Html",
-          "content": "<div class=\"govuk-prose-scope\">\r\n<p>\r\n1. What the flood warnings mean\r\n</p>\r\n<p>\r\n2. What to do if you get a flood alert\r\n</p>\r\n<p>\r\n3. What to do if you get a flood warning\r\n</p>\r\n<p>\r\n4. What to do if you get a severe flood warning\r\n</p>\r\n<p>\r\n<h2 class=\"govuk-heading-m\">1. What the flood warnings mean</h2>\r\n</p>\r\n<p>\r\nWe issue 3 levels of flood warning:\r\n</p>\r\n<img src=\"https://flood-warning-information.service.gov.uk/public/images/flood-alerts-icon.gif\" alt=\"Image of flood alert symbol\"\r\n    width=\"69\" height=\"65\" />\r\n<h3 class=\"govuk-heading-m\">Flood alert - prepare</h3>\r\n<ul class=\"govuk-list govuk-list--bullet\">\r\n  <li>prepare a bag that includes medicines and insurance documents\r\n</li>\r\n  <li>check flood warnings\r\n</li>\r\n</ul>\r\n</p>\r\n<img src=\"https://flood-warning-information.service.gov.uk/public/images/flood-warnings-icon.gif\" alt=\"Image of flood warning symbol\"\r\n    width=\"69\" height=\"65\" />\r\n<h3 class=\"govuk-heading-m\">Flood warning - act</h3>\r\n<ul class=\"govuk-list govuk-list--bullet\">\r\n  <li>turn off gas, water and electricity\r\n</li>\r\n  <li>move things upstairs or to safety\r\n</li>\r\n<li>move family, pets and car to safety</li>\r\n</ul>\r\n\r\n<img src=\"https://flood-warning-information.service.gov.uk/public/images/severe-flood-warnings-icon.gif\" alt=\"Image of severe flood warning symbol\"\r\n    width=\"69\" height=\"65\" />\r\n <h3 class=\"govuk-heading-m\">Severe flood warning - survive\r\n</h3>\r\n\r\n<ul class=\"govuk-list govuk-list--bullet\">\r\n  <li>call 999 if in immediate danger\r\n</li>\r\n  <li>follow advice from emergency services\r\n</li>\r\n  <li>keep yourself and your family safe\r\n</li>\r\n\r\n</ul>\r\n\r\n<p>\r\nSave a copy of this <a href=\"https://flood-warning-information.service.gov.uk/public/pdf/flood_warnings.pdf\">simple flood plan (PDF, 139KB)</a> so you’ll know what to do when there’s a flood warning in your area.\r\n</p>\r\n\r\n\r\n<p><a href=\"/alpha-start-page\r\n\">View current warnings and advice specific to your area.</a>.</p>\r\n\r\n<p>\r\nAll floods are different and you should take advice from the emergency services and your local authority if you’re in a flood.\r\n</p>\r\n</div>",
-          "options": {},
-          "schema": {}
-        }
-      ],
-      "next": []
-    },
-    {
       "path": "/location-not-england",
       "title": "This service provides flood warning information for England only",
       "section": "floodRisk",
