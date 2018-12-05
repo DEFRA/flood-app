@@ -45,7 +45,7 @@
         },
         {
           "type": "Html",
-          "content": "<a href=\"/start\" role=\"button\" draggable=\"false\" class=\"govuk-button govuk-button--start\">\r\nStart now\r\n</a>",
+          "content": "<a href=\"/\" role=\"button\" draggable=\"false\" class=\"govuk-button govuk-button--start\">\r\nStart now\r\n</a>",
           "options": {},
           "schema": {}
         },
