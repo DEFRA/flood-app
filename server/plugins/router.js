@@ -5,6 +5,7 @@ const routes = [].concat(
   require('../routes/target-area'),
   require('../routes/station'),
   require('../routes/api'),
+  require('../routes/roadmap'),
   require('../routes/public')
 )
 
