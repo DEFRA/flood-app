@@ -32,8 +32,8 @@
   <![endif]-->
 
   <script src="//cdn.polyfill.io/v2/polyfill.min.js"></script>
-
-  <!-- Hotjar Tracking Code for https://flood-private-beta.aws.defra.cloud/warnings -->
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+ <!-- Hotjar Tracking Code for https://flood-private-beta.aws.defra.cloud/warnings -->
   <script>
     (function (h, o, t, j, a, r) {
       h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) }
@@ -82,6 +82,8 @@
 
 {% block bodyEnd %}
 
+{% include "partials/exit-survey-dialog.html" %}
+
   {# DEBUG 
   <details>
     <summary>DEBUG</summary>
@@ -107,7 +109,9 @@
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script src="{{ assetPath }}/all.js"></script>
   <script src="{{ assetPath }}/javascripts/core.js"></script>
+  <script src="{{ assetPath }}/javascripts/components/a11y-dialog.js"></script>
   <script>window.GOVUKFrontend.initAll()</script>
+  <script src="{{ assetPath }}/javascripts/exit-survey.js"></script>
 {% endblock %}
 
 {% block footer %}
