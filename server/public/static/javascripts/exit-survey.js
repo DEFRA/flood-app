@@ -4,7 +4,7 @@
   // creates a popup survey dialog that displays after set intervals
   // assumes js-cookie as Cookies
   var delayAfterDismissal = 900 // in seconds
-  var delayAfterFirstVisit = 180 // in seconds
+  var delayAfterFirstVisit = 120 // in seconds
   var minsDefiningARecentVisit = 30
   var cookieFirstRecentVisitAt = 'firstRecentVisitAt'
   var cookieHasGoneToSurvey = 'hasGoneToSurvey'
