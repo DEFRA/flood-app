@@ -16,7 +16,11 @@ module.exports = [{
   options: {
     validate: {
       payload: {
-        location: joi.string().required().allow('')
+        // location: joi.string().required().allow('')
+        location: joi.string().required()
+      },
+      failAction: (request, h, err) => {
+        return h.view('home', { errorMessage: 'Location empty' }).takeover()
       }
     }
   }
