@@ -77,5 +77,10 @@ module.exports = {
   async getStationForecastData (id) {
     const url = `${serviceUrl}/station/${id}/forecast/data`
     return util.getJson(url)
+  },
+
+  async getIsEngland (lng, lat) {
+    const url = `${serviceUrl}/is-england/${lng}/${lat}`
+    return util.getJson(url)
   }
 }
