@@ -8,15 +8,20 @@
     {% set symbol = 'forecastAbove' %}
   {% elif props.status === 'Closed' or props.status === 'Suspended' %}
     {% set symbol = 'disabled' %}
+    {% set closedOrSuspended = true%}
   {% endif %}
 
   <p class="govuk-!-margin-bottom-2">
     <span class="govuk-body-m govuk-!-font-weight-bold">{{props.river}}</span><br/>
+    {% if closedOrSuspended %}
+    <span class="govuk-body-s">{{props.name}}</span>
+    {% else %}
     <a class="govuk-body-s" href="/station/{{stationId}}">{{props.name}}</a>
+    {% endif %}
   </p>
 
   {% if closedOrSuspended %}
-    <p class="govuk-body-s">Temporarily out of service</p>
+    <p class="govuk-body-s">Closed or temporarily out of service</p>
   {% else %}
     <p class="govuk-body-s">
       {% if props.value %}
