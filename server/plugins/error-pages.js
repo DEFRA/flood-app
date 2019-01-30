@@ -26,6 +26,13 @@ module.exports = {
             message: response.message
           })
 
+          // In the event of 400
+          // return the invalid location error
+          if (statusCode === 400) {
+            request.yar.set('displayError', { errorMessage: 'Please enter a valid location' })
+            return h.redirect('/')
+          }
+
           // The return the `500` view
           return h.view('500').code(statusCode)
         }

@@ -7,7 +7,10 @@ module.exports = [{
     if (typeof request.yar.get('displayError') === 'undefined') {
       return h.view('home')
     } else {
-      return h.view('home', request.yar.get('displayError'))
+      let errMess = request.yar.get('displayError')
+      request.yar.set('displayError', {})
+      // return h.view('home', request.yar.get('displayError'))
+      return h.view('home', errMess)
     }
   }
 }, {
@@ -23,7 +26,7 @@ module.exports = [{
         location: joi.string().required()
       },
       failAction: (request, h, err) => {
-        return h.view('home', { errorMessage: 'Please enter a location' }).takeover()
+        return h.view('home', { errorMessage: 'Please enter a valid location' }).takeover()
       }
     }
   }
