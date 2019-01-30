@@ -4,9 +4,7 @@ const floodServices = require('./flood')
 
 async function find (location) {
   const query = encodeURIComponent(location)
-  const url = `http://dev.virtualearth.net/REST/v1/Locations?query=${query},UK&userRegion=GB&include=ciso2&c=en-GB&maxResults=1&userIP=127.0.0.1&key=${bingKey}`
-  // const url = `http://dev.virtualearth.net/REST/v1/Locations?query=${query},UK&include=ciso2&c=en-GB&maxResults=1&userIP=127.0.0.1&key=${bingKey}`
-  // const url = `http://dev.virtualearth.net/REST/v1/Locations?query=${query}&include=ciso2&c=en-GB&maxResults=1&userIP=127.0.0.1&key=${bingKey}`
+  const url = `https://dev.virtualearth.net/REST/v1/Locations?query=${query},UK&userRegion=GB&include=ciso2&c=en-GB&maxResults=1&userIP=127.0.0.1&key=${bingKey}`
   // const url = `https://dev.virtualearth.net/REST/v1/Locations/UK/${query}?key=${bingKey}&maxResults=1&userIP=127.0.0.1`
 
   let data = await getJson(url, true)
