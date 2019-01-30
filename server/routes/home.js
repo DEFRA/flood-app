@@ -9,7 +9,6 @@ module.exports = [{
     } else {
       let errMess = request.yar.get('displayError')
       request.yar.set('displayError', {})
-      // return h.view('home', request.yar.get('displayError'))
       return h.view('home', errMess)
     }
   }
