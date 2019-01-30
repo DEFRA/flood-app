@@ -22,6 +22,7 @@ async function createServer () {
   await server.register(require('./plugins/builder'))
   await server.register(require('./plugins/error-pages'))
   await server.register(require('./plugins/full-url'))
+  await server.register(require('./plugins/session'))
 
   if (config.isDev) {
     await server.register(require('blipp'))

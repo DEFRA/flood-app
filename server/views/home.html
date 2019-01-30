@@ -1,20 +1,55 @@
 {% extends 'layout.html' %}
 
+{% from "error-summary/macro.njk" import govukErrorSummary %}
+{% from "input/macro.njk" import govukInput %}
+
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Enter a location in England</h1>
+    {% if errorMessage %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [
+        {
+          text: errorMessage,
+          href: "#location"
+        }
+      ]
+    }) }}
+    {% endif %}
     <form method="post">
-      <div class="govuk-form-group">
-        <label class="govuk-label govuk-label--m" for="location">City, town or postcode</label>
-        <span id="location-hint" class="govuk-hint">For example Bakewell or SW1A 2AA</span>
-        <input class="govuk-input govuk-!-width-two-thirds" id="location" name="location" value="" type="text"
-          aria-describedby="location-hint">
-        <div id="autocomplete-container" class="govuk-body"></div>
-      </div>
-      <button type="submit" class="govuk-button">Continue</button>
-    </form>
-  </div>
+      <div id="autocomplete-container" class="govuk-body">
+      {% if errorMessage %}
+        {{ govukInput({
+          label: {
+            text: "City, town or postcode"
+          },
+          hint: {
+            text: "For example Bakewell or SW1A 2AA"
+          },
+          errorMessage: {
+            "text": "Enter location"
+          },
+          id: "location",
+          name: "location"
+        }) }}
+      {% else %}
+      {{ govukInput({
+        label: {
+          text: "City, town or postcode"
+        },
+        hint: {
+          text: "For example Bakewell or SW1A 2AA"
+        },
+        id: "location",
+        name: "location"
+      }) }}
+      {% endif %}
+    </div>
+    <button type="submit" class="govuk-button">Continue</button>
+  </form>
+</div>
 </div>
 {% endblock %}
 
