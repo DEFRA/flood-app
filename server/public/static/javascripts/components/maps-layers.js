@@ -26,18 +26,16 @@
   }
 
   function stations () {
-    var sourceStations = new ol.source.Vector({
-      format: new ol.format.GeoJSON(),
-      projection: 'EPSG:3857',
-      url: '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&maxFeatures=10000&outputFormat=application/json&srsName=EPSG:4326'
-    })
-
     return new ol.layer.Vector({
+      ref: 'stations',
       title: 'stations',
-      source: sourceStations,
-      visible: true,
+      source: new ol.source.Vector({
+        format: new ol.format.GeoJSON(),
+        projection: 'EPSG:3857',
+        url: '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&maxFeatures=10000&outputFormat=application/json&srsName=EPSG:4326'
+      }),
       style: maps.styles.stations,
-      maxResolution: 800
+      visible: false
     })
   }
 
@@ -84,7 +82,47 @@
         }
       })
     })
+    /*
+    return new ol.layer.Vector({
+      ref: 'floods-alert',
+      maxResolution: 200,
+      source: new ol.source.Vector({
+        format: new ol.format.GeoJSON(),
+        loader: function(extent, resolution, projection) {
+          var source = this
+          var proj = projection.getCode();
+          var url = '/ows?service=wfs&' +
+              'version=1.3.0&request=GetFeature&typename=flood:flood_warning_alert&' +
+              'outputFormat=application/json&srsname=' + proj + '&' +
+              'bbox=' + extent.join(',') + ',' + proj
+          var xhr = new XMLHttpRequest()
+          xhr.open('GET', url)
+          var onError = function() {
+            source.removeLoadedExtent(extent)
+          }
+          xhr.onerror = onError
+          xhr.onload = function() {
+            if (xhr.status == 200) {
+              source.addFeatures(source.getFormat().readFeatures(xhr.responseText))
+            } else {
+              onError()
+            }
+          }
+          xhr.send()
+        },
+        strategy: ol.loadingstrategy.bbox
+      })
+    })
+    */
   }
+
+/*
+'http://localhost:3009/ows?service=wfs&' +
+'version=1.3.0&'+
+'request=GetFeature&' +
+'typeNames=flood:flood_warning_alert&' +
+'bbox='+extent.join()+',urn:ogc:def:crs:EPSG:3857'
+*/
 
   function floodPolygonsNotInForce () {
     return new ol.layer.Image({
@@ -122,21 +160,30 @@
   }
 
   function location (name, center) {
+    var feature = new window.ol.Feature({
+      geometry: new window.ol.geom.Point(window.ol.proj.transform(center, 'EPSG:4326', 'EPSG:3857')),
+      type: 'location',
+      html: name
+    })
+    feature.setId('location')
     var locationPoint = new window.ol.source.Vector({
-      features: [
-        new window.ol.Feature({
-          geometry: new window.ol.geom.Point(window.ol.proj.transform(center, 'EPSG:4326', 'EPSG:3857')),
-          type: 'location',
-          html: name
-        })
-      ]
+      features: [feature]
     })
 
     return new window.ol.layer.Vector({
+      ref: 'location',
       renderMode: 'hybrid',
       source: locationPoint,
       style: maps.styles.location,
       zIndex: 2
+    })
+  }
+
+  function selectedPointFeature () {
+    return new window.ol.layer.Vector({
+      ref: 'selected-point-feature',
+      renderMode: 'hybrid',
+      zIndex: 10
     })
   }
 
@@ -150,6 +197,7 @@
   layers.floodCentroids = floodCentroids
   layers.stations = stations
   layers.location = location
+  layers.selectedPointFeature = selectedPointFeature
 
   maps.layers = layers
 })(window, window.flood.maps)
