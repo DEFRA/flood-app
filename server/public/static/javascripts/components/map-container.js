@@ -4,7 +4,8 @@
 // It also controls the zoom, full screen controls, responsiveness etc.
 // No implementation details specific to a map should be in here.
 // This is a generic container that could be reused for LTFRI maps, FMfP etc.
-// To include a key, include an element with `.map-key__container` in the main inner element.
+// ***To include a key, include an element with `.map-key__container` in the main inner element.
+// To include a key pass its template name as an option
 
 (function (window, flood) {
   var ol = window.ol
@@ -14,7 +15,8 @@
     var defaults = {
       buttonText: 'Show map',
       progressive: false,
-      minIconResolution: 200
+      minIconResolution: 200,
+      keyTemplate: ''
     }
 
     this.options = Object.assign({}, defaults, options)
@@ -37,11 +39,13 @@
     el.parentNode.parentNode.insertBefore(this.showMapButton, el.parentNode)
 
     var hasKey = false
-    var keyEl = this.mapContainerInnerElement.querySelector('.map-key__container')
-    if (keyEl) {
+    // Experimental adding key via client side template
+
+    if (this.options.keyTemplate !== '') {
+      var keyHtml = window.nunjucks.render(this.options.keyTemplate)
       hasKey = true
       this.keyElement = document.createElement('div')
-      this.keyElement.appendChild(keyEl)
+      this.keyElement.innerHTML = keyHtml
       this.keyElement.className = 'map-key'
 
       // Key toggle button
@@ -90,6 +94,7 @@
 
     // Add key
     if (hasKey) {
+      el.classList.add('map--has-key')
       this.mapContainerInnerElement.appendChild(this.keyElement)
       this.keyElement.insertBefore(this.keyToggleElement, this.keyElement.firstChild)
     }
@@ -116,8 +121,15 @@
       target: this.mapContainerInnerElement,
       controls: controls,
       layers: layers,
-      view: view
+      view: view,
+      interactions: ol.interaction.defaults({
+        mouseWheelZoom: false
+      })
     })
+
+    // Add mouse wheel zoom interaction
+    var mouseWheelZoom = new ol.interaction.MouseWheelZoom()
+    map.addInteraction(mouseWheelZoom)
 
     this.map = map
 
@@ -163,19 +175,25 @@
 
     // Close key or overlay if map is clicked
     map.on('click', function (e) {
+      // Re-enable mouse wheel scroll
+      // mouseWheelZoom.setActive(true)
+
       // Hide overlay if exists
       this.hideOverlay()
 
       // Set a short timeout to allow downstream events to fire
       // and set `e.hit`. Hide the key when nothing is clicked (hit).
       setTimeout(function () {
-        if (!e.hit) {
-          if (hasKey && this.isKeyOpen) {
-            this.closeKey()
-          }
+        if (hasKey && this.isKeyOpen) {
+          this.closeKey()
         }
       }.bind(this), 100)
     }.bind(this))
+
+    // Disable mouse wheel when point moves away from the map
+    el.addEventListener('mouseout', function (e) {
+      mouseWheelZoom.setActive(false)
+    })
 
     // Set fullscreen state
     this.setFullScreen = function () {
