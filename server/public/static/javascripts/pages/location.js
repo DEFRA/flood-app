@@ -2,5 +2,5 @@
   var maps = flood.maps
   var model = flood.model
 
-  maps.createLiveMap('map', model.place)
+  maps.createLiveLocationMap('map', model.place)
 })(window, window.flood)
