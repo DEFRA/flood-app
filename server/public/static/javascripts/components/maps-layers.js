@@ -68,7 +68,7 @@
         }
       })
     })
-    /*
+
     return new ol.layer.Vector({
       ref: 'floods-alert',
       maxResolution: 200,
@@ -99,7 +99,7 @@
         strategy: ol.loadingstrategy.bbox
       })
     })
-    */
+
   }
 
 /*
@@ -160,10 +160,39 @@
   }
 
   function rain () {
+    var geojsonObject = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type" : "Feature",
+          "id": "rain.0001",
+          "properties": {
+            "label": "Rain gauge name",
+            "gridRef": "SS777481",
+            "value": 0,
+            "latestDate": "2019-02-12T04:00:00Z"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -3.75,
+              51.22
+            ]
+          }
+        }
+      ]     
+    }
+
+    var features = new ol.format.GeoJSON().readFeatures(geojsonObject, {
+      featureProjection: 'EPSG:3857'
+    })
+
     return new ol.layer.Vector({
       ref: 'rain',
       title: 'rain',
-      source: new ol.source.Vector(),
+      source: new ol.source.Vector({
+        features: features
+      }),
       style: maps.styles.rain,
       visible: false
     })

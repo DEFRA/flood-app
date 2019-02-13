@@ -124,6 +124,41 @@
     ]
   }
 
+  function rain (feature, resolution) {
+    var featureId = feature.getId()
+    if (!featureId) {
+      return
+    }
+
+    var source = '/assets/images/icon-map-features-2x.png'
+    var zIndex = 1
+    var anchor = [0.5, 0.75]
+    var offset = [0, 1500]
+
+    if (resolution > 200) {
+      offset[0] += 200
+      anchor = [0.5, 0.5]
+    }
+
+    if (feature.get('isSelected') === true) {
+      offset[0] += 100
+      zIndex = 5
+    }
+
+    return [
+      new ol.style.Style({
+        image: new ol.style.Icon({
+          src: source,
+          size: [66, 84],
+          anchor: anchor,
+          scale: 0.5,
+          offset: offset
+        }),
+        zIndex: zIndex
+      })
+    ]
+  }
+
   function location (feature, resolution) {
     var offset = [0, 1300] // Icon sprite offset
 
@@ -157,6 +192,7 @@
 
   styles.floods = floods
   styles.stations = stations
+  styles.rain = rain
   styles.location = location
   styles.floodPolygon = floodPolygon
 

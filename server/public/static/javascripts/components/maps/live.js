@@ -74,6 +74,7 @@
         floodsSevere,
         floodPolygon,
         stations,
+        rain,
         floodCentroids
       ]
     }
@@ -164,7 +165,7 @@
           break
         }
         case 'rain': {
-          // stations.setVisible(input.checked)
+          rain.setVisible(input.checked)
           break
         }
       }
@@ -233,6 +234,8 @@
           selectedPointFeature.setStyle(maps.styles.stations)
         } else if (id.startsWith('flood_warning_alert')) {
           selectedPointFeature.setStyle(maps.styles.floods)
+        } else if (id.startsWith('rain')) {
+          selectedPointFeature.setStyle(maps.styles.rain)
         } else {
           selectedPointFeature.setStyle(maps.styles.location)
         }
@@ -250,7 +253,7 @@
       toggleKeySections()
     })
 
-    // Toggle key sectino when flood centroids have loaded
+    // Toggle key section when flood centroids have loaded
     floodCentroids.getSource().on('change', function (event) {
       toggleKeySections()
     })
@@ -389,10 +392,6 @@
           }
           break
         }
-        case 'stations': {
-          stations.setVisible(target.checked)
-          break
-        }
         case 'floodWarnings': {
           setFloodsVisibility([1, 2], target.checked)
           break
@@ -403,6 +402,14 @@
         }
         case 'floodExpired': {
           setFloodsVisibility([4], target.checked)
+          break
+        }
+        case 'stations': {
+          stations.setVisible(target.checked)
+          break
+        }
+        case 'rain': {
+          rain.setVisible(target.checked)
           break
         }
       }
