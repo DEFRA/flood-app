@@ -25,20 +25,6 @@
     })
   }
 
-  function stations () {
-    return new ol.layer.Vector({
-      ref: 'stations',
-      title: 'stations',
-      source: new ol.source.Vector({
-        format: new ol.format.GeoJSON(),
-        projection: 'EPSG:3857',
-        url: '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&maxFeatures=10000&outputFormat=application/json&srsName=EPSG:4326'
-      }),
-      style: maps.styles.stations,
-      visible: false
-    })
-  }
-
   function floodPolygonsSevere () {
     return new ol.layer.Image({
       ref: 'floods-severe',
@@ -159,6 +145,30 @@
     })
   }
 
+  function stations () {
+    return new ol.layer.Vector({
+      ref: 'stations',
+      title: 'stations',
+      source: new ol.source.Vector({
+        format: new ol.format.GeoJSON(),
+        projection: 'EPSG:3857',
+        url: '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&maxFeatures=10000&outputFormat=application/json&srsName=EPSG:4326'
+      }),
+      style: maps.styles.stations,
+      visible: false
+    })
+  }
+
+  function rain () {
+    return new ol.layer.Vector({
+      ref: 'rain',
+      title: 'rain',
+      source: new ol.source.Vector(),
+      style: maps.styles.rain,
+      visible: false
+    })
+  }
+
   function location (name, center) {
     var feature = new window.ol.Feature({
       geometry: new window.ol.geom.Point(window.ol.proj.transform(center, 'EPSG:4326', 'EPSG:3857')),
@@ -196,6 +206,7 @@
   layers.floodPolygon = floodPolygon
   layers.floodCentroids = floodCentroids
   layers.stations = stations
+  layers.rain = rain
   layers.location = location
   layers.selectedPointFeature = selectedPointFeature
 

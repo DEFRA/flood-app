@@ -31,6 +31,7 @@
     var floodsNotInForce = maps.layers.floodsNotInForce()
     var floodPolygon = maps.layers.floodPolygon()
     var stations = maps.layers.stations()
+    var rain = maps.layers.rain()
     var floodCentroids = maps.layers.floodCentroids()
     var selectedPointFeature = maps.layers.selectedPointFeature()
 
@@ -94,7 +95,7 @@
     var keyForm = container.keyElement.querySelector('form')
 
     // Toggle key sections depending on what features are visible in the current extent
-    function toggleKeySections(url) {
+    function toggleKeySections() {
       var extent = map.getView().calculateExtent()
       // getFeature request
       var url = '/ows?service=wfs&' +
@@ -117,12 +118,14 @@
           var showWarning = false
           var showAlert = false
           var showNotInForce = false
-          // Set booleans for polygons
+          var showStations = false
+          var showRain = false
+          // Set booleans for flood polygons
           showSevere = floodsPolygons.features.filter(x => x.properties.severity === 1).length ? true : false
           showWarning = floodsPolygons.features.filter(x => x.properties.severity === 2).length ? true : false
           showAlert = floodsPolygons.features.filter(x => x.properties.severity === 3).length ? true : false
           showNotInForce = floodsPolygons.features.filter(x => x.properties.severity === 4).length ? true : false
-          // Set booleans for centroids
+          // Set booleans for flood centroids
           floodCentroids.getSource().forEachFeatureInExtent(extent, function(feature) {
             switch (feature.get('severity')) {
               case 1: { showSevere = true }
@@ -131,6 +134,11 @@
               case 4: { showNotInForce = true }
             }
           })
+          // Set booleans for stations centroids
+          showStations = stations.getSource().getFeaturesInExtent(extent).length ? true : false
+          // Set booleans for rain gauge centroids
+          showRain = rain.getSource().getFeaturesInExtent(extent).length ? true : false
+          // Toggle key ul or li display
           if (showSevere || showWarning || showAlert) {
             keyForm.querySelector('#severeFloodWarnings').closest('ul').style.display = 'block'
             keyForm.querySelector('#severeFloodWarnings').closest('li').style.display = showSevere ? 'block' : 'none'
@@ -139,6 +147,8 @@
           } else {
             keyForm.querySelector('#severeFloodWarnings').closest('ul').style.display = 'none'
           }
+          keyForm.querySelector('#stations').closest('ul').style.display = showStations ? 'block' : 'none'
+          keyForm.querySelector('#rain').closest('ul').style.display = showRain ? 'block' : 'none'
         } else {
           onError()
         }
