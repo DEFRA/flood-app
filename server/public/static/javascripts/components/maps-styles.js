@@ -78,6 +78,7 @@
     var props = feature.getProperties()
     var source = '/assets/images/icon-map-features-2x.png'
     var zIndex = 1
+    var anchor = [0.5, 0.75]
     var offset
 
     switch (true) {
@@ -101,6 +102,7 @@
 
     if (resolution > 200) {
       offset[0] += 200
+      anchor = [0.5, 0.5]
     }
 
     if (feature.get('isSelected') === true) {
@@ -112,8 +114,8 @@
       new ol.style.Style({
         image: new ol.style.Icon({
           src: source,
-          size: [86, 86],
-          anchor: [0.5, 0.75],
+          size: [66, 84],
+          anchor: anchor,
           scale: 0.5,
           offset: offset
         }),
