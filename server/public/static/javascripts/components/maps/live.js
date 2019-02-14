@@ -258,6 +258,16 @@
       toggleKeySections()
     })
 
+    // Toggle key section when flood centroids have loaded
+    stations.getSource().on('change', function (event) {
+      toggleKeySections()
+    })
+
+    // Toggle key section when flood centroids have loaded
+    rain.getSource().on('change', function (event) {
+      toggleKeySections()
+    })
+
     // Reactions based on pan/zoom change on map
     map.on('moveend', function (event) {
       // Update layer opacity setting for different map resolutions
