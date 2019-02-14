@@ -69,6 +69,7 @@
       })
     })
 
+    /*
     return new ol.layer.Vector({
       ref: 'floods-alert',
       maxResolution: 200,
@@ -99,16 +100,8 @@
         strategy: ol.loadingstrategy.bbox
       })
     })
-
+    */
   }
-
-/*
-'http://localhost:3009/ows?service=wfs&' +
-'version=1.3.0&'+
-'request=GetFeature&' +
-'typeNames=flood:flood_warning_alert&' +
-'bbox='+extent.join()+',urn:ogc:def:crs:EPSG:3857'
-*/
 
   function floodPolygonsNotInForce () {
     return new ol.layer.Image({
@@ -161,26 +154,60 @@
 
   function rain () {
     var geojsonObject = {
-      "type": "FeatureCollection",
-      "features": [
+      'type': 'FeatureCollection',
+      'features': [
         {
-          "type" : "Feature",
-          "id": "rain.0001",
-          "properties": {
-            "label": "Rain gauge name",
-            "gridRef": "SS777481",
-            "value": 0,
-            "latestDate": "2019-02-12T04:00:00Z"
+          'type': 'Feature',
+          'id': 'rain.50112',
+          'properties': {
+            'label': 'Rain gauge name',
+            'gridRef': 'SS777481',
+            'value': 0,
+            'latestDate': '2019-02-12T04:00:00Z'
           },
-          "geometry": {
-            "type": "Point",
-            "coordinates": [
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [
               -3.75,
               51.22
             ]
           }
+        },
+        {
+          'type': 'Feature',
+          'id': 'rain.45101',
+          'properties': {
+            'label': 'Rain gauge name',
+            'gridRef': 'SS770391',
+            'value': 0,
+            'latestDate': '2019-02-12T04:00:00Z'
+          },
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [
+              -3.76,
+              51.14
+            ]
+          }
+        },
+        {
+          'type': 'Feature',
+          'id': 'rain.45100',
+          'properties': {
+            'label': 'Rain gauge name',
+            'gridRef': 'SS763417',
+            'value': 0,
+            'latestDate': '2019-02-12T04:00:00Z'
+          },
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [
+              -3.77,
+              51.16
+            ]
+          }
         }
-      ]     
+      ]
     }
 
     var features = new ol.format.GeoJSON().readFeatures(geojsonObject, {
