@@ -1,0 +1,76 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <a href="" onclick="window.history.back();return false" class="govuk-back-link govuk-!-margin-bottom-7">Back</a>
+    <h1 class="govuk-heading-xl">
+      <span class="govuk-caption-xl">Rain gauge at</span>
+      {{ model.name }}
+    </h1>
+  </div>
+</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-m">
+      140mm in the last 24 hours
+    </h2>
+    <div class="govuk-tabs" data-module="tabs">
+      <h2 class="govuk-tabs__title">
+        Contents
+      </h2>
+      <ul class="govuk-tabs__list">
+        <li class="govuk-tabs__list-item">
+          <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#six-hours">
+            6 hours
+          </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+          <a class="govuk-tabs__tab" href="#twenty-four-hours">
+            24 hours
+          </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+          <a class="govuk-tabs__tab" href="#thirty-days">
+            30 days
+          </a>
+        </li>
+      </ul>
+      <section class="govuk-tabs__panel" id="six-hours">
+        <table class="govuk-table">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th class="govuk-table__header" scope="col">15 minute period</th>
+              <th class="govuk-table__header" scope="col">Measurement</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            {% for record in model.fifteen %}
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">{{ record.period }}</td>
+              <td class="govuk-table__cell">{{ record.value }}mm</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+      <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="twenty-four-hours">
+        <p class="govuk-body">24 hours</p>
+      </section>
+      <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="thirty-days">
+        <p class="govuk-body">30 days</p>
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block bodyEnd %}
+{{ super() }}
+<script src="{{ assetPath }}/nunjucks-slim.min.js"></script>
+<script>nunjucks.configure()</script>
+<script>
+  window.flood.model = {{ model | dump(2) | safe }}
+</script>
+<script src="{{assetPath}}/javascripts/pages/rain-gauge.js"></script>
+{% endblock %}
