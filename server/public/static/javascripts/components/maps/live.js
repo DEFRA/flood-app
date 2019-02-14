@@ -101,49 +101,67 @@
     var keyForm = container.keyElement.querySelector('form')
 
     // Toggle key sections depending on what features are visible in the current extent
-    function toggleKeySections() {
+    function toggleKeySections () {
       var extent = map.getView().calculateExtent()
       // getFeature request
       var url = '/ows?service=wfs&' +
-        'version=1.3.0&'+
+        'version=1.3.0&' +
         'request=GetFeature&' +
         'typeNames=flood:flood_warning_alert&' +
         'propertyName=severity&' +
-        'bbox='+extent.join()+',urn:ogc:def:crs:EPSG:3857&' +
+        'bbox=' + extent.join() + ',urn:ogc:def:crs:EPSG:3857&' +
         'outputFormat=application/json'
       var xhr = new XMLHttpRequest()
       xhr.open('GET', url)
-      var onError = function() {
+      var onError = function () {
         console.log('Error: getPropertyValue')
       }
       xhr.onerror = onError
-      xhr.onload = function() {
-        if (xhr.status == 200) {
+      xhr.onload = function () {
+        if (xhr.status === 200) {
           var floodsPolygons = JSON.parse(xhr.responseText)
           var showSevere = false
           var showWarning = false
           var showAlert = false
-          var showNotInForce = false
+          // var showNotInForce = false
           var showStations = false
           var showRain = false
           // Set booleans for flood polygons
           showSevere = floodsPolygons.features.filter(x => x.properties.severity === 1).length ? true : false
           showWarning = floodsPolygons.features.filter(x => x.properties.severity === 2).length ? true : false
           showAlert = floodsPolygons.features.filter(x => x.properties.severity === 3).length ? true : false
-          showNotInForce = floodsPolygons.features.filter(x => x.properties.severity === 4).length ? true : false
+          // showNotInForce = floodsPolygons.features.filter(x => x.properties.severity === 4).length ? true : false
           // Set booleans for flood centroids
           floodCentroids.getSource().forEachFeatureInExtent(extent, function(feature) {
             switch (feature.get('severity')) {
-              case 1: { showSevere = true }
-              case 2: { showWarning = true }
-              case 3: { showAlert = true }
-              case 4: { showNotInForce = true }
+              case 1: {
+                showSevere = true
+                break
+              }
+              case 2: {
+                showWarning = true
+                break
+              }
+              case 3: {
+                showAlert = true
+                break
+              }
+              /*
+              case 4: {
+                showNotInForce = true
+                break
+              }
+              */
             }
           })
           // Set booleans for stations centroids
-          showStations = stations.getSource().getFeaturesInExtent(extent).length ? true : false
+          if (stations.getSource().getFeaturesInExtent(extent).length) {
+            showStations = true
+          }
           // Set booleans for rain gauge centroids
-          showRain = rain.getSource().getFeaturesInExtent(extent).length ? true : false
+          if (rain.getSource().getFeaturesInExtent(extent).length) {
+            showRain = true
+          }
           // Toggle key ul or li display
           if (showSevere || showWarning || showAlert) {
             keyForm.querySelector('#severeFloodWarnings').closest('ul').style.display = 'block'
@@ -166,11 +184,11 @@
     forEach(keyForm.querySelectorAll('.govuk-checkboxes__input'), function (input) {
       switch (input.getAttribute('data-layer')) {
         case 'stations': {
-          stations.setVisible(input.checked)
+          input.checked ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
           break
         }
         case 'rain': {
-          rain.setVisible(input.checked)
+          input.checked ? rain.setStyle(maps.styles.rain) : rain.setStyle(new ol.style.Style({}))
           break
         }
       }
@@ -420,11 +438,11 @@
           break
         }
         case 'stations': {
-          stations.setVisible(target.checked)
+          target.checked ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
           break
         }
         case 'rain': {
-          rain.setVisible(target.checked)
+          target.checked ? rain.setStyle(maps.styles.rain) : rain.setStyle(new ol.style.Style({}))
           break
         }
       }

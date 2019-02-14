@@ -147,8 +147,7 @@
         projection: 'EPSG:3857',
         url: '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&maxFeatures=10000&outputFormat=application/json&srsName=EPSG:4326'
       }),
-      style: maps.styles.stations,
-      visible: false
+      style: new ol.style.Style({})
     })
   }
 
@@ -220,8 +219,7 @@
       source: new ol.source.Vector({
         features: features
       }),
-      style: maps.styles.rain,
-      visible: false
+      style: new ol.style.Style({})
     })
   }
 
