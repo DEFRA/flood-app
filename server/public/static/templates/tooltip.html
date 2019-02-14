@@ -44,4 +44,14 @@
     <a class="govuk-body-s" href="/target-area/{{props.fwa_code}}">{{props.description}}</a>
   </p>
   <span class="ol-overlay__symbol ol-overlay__symbol--{{props.severity}}"></span>
+{% elif type == 'rain' %}
+  <p class="govuk-body-s govuk-!-margin-bottom-1">
+    <a href="">Monksilver rain gauge</a>
+  </p>
+  <p class="govuk-body-m govuk-!-font-weight-bold">
+    140mm in the last 24 hours
+  </p>
+  <p class="govuk-body-s">
+    Last 30 days within season average
+  </p>
 {% endif %}

@@ -38,22 +38,27 @@
     function ensureFeatureTooltipHtml (feature) {
       var id = feature.getId()
       var props = feature.getProperties()
+      var template = 'tooltip.html'
       var html
 
       if (!props.html) {
         if (id.startsWith('stations')) {
-          html = window.nunjucks.render('tooltip.html', {
+          html = window.nunjucks.render(template, {
             type: 'station',
             props: props,
             stationId: id.substr(9)
           })
         } else if (id.startsWith('flood_warning_alert')) {
-          html = window.nunjucks.render('tooltip.html', {
+          html = window.nunjucks.render(template, {
             type: 'warnings',
             props: props
           })
+        } else if (id.startsWith('rain')) {
+          html = window.nunjucks.render(template, {
+            type: 'rain',
+            props: props
+          })
         }
-
         feature.set('html', html)
       }
     }
