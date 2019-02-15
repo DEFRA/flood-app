@@ -54,9 +54,10 @@
 }
 .defra-bar-chart__h-tick {
     display:block;
+    font-family: "ntatabularnumbers","nta",Arial,sans-serif;
     top:100%;
     text-align:center;
-    padding-top:5px;
+    padding-top:7px;
 }
 .defra-bar-chart__h-tick:before {
     position:absolute;
@@ -95,6 +96,7 @@ tr:nth-of-type(2n) .defra-bar-chart__h-tick {
 }
 .defra-bar-chart__v-tick-label {
     position:absolute;
+    font-family: "ntatabularnumbers","nta",Arial,sans-serif;
     right:100%;
     @extend .govuk-body-s;
     height:1em;
