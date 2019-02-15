@@ -4,10 +4,10 @@
 
 // Reset table properties
 .defra-bar-chart {
-    padding-left:40px;
+    padding-left:48px;
     padding-bottom:20px;
     @include mq ($from: tablet) {
-        padding-left:60px;
+        padding-left:55px;
         padding-right:10px;
         padding-top:10px;
         padding-bottom:30px;
