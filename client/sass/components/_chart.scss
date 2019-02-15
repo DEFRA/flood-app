@@ -88,8 +88,7 @@ tr:nth-of-type(2n) .defra-bar-chart__h-tick {
     left:0px;
     border-bottom:1px solid #dee0e2;
 }
-.defra-bar-chart__v-tick:first-child,
-.defra-bar-chart__v-tick:last-child {
+.defra-bar-chart__v-tick:first-child {
     border:0px;
 }
 .defra-bar-chart__v-tick-label {
