@@ -3,7 +3,7 @@ const moment = require('moment-timezone')
 // Generate some data
 var startTime = moment('2019-02-18T15:00:00Z')
 var values = [0, 0, 1, 2, 2, 2, 2, 2, 1, 1, 1, 2, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0]
-var fifteenThreshold = -1
+var fifteenThreshold = 6
 
 // Axis config
 var verticalAxisMax = 10
@@ -57,6 +57,9 @@ for (var i = 0; i < 24; i++) {
   startTime.add(15, 'minutes')
 }
 
+// Calculate threshold height
+var fifteenThresholdPercentile = fifteenThreshold > 0 ? ((100/vMaxValue)*fifteenThreshold).toFixed(2) : -1
+
 class ViewModel {
   constructor (name) {
     this.name = 'Monksilver'
@@ -69,6 +72,8 @@ class ViewModel {
       'vTicksCount': vTicksCount + 1, // Added for 0 tick
       'vTickPercentile': vTickPercentile
     }
+    this.fifteenThreshold = (fifteenThreshold > 0) ? fifteenThreshold : ''
+    this.fifteenThresholdPercentile = (fifteenThresholdPercentile > 0) ? fifteenThresholdPercentile : ''
   }
 }
 

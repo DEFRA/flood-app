@@ -4,16 +4,30 @@
 
 // Reset table properties
 .defra-bar-chart {
-    padding-left:48px;
-    padding-bottom:20px;
+    position:relative;
+    padding-left:50px;
+    margin:0px;
     @include mq ($from: tablet) {
-        padding-left:55px;
-        padding-right:10px;
-        padding-top:10px;
-        padding-bottom:30px;
+        padding-left:58px;
+        padding-bottom:25px;
     }
-    .defra-bar-chart__inner {
+    table {
+        display: block;
         position:relative;
+        width:100%;
+        @include mq ($from: tablet) {
+            width:80%;
+        }
+        margin:0px;
+    }
+    thead {
+        @extend .govuk-visually-hidden;
+    }
+    tbody {
+        display: block;
+        position:relative;
+        left:-2px;
+        width:100%;
         height:200px;
         @include mq ($from: tablet) {
             height:360px;
@@ -21,23 +35,69 @@
         border-left:2px solid $govuk-border-colour;
         border-bottom:2px solid $govuk-border-colour;
     }
-    table {
-        display: block;
+    tfoot {
+        position:absolute;
         width:100%;
-        height:100%;
-        margin:0px;
-    }
-    tbody {
-        display:block;
-    }
-    th { 
-        @extend .govuk-visually-hidden;
+        left:-2px;
+        height:200px;
+        @include mq ($from: tablet) {
+            height:360px;
+        }
+        border-left:2px solid transparent;
+        border-bottom:2px solid transparent;
+        bottom:0px;
     }
     td {
         position:absolute;
         bottom:0px;
     }
 }
+.defra-bar-chart__caption {
+    display:block;
+    position:relative;
+    margin-left:-50px;
+    margin-bottom:30px;
+    @include mq ($from: tablet) {
+        margin-left:-58px;
+        margin-bottom:40px;
+    }
+    margin-right:0px;
+    text-align:left;
+}
+.defra-bar-chart__inner {
+    position:relative;
+}
+.defra-bar-chart__legend {
+    position:relative;
+    box-sizing:border-box;
+    @extend .govuk-body-s;
+    margin-top:40px;
+    margin-bottom:0px;
+    padding-left:25px;
+    @include mq ($until: tablet) {
+        bottom:auto !important;
+    }
+    @include mq ($from: tablet) {
+        position:absolute;
+        width:20%;
+        right:0px;
+        padding-left:15px;
+        line-height:1em;
+        margin-bottom:-0.45em;
+    }
+}
+.defra-bar-chart__legend:before {
+    @include mq ($until: tablet) {
+        position:absolute;
+        content:'';
+        left:0px;
+        top:50%;
+        margin-top:-2px;
+        width:15px;
+        height:2px;
+        background-color: govuk-colour('light-blue');
+    }
+}  
 .defra-bar-chart__h-value-inner {
     position:absolute;
     left:2px;
@@ -48,7 +108,7 @@
     }
     height:100%;
     text-indent:-5000px;
-    background-color:$govuk-border-colour;
+    background-color: govuk-colour('light-blue');
 }
 .defra-bar-chart__h-tick {
     display:block;
@@ -64,7 +124,7 @@
     top:0px;
     width:2px;
     height:5px;
-    background-color:$govuk-border-colour;
+    background-color: govuk-colour('grey-2');
 }   
 // Quick mobile fix but may not work for other offsets and increments
 tr:nth-of-type(2n) .defra-bar-chart__h-tick {
@@ -84,9 +144,9 @@ tr:nth-of-type(2n) .defra-bar-chart__h-tick {
 }
 .defra-bar-chart__v-tick {
     position:absolute;
-    width:100%;
     left:0px;
-    border-bottom:1px solid #dee0e2;
+    right:0px;
+    border-bottom:1px solid $govuk-border-colour;
 }
 .defra-bar-chart__v-tick:first-child {
     border:0px;
@@ -103,3 +163,7 @@ tr:nth-of-type(2n) .defra-bar-chart__h-tick {
     margin-top:-0.5em;
     margin-right:10px;
 }   
+.defra-bar-chart__v-tick--threshold {
+    position:relative;
+    border-bottom:2px solid govuk-colour('light-blue');
+} 

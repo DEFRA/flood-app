@@ -12,9 +12,6 @@
 </div>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <strong class="govuk-heading-m govuk-!-margin-bottom-8">
-      140mm in the last 24 hours
-    </strong>
     <div class="govuk-tabs" data-module="tabs">
       <h2 class="govuk-tabs__title">
         Contents
@@ -37,17 +34,12 @@
         </li>
       </ul>
       <section class="govuk-tabs__panel" id="six-hours">
-        <div class="defra-bar-chart">
+        <figure class="defra-bar-chart">
+          <figcaption class="defra-bar-chart__caption">
+            Rainfall measured at 15 minute intervals over the last 6 hours
+          </figcaption>
           <div class="defra-bar-chart__inner">
-            <div class="defra-bar-chart__v-axis" aria-hidden="true">
-              {% for i in range(0, model.vAxisFifteen.vTicksCount) -%}
-              <span class="defra-bar-chart__v-tick" style="bottom:{{ i * model.vAxisFifteen.vTickPercentile }}%">
-                <span class="defra-bar-chart__v-tick-label">{{ i * model.vAxisFifteen.vTickValue }}mm</span>
-              </span>
-              {%- endfor %}
-            </div>
-            <table>
-              <caption class="govuk-visually-hidden">Rainfall measured at 15 minute intervals for the last 6 hours</caption>
+            <table class="defra-bar-chart__table">
               <thead>
                 <tr>
                   <th scope="col">15 minute period</th>
@@ -57,7 +49,7 @@
               <tbody>
                 {% for record in model.fifteen %}
                 <tr>
-                  <td class="{% if record.isTick %}defra-bar-chart__h-tick{% else %}govuk-visually-hidden{% endif %}" style="width:{{ record.hWidthPercentile * 3 }}%;left:{{ record.hPercentile - record.hWidthPercentile }}%">
+                  <td class="{% if record.isTick %}defra-bar-chart__h-tick{% else %}govuk-visually-hidden{% endif %}" style="width:{{ record.hWidthPercentile * 4 }}%;left:{{ record.hPercentile - (record.hWidthPercentile * 1.5) }}%">
                     <span class="govuk-body-s">
                       <time datetime="{{ record.timestamp }}">{{ record.period }}</time>
                     </span>
@@ -68,9 +60,29 @@
                 </tr>
                 {% endfor %}
               </tbody>
+              <tfoot aria-hidden="true">
+                <tr class="defra-bar-chart__v-axis">
+                  {% for i in range(0, model.vAxisFifteen.vTicksCount) -%}
+                  <td class="defra-bar-chart__v-tick" style="bottom:{{ i * model.vAxisFifteen.vTickPercentile }}%">
+                    <span class="defra-bar-chart__v-tick-label">{{ i * model.vAxisFifteen.vTickValue }}mm</span>
+                  </td>
+                  {%- endfor %}
+                  {% if model.fifteenThreshold %}
+                  <td class="defra-bar-chart__v-tick defra-bar-chart__v-tick--threshold" style="bottom:{{ model.fifteenThresholdPercentile }}%">
+                    <span class="govuk-visually-hidden">{{ model.fifteenThreshold }}mm</span>
+                  </td>
+                  {% endif %}
+                </tr>
+              </tfoot>
             </table>
+            <div class="defra-bar-chart__legend" style="bottom:{{ model.fifteenThresholdPercentile }}%">
+              <!--
+              Average daily rainfall for January<span class="govuk-visually-hidden"> is {{ model.fifteenThreshold }}mm.</span>
+              -->
+              Heavy rainfall<span class="govuk-visually-hidden"> is defined here as above {{ model.fifteenThreshold }}mm in 15 minutes.</span>
+            </div>
           </div>
-        </div>
+        </figure>
       </section>
       <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="twenty-four-hours">
         <p class="govuk-body">24 hours</p>
