@@ -76,10 +76,12 @@
               </tfoot>
             </table>
             <div class="defra-bar-chart__legend" style="bottom:{{ model.fifteenThresholdPercentile }}%">
-              <!--
-              Average daily rainfall for January<span class="govuk-visually-hidden"> is {{ model.fifteenThreshold }}mm.</span>
-              -->
-              Heavy rainfall<span class="govuk-visually-hidden"> is defined here as above {{ model.fifteenThreshold }}mm in 15 minutes.</span>
+              <div class="defra-bar-chart__legend--inner">
+                <!--
+                Average daily rainfall for January<span class="govuk-visually-hidden"> is {{ model.fifteenThreshold }}mm.</span>
+                -->
+                Heavy rainfall level<span class="govuk-visually-hidden"> is defined here as above {{ model.fifteenThreshold }}mm in 15 minutes.</span>
+              </div>
             </div>
           </div>
         </figure>
