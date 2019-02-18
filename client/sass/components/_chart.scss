@@ -106,7 +106,7 @@
         margin-top:-2px;
         width:15px;
         height:2px;
-        background-color: govuk-colour('light-blue');
+        background-color: govuk-colour('black');
     }
 }  
 .defra-bar-chart__h-value-inner {
@@ -176,5 +176,5 @@ tr:nth-of-type(2n) .defra-bar-chart__h-tick {
 }   
 .defra-bar-chart__v-tick--threshold {
     position:relative;
-    border-bottom:2px solid govuk-colour('light-blue');
+    border-bottom:2px solid govuk-colour('black');
 } 
