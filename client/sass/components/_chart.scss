@@ -27,7 +27,7 @@
         display: block;
         position:relative;
         z-index:2;
-        left:-2px;
+        left:0px;
         width:100%;
         height:200px;
         @include mq ($from: tablet) {
@@ -51,6 +51,7 @@
     }
     td {
         position:absolute;
+        display:block;
         bottom:0px;
     }
 }
@@ -86,7 +87,7 @@
         right:0px;
         padding-left:15px;
         height:100px;
-        margin-bottom:-50px;
+        margin-bottom:-48px;
     }
     .defra-bar-chart__legend--inner {
         display: table-cell; 
@@ -103,21 +104,24 @@
         content:'';
         left:0px;
         top:50%;
-        margin-top:-2px;
         width:15px;
         height:2px;
         background-color: govuk-colour('black');
     }
 }  
+.defra-bar-chart__h-value {
+    margin-left:-1px; // Offset added left border on tbody
+}
 .defra-bar-chart__h-value-inner {
     position:absolute;
     left:2px;
     right:2px;
+    top:1px; // Offset border position of v tick lines
+    bottom:0px;
     @include mq ($from: tablet) {
         left:4px;
         right:4px;
     }
-    height:100%;
     text-indent:-5000px;
     background-color: govuk-colour('light-blue');
 }
@@ -154,16 +158,14 @@ tr:nth-of-type(2n) .defra-bar-chart__h-tick {
     }
 }
 .defra-bar-chart__v-tick {
-    position:absolute;
+    position:relative;
     left:0px;
     right:0px;
-    border-bottom:1px solid $govuk-border-colour;
+    border-bottom:1px solid govuk-colour('grey-3');
+    z-index:-1; // Ensure v tick line is behind threshold mask
 }
 .defra-bar-chart__v-tick:first-child {
     border:0px;
-}
-.defra-bar-chart__v-tick:last-child {
-    margin-bottom:-1px;
 }
 .defra-bar-chart__v-tick-label {
     position:absolute;
@@ -174,7 +176,19 @@ tr:nth-of-type(2n) .defra-bar-chart__h-tick {
     margin-top:-0.5em;
     margin-right:10px;
 }   
-.defra-bar-chart__v-tick--threshold {
+.defra-bar-chart__v-threshold {
     position:relative;
-    border-bottom:2px solid govuk-colour('black');
-} 
+    left:0px;
+    right:0px;
+    border-bottom:2px dashed govuk-colour('black');
+}
+.defra-bar-chart__v-threshold:before {
+    position:absolute;
+    content:'';
+    z-index:1;
+    height:1px;
+    left:0px;
+    right:0px;
+    border-bottom:2px solid white;
+    z-index:-1; // Needed to mask possible v tick line
+}

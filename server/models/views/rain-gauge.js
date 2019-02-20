@@ -24,7 +24,7 @@ function Graph (period, endTime, values, threshold) {
   }
   var hTickFirstOffset = 2
   var hTickIncrement = 3
-  var hTickPercentile = (100/24).toFixed(2)
+  var hTickPercentile = (100/24).toFixed(4)
 
   // Generate vertical axis values
   var vMaxValue = Math.max.apply(Math, values) + 1 // Vertical axis max
@@ -103,7 +103,7 @@ class ViewModel {
     this.graphMinutes = new Graph (
       'minutes',
       new Date(),
-      [0, 0, 1, 2, 2, 2, 2, 2, 1, 1, 1, 2, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0],
+      [1, 0, 1, 2, 2, 2, 2, 2, 1, 1, 1, 2, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 4, 8],
       6
     )
     this.graphHours = new Graph (

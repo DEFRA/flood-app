@@ -68,7 +68,7 @@
                   </td>
                   {%- endfor %}
                   {% if model.graphMinutes.threshold %}
-                  <td class="defra-bar-chart__v-tick defra-bar-chart__v-tick--threshold" style="bottom:{{ model.graphMinutes.thresholdPercentile }}%">
+                  <td class="defra-bar-chart__v-threshold" style="bottom:{{ model.graphMinutes.thresholdPercentile }}%">
                     <span class="govuk-visually-hidden">{{ model.graphMinutes.threshold }}mm</span>
                   </td>
                   {% endif %}
@@ -121,7 +121,7 @@
                   </td>
                   {%- endfor %}
                   {% if model.graphHours.threshold %}
-                  <td class="defra-bar-chart__v-tick defra-bar-chart__v-tick--threshold" style="bottom:{{ model.graphHours.thresholdPercentile }}%">
+                  <td class="defra-bar-chart__v-threshold" style="bottom:{{ model.graphHours.thresholdPercentile }}%">
                     <span class="govuk-visually-hidden">{{ model.graphHours.threshold }}mm</span>
                   </td>
                   {% endif %}
