@@ -6,13 +6,11 @@ function Graph (period, endTime, values, threshold) {
 
   // Hourly intervals over 24 hours
   var end = moment(endTime).subtract(moment(endTime).minute(), 'minutes')
-  var startTime = end.subtract(24, 'hours')
+  var startTime = end.subtract(23, 'hours')
 
   // 15 minute intervals over 6 hours
   if (period === 'minutes') {
-    var remainder = end.minute() % 15
-    endTime = moment(end).subtract(remainder, 'minutes')
-    startTime = endTime.subtract(6, 'hours')
+    startTime = moment(endTime).subtract(5, 'hours').subtract(45, 'minutes')
   }
 
   // Axis config
@@ -94,19 +92,56 @@ function Graph (period, endTime, values, threshold) {
 
 class ViewModel {
   constructor (rainGauge, rainMeasures) {
+    // Static gauge properties
     this.name = rainGauge.items.label
     this.gridRef = rainGauge.items.gridReference
     this.coordinates = [rainGauge.items.long, rainGauge.items.lat]
+    // 6 hour data
+    let endDateMinutes = rainMeasures.items[0].dateTime // Start from latest entry
+    let measuresMinutes = rainMeasures.items.slice(0, 24).map(a => a.value).reverse() // reversed for display
     this.graphMinutes = new Graph(
       'minutes',
-      new Date(),
-      [1, 0, 1, 2, 2, 2, 2, 2, 1, 1, 1, 2, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0],
+      new Date(endDateMinutes),
+      measuresMinutes,
       6
     )
+    // 1 day data
+    var endDateHours
+    var measuresHours = []
+    var startIndex = -1 // Start from first whole hour may need an offset
+    for (var i = 0; i < 99; i++) { // Add an extra three to cover potential offset
+      if (startIndex === -1 && moment(rainMeasures.items[i].dateTime).minute() === 0) {
+        startIndex = i
+      }
+      if (startIndex > -1) {
+        // We have the start position
+        var hourTotal = 0
+        endDateHours = rainMeasures.items[startIndex].dateTime
+        if ((i - startIndex) % 4 === 0) {
+          // Sum value
+          hourTotal += rainMeasures.items[i].value
+          console.log(rainMeasures.items[i].value)
+          // Add hour total
+          measuresHours.push(hourTotal)
+          console.log('Hour')
+          hourTotal = 0
+        } else {
+          // Sum value
+          hourTotal += rainMeasures.items[i].value
+          console.log(rainMeasures.items[i].value)
+        }
+        // We only need 24 * 4
+        if (i === startIndex + 95) {
+          break
+        }
+      }
+    }
+    measuresHours.reverse() // Reversed for display
+    console.log(measuresHours)
     this.graphHours = new Graph(
       'hours',
-      new Date(),
-      [0, 0, 5, 8, 7, 7, 8, 6, 0, 1, 1, 2, 0, 0, 0, 2, 1, 0, 1, 8, 5, 2, 3, 0],
+      new Date(endDateHours),
+      measuresHours,
       24
     )
   }

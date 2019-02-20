@@ -56,7 +56,8 @@
         } else if (id.startsWith('rain')) {
           html = window.nunjucks.render(template, {
             type: 'rain',
-            props: props
+            props: props,
+            rainGaugeId: id
           })
         }
         feature.set('html', html)
