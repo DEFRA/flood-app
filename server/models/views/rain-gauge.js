@@ -1,14 +1,12 @@
 const moment = require('moment-timezone')
 
 function Graph (period, endTime, values, threshold) {
-
   // End time on horizontal axis
   // var end = moment('2019-02-18T15:00:00Z')
-  var end = moment(endTime)
 
   // Hourly intervals over 24 hours
-  var endTime = moment(end).subtract(end.minute(), 'minutes')
-  var startTime = endTime.subtract(24, 'hours')
+  var end = moment(endTime).subtract(moment(endTime).minute(), 'minutes')
+  var startTime = end.subtract(24, 'hours')
 
   // 15 minute intervals over 6 hours
   if (period === 'minutes') {
@@ -24,7 +22,7 @@ function Graph (period, endTime, values, threshold) {
   }
   var hTickFirstOffset = 2
   var hTickIncrement = 3
-  var hTickPercentile = (100/24).toFixed(4)
+  var hTickPercentile = (100 / 24).toFixed(4)
 
   // Generate vertical axis values
   var vMaxValue = Math.max.apply(Math, values) + 1 // Vertical axis max
@@ -41,19 +39,19 @@ function Graph (period, endTime, values, threshold) {
 
   // Calculate tick values and counts
   var vTickValue = Math.ceil((vMaxValue + 1) / 6) // Vertical tick value
-  var vTicksCount = Math.floor(vMaxValue/vTickValue) // Number of vertical ticks
+  var vTicksCount = Math.floor(vMaxValue / vTickValue) // Number of vertical ticks
 
   // Extend vertical axis if max value does not fall on a tick
   if (vTickValue * vTicksCount < vMaxValue) {
-    vTicksCount ++
+    vTicksCount++
     vMaxValue = vTicksCount * vTickValue
   }
 
   // Add one extra vertical tick
-  vTicksCount ++ // Added for 0 tick
+  vTicksCount++ // Added for 0 tick
 
   // Calculate percentage spacing for each tick
-  var vTickPercentile = ((100/vMaxValue)*vTickValue).toFixed(2)
+  var vTickPercentile = ((100 / vMaxValue) * vTickValue).toFixed(2)
 
   // Generate records
   var columns = []
@@ -62,14 +60,14 @@ function Graph (period, endTime, values, threshold) {
       'timestamp': startTime.format(),
       'period': startTime.format('HH:mm'),
       'value': values[i],
-      'vPercentile': ((100/vMaxValue)*values[i]).toFixed(2),
+      'vPercentile': ((100 / vMaxValue) * values[i]).toFixed(2),
       'hPercentile': (i * hTickPercentile),
       'hWidthPercentile': hTickPercentile,
       'isTick': false
     }
-    if ((i+hTickFirstOffset) % hTickIncrement === 0) {
+    if ((i + hTickFirstOffset) % hTickIncrement === 0) {
       // THis is also an hTick tick
-      column.isTick = true 
+      column.isTick = true
     }
     columns.push(column)
     if (period === 'hours') {
@@ -80,7 +78,7 @@ function Graph (period, endTime, values, threshold) {
   }
 
   // Calculate threshold height
-  var thresholdPercentile = threshold > 0 ? ((100/vMaxValue)*threshold).toFixed(2) : -1
+  var thresholdPercentile = threshold > 0 ? ((100 / vMaxValue) * threshold).toFixed(2) : -1
 
   // Graph object
   return {
@@ -92,21 +90,20 @@ function Graph (period, endTime, values, threshold) {
     'threshold': (threshold > 0) ? threshold : '',
     'thresholdPercentile': (thresholdPercentile > 0) ? thresholdPercentile : ''
   }
-
 }
 
 class ViewModel {
-  constructor (name) {
-    this.name = 'Monksilver'
-    this.gridRef = 'SS763417'
-    this.coordinates = [-3.77, 51.16]
-    this.graphMinutes = new Graph (
+  constructor (rainGauge, rainMeasures) {
+    this.name = rainGauge.items.label
+    this.gridRef = rainGauge.items.gridReference
+    this.coordinates = [rainGauge.items.long, rainGauge.items.lat]
+    this.graphMinutes = new Graph(
       'minutes',
       new Date(),
-      [1, 0, 1, 2, 2, 2, 2, 2, 1, 1, 1, 2, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 4, 8],
+      [1, 0, 1, 2, 2, 2, 2, 2, 1, 1, 1, 2, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0],
       6
     )
-    this.graphHours = new Graph (
+    this.graphHours = new Graph(
       'hours',
       new Date(),
       [0, 0, 5, 8, 7, 7, 8, 6, 0, 1, 1, 2, 0, 0, 0, 2, 1, 0, 1, 8, 5, 2, 3, 0],

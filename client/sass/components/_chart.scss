@@ -105,8 +105,8 @@
         left:0px;
         top:50%;
         width:15px;
-        height:2px;
-        background-color: govuk-colour('black');
+        margin-top:-2px;
+        border-bottom: 2px dashed govuk-colour('black');
     }
 }  
 .defra-bar-chart__h-value {
@@ -131,6 +131,7 @@
     top:100%;
     text-align:center;
     padding-top:7px;
+    margin-left:-1px; // Offset added left border on tbody
 }
 .defra-bar-chart__h-tick:before {
     position:absolute;

@@ -5,8 +5,8 @@
   <div class="govuk-grid-column-two-thirds">
     <a href="" onclick="window.history.back();return false" class="govuk-back-link govuk-!-margin-bottom-7">Back</a>
     <h1 class="govuk-heading-xl">
-      <span class="govuk-caption-xl">Rain gauge at</span>
-      {{ model.name }}
+      <span class="govuk-caption-xl">Rain gauge at grid ref</span>
+      {{ model.gridRef }}
     </h1>
   </div>
 </div>
@@ -23,13 +23,13 @@
           </a>
         </li>
         <li class="govuk-tabs__list-item">
-          <a class="govuk-tabs__tab" href="#twenty-four-hours">
-            24 hours
+          <a class="govuk-tabs__tab" href="#one-day">
+            1 day
           </a>
         </li>
         <li class="govuk-tabs__list-item">
-          <a class="govuk-tabs__tab" href="#thirty-days">
-            30 days
+          <a class="govuk-tabs__tab" href="#four-weeks">
+            4 weeks
           </a>
         </li>
       </ul>
@@ -86,7 +86,7 @@
           </div>
         </figure>
       </section>
-      <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="twenty-four-hours">
+      <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="one-day">
         <figure class="defra-bar-chart">
           <figcaption class="defra-bar-chart__caption">
             Hourly rainfall measurements for the last 24 hours
@@ -139,7 +139,7 @@
           </div>
         </figure>
       </section>
-      <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="thirty-days">
+      <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="four-weeks">
         <p class="govuk-body">To follow...</p>
       </section>
     </div>
