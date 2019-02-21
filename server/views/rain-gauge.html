@@ -169,7 +169,7 @@
               <tfoot aria-hidden="true">
                 <tr class="defra-bar-chart__v-axis">
                   {% for i in range(0, model.graphDays.vTicksCount) -%}
-                  <td class="defra-bar-chart__v-tick" style="bottom:{{ i * model.graphHours.vTickPercentile }}%">
+                  <td class="defra-bar-chart__v-tick" style="bottom:{{ i * model.graphDays.vTickPercentile }}%">
                     <span class="defra-bar-chart__v-tick-label">{{ i * model.graphDays.vTickValue }}mm</span>
                   </td>
                   {%- endfor %}

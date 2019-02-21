@@ -1,6 +1,6 @@
 const moment = require('moment-timezone')
 
-function Graph (period, endTime, values, threshold) {
+function Graph (period, endTime, values, threshold, verticalAxisMax = 0) {
   // End time on horizontal axis
   // var end = moment('2019-02-18T15:00:00Z')
 
@@ -19,49 +19,65 @@ function Graph (period, endTime, values, threshold) {
   }
 
   // Axis config
-  var verticalAxisMax = 0
+  var vMaxValue = Math.max.apply(Math, values) // Vertical axis max from values rounded up to nearest tick value
   if (period === 'minutes') {
-    verticalAxisMax = 10
+    vMaxValue = vMaxValue + 2 - (vMaxValue % 2)
   } else if (period === 'hours') {
-    verticalAxisMax = 30
+    vMaxValue = vMaxValue + 10 - (vMaxValue % 10)
   } else if (period === 'days') {
-    verticalAxisMax = 250
+    vMaxValue = vMaxValue + 50 - (vMaxValue % 50)
   }
+  vMaxValue = vMaxValue.toFixed(0)
+
+  // Horizontal config
   var hTickFirstOffset = 2
   var hTickIncrement = 3
   var hTickPercentile = (100 / values.length).toFixed(4)
-
-  // Generate vertical axis values
-  var vMaxValue = Math.max.apply(Math, values) // Vertical axis max
 
   // Extend vertical axis for fixed upper value
   if (vMaxValue < verticalAxisMax) {
     vMaxValue = verticalAxisMax
   }
 
-  // Extend vertical axis for threshold plus buffer
+  // Extend vertical axis for threshold rounded up
   if (vMaxValue < threshold) {
     if (period === 'minutes') {
-      vMaxValue = threshold + 1
+      vMaxValue = (threshold + 2 - (threshold % 2))
     } else if (period === 'hours') {
-      vMaxValue = threshold + 5
+      vMaxValue = (threshold + 10 - (threshold % 10))
     } else if (period === 'days') {
-      vMaxValue = threshold + 50
+      vMaxValue = (threshold + 50 - (threshold % 50))
     }
   }
 
   // Calculate tick values and counts
+  /*
   var vTickValue = Math.ceil((vMaxValue) / 5) // Vertical tick value
   var vTicksCount = Math.floor(vMaxValue / vTickValue) // Number of vertical ticks
+  */
+  var vTickValue = 0
+  var vTicksCount = 1
+  if (period === 'minutes') {
+    vTickValue = 2
+    vTicksCount += vMaxValue / 2
+  } else if (period === 'hours') {
+    vTickValue = 10
+    vTicksCount += vMaxValue / 10
+  } else if (period === 'days') {
+    vTickValue = 50
+    vTicksCount += vMaxValue / 50
+  }
 
   // Extend vertical axis if max value does not fall on a tick
+  /*
   if (vTickValue * vTicksCount < vMaxValue) {
     vTicksCount++
     vMaxValue = vTicksCount * vTickValue
   }
+  */
 
   // Add one extra vertical tick
-  vTicksCount++ // Added for 0 tick
+  // vTicksCount++ // Added for 0 tick
 
   // Calculate percentage spacing for each tick
   var vTickPercentile = ((100 / vMaxValue) * vTickValue).toFixed(2)
@@ -122,7 +138,8 @@ class ViewModel {
       'minutes',
       new Date(endDateMinutes),
       measuresMinutes,
-      6
+      6,
+      10 // Multiples of 2
     )
     //
     // 1 day data
@@ -152,7 +169,8 @@ class ViewModel {
       'hours',
       new Date(endDateHours),
       measuresHours,
-      24
+      24,
+      50 // Multiples of 10
     )
     //
     // 28 day data
@@ -177,13 +195,13 @@ class ViewModel {
       // Add total for hour
       measuresDays.push(dayTotal)
     }
-    console.log(measuresDays[0], measuresDays[1], measuresDays[2], measuresDays[3])
     measuresDays.reverse() // Reversed for display
     this.graphDays = new Graph(
       'days',
       new Date(endDateDays),
       measuresDays,
-      120
+      120,
+      250 // Multiples of 50
     )
   }
 }
