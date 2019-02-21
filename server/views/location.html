@@ -36,81 +36,79 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <div id="warnings">
-      <!-- Headline statement -->
-      <div class="govuk-inset-text govuk-!-margin-top-0">
-        {% if model.hasActiveFloods %}
-          <div class="govuk-warning-text govuk-warning-text--{{model.highestSeverity.hash}}">
-            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-            <strong class="govuk-warning-text__text">
-              <span class="govuk-warning-text__assistive">{{model.highestSeverity.title}}</span>
-              {{model.highestSeverity.subTitle}}<!-- - {{model.highestSeverity.tagline.toLowerCase()}} -->
-            </strong>
-          </div>
-          <p>{{model.floodsSummary}}</p>
-        {% else %}
-          <p class="govuk-body-m">
-            There are currently no flood warnings or alerts in this area
-          </p>
-        {% endif %}
-        <p class="govuk-body">
-          <span class="govuk-body--caption">
-            <time class="form-hint" title="{{model.timestamp | formatDate}}"
-              datetime="{{model.timestamp}}">{{model.timestamp | formatDate}}</time>
-          </span>
-        </p>
+    <!-- Headline statement -->
+    {% if model.hasActiveFloods %}
+      <div class="govuk-warning-text govuk-warning-text--{{model.highestSeverity.hash}}">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+          <span class="govuk-warning-text__assistive">{{model.highestSeverity.title}}</span>
+          {{model.highestSeverity.subTitle}}<!-- - {{model.highestSeverity.tagline.toLowerCase()}} -->
+        </strong>
       </div>
+      <p>{{model.floodsSummary}}</p>
+    {% else %}
+      <p class="govuk-body-m">
+        There are currently no flood warnings or alerts in this area
+      </p>
+    {% endif %}
 
-      {% if not model.hasActiveFloods %}
-        <details class="govuk-details govuk-!-margin-top-6">
-          <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">Were you expecting to see a flood warning or alert here?</span>
-          </summary>
-          <div class="govuk-details__text">
-            <p class="govuk-body">You might have been looking at this location because you received a message saying there was:</p>
-            <ul class="govuk-list govuk-list--bullet">
-              <li>a severe flood warning</li>
-              <li>a flood warning</li>
-              <li>a flood alert</li>
+    {% if not model.hasActiveFloods %}
+      <details class="govuk-details govuk-!-margin-top-6">
+        <summary class="govuk-details__summary">
+          <span class="govuk-details__summary-text">Were you expecting to see a flood warning or alert here?</span>
+        </summary>
+        <div class="govuk-details__text">
+          <p class="govuk-body">You might have been looking at this location because you received a message saying there was:</p>
+          <ul class="govuk-list govuk-list--bullet">
+            <li>a severe flood warning</li>
+            <li>a flood warning</li>
+            <li>a flood alert</li>
+          </ul>
+          <p class="govuk-body">We provide flood updates in many ways. Sometimes there can be a few minutes' delay before the latest information is shown.</p>
+          <p class="govuk-body">Please check regularly to get the latest information. You can do this by refreshing this page using your browser.</p>
+        </div>
+      </details>
+    {% endif %}
+
+    {% if model.groupedFloods.length %}
+      <details class="defra-flood-details govuk-!-margin-bottom-4">
+        <summary class="govuk-details__summary">
+          <span class="govuk-details__summary-text">View flood warnings and alerts</span>
+        </summary>
+        <div class="govuk-details__text">
+          {% for group in model.groupedFloods %}
+            <h2 class="defra-flood-details__section-heading">
+              {{group.severity.pluralisedTitle}}
+              <span class="govuk-caption-m govuk-caption--normal">Explanation of state</span>
+            </h2>
+            <ul class="defra-targetareas-list">
+              {% for flood in group.floods %}
+                <li>
+                  <a href="/target-area/{{flood.code}}">{{flood.description}}</a><br/>
+                  <span class="govuk-body-s">Issued 00:00, 28 Jan</span>
+                </li>
+              {% endfor %}
             </ul>
-            <p class="govuk-body">We provide flood updates in many ways. Sometimes there can be a few minutes' delay before the latest information is shown.</p>
-            <p class="govuk-body">Please check regularly to get the latest information. You can do this by refreshing this page using your browser.</p>
-          </div>
-        </details>
-      {% endif %}
+          {% endfor %}
+        </div>
+      </details>
+    {% endif %}
 
-      {% if model.groupedFloods.length %}
-        <details class="govuk-details govuk-!-margin-bottom-4">
-          <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">View flood warnings and alerts</span>
-          </summary>
-          <div class="govuk-details__text">
-            {% for group in model.groupedFloods %}
-              <h2 class="govuk-heading-s govuk-!-margin-bottom-1">{{group.severity.pluralisedTitle}}</h2>
-              <ul class="govuk-list govuk-list--warning">
-                {% for flood in group.floods %}
-                  <li><a href="/target-area/{{flood.code}}">{{flood.description}}</a></li>
-                {% endfor %}
-              </ul>
-            {% endfor %}
-          </div>
-        </details>
-      {% endif %}
-
-      {% if model.hasActiveFloods %}
-        <p>Find out <a href="">what to do if you live in a flood warning or alert area</a>.</p>
-      {% endif %}
-
-      <p class="govuk-!-margin-bottom-0">If you live in this area you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
-
+    <p class="govuk-body-s">
+      <time class="form-hint" title="{{model.timestamp | formatDate}}"
+      datetime="{{model.timestamp}}">{{model.timestamp | formatDate}}</time>
+    </p>
+    <div class="govuk-inset-text govuk-!-margin-top-4">
+      <p>If you live in this area you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
     </div>
+
   </div>
 </div>
 
 {% if model.rivers %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-m govuk-!-margin-top-6">Water levels that impact this area</h2>
+    <h2 class="govuk-heading-m">Water levels that impact this area</h2>
     <p class="govuk-body">River, sea and groundwater levels are regularly checked by a network of monitoring stations. These levels can help you understand your flood risk now and in the next few days.</p>
     <details class="govuk-details">
       <summary class="govuk-details__summary">

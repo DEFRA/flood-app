@@ -41,12 +41,17 @@ class ViewModel {
             return { count, title, subTitle }
           })
 
+        /*
         const statements = summary.map(item => `${item.count} ${item.title.toLowerCase()}`)
         const floodsSummaryBody = statements.reduce((accumulator, currentValue, index, arr) => {
           return `${accumulator}${(index === arr.length - 1) ? ' and' : ','} ${currentValue}`
         })
-
         const floodsSummary = `There ${summary[0].count === 1 ? 'is' : 'are'} currently ${floodsSummaryBody} in this area.`
+        */
+
+        // Added by Dan leech
+        const floodsSummary = 'Summary'
+
         const highestSeverityId = Math.min(...floods.map(flood => flood.severity))
 
         this.highestSeverity = severity[highestSeverityId - 1]
