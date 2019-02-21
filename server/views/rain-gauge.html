@@ -140,7 +140,57 @@
         </figure>
       </section>
       <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="four-weeks">
-        <p class="govuk-body">To follow...</p>
+        <figure class="defra-bar-chart">
+          <figcaption class="defra-bar-chart__caption">
+            Daily rainfall measurements for the 4 weeks
+          </figcaption>
+          <div class="defra-bar-chart__inner">
+            <table class="defra-bar-chart__table">
+              <thead>
+                <tr>
+                  <th scope="col">Day</th>
+                  <th scope="col">Measurement</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for column in model.graphDays.columns %}
+                <tr>
+                  <td class="{% if column.isTick %}defra-bar-chart__h-tick{% else %}govuk-visually-hidden{% endif %}" style="width:{{ column.hWidthPercentile * 4 }}%;left:{{ column.hPercentile - (column.hWidthPercentile * 1.5) }}%">
+                    <span class="govuk-body-s">
+                      <time datetime="{{ column.timestamp }}">{{ column.period }}</time>
+                    </span>
+                  </td>
+                  <td class="{% if column.value %}defra-bar-chart__h-value{% else %}govuk-visually-hidden{% endif %}" style="width:{{ column.hWidthPercentile }}%;left:{{ column.hPercentile }}%;height:{{ column.vPercentile }}%">
+                    <span class="defra-bar-chart__h-value-inner">{{ column.value }}mm</span>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+              <tfoot aria-hidden="true">
+                <tr class="defra-bar-chart__v-axis">
+                  {% for i in range(0, model.graphDays.vTicksCount) -%}
+                  <td class="defra-bar-chart__v-tick" style="bottom:{{ i * model.graphHours.vTickPercentile }}%">
+                    <span class="defra-bar-chart__v-tick-label">{{ i * model.graphDays.vTickValue }}mm</span>
+                  </td>
+                  {%- endfor %}
+                  {% if model.graphDays.threshold %}
+                  <td class="defra-bar-chart__v-threshold" style="bottom:{{ model.graphDays.thresholdPercentile }}%">
+                    <span class="govuk-visually-hidden">{{ model.graphDays.threshold }}mm</span>
+                  </td>
+                  {% endif %}
+                </tr>
+              </tfoot>
+            </table>
+            <div class="defra-bar-chart__legend" style="bottom:{{ model.graphDays.thresholdPercentile }}%">
+              <div class="defra-bar-chart__legend--inner">
+                <!--
+                Average daily rainfall for January<span class="govuk-visually-hidden"> is {{ model.graphDays.threshold }}mm.</span>
+                -->
+                Heavy rainfall level<span class="govuk-visually-hidden"> is defined here as above {{ model.graphDays.threshold }}mm in 15 minutes.</span>
+              </div>
+            </div>
+          </div>
+        </figure>
       </section>
     </div>
   </div>

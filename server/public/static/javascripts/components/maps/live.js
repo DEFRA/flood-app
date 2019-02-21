@@ -57,7 +57,7 @@
           html = window.nunjucks.render(template, {
             type: 'rain',
             props: props,
-            rainGaugeId: id
+            rainGaugeId: id.substring(id.lastIndexOf('.') + 1)
           })
         }
         feature.set('html', html)

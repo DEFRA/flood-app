@@ -157,7 +157,7 @@
       'features': [
         {
           'type': 'Feature',
-          'id': '50112',
+          'id': 'rain.50112',
           'properties': {
             'label': 'Rain gauge name',
             'gridRef': 'SS777481',
@@ -174,7 +174,7 @@
         },
         {
           'type': 'Feature',
-          'id': '45101',
+          'id': 'rain.45101',
           'properties': {
             'label': 'Rain gauge name',
             'gridRef': 'SS770391',
@@ -191,7 +191,7 @@
         },
         {
           'type': 'Feature',
-          'id': '45100',
+          'id': 'rain.45100',
           'properties': {
             'label': 'Rain gauge name',
             'gridRef': 'SS763417',

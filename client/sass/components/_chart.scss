@@ -5,10 +5,10 @@
 // Reset table properties
 .defra-bar-chart {
     position:relative;
-    padding-left:50px;
+    padding-left:56px;
     margin:0px;
     @include mq ($from: tablet) {
-        padding-left:58px;
+        padding-left:67px;
         padding-bottom:25px;
     }
     table {
@@ -58,10 +58,10 @@
 .defra-bar-chart__caption {
     display:block;
     position:relative;
-    margin-left:-50px;
+    margin-left:-56px;
     margin-bottom:30px;
     @include mq ($from: tablet) {
-        margin-left:-58px;
+        margin-left:-67px;
         margin-bottom:40px;
     }
     margin-right:0px;
