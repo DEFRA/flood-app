@@ -45,7 +45,7 @@
           {{model.highestSeverity.subTitle}}<!-- - {{model.highestSeverity.tagline.toLowerCase()}} -->
         </strong>
       </div>
-      <p>{{model.floodsSummary}}</p>
+      {{ model.floodsSummary | safe }}
     {% else %}
       <p class="govuk-body-m">
         There are currently no flood warnings or alerts in this area
@@ -70,10 +70,10 @@
       </details>
     {% endif %}
 
-    {% if model.groupedFloods.length %}
+    {% if model.hasAllFloodsList %}
       <details class="defra-flood-details govuk-!-margin-bottom-4">
         <summary class="govuk-details__summary">
-          <span class="govuk-details__summary-text">View flood warnings and alerts</span>
+          <span class="govuk-details__summary-text">View all flood warnings and alerts</span>
         </summary>
         <div class="govuk-details__text">
           {% for group in model.groupedFloods %}
@@ -85,7 +85,7 @@
               {% for flood in group.floods %}
                 <li>
                   <a href="/target-area/{{flood.code}}">{{flood.description}}</a><br/>
-                  <span class="govuk-body-s">Issued 00:00, 28 Jan</span>
+                  <!--<span class="govuk-body-s">Issued 00:00, 28 Jan</span>-->
                 </li>
               {% endfor %}
             </ul>
