@@ -415,7 +415,6 @@
 .ol-overlay-inner {
   padding:10px 50px 10px 10px;
   position:relative;
-  min-height: 38px;
   @include govuk-font($size: 16);
   p {
     margin: 0;

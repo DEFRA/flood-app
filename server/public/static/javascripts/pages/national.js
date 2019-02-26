@@ -2,7 +2,7 @@
   var maps = flood.maps
 
   // Live map
-  maps.createLiveNationalMap('map')
+  maps.createLiveNationalMap('map-live')
 
   // Outlook map
   if (document.getElementById('map-outlook')) {

@@ -11,6 +11,25 @@
   var ol = window.ol
   var maps = flood.maps
 
+  // Application utilities - perhaps should be somewhere else
+
+  function getParameterByName (name) {
+    var v = window.location.search.match(new RegExp('(?:[\?\&]' + name + '=)([^&]+)'))
+    return v ? v[1] : null
+  }
+
+  // Add or update a querystring parameter
+  function addOrUpdateParameter (uri, paramKey, paramVal, fragment = '') {
+    var re = new RegExp('([?&])' + paramKey + '=[^&#]*', 'i')
+    if (re.test(uri)) {
+      uri = uri.replace(re, '$1' + paramKey + '=' + paramVal)
+    } else {
+      var separator = /\?/.test(uri) ? '&' : '?'
+      uri = uri + separator + paramKey + '=' + paramVal
+    }
+    return uri + fragment
+  }
+
   function MapContainer (el, options) {
     var defaults = {
       buttonText: 'Show map',
@@ -33,8 +52,16 @@
     this.showMapButton.className = 'govuk-button govuk-button--secondary govuk-button--show-map'
     this.showMapButton.addEventListener('click', function (e) {
       e.preventDefault()
+      /*
       this.setFullScreen()
       this.fullScreenButton.classList.add('ol-full-screen-back')
+      */
+      window.activeMap = this
+      this.setFullScreen()
+      var state = { 'view': el.id }
+      var title = document.title
+      var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'view', el.id)
+      window.history.pushState(state, title, url)
     }.bind(this))
     el.parentNode.parentNode.insertBefore(this.showMapButton, el.parentNode)
 
@@ -83,10 +110,23 @@
     this.fullScreenButton.addEventListener('click', function (e) {
       e.preventDefault()
       // Fullscreen view
+      /*
       if (this.isFullScreen) {
         this.removeFullScreen()
       } else {
         this.setFullScreen()
+      }
+      */
+      if (this.isFullScreen) {
+        window.history.back()
+      } else {
+        window.activeMap = this
+        this.setFullScreen()
+        var state = { 'view': el.id }
+        var title = document.title
+        var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'view', el.id)
+        window.history.pushState(state, title, url)
+        e.target.classList.add('ol-full-screen-back')
       }
     }.bind(this))
 
@@ -134,9 +174,11 @@
     this.map = map
 
     // Set fullscreen before map is rendered
+    /*
     if (this.isFullScreen) {
       this.setFullScreen()
     }
+    */
 
     // Open key
     if (this.isKeyOpen) {
@@ -277,6 +319,24 @@
       if (this.overlay) {
         map.removeOverlay(this.overlay)
       }
+    }
+
+    // Toggle fullscreen view on browser history change
+    window.onpopstate = function (e) {
+      if (window.activeMap) {
+        if (e && e.state) {
+          window.activeMap.setFullScreen()
+        } else {
+          window.activeMap.removeFullScreen()
+        }
+        window.activeMap.map.updateSize()
+      }
+    }
+
+    // Set fullscreen state
+    if (getParameterByName('view') === el.id) {
+      window.activeMap = this
+      window.activeMap.setFullScreen()
     }
   }
 

@@ -44,6 +44,14 @@ async function find (location) {
   // Strip the "U.K" part of the address
   name = name.replace(', United Kingdom', '')
 
+  // Dan Leech temporary addition to remove the duplicate city/town name
+  if (name.split(',').length === 2) {
+    var parts = name.toLowerCase().split(',')
+    if (parts[0].trim() === parts[1].trim()) {
+      name = name.substr(0, name.indexOf(','))
+    }
+  }
+
   let isEngland = await floodServices.getIsEngland(center[0], center[1])
 
   return {
