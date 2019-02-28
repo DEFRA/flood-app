@@ -26,11 +26,11 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <div class="defra-search-link">
+    <nav class="defra-search-link">
       <p>
         <a href="/"><span class="defra-search-link__icon"></span>Change location</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/national">See the national view</a>
       </p>
-    </div>
+    </nav>
   </div>
 </div>
 
@@ -60,13 +60,19 @@
           {{model.highestSeverity.subTitle}}<!-- - {{model.highestSeverity.tagline.toLowerCase()}} -->
         </strong>
       </div>
-      {{ model.floodsSummary | safe }}
+      <p class="govuk-body-m">
+        {{ model.floodsPrimary | safe }}
+      </p>
     {% else %}
       <p class="govuk-body-m">
         There are currently no flood warnings or alerts in force in this area
       </p>
     {% endif %}
-
+    {% if model.hasFloodsSecondary %}
+      <p class="govuk-body-m">
+        {{ model.floodsSecondary | safe }}
+      </p>
+    {% endif %}
     {% if model.hasAllFloodsList %}
       <details class="defra-flood-details govuk-!-margin-bottom-4">
         <summary class="govuk-details__summary">
@@ -151,7 +157,7 @@
 
 <section class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-m govuk-!-margin-top-8">Long term flood risk for this area</h2>
+    <h2 class="govuk-heading-m govuk-!-margin-top-8">Long term flood risk</h2>
     <p>This area could be affected by flooding in the future. <a href="https://flood-warning-information.service.gov.uk/long-term-flood-risk">View the long term flood risk information for a location in England</a>.</p>
   </div>
 </section>
@@ -169,7 +175,7 @@
   </div>
 </section>
 
-<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-7">
+<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6 govuk-!-margin-bottom-7">
 
 <section class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
