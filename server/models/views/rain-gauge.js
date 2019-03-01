@@ -138,7 +138,7 @@ class ViewModel {
       'minutes',
       new Date(endDateMinutes),
       measuresMinutes,
-      6,
+      5,
       10 // Multiples of 2
     )
     //
@@ -169,7 +169,7 @@ class ViewModel {
       'hours',
       new Date(endDateHours),
       measuresHours,
-      24,
+      10,
       50 // Multiples of 10
     )
     //
@@ -200,7 +200,7 @@ class ViewModel {
       'days',
       new Date(endDateDays),
       measuresDays,
-      120,
+      50,
       250 // Multiples of 50
     )
   }
