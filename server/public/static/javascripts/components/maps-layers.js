@@ -154,76 +154,99 @@
     })
   }
 
+  // function rain () {
+  //   var geojsonObject = {
+  //     'type': 'FeatureCollection',
+  //     'features': [
+  //       {
+  //         'type': 'Feature',
+  //         'id': 'rain.50112',
+  //         'properties': {
+  //           'label': 'Rain gauge name',
+  //           'gridRef': 'SS777481',
+  //           'value': 0,
+  //           'latestDate': '2019-02-12T04:00:00Z'
+  //         },
+  //         'geometry': {
+  //           'type': 'Point',
+  //           'coordinates': [
+  //             -3.75,
+  //             51.22
+  //           ]
+  //         }
+  //       },
+  //       {
+  //         'type': 'Feature',
+  //         'id': 'rain.45101',
+  //         'properties': {
+  //           'label': 'Rain gauge name',
+  //           'gridRef': 'SS770391',
+  //           'value': 0,
+  //           'latestDate': '2019-02-12T04:00:00Z'
+  //         },
+  //         'geometry': {
+  //           'type': 'Point',
+  //           'coordinates': [
+  //             -3.76,
+  //             51.14
+  //           ]
+  //         }
+  //       },
+  //       {
+  //         'type': 'Feature',
+  //         'id': 'rain.45100',
+  //         'properties': {
+  //           'label': 'Rain gauge name',
+  //           'gridRef': 'SS763417',
+  //           'value': 0,
+  //           'latestDate': '2019-02-12T04:00:00Z'
+  //         },
+  //         'geometry': {
+  //           'type': 'Point',
+  //           'coordinates': [
+  //             -3.77,
+  //             51.16
+  //           ]
+  //         }
+  //       }
+  //     ]
+  //   }
+
+  //   var features = new ol.format.GeoJSON().readFeatures(geojsonObject, {
+  //     featureProjection: 'EPSG:3857'
+  //   })
+
+  //   return new ol.layer.Vector({
+  //     ref: 'rain',
+  //     title: 'rain',
+  //     source: new ol.source.Vector({
+  //       features: features
+  //     }),
+  //     style: maps.styles.rain,
+  //     visible: false
+  //   })
+  // }
+
   function rain () {
-    var geojsonObject = {
-      'type': 'FeatureCollection',
-      'features': [
-        {
-          'type': 'Feature',
-          'id': 'rain.50112',
-          'properties': {
-            'label': 'Rain gauge name',
-            'gridRef': 'SS777481',
-            'value': 0,
-            'latestDate': '2019-02-12T04:00:00Z'
-          },
-          'geometry': {
-            'type': 'Point',
-            'coordinates': [
-              -3.75,
-              51.22
-            ]
-          }
-        },
-        {
-          'type': 'Feature',
-          'id': 'rain.45101',
-          'properties': {
-            'label': 'Rain gauge name',
-            'gridRef': 'SS770391',
-            'value': 0,
-            'latestDate': '2019-02-12T04:00:00Z'
-          },
-          'geometry': {
-            'type': 'Point',
-            'coordinates': [
-              -3.76,
-              51.14
-            ]
-          }
-        },
-        {
-          'type': 'Feature',
-          'id': 'rain.45100',
-          'properties': {
-            'label': 'Rain gauge name',
-            'gridRef': 'SS763417',
-            'value': 0,
-            'latestDate': '2019-02-12T04:00:00Z'
-          },
-          'geometry': {
-            'type': 'Point',
-            'coordinates': [
-              -3.77,
-              51.16
-            ]
-          }
-        }
-      ]
-    }
-
-    var features = new ol.format.GeoJSON().readFeatures(geojsonObject, {
-      featureProjection: 'EPSG:3857'
-    })
-
     return new ol.layer.Vector({
       ref: 'rain',
       title: 'rain',
       source: new ol.source.Vector({
-        features: features
+        format: new ol.format.GeoJSON(),
+        projection: 'EPSG:3857',
+        url: '/rainfall'
       }),
       style: new ol.style.Style({})
     })
+    // return new ol.layer.Vector({
+    //   ref: 'rain',
+    //   title: 'rain',
+    //   source: new ol.source.Vector({
+    //     features: features
+    //   }),
+    //   style: maps.styles.rain,
+    //   visible: false
+    // })
   }
 
   function location (name, center) {
