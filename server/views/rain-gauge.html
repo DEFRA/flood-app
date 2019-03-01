@@ -3,10 +3,15 @@
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <a href="" onclick="window.history.back();return false" class="govuk-back-link govuk-!-margin-bottom-7">Back</a>
+    <a href="{{ model.referer }}" class="govuk-back-link govuk-!-margin-bottom-7">Back</a>
     <h1 class="govuk-heading-xl">
-      <span class="govuk-caption-xl">Rain gauge at grid ref</span>
+      {% if model.gridRef %}
+      <span class="govuk-caption-xl">Rainfall measured at grid reference</span>
       {{ model.gridRef }}
+      {% else %}
+      <span class="govuk-caption-xl">Rainfall measured at </span>
+      {{ model.name }}
+      {% endif %}
     </h1>
   </div>
 </div>
@@ -36,7 +41,7 @@
       <section class="govuk-tabs__panel" id="six-hours">
         <figure class="defra-bar-chart">
           <figcaption class="defra-bar-chart__caption">
-            Rainfall measured at 15 minute intervals over the latest 6 hours
+            Rainfall (latest 6 hours)
           </figcaption>
           <div class="defra-bar-chart__inner">
             <table class="defra-bar-chart__table">
@@ -68,9 +73,9 @@
                   </td>
                   {%- endfor %}
                   {% if model.graphMinutes.threshold %}
-                  <td class="defra-bar-chart__v-threshold" style="bottom:{{ model.graphMinutes.thresholdPercentile }}%">
+                  <!-- <td class="defra-bar-chart__v-threshold" style="bottom:{{ model.graphMinutes.thresholdPercentile }}%">
                     <span class="govuk-visually-hidden">{{ model.graphMinutes.threshold }}mm</span>
-                  </td>
+                  </td> -->
                   {% endif %}
                 </tr>
               </tfoot>
@@ -80,7 +85,7 @@
                 <!--
                 Average daily rainfall for January<span class="govuk-visually-hidden"> is {{ model.graphMinutes.threshold }}mm.</span>
                 -->
-                Heavy rainfall level<span class="govuk-visually-hidden"> is defined here as above {{ model.graphMinutes.threshold }}mm in 15 minutes.</span>
+                <!-- Heavy rainfall level<span class="govuk-visually-hidden"> is defined here as above {{ model.graphMinutes.threshold }}mm in 15 minutes.</span> -->
               </div>
             </div>
           </div>
@@ -89,7 +94,7 @@
       <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="one-day">
         <figure class="defra-bar-chart">
           <figcaption class="defra-bar-chart__caption">
-            Hourly rainfall measurements for the latest 24 hours
+            Hourly rainfall (latest 24 hours)
           </figcaption>
           <div class="defra-bar-chart__inner">
             <table class="defra-bar-chart__table">
@@ -142,7 +147,7 @@
       <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="four-weeks">
         <figure class="defra-bar-chart">
           <figcaption class="defra-bar-chart__caption">
-            Daily rainfall measurements for the latest 4 weeks
+            Daily rainfall (latest 4 weeks)
           </figcaption>
           <div class="defra-bar-chart__inner">
             <table class="defra-bar-chart__table">
@@ -195,6 +200,43 @@
     </div>
   </div>
 </div>
+
+<section class=“govuk-grid-row”>
+  <div class=“govuk-grid-column-two-thirds”>
+      <details class="govuk-details govuk-!-margin-bottom-1">
+          <summary class="govuk-details__summary" id="summary-express" aria-controls="details-content-how-measured" aria-expanded="false" role="button" data-journey-click="lfw:station:how-measured">
+            <span class="govuk-details__summary-text">
+              How is rainfall measured?
+            </span>
+          </summary>
+          <div class="govuk-details__text" id="details-content-how-measured" aria-hidden="true">
+
+              <p>The Environment Agency uses a network of rainfall measuring stations across the country. Information from these is fed into our system to provide a picture of:</p>
+              <ul class="govuk-list govuk-list--bullet">
+                <li>how much rain has fallen</li>
+                <li>where the rain has fallen</li>
+                <li>at what rate the rain has fallen</li>
+              </ul>
+          </div>
+        </details>
+        <details class="govuk-details govuk-!-margin-bottom-1">
+          <summary class="govuk-details__summary" aria-controls="details-content-when-measured" aria-expanded="false" role="button" data-journey-click="lfw:station:when-measured">
+            <span class="govuk-details__summary-text">
+              How might rainfall affect flood risk?
+            </span>
+          </summary>
+          <div class="govuk-details__text" id="details-content-when-measured" aria-hidden="true">
+            <p>
+              Heavy rainfall is closely linked to flood risk - especially surface water flooding.
+              Many factors can contribute to flooding including river levels, ground saturation levels, tides and wind.
+              The government 's <a href="https://flood-warning-information.service.gov.uk/warnings">live flood warning service</a> assesses all these factors when issuing flood warnings and alerts in England.
+            </p>
+            <p>As a guide, 50mm in 24 hours is considered heavy rainfall.</p>
+          </div>
+        </details>
+  </div>
+</section>
+
 {% endblock %}
 
 {% block bodyEnd %}
