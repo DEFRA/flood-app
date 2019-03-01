@@ -35,7 +35,7 @@
     var floodCentroids = maps.layers.floodCentroids()
     var selectedPointFeature = maps.layers.selectedPointFeature()
 
-    function ensureFeatureTooltipHtml (feature) {
+    async function ensureFeatureTooltipHtml (feature) {
       var id = feature.getId()
       var props = feature.getProperties()
       var template = 'tooltip.html'
@@ -54,12 +54,26 @@
             props: props
           })
         } else if (id.startsWith('rain')) {
+          // Get rainfall data for station
+          const rainfallData = async () => {
+            const rainfallUrl = '/rain-gauge-tooltip/' + props.stationReference + '/' + props.label + '/100'
+            try {
+              const response = await fetch(rainfallUrl)
+              const rainfallJson = await response.json()
+              return rainfallJson
+            } catch (err) {
+              return { error: 'Unable to display latest readings' }
+            }
+          }
+
           html = window.nunjucks.render(template, {
             type: 'rain',
             props: props,
-            rainGaugeId: id.substring(id.lastIndexOf('.') + 1)
+            // rainGaugeId: id.substring(id.lastIndexOf('.') + 1)
+            rainfallValues: await rainfallData()
           })
         }
+
         feature.set('html', html)
       }
     }
@@ -128,12 +142,12 @@
           var showStations = false
           var showRain = false
           // Set booleans for flood polygons
-          showSevere = floodsPolygons.features.filter(x => x.properties.severity === 1).length ? true : false
-          showWarning = floodsPolygons.features.filter(x => x.properties.severity === 2).length ? true : false
-          showAlert = floodsPolygons.features.filter(x => x.properties.severity === 3).length ? true : false
+          showSevere = !!floodsPolygons.features.filter(x => x.properties.severity === 1).length
+          showWarning = !!floodsPolygons.features.filter(x => x.properties.severity === 2).length
+          showAlert = !!floodsPolygons.features.filter(x => x.properties.severity === 3).length
           // showNotInForce = floodsPolygons.features.filter(x => x.properties.severity === 4).length ? true : false
           // Set booleans for flood centroids
-          floodCentroids.getSource().forEachFeatureInExtent(extent, function(feature) {
+          floodCentroids.getSource().forEachFeatureInExtent(extent, function (feature) {
             switch (feature.get('severity')) {
               case 1: {
                 showSevere = true
@@ -327,7 +341,7 @@
     })
 
     // Close key or place locator if map is clicked
-    map.on('click', function (e) {
+    map.on('click', async function (e) {
       // Get mouse coordinates and check for feature if not the highlighted flood polygon
       var feature = map.forEachFeatureAtPixel(e.pixel, function (feature) {
         return feature
@@ -347,7 +361,7 @@
           features: [feature],
           format: new ol.format.GeoJSON()
         }))
-        ensureFeatureTooltipHtml(feature)
+        await ensureFeatureTooltipHtml(feature)
         container.showOverlay(feature)
       } else {
         var layer = getFloodLayer(e.pixel)
@@ -362,7 +376,7 @@
           })
 
           if (url) {
-            flood.utils.xhr(url, function (err, json) {
+            flood.utils.xhr(url, async function (err, json) {
               if (err) {
                 console.error(err)
               }
@@ -378,7 +392,7 @@
                 format: new ol.format.GeoJSON()
               }))
 
-              ensureFeatureTooltipHtml(feature)
+              await ensureFeatureTooltipHtml(feature)
               container.showOverlay(feature)
             })
           }
