@@ -68,6 +68,11 @@ module.exports = [{
         earliestDate = payload.items[payload.items.length - 1].dateTime
 
         for (let i = 0; i < payload.items.length; i++) {
+          // If there is no value for a particular day then force 0. TODO: Investigate if this should error instead
+          if (!payload.items[i].value) {
+            payload.items[i].value = 0
+          }
+
           if (i < 97) {
             latestDailyRainfallTotal += payload.items[i].value
           }
@@ -88,6 +93,11 @@ module.exports = [{
           }
           cumHourlyValue += payload.items[i].value
           cumDailyValue += payload.items[i].value
+        }
+
+        // If latestDailyRainfallTotal is not an integer then round up to 1 decimal place.
+        if (!Number.isInteger(latestDailyRainfallTotal)) {
+          latestDailyRainfallTotal = Math.round(latestDailyRainfallTotal * 10) / 10
         }
       }
 
