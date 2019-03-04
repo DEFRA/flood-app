@@ -20,6 +20,8 @@ class ViewModel {
       const alertFloods = floods.filter(flood => flood.severity === 3)
       const inactiveFloods = floods.filter(flood => flood.severity === 4)
 
+      console.log(floods.filter(flood => flood.severity === 4))
+
       const hasActiveFloods = !!activeFloods.length
       const hasSevereFloods = !!severeFloods.length
       const hasWarningFloods = !!warningFloods.length
@@ -48,19 +50,19 @@ class ViewModel {
         switch(highestSeverity.name) {
           case 'severe':
             primaryStatement = `
-              ${primaryGroup.length > 1 ? primaryGroup.length : 'A'} severe flood warning${primaryGroup.length > 1 ? primaryGroup.length + 's are' : ' is'} in force ${primaryGroup.length > 2 ? '' : 'for ' + primaryList} where there is a danger to life.
+              ${primaryGroup.length > 1 ? primaryGroup.length : 'A'} severe flood warning${primaryGroup.length > 1 ? 's are' : ' is'} in force${primaryGroup.length > 2 ? '' : ' for ' + primaryList} where there is a danger to life.
               <a href="/what-to-do-in-a-flood/getting-a-severe-flood-warning">You must act now</a> if you live in ${primaryGroup.length > 1 ? primaryGroup.length + 'one of these areas' : 'this area'}.
             `
             break
           case 'warning':
             primaryStatement = `
-              ${primaryGroup.length > 1 ? primaryGroup.length : 'A'} flood warning${primaryGroup.length > 1 ? primaryGroup.length + 's are' : ' is'} in force ${primaryGroup.length > 2 ? '' : 'for ' + primaryList} where flooding is expected.
+              ${primaryGroup.length > 1 ? primaryGroup.length : 'A'} flood warning${primaryGroup.length > 1 ? 's are' : ' is'} in force${primaryGroup.length > 2 ? '' : ' for ' + primaryList} where flooding is expected.
               You need to <a href="/what-to-do-in-a-flood/getting-a-flood-warning">take action</a> if you live in ${primaryGroup.length > 1 ? primaryGroup.length + 'one of these areas' : 'this area'}.
             `
             break
           case 'alert':
             primaryStatement = `
-              ${primaryGroup.length > 1 ? primaryGroup.length : 'A'} flood alert${primaryGroup.length > 1 ? primaryGroup.length + 's are' : ' is'} in place ${primaryGroup.length > 2 ? '' : 'for ' + primaryList}.
+              ${primaryGroup.length > 1 ? primaryGroup.length : 'A'} flood alert${primaryGroup.length > 1 ? 's are' : ' is'} in place${primaryGroup.length > 2 ? '' : ' for ' + primaryList}.
               There may be some flooding, <a href="/what-to-do-in-a-flood/getting-a-flood-alert">be prepared</a> if you live in ${primaryGroup.length > 1 ? 'one of these areas' : 'this area'}.
             `
             break
@@ -84,14 +86,16 @@ class ViewModel {
 
       // Inactive floods (optional)
       var inactiveStatement = ''
-      if (inactiveFloods.length > 2 || hasActiveFloods) {
-        inactiveStatement = `
-          ${inactiveFloods.length} flood warning${inactiveFloods.length > 1 ? 's have' : ' has'} been removed.
-        `
-      } else if (inactiveFloods.length) {
-        inactiveStatement = `
-          ${primaryGroup.length > 1 ? 'Flood warnings' : 'The flood warning'} for ${primaryList} ${primaryGroup.length > 1 ? 'have' : 'has'} been removed.
-        `
+      if (hasInactiveFloods){
+        if (inactiveFloods.length > 2 || hasActiveFloods) {
+          inactiveStatement = `
+            ${inactiveFloods.length} flood warning${inactiveFloods.length > 1 ? 's have' : ' has'} been removed.
+          `
+        } else {
+          inactiveStatement = `
+            ${primaryGroup.length > 1 ? 'Flood warnings' : 'The flood warning'} for ${primaryList} ${primaryGroup.length > 1 ? 'have' : 'has'} been removed.
+          `
+        }
       }
 
       this.highestSeverity = highestSeverity
