@@ -1,8 +1,18 @@
 const config = require('../config')
 const joi = require('joi')
+const HttpsProxyAgent = require('https-proxy-agent')
 const wreck = require('wreck').defaults({
   timeout: config.restClientTimeoutMillis
 })
+
+let wreckExt
+if (config.httpsProxy) {
+  wreckExt = require('wreck').defaults({
+    timeout: config.httpTimeoutMs,
+    agent: new HttpsProxyAgent(config.httpsProxy)
+  })
+}
+
 const moment = require('moment')
 const momentDate = moment()
 
@@ -47,7 +57,9 @@ module.exports = [{
     const url = rainfallApiUri + '/id/stations?parameter=rainfall&_limit=2000&_view=full'
     try {
       // const { res, payload } = await wreck.get(url, { json: true })
-      const { payload } = await wreck.get(url, { json: true })
+      const thisWreck = wreckExt ? wreckExt : wreck
+      // const { payload } = await wreck.get(url, { json: true })
+      const { payload } = await thisWreck.get(url, { json: true })
       const geojsonObject = {
         'type': 'FeatureCollection',
         'features': [
