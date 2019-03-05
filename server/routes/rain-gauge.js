@@ -3,9 +3,18 @@ const config = require('../config')
 const Joi = require('joi')
 const boom = require('boom')
 const ViewModel = require('../models/views/rain-gauge')
+const HttpsProxyAgent = require('https-proxy-agent')
 const wreck = require('wreck').defaults({
   timeout: config.restClientTimeoutMillis
 })
+
+let wreckExt
+if (config.httpsProxy) {
+  wreckExt = require('wreck').defaults({
+    timeout: config.httpTimeoutMs,
+    agent: new HttpsProxyAgent(config.httpsProxy)
+  })
+}
 
 // const rainfallApiUri = config.rainfallApiUrl
 
@@ -46,7 +55,9 @@ module.exports = [{
       readingsUrl += '&_limit=' + 25
     }
     try {
-      const { res, payload } = await wreck.get(readingsUrl, { json: true })
+      const thisWreck = wreckExt ? wreckExt : wreck
+      // const { res, payload } = await wreck.get(readingsUrl, { json: true })
+      const { res, payload } = await thisWreck.get(readingsUrl, { json: true })
       payload.label = label
 
       if (res.statusCode !== 200 || payload.items.length === 0 || payload.items === undefined) {
