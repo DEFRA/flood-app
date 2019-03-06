@@ -345,20 +345,20 @@
   background-image: url('#{$govuk-images-path}icon-map-features-2x.png');
   background-color:transparent;
   background-position: -5000px;
-  background-size: 200px;
+  background-size: 400px;
   background-repeat: no-repeat;
 }
 .map__outlook-control__icon--risk-level-1 {
-  background-position: -2px -162px;
+  background-position: -256px -203px;
 }
 .map__outlook-control__icon--risk-level-2 {
-  background-position: -2px -242px;
+  background-position: -256px -303px;
 }
 .map__outlook-control__icon--risk-level-3 {
-  background-position: -2px -282px;
+  background-position: -256px -353px;
 }
 .map__outlook-control__icon--risk-level-4 {
-  background-position: -2px -322px;
+  background-position: -256px -403px;
 }
 .map__outlook-control__icon--risk-level-0 {
   background:none;
