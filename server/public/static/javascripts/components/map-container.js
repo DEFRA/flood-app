@@ -43,6 +43,7 @@
     //
     // Map to DOM container elements
     //
+
     this.element = el.firstElementChild
     this.mapContainerInnerElement = el.firstElementChild.firstElementChild
 
@@ -56,7 +57,6 @@
       this.setFullScreen()
       this.fullScreenButton.classList.add('ol-full-screen-back')
       */
-      window.activeMap = this
       this.setFullScreen()
       var state = { 'view': el.id }
       var title = document.title
@@ -120,7 +120,6 @@
       if (this.isFullScreen) {
         window.history.back()
       } else {
-        window.activeMap = this
         this.setFullScreen()
         var state = { 'view': el.id }
         var title = document.title
@@ -191,7 +190,6 @@
       this.progressiveButton.innerText = this.options.buttonText
       this.progressiveButton.className = 'govuk-button govuk-button--progressive'
       this.progressiveButton.setAttribute('aria-pressed', false)
-      var activeMap = this.map
       this.progressiveButton.addEventListener('click', function (e) {
         e.preventDefault()
         if (this.getAttribute('aria-pressed') === 'true') {
@@ -202,7 +200,7 @@
           el.parentNode.setAttribute('aria-expanded', true)
         }
         this.focus()
-        activeMap.updateSize()
+        this.updateSize()
       })
       el.parentNode.parentNode.insertBefore(this.progressiveButton, el.parentNode)
       // Tablet upwards only
@@ -242,6 +240,7 @@
       el.classList.add('map--fullscreen')
       this.fullScreenButton.classList.add('ol-full-screen-back')
       this.fullScreenButton.title = 'Go back'
+      this.fullScreenButton.focus()
       this.isFullScreen = true
       map.updateSize()
     }
@@ -277,7 +276,6 @@
       feature.set('isSelected', true)
       // Store selected feature
       this.selectedFeature = feature
-
       // Add class to map
       el.classList.add('map--overlay-open')
       // Add feature html
@@ -321,23 +319,51 @@
       }
     }
 
-    // Toggle fullscreen view on browser history change
-    window.onpopstate = function (e) {
-      if (window.activeMap) {
-        if (e && e.state) {
-          window.activeMap.setFullScreen()
-        } else {
-          window.activeMap.removeFullScreen()
-        }
-        window.activeMap.map.updateSize()
-      }
-    }
-
     // Set fullscreen state
     if (getParameterByName('view') === el.id) {
-      window.activeMap = this
-      window.activeMap.setFullScreen()
+      this.setFullScreen()
     }
+
+    // Toggle fullscreen view on browser history change
+    window.addEventListener('popstate', function (e) { 
+      if (e && e.state && getParameterByName('view') === el.id) {
+        this.setFullScreen()
+      } else {
+        this.removeFullScreen()
+      }
+    }.bind(this))
+
+    // Constrain keyboard focus
+    this.element.addEventListener('keydown', function(e) {
+      if (e.keyCode === 9 && this.isFullScreen) {
+        // Select only elements that can have focus
+        var focusableElements = this.element.querySelectorAll('button:not(:disabled), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+        // Filter to remove any elements that are not currently visible
+        var validElements = []
+        for (i = 0; i < focusableElements.length; i++) {
+          if (focusableElements[i].offsetParent !== null) {
+            validElements.push(focusableElements[i])
+          }
+        }
+        // Set first and last element
+        var firstFocusableElement = validElements[0]
+        var lastFocusableElement = validElements[validElements.length - 1]
+        // Shift tab (backwards)
+        if (e.shiftKey) {            
+          if (document.activeElement === firstFocusableElement) {
+            e.preventDefault()
+            lastFocusableElement.focus()
+          }
+        }
+        // Tab (forwards) 
+        else {
+          if (document.activeElement === lastFocusableElement) {
+            e.preventDefault()
+            firstFocusableElement.focus()
+          }
+        }
+      }
+    }.bind(this))
   }
 
   maps.MapContainer = MapContainer
