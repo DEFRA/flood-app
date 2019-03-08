@@ -7,7 +7,7 @@
   var MapContainer = maps.MapContainer
   var forEach = flood.utils.forEach
 
-  function OutlookMap (elementId, options) {
+  function OutlookMap (elementId, options, keyTemplate) {
     options = options || {}
 
     // Outlook map
@@ -30,22 +30,23 @@
     })
 
     function styleFeature (feature) {
-      var strokeColour = '#6f777b'
-      var strokeWidth = 2
+      // var strokeColour = '#6f777b'
+      // var strokeWidth = 2
       var zIndex = feature.get('z-index')
       var lineDash = [2, 3]
-      var fillColour = '#85994b'
+      var fillColour = 'rgba(0,64,35, 0.5)' // '#85994b'
 
       if (feature.get('risk-level') === 2) {
-        fillColour = '#ffbf47'
+        fillColour = 'rgba(0,28,84, 0.5)' // '#ffbf47'
       } else if (feature.get('risk-level') === 3) {
-        fillColour = '#F47738'
+        fillColour = 'rgba(0,67,87, 0.5)' // '#F47738'
       } else if (feature.get('risk-level') === 4) {
-        fillColour = '#df3034'
+        fillColour = 'rgba(6,96,89, 0.5)' // '#df3034'
       }
 
       return new ol.style.Style({
         fill: new ol.style.Fill({ color: fillColour }),
+        /*
         stroke: new ol.style.Stroke({
           color: strokeColour,
           width: strokeWidth,
@@ -53,6 +54,7 @@
           lineJoin: 'round',
           lineDash: lineDash
         }),
+        */
         lineDash: lineDash,
         zIndex: zIndex
       })
@@ -82,6 +84,7 @@
 
     var container = new MapContainer(document.getElementById(elementId), {
       buttonText: 'View map of forecast flood risk',
+      keyTemplate: keyTemplate,
       progressive: true,
       view: view,
       layers: [
@@ -108,6 +111,6 @@
   // (This is done mainly to avoid the rule
   // "do not use 'new' for side effects. (no-new)")
   maps.createOutlookMap = function (containerId, place) {
-    return new OutlookMap(containerId, place)
+    return new OutlookMap(containerId, place, 'key-live-outlook.html')
   }
 })(window, window.flood)
