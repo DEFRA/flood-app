@@ -345,20 +345,20 @@
   background-image: url('#{$govuk-images-path}icon-map-features-2x.png');
   background-color:transparent;
   background-position: -5000px;
-  background-size: 200px;
+  background-size: 400px;
   background-repeat: no-repeat;
 }
 .map__outlook-control__icon--risk-level-1 {
-  background-position: -2px -162px;
+  background-position: -256px -203px;
 }
 .map__outlook-control__icon--risk-level-2 {
-  background-position: -2px -242px;
+  background-position: -256px -303px;
 }
 .map__outlook-control__icon--risk-level-3 {
-  background-position: -2px -282px;
+  background-position: -256px -353px;
 }
 .map__outlook-control__icon--risk-level-4 {
-  background-position: -2px -322px;
+  background-position: -256px -403px;
 }
 .map__outlook-control__icon--risk-level-0 {
   background:none;
@@ -792,7 +792,7 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
     top:0px;
     bottom:0px;
     width:100%;
-    max-width:272px;
+    max-width:252px;
   }
   @include mq ($from: tablet) {
     max-width:304px;
@@ -839,14 +839,14 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
 .map--has-key.map--fullscreen {
   .map__container-inner {
     @include mq ($from: tablet) {
-      right:260px;
+      right:280px;
       width:auto;
     }
     border:0px;
   }
   .map-key__container  {
     @include mq ($from: tablet) {
-      width:260px;
+      width:280px;
     }
     border:0px;
   }
@@ -915,6 +915,9 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
   }
   .map-key__title {
     @extend .govuk-heading-m;
+    @include mq ($until: tablet) {
+      font-size:21px;
+    }
     margin-top:6px;
     margin-bottom:0;
     @include mq ($from: tablet) {

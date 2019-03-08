@@ -82,7 +82,7 @@
           {% for group in model.groupedFloods %}
             <h2 class="defra-flood-details__section-heading">
               {{group.severity.pluralisedTitle}}
-              <span class="govuk-caption-m govuk-caption--normal">Explanation of state</span>
+              <span class="govuk-caption-m govuk-caption--normal">{{group.severity.subTitle}}</span>
             </h2>
             <ul class="defra-targetareas-list">
               {% for flood in group.floods %}
