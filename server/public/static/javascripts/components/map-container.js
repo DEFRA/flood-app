@@ -53,15 +53,17 @@
     this.showMapButton.className = 'govuk-button govuk-button--secondary govuk-button--show-map'
     this.showMapButton.addEventListener('click', function (e) {
       e.preventDefault()
-      /*
       this.setFullScreen()
-      this.fullScreenButton.classList.add('ol-full-screen-back')
-      */
-      this.setFullScreen()
+      // this.fullScreenButton.focus()
       var state = { 'view': el.id }
       var title = document.title
       var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'view', el.id)
       window.history.pushState(state, title, url)
+    }.bind(this))
+    this.showMapButton.addEventListener('keyup', function (e) {
+      if (e.keyCode === 13 || e.keyCode === 32) {
+        this.fullScreenButton.focus()
+      }
     }.bind(this))
     el.parentNode.parentNode.insertBefore(this.showMapButton, el.parentNode)
 
@@ -109,16 +111,9 @@
     this.fullScreenButton.appendChild(document.createTextNode('Full screen'))
     this.fullScreenButton.addEventListener('click', function (e) {
       e.preventDefault()
-      // Fullscreen view
-      /*
-      if (this.isFullScreen) {
-        this.removeFullScreen()
-      } else {
-        this.setFullScreen()
-      }
-      */
       if (this.isFullScreen) {
         window.history.back()
+        // Set keyboard focus to the next link
       } else {
         this.setFullScreen()
         var state = { 'view': el.id }
@@ -128,18 +123,19 @@
         e.target.classList.add('ol-full-screen-back')
       }
     }.bind(this))
+    this.fullScreenButton.addEventListener('keyup', function (e) {
+      if (e.keyCode === 13 || e.keyCode === 32) {
+        this.showMapButton.style.display === 'none' ? this.fullScreenButton.focus() : this.showMapButton.focus()
+      }
+    }.bind(this))
 
     var view = this.options.view
 
-    // Add key
+    // Add key and fullscreen buttons
     if (hasKey) {
       el.classList.add('map--has-key')
       this.mapContainerInnerElement.appendChild(this.keyElement)
       this.keyElement.insertBefore(this.keyToggleElement, this.keyElement.firstChild)
-    }
-
-    // Add fullscreen control
-    if (hasKey) {
       this.keyElement.prepend(this.fullScreenButton)
     } else {
       this.mapContainerInnerElement.prepend(this.fullScreenButton)
@@ -172,36 +168,31 @@
 
     this.map = map
 
-    // Set fullscreen before map is rendered
-    /*
-    if (this.isFullScreen) {
-      this.setFullScreen()
-    }
-    */
-
     // Open key
     if (this.isKeyOpen) {
       this.openKey()
     }
 
     // Show map progressive disclosure (desktop only)
+    // Needs a lot of accessbility thinking here...
     if (this.options.progressive) {
       this.progressiveButton = document.createElement('button')
       this.progressiveButton.innerText = this.options.buttonText
       this.progressiveButton.className = 'govuk-button govuk-button--progressive'
       this.progressiveButton.setAttribute('aria-pressed', false)
       this.progressiveButton.addEventListener('click', function (e) {
+        var btn = e.target
         e.preventDefault()
-        if (this.getAttribute('aria-pressed') === 'true') {
-          this.setAttribute('aria-pressed', false)
+        if (btn.getAttribute('aria-pressed') === 'true') {
+          btn.setAttribute('aria-pressed', false)
           el.parentNode.setAttribute('aria-expanded', false)
         } else {
-          this.setAttribute('aria-pressed', true)
+          btn.setAttribute('aria-pressed', true)
           el.parentNode.setAttribute('aria-expanded', true)
         }
-        this.focus()
-        this.updateSize()
-      })
+        btn.focus()
+        this.map.updateSize()
+      }.bind(this))
       el.parentNode.parentNode.insertBefore(this.progressiveButton, el.parentNode)
       // Tablet upwards only
       if (window.matchMedia && window.matchMedia('(min-width: 40.0625em)').matches) {
@@ -240,7 +231,6 @@
       el.classList.add('map--fullscreen')
       this.fullScreenButton.classList.add('ol-full-screen-back')
       this.fullScreenButton.title = 'Go back'
-      this.fullScreenButton.focus()
       this.isFullScreen = true
       map.updateSize()
     }
@@ -335,33 +325,40 @@
 
     // Constrain keyboard focus
     this.element.addEventListener('keydown', function(e) {
-      if (e.keyCode === 9 && this.isFullScreen) {
-        // Select only elements that can have focus
-        var focusableElements = this.element.querySelectorAll('button:not(:disabled), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
-        // Filter to remove any elements that are not currently visible
-        var validElements = []
-        for (i = 0; i < focusableElements.length; i++) {
-          if (focusableElements[i].offsetParent !== null) {
-            validElements.push(focusableElements[i])
+      if (this.element.contains(document.activeElement)) {
+        // Tab key
+        if (e.keyCode === 9) {
+          if (this.isFullScreen) {
+            // Select only elements that can have focus
+            var focusableElements = this.element.querySelectorAll('button:not(:disabled), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+            // Filter to remove any elements that are not currently visible
+            var validElements = []
+            for (i = 0; i < focusableElements.length; i++) {
+              if (focusableElements[i].offsetParent !== null) {
+                validElements.push(focusableElements[i])
+              }
+            }
+            // Set first and last focusable elements
+            var firstFocusableElement = validElements[0]
+            var lastFocusableElement = validElements[validElements.length - 1]
+            // Shift tab (backwards)
+            if (e.shiftKey) {            
+              if (document.activeElement === firstFocusableElement) {
+                e.preventDefault()
+                lastFocusableElement.focus()
+              }
+            }
+            // Tab (forwards) 
+            else {
+              if (document.activeElement === lastFocusableElement) {
+                e.preventDefault()
+                firstFocusableElement.focus()
+              }
+            }
           }
         }
-        // Set first and last element
-        var firstFocusableElement = validElements[0]
-        var lastFocusableElement = validElements[validElements.length - 1]
-        // Shift tab (backwards)
-        if (e.shiftKey) {            
-          if (document.activeElement === firstFocusableElement) {
-            e.preventDefault()
-            lastFocusableElement.focus()
-          }
-        }
-        // Tab (forwards) 
-        else {
-          if (document.activeElement === lastFocusableElement) {
-            e.preventDefault()
-            firstFocusableElement.focus()
-          }
-        }
+        // Add map pan (cursor keys)
+        // Add map zoom (plus and minus keys)
       }
     }.bind(this))
   }

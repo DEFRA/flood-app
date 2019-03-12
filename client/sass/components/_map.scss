@@ -282,7 +282,7 @@
 //
 
 .map__outlook-control {
-  display:none;
+  display:block;
   position: absolute;
   bottom:10px;
   left:10px;
@@ -291,9 +291,6 @@
   @include mq ($from: tablet) {
     right:auto;
   }
-}
-.map--outlook-control-open .map__outlook-control {
-  display:block;
 }
 .map__outlook-control__inner {
   width:100%;
@@ -1088,4 +1085,13 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
   @include mq ($from: tablet) {
     display:block;
   }
+}
+
+// Feature list
+.map-feature-list button {
+  position:absolute;
+  display:block;
+  width:1px;
+  height:1px;
+  left:0px;
 }

@@ -122,6 +122,21 @@
   </div>
 </div>
 
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <div class="app-map govuk-!-margin-bottom-7">
+      <div class="app-map__container">
+        <figure class="map" id="map-live">
+          <div class="map__container">
+            <div class="map__container-inner"></div>
+          </div>
+          <figcaption class="govuk-visually-hidden">Flood warnings and river and sea levels</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% if model.rivers %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -147,17 +162,13 @@
     </details>
   </div>
 </div>
-{% endif %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    {% include "partials/map.html" %}
-  </div>
-</div>
+<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-7">
+{% endif %}
 
 <section class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-m govuk-!-margin-top-8">Long term flood risk</h2>
+    <h2 class="govuk-heading-m">Long term flood risk</h2>
     <p>This area could be affected by flooding in the future. <a href="https://flood-warning-information.service.gov.uk/long-term-flood-risk">View the long term flood risk information for a location in England</a>.</p>
   </div>
 </section>
