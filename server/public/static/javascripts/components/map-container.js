@@ -156,10 +156,12 @@
       target: this.mapContainerInnerElement,
       controls: controls,
       layers: layers,
-      view: view,
+      view: view
+      /*
       interactions: ol.interaction.defaults({
         mouseWheelZoom: false
       })
+      */
     })
 
     // Add mouse wheel zoom interaction
