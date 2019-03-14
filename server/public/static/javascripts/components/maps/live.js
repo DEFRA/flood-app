@@ -39,18 +39,17 @@
     async function ensureFeatureTooltipHtml (feature) {
       var id = feature.getId()
       var props = feature.getProperties()
-      var template = 'tooltip.html'
       var html
 
       if (!props.html) {
         if (id.startsWith('stations')) {
-          html = window.nunjucks.render(template, {
+          html = window.nunjucks.render('tooltip-station.html', {
             type: 'station',
             props: props,
             stationId: id.substr(9)
           })
         } else if (id.startsWith('flood_warning_alert')) {
-          html = window.nunjucks.render(template, {
+          html = window.nunjucks.render('tooltip.html', {
             type: 'warnings',
             props: props
           })
@@ -67,7 +66,7 @@
             }
           }
 
-          html = window.nunjucks.render(template, {
+          html = window.nunjucks.render('tooltip.html', {
             type: 'rain',
             props: props,
             // rainGaugeId: id.substring(id.lastIndexOf('.') + 1)
@@ -145,8 +144,8 @@
 
           // Set booleans for flood centroids
           floodCentroids.getSource().forEachFeatureInExtent(extent, function (feature) {
-            if (feature.get('severity') === 1) { 
-              showSevere = true 
+            if (feature.get('severity') === 1) {
+              showSevere = true
             } else if (feature.get('severity') === 2) {
               showWarning = true
             } else if (feature.get('severity') === 3) {
@@ -180,17 +179,17 @@
               } else if (input.getAttribute('data-layer') === 'stations') {
                 stations.getSource().forEachFeatureInExtent(extent, function (feature) {
                   featuresInViewPort.push({
-                    'id' : feature.getId(),
-                    'description' : feature.get('name'),
-                    'layer' : 'stations'
+                    'id': feature.getId(),
+                    'description': feature.get('name'),
+                    'layer': 'stations'
                   })
                 })
               } else if (input.getAttribute('data-layer') === 'rain') {
                 rain.getSource().forEachFeatureInExtent(extent, function (feature) {
                   featuresInViewPort.push({
-                    'id' : feature.getId(),
-                    'description' : feature.get('label'),
-                    'layer' : 'rain'
+                    'id': feature.getId(),
+                    'description': feature.get('label'),
+                    'layer': 'rain'
                   })
                 })
               }
@@ -212,9 +211,9 @@
                     break
                 }
                 featuresInViewPort.push({
-                  'id' : feature.id,
-                  'description' : feature.properties.description,
-                  'layer' : layer
+                  'id': feature.id,
+                  'description': feature.properties.description,
+                  'layer': layer
                 })
               }
             })
@@ -222,9 +221,9 @@
             floodCentroids.getSource().forEachFeatureInExtent(extent, function (feature) {
               if (visibleSeverities.indexOf(parseInt(feature.get('severity'))) > -1 ) { 
                 featuresInViewPort.push({
-                  'id' : feature.getId(),
-                  'description' : feature.get('description'),
-                  'layer' : 'floodCentroids'
+                  'id': feature.getId(),
+                  'description': feature.get('description'),
+                  'layer': 'floodCentroids'
                 })
               }
             })
@@ -235,7 +234,7 @@
           }
           canvas.innerHTML = window.nunjucks.render('canvas-live.html', {
             features: featuresInViewPort.length <= 20 ? featuresInViewPort : [],
-            numFeatures : featuresInViewPort.length
+            numFeatures: featuresInViewPort.length
           })
         } else {
           onError()
@@ -248,7 +247,7 @@
     function setFloodsVisibility (severity, visible) {
       // flood centroids
       floodCentroids.getSource().forEachFeature(function (feature) {
-        if (feature.get('severity') == severity) {
+        if (feature.get('severity') === severity) {
           feature.setStyle(visible ? null : new ol.style.Style({}))
         }
       })

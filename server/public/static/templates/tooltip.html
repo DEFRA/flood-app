@@ -1,44 +1,5 @@
-{% if type == 'station' %}
-  {# Icon symbol #}
-  {% set closedOrSuspended = false %}
-  {% set symbol = 'normal' %}
-  {% if props.atrisk %}
-    {% set symbol = 'above' %}
-  {% elif props.is_ffoi_at_risk %}
-    {% set symbol = 'forecastAbove' %}
-  {% elif props.status === 'Closed' or props.status === 'Suspended' %}
-    {% set symbol = 'disabled' %}
-    {% set closedOrSuspended = true%}
-  {% endif %}
 
-  <p class="govuk-!-margin-bottom-2">
-    <span class="govuk-body-m govuk-!-font-weight-bold">{{props.river}}</span><br/>
-    {% if closedOrSuspended %}
-    <span class="govuk-body-s">{{props.name}}</span>
-    {% else %}
-    <a class="govuk-body-s" href="/station/{{stationId}}">{{props.name}}</a>
-    {% endif %}
-  </p>
-
-  {% if closedOrSuspended %}
-    <p class="govuk-body-s">Closed or temporarily out of service</p>
-  {% else %}
-    <p class="govuk-body-s">
-      {% if props.value %}
-        <strong class="govuk-font-weight-bold">{{props.value.toFixed(2)}}m</strong> latest recorded level<br>
-      {% endif %}
-
-      {% if props.is_ffoi and props.ffoi_max %}
-        <strong class="govuk-font-weight-bold">{{props.ffoi_max.toFixed(2)}}m</strong> forecast highest level<br>
-      {% endif %}
-      
-      {% if props.percentile_5 %}
-        <strong class="govuk-font-weight-bold">{{props.percentile_5.toFixed(2)}}m</strong> top of typical range
-      {% endif %}
-    </p>
-  {% endif %}
-  <span class="ol-overlay__symbol ol-overlay__symbol--{{symbol}}"></span>
-{% elif type == 'warnings' %}
+{% if type == 'warnings' %}
   <p>
     <span class="govuk-body-m govuk-!-font-weight-bold">{{props.severity_description}}</span><br/>
     <a class="govuk-body-s" href="/target-area/{{props.fwa_code}}">{{props.description}}</a>

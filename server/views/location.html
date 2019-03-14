@@ -74,7 +74,7 @@
       </p>
     {% endif %}
     {% if model.hasAllFloodsList %}
-      <details class="defra-flood-details govuk-!-margin-bottom-4">
+      <details class="defra-flood-details govuk-!-margin-bottom-6">
         <summary class="govuk-details__summary">
           <span class="govuk-details__summary-text">View all flood warnings and alerts</span>
         </summary>
@@ -96,10 +96,6 @@
         </div>
       </details>
     {% endif %}
-
-    <div class="govuk-inset-text govuk-!-margin-top-4">
-      <p>If you live in this area you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
-    </div>
 
     {% if not model.hasActiveFloods %}
       <details class="govuk-details govuk-!-margin-top-6">
@@ -124,13 +120,13 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <div class="app-map govuk-!-margin-bottom-7">
+    <div class="app-map govuk-!-margin-bottom-2">
       <div class="app-map__container">
         <figure class="map" id="map-live">
           <div class="map__container">
             <div class="map__container-inner"></div>
           </div>
-          <figcaption class="govuk-visually-hidden">Flood warnings and river and sea levels</figcaption>
+          <figcaption class="govuk-visually-hidden">Map showing flood warnings; river and sea levels and rainfall measurements</figcaption>
         </figure>
       </div>
     </div>
@@ -140,6 +136,9 @@
 {% if model.rivers %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-inset-text">
+      <p>If you live in this area you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
+    </div>
     <h2 class="govuk-heading-m">Water levels that impact this area</h2>
     <p class="govuk-body">River, sea and groundwater levels are regularly checked by a network of monitoring stations. These levels can help you understand your flood risk now and in the next few days.</p>
     <details class="govuk-details">
