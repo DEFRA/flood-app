@@ -7,7 +7,7 @@
   {% set symbol = 'forecastAbove' %}
 {% elif props.status === 'Closed' or props.status === 'Suspended' %}
   {% set symbol = 'disabled' %}
-  {% set closedOrSuspended = true%}
+  {% set closedOrSuspended = true %}
 {% endif %}
 
 {% if closedOrSuspended %}
@@ -27,7 +27,7 @@
     </p>
     {% if props.value %}
     <strong class="overlay__navigation-headline overlay__navigation-headline--{{symbol}}">
-      {{props.value.toFixed(2)}}m at 10:30am, 28 Jan
+      {{props.value.toFixed(2)}}m at {{ props.value_date }}
     </strong>
     {% endif %}
     {% if props.percentile_5 and props.percentile_95 %}
@@ -37,7 +37,7 @@
     {% endif %}
     {% if props.is_ffoi_at_risk and props.ffoi_max %}
     <p class="govuk-body-s govuk-!-margin-bottom-0">
-        Forecast high level {{props.ffoi_max.toFixed(2)}}m
+      <strong>{{props.ffoi_max.toFixed(2)}}m</strong> forecast at {{ props.ffoi_date }}
     </p>
     {% endif %}
   </div>
