@@ -312,6 +312,15 @@
       }
     }
 
+    // Pan map
+    function panMap (feature) {
+        var bounds = map.getView().calculateExtent(map.getSize())
+        bounds = ol.extent.buffer(bounds, -1000)
+        if (!ol.extent.containsExtent(bounds, feature.getGeometry().getExtent())) {
+            map.getView().setCenter(feature.getGeometry().getCoordinates())
+        }
+    }
+
     //
     // Events
     //
@@ -497,6 +506,21 @@
         }
       }
       updateKeyAndCanvas()
+    })
+
+    // Overlay river level navigation button click
+    document.querySelector('.ol-overlaycontainer-stopevent').addEventListener('click', async function (e) {
+      if (e.target.classList.contains('overlay__navigation-button')) {
+        var nextStationId = e.target.getAttribute('data-id')
+        var feature = stations.getSource().getFeatureById(nextStationId)
+        container.selectedFeature.set('isSelected', false)
+        setSelectedPointFeatureSource()
+        feature.set('isSelected', true)
+        container.selectedFeature = feature
+        panMap(feature)
+        await ensureFeatureTooltipHtml(feature)
+        container.showOverlay(feature)
+      }
     })
 
     // Keyboard access to features

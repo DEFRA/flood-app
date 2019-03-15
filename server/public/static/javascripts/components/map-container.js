@@ -272,15 +272,6 @@
       el.classList.add('map--overlay-open')
       // Add feature html
       this.overlayInnerElement.innerHTML = feature.get('html')
-      // Set icon resolution class
-      var icon = this.overlayInnerElement.querySelector('.ol-overlay__symbol')
-      if (icon) {
-        if (map.getView().getResolution() <= this.options.minIconResolution) {
-          icon.classList.add('ol-overlay__symbol--zoomin')
-        } else {
-          icon.classList.remove('ol-overlay__symbol--zoomin')
-        }
-      }
 
       // Create overlay object
       this.overlay = new ol.Overlay({
