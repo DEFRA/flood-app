@@ -38,14 +38,27 @@
     // Load tooltip
     async function ensureFeatureTooltipHtml (feature) {
       var id = feature.getId()
+      let trimId = id.replace('stations.', '')
       var props = feature.getProperties()
       var html
-
       if (!props.html) {
         if (id.startsWith('stations')) {
+          // Get upstream - downstream data
+          const upDownData = async () => {
+            const upDownUrl = '/stations-upstream-downstream/' + trimId + '/' + props.direction
+            try {
+              const response = await fetch(upDownUrl)
+              const upDownJson = await response.json()
+              return upDownJson
+            } catch (err) {
+              return { error: 'Unable to display latest upstream / downstream readings' }
+            }
+          }
+
           html = window.nunjucks.render('tooltip-station.html', {
             type: 'station',
             props: props,
+            upDown: await upDownData(),
             stationId: id.substr(9)
           })
         } else if (id.startsWith('flood_warning_alert')) {
@@ -219,7 +232,7 @@
             })
           } else {
             floodCentroids.getSource().forEachFeatureInExtent(extent, function (feature) {
-              if (visibleSeverities.indexOf(parseInt(feature.get('severity'))) > -1 ) { 
+              if (visibleSeverities.indexOf(parseInt(feature.get('severity'))) > -1) {
                 featuresInViewPort.push({
                   'id': feature.getId(),
                   'description': feature.get('description'),
@@ -314,11 +327,11 @@
 
     // Pan map
     function panMap (feature) {
-        var bounds = map.getView().calculateExtent(map.getSize())
-        bounds = ol.extent.buffer(bounds, -1000)
-        if (!ol.extent.containsExtent(bounds, feature.getGeometry().getExtent())) {
-            map.getView().setCenter(feature.getGeometry().getCoordinates())
-        }
+      var bounds = map.getView().calculateExtent(map.getSize())
+      bounds = ol.extent.buffer(bounds, -1000)
+      if (!ol.extent.containsExtent(bounds, feature.getGeometry().getExtent())) {
+        map.getView().setCenter(feature.getGeometry().getCoordinates())
+      }
     }
 
     //
@@ -395,7 +408,7 @@
         // *** Point feature
         e.hit = true
         // Change active element if exists
-        document.querySelectorAll('.map-feature-list button').forEach(function(button) {
+        document.querySelectorAll('.map-feature-list button').forEach(function (button) {
           if (button.getAttribute('data-id') === feature.getId()) {
             button.focus()
           }

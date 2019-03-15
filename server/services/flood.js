@@ -59,6 +59,12 @@ module.exports = {
     return util.getJson(url)
   },
 
+  async getStationsUpstreamDownstream (id, direction) {
+    const url = `${serviceUrl}/stations-upstream-downstream/${id}/${direction}`
+    let result = await util.getJson(url)
+    return result
+  },
+
   async getStationsWithinRadius (lng, lat, radiusM = 10000) {
     const url = `${serviceUrl}/stations-within/${lng}/${lat}/${radiusM}`
     return util.getJson(url)
