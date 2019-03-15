@@ -27,7 +27,7 @@
     </p>
     {% if props.value %}
     <strong class="overlay__navigation-headline overlay__navigation-headline--{{symbol}}">
-      {{props.value.toFixed(2)}}m at {{ props.value_date }}
+      {{props.value.toFixed(2)}}m at <time datetime="{{ props.value_date }}">10:30am today</time>
     </strong>
     {% endif %}
     {% if props.percentile_5 and props.percentile_95 %}
@@ -37,7 +37,7 @@
     {% endif %}
     {% if props.is_ffoi_at_risk and props.ffoi_max %}
     <p class="govuk-body-s govuk-!-margin-bottom-0">
-      <strong>{{props.ffoi_max.toFixed(2)}}m</strong> forecast at {{ props.ffoi_date }}
+      <strong>{{props.ffoi_max.toFixed(2)}}m</strong> forecast at <time datetime="{{ props.ffoi_date }}">6:15am tomorrow</time>
     </p>
     {% endif %}
   </div>
