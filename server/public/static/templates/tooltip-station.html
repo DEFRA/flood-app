@@ -20,8 +20,8 @@
 {% else %}
 <div class="overlay__navigation">
   {% for up in upDown.upDown.upstream %}
-  <button class="overlay__navigation-button overlay__navigation-button--upstream-tributary" data-id="{{up.id}}">{{up.river}}</button>
-  {% endfor%}
+  <button class="overlay__navigation-button overlay__navigation-button--upstream{% if up.isTrib %}-tributary{% endif %}" data-id="{{up.id}}">{{up.river}}</button>
+  {% endfor %}
 
   <div class="overlay__navigation-copy overlay__navigation-copy">
     <p class="govuk-body-s govuk-!-margin-bottom-1">
