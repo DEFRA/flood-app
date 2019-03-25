@@ -6,7 +6,11 @@ var stations = []
 
 // Process stations
 dataStations.features.forEach((feature) => {
-  var river = dataRivers.find(x => x.stationIds.includes(feature.id))
+  // Find the station in its own river
+  var river = dataRivers.find(x => JSON.stringify(x.stations).includes({
+    "id": feature.id,
+    "type": ""
+  }))
   stations.push({
     'id': feature.id,
     'name': feature.properties.name,
