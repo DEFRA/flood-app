@@ -7,10 +7,10 @@ var stations = []
 // Process stations
 dataStations.features.forEach((feature) => {
   // Find the station in its own river
-  var river = dataRivers.find(x => JSON.stringify(x.stations).includes({
+  var river = dataRivers.find(x => JSON.stringify(x.stations).includes(JSON.stringify({
     "id": feature.id,
     "type": ""
-  }))
+  })))
   stations.push({
     'id': feature.id,
     'name': feature.properties.name,
@@ -21,98 +21,81 @@ dataStations.features.forEach((feature) => {
   })
 })
 
-// Add upstream/downstream and id's to stations within the same rivers
+// Add all upstream and downstream id's to stations within the same rivers
 dataRivers.forEach((river) => {
-  var stationIds = river.stationIds
-  stationIds.forEach((stationId) => {
-    var station = stations.find(x => x.id === stationId)
-    // Add upstream/downstream station id's but exclude tributary river id's
-    if (station) {
-      var position = stationIds.indexOf(stationId)
-      // Add first upstream station (none river)
+  var stationRefs = river.stations
+  stationRefs.forEach((stationRef) => {
+    var station = stations.find(x => x.id === stationRef.id)
+    // Check for valid station on this river
+    if (station && stationRef.type !== 'T') {
+      // Get position in river
+      var position = stationRefs.indexOf(stationRef)
+      // Add all upstream stations
       if (position > 0) {
+        var upstreamStations = []
         for (var i = (position - 1); i >= 0; i--) {
-          var upstreamStation = stations.find(x => x.id === stationIds[i])
-          if (upstreamStation) {
-            station.upstream.push({
-              'id': upstreamStation.id,
-              'river': upstreamStation.river,
-              'isSameRiver': upstreamStation.riverId === river.id || false
-            })
+          var nextUpstream = stations.find(x => x.id === stationRefs[i].id)
+          if (nextUpstream) {
+            upstreamStations.push({
+              'id': nextUpstream.id,
+              'river': nextUpstream.river,
+              'isTrib': stationRefs[i].type === 'T' ? true : false
+            }) 
+          } else {
+            console.log('Error: Upstream ' + stationRefs[i].id + ' missing.')
+          }
+          // Break when we have the next station on the same river
+          if (stationRefs[i].type === '') {
             break
           }
         }
+        // Reverse array and set upstream collection
+        station.upstream = upstreamStations.reverse()
       }
-      // Add first downstream station (none river)
-      if (position < stationIds.length - 1) {
-        for (i = position; i < stationIds.length - 1; i++) {
-          var downstreamStation = stations.find(x => x.id === stationIds[i + 1])
-          if (downstreamStation) {
-            station.downstream.push({
-              'id': downstreamStation.id,
-              'river': downstreamStation.river,
-              'isSameRiver': downstreamStation.riverId === river.id || false
-            })
-            break
+      // Add all downstream stations
+      if (position < (stationRefs.length - 1)) {
+        var downstreamStations = []
+        for (i = (position + 1); i < stationRefs.length; i++) {
+          var nextDownstream = stations.find(x => x.id === stationRefs[i].id)
+          if (nextDownstream) {
+            if (stationRefs[i].type !== 'T') {
+              downstreamStations.push({
+                'id': nextDownstream.id,
+                'river': nextDownstream.river
+              })
+              // Break when we have the next station that is not a tributary
+              break
+            }
+          } else {
+            console.log('Error: Downstream ' + stationRefs[i].id + ' missing.')
           }
         }
+        // Array already n correct order
+        station.downstream = downstreamStations
       }
     }
   })
 })
 
-// Add upstream/downstream tributary/main river id's to stations in different rivers
+// Add larger river id's at the bottom of tributary rivers
 dataRivers.forEach((river) => {
-  var stationIds = river.stationIds
-  var tributaryStartPosition = -1
-  stationIds.forEach((stationId, index) => {
-    // Joins a main river. Get station before river id and update its downstream array
-    if (index === stationIds.length - 1 && !stationId.includes('stations.')) {
-      var stationIdtoUpdate = stationIds[stationIds.length - 2]
-      var tributaryRiverId = river.id
-      var mainRiverId = stationId
-      // Get the main river
-      var mainRiver = dataRivers.find(x => x.id === mainRiverId)
-      tributaryStartPosition = mainRiver.stationIds.indexOf(tributaryRiverId)
-      // Get first downstream station after tributary start
-      for (var i = tributaryStartPosition; i < mainRiver.stationIds.length - 1; i++) {
-        if (mainRiver.stationIds[i].includes('stations.')) {
-          var entryStationId = mainRiver.stationIds[i]
-          // We have entry point in the main river
-          var tributaryStation = stations.find(x => x.id === stationIdtoUpdate)
-          // Update river station
-          tributaryStation.downstream.push({
-            'id': entryStationId,
-            'river': mainRiver.name,
-            'isSameRiver': true
+  var stationRefs = river.stations
+  // Iterate over tributaries
+  stationRefs.forEach((stationRef) => {
+    if (stationRef.type === 'T') {
+      var position = stationRefs.indexOf(stationRef)
+      var stationToUpdate = stations.find(x => x.id === stationRef.id)
+      for (i = (position + 1); i < stationRefs.length; i++) {
+        if (stationRefs[i].type !== 'T') {
+          var nextDownstream = stations.find(x => x.id === stationRefs[i].id)
+          stationToUpdate.downstream.push({
+            'id': nextDownstream.id,
+            'river': nextDownstream.river
           })
+          // Break when we have the next station that is not a tributary
           break
         }
       }
-    // Start of a tributary. Get previous station and update its upstream array
-    } else if (stationId.includes('river')) {
-      // Get tributary river last station id
-      var tributaryRiver = dataRivers.find(x => x.id === stationId)
-      var tributaryLastStationId = tributaryRiver.stationIds[tributaryRiver.stationIds.length - 2]
-      // Get the tributary start position in the main river
-      tributaryStartPosition = index
-      // Get first downstream station in main river
-      var downstreamStationId = ''
-      for (i = tributaryStartPosition; i < stationIds.length - 1; i++) {
-        var downstreamStation = stations.find(x => x.id === stationIds[i + 1])
-        if (downstreamStation) {
-          downstreamStationId = stationIds[i + 1]
-          break
-        }
-      }
-      // Add this id to tributary rivers last station
-      var mainStation = stations.find(x => x.id === downstreamStationId)
-      // Update downstream station with new upstream id
-      mainStation.upstream.push({
-        'id': tributaryLastStationId,
-        'river': tributaryRiver.name,
-        'isSameRiver': true
-      })
     }
   })
 })
