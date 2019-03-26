@@ -23,6 +23,20 @@
       for (var i = 0; i < items.length; i++) {
         callback.call(items, items[i], i)
       }
+    },
+    addOrUpdateParameter: function (uri, paramKey, paramVal) {
+      var re = new RegExp('([?&])' + paramKey + '=[^&#]*', 'i')
+      if (re.test(uri)) {
+        uri = uri.replace(re, '$1' + paramKey + '=' + paramVal)
+      } else {
+        var separator = /\?/.test(uri) ? '&' : '?'
+        uri = uri + separator + paramKey + '=' + paramVal
+      }
+      return uri
+    },
+    getParameterByName: function (name) {
+      var v = window.location.search.match(new RegExp('(?:[\?\&]' + name + '=)([^&]+)'))
+      return v ? v[1] : null
     }
   }
 

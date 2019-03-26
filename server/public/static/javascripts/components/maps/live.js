@@ -7,6 +7,8 @@
 (function (window, flood) {
   var ol = window.ol
   var maps = flood.maps
+  var addOrUpdateParameter = flood.utils.addOrUpdateParameter
+  var getParameterByName = flood.utils.getParameterByName
   var forEach = flood.utils.forEach
   var MapContainer = maps.MapContainer
 
@@ -127,6 +129,44 @@
 
     // Handle key interactions
     var keyForm = container.keyElement.querySelector('form')
+
+    // Set initial map centre and zoom from querystring
+    if (getParameterByName('cz')) {
+      var centreZoom = getParameterByName('cz').split(',')
+      map.getView().setCenter([parseFloat(centreZoom[0]), parseFloat(centreZoom[1])])
+      map.getView().setZoom(parseFloat(centreZoom[2]))
+    }
+
+    // Set initial layers views from querystring
+    if (getParameterByName('l')) {
+      var layers = getParameterByName('l').split(',')
+      if (layers.includes('s')) {
+        keyForm.querySelector('#stations').checked = true
+      }
+      if (layers.includes('r')) {
+        keyForm.querySelector('#rain').checked = true
+      }
+    }
+
+    // Update URL centre and zoom parameter
+    function updateUrlCentreZoom () {
+      var cz = map.getView().getCenter()[0] + ',' + map.getView().getCenter()[1] + ',' + map.getView().getZoom()
+      var state = { 'cz': cz }
+      var title = document.title
+      var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'cz', cz)
+      window.history.replaceState(state, title, url)
+    }
+
+    // Update URL layers parameter
+    function updateUrlLayers () {
+      var s = keyForm.querySelector('#stations').checked ? 's' : ''
+      var r = keyForm.querySelector('#rain').checked ? 'r' : ''
+      var l = [s, r].filter(Boolean).join(',')
+      var state = { 'l': l }
+      var title = document.title
+      var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'l', l)
+      window.history.replaceState(state, title, url)
+    }
 
     // Update Key and Canvas depending on visible features in extent
     function updateKeyAndCanvas () {
@@ -388,6 +428,7 @@
         })
       }
 
+      updateUrlCentreZoom()
       updateKeyAndCanvas()
     })
 
@@ -518,6 +559,7 @@
           break
         }
       }
+      updateUrlLayers()
       updateKeyAndCanvas()
     })
 

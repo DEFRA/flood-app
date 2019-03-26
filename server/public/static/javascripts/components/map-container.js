@@ -10,25 +10,8 @@
 (function (window, flood) {
   var ol = window.ol
   var maps = flood.maps
-
-  // Application utilities - perhaps should be somewhere else
-
-  function getParameterByName (name) {
-    var v = window.location.search.match(new RegExp('(?:[\?\&]' + name + '=)([^&]+)'))
-    return v ? v[1] : null
-  }
-
-  // Add or update a querystring parameter
-  function addOrUpdateParameter (uri, paramKey, paramVal, fragment = '') {
-    var re = new RegExp('([?&])' + paramKey + '=[^&#]*', 'i')
-    if (re.test(uri)) {
-      uri = uri.replace(re, '$1' + paramKey + '=' + paramVal)
-    } else {
-      var separator = /\?/.test(uri) ? '&' : '?'
-      uri = uri + separator + paramKey + '=' + paramVal
-    }
-    return uri + fragment
-  }
+  var addOrUpdateParameter = flood.utils.addOrUpdateParameter
+  var getParameterByName = flood.utils.getParameterByName
 
   function MapContainer (el, options) {
     var defaults = {
@@ -55,9 +38,9 @@
       e.preventDefault()
       this.setFullScreen()
       // this.fullScreenButton.focus()
-      var state = { 'view': el.id }
+      var state = { 'v': el.id }
       var title = document.title
-      var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'view', el.id)
+      var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'v', el.id)
       window.history.pushState(state, title, url)
     }.bind(this))
     this.showMapButton.addEventListener('keyup', function (e) {
@@ -116,9 +99,9 @@
         // Set keyboard focus to the next link
       } else {
         this.setFullScreen()
-        var state = { 'view': el.id }
+        var state = { 'v': el.id }
         var title = document.title
-        var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'view', el.id)
+        var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'v', el.id)
         window.history.pushState(state, title, url)
         e.target.classList.add('ol-full-screen-back')
       }
@@ -303,13 +286,13 @@
     }
 
     // Set fullscreen state
-    if (getParameterByName('view') === el.id) {
+    if (getParameterByName('v') === el.id) {
       this.setFullScreen()
     }
 
     // Toggle fullscreen view on browser history change
     window.addEventListener('popstate', function (e) { 
-      if (e && e.state && getParameterByName('view') === el.id) {
+      if (e && e.state && getParameterByName('v') === el.id) {
         this.setFullScreen()
       } else {
         this.removeFullScreen()
@@ -317,7 +300,7 @@
     }.bind(this))
 
     // Constrain keyboard focus
-    this.element.addEventListener('keydown', function(e) {
+    this.element.addEventListener('keydown', function (e) {
       if (this.element.contains(document.activeElement)) {
         // Tab key
         if (e.keyCode === 9) {
@@ -326,7 +309,7 @@
             var focusableElements = this.element.querySelectorAll('button:not(:disabled), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
             // Filter to remove any elements that are not currently visible
             var validElements = []
-            for (i = 0; i < focusableElements.length; i++) {
+            for (var i = 0; i < focusableElements.length; i++) {
               if (focusableElements[i].offsetParent !== null) {
                 validElements.push(focusableElements[i])
               }
@@ -335,7 +318,7 @@
             var firstFocusableElement = validElements[0]
             var lastFocusableElement = validElements[validElements.length - 1]
             // Shift tab (backwards)
-            if (e.shiftKey) {            
+            if (e.shiftKey) {
               if (document.activeElement === firstFocusableElement) {
                 e.preventDefault()
                 lastFocusableElement.focus()
