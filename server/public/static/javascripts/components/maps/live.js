@@ -150,7 +150,7 @@
 
     // Update URL centre and zoom parameter
     function updateUrlCentreZoom () {
-      var cz = map.getView().getCenter()[0] + ',' + map.getView().getCenter()[1] + ',' + map.getView().getZoom()
+      var cz = map.getView().getCenter()[0] + ',' + map.getView().getCenter()[1] + ',' + map.getView().getZoom().toFixed(0)
       var state = { 'cz': cz }
       var title = document.title
       var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'cz', cz)
