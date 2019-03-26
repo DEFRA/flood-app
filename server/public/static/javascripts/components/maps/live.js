@@ -37,11 +37,50 @@
     var floodCentroids = maps.layers.floodCentroids()
     var selectedPointFeature = maps.layers.selectedPointFeature()
 
+    // Format date
+    function toolTipDate (dateTime) {
+      var hours = dateTime.getHours() > 12 ? dateTime.getHours() - 12 : dateTime.getHours()
+      var minutes = (dateTime.getMinutes() < 10 ? '0' : '') + dateTime.getMinutes()
+      var amPm = (dateTime.getHours() > 12) ? 'pm' : 'am'
+      var day = dateTime.getDate()
+      var month = parseInt(dateTime.getMonth()) + 1
+      var year = dateTime.getFullYear().toString().substr(-2)
+      const isToday = (dateTime) => {
+        const today = new Date()
+        return dateTime.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)
+      }
+      const isTomorrow = (dateTime) => {
+        const tomorrow = new Date() + 1
+        return dateTime.setHours(0, 0, 0, 0) === tomorrow.setHours(0, 0, 0, 0)
+      }
+      const isYesterday = (dateTime) => {
+        const yesterday = new Date() - 1
+        return dateTime.setHours(0, 0, 0, 0) === yesterday.setHours(0, 0, 0, 0)
+      }
+      var date = hours + ':' + minutes + amPm
+      if (isToday) {
+        date += ' today'
+      } else if (isTomorrow) {
+        date += ' tomorrow'
+      } else if (isYesterday) {
+        date += ' yesterday'
+      } else {
+        date += ' on ' + day + '/' + month + '/' + year
+      }
+      return date
+    }
+
     // Load tooltip
     async function ensureFeatureTooltipHtml (feature) {
       var id = feature.getId()
       let trimId = id.replace('stations.', '')
       var props = feature.getProperties()
+      if (props.value_date) {
+        props.value_date = toolTipDate(new Date(props.value_date))
+      }
+      if (props.ffoi_date) {
+        props.ffoi_date = toolTipDate(new Date(props.value_date))
+      }
       var html
       if (!props.html) {
         if (id.startsWith('stations')) {
@@ -56,7 +95,6 @@
               return { error: 'Unable to display latest upstream / downstream readings' }
             }
           }
-
           html = window.nunjucks.render('tooltip-station.html', {
             type: 'station',
             props: props,
