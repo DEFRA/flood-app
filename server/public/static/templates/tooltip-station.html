@@ -31,6 +31,10 @@
     <strong class="overlay__navigation-headline overlay__navigation-headline--{{symbol}}">
       {{props.value.toFixed(2)}}m at <time datetime="{{ props.value_date }}">10:30am today</time>
     </strong>
+    {% else %}
+    <strong class="overlay__navigation-headline overlay__navigation-headline--unreliable">
+      Latest measurement unreliable
+    </strong>
     {% endif %}
     {% if props.percentile_5 and props.percentile_95 %}
     <p class="govuk-body-s govuk-!-margin-bottom-0">

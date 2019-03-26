@@ -696,6 +696,9 @@
 .overlay__navigation-headline--disabled:before {
   background-position:-302px -3px;
 }
+.overlay__navigation-headline--unreliable:before {
+  background-position:-352px -3px;
+}
 
 //
 // Map search
