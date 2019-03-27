@@ -88,6 +88,7 @@
     })
 
     // Fullscreen button
+    var historyAdvanced = false
     this.fullScreenButton = document.createElement('button')
     this.fullScreenButton.className = 'ol-full-screen'
     this.fullScreenButton.title = 'Make the map fill the screen'
@@ -95,14 +96,25 @@
     this.fullScreenButton.addEventListener('click', function (e) {
       e.preventDefault()
       if (this.isFullScreen) {
-        window.history.back()
-        // Set keyboard focus to the next link
+        if (historyAdvanced) {
+          window.history.back()
+        } else {
+          this.removeFullScreen()
+          e.target.classList.remove('ol-full-screen-back')
+          var state = { 'v': '' }
+          var title = document.title
+          var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'v', '')
+          window.history.replaceState(state, title, url)
+          historyAdvanced = false
+        }
+        // Todo - set keyboard focus to the next link
       } else {
         this.setFullScreen()
         var state = { 'v': el.id }
         var title = document.title
         var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'v', el.id)
         window.history.pushState(state, title, url)
+        historyAdvanced = true
         e.target.classList.add('ol-full-screen-back')
       }
     }.bind(this))

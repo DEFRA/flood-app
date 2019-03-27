@@ -26,8 +26,13 @@
     },
     addOrUpdateParameter: function (uri, paramKey, paramVal) {
       var re = new RegExp('([?&])' + paramKey + '=[^&#]*', 'i')
-      if (re.test(uri)) {
+      // Delete parameter and value
+      if (paramVal === '') {
+        uri = uri.replace(re, '')
+      } else if (re.test(uri)) {
+      // Replace parameter value
         uri = uri.replace(re, '$1' + paramKey + '=' + paramVal)
+      // Add parameter and value
       } else {
         var separator = /\?/.test(uri) ? '&' : '?'
         uri = uri + separator + paramKey + '=' + paramVal
