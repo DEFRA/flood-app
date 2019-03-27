@@ -14,15 +14,25 @@
 
   function LiveMap (elementId, place, keyTemplate) {
     
+    var zoom = place ? 11 : 6
+    var center = ol.proj.transform(place
+      ? place.center
+      : maps.center, 'EPSG:4326', 'EPSG:3857')
+
+    // Replace center and zoom if exists in querystring
+    if (getParameterByName('cz')) {
+      var cz = getParameterByName('cz').split(',')
+      center = [parseFloat(cz[0]), parseFloat(cz[1])]
+      zoom = parseFloat(cz[2])
+    }
+
     // ol.View
     var view = new ol.View({
-      zoom: place ? 11 : 6,
+      zoom: zoom,
       minZoom: 6,
       maxZoom: 14,
       extent: maps.extent,
-      center: ol.proj.transform(place
-        ? place.center
-        : maps.center, 'EPSG:4326', 'EPSG:3857')
+      center: center
     })
 
     // ol.Layers
@@ -169,34 +179,19 @@
     // Handle key interactions
     var keyForm = container.keyElement.querySelector('form')
 
-    // Set initial layers views from querystring
-    if (getParameterByName('l')) {
-      var layers = getParameterByName('l').split(',')
-      if (layers.includes('s')) {
-        keyForm.querySelector('#stations').checked = true
-      }
-      if (layers.includes('r')) {
-        keyForm.querySelector('#rain').checked = true
-      }
-    }
-
     // Update URL centre and zoom parameter
-    function updateUrlCentreZoom () {
+    function updateUrl () {
+      // Centre and zoom
       var cz = map.getView().getCenter()[0] + ',' + map.getView().getCenter()[1] + ',' + map.getView().getZoom().toFixed(0)
-      var state = { 'cz': cz }
-      var title = document.title
       var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'cz', cz)
-      window.history.replaceState(state, title, url)
-    }
-
-    // Update URL layers parameter
-    function updateUrlLayers () {
+      // Layers
       var s = keyForm.querySelector('#stations').checked ? 's' : ''
       var r = keyForm.querySelector('#rain').checked ? 'r' : ''
       var l = [s, r].filter(Boolean).join(',')
-      var state = { 'l': l }
+      url = addOrUpdateParameter(url, 'l', l)
+      // Replace history entry
+      var state = { 'cz': cz, 'l': l }
       var title = document.title
-      var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'l', l)
       window.history.replaceState(state, title, url)
     }
 
@@ -354,6 +349,22 @@
       }
     }
 
+    // Set point feature visibility
+    function setPointVisibility () {
+      forEach(keyForm.querySelectorAll('.govuk-checkboxes__input'), function (input) {
+        switch (input.getAttribute('data-layer')) {
+          case 'stations': {                        
+            input.checked ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
+            break
+          }
+          case 'rain': {
+            input.checked ? rain.setStyle(maps.styles.rain) : rain.setStyle(new ol.style.Style({}))
+            break
+          }
+        }
+      })
+    }
+
     function setFloodsOpacity (opacity) {
       floodsSevere.setOpacity(opacity)
       floodsWarning.setOpacity(opacity)
@@ -406,6 +417,14 @@
       }
     }
 
+    // Set initial layers views from querystring
+    if (getParameterByName('l')) {
+      var layers = getParameterByName('l').split(',')
+      keyForm.querySelector('#stations').checked = layers.includes('s') ? true : false
+      keyForm.querySelector('#rain').checked = layers.includes('r') ? true : false
+
+    }
+
     //
     // Events
     //
@@ -415,18 +434,7 @@
       // Set floods visibility
       setFloodsVisibility(4, false)
       // Set point layer visibility based on key checked state
-      forEach(keyForm.querySelectorAll('.govuk-checkboxes__input'), function (input) {
-        switch (input.getAttribute('data-layer')) {
-          case 'stations': {
-            input.checked ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
-            break
-          }
-          case 'rain': {
-            input.checked ? rain.setStyle(maps.styles.rain) : rain.setStyle(new ol.style.Style({}))
-            break
-          }
-        }
-      })
+      setPointVisibility()
       // Toggle key section if features are in viewport
       updateKeyAndCanvas()
     })
@@ -460,7 +468,7 @@
         })
       }
 
-      updateUrlCentreZoom()
+      updateUrl()
       updateKeyAndCanvas()
     })
 
@@ -591,7 +599,7 @@
           break
         }
       }
-      updateUrlLayers()
+      updateUrl()
       updateKeyAndCanvas()
     })
 
@@ -633,12 +641,22 @@
       }
     })
 
-    // Set initial map centre and zoom from querystring
-    if (getParameterByName('cz')) {
-      var centreZoom = getParameterByName('cz').split(',')
-      map.getView().setCenter([parseFloat(centreZoom[0]), parseFloat(centreZoom[1])])
-      map.getView().setZoom(parseFloat(centreZoom[2]))
-    } else if (place && place.bbox) {
+    map.getLayers().forEach(function(layer) {
+      if (layer.getSource()) {
+        layer.getSource().on('change', function(e) {
+          if (this.getState() == 'ready') {
+            // Set feature visibility style
+            setPointVisibility()
+            // Toggle key section if features are in viewport
+            updateKeyAndCanvas()
+          }
+        })
+      }
+    })
+
+    // Set initial map centre and zoom from querystring  
+    /*
+    if (place && place.bbox && !getParameterByName('cz')) {
       // If we have a location, set the map extent
       var searchExtent = ol.proj.transformExtent(place.bbox, 'EPSG:4326', 'EPSG:3857')
       container.map.getView().fit(searchExtent, {
@@ -646,6 +664,7 @@
         size: container.map.getSize()
       })
     }
+    */
 
     this.map = map
     this.container = container
