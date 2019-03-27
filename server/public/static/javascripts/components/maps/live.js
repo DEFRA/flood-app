@@ -13,6 +13,7 @@
   var MapContainer = maps.MapContainer
 
   function LiveMap (elementId, place, keyTemplate) {
+    
     // ol.View
     var view = new ol.View({
       zoom: place ? 11 : 6,
@@ -167,13 +168,6 @@
 
     // Handle key interactions
     var keyForm = container.keyElement.querySelector('form')
-
-    // Set initial map centre and zoom from querystring
-    if (getParameterByName('cz')) {
-      var centreZoom = getParameterByName('cz').split(',')
-      map.getView().setCenter([parseFloat(centreZoom[0]), parseFloat(centreZoom[1])])
-      map.getView().setZoom(parseFloat(centreZoom[2]))
-    }
 
     // Set initial layers views from querystring
     if (getParameterByName('l')) {
@@ -639,10 +633,14 @@
       }
     })
 
-    // If we have a location, set the map extent
-    if (place && place.bbox) {
+    // Set initial map centre and zoom from querystring
+    if (getParameterByName('cz')) {
+      var centreZoom = getParameterByName('cz').split(',')
+      map.getView().setCenter([parseFloat(centreZoom[0]), parseFloat(centreZoom[1])])
+      map.getView().setZoom(parseFloat(centreZoom[2]))
+    } else if (place && place.bbox) {
+      // If we have a location, set the map extent
       var searchExtent = ol.proj.transformExtent(place.bbox, 'EPSG:4326', 'EPSG:3857')
-
       container.map.getView().fit(searchExtent, {
         maxZoom: 16,
         size: container.map.getSize()
