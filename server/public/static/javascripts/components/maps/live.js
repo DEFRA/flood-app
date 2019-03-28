@@ -422,7 +422,6 @@
       var layers = getParameterByName('l').split(',')
       keyForm.querySelector('#stations').checked = layers.includes('s') ? true : false
       keyForm.querySelector('#rain').checked = layers.includes('r') ? true : false
-
     }
 
     //
@@ -641,6 +640,7 @@
       }
     })
 
+    // Layer loaded event needed to address render complete event not always firing
     map.getLayers().forEach(function(layer) {
       if (layer.getSource()) {
         layer.getSource().on('change', function(e) {
