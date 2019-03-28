@@ -30,8 +30,10 @@ $govuk-global-styles: true;
 // Custom components that aren't in Frontend or prorotpye kit
 @import "components/accordion"; // Dan Leech
 @import "components/map"; // Dan Leech
+@import "components/chart"; // Dan Leech
 @import "components/tabs"; // Dan Leech (modifier link display to improve affordance issues)
 @import "components/banners"; // Dan Leech (Warnings and alert banners)
+@import "components/flood-details"; // Dan Leech (Flood warning details)
 @import "components/warning-overview"; // Dan Leech (Flood warning overview)
 @import "components/buttons"; // Dan Leech (Button overides)
 @import "components/search-link"; // Dan Leech (Flood warning overview)

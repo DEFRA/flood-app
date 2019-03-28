@@ -25,7 +25,7 @@ module.exports = [{
         location: joi.string().required()
       },
       failAction: (request, h, err) => {
-        return h.view('home', { errorMessage: 'Please enter a valid location' }).takeover()
+        return h.view('home', { errorMessage: 'Enter a valid location' }).takeover()
       }
     }
   }

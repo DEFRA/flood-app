@@ -4,17 +4,38 @@
 // It also controls the zoom, full screen controls, responsiveness etc.
 // No implementation details specific to a map should be in here.
 // This is a generic container that could be reused for LTFRI maps, FMfP etc.
-// To include a key, include an element with `.map-key__container` in the main inner element.
+// ***To include a key, include an element with `.map-key__container` in the main inner element.
+// To include a key pass its template name as an option
 
 (function (window, flood) {
   var ol = window.ol
   var maps = flood.maps
 
+  // Application utilities - perhaps should be somewhere else
+
+  function getParameterByName (name) {
+    var v = window.location.search.match(new RegExp('(?:[\?\&]' + name + '=)([^&]+)'))
+    return v ? v[1] : null
+  }
+
+  // Add or update a querystring parameter
+  function addOrUpdateParameter (uri, paramKey, paramVal, fragment = '') {
+    var re = new RegExp('([?&])' + paramKey + '=[^&#]*', 'i')
+    if (re.test(uri)) {
+      uri = uri.replace(re, '$1' + paramKey + '=' + paramVal)
+    } else {
+      var separator = /\?/.test(uri) ? '&' : '?'
+      uri = uri + separator + paramKey + '=' + paramVal
+    }
+    return uri + fragment
+  }
+
   function MapContainer (el, options) {
     var defaults = {
       buttonText: 'Show map',
       progressive: false,
-      minIconResolution: 200
+      minIconResolution: 200,
+      keyTemplate: ''
     }
 
     this.options = Object.assign({}, defaults, options)
@@ -22,6 +43,7 @@
     //
     // Map to DOM container elements
     //
+
     this.element = el.firstElementChild
     this.mapContainerInnerElement = el.firstElementChild.firstElementChild
 
@@ -31,17 +53,26 @@
     this.showMapButton.className = 'govuk-button govuk-button--secondary govuk-button--show-map'
     this.showMapButton.addEventListener('click', function (e) {
       e.preventDefault()
+      /*
       this.setFullScreen()
       this.fullScreenButton.classList.add('ol-full-screen-back')
+      */
+      this.setFullScreen()
+      var state = { 'view': el.id }
+      var title = document.title
+      var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'view', el.id)
+      window.history.pushState(state, title, url)
     }.bind(this))
     el.parentNode.parentNode.insertBefore(this.showMapButton, el.parentNode)
 
     var hasKey = false
-    var keyEl = this.mapContainerInnerElement.querySelector('.map-key__container')
-    if (keyEl) {
+    // Experimental adding key via client side template
+
+    if (this.options.keyTemplate !== '') {
+      var keyHtml = window.nunjucks.render(this.options.keyTemplate)
       hasKey = true
       this.keyElement = document.createElement('div')
-      this.keyElement.appendChild(keyEl)
+      this.keyElement.innerHTML = keyHtml
       this.keyElement.className = 'map-key'
 
       // Key toggle button
@@ -79,10 +110,22 @@
     this.fullScreenButton.addEventListener('click', function (e) {
       e.preventDefault()
       // Fullscreen view
+      /*
       if (this.isFullScreen) {
         this.removeFullScreen()
       } else {
         this.setFullScreen()
+      }
+      */
+      if (this.isFullScreen) {
+        window.history.back()
+      } else {
+        this.setFullScreen()
+        var state = { 'view': el.id }
+        var title = document.title
+        var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'view', el.id)
+        window.history.pushState(state, title, url)
+        e.target.classList.add('ol-full-screen-back')
       }
     }.bind(this))
 
@@ -90,6 +133,7 @@
 
     // Add key
     if (hasKey) {
+      el.classList.add('map--has-key')
       this.mapContainerInnerElement.appendChild(this.keyElement)
       this.keyElement.insertBefore(this.keyToggleElement, this.keyElement.firstChild)
     }
@@ -116,15 +160,24 @@
       target: this.mapContainerInnerElement,
       controls: controls,
       layers: layers,
-      view: view
+      view: view,
+      interactions: ol.interaction.defaults({
+        mouseWheelZoom: false
+      })
     })
+
+    // Add mouse wheel zoom interaction
+    var mouseWheelZoom = new ol.interaction.MouseWheelZoom()
+    map.addInteraction(mouseWheelZoom)
 
     this.map = map
 
     // Set fullscreen before map is rendered
+    /*
     if (this.isFullScreen) {
       this.setFullScreen()
     }
+    */
 
     // Open key
     if (this.isKeyOpen) {
@@ -137,7 +190,6 @@
       this.progressiveButton.innerText = this.options.buttonText
       this.progressiveButton.className = 'govuk-button govuk-button--progressive'
       this.progressiveButton.setAttribute('aria-pressed', false)
-      var activeMap = this.map
       this.progressiveButton.addEventListener('click', function (e) {
         e.preventDefault()
         if (this.getAttribute('aria-pressed') === 'true') {
@@ -148,7 +200,7 @@
           el.parentNode.setAttribute('aria-expanded', true)
         }
         this.focus()
-        activeMap.updateSize()
+        this.updateSize()
       })
       el.parentNode.parentNode.insertBefore(this.progressiveButton, el.parentNode)
       // Tablet upwards only
@@ -163,25 +215,32 @@
 
     // Close key or overlay if map is clicked
     map.on('click', function (e) {
+      // Re-enable mouse wheel scroll
+      // mouseWheelZoom.setActive(true)
+
       // Hide overlay if exists
       this.hideOverlay()
 
       // Set a short timeout to allow downstream events to fire
       // and set `e.hit`. Hide the key when nothing is clicked (hit).
       setTimeout(function () {
-        if (!e.hit) {
-          if (hasKey && this.isKeyOpen) {
-            this.closeKey()
-          }
+        if (hasKey && this.isKeyOpen) {
+          this.closeKey()
         }
       }.bind(this), 100)
     }.bind(this))
+
+    // Disable mouse wheel when point moves away from the map
+    el.addEventListener('mouseout', function (e) {
+      mouseWheelZoom.setActive(false)
+    })
 
     // Set fullscreen state
     this.setFullScreen = function () {
       el.classList.add('map--fullscreen')
       this.fullScreenButton.classList.add('ol-full-screen-back')
       this.fullScreenButton.title = 'Go back'
+      this.fullScreenButton.focus()
       this.isFullScreen = true
       map.updateSize()
     }
@@ -217,7 +276,6 @@
       feature.set('isSelected', true)
       // Store selected feature
       this.selectedFeature = feature
-
       // Add class to map
       el.classList.add('map--overlay-open')
       // Add feature html
@@ -260,6 +318,52 @@
         map.removeOverlay(this.overlay)
       }
     }
+
+    // Set fullscreen state
+    if (getParameterByName('view') === el.id) {
+      this.setFullScreen()
+    }
+
+    // Toggle fullscreen view on browser history change
+    window.addEventListener('popstate', function (e) { 
+      if (e && e.state && getParameterByName('view') === el.id) {
+        this.setFullScreen()
+      } else {
+        this.removeFullScreen()
+      }
+    }.bind(this))
+
+    // Constrain keyboard focus
+    this.element.addEventListener('keydown', function(e) {
+      if (e.keyCode === 9 && this.isFullScreen) {
+        // Select only elements that can have focus
+        var focusableElements = this.element.querySelectorAll('button:not(:disabled), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+        // Filter to remove any elements that are not currently visible
+        var validElements = []
+        for (i = 0; i < focusableElements.length; i++) {
+          if (focusableElements[i].offsetParent !== null) {
+            validElements.push(focusableElements[i])
+          }
+        }
+        // Set first and last element
+        var firstFocusableElement = validElements[0]
+        var lastFocusableElement = validElements[validElements.length - 1]
+        // Shift tab (backwards)
+        if (e.shiftKey) {            
+          if (document.activeElement === firstFocusableElement) {
+            e.preventDefault()
+            lastFocusableElement.focus()
+          }
+        }
+        // Tab (forwards) 
+        else {
+          if (document.activeElement === lastFocusableElement) {
+            e.preventDefault()
+            firstFocusableElement.focus()
+          }
+        }
+      }
+    }.bind(this))
   }
 
   maps.MapContainer = MapContainer

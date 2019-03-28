@@ -4,10 +4,13 @@ const defaultPort = 3009
 
 // Define config schema
 const schema = {
+  restClientTimeoutMillis: joi.number().default(15000),
   port: joi.number().default(defaultPort),
   env: joi.string().valid('development', 'test', 'production').default('development'),
   serviceUrl: joi.string().uri().default('http://localhost:8050'),
   geoserverUrl: joi.string().uri().default('http://localhost:8080'),
+  rainfallApiUrl: joi.string().uri().default('http://localhost:3000'),
+  // rainfallApiUrl: joi.string().uri().default('https://environment.data.gov.uk/flood-monitoring'),
   bingKey: joi.string().required(),
   ordnanceSurveyKey: joi.string().optional(),
   browserRefreshUrl: joi.string().optional(),
@@ -29,10 +32,12 @@ const schema = {
 
 // Build config
 const config = {
+  restClientTimeoutMillis: 10000,
   port: process.env.PORT,
   env: process.env.NODE_ENV,
   serviceUrl: process.env.FLOOD_APP_SERVICE_URL,
   geoserverUrl: process.env.FLOOD_APP_GEOSERVER_URL,
+  rainfallApiUrl: process.env.FLOOD_APP_RAINFALL_API_URL,
   bingKey: process.env.FLOOD_APP_BING_KEY,
   httpsProxy: process.env.HTTPS_PROXY,
   httpTimeoutMs: process.env.FLOOD_APP_HTTP_TIMEOUT,

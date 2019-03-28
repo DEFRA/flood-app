@@ -5,6 +5,7 @@
     display: block;
     margin:0;
     padding:0px;
+    //border:1px solid $govuk-border-colour;
   }
 }
 .map canvas { // Open layers bug fix
@@ -15,7 +16,7 @@
   position:relative;
   height:275px;
 }
-.js-enabled .map--large .map__container {
+.js-enabled .map__container {
   width:100%;
   @include mq ($from: tablet) {
     height:576px;
@@ -31,6 +32,9 @@
   z-index:1;
   width:100%;
   height:100%;
+  border-top: 1px solid $govuk-border-colour;
+  border-left: 1px solid $govuk-border-colour;
+  border-bottom: 1px solid $govuk-border-colour;
 }
 .map--fullscreen {
   display: block;
@@ -104,11 +108,15 @@
   background-position: -25px -85px;
 }
 .map--key-open .ol-full-screen.ol-full-screen-back {
-  background-position: -55px -85px;
-  background-color:white;
+  @include mq ($until: tablet) {
+    background-position: -55px -85px;
+    background-color:white;
+  }
 }
 .map--key-open .ol-full-screen.ol-full-screen-back:hover {
-  background-color:$govuk-focus-colour;
+  @include mq ($until: tablet) {
+    background-color:$govuk-focus-colour;
+  }
 }
 .ol-zoom-reset {
   text-indent:-5000px;
@@ -337,20 +345,20 @@
   background-image: url('#{$govuk-images-path}icon-map-features-2x.png');
   background-color:transparent;
   background-position: -5000px;
-  background-size: 200px;
+  background-size: 400px;
   background-repeat: no-repeat;
 }
 .map__outlook-control__icon--risk-level-1 {
-  background-position: -2px -162px;
+  background-position: -256px -203px;
 }
 .map__outlook-control__icon--risk-level-2 {
-  background-position: -2px -242px;
+  background-position: -256px -303px;
 }
 .map__outlook-control__icon--risk-level-3 {
-  background-position: -2px -282px;
+  background-position: -256px -353px;
 }
 .map__outlook-control__icon--risk-level-4 {
-  background-position: -2px -322px;
+  background-position: -256px -403px;
 }
 .map__outlook-control__icon--risk-level-0 {
   background:none;
@@ -379,7 +387,7 @@
     bottom:10px;
     width:auto;
     right:50px;
-    max-width:300px;
+    max-width:360px;
     //margin-left:-125px;
     //margin-bottom:12px;
   }
@@ -407,7 +415,6 @@
 .ol-overlay-inner {
   padding:10px 50px 10px 10px;
   position:relative;
-  min-height: 38px;
   @include govuk-font($size: 16);
   p {
     margin: 0;
@@ -460,30 +467,26 @@
   background-image: url('#{$govuk-images-path}icon-map-features-2x.png');
   background-color:transparent;
   background-position: -5000px;
-  background-size: 250px;
+  background-size: 400px;
   background-repeat: no-repeat;
 }
 // Target areas
-.ol-overlay__symbol--severe,
-.ol-overlay__symbol--1 {
+.ol-overlay__symbol--severe {
   width:43px;
   height:43px;
   background-position:3px -453px;
 }
-.ol-overlay__symbol--warning,
-.ol-overlay__symbol--2 {
+.ol-overlay__symbol--warning {
   width:43px;
   height:43px;
   background-position:3px -503px;
 }
-.ol-overlay__symbol--alert,
-.ol-overlay__symbol--3 {
+.ol-overlay__symbol--alert {
   width:43px;
   height:43px;
   background-position:3px -553px;
 }
-.ol-overlay__symbol--removed,
-.ol-overlay__symbol--4 {
+.ol-overlay__symbol--removed {
   width:43px;
   height:43px;
   background-position:3px -653px;
@@ -500,7 +503,9 @@
   background-color:$govuk-focus-colour;
 }
 */
+
 // Levels
+/*
 .ol-overlay__symbol--above {
   width:33px;
   height:42px;
@@ -520,7 +525,173 @@
   width:33px;
   height:42px;
   background-position:3px -3px
-}   
+}  
+*/ 
+
+// Rainfall
+.ol-overlay__symbol--none {
+  width:33px;
+  height:42px;
+  background-position:3px -753px
+}
+.ol-overlay__symbol--hasRainfall {
+  width:33px;
+  height:42px;
+  background-position:3px -803px
+}
+/*
+.ol-overlay__symbol--high {
+  width:33px;
+  height:42px;
+  background-position:3px -853px
+}
+*/
+
+// River level navigation
+.overlay__container {
+  position:relative;
+}
+.overlay__copy {
+  padding-left:36px;
+  padding-top:2px;
+  padding-bottom:2px;
+} 
+.overlay__navigation {
+  position:relative;
+  padding-left:30px;
+}
+/*
+.overlay__navigation:after {
+  position: absolute;
+  z-index:1;
+  content:'';
+  width:2px;
+  left:50%;
+  top:1px;
+  bottom:1px;
+  background-color: $govuk-border-colour;
+  margin-left:-1px;
+}
+*/
+.overlay__navigation-button {
+  position:relative;
+  display:block;
+  z-index:2;
+  @include govuk-font($size: 16);
+  background:none!important;
+  //color:inherit;
+  color: $govuk-secondary-text-colour;
+  border:none; 
+  padding:0;
+  margin:0;
+  text-decoration: underline;
+  font: inherit;
+  cursor: pointer;
+}
+.overlay__navigation-button:hover {
+  opacity: 0.75;
+}
+.overlay__navigation-button:after {
+  position: absolute;
+  z-index:1;
+  content:'';
+  width:2px;
+  left:-21px;
+  top: 0px;
+  bottom:0px;
+  background-color: $govuk-border-colour;
+}
+.overlay__navigation-button:before {
+  position:absolute;
+  z-index:2;
+  content:'';
+  width:8px;
+  height:8px;
+  left:-25px;
+  transform: rotate(45deg);
+}
+.overlay__navigation-button--upstream,
+.overlay__navigation-button--upstream-tributary {
+  padding-bottom:2px;
+}
+.overlay__navigation-button--upstream-tributary {
+  padding-top:5px;
+  @include mq ($from: tablet) {
+    padding-top:2px;
+  }
+}
+.overlay__navigation-button--downstream {
+  padding-top:2px;
+}
+.overlay__navigation-button--upstream:after {
+  top: 2px;
+}
+.overlay__navigation-button--downstream:after {
+  bottom:2px;
+}
+.overlay__navigation-button--upstream:before {
+  top:3px;
+  border-left:2px solid $govuk-border-colour;
+  border-top:2px solid $govuk-border-colour;
+}
+.overlay__navigation-button--downstream:before {
+  bottom:3px;
+  border-right:2px solid $govuk-border-colour;
+  border-bottom:2px solid $govuk-border-colour;
+}
+.overlay__navigation-button--upstream-tributary:before {
+  position:absolute;
+  z-index:2;
+  content:'';
+  width:10px;
+  height:10px;
+  left:-25px;
+  top:50%;
+  margin-top:-6px;
+  border-radius: 100%;
+  background-color:$govuk-border-colour;
+}
+.overlay__navigation-copy {
+  position:relative;
+  padding-top:8px;
+  padding-bottom:8px;
+}
+.overlay__navigation-copy:after {
+  position: absolute;
+  z-index:1;
+  content:'';
+  width:2px;
+  left:-21px;
+  top: 0px;
+  bottom:0px;
+  background-color: $govuk-border-colour;
+}
+.overlay__navigation-copy:before {
+  position: absolute;
+  z-index:2;
+  content:'';
+  width:18px;
+  height:18px;
+  left:-29px;
+  top: 50%;
+  margin-top:-8px;
+  background-image: url('#{$govuk-images-path}icon-flood-symbols-2x.png');
+  background-color: transparent;
+  background-size:180px;
+  background-repeat: no-repeat;
+}
+.overlay__navigation-copy--above:before {
+  background-position:-81px -501px;
+}
+.overlay__navigation-copy--forecastAbove:before {
+  background-position:-81px -441px;
+}
+.overlay__navigation-copy--normal:before {
+  background-position:-81px -381px;
+}
+.overlay__navigation-copy--disabled:before {
+  background-position:-81px -441px;
+}
 
 //
 // Map search
@@ -614,13 +785,15 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
 //
 
 .map--key-open .map-key {
-  position:absolute;
-  z-index:3;
-  left:0;
-  top:0px;
-  bottom:0px;
-  width:100%;
-  max-width:272px;
+  @include mq ($until: tablet) {
+    position:absolute;
+    z-index:3;
+    left:0;
+    top:0px;
+    bottom:0px;
+    width:100%;
+    max-width:252px;
+  }
   @include mq ($from: tablet) {
     max-width:304px;
   }
@@ -629,16 +802,17 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
 .map-key__container {
   display:none;
   position:relative;
+  margin-top: -1px;
   height:100%;
   z-index:2;
   background-color: #fff;
+  border-top: 1px solid $govuk-border-colour;
+  border-right: 1px solid $govuk-border-colour;
+  border-bottom: 1px solid $govuk-border-colour;
 }
-.map--embedded {
+.map--has-key {
   .map__container-inner  {
     @include mq ($from: tablet) {
-      border-top:1px solid $govuk-border-colour;
-      border-left:1px solid $govuk-border-colour;
-      border-bottom:1px solid $govuk-border-colour;
       width: 66.6%;
     }
     @include mq ($from: desktop) {
@@ -647,17 +821,13 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
   }
   .map-key__container  {
     @include mq ($from: tablet) {
-      top:-1px;
       display:block;
       position:absolute;
       left:100%;
       width:50%;
-      border-top:1px solid $govuk-border-colour;
-      border-right:1px solid $govuk-border-colour;
-      border-bottom:1px solid $govuk-border-colour;
     }
     @include mq ($from: desktop) {
-      width:33%;
+      width:33.33%;
     }
   }
   .map-key__toggle {
@@ -666,9 +836,26 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
     }
   }
 }
+.map--has-key.map--fullscreen {
+  .map__container-inner {
+    @include mq ($from: tablet) {
+      right:280px;
+      width:auto;
+    }
+    border:0px;
+  }
+  .map-key__container  {
+    @include mq ($from: tablet) {
+      width:280px;
+    }
+    border:0px;
+  }
+}
 .map--key-open .map-key__container {
-  display:block;
-  border-left:1px solid $govuk-border-colour;
+  @include mq ($until: tablet) {
+    display:block;
+    border-left:1px solid $govuk-border-colour;
+  }
 }
 .map-key__toggle {
   //@include govuk-font($size: 16);
@@ -694,14 +881,16 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
   background-repeat: no-repeat;
 }
 .map--key-open .map-key__toggle {
-  right: 10px;
-  width: 40px;
-  padding: 0;
-  text-indent: -5000px;
-  left: auto;
-  background-color:white;
-  color:$govuk-link-colour;
-  background-position:5px -175px;
+  @include mq ($until: tablet) {
+    right: 10px;
+    width: 40px;
+    padding: 0;
+    text-indent: -5000px;
+    left: auto;
+    background-color:white;
+    color:$govuk-link-colour;
+    background-position:5px -175px;
+  }
 }
 .map-key__toggle:hover {
   background-color:$govuk-focus-colour;
@@ -726,6 +915,9 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
   }
   .map-key__title {
     @extend .govuk-heading-m;
+    @include mq ($until: tablet) {
+      font-size:21px;
+    }
     margin-top:6px;
     margin-bottom:0;
     @include mq ($from: tablet) {
@@ -734,9 +926,8 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
   }
 }
 .map--key-open .map-key__title {
-  padding-left:43px;
-  @include mq ($from: tablet) {
-    padding-left:40px;
+  @include mq ($until: tablet) {
+    padding-left:43px;
   }
 }
 .map-key__features {
@@ -772,12 +963,12 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
 // Features 
 .map-key-features__section {
   border-top:1px solid $govuk-border-colour;
-  padding:10px 0 3px 0;
+  padding:10px 0 10px 0;
   margin:0;
   list-style-type: none;
   @include mq ($from: tablet) {
-    padding-top:15px;
-    padding-bottom:5px;
+    padding-top:12.5px;
+    padding-bottom:12.5px;
   }
 }
 .map-key-features__item {
@@ -828,15 +1019,15 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
   left:0;
   width:30px;
   height:32px;
-  margin-left:-35px;
-  margin-top:-8px;
+  margin-left:-37px;
+  margin-top:-9px;
   @include mq ($from: tablet) {
-    margin-top:-6px;
+    margin-top:-7px;
   }
   background-image: url('#{$govuk-images-path}icon-map-features-2x.png');
   background-color:transparent;
   background-position:0 0;
-  background-size:200px;
+  background-size:400px;
   background-repeat: no-repeat;
   border:0;
 }
@@ -846,11 +1037,7 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
 .govuk-radios__item--map-key {
   @extend .govuk-checkboxes__item;
   padding-left:28px;
-  margin-bottom:7px;
   min-height:0;
-  @include mq ($from: tablet) {
-    margin-bottom:10px;
-  }
   .govuk-checkboxes__input,
   .govuk-radios__input {
     width:28px;
@@ -887,10 +1074,8 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
     left: 6px;
   }
   &:last-child, &:last-of-type {
-    margin-bottom:7px;
-    @include mq ($from: tablet) {
-      margin-bottom:10px;
-    }
+    margin-top:7.5px;
+    margin-bottom:7.5px;
   }
 }
 

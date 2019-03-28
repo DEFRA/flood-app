@@ -1,12 +1,10 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
-      <span class="govuk-caption-xl">Flood risk</span>England
-    </h1>
-    <div class="defra-search-link govuk-!-margin-top-2">
+  <div class="govuk-grid-column-full">
+    <div class="defra-search-link">
       <p>
         <a href="/">
           <span class="defra-search-link__icon"></span>Check flood risk for a specific location
@@ -16,17 +14,23 @@
   </div>
 </div>
 
+<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-7">
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
+      Flood risk England
+      <span class="govuk-caption-m">
+        <time class="form-hint" title="{{model.timestamp | formatDate}}"
+        datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time>        
+      </span>
+    </h1>
+  </div>
+</div>
+
 <div id="warnings" class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <div class="defra-warning-overview govuk-!-margin-top-0">
-      <h2 class="govuk-heading-m govuk-!-margin-bottom-4 govuk-!-margin-top-6">
-        Current situation
-        <span class="govuk-caption-s">
-          <time class="form-hint" title="{{model.timestamp | formatDate}}"
-            datetime="{{model.timestamp}}">Last updated {{ model.timestamp | formatDate }}</time>
-        </span>
-      </h2>
-
       {% if model.floods.length %}
         {% for group in model.groups %}
           {% if group.floods %}
@@ -40,7 +44,7 @@
           {% endif %}
         {% endfor %}
       {% else %}
-        <p class="govuk-body">There are currently no flood warnings or alerts</p>
+        <p class="govuk-body">There are currently no flood warnings or alerts in force</p>
       {% endif %}
     </div>
   </div>
@@ -98,17 +102,16 @@
           datetime="{{ model.timestampOutlook }}">Last updated {{ model.timestampOutlook | formatDate }}</time>
       </span>
     </h2>
-    <p>{{ model.outlook | safe }}</p>
+    {{ model.outlook | safe }}
   </div>
 
   {% if model.hasOutlookConcern %}
   <div class="govuk-grid-column-full">
     <div class="app-map">
       <div class="app-map__container" id="map-outlook-details">
-        <figure class="map map--large map--outlook-control-open map--embedded" id="map-outlook">
+        <figure class="map map--has-key map--outlook-control-open" id="map-outlook">
           <div class="map__container">
             <div class="map__container-inner">
-              {% include "./partials/outlook-key.html" %}
               <div class="map__outlook-control">
                 <div class="map__outlook-control__inner">
                   {% for day in model.days %}
@@ -132,7 +135,7 @@
   {% endif %}
 </section>
 
-<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6">
+<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-4">
 
 <section id="long-term" class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

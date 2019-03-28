@@ -10,7 +10,7 @@ module.exports = {
     const { q: location } = request.query
     const place = await locationService.find(location)
     if (typeof place === 'undefined') {
-      request.yar.set('displayError', { errorMessage: 'Please enter a valid location' })
+      request.yar.set('displayError', { errorMessage: 'Enter a valid location' })
       return h.redirect('/')
     }
     if (!place.isEngland.is_england) {

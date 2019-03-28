@@ -3,6 +3,7 @@
   Overide styling for link text
   ----------------------------------- */
 
+/*
 .js-enabled .govuk-tabs__tab:not([aria-selected="true"]) {
   @include mq($from: tablet) {
     text-decoration: underline;
@@ -15,3 +16,4 @@
 .js-enabled .govuk-tabs__tab:not([aria-selected="true"]):visited {
   color: $govuk-link-visited-colour
 }
+*/

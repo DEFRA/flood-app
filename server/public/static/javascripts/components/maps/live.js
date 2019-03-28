@@ -10,7 +10,7 @@
   var forEach = flood.utils.forEach
   var MapContainer = maps.MapContainer
 
-  function LiveMap (elementId, place) {
+  function LiveMap (elementId, place, keyTemplate) {
     // ol.View
     var view = new ol.View({
       zoom: place ? 11 : 6,
@@ -29,26 +29,48 @@
     var floodsWarning = maps.layers.floodsWarning()
     var floodsAlert = maps.layers.floodsAlert()
     var floodsNotInForce = maps.layers.floodsNotInForce()
-    var stations = maps.layers.stations()
-    var floodCentroids = maps.layers.floodCentroids()
     var floodPolygon = maps.layers.floodPolygon()
+    var stations = maps.layers.stations()
+    var rain = maps.layers.rain()
+    var floodCentroids = maps.layers.floodCentroids()
+    var selectedPointFeature = maps.layers.selectedPointFeature()
 
-    function ensureFeatureTooltipHtml (feature) {
+    async function ensureFeatureTooltipHtml (feature) {
       var id = feature.getId()
       var props = feature.getProperties()
+      var template = 'tooltip.html'
       var html
 
       if (!props.html) {
         if (id.startsWith('stations')) {
-          html = window.nunjucks.render('tooltip.html', {
+          html = window.nunjucks.render(template, {
             type: 'station',
             props: props,
             stationId: id.substr(9)
           })
         } else if (id.startsWith('flood_warning_alert')) {
-          html = window.nunjucks.render('tooltip.html', {
+          html = window.nunjucks.render(template, {
             type: 'warnings',
             props: props
+          })
+        } else if (id.startsWith('rain')) {
+          // Get rainfall data for station
+          const rainfallData = async () => {
+            const rainfallUrl = '/rain-gauge-tooltip/' + props.stationReference + '/' + props.label + '/100'
+            try {
+              const response = await fetch(rainfallUrl)
+              const rainfallJson = await response.json()
+              return rainfallJson
+            } catch (err) {
+              return { error: 'Unable to display latest readings' }
+            }
+          }
+
+          html = window.nunjucks.render(template, {
+            type: 'rain',
+            props: props,
+            // rainGaugeId: id.substring(id.lastIndexOf('.') + 1)
+            rainfallValues: await rainfallData()
           })
         }
 
@@ -61,15 +83,18 @@
       minIconResolution: 200,
       buttonText: 'View map of current situation',
       view: view,
+      keyTemplate: keyTemplate,
+      keyProps: {},
       layers: [
         road,
         satellite,
-        floodsNotInForce,
+        // floodsNotInForce,
         floodsAlert,
         floodsWarning,
         floodsSevere,
         floodPolygon,
         stations,
+        rain,
         floodCentroids
       ]
     }
@@ -79,6 +104,9 @@
       options.layers.push(maps.layers.location(place.name, place.center))
     }
 
+    // Selected point feature last in zIndex
+    options.layers.push(selectedPointFeature)
+
     // Create MapContainer
     var containerEl = document.getElementById(elementId)
     var container = new MapContainer(containerEl, options)
@@ -87,6 +115,101 @@
     // Handle key interactions
     var keyForm = container.keyElement.querySelector('form')
 
+    // Toggle key sections depending on what features are visible in the current extent
+    function toggleKeySections () {
+      var extent = map.getView().calculateExtent()
+      // getFeature request
+      var url = '/ows?service=wfs&' +
+        'version=1.3.0&' +
+        'request=GetFeature&' +
+        'typeNames=flood:flood_warning_alert&' +
+        'propertyName=severity&' +
+        'bbox=' + extent.join() + ',urn:ogc:def:crs:EPSG:3857&' +
+        'outputFormat=application/json'
+      var xhr = new XMLHttpRequest()
+      xhr.open('GET', url)
+      var onError = function () {
+        console.log('Error: getPropertyValue')
+      }
+      xhr.onerror = onError
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          var floodsPolygons = JSON.parse(xhr.responseText)
+          var showSevere = false
+          var showWarning = false
+          var showAlert = false
+          // var showNotInForce = false
+          var showStations = false
+          var showRain = false
+          // Set booleans for flood polygons
+          showSevere = !!floodsPolygons.features.filter(x => x.properties.severity === 1).length
+          showWarning = !!floodsPolygons.features.filter(x => x.properties.severity === 2).length
+          showAlert = !!floodsPolygons.features.filter(x => x.properties.severity === 3).length
+          // showNotInForce = floodsPolygons.features.filter(x => x.properties.severity === 4).length ? true : false
+          // Set booleans for flood centroids
+          floodCentroids.getSource().forEachFeatureInExtent(extent, function (feature) {
+            switch (feature.get('severity')) {
+              case 1: {
+                showSevere = true
+                break
+              }
+              case 2: {
+                showWarning = true
+                break
+              }
+              case 3: {
+                showAlert = true
+                break
+              }
+              /*
+              case 4: {
+                showNotInForce = true
+                break
+              }
+              */
+            }
+          })
+          // Set booleans for stations centroids
+          if (stations.getSource().getFeaturesInExtent(extent).length) {
+            showStations = true
+          }
+          // Set booleans for rain gauge centroids
+          if (rain.getSource().getFeaturesInExtent(extent).length) {
+            showRain = true
+          }
+          // Toggle key ul or li display
+          if (showSevere || showWarning || showAlert) {
+            keyForm.querySelector('#severeFloodWarnings').closest('ul').style.display = 'block'
+            keyForm.querySelector('#severeFloodWarnings').closest('li').style.display = showSevere ? 'block' : 'none'
+            keyForm.querySelector('#floodWarnings').closest('li').style.display = showWarning ? 'block' : 'none'
+            keyForm.querySelector('#floodAlerts').closest('li').style.display = showAlert ? 'block' : 'none'
+          } else {
+            keyForm.querySelector('#severeFloodWarnings').closest('ul').style.display = 'none'
+          }
+          keyForm.querySelector('#stations').closest('ul').style.display = showStations ? 'block' : 'none'
+          keyForm.querySelector('#rain').closest('ul').style.display = showRain ? 'block' : 'none'
+        } else {
+          onError()
+        }
+      }
+      xhr.send()
+    }
+
+    // Set point layer visibility based on key checked state
+    forEach(keyForm.querySelectorAll('.govuk-checkboxes__input'), function (input) {
+      switch (input.getAttribute('data-layer')) {
+        case 'stations': {
+          input.checked ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
+          break
+        }
+        case 'rain': {
+          input.checked ? rain.setStyle(maps.styles.rain) : rain.setStyle(new ol.style.Style({}))
+          break
+        }
+      }
+    })
+
+    // Set flood layers visibility
     function setFloodsVisibility (severity, visible) {
       // flood centroids
       floodCentroids.getSource().forEachFeature(function (feature) {
@@ -135,16 +258,52 @@
 
     // Sets the source of selected warning polygon
     function setFloodPolygonSource (source) {
-      map.getLayers().forEach(function (layer) {
-        if (layer.get('ref') === 'flood-polygon') {
-          layer.setSource(source)
-        }
-      })
+      floodPolygon.setSource(source)
     }
+
+    // Sets the source of selected point feature
+    function setSelectedPointFeatureSource (source) {
+      selectedPointFeature.setSource(source)
+      // Set feature style
+      if (source) {
+        // *** Need a schema for all GeoJson features
+        var id = source.getFeatures()[0].getId()
+        if (id.startsWith('stations')) {
+          selectedPointFeature.setStyle(maps.styles.stations)
+        } else if (id.startsWith('flood_warning_alert')) {
+          selectedPointFeature.setStyle(maps.styles.floods)
+        } else if (id.startsWith('rain')) {
+          selectedPointFeature.setStyle(maps.styles.rain)
+        } else {
+          selectedPointFeature.setStyle(maps.styles.location)
+        }
+      }
+    }
+
+    //
+    // Events
+    //
 
     // TODO: this should be performed dynamically from the key selection, or once cookie is implemented
     map.once('rendercomplete', function (event) {
       setFloodsVisibility([4], false)
+      // Toggle key section if features are in viewport
+      toggleKeySections()
+    })
+
+    // Toggle key section when flood centroids have loaded
+    floodCentroids.getSource().on('change', function (event) {
+      toggleKeySections()
+    })
+
+    // Toggle key section when flood centroids have loaded
+    stations.getSource().on('change', function (event) {
+      toggleKeySections()
+    })
+
+    // Toggle key section when flood centroids have loaded
+    rain.getSource().on('change', function (event) {
+      toggleKeySections()
     })
 
     // Reactions based on pan/zoom change on map
@@ -176,10 +335,13 @@
           symbol.style = symbol.getAttribute('data-style')
         })
       }
+
+      // Toggle key section if features are in viewport
+      toggleKeySections()
     })
 
     // Close key or place locator if map is clicked
-    map.on('click', function (e) {
+    map.on('click', async function (e) {
       // Get mouse coordinates and check for feature if not the highlighted flood polygon
       var feature = map.forEachFeatureAtPixel(e.pixel, function (feature) {
         return feature
@@ -192,15 +354,20 @@
       // A new feature has been selected
       if (feature) {
         // Notifies the container that something was hit
+        // *** Point feature
         e.hit = true
-        ensureFeatureTooltipHtml(feature)
+        // Add point to selection layer
+        setSelectedPointFeatureSource(new ol.source.Vector({
+          features: [feature],
+          format: new ol.format.GeoJSON()
+        }))
+        await ensureFeatureTooltipHtml(feature)
         container.showOverlay(feature)
-        // Clear out pre selected polygon
-        setFloodPolygonSource()
       } else {
         var layer = getFloodLayer(e.pixel)
         if (layer) {
           // Notifies the container that something was hit
+          // *** Flood polygon feature
           e.hit = true
           var url = layer.getSource().getGetFeatureInfoUrl(e.coordinate, view.getResolution(), 'EPSG:3857', {
             INFO_FORMAT: 'application/json',
@@ -209,7 +376,7 @@
           })
 
           if (url) {
-            flood.utils.xhr(url, function (err, json) {
+            flood.utils.xhr(url, async function (err, json) {
               if (err) {
                 console.error(err)
               }
@@ -225,12 +392,15 @@
                 format: new ol.format.GeoJSON()
               }))
 
-              ensureFeatureTooltipHtml(feature)
+              await ensureFeatureTooltipHtml(feature)
               container.showOverlay(feature)
             })
           }
         } else {
+          // Clear out pre selected polygon
           setFloodPolygonSource()
+          // Clear out pre selected point
+          setSelectedPointFeatureSource()
         }
       }
     })
@@ -270,10 +440,6 @@
           }
           break
         }
-        case 'riverLevels': {
-          stations.setVisible(target.checked)
-          break
-        }
         case 'floodWarnings': {
           setFloodsVisibility([1, 2], target.checked)
           break
@@ -284,6 +450,14 @@
         }
         case 'floodExpired': {
           setFloodsVisibility([4], target.checked)
+          break
+        }
+        case 'stations': {
+          target.checked ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
+          break
+        }
+        case 'rain': {
+          target.checked ? rain.setStyle(maps.styles.rain) : rain.setStyle(new ol.style.Style({}))
           break
         }
       }
@@ -307,7 +481,10 @@
   // onto the `maps` object.
   // (This is done mainly to avoid the rule
   // "do not use 'new' for side effects. (no-new)")
-  maps.createLiveMap = function (containerId, place) {
-    return new LiveMap(containerId, place)
+  maps.createLiveLocationMap = function (containerId, place) {
+    return new LiveMap(containerId, place, 'key-live-location.html')
+  }
+  maps.createLiveNationalMap = function (containerId, place) {
+    return new LiveMap(containerId, place, 'key-live-national.html')
   }
 })(window, window.flood)

@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block head %}
-  <meta http-equiv="refresh" content="900"/>
+  <!-- <meta http-equiv="refresh" content="900"/> -->
   <meta property="fb:app_id" content="{{fbAppId}}" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="{{fullUrl}}" />
@@ -109,9 +109,9 @@
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script src="{{ assetPath }}/all.js"></script>
   <script src="{{ assetPath }}/javascripts/core.js"></script>
-  <script src="{{ assetPath }}/javascripts/components/a11y-dialog.js"></script>
+  <!--<script src="{{ assetPath }}/javascripts/components/a11y-dialog.js"></script>-->
   <script>window.GOVUKFrontend.initAll()</script>
-  <script src="{{ assetPath }}/javascripts/exit-survey.js"></script>
+  <!--<script src="{{ assetPath }}/javascripts/exit-survey.js"></script>-->
 {% endblock %}
 
 {% block footer %}
