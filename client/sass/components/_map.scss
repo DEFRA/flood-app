@@ -282,7 +282,7 @@
 //
 
 .map__outlook-control {
-  display:none;
+  display:block;
   position: absolute;
   bottom:10px;
   left:10px;
@@ -291,9 +291,6 @@
   @include mq ($from: tablet) {
     right:auto;
   }
-}
-.map--outlook-control-open .map__outlook-control {
-  display:block;
 }
 .map__outlook-control__inner {
   width:100%;
@@ -413,7 +410,7 @@
 }
 */
 .ol-overlay-inner {
-  padding:10px 50px 10px 10px;
+  padding:10px 10px 10px 10px;
   position:relative;
   @include govuk-font($size: 16);
   p {
@@ -558,7 +555,7 @@
 } 
 .overlay__navigation {
   position:relative;
-  padding-left:30px;
+  padding-left:34px;
 }
 /*
 .overlay__navigation:after {
@@ -596,7 +593,7 @@
   z-index:1;
   content:'';
   width:2px;
-  left:-21px;
+  left:-23px;
   top: 0px;
   bottom:0px;
   background-color: $govuk-border-colour;
@@ -607,7 +604,7 @@
   content:'';
   width:8px;
   height:8px;
-  left:-25px;
+  left:-27px;
   transform: rotate(45deg);
 }
 .overlay__navigation-button--upstream,
@@ -645,7 +642,7 @@
   content:'';
   width:10px;
   height:10px;
-  left:-25px;
+  left:-27px;
   top:50%;
   margin-top:-6px;
   border-radius: 100%;
@@ -661,36 +658,46 @@
   z-index:1;
   content:'';
   width:2px;
-  left:-21px;
+  left:-23px;
   top: 0px;
   bottom:0px;
   background-color: $govuk-border-colour;
 }
-.overlay__navigation-copy:before {
+.overlay__navigation-headline {
+  @extend .govuk-body;
+  position:relative;
+  display: block;
+  font-weight:bold;
+  margin-bottom:0;
+}
+.overlay__navigation-headline:before {
   position: absolute;
   z-index:2;
   content:'';
-  width:18px;
-  height:18px;
-  left:-29px;
+  width:26px;
+  height:26px;
+  left:-35px;
   top: 50%;
-  margin-top:-8px;
-  background-image: url('#{$govuk-images-path}icon-flood-symbols-2x.png');
+  margin-top:-14px;
+  background-image: url('#{$govuk-images-path}icon-map-features-2x.png');
   background-color: transparent;
-  background-size:180px;
+  background-size:400px;
   background-repeat: no-repeat;
 }
-.overlay__navigation-copy--above:before {
-  background-position:-81px -501px;
+.overlay__navigation-headline--above:before {
+  background-position:-302px -153px;
 }
-.overlay__navigation-copy--forecastAbove:before {
-  background-position:-81px -441px;
+.overlay__navigation-headline--forecastAbove:before {
+  background-position:-302px -103px;
 }
-.overlay__navigation-copy--normal:before {
-  background-position:-81px -381px;
+.overlay__navigation-headline--normal:before {
+  background-position:-302px -53px;
 }
-.overlay__navigation-copy--disabled:before {
-  background-position:-81px -441px;
+.overlay__navigation-headline--disabled:before {
+  background-position:-302px -3px;
+}
+.overlay__navigation-headline--unreliable:before {
+  background-position:-352px -3px;
 }
 
 //
@@ -1088,4 +1095,13 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
   @include mq ($from: tablet) {
     display:block;
   }
+}
+
+// Feature list
+.map-feature-list button {
+  position:absolute;
+  display:block;
+  width:1px;
+  height:1px;
+  left:0px;
 }

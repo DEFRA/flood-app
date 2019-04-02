@@ -56,9 +56,7 @@ module.exports = [{
   handler: async (request, h) => {
     const url = rainfallApiUri + '/id/stations?parameter=rainfall&_limit=2000&_view=full'
     try {
-      // const { res, payload } = await wreck.get(url, { json: true })
-      const thisWreck = wreckExt ? wreckExt : wreck
-      // const { payload } = await wreck.get(url, { json: true })
+      const thisWreck = wreckExt || wreck
       const { payload } = await thisWreck.get(url, { json: true })
       const geojsonObject = {
         'type': 'FeatureCollection',
