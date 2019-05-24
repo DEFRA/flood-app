@@ -88,5 +88,9 @@ module.exports = {
   async getIsEngland (lng, lat) {
     const url = `${serviceUrl}/is-england/${lng}/${lat}`
     return util.getJson(url)
+  },
+  async getImpacts (id) {
+    const url = `${serviceUrl}/impacts/${id}`
+    return util.getJson(url)
   }
 }

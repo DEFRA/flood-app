@@ -16,9 +16,10 @@ module.exports = {
     if (!place.isEngland.is_england) {
       return h.redirect('/location-not-england')
     }
+    const impacts = await floodService.getImpacts(1)
     const { floods } = await floodService.getFloodsWithin(place.bbox)
     const stations = await floodService.getStationsWithin(place.bbox)
-    const model = new ViewModel({ place, floods, stations })
+    const model = new ViewModel({ place, floods, stations, impacts })
 
     return h.view('location', { model })
   },
