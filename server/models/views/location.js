@@ -2,12 +2,13 @@ const severity = require('../severity')
 const { groupBy } = require('../../util')
 
 class ViewModel {
-  constructor ({ place, floods, stations }) {
+  constructor ({ place, floods, stations, impacts }) {
     const title = place.name
 
     Object.assign(this, {
       place,
       floods,
+      impacts,
       location: title,
       pageTitle: `${title} flood risk`
     })
@@ -99,8 +100,8 @@ class ViewModel {
       this.groupedFloods = groupedFloods
       this.floodsPrimary = primaryStatement
       this.floodsSecondary = secondaryStatement + inactiveStatement
-      this.hasFloodsSecondary = this.floodsSecondary.length ? true : false
-      this.hasAllFloodsList = floods.length > primaryGroup.length || floods.length > 2 ? true : false
+      this.hasFloodsSecondary = !!this.floodsSecondary.length
+      this.hasAllFloodsList = !!(floods.length > primaryGroup.length || floods.length > 2)
       this.activeFloods = activeFloods
       this.hasActiveFloods = hasActiveFloods
       this.inactiveFloods = inactiveFloods
@@ -110,6 +111,12 @@ class ViewModel {
     // Rivers
     if (stations.length) {
       this.rivers = groupBy(stations, 'wiski_river_name')
+    }
+
+    // Impacts
+
+    if (impacts) {
+      this.impacts = impacts
     }
   }
 }

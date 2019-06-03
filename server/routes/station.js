@@ -32,6 +32,9 @@ module.exports = [{
       // Get thresholds first as this will tell us if should be a forecast or not
       const thresholds = await floodService.getStationForecastThresholds(id)
 
+      // Get impacts for the station
+      const impacts = await floodService.getImpactData(station.rloi_id)
+
       // Check if it's a forecast station
       if (thresholds) {
         const values = await floodService.getStationForecastData(station.wiski_id)
@@ -41,12 +44,12 @@ module.exports = [{
           values
         }
 
-        const model = new ViewModel({ station, telemetry, forecast })
+        const model = new ViewModel({ station, telemetry, forecast, impacts })
 
         return h.view('station', { model })
       } else {
         // Non-forecast Station
-        const model = new ViewModel({ station, telemetry })
+        const model = new ViewModel({ station, telemetry, impacts })
 
         return h.view('station', { model })
       }

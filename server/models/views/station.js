@@ -10,7 +10,7 @@ function dateDiff (date1, date2) {
 
 class ViewModel {
   constructor (options) {
-    const { station, telemetry, forecast } = options
+    const { station, telemetry, forecast, impacts } = options
 
     Object.assign(this, {
       pageTitle: `Flood information for ${station.name}`
@@ -112,6 +112,12 @@ class ViewModel {
     this.stationJSON = JSON.stringify(this.station)
     this.forecast = this.ffoi || {}
     this.forecastJSON = this.ffoi ? this.ffoi.forecastJSON : JSON.stringify({})
+
+    // Impacts
+
+    if (impacts) {
+      this.impacts = impacts
+    }
 
     // Page category for feedback categorisation
     this.pageCategory = this.isFfoi ? 'station-ffoi' : ''

@@ -89,8 +89,12 @@ module.exports = {
     const url = `${serviceUrl}/is-england/${lng}/${lat}`
     return util.getJson(url)
   },
-  async getImpacts (id) {
+  async getImpactData (id) {
     const url = `${serviceUrl}/impacts/${id}`
+    return util.getJson(url)
+  },
+  async getImpactsWithin (bbox) {
+    const url = `${serviceUrl}/impacts-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`
     return util.getJson(url)
   }
 }

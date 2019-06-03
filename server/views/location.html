@@ -167,7 +167,16 @@
 
 
 <div class="govuk-inset-text">
-  Render Impacts here
+    <h2 class="govuk-heading-m">Impacts</h2>
+    {% if model.impacts and ( model.impacts | length > 0 ) %}
+    <ul>
+      {% for impact in model.impacts %}
+      <li>{{ impact.gauge }}: {{ impact.description }}</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No impacts for this area.</p>
+    {% endif %}
 </div>
 
 
