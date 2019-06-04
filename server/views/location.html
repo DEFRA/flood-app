@@ -159,26 +159,25 @@
         {% endfor %}
       </div>
     </details>
+    <details class="govuk-details">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">View impacts in this area</span>
+      </summary>
+      <div class="govuk-details__text">
+        {% if model.impacts and ( model.impacts | length > 0 ) %}
+        {% for impact in model.impacts %}
+          <p>{{ impact.description }}<br />Source: <a href="/station/{{ impact.rloiId }}">{{ impact.gauge }}</a></p>
+        {% endfor %}
+        {% else %}
+          <p>No impacts for this area.</p>
+        {% endif %}
+      </div>
+    </details>
   </div>
 </div>
 
 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-7">
 {% endif %}
-
-
-<div class="govuk-inset-text">
-    <h2 class="govuk-heading-m">Impacts</h2>
-    {% if model.impacts and ( model.impacts | length > 0 ) %}
-    <ul>
-      {% for impact in model.impacts %}
-      <li>{{ impact.gauge }}: {{ impact.description }}</li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p>No impacts for this area.</p>
-    {% endif %}
-</div>
-
 
 <section class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

@@ -29,6 +29,24 @@
       </ul>
     </div>
   </details>
+  <details class="govuk-details govuk-!-margin-bottom-1">
+    <summary class="govuk-details__summary" id="summary-express" aria-controls="details-content-impacts" aria-expanded="false" role="button" data-journey-click="lfw:station:impacts">
+      <span class="govuk-details__summary-text">
+        Impacts
+      </span>
+    </summary>
+    <div class="govuk-details__text" id="details-content-impacts" aria-hidden="true">
+      {% if model.impacts and ( model.impacts | length > 0 ) %}
+      <ul>
+        {% for impact in model.impacts %}
+        <li>{{ impact.description }} {% if impact.obsFloodYear > 0 %} occurred in {{ impact.obsFloodYear }} {% endif %}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No impacts for this area.</p>
+      {% endif %}
+    </div>
+  </details>
   {% if station.isGroundwater %}
     <details class="govuk-details govuk-!-margin-bottom-1">
       <summary class="govuk-details__summary" aria-controls="details-content-groundwater-risk" aria-expanded="false" role="button" data-journey-click="lfw:station:groundwater-risk">
