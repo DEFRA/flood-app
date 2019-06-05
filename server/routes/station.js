@@ -5,7 +5,7 @@ const ViewModel = require('../models/views/station')
 const additionalWelshStations = [4162, 4170, 4173, 4174, 4176]
 const nrwStationUrl = 'http://rloi.naturalresources.wales/ViewDetails?station='
 
-module.exports = {
+module.exports = [{
   method: 'GET',
   path: '/station/{id}',
   handler: async (request, h) => {
@@ -66,4 +66,32 @@ module.exports = {
       }
     }
   }
-}
+}, {
+  method: 'GET',
+  path: '/stations-upstream-downstream/{id}/{direction}',
+  handler: async (request, h) => {
+    const { id, direction } = request.params
+
+    try {
+      const stations = await floodService.getStationsUpstreamDownstream(id, direction)
+
+      if (!stations) {
+        return boom.notFound('No stations found')
+      }
+
+      return stations
+    } catch (err) {
+      return err.isBoom
+        ? err
+        : boom.badRequest('Failed to get upstream - downstream stations', err)
+    }
+  },
+  options: {
+    validate: {
+      params: {
+        id: Joi.string().required(),
+        direction: Joi.string().valid('d', 'u').default('u')
+      }
+    }
+  }
+}]

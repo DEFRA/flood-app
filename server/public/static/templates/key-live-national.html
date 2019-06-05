@@ -24,11 +24,11 @@
             </div>
           </li>
         </ul>
-        <ul class="map-key-features__section">
-          <li class="map-key-features__item">
+        <ul class="map-key-features__section" style="display:none">
+          <li class="map-key-features__item" style="display:none">
             <div class="govuk-checkboxes__item govuk-checkboxes__item--map-key">
               <input class="govuk-checkboxes__input" id="severeFloodWarnings" data-layer="severeFloodWarning"
-                data-states="warning,severe" name="severeFloodWarnings" type="checkbox" value="flood-zones" checked="">
+                data-severity="1" name="severeFloodWarnings" type="checkbox" value="flood-zones" checked="">
               <label class="govuk-label govuk-checkboxes__label" for="severeFloodWarnings">
                 <span class="govuk-label__inner">
                   <span class="key-symbol" style="background-position: -200px -450px" data-style="background-position:-200px -450px"
@@ -38,10 +38,10 @@
               </label>
             </div>
           </li>
-          <li class="map-key-features__item">
+          <li class="map-key-features__item" style="display:none">
             <div class="govuk-checkboxes__item govuk-checkboxes__item--map-key">
               <input class="govuk-checkboxes__input" id="floodWarnings" data-layer="floodWarning"
-                data-states="warning,severe" name="floodWarnings" type="checkbox" value="flood-zones" checked="">
+                data-severity="2" name="floodWarnings" type="checkbox" value="flood-zones" checked="">
               <label class="govuk-label govuk-checkboxes__label" for="floodWarnings">
                 <span class="govuk-label__inner">
                   <span class="key-symbol" style="background-position: -200px -500px" data-style="background-position: -200px -500px"
@@ -51,10 +51,10 @@
               </label>
             </div>
           </li>
-          <li class="map-key-features__item">
+          <li class="map-key-features__item" style="display:none">
             <div class="govuk-checkboxes__item govuk-checkboxes__item--map-key">
               <input class="govuk-checkboxes__input" id="floodAlerts" data-layer="floodAlert"
-                data-states="alert" name="floodAlerts" type="checkbox" value="flood-zones" checked="">
+                data-severity="3" name="floodAlerts" type="checkbox" value="flood-zones" checked="">
               <label class="govuk-label govuk-checkboxes__label" for="floodAlerts">
                 <span class="govuk-label__inner">
                   <span class="key-symbol" style="background-position: -200px -550px" data-style="background-position: -200px -550px"
@@ -65,10 +65,10 @@
             </div>
           </li>
         </ul>
-        <ul class="map-key-features__section">
+        <ul class="map-key-features__section" style="display:none">
           <li class="map-key-features__item">
             <div class="govuk-checkboxes__item govuk-checkboxes__item--map-key">
-              <input class="govuk-checkboxes__input" id="stations" data-layer="stations" data-states="" name="stations"
+              <input class="govuk-checkboxes__input" id="stations" data-layer="stations" name="stations"
                 type="checkbox" value="stations">
               <label class="govuk-label govuk-checkboxes__label" for="stations">
                 <span class="govuk-label__inner">
@@ -80,10 +80,10 @@
             </div>
           </li>
         </ul>
-        <ul class="map-key-features__section">
+        <ul class="map-key-features__section" style="display:none">
           <li class="map-key-features__item">
             <div class="govuk-checkboxes__item govuk-checkboxes__item--map-key">
-              <input class="govuk-checkboxes__input" id="rain" data-layer="rain" data-states="" name="rain"
+              <input class="govuk-checkboxes__input" id="rain" data-layer="rain" name="rain"
                 type="checkbox" value="rain">
               <label class="govuk-label govuk-checkboxes__label" for="rain">
                 <span class="govuk-label__inner">

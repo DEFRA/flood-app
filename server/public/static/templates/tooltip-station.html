@@ -1,0 +1,55 @@
+{# Icon symbol #}
+{% set closedOrSuspended = false %}
+{% set symbol = 'normal' %}
+{% if props.atrisk %}
+  {% set symbol = 'above' %}
+{% elif props.is_ffoi_at_risk and props.ffoi_max %}
+  {% set symbol = 'forecastAbove' %}
+{% elif props.status === 'Closed' or props.status === 'Suspended' %}
+  {% set symbol = 'disabled' %}
+  {% set closedOrSuspended = true %}
+{% endif %}
+
+{% if closedOrSuspended %}
+<p class="govuk-body-s govuk-!-margin-bottom-1">
+    <a href="/station/{{stationId}}" data-id="stations.3246">{{props.name}} ({{props.river}})</a>
+</p>
+<strong class="overlay__navigation-headline overlay__navigation-headline--disabled">
+    <span class="govuk-!-font-weight-bold">Closed or temporarily out of service</span>
+</strong>
+{% else %}
+<div class="overlay__navigation">
+  {% for up in upDown.upDown.upstream %}
+  <button class="overlay__navigation-button overlay__navigation-button--upstream{% if up.isTrib %}-tributary{% endif %}" data-id="{{up.id}}">{{up.river}}</button>
+  {% endfor %}
+
+  <div class="overlay__navigation-copy overlay__navigation-copy">
+    <p class="govuk-body-s govuk-!-margin-bottom-1">
+        <a href="/station/{{stationId}}" data-id="{{stationId}}">{{props.name}} ({{props.river}})</a>
+    </p>
+    {% if props.value %}
+    <strong class="overlay__navigation-headline overlay__navigation-headline--{{symbol}}">
+      {{props.value.toFixed(2)}}m at <time datetime="{{ props.value_date }}">{{ props.value_date }}</time>
+    </strong>
+    {% else %}
+    <strong class="overlay__navigation-headline overlay__navigation-headline--unreliable">
+      Latest measurement unreliable
+    </strong>
+    {% endif %}
+    {% if props.percentile_5 and props.percentile_95 %}
+    <p class="govuk-body-s govuk-!-margin-bottom-0">
+      Typical level {{props.percentile_95.toFixed(2)}}m to {{props.percentile_5.toFixed(2)}}m
+    </p>
+    {% endif %}
+    {% if props.is_ffoi_at_risk and props.ffoi_max %}
+    <p class="govuk-body-s govuk-!-margin-bottom-0">
+      <strong>{{props.ffoi_max.toFixed(2)}}m</strong> forecast at <time datetime="{{ props.ffoi_date }}">{{ props.ffoi_date }}</time>
+    </p>
+    {% endif %}
+  </div>
+  {% for down in upDown.upDown.downstream %}
+  <button class="overlay__navigation-button overlay__navigation-button--downstream" data-id="{{down.id}}">{{down.river}}</button>
+  {% endfor%}
+</div>
+{% endif %}
+

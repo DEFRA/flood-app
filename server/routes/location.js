@@ -25,7 +25,10 @@ module.exports = {
   options: {
     validate: {
       query: {
-        q: joi.string().required()
+        q: joi.string().required(),
+        cz: joi.string(),
+        l: joi.string(),
+        v: joi.string()
       }
     }
   }
