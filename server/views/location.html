@@ -166,7 +166,7 @@
       <div class="govuk-details__text">
         {% if model.impacts and ( model.impacts | length > 0 ) %}
         {% for impact in model.impacts %}
-          <p>{{ impact.description }}<br />Source: <a href="/station/{{ impact.rloiid }}">{{ impact.gauge }}</a></p>
+          <p>{{ impact.description }} | {{ impact.value }}{{ impact.units }} | {% if impact.telemetryactive or impact.forecastactive %}Active{% else %}Inactive{% endif %}<br />Source: <a href="/station/{{ impact.rloiid }}">{{ impact.gauge }}</a></p>
         {% endfor %}
         {% else %}
           <p>No impacts for this area.</p>

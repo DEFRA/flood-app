@@ -39,7 +39,7 @@
       {% if model.impacts and ( model.impacts | length > 0 ) %}
       <ul>
         {% for impact in model.impacts %}
-        <li>{{ impact.description }} {% if impact.obsFloodYear > 0 %} occurred in {{ impact.obsFloodYear }} {% endif %}</li>
+        <li>{{ impact.description }} | {{ impact.value }}{{ impact.units }} | {% if impact.telemetryactive or impact.forecastactive %}Active{% else %}Inactive{% endif %} {% if impact.obsFloodYear > 0 %} occurred in {{ impact.obsFloodYear }} {% endif %}</li>
         {% endfor %}
       </ul>
       {% else %}
