@@ -37,11 +37,23 @@
     </summary>
     <div class="govuk-details__text" id="details-content-impacts" aria-hidden="true">
       {% if model.impacts and ( model.impacts | length > 0 ) %}
-      <ul>
-        {% for impact in model.impacts %}
-        <li>{{ impact.description }} | {{ impact.value }}{{ impact.units }} | {% if impact.telemetryactive or impact.forecastactive %}Active{% else %}Inactive{% endif %} {% if impact.obsFloodYear > 0 %} occurred in {{ impact.obsFloodYear }} {% endif %}</li>
-        {% endfor %}
-      </ul>
+      <table class="govuk-table">
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th class="govuk-table__header" scope="col">Level</th>
+      <th class="govuk-table__header" scope="col">Description</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+  {% for impact in model.impacts %}
+    <tr class="govuk-table__row">
+      <th class="govuk-table__header" scope="row">{{ impact.value }}m</th>
+      <td class="govuk-table__cell">{{ impact.description }} {% if impact.obsFloodYear > 0 %} ({{ impact.obsFloodYear }}) {% endif %} </td>
+      <td class="govuk-table__cell"><a class="govuk-link" href="#">Show on Chart</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
       {% else %}
       <p>No impacts for this area.</p>
       {% endif %}
