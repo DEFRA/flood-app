@@ -12,13 +12,11 @@
   var forEach = flood.utils.forEach
   var MapContainer = maps.MapContainer
 
-  function LiveMap (elementId, place, keyTemplate) {
-    
+  function LiveMap (elementId, place) {
     var zoom = place ? 11 : 6
     var center = ol.proj.transform(place
       ? place.center
       : maps.center, 'EPSG:4326', 'EPSG:3857')
-
     // Replace center and zoom if exists in querystring
     if (getParameterByName('cz')) {
       var cz = getParameterByName('cz').split(',')
@@ -145,9 +143,8 @@
     // MapContainer options
     var options = {
       minIconResolution: 200,
-      buttonText: 'View map of current situation',
       view: view,
-      keyTemplate: keyTemplate,
+      keyTemplate: 'map-key-live.html',
       keyProps: {},
       layers: [
         road,
@@ -166,6 +163,7 @@
     // Localised
     if (place) {
       options.layers.push(maps.layers.location(place.name, place.center))
+      //options.layers.push(maps.layers.location(place.name, [-2.315848, 52.377300]))
     }
 
     // Selected point feature last in zIndex
@@ -325,6 +323,9 @@
 
     // Set flood layers visibility
     function setFloodsVisibility (severity, visible) {
+      if (visible) { // Temp fix to stop centroids initially showing if layer is off
+        floodCentroids.setVisible(true)
+      }
       // flood centroids
       floodCentroids.getSource().forEachFeature(function (feature) {
         if (feature.get('severity') === severity) {
@@ -350,6 +351,7 @@
     }
 
     // Set point feature visibility
+    /*
     function setPointVisibility () {
       forEach(keyForm.querySelectorAll('.govuk-checkboxes__input'), function (input) {
         switch (input.getAttribute('data-layer')) {
@@ -364,6 +366,7 @@
         }
       })
     }
+    */
 
     function setFloodsOpacity (opacity) {
       floodsSevere.setOpacity(opacity)
@@ -417,6 +420,46 @@
       }
     }
 
+    // Layer visibility
+    function setLayerVisibility (target) {
+      switch (target.name) {
+        case 'baseLayer': {
+          if (target.value === 'mapView') {
+            road.setVisible(true)
+            satellite.setVisible(false)
+          } else {
+            road.setVisible(false)
+            satellite.setVisible(true)
+          }
+          break
+        }
+        case 'severeFloodWarnings': {
+          setFloodsVisibility(1, target.checked)
+          break
+        }
+        case 'floodWarnings': {
+          setFloodsVisibility(2, target.checked)
+          break
+        }
+        case 'floodAlerts': {
+          setFloodsVisibility(3, target.checked)
+          break
+        }
+        case 'floodExpired': {
+          setFloodsVisibility(4, target.checked)
+          break
+        }
+        case 'stations': {
+          target.checked ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
+          break
+        }
+        case 'rain': {
+          target.checked ? rain.setStyle(maps.styles.rain) : rain.setStyle(new ol.style.Style({}))
+          break
+        }
+      }
+    }
+
     // Set initial layers views from querystring
     if (getParameterByName('l')) {
       var layers = getParameterByName('l').split(',')
@@ -431,10 +474,13 @@
     // TODO: this should be performed dynamically from the key selection, or once cookie is implemented
     map.once('rendercomplete', function (e) {
       // Set floods visibility
-      setFloodsVisibility(4, false)
+      // setFloodsVisibility(4, false)
       // Set point layer visibility based on key checked state
-      setPointVisibility()
+      // setPointVisibility()
       // Toggle key section if features are in viewport
+      forEach(keyForm.querySelectorAll('.govuk-checkboxes__input'), function (input) {
+        setLayerVisibility(input)       
+      })
       updateKeyAndCanvas()
     })
 
@@ -453,7 +499,6 @@
         layerOpacity = 0.4
       }
       setFloodsOpacity(layerOpacity)
-
       // Key icons
       if (resolution <= options.minIconResolution) {
         // Key polygons
@@ -466,7 +511,6 @@
           symbol.style = symbol.getAttribute('data-style')
         })
       }
-
       updateUrl()
       updateKeyAndCanvas()
     })
@@ -559,45 +603,7 @@
 
     // Key form layer toggle
     keyForm.addEventListener('change', function (e) {
-      var target = e.target
-      var name = target.name
-
-      switch (name) {
-        case 'baseLayer': {
-          if (target.value === 'mapView') {
-            road.setVisible(true)
-            satellite.setVisible(false)
-          } else {
-            road.setVisible(false)
-            satellite.setVisible(true)
-          }
-          break
-        }
-        case 'severeFloodWarnings': {
-          setFloodsVisibility(1, target.checked)
-          break
-        }
-        case 'floodWarnings': {
-          setFloodsVisibility(2, target.checked)
-          break
-        }
-        case 'floodAlerts': {
-          setFloodsVisibility(3, target.checked)
-          break
-        }
-        case 'floodExpired': {
-          setFloodsVisibility(4, target.checked)
-          break
-        }
-        case 'stations': {
-          target.checked ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
-          break
-        }
-        case 'rain': {
-          target.checked ? rain.setStyle(maps.styles.rain) : rain.setStyle(new ol.style.Style({}))
-          break
-        }
-      }
+      setLayerVisibility (e.target)
       updateUrl()
       updateKeyAndCanvas()
     })
@@ -641,10 +647,11 @@
     })
 
     // Layer loaded event needed to address render complete event not always firing
-    map.getLayers().forEach(function(layer) {
+    /*
+    map.getLayers().forEach(function (layer) {
       if (layer.getSource()) {
-        layer.getSource().on('change', function(e) {
-          if (this.getState() == 'ready') {
+        layer.getSource().on('change', function (e) {
+          if (this.getState() === 'ready') {
             // Set feature visibility style
             setPointVisibility()
             // Toggle key section if features are in viewport
@@ -653,17 +660,6 @@
         })
       }
     })
-
-    // Set initial map centre and zoom from querystring  
-    /*
-    if (place && place.bbox && !getParameterByName('cz')) {
-      // If we have a location, set the map extent
-      var searchExtent = ol.proj.transformExtent(place.bbox, 'EPSG:4326', 'EPSG:3857')
-      container.map.getView().fit(searchExtent, {
-        maxZoom: 16,
-        size: container.map.getSize()
-      })
-    }
     */
 
     this.map = map
@@ -674,10 +670,7 @@
   // onto the `maps` object.
   // (This is done mainly to avoid the rule
   // "do not use 'new' for side effects. (no-new)")
-  maps.createLiveLocationMap = function (containerId, place) {
-    return new LiveMap(containerId, place, 'key-live-location.html')
-  }
-  maps.createLiveNationalMap = function (containerId, place) {
-    return new LiveMap(containerId, place, 'key-live-national.html')
+  maps.createLiveMap = function (containerId, place) {
+    return new LiveMap(containerId, place)
   }
 })(window, window.flood)

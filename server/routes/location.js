@@ -20,7 +20,6 @@ module.exports = {
     const { floods } = await floodService.getFloodsWithin(place.bbox)
     const stations = await floodService.getStationsWithin(place.bbox)
     const model = new ViewModel({ place, floods, stations, impacts })
-
     return h.view('location', { model })
   },
   options: {

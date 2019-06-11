@@ -21,7 +21,7 @@
       {% if rainfallValues.error %}
         Rainfall measured at {{props.label}}
       {% else %}
-        <a class="govuk-body-s" href="/rain-gauge/{{ props.stationReference }}#one-day">Rainfall measured at {{props.label}}</a>
+        <a class="govuk-body-s" href="/rain-gauge/{{ props.stationReference }}">Rainfall measured at {{props.label}}</a>
       {% endif %}
     </span><br/>
     {% endif %}

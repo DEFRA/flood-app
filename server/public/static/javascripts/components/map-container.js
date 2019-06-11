@@ -15,8 +15,6 @@
 
   function MapContainer (el, options) {
     var defaults = {
-      buttonText: 'Show map',
-      progressive: false,
       minIconResolution: 200,
       keyTemplate: ''
     }
@@ -29,26 +27,6 @@
 
     this.element = el.firstElementChild
     this.mapContainerInnerElement = el.firstElementChild.firstElementChild
-
-    // Show map (mobile only)
-    this.showMapButton = document.createElement('button')
-    this.showMapButton.innerText = this.options.buttonText
-    this.showMapButton.className = 'govuk-button govuk-button--secondary govuk-button--show-map'
-    this.showMapButton.addEventListener('click', function (e) {
-      e.preventDefault()
-      this.setFullScreen()
-      // this.fullScreenButton.focus()
-      var state = { 'v': el.id }
-      var title = document.title
-      var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'v', el.id)
-      window.history.pushState(state, title, url)
-    }.bind(this))
-    this.showMapButton.addEventListener('keyup', function (e) {
-      if (e.keyCode === 13 || e.keyCode === 32) {
-        this.fullScreenButton.focus()
-      }
-    }.bind(this))
-    el.parentNode.parentNode.insertBefore(this.showMapButton, el.parentNode)
 
     var hasKey = false
     // Experimental adding key via client side template
@@ -87,42 +65,39 @@
       element: this.zoomButton
     })
 
-    // Fullscreen button
+    // Hide map
     var historyAdvanced = false
-    this.fullScreenButton = document.createElement('button')
-    this.fullScreenButton.className = 'ol-full-screen'
-    this.fullScreenButton.title = 'Make the map fill the screen'
-    this.fullScreenButton.appendChild(document.createTextNode('Full screen'))
-    this.fullScreenButton.addEventListener('click', function (e) {
-      e.preventDefault()
-      if (this.isFullScreen) {
-        if (historyAdvanced) {
-          window.history.back()
-        } else {
-          this.removeFullScreen()
-          e.target.classList.remove('ol-full-screen-back')
-          var state = { 'v': '' }
-          var title = document.title
-          var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'v', '')
-          window.history.replaceState(state, title, url)
-          historyAdvanced = false
-        }
-        // Todo - set keyboard focus to the next link
+    this.hideMapButton = document.createElement('button')
+    this.hideMapButton.className = 'ol-full-screen ol-full-screen-back'
+    this.hideMapButton.appendChild(document.createTextNode('Exit map'))
+    this.hideMapButton.addEventListener('click', function (e) {
+      if (historyAdvanced) {
+        window.history.back()
       } else {
-        this.setFullScreen()
-        var state = { 'v': el.id }
+        this.removeFullScreen()
+        var state = { 'v': '' }
         var title = document.title
-        var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'v', el.id)
-        window.history.pushState(state, title, url)
-        historyAdvanced = true
-        e.target.classList.add('ol-full-screen-back')
+        var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'v', '')
+        window.history.replaceState(state, title, url)
+        historyAdvanced = false
       }
+      // Todo - set keyboard focus to the next link
     }.bind(this))
-    this.fullScreenButton.addEventListener('keyup', function (e) {
+    this.hideMapButton.addEventListener('keyup', function (e) {
       if (e.keyCode === 13 || e.keyCode === 32) {
-        this.showMapButton.style.display === 'none' ? this.fullScreenButton.focus() : this.showMapButton.focus()
+        this.showMapButton.style.display === 'none' ? this.hideMapButton.focus() : this.showMapButton.focus()
       }
     }.bind(this))
+
+    // Show map
+    this.show = function() {
+      this.setFullScreen()
+      var state = { 'v': el.id }
+      var title = document.title
+      var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'v', el.id)
+      window.history.pushState(state, title, url)
+      historyAdvanced = true
+    }.bind(this)
 
     var view = this.options.view
 
@@ -131,9 +106,9 @@
       el.classList.add('map--has-key')
       this.mapContainerInnerElement.appendChild(this.keyElement)
       this.keyElement.insertBefore(this.keyToggleElement, this.keyElement.firstChild)
-      this.keyElement.prepend(this.fullScreenButton)
+      this.keyElement.prepend(this.hideMapButton)
     } else {
-      this.mapContainerInnerElement.prepend(this.fullScreenButton)
+      this.mapContainerInnerElement.prepend(this.hideMapButton)
     }
 
     // Add remaining controls
@@ -170,33 +145,6 @@
       this.openKey()
     }
 
-    // Show map progressive disclosure (desktop only)
-    // Needs a lot of accessbility thinking here...
-    if (this.options.progressive) {
-      this.progressiveButton = document.createElement('button')
-      this.progressiveButton.innerText = this.options.buttonText
-      this.progressiveButton.className = 'govuk-button govuk-button--progressive'
-      this.progressiveButton.setAttribute('aria-pressed', false)
-      this.progressiveButton.addEventListener('click', function (e) {
-        var btn = e.target
-        e.preventDefault()
-        if (btn.getAttribute('aria-pressed') === 'true') {
-          btn.setAttribute('aria-pressed', false)
-          el.parentNode.setAttribute('aria-expanded', false)
-        } else {
-          btn.setAttribute('aria-pressed', true)
-          el.parentNode.setAttribute('aria-expanded', true)
-        }
-        btn.focus()
-        this.map.updateSize()
-      }.bind(this))
-      el.parentNode.parentNode.insertBefore(this.progressiveButton, el.parentNode)
-      // Tablet upwards only
-      if (window.matchMedia && window.matchMedia('(min-width: 40.0625em)').matches) {
-        el.parentNode.setAttribute('aria-expanded', false)
-      }
-    }
-
     //
     // Map events
     //
@@ -225,18 +173,16 @@
 
     // Set fullscreen state
     this.setFullScreen = function () {
+      el.removeAttribute('hidden')
       el.classList.add('map--fullscreen')
-      this.fullScreenButton.classList.add('ol-full-screen-back')
-      this.fullScreenButton.title = 'Go back'
       this.isFullScreen = true
       map.updateSize()
     }
 
     // Remove fullscreen state
     this.removeFullScreen = function () {
+      el.setAttribute('hidden', true)
       el.classList.remove('map--fullscreen')
-      this.fullScreenButton.classList.remove('ol-full-screen-back')
-      this.fullScreenButton.title = 'Make the map fill the screen'
       this.isFullScreen = false
       map.updateSize()
     }
@@ -244,7 +190,7 @@
     // Open key
     this.openKey = function () {
       if (!this.isFullScreen) {
-        this.fullScreenButton.click()
+        this.hideMapButton.click()
       }
       el.classList.add('map--key-open')
       this.keyToggleElement.innerHTML = 'Close'

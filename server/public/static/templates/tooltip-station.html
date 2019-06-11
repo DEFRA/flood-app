@@ -12,7 +12,7 @@
 
 {% if closedOrSuspended %}
 <p class="govuk-body-s govuk-!-margin-bottom-1">
-    <a href="/station/{{stationId}}" data-id="stations.3246">{{props.name}} ({{props.river}})</a>
+    <a href="/station-impacts/{{stationId}}" data-id="stations.3246">{{props.name}} ({{props.river}})</a>
 </p>
 <strong class="overlay__navigation-headline overlay__navigation-headline--disabled">
     <span class="govuk-!-font-weight-bold">Closed or temporarily out of service</span>
@@ -25,7 +25,7 @@
 
   <div class="overlay__navigation-copy overlay__navigation-copy">
     <p class="govuk-body-s govuk-!-margin-bottom-1">
-        <a href="/station/{{stationId}}" data-id="{{stationId}}">{{props.name}} ({{props.river}})</a>
+        <a href="/station-impacts/{{stationId}}" data-id="{{stationId}}">{{props.name}} ({{props.river}})</a>
     </p>
     {% if props.value %}
     <strong class="overlay__navigation-headline overlay__navigation-headline--{{symbol}}">

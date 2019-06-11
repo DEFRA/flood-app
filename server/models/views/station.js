@@ -26,7 +26,6 @@ class ViewModel {
     this.porMaxValueIsProvisional = false
     this.station.floodingIsPossible = false
     this.station.hasPercentiles = true
-
     const now = moment(Date.now())
     const numberOfProvisionalDays = config.provisionalPorMaxValueDays
 
@@ -46,6 +45,16 @@ class ViewModel {
       this.readings = this.telemetry.length
       this.recentValue = this.telemetry[0]
       this.station.recentValue = this.recentValue
+    }
+
+    this.recentValue.formattedTime = moment(this.recentValue.ts).format('h:mma')
+    var today = moment().startOf('day')
+    var yesterday = moment().subtract(1, 'days').startOf('day')
+    this.recentValue.dateWhen = '(' + moment(this.recentValue.ts).format('D/MM/YY') + ')'
+    if (moment(this.recentValue.ts).isSame(today, 'd')) {
+      this.recentValue.dateWhen = ''
+    } else if (moment(this.recentValue.ts).isSame(yesterday, 'd')) {
+      this.recentValue.dateWhen = '(Yesterday)'
     }
 
     const coordinates = JSON.parse(this.station.coordinates).coordinates
@@ -114,9 +123,9 @@ class ViewModel {
     this.forecastJSON = this.ffoi ? this.ffoi.forecastJSON : JSON.stringify({})
 
     // Impacts
-
     if (impacts) {
       this.impacts = impacts
+      impacts.sort((a, b) => b.value - a.value)
     }
 
     // Page category for feedback categorisation

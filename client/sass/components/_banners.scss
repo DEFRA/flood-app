@@ -1,11 +1,17 @@
+.govuk-header--defra-banner-flood-warning {
+    .govuk-header__container {
+        border-bottom:0;
+        margin-bottom:0;
+    }
+}
 .defra-banner-warning {
     //background-color:#dee0e2;
     background-color:#F18700;
     border-top: 2px solid #ffffff;
     border-bottom: 10px solid #ffffff;
-    margin-bottom:30px;
 }
 .defra-banner-warning__container {
+    @extend .govuk-width-container;
     position:relative;
     padding:24px 0 22px 62px;
     @include mq ($from: tablet) {

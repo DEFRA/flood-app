@@ -1,4 +1,5 @@
 .app-map {
+    display: inline-block;
     .govuk-button--show-map {
         margin-bottom:0px;
         @include mq ($from: tablet) {

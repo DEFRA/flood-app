@@ -7,8 +7,8 @@
   var MapContainer = maps.MapContainer
   var forEach = flood.utils.forEach
 
-  function OutlookMap (elementId, options, keyTemplate) {
-    options = options || {}
+  function OutlookMap (elementId) {
+    // options = options || {}
 
     // Outlook map
     var road = maps.layers.road()
@@ -34,14 +34,14 @@
       // var strokeWidth = 2
       var zIndex = feature.get('z-index')
       var lineDash = [2, 3]
-      var fillColour = 'rgba(0,64,35, 0.5)' // '#85994b'
+      var fillColour = 'rgba(133,153,75, 0.8)' // '#85994b'
 
       if (feature.get('risk-level') === 2) {
-        fillColour = 'rgba(0,28,84, 0.5)' // '#ffbf47'
+        fillColour = 'rgba(255,191,71, 0.8)' // '#ffbf47'
       } else if (feature.get('risk-level') === 3) {
-        fillColour = 'rgba(0,67,87, 0.5)' // '#F47738'
+        fillColour = 'rgba(244,119,56, 0.8)' // '#F47738'
       } else if (feature.get('risk-level') === 4) {
-        fillColour = 'rgba(6,96,89, 0.5)' // '#df3034'
+        fillColour = 'rgba(223,48,52, 0.8)' // '#df3034'
       }
 
       return new ol.style.Style({
@@ -83,15 +83,24 @@
     }
 
     var container = new MapContainer(document.getElementById(elementId), {
-      buttonText: 'View map of forecast flood risk',
-      keyTemplate: keyTemplate,
-      progressive: true,
+      keyTemplate: 'map-key-outlook.html',
       view: view,
       layers: [
         road,
         areasOfConcern
       ]
     })
+
+    // Add show map button
+    // Add map view button
+    var mapButton = document.createElement('button')
+    mapButton.innerText = 'View map showing risk areas'
+    mapButton.className = 'defra-button-map'
+    mapButton.addEventListener('click', function (e) {
+      e.preventDefault()
+      container.show()
+    })
+    document.getElementById(elementId).closest('.app-map').prepend(mapButton)
 
     var outlookControl = container.element.querySelector('.map__outlook-control')
     var outlookButtons = outlookControl.querySelectorAll('button')
@@ -110,7 +119,7 @@
   // onto the `maps` object.
   // (This is done mainly to avoid the rule
   // "do not use 'new' for side effects. (no-new)")
-  maps.createOutlookMap = function (containerId, place) {
-    return new OutlookMap(containerId, place, 'key-live-outlook.html')
+  maps.createOutlookMap = function (containerId) {
+    return new OutlookMap(containerId)
   }
 })(window, window.flood)

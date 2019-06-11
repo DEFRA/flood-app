@@ -1,14 +1,3 @@
- .govuk-details--risk-detail {
-     @include govuk-responsive-margin(4, "bottom");
-     .govuk-details__summary {
-         margin-bottom:0;
-     }
-     .govuk-details__text {
-         @include govuk-responsive-margin(0, "bottom");
-         @include govuk-responsive-padding(0, "bottom");
-         padding-left:0;
-         //padding-left:25px;
-         padding-right:0;
-         border-left:0;
-     }
- }
+.govuk-details__text--defra-details-flood {
+    padding-right:0;
+}
