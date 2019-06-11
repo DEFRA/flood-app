@@ -43,6 +43,7 @@
     var floodPolygon = maps.layers.floodPolygon()
     var stations = maps.layers.stations()
     var rain = maps.layers.rain()
+    var impacts = maps.layers.impacts()
     var floodCentroids = maps.layers.floodCentroids()
     var selectedPointFeature = maps.layers.selectedPointFeature()
 
@@ -81,6 +82,7 @@
 
     // Load tooltip
     async function ensureFeatureTooltipHtml (feature) {
+      console.log(feature)
       var id = feature.getId()
       let trimId = id.replace('stations.', '')
       var props = feature.getProperties()
@@ -92,7 +94,12 @@
       }
       var html
       if (!props.html) {
-        if (id.startsWith('stations')) {
+        if (id.startsWith('impacts')) {
+          html = window.nunjucks.render('tooltip.html', {
+            type: 'impact',
+            props: props
+          })
+        } else if (id.startsWith('stations')) {
           // Get upstream - downstream data
           const upDownData = async () => {
             const upDownUrl = '/stations-upstream-downstream/' + trimId + '/' + props.direction
@@ -127,7 +134,6 @@
               return { error: 'Unable to display latest readings' }
             }
           }
-
           html = window.nunjucks.render('tooltip.html', {
             type: 'rain',
             props: props,
@@ -154,8 +160,9 @@
         floodsWarning,
         floodsSevere,
         floodPolygon,
-        stations,
         rain,
+        stations,
+        impacts,
         floodCentroids
       ]
     }
@@ -183,9 +190,10 @@
       var cz = map.getView().getCenter()[0] + ',' + map.getView().getCenter()[1] + ',' + map.getView().getZoom().toFixed(0)
       var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'cz', cz)
       // Layers
+      var i = keyForm.querySelector('#impacts').checked ? 'i' : ''
       var s = keyForm.querySelector('#stations').checked ? 's' : ''
       var r = keyForm.querySelector('#rain').checked ? 'r' : ''
-      var l = [s, r].filter(Boolean).join(',')
+      var l = [i, s, r].filter(Boolean).join(',')
       url = addOrUpdateParameter(url, 'l', l)
       // Replace history entry
       var state = { 'cz': cz, 'l': l }
@@ -232,6 +240,7 @@
           })
 
           // Set booleans for stations and rain centroids
+          var showImpacts = !!impacts.getSource().getFeaturesInExtent(extent).length
           var showStations = !!stations.getSource().getFeaturesInExtent(extent).length
           var showRain = !!rain.getSource().getFeaturesInExtent(extent).length
 
@@ -244,6 +253,7 @@
           } else {
             keyForm.querySelector('#severeFloodWarnings').closest('ul').style.display = 'none'
           }
+          keyForm.querySelector('#impacts').closest('ul').style.display = showImpacts ? 'block' : 'none'
           keyForm.querySelector('#stations').closest('ul').style.display = showStations ? 'block' : 'none'
           keyForm.querySelector('#rain').closest('ul').style.display = showRain ? 'block' : 'none'
 
@@ -254,6 +264,14 @@
             if (input.checked) {
               if (input.hasAttribute('data-severity')) {
                 visibleSeverities.push(parseInt(input.getAttribute('data-severity')))
+              } else if (input.getAttribute('data-layer') === 'impacts') {
+                impacts.getSource().forEachFeatureInExtent(extent, function (feature) {
+                  featuresInViewPort.push({
+                    'id': feature.getId(),
+                    'description': feature.get('label'),
+                    'layer': 'impacts'
+                  })
+                })
               } else if (input.getAttribute('data-layer') === 'stations') {
                 stations.getSource().forEachFeatureInExtent(extent, function (feature) {
                   featuresInViewPort.push({
@@ -350,24 +368,6 @@
       }
     }
 
-    // Set point feature visibility
-    /*
-    function setPointVisibility () {
-      forEach(keyForm.querySelectorAll('.govuk-checkboxes__input'), function (input) {
-        switch (input.getAttribute('data-layer')) {
-          case 'stations': {                        
-            input.checked ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
-            break
-          }
-          case 'rain': {
-            input.checked ? rain.setStyle(maps.styles.rain) : rain.setStyle(new ol.style.Style({}))
-            break
-          }
-        }
-      })
-    }
-    */
-
     function setFloodsOpacity (opacity) {
       floodsSevere.setOpacity(opacity)
       floodsWarning.setOpacity(opacity)
@@ -399,7 +399,9 @@
       if (source) {
         // *** Need a schema for all GeoJson features
         var id = source.getFeatures()[0].getId()
-        if (id.startsWith('stations')) {
+        if (id.startsWith('impacts')) {
+          selectedPointFeature.setStyle(maps.styles.impacts)
+        } else if (id.startsWith('stations')) {
           selectedPointFeature.setStyle(maps.styles.stations)
         } else if (id.startsWith('flood_warning_alert')) {
           selectedPointFeature.setStyle(maps.styles.floods)
@@ -449,6 +451,10 @@
           setFloodsVisibility(4, target.checked)
           break
         }
+        case 'impacts': {
+          target.checked ? impacts.setStyle(maps.styles.impacts) : impacts.setStyle(new ol.style.Style({}))
+          break
+        }
         case 'stations': {
           target.checked ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
           break
@@ -463,6 +469,7 @@
     // Set initial layers views from querystring
     if (getParameterByName('l')) {
       var layers = getParameterByName('l').split(',')
+      keyForm.querySelector('#impacts').checked = layers.includes('i') ? true : false
       keyForm.querySelector('#stations').checked = layers.includes('s') ? true : false
       keyForm.querySelector('#rain').checked = layers.includes('r') ? true : false
     }

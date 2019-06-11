@@ -66,7 +66,7 @@
       datetime="{{model.timestamp}}">{{model.timestamp | formatDate}}</time>.</p>
     {% endif %}
 
-    {% if model.impacts %}
+    {% if model.impacts and ( model.impacts | length > 0 ) %}
     <p class="govuk-body">Historic records show {{ model.impacts.length }} flood impacts occured in this area when river levels previously reached their current height.</p>
     <div id="map-list-impacts" class="defra-map-list govuk-!-margin-bottom-4">
       <div id="impact-detail" class="govuk-details__text govuk-details__text--defra-details-flood">

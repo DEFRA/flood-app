@@ -15,7 +15,7 @@
         'level': impact.value,
         'name': impact.shortname
       })
-    } else if (flood.model.station.percentile5.length) {
+    } else if (flood.model.station.percentile5) {
       lineChart.addThreshold({
         'id': 'alert',
         'level': flood.model.station.percentile5,
