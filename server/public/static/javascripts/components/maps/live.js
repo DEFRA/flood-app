@@ -12,13 +12,11 @@
   var forEach = flood.utils.forEach
   var MapContainer = maps.MapContainer
 
-  function LiveMap (elementId, place, keyTemplate) {
-    
+  function LiveMap (elementId, place) {
     var zoom = place ? 11 : 6
     var center = ol.proj.transform(place
       ? place.center
       : maps.center, 'EPSG:4326', 'EPSG:3857')
-
     // Replace center and zoom if exists in querystring
     if (getParameterByName('cz')) {
       var cz = getParameterByName('cz').split(',')
@@ -45,6 +43,7 @@
     var floodPolygon = maps.layers.floodPolygon()
     var stations = maps.layers.stations()
     var rain = maps.layers.rain()
+    var impacts = maps.layers.impacts()
     var floodCentroids = maps.layers.floodCentroids()
     var selectedPointFeature = maps.layers.selectedPointFeature()
 
@@ -83,6 +82,7 @@
 
     // Load tooltip
     async function ensureFeatureTooltipHtml (feature) {
+      // console.log(feature)
       var id = feature.getId()
       let trimId = id.replace('stations.', '')
       var props = feature.getProperties()
@@ -94,7 +94,12 @@
       }
       var html
       if (!props.html) {
-        if (id.startsWith('stations')) {
+        if (id.startsWith('impacts')) {
+          html = window.nunjucks.render('tooltip.html', {
+            type: 'impact',
+            props: props
+          })
+        } else if (id.startsWith('stations')) {
           // Get upstream - downstream data
           const upDownData = async () => {
             const upDownUrl = '/stations-upstream-downstream/' + trimId + '/' + props.direction
@@ -129,7 +134,6 @@
               return { error: 'Unable to display latest readings' }
             }
           }
-
           html = window.nunjucks.render('tooltip.html', {
             type: 'rain',
             props: props,
@@ -145,9 +149,8 @@
     // MapContainer options
     var options = {
       minIconResolution: 200,
-      buttonText: 'View map of current situation',
       view: view,
-      keyTemplate: keyTemplate,
+      keyTemplate: 'map-key-live.html',
       keyProps: {},
       layers: [
         road,
@@ -157,8 +160,9 @@
         floodsWarning,
         floodsSevere,
         floodPolygon,
-        stations,
         rain,
+        stations,
+        impacts,
         floodCentroids
       ]
     }
@@ -166,6 +170,7 @@
     // Localised
     if (place) {
       options.layers.push(maps.layers.location(place.name, place.center))
+      //options.layers.push(maps.layers.location(place.name, [-2.315848, 52.377300]))
     }
 
     // Selected point feature last in zIndex
@@ -185,9 +190,10 @@
       var cz = map.getView().getCenter()[0] + ',' + map.getView().getCenter()[1] + ',' + map.getView().getZoom().toFixed(0)
       var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'cz', cz)
       // Layers
+      var i = keyForm.querySelector('#impacts').checked ? 'i' : ''
       var s = keyForm.querySelector('#stations').checked ? 's' : ''
       var r = keyForm.querySelector('#rain').checked ? 'r' : ''
-      var l = [s, r].filter(Boolean).join(',')
+      var l = [i, s, r].filter(Boolean).join(',')
       url = addOrUpdateParameter(url, 'l', l)
       // Replace history entry
       var state = { 'cz': cz, 'l': l }
@@ -234,6 +240,7 @@
           })
 
           // Set booleans for stations and rain centroids
+          var showImpacts = !!impacts.getSource().getFeaturesInExtent(extent).length
           var showStations = !!stations.getSource().getFeaturesInExtent(extent).length
           var showRain = !!rain.getSource().getFeaturesInExtent(extent).length
 
@@ -246,6 +253,7 @@
           } else {
             keyForm.querySelector('#severeFloodWarnings').closest('ul').style.display = 'none'
           }
+          keyForm.querySelector('#impacts').closest('ul').style.display = showImpacts ? 'block' : 'none'
           keyForm.querySelector('#stations').closest('ul').style.display = showStations ? 'block' : 'none'
           keyForm.querySelector('#rain').closest('ul').style.display = showRain ? 'block' : 'none'
 
@@ -256,6 +264,14 @@
             if (input.checked) {
               if (input.hasAttribute('data-severity')) {
                 visibleSeverities.push(parseInt(input.getAttribute('data-severity')))
+              } else if (input.getAttribute('data-layer') === 'impacts') {
+                impacts.getSource().forEachFeatureInExtent(extent, function (feature) {
+                  featuresInViewPort.push({
+                    'id': feature.getId(),
+                    'description': feature.get('label'),
+                    'layer': 'impacts'
+                  })
+                })
               } else if (input.getAttribute('data-layer') === 'stations') {
                 stations.getSource().forEachFeatureInExtent(extent, function (feature) {
                   featuresInViewPort.push({
@@ -325,6 +341,9 @@
 
     // Set flood layers visibility
     function setFloodsVisibility (severity, visible) {
+      if (visible) { // Temp fix to stop centroids initially showing if layer is off
+        floodCentroids.setVisible(true)
+      }
       // flood centroids
       floodCentroids.getSource().forEachFeature(function (feature) {
         if (feature.get('severity') === severity) {
@@ -347,22 +366,6 @@
           break
         default:
       }
-    }
-
-    // Set point feature visibility
-    function setPointVisibility () {
-      forEach(keyForm.querySelectorAll('.govuk-checkboxes__input'), function (input) {
-        switch (input.getAttribute('data-layer')) {
-          case 'stations': {                        
-            input.checked ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
-            break
-          }
-          case 'rain': {
-            input.checked ? rain.setStyle(maps.styles.rain) : rain.setStyle(new ol.style.Style({}))
-            break
-          }
-        }
-      })
     }
 
     function setFloodsOpacity (opacity) {
@@ -396,7 +399,9 @@
       if (source) {
         // *** Need a schema for all GeoJson features
         var id = source.getFeatures()[0].getId()
-        if (id.startsWith('stations')) {
+        if (id.startsWith('impacts')) {
+          selectedPointFeature.setStyle(maps.styles.impacts)
+        } else if (id.startsWith('stations')) {
           selectedPointFeature.setStyle(maps.styles.stations)
         } else if (id.startsWith('flood_warning_alert')) {
           selectedPointFeature.setStyle(maps.styles.floods)
@@ -417,9 +422,54 @@
       }
     }
 
+    // Layer visibility
+    function setLayerVisibility (target) {
+      switch (target.name) {
+        case 'baseLayer': {
+          if (target.value === 'mapView') {
+            road.setVisible(true)
+            satellite.setVisible(false)
+          } else {
+            road.setVisible(false)
+            satellite.setVisible(true)
+          }
+          break
+        }
+        case 'severeFloodWarnings': {
+          setFloodsVisibility(1, target.checked)
+          break
+        }
+        case 'floodWarnings': {
+          setFloodsVisibility(2, target.checked)
+          break
+        }
+        case 'floodAlerts': {
+          setFloodsVisibility(3, target.checked)
+          break
+        }
+        case 'floodExpired': {
+          setFloodsVisibility(4, target.checked)
+          break
+        }
+        case 'impacts': {
+          target.checked ? impacts.setStyle(maps.styles.impacts) : impacts.setStyle(new ol.style.Style({}))
+          break
+        }
+        case 'stations': {
+          target.checked ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
+          break
+        }
+        case 'rain': {
+          target.checked ? rain.setStyle(maps.styles.rain) : rain.setStyle(new ol.style.Style({}))
+          break
+        }
+      }
+    }
+
     // Set initial layers views from querystring
     if (getParameterByName('l')) {
       var layers = getParameterByName('l').split(',')
+      keyForm.querySelector('#impacts').checked = layers.includes('i') ? true : false
       keyForm.querySelector('#stations').checked = layers.includes('s') ? true : false
       keyForm.querySelector('#rain').checked = layers.includes('r') ? true : false
     }
@@ -431,10 +481,13 @@
     // TODO: this should be performed dynamically from the key selection, or once cookie is implemented
     map.once('rendercomplete', function (e) {
       // Set floods visibility
-      setFloodsVisibility(4, false)
+      // setFloodsVisibility(4, false)
       // Set point layer visibility based on key checked state
-      setPointVisibility()
+      // setPointVisibility()
       // Toggle key section if features are in viewport
+      forEach(keyForm.querySelectorAll('.govuk-checkboxes__input'), function (input) {
+        setLayerVisibility(input)       
+      })
       updateKeyAndCanvas()
     })
 
@@ -453,7 +506,6 @@
         layerOpacity = 0.4
       }
       setFloodsOpacity(layerOpacity)
-
       // Key icons
       if (resolution <= options.minIconResolution) {
         // Key polygons
@@ -466,7 +518,6 @@
           symbol.style = symbol.getAttribute('data-style')
         })
       }
-
       updateUrl()
       updateKeyAndCanvas()
     })
@@ -559,45 +610,7 @@
 
     // Key form layer toggle
     keyForm.addEventListener('change', function (e) {
-      var target = e.target
-      var name = target.name
-
-      switch (name) {
-        case 'baseLayer': {
-          if (target.value === 'mapView') {
-            road.setVisible(true)
-            satellite.setVisible(false)
-          } else {
-            road.setVisible(false)
-            satellite.setVisible(true)
-          }
-          break
-        }
-        case 'severeFloodWarnings': {
-          setFloodsVisibility(1, target.checked)
-          break
-        }
-        case 'floodWarnings': {
-          setFloodsVisibility(2, target.checked)
-          break
-        }
-        case 'floodAlerts': {
-          setFloodsVisibility(3, target.checked)
-          break
-        }
-        case 'floodExpired': {
-          setFloodsVisibility(4, target.checked)
-          break
-        }
-        case 'stations': {
-          target.checked ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
-          break
-        }
-        case 'rain': {
-          target.checked ? rain.setStyle(maps.styles.rain) : rain.setStyle(new ol.style.Style({}))
-          break
-        }
-      }
+      setLayerVisibility (e.target)
       updateUrl()
       updateKeyAndCanvas()
     })
@@ -641,10 +654,11 @@
     })
 
     // Layer loaded event needed to address render complete event not always firing
-    map.getLayers().forEach(function(layer) {
+    /*
+    map.getLayers().forEach(function (layer) {
       if (layer.getSource()) {
-        layer.getSource().on('change', function(e) {
-          if (this.getState() == 'ready') {
+        layer.getSource().on('change', function (e) {
+          if (this.getState() === 'ready') {
             // Set feature visibility style
             setPointVisibility()
             // Toggle key section if features are in viewport
@@ -653,17 +667,6 @@
         })
       }
     })
-
-    // Set initial map centre and zoom from querystring  
-    /*
-    if (place && place.bbox && !getParameterByName('cz')) {
-      // If we have a location, set the map extent
-      var searchExtent = ol.proj.transformExtent(place.bbox, 'EPSG:4326', 'EPSG:3857')
-      container.map.getView().fit(searchExtent, {
-        maxZoom: 16,
-        size: container.map.getSize()
-      })
-    }
     */
 
     this.map = map
@@ -674,10 +677,7 @@
   // onto the `maps` object.
   // (This is done mainly to avoid the rule
   // "do not use 'new' for side effects. (no-new)")
-  maps.createLiveLocationMap = function (containerId, place) {
-    return new LiveMap(containerId, place, 'key-live-location.html')
-  }
-  maps.createLiveNationalMap = function (containerId, place) {
-    return new LiveMap(containerId, place, 'key-live-national.html')
+  maps.createLiveMap = function (containerId, place) {
+    return new LiveMap(containerId, place)
   }
 })(window, window.flood)

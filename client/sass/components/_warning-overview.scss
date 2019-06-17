@@ -1,61 +1,61 @@
 .defra-warning-overview {
-    //border-top:1px solid $govuk-border-colour;
     overflow:auto;
     .defra-warning-overview__section {
         position:relative;
-        padding-top:7px;
-        padding-left:58px;
-        margin-bottom:15px;
-        @include mq ($from: tablet) {
-            float:left;
-            padding:0;
-            margin-right:30px;
-        }
+        border-bottom:1px solid $govuk-border-colour;
+        padding:25px 0px;
+    }
+    .defra-warning-overview__section:first-child {
+        padding-top:10px;
     }
     .defra-warning-overview__section-title {
-        @extend .govuk-body;
+        @extend .govuk-heading-m;
+        position:relative;
         margin-bottom:0;
+        padding-left:75px;
+        @include mq ($from: tablet) {
+            padding-left:85px;
+        }
     }
     .defra-warning-overview__icon,
     .defra-warning-overview__icon--1 {
         position: absolute;
-        width:50px;
-        height:50px;
+        width:60px;
+        height:60px;
         left:0;
-        top:0;
+        top:50%;
+        margin-top:-26px;
         background-image: url('#{$govuk-images-path}icon-flood-symbols-2x.png');
         background-color:transparent;
-        background-size:180px;
+        background-size:240px;
         background-repeat: no-repeat;
         background-position:-65px -5px;
         @include mq ($from: tablet) {
-            width:60px;
-            height:60px;
-            background-position:-120px -0px;
-            position: relative;
-            display: block;
-            margin-bottom:5px;
+            width:75px;
+            height:75px;
+            background-position:-163px -2px;
+            margin-top:-39px;
         }
     }
     .defra-warning-overview__icon--warning,
     .defra-warning-overview__icon--2 {
         background-position:-65px -65px;
         @include mq ($from: tablet) {
-            background-position:-120px -60px;
+            background-position:-163px -82px;
         }
     }
     .defra-warning-overview__icon--alert,
     .defra-warning-overview__icon--3 {
         background-position:-65px -125px;
         @include mq ($from: tablet) {
-            background-position:-120px -120px;
+            background-position:-163px -162px;
         }
     }
     .defra-warning-overview__icon--removed,
     .defra-warning-overview__icon--4 {
         background-position:-65px -245px;
         @include mq ($from: tablet) {
-            background-position:-120px -240px;
+            background-position:-163px -242px;
         }
     }
 }

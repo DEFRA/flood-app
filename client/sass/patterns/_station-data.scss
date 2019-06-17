@@ -1,0 +1,56 @@
+.station-data {
+    @include mq($from: tablet) {
+        display: table;
+        width:100%;
+        border-collapse: collapse;
+    }
+    .station-data__item {
+        position: relative;
+        width:50%;
+        float:left;
+        margin-bottom:20px;
+        @include mq($from: tablet) {
+            float:none;
+            display: table-cell;
+            vertical-align: top;
+            width:33.33%;
+            box-sizing:border-box;
+        }
+    }
+    .station-data__copy {
+        float:left;
+        @include mq($from: tablet) {
+            min-width:7.2em;
+            margin-bottom:10px;
+        }
+    }
+    .station-data__item-name {
+        @extend .govuk-body-s;
+        display: block;
+        color: $govuk-secondary-text-colour;
+        margin-bottom:1px;
+    }
+    .station-data__item-value {
+        @include govuk-font($weight: bold, $size: 36);
+        margin-bottom:2px;
+        display: block;
+    }
+    .station-data__item-secondary {
+        @extend .govuk-body-s;
+        margin-bottom:0;
+        display: block;
+    }
+    .station-data__icon {
+        display: none;
+        @include mq($from: desktop) {
+            display: block;
+            float:left;
+            width:46px;
+            height:46px;
+            margin-right:0.75em;
+        }
+        margin-bottom:10px;
+        border-radius:100%;
+        border:2px solid $govuk-border-colour;
+    }
+}

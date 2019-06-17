@@ -5,6 +5,11 @@
     <a class="govuk-body-s" href="/target-area/{{props.fwa_code}}">{{props.description}}</a>
   </p>
   <span class="ol-overlay__symbol ol-overlay__symbol--{{props.severity}}"></span>
+{% elif type == 'impact' %}
+  <p>
+    <span class="govuk-body-m govuk-!-font-weight-bold">Flood impact description</span><br/>
+    <a class="govuk-body-s" href="">Trigger station</a>
+  </p>
 {% elif type == 'rain' %}
   <p class="govuk-!-margin-bottom-2">
 
@@ -21,7 +26,7 @@
       {% if rainfallValues.error %}
         Rainfall measured at {{props.label}}
       {% else %}
-        <a class="govuk-body-s" href="/rain-gauge/{{ props.stationReference }}#one-day">Rainfall measured at {{props.label}}</a>
+        <a class="govuk-body-s" href="/rain-gauge/{{ props.stationReference }}">Rainfall measured at {{props.label}}</a>
       {% endif %}
     </span><br/>
     {% endif %}

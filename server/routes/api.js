@@ -18,6 +18,8 @@ const momentDate = moment()
 
 const locationService = require('../services/location')
 
+const floodService = require('../services/flood')
+
 const uri = config.geoserverUrl + '/geoserver/flood/ows'
 const rainfallApiUri = config.rainfallApiUrl
 
@@ -96,5 +98,43 @@ module.exports = [{
   },
   options: {
     description: 'Rainfall API'
+  }
+}, {
+  method: 'GET',
+  path: '/impacts',
+  handler: async (request, h) => {
+    // TODO: Refactor to identify all impacts in England.
+    const impacts = await floodService.getImpactsWithin([
+      -5.75447130203247,
+      49.9302711486816,
+      1.79968345165253,
+      55.8409309387207
+    ])
+    // console.log(impacts)
+    try {
+      const geojsonObject = {
+        'type': 'FeatureCollection',
+        'features': [
+        ]
+      }
+      for (let i = 0; i < impacts.length; i++) {
+        geojsonObject.features.push({
+          'type': 'Feature',
+          'id': 'impacts.' + impacts[i].impactid,
+          'properties': {
+            'shortName': impacts[i].shortname,
+            'description': impacts[i].description,
+            'stationId': impacts[i].rloiid,
+            'stationName': impacts[i].gauge,
+            'value': impacts[i].value
+          },
+          'geometry': JSON.parse(impacts[i].coordinates)
+        })
+      }
+      return geojsonObject
+    } catch (err) {
+      request.yar.set('displayError', { errorMessage: 'Unable to process your request. Please try again later.' })
+      return h.redirect('/')
+    }
   }
 }]

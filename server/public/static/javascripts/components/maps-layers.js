@@ -5,11 +5,13 @@
   function road () {
     return new ol.layer.Tile({
       ref: 'bing-road',
+      /*
       source: new ol.source.BingMaps({
         key: 'Ajou-3bB1TMVLPyXyNvMawg4iBPqYYhAN4QMXvOoZvs47Qmrq7L5zio0VsOOAHUr',
         imagerySet: 'RoadOnDemand'
       }),
-      // source: new ol.source.OSM(),
+      */
+      source: new ol.source.OSM(),
       visible: true,
       zIndex: 0
     })
@@ -37,7 +39,8 @@
           'LAYERS': 'flood_warning_alert',
           'CQL_FILTER': 'severity = 1'
         }
-      })
+      }),
+      visible: false
     })
   }
 
@@ -52,7 +55,8 @@
           'LAYERS': 'flood_warning_alert',
           'CQL_FILTER': 'severity = 2'
         }
-      })
+      }),
+      visible: false
     })
   }
 
@@ -67,7 +71,8 @@
           'LAYERS': 'flood_warning_alert',
           'CQL_FILTER': 'severity = 3'
         }
-      })
+      }),
+      visible: false
     })
 
     /*
@@ -115,7 +120,8 @@
           'LAYERS': 'flood_warning_alert',
           'CQL_FILTER': 'severity = 4'
         }
-      })
+      }),
+      visible: false
     })
   }
 
@@ -135,7 +141,8 @@
         url: '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert_centroid&maxFeatures=10000&outputFormat=application/json',
         format: new ol.format.GeoJSON()
       }),
-      style: maps.styles.floods
+      style: maps.styles.floods,
+      visible: false
     })
   }
 
@@ -247,6 +254,28 @@
     // })
   }
 
+  function impacts () {
+    return new ol.layer.Vector({
+      ref: 'impacts',
+      title: 'impacts',
+      source: new ol.source.Vector({
+        format: new ol.format.GeoJSON(),
+        projection: 'EPSG:3857',
+        url: '/impacts'
+      }),
+      style: new ol.style.Style({})
+    })
+    // return new ol.layer.Vector({
+    //   ref: 'rain',
+    //   title: 'rain',
+    //   source: new ol.source.Vector({
+    //     features: features
+    //   }),
+    //   style: maps.styles.rain,
+    //   visible: false
+    // })
+  }
+
   function location (name, center) {
     var feature = new window.ol.Feature({
       geometry: new window.ol.geom.Point(window.ol.proj.transform(center, 'EPSG:4326', 'EPSG:3857')),
@@ -284,6 +313,7 @@
   layers.floodPolygon = floodPolygon
   layers.floodCentroids = floodCentroids
   layers.stations = stations
+  layers.impacts = impacts
   layers.rain = rain
   layers.location = location
   layers.selectedPointFeature = selectedPointFeature

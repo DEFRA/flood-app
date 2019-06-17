@@ -65,7 +65,8 @@ module.exports = [{
         id: Joi.number().required()
       },
       query: {
-        direction: Joi.string().valid('d', 'u').default('u')
+        direction: Joi.string().valid('d', 'u').default('u'),
+        i: Joi.string()
       }
     }
   }

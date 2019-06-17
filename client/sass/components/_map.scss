@@ -2,10 +2,8 @@
   display: none;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   @include mq ($from: tablet) {
-    display: block;
     margin:0;
     padding:0px;
-    //border:1px solid $govuk-border-colour;
   }
 }
 .map canvas { // Open layers bug fix
@@ -93,27 +91,54 @@
   }
 }
 .ol-full-screen {
-  //right:10px;
-  //top: -50px;
   left:10px;
   top:10px;
   width: 40px;
   height:40px;
+  background:none;
   text-indent: -5000px;
-  background-position: 5px -85px;
-  background-color:$govuk-link-colour;
   z-index:3;
 }
-.ol-full-screen.ol-full-screen-back {
-  background-position: -25px -85px;
+.ol-full-screen:before {
+  position: absolute;
+  content: '';
+  left:0px;
+  top:0px;
+  width: 40px;
+  height:40px;
+  background-image: url('#{$govuk-images-path}icon-map-controls-2x.png');
+  background-position: 5px -85px;
+  background-color:$govuk-link-colour;
+  background-size:90px;
+  background-repeat: no-repeat;
+  background-position:center center;
+  @include mq ($from: tablet) {
+    background-color:transparent;
+  }
 }
-.map--key-open .ol-full-screen.ol-full-screen-back {
+.ol-full-screen.ol-full-screen-back {
+  @include mq ($from: tablet) {
+    width:120px;
+    padding-left:26px;
+    text-indent: 0px;
+    background-color:$govuk-link-colour;
+  }
+  &:before {
+    background-position: -25px -85px;
+  }
+}
+.ol-full-screen.ol-full-screen-back:hover:before {
+  @include mq ($until: tablet) {
+    background-color:$govuk-focus-colour;
+  }
+}
+.map--key-open .ol-full-screen.ol-full-screen-back:before {
   @include mq ($until: tablet) {
     background-position: -55px -85px;
     background-color:white;
   }
 }
-.map--key-open .ol-full-screen.ol-full-screen-back:hover {
+.map--key-open .ol-full-screen.ol-full-screen-back:hover:before {
   @include mq ($until: tablet) {
     background-color:$govuk-focus-colour;
   }
@@ -923,7 +948,8 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
   .map-key__title {
     @extend .govuk-heading-m;
     @include mq ($until: tablet) {
-      font-size:21px;
+      display: none;
+      // font-size:21px;
     }
     margin-top:6px;
     margin-bottom:0;
