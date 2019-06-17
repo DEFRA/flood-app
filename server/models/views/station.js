@@ -127,9 +127,6 @@ class ViewModel {
       this.impacts = impacts
       impacts.sort((a, b) => b.value - a.value)
     }
-    impacts.sort((a, b) => b.value - a.value)
-    // console.log(impacts)
-
     // Page category for feedback categorisation
     this.pageCategory = this.isFfoi ? 'station-ffoi' : ''
   }

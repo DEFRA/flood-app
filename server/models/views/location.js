@@ -2,13 +2,14 @@ const severity = require('../severity')
 const { groupBy } = require('../../util')
 
 class ViewModel {
-  constructor ({ place, floods, stations, impacts }) {
+  constructor ({ place, floods, stations, impacts, activeImpacts }) {
     const title = place.name
 
     Object.assign(this, {
       place,
       floods,
       impacts,
+      activeImpacts,
       location: title,
       pageTitle: `${title} flood risk`
     })
@@ -104,6 +105,17 @@ class ViewModel {
       this.impacts = impacts
     }
 
+    // sort impacts order by value
+    impacts.sort((a, b) => b.value - a.value)
+
+    // create an array of all active impacts
+    activeImpacts = impacts.filter(function (active) {
+      return active.telemetryactive === true
+    })
+
+    if (activeImpacts) {
+      this.activeImpacts = activeImpacts
+    }
   }
 }
 
