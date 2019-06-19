@@ -124,8 +124,14 @@ class ViewModel {
 
     // Impacts
     if (impacts) {
-      this.impacts = impacts
+      // Add Highest level and Top of typical range to imapacts array for sorting purposes
+
+      impacts.push({ impactid: 'highest', value: this.station.porMaxValue, description: 'Highest level on record', shortname: 'Highest level on record' })
+      impacts.push({ impactid: 'alert', value: this.station.percentile5, description: 'Top of typical range', shortname: 'Top of typical range' })
+
       impacts.sort((a, b) => b.value - a.value)
+
+      this.impacts = impacts
     }
     // Page category for feedback categorisation
     this.pageCategory = this.isFfoi ? 'station-ffoi' : ''

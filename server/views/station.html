@@ -93,13 +93,6 @@
         </tr>
       </thead>
       <tbody class="govuk-table__body">
-        {% if model.station.porMaxValue %}
-        <tr class="defra-table-impact__row govuk-table__row" data-id="highest" data-level="{{ model.station.porMaxValue }}" data-name="Highest level on record">
-          <th class="govuk-table__header" scope="row">{{ model.station.porMaxValue }}m</th>
-          <td class="govuk-table__cell">Highest level on record</td>
-          <td class="govuk-table__cell"><button class="defra-button-text-s">Show on chart</button></td>
-        </tr>
-        {% endif %}
         {% for impact in model.impacts %}
         <tr class="defra-table-impact__row govuk-table__row" data-id="{{ impact.impactid }}" data-level="{{ impact.value }}" data-name="{{ impact.shortname }}">
           <th class="govuk-table__header" scope="row">{{ impact.value }}m</th>
@@ -113,13 +106,6 @@
             <td class="govuk-table__cell">Flood warning threshold</td>
             <td class="govuk-table__cell"><button class="defra-button-text-s">Show on chart</button></td>
           </tr>
-        {% endif %}
-        {% if model.station.percentile5 %}
-        <tr class="defra-table-impact__row govuk-table__row" data-id="alert" data-level="{{ model.station.percentile5 }}" data-name="Top of typical range">
-          <th class="govuk-table__header" scope="row">{{ model.station.percentile5 }}m</th>
-          <td class="govuk-table__cell">Top of typical range</td>
-          <td class="govuk-table__cell"><button class="defra-button-text-s">Show on chart</button></td>
-        </tr>
         {% endif %}
       </tbody>
     </table>

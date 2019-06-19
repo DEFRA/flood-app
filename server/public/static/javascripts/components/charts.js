@@ -186,11 +186,11 @@
         // Remove button
         remove.on('click', function () {
           d3.event.stopPropagation()
-          console.log(thresholds)
+          // console.log(thresholds)
           thresholds = thresholds.filter(function(x) {
             return x.id !== threshold.id
           })
-          console.log(thresholds)
+          // console.log(thresholds)
           // Show tooltip
           modifyAxis()
           updateDimensions()
