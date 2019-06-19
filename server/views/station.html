@@ -29,33 +29,29 @@
 
 {% if model.station.isActive %}
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full"> 
-    <div class="station-data govuk-!-margin-bottom-6">
-      <div class="station-data__item">
-        <span class="station-data__icon"></span>
-        <div class="station-data__copy">
-          <span class="station-data__item-name">Latest level</span>
-          <strong class="station-data__item-value">Normal</strong>
-          <span class="station-data__item-secondary">{{ (model.station.recentValue._).toFixed(2) }}m (typical {{ model.station.percentile95 }}m - {{ model.station.percentile5 }}m)</span>
-        </div>
-      </div>
-      <div class="station-data__item">
-        <span class="station-data__icon"></span>
-        <div class="station-data__copy">
-          <span class="station-data__item-name">Current trend</span>
-          <strong class="station-data__item-value">Stable</strong>
-          <span class="station-data__item-secondary">Forecast within typical range</span>
-        </div>
-      </div>
-      <div class="station-data__item">
-        <span class="station-data__icon"></span>
-        <div class="station-data__copy">
-          <span class="station-data__item-name">Last updated</span>
-          <strong class="station-data__item-value">{{ model.station.recentValue.formattedTime }}</strong>
-          <span class="station-data__item-secondary">{{ model.station.recentValue.dateWhen }}</span>
-        </div>
+  <div class="govuk-grid-column-one-third"> 
+    <p role="text" class="govuk-!-padding-bottom-4">
+      <span class="govuk-caption-m">Latest level</span>
+      <strong class="govuk-heading-l govuk-!-margin-bottom-1">Normal</strong>
+      <span class="govuk-body">{{ (model.station.recentValue._).toFixed(2) }}m (typical {{ model.station.percentile95 }}m - {{ model.station.percentile5 }}m)</span>
+    </p>
+  </div>
+  <!--
+    <div class="station-data__item">
+      <span class="station-data__icon"></span>
+      <div class="station-data__copy">
+        <span class="station-data__item-name">Current trend</span>
+        <strong class="station-data__item-value">Stable</strong>
+        <span class="station-data__item-secondary">Forecast within typical range</span>
       </div>
     </div>
+  -->
+  <div class="govuk-grid-column-one-third"> 
+    <p role="text" class="govuk-!-padding-bottom-4">
+      <span class="govuk-caption-m">Last updated</span>
+      <time datetime="" class="govuk-heading-l govuk-!-margin-bottom-1">{{ model.station.recentValue.formattedTime }}</time>
+      <span class="govuk-body">{{ model.station.recentValue.dateWhen }}</span>
+    </p>
   </div>
 </div>
 <div class="govuk-grid-row">
