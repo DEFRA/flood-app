@@ -1,33 +1,40 @@
-.govuk-warning-text--flood-warning {
-    padding:10px 0 0 0;
-    .govuk-warning-text__text {
-        padding-left:52px;
-        @include govuk-font($size: 24, $weight: bold);
-        @include mq ($from: tablet) {
-            padding-left:58px;
-        }
-    }
-    .govuk-warning-text__icon {
-        background: transparent url('#{$govuk-images-path}icon-flood-symbols-2x.png') no-repeat;
-        background-position: -9px -70px;
-        border-radius: 0;
-        border:0;
-        background-size: 180px;
-        text-indent: -5000px;
-        width: 42px;
-        height: 42px;
-        padding: 0;
-        margin-top:-18px;
-        font-size: 1em;
-        line-height: auto;
-        @include mq ($from: tablet) {
-            width: 48px;
-            height: 48px;
-            margin-top:-22px;
-            background-position:-66px -66px;
-        }
+
+.defra-warning-flood {
+    position:relative;
+    padding:30px 25px 30px 80px;
+    background-color: #E4271B;
+}
+.defra-warning-flood__text {
+    position:relative;
+    @include govuk-font($size: 24);
+    top:2px;
+    font-weight:normal;
+    color:white;
+}
+.defra-warning-flood__icon {
+    position: absolute;
+    top:50%;
+    left:20px;
+    background: transparent url('#{$govuk-images-path}icon-flood-symbols-2x.png') no-repeat;
+    background-position: -9px -70px;
+    border-radius: 0;
+    border:0;
+    background-size: 180px;
+    width: 42px;
+    height: 42px;
+    margin-top:-21px;
+    padding: 0;
+    margin-top:-18px;
+    font-size: 1em;
+    line-height: auto;
+    @include mq ($from: tablet) {
+        width: 48px;
+        height: 48px;
+        margin-top:-22px;
+        background-position:-66px -66px;
     }
 }
+/*
 .govuk-warning-text--severe-flood-warning {
     @extend .govuk-warning-text--flood-warning;
     .govuk-warning-text__icon {
@@ -37,6 +44,8 @@
         }
     }
 }
+*/
+/*
 .govuk-warning-text--flood-alert {
     @extend .govuk-warning-text--flood-warning;
     .govuk-warning-text__icon {
@@ -46,3 +55,4 @@
         }
     }
 }
+*/
