@@ -23,7 +23,7 @@
     <!-- Flood alerts or warnings in force -->
     {% if model.hasActiveFloods %}
       <div class="govuk-warning-text govuk-warning-text--{{model.highestSeverity.hash}}">
-        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <span class="govuk-warning-text__icon"></span>
         <strong class="govuk-warning-text__text">
           <span class="govuk-warning-text__assistive">{{model.highestSeverity.title}}</span>
           {{model.highestSeverity.subTitle}}<!-- - {{model.highestSeverity.tagline.toLowerCase()}} -->
@@ -91,7 +91,7 @@
     {% if model.rivers %}
     <h2 class="govuk-heading-m">River and sea levels</h2>
     <p class="govuk-body">River and sea levels are regularly checked by a network of monitoring stations. These levels can help you understand flood risk now and in the next few days.</p>
-    <div id="map-list-levels" class="defra-map-list govuk-!-margin-bottom-4">
+    <div id="map-list-stations" class="defra-map-list govuk-!-margin-bottom-4">
       <div id="level-detail" class="govuk-details__text govuk-details__text--defra-details-flood">
         {% for name, river in model.rivers %}
         <h2 class="govuk-heading-s govuk-!-margin-bottom-3">{{name}} at:</h2>
@@ -100,7 +100,7 @@
           <li class="defra-list-flood__item">
             <a href="/station/{{station.rloi_id}}">{{station.external_name}}</a>
             <div class="defra-list-flood__meta">
-              Level: &lt;High/Normal/Low&gt;, Trend: &lt;Rising/Stable/Falling&gt;, Updated: &lt;00:00am&gt;
+              Level: &lt;High/Normal/Low&gt;<!--, Trend: &lt;Rising/Stable/Falling&gt;-->, Updated: &lt;00:00am&gt;
             </div>
           </li>
           {% endfor %}
