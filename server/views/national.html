@@ -132,13 +132,13 @@
       Flood risk for the next 5 days
     </h2>
     {{ model.outlook | safe }}
-    <p class="govuk-body govuk-!-margin-bottom-0">
+    <p class="govuk-body">
       <time class="form-hint" title="{{model.timestampOutlook | formatDate}}"
         datetime="{{ model.timestampOutlook }}">Updated {{ model.timestampOutlook | formatDate }}</time>
     </p>
 
     {% if model.hasOutlookConcern %}
-    <div class="app-map govuk-!-margin-top-4">
+    <div class="app-map">
       <div class="app-map__container">
         <div class="map" id="map-outlook" hidden>
           <div class="map__container">
