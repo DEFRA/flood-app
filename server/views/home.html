@@ -69,11 +69,18 @@
     })
   }
 
+  function onConfirm (confirmed) {
+    document.getElementById('location').value = confirmed
+    document.getElementsByTagName('form')[0].submit()
+  }
+
   accessibleAutocomplete({
     element: document.getElementById('autocomplete-container'),
     id: 'location',
     name: 'location',
-    source: suggest
+    source: suggest,
+    onConfirm: onConfirm,
+    minLength: 3
   })
 
   // Remove the original input
