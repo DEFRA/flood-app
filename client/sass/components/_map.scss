@@ -435,7 +435,7 @@
 }
 */
 .ol-overlay-inner {
-  padding:10px 10px 10px 10px;
+  padding:15px;
   position:relative;
   @include govuk-font($size: 16);
   p {
@@ -570,32 +570,8 @@
 */
 
 // River level navigation
-.overlay__container {
-  position:relative;
-}
-.overlay__copy {
-  padding-left:36px;
-  padding-top:2px;
-  padding-bottom:2px;
-} 
-.overlay__navigation {
-  position:relative;
-  padding-left:34px;
-}
-/*
-.overlay__navigation:after {
-  position: absolute;
-  z-index:1;
-  content:'';
-  width:2px;
-  left:50%;
-  top:1px;
-  bottom:1px;
-  background-color: $govuk-border-colour;
-  margin-left:-1px;
-}
-*/
-.overlay__navigation-button {
+
+.overlay-navigation-button {
   position:relative;
   display:block;
   z-index:2;
@@ -607,123 +583,37 @@
   padding:0;
   margin:0;
   text-decoration: underline;
-  font: inherit;
   cursor: pointer;
+  padding-left:20px;
 }
-.overlay__navigation-button:hover {
+.overlay-navigation-button:hover {
   opacity: 0.75;
 }
-.overlay__navigation-button:after {
-  position: absolute;
-  z-index:1;
-  content:'';
-  width:2px;
-  left:-23px;
-  top: 0px;
-  bottom:0px;
-  background-color: $govuk-border-colour;
-}
-.overlay__navigation-button:before {
+.overlay-navigation-button__icon {
   position:absolute;
-  z-index:2;
-  content:'';
-  width:8px;
-  height:8px;
-  left:-27px;
-  transform: rotate(45deg);
+  left:0px;
+  top:2px;
+  width:13px;
+  height:14px;
 }
-.overlay__navigation-button--upstream,
-.overlay__navigation-button--upstream-tributary {
-  padding-bottom:2px;
+.overlay-navigation-button--up {
+  margin-bottom:10px;
 }
-.overlay__navigation-button--upstream-tributary {
-  padding-top:5px;
-  @include mq ($from: tablet) {
-    padding-top:2px;
+.overlay-navigation-button--up-trib {
+  margin-bottom:10px;
+  .overlay-navigation-button__icon {
+    top:2px;
+    transform: rotate(90deg);
   }
 }
-.overlay__navigation-button--downstream {
-  padding-top:2px;
+.overlay-navigation-button--down {
+  margin-top:10px;
+  .overlay-navigation-button__icon {
+    top:3px;
+    transform: rotate(180deg);
+  }
 }
-.overlay__navigation-button--upstream:after {
-  top: 2px;
-}
-.overlay__navigation-button--downstream:after {
-  bottom:2px;
-}
-.overlay__navigation-button--upstream:before {
-  top:3px;
-  border-left:2px solid $govuk-border-colour;
-  border-top:2px solid $govuk-border-colour;
-}
-.overlay__navigation-button--downstream:before {
-  bottom:3px;
-  border-right:2px solid $govuk-border-colour;
-  border-bottom:2px solid $govuk-border-colour;
-}
-.overlay__navigation-button--upstream-tributary:before {
-  position:absolute;
-  z-index:2;
-  content:'';
-  width:10px;
-  height:10px;
-  left:-27px;
-  top:50%;
-  margin-top:-6px;
-  border-radius: 100%;
-  background-color:$govuk-border-colour;
-}
-.overlay__navigation-copy {
-  position:relative;
-  padding-top:8px;
-  padding-bottom:8px;
-}
-.overlay__navigation-copy:after {
-  position: absolute;
-  z-index:1;
-  content:'';
-  width:2px;
-  left:-23px;
-  top: 0px;
-  bottom:0px;
-  background-color: $govuk-border-colour;
-}
-.overlay__navigation-headline {
-  @extend .govuk-body;
-  position:relative;
-  display: block;
-  font-weight:bold;
-  margin-bottom:0;
-}
-.overlay__navigation-headline:before {
-  position: absolute;
-  z-index:2;
-  content:'';
-  width:26px;
-  height:26px;
-  left:-35px;
-  top: 50%;
-  margin-top:-14px;
-  background-image: url('#{$govuk-images-path}icon-map-features-2x.png');
-  background-color: transparent;
-  background-size:400px;
-  background-repeat: no-repeat;
-}
-.overlay__navigation-headline--above:before {
-  background-position:-302px -153px;
-}
-.overlay__navigation-headline--forecastAbove:before {
-  background-position:-302px -103px;
-}
-.overlay__navigation-headline--normal:before {
-  background-position:-302px -53px;
-}
-.overlay__navigation-headline--disabled:before {
-  background-position:-302px -3px;
-}
-.overlay__navigation-headline--unreliable:before {
-  background-position:-352px -3px;
-}
+
 
 //
 // Map search

@@ -12,11 +12,16 @@
   var forEach = flood.utils.forEach
   var MapContainer = maps.MapContainer
 
-  function LiveMap (elementId, place) {
+  function LiveMap (elementId /*, place*/) {
+    /*
     var zoom = place ? 11 : 6
     var center = ol.proj.transform(place
       ? place.center
       : maps.center, 'EPSG:4326', 'EPSG:3857')
+    */
+    var zoom = 6
+    var center = ol.proj.transform(maps.center, 'EPSG:4326', 'EPSG:3857')
+
     // Replace center and zoom if exists in querystring
     if (getParameterByName('cz')) {
       var cz = getParameterByName('cz').split(',')
@@ -82,7 +87,6 @@
 
     // Load tooltip
     async function ensureFeatureTooltipHtml (feature) {
-      // console.log(feature)
       var id = feature.getId()
       let trimId = id.replace('stations.', '')
       var props = feature.getProperties()
@@ -168,10 +172,12 @@
     }
 
     // Localised
+    /*
     if (place) {
       options.layers.push(maps.layers.location(place.name, place.center))
       //options.layers.push(maps.layers.location(place.name, [-2.315848, 52.377300]))
     }
+    */
 
     // Selected point feature last in zIndex
     options.layers.push(selectedPointFeature)
@@ -190,10 +196,13 @@
       var cz = map.getView().getCenter()[0] + ',' + map.getView().getCenter()[1] + ',' + map.getView().getZoom().toFixed(0)
       var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'cz', cz)
       // Layers
+      var sw = keyForm.querySelector('#severeFloodWarnings').checked ? 'sw' : ''
+      var w = keyForm.querySelector('#floodWarnings').checked ? 'w' : ''
+      var a = keyForm.querySelector('#floodAlerts').checked ? 'a' : ''
       var i = keyForm.querySelector('#impacts').checked ? 'i' : ''
       var s = keyForm.querySelector('#stations').checked ? 's' : ''
       var r = keyForm.querySelector('#rain').checked ? 'r' : ''
-      var l = [i, s, r].filter(Boolean).join(',')
+      var l = [i, s, r, a, w, sw].filter(Boolean).join(',')
       url = addOrUpdateParameter(url, 'l', l)
       // Replace history entry
       var state = { 'cz': cz, 'l': l }
@@ -469,6 +478,9 @@
     // Set initial layers views from querystring
     if (getParameterByName('l')) {
       var layers = getParameterByName('l').split(',')
+      keyForm.querySelector('#severeFloodWarnings').checked = layers.includes('sw') ? true : false
+      keyForm.querySelector('#floodWarnings').checked = layers.includes('w') ? true : false
+      keyForm.querySelector('#floodAlerts').checked = layers.includes('a') ? true : false
       keyForm.querySelector('#impacts').checked = layers.includes('i') ? true : false
       keyForm.querySelector('#stations').checked = layers.includes('s') ? true : false
       keyForm.querySelector('#rain').checked = layers.includes('r') ? true : false
@@ -617,7 +629,7 @@
 
     // Overlay river level navigation button click
     document.querySelector('.ol-overlaycontainer-stopevent').addEventListener('click', async function (e) {
-      if (e.target.classList.contains('overlay__navigation-button')) {
+      if (e.target.classList.contains('overlay-navigation-button')) {
         var nextStationId = e.target.getAttribute('data-id')
         var feature = stations.getSource().getFeatureById(nextStationId)
         container.selectedFeature.set('isSelected', false)

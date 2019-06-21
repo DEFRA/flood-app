@@ -2,10 +2,17 @@
   var maps = flood.maps
   var model = flood.model
 
-  var mapLive = maps.createLiveMap('map-live', model.place)
+  var mapLive = maps.createLiveMap('map-live')
+  var container = mapLive.container
+  var map = mapLive.map
+  var coordinates = model.place.center
+  var name = model.place.name
+
+  // Add locator
+  container.addLocator(name, coordinates)
 
   // Ultimately needs to be in the MapContainer
-  function showLayer(map, state) {
+  function showFeatureSet(map, state) {
     // Set layers in key
     var layers = document.querySelectorAll('.govuk-checkboxes__input')
     layers.forEach(input => {
@@ -27,7 +34,6 @@
     })
     // Set layers and/or features on map
     map.getLayers().forEach(function (layer) {      
-      console.log(layer.get('ref'))
       switch (layer.get('ref')) {
         case 'floods-alert':
         case 'floods-warning':
@@ -66,8 +72,10 @@
     mapListWarning.mapButton.addEventListener('click', function (e) {
       e.preventDefault()
       // Show map
-      mapLive.container.show()
-      showLayer(mapLive.map, 'warnings')
+      container.show()
+      container.setCenter(coordinates)
+      container.setZoom(11)
+      showFeatureSet(map, 'warnings')
     })
   }
 
@@ -80,8 +88,10 @@
     mapListImpacts.mapButton.addEventListener('click', function (e) {
       e.preventDefault()
       // Show map
-      mapLive.container.show()
-      showLayer(mapLive.map, 'impacts')
+      container.show()
+      container.setCenter(coordinates)
+      container.setZoom(11)
+      showFeatureSet(map, 'impacts')
     })
   }
 
@@ -94,8 +104,10 @@
     mapListStations.mapButton.addEventListener('click', function (e) {
       e.preventDefault()
       // Show map
-      mapLive.container.show()
-      showLayer(mapLive.map, 'stations')
+      container.show()
+      container.setCenter(coordinates)
+      container.setZoom(11)
+      showFeatureSet(map, 'stations')
     })
   }
 
