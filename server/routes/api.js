@@ -118,6 +118,7 @@ module.exports = [{
         ]
       }
       for (let i = 0; i < impacts.length; i++) {
+        var obsDate = impacts[i].obsfloodmonth && impacts[i].obsfloodyear ? '(' + impacts[i].obsfloodmonth + ' ' + impacts[i].obsfloodyear + ')' : ''
         geojsonObject.features.push({
           'type': 'Feature',
           'id': 'impacts.' + impacts[i].impactid,
@@ -125,8 +126,10 @@ module.exports = [{
             'shortName': impacts[i].shortname,
             'description': impacts[i].description,
             'stationId': impacts[i].rloiid,
+            'impactId': impacts[i].impactid,
             'stationName': impacts[i].gauge,
-            'value': impacts[i].value
+            'value': impacts[i].value,
+            'obsDate': obsDate
           },
           'geometry': JSON.parse(impacts[i].coordinates)
         })

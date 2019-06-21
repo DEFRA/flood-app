@@ -6,36 +6,21 @@
   </p>
   <span class="ol-overlay__symbol ol-overlay__symbol--{{props.severity}}"></span>
 {% elif type == 'impact' %}
-  <p>
-    <span class="govuk-body-m govuk-!-font-weight-bold">Flood impact description</span><br/>
-    <a class="govuk-body-s" href="">Trigger station</a>
+  <p class="govuk-body-s">
+    Historic flood impact {{ props.obsDate }}<br/>
+    <span class="govuk-!-font-weight-bold">{{ props.description }}</span><br/>
+    <a href="/station/{{props.stationId}}?i={{props.impactId}}">{{ props.stationName }}</a>
   </p>
 {% elif type == 'rain' %}
-  <p class="govuk-!-margin-bottom-2">
-
-    {% if props.gridRef %}
-    <span class="govuk-body-m govuk-!-font-weight-bold">
-      {% if rainfallValues.error %}
-        Rainfall measured at grid ref {{props.gridRef}}
-      {% else %}
-        <a class="govuk-body-s" href="/rain-gauge/{{ props.stationReference }}#one-day">Rainfall measured at grid ref {{props.gridRef}}</a>
-      {% endif %}
-    </span><br/>
-    {% else %}
-    <span class="govuk-body-m govuk-!-font-weight-bold">
-      {% if rainfallValues.error %}
-        Rainfall measured at {{props.label}}
-      {% else %}
-        <a class="govuk-body-s" href="/rain-gauge/{{ props.stationReference }}">Rainfall measured at {{props.label}}</a>
-      {% endif %}
-    </span><br/>
-    {% endif %}
-
+  <p class="govuk-body-s">
+    Rainfall measuring gauge<br/>
+    <span class="govuk-!-font-weight-bold">
     {% if rainfallValues.error %}
-    <span class="govuk-body-s">{{rainfallValues.error}}</span><br/>
+      {{rainfallValues.error}}
     {% else %}
-    <span class="govuk-body-s">{% if rainfallValues.dailyTotal === 0 %} No rain was recorded in the last 24 hour period measured{% else %} <strong>{{ rainfallValues.dailyTotal }}mm</strong> in the last 24 hour period measured{% endif %}</span><br/>
+      {% if rainfallValues.dailyTotal === 0 %} No rain was recorded in the last 24 hour period measured{% else %} <strong>{{ rainfallValues.dailyTotal }}mm</strong> in the last 24 hour period measured{% endif %}
     {% endif %}
-
+    </span><br/>
+    <a href="/rain-gauge/{{ props.stationReference }}#one-day">Rainfall at grid ref {{props.gridRef}}</a> 
   </p>
 {% endif %}
