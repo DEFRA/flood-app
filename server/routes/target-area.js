@@ -14,6 +14,7 @@ module.exports = {
 
       const flood = floods.find(n => n.code === code)
       const model = new ViewModel({ area, flood })
+      model.referer = request.headers.referer || config.siteUrl
 
       return h.view('target-area', { model })
     } catch (err) {
