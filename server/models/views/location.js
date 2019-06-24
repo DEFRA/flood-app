@@ -106,7 +106,7 @@ class ViewModel {
     // stations.splice(stations.findIndex(stations => stations[s].value_erred === null), 1)
     }
 
-    console.log('stations', stations)
+    // console.log('stations', stations)
     // stations = stations.filter(item => item.value_erred !== null)
     // console.log('updatedStations', updatedStations.length)
 

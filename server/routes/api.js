@@ -104,13 +104,16 @@ module.exports = [{
   path: '/impacts',
   handler: async (request, h) => {
     // TODO: Refactor to identify all impacts in England.
-    const impacts = await floodService.getImpactsWithin([
+    const allImpacts = await floodService.getImpactsWithin([
       -5.75447130203247,
       49.9302711486816,
       1.79968345165253,
       55.8409309387207
     ])
-    // console.log(impacts)
+
+    // TODO: Refactor: Create getActiveImpactsWithin method or similar.
+    const impacts = allImpacts.filter(active => active.telemetryactive === true)
+
     try {
       const geojsonObject = {
         'type': 'FeatureCollection',
