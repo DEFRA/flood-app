@@ -3,14 +3,13 @@ const { groupBy } = require('../../util')
 const moment = require('moment-timezone')
 
 class ViewModel {
-  constructor ({ place, floods, stations, impacts, activeImpacts }) {
+  constructor ({ place, floods, stations, impacts }) {
     const title = place.name
 
     Object.assign(this, {
       place,
       floods,
       impacts,
-      activeImpacts,
       location: title,
       pageTitle: `${title} flood risk`
     })
@@ -88,8 +87,8 @@ class ViewModel {
       this.groupedFloods = groupedFloods
       this.floodsPrimary = primaryStatement
       this.floodsSecondary = secondaryStatement + inactiveStatement
-      this.hasFloodsSecondary = this.floodsSecondary.length ? true : false
-      this.hasFloodsList = floods.length > primaryGroup.length || floods.length > 2 ? true : false
+      this.hasFloodsSecondary = !!this.floodsSecondary.length
+      this.hasFloodsList = !!(floods.length > primaryGroup.length || floods.length > 2)
       this.activeFloods = activeFloods
       this.hasActiveFloods = hasActiveFloods
       this.inactiveFloods = inactiveFloods
@@ -126,18 +125,13 @@ class ViewModel {
 
     // Impacts
     if (impacts) {
+      // sort impacts order by value
+      impacts.sort((a, b) => b.value - a.value)
+
+      // create an array of all active impacts
+      const activeImpacts = impacts.filter(active => active.telemetryactive === true)
+
       this.impacts = impacts
-    }
-
-    // sort impacts order by value
-    impacts.sort((a, b) => b.value - a.value)
-
-    // create an array of all active impacts
-    activeImpacts = impacts.filter(function (active) {
-      return active.telemetryactive === true
-    })
-
-    if (activeImpacts) {
       this.activeImpacts = activeImpacts
     }
   }

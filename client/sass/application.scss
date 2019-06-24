@@ -14,7 +14,6 @@ $govuk-global-styles: true;
 
 // Custom patterns that aren't in Frontend or prorotpye kit
 @import "patterns/risk-detail"; // Dan Leech
-@import "patterns/station-data"; // Dan Leech
 @import "patterns/map"; // Dan Leech (Pattern for buttons, progressive disclousre and map figure)
 
 // Custom objects overides for existing components

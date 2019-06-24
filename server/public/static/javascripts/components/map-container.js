@@ -98,7 +98,6 @@
       window.history.pushState(state, title, url)
       historyAdvanced = true
     }.bind(this)
-
     var view = this.options.view
 
     // Add key and fullscreen buttons
@@ -133,6 +132,22 @@
       })
       */
     })
+
+    // Set center
+    this.setCenter = function(coordinates) {
+      var center = ol.proj.transform(coordinates, 'EPSG:4326', 'EPSG:3857')
+      map.getView().setCenter(center)
+    }
+
+    // Set zoom
+    this.setZoom = function(zoom) {
+      map.getView().setZoom(zoom)
+    }
+
+    // Add locator: Could this be an exception as a locator may be common to all maps?
+    this.addLocator = function(name, coordinates) {
+      map.addLayer(maps.layers.location(name, coordinates))
+    }
 
     // Add mouse wheel zoom interaction
     var mouseWheelZoom = new ol.interaction.MouseWheelZoom()

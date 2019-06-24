@@ -23,7 +23,7 @@
     <!-- Flood alerts or warnings in force -->
     {% if model.hasActiveFloods %}
       <div class="govuk-warning-text govuk-warning-text--{{model.highestSeverity.hash}}">
-        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <span class="govuk-warning-text__icon"></span>
         <strong class="govuk-warning-text__text">
           <span class="govuk-warning-text__assistive">{{model.highestSeverity.title}}</span>
           {{model.highestSeverity.subTitle}}<!-- - {{model.highestSeverity.tagline.toLowerCase()}} -->
@@ -91,7 +91,7 @@
     {% if model.rivers %}
     <h2 class="govuk-heading-m">River and sea levels</h2>
     <p class="govuk-body">River and sea levels are regularly checked by a network of monitoring stations. These levels can help you understand flood risk now and in the next few days.</p>
-    <div id="map-list-levels" class="defra-map-list govuk-!-margin-bottom-4">
+    <div id="map-list-stations" class="defra-map-list govuk-!-margin-bottom-4">
       <div id="level-detail" class="govuk-details__text govuk-details__text--defra-details-flood">
         {% for name, river in model.rivers %}
         <h2 class="govuk-heading-s govuk-!-margin-bottom-3">{{name}} at:</h2>
@@ -100,7 +100,11 @@
           <li class="defra-list-flood__item">
             <a href="/station/{{station.rloi_id}}">{{station.external_name}}</a>
             <div class="defra-list-flood__meta">
+<<<<<<< HEAD
               Level: {{station.value}}, Updated: {{station.value_timestamp}}
+=======
+              Level: &lt;High/Normal/Low&gt;<!--, Trend: &lt;Rising/Stable/Falling&gt;-->, Updated: &lt;00:00am&gt;
+>>>>>>> ca45eac5d73806f3a8e01a4e33c6dadbaca9dd79
             </div>
           </li>
           {% endfor %}
@@ -110,19 +114,19 @@
     </div>
     {% endif %}
 
-    <h2 class="govuk-heading-m">Flash flooding, drains and groundwater</h2>
-    <p class="govuk-body">Or surface water and sewers? The source of flood water may not be from rivers and seas... If flooding is from drains overflowing contact your <a href="https://www.water.org.uk/advice-for-customers/find-your-supplier/">contact your local water and sewerage company</a>. If its road flooding contact your <a href="">contact your Local Council</a>.</p>
+    <h2 class="govuk-heading-m">Report a flood</h2>
+    <p class="govuk-body">Flooding can also be caused by surface water, burst water mains or overflowing drains.</p>
+    <p class="govuk-body">You can <a href="https://www.gov.uk/report-flood-cause">report a flood or possible cause of flooding</a>.</p>
 
     <h2 class="govuk-heading-m">Other ways to check your current flood risk</h2>
-    <p class="govuk-body">For river and sea flooding:</p>
+    <p class="govuk-body">For river and sea flooding, call the 24-hour Floodline service.</p>
     <p class="govuk-body">
-      <strong class="govuk-!-font-weight-bold">Floodline</strong><br />
       Telephone: 0345 988 1188<br />
       Type talk: 0345 602 6340 (for the hard of hearing)<br />
-      24-hour service<br>
       <a class="govuk-link" href="https://gov.uk/call-charges">Find out more about call charges</a>.
     </p>
     <p class="govuk-body">If you are not sure of the source of flooding <a href="https://www.gov.uk/find-local-council">contact your Local Council</a>.</p>
+    
   </div>
   <div class="govuk-grid-column-one-third">
     <!-- The Related items component is not part of GOV.UK Frontend but will be styled if used in the Prototype Kit -->
