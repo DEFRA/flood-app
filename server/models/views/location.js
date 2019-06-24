@@ -1,5 +1,6 @@
 const severity = require('../severity')
 const { groupBy } = require('../../util')
+const moment = require('moment-timezone')
 
 class ViewModel {
   constructor ({ place, floods, stations, impacts, activeImpacts }) {
@@ -99,6 +100,29 @@ class ViewModel {
     if (stations.length) {
       this.rivers = groupBy(stations, 'wiski_river_name')
     }
+
+    // change value_timestamp from UTC
+    for (var s in stations) {
+      stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('HH:mm A')
+    // stations.splice(stations.findIndex(stations => stations[s].value_erred === null), 1)
+    }
+
+    console.log('stations', stations)
+    // stations = stations.filter(item => item.value_erred !== null)
+    // console.log('updatedStations', updatedStations.length)
+
+    // change value into low-med-hign
+    for (var v in stations) {
+      if (stations[v].value > stations[v].percentile_5) {
+        stations[v].value = 'High'
+      } else if (stations[v].value < stations[v].percentile_95) {
+        stations[v].value = 'Low'
+      } else {
+        stations[v].value = 'Med'
+      }
+    }
+
+    // stations.filter(obj => obj.value_erred !== false)
 
     // Impacts
     if (impacts) {
