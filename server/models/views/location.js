@@ -100,6 +100,13 @@ class ViewModel {
       stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('HH:mm A')
     }
 
+<<<<<<< HEAD
+=======
+    // console.log('stations', stations)
+    // stations = stations.filter(item => item.value_erred !== null)
+    // console.log('updatedStations', updatedStations.length)
+
+>>>>>>> b634f970a03321452ba05f78ef1f559ccd1fe62c
     // change value into low-med-hign
     for (var v in stations) {
       if (stations[v].value > stations[v].percentile_5) {
