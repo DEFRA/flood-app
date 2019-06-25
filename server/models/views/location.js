@@ -97,7 +97,6 @@ class ViewModel {
 
     // change value_timestamp from UTC
     for (var s in stations) {
-<<<<<<< HEAD
       stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('H:mma')
     // stations.splice(stations.findIndex(stations => stations[s].value_erred === null), 1)
     }
@@ -107,12 +106,6 @@ class ViewModel {
     // console.log('updatedStations', updatedStations.length)
 
     // change value into High, Normal, Low
-=======
-      stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('HH:mm A')
-    }
-
-    // change value into low-med-hign
->>>>>>> 8f973a0c486e5a0db4770c43c5c55db360ae6c4f
     for (var v in stations) {
       if (stations[v].value > stations[v].percentile_5) {
         stations[v].value = 'High'
