@@ -95,20 +95,10 @@ class ViewModel {
       this.hasInactiveFloods = hasInactiveFloods
     }
 
-    // Rivers
-    if (stations.length) {
-      this.rivers = groupBy(stations, 'wiski_river_name')
-    }
-
     // change value_timestamp from UTC
     for (var s in stations) {
       stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('HH:mm A')
-    // stations.splice(stations.findIndex(stations => stations[s].value_erred === null), 1)
     }
-
-    console.log('stations', stations)
-    // stations = stations.filter(item => item.value_erred !== null)
-    // console.log('updatedStations', updatedStations.length)
 
     // change value into low-med-hign
     for (var v in stations) {
@@ -121,7 +111,20 @@ class ViewModel {
       }
     }
 
-    // stations.filter(obj => obj.value_erred !== false)
+    // // TO DO re introduce if invalid dates are to be removed
+    // var filteredStations = stations.filter(function (value) {
+    //   return value.value_erred === false &&
+    //          value.percentile_5 !== null &&
+    //          value.percentile_95 !== null &&
+    //          value.value_timestamp !== 'Invalid date'
+    // })
+
+    // stations = filteredStations
+
+    // Rivers
+    if (stations.length) {
+      this.rivers = groupBy(stations, 'wiski_river_name')
+    }
 
     // Impacts
     if (impacts) {
