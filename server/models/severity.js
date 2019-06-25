@@ -28,8 +28,8 @@ const severity = [{
 }, {
   id: 4,
   name: 'expired',
-  title: 'Warnings removed',
-  pluralisedTitle: 'Warnings removed',
+  title: 'Flood warning removed',
+  pluralisedTitle: 'Flood warnings removed',
   hash: 'expired',
   subTitle: 'Within the last 24 hours',
   tagline: 'Within the last 24 hours',

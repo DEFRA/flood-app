@@ -1,67 +1,48 @@
 {% extends 'layout.html' %}
 {% block content %}
 
+{% if model.referer %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <a href="{{ model.referer }}" class="govuk-back-link govuk-!-margin-bottom-7">Back</a>
   </div>
 </div>
+{% endif %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-
-    <div class="defra-warning-flood defra-warning-flood--warning govuk-!-margin-bottom-7">
-      <span class="defra-warning-flood__icon"></span>
-      <strong class="defra-warning-flood__text">Flood warning - flooding is expected</strong>
-    </div>
-
-    <!--
-    {% if model.severity %}
-      {% if model.severity.isActive %}
-        <span class="govuk-caption-xl">
-          <i class="flood-icon flood-icon--{{model.severity.name}}">
-            <span class="visually-hidden">{{model.severity.title}}</span>
-          </i>
-          {{model.severity.title}} in force now
-        </span>
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
+      {% if model.flood %}
+      {{ model.severity.title }}: {{model.area.name}}
       {% else %}
-        <span class="govuk-caption-xl">{{model.severity.title}}</span>
+      Target area: {{model.area.name}}
       {% endif %}
-    {% else %}
-      <span class="govuk-caption-xl">
-        There are currently no flood warnings or alerts in force at this location
-      </span>
-    {% endif %}
-    -->
-    <h1 class="govuk-heading-xl">
-      <!--
-      {% if not model.severity %}
-      <span class="govuk-caption-xl">
-        Target area
-      </span>
-      {% endif %}
-      -->
-      {{model.area.name}}
     </h1>
+    <p class="govuk-body-s govuk-!-margin-bottom-7">Updated:
+      {% if model.flood %}
+        {% if model.severity.isActive %}
+        <time datetime="{{model.flood.severityChanged}}">{{model.flood.severityChanged | formatDate}}</time>
+        {% else %}
+        <time datetime="{{model.flood.messageChanged}}">{{model.flood.messageChanged | formatDate}}</time>
+        {% endif %}
+      {% else %}
+      <time datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time>
+      {% endif %}
+    </p>
+
     <!--<p class="govuk-body-l govuk-!-margin-bottom-2">{{model.area.description}}</p>-->
 
     {% if model.flood %}
       {% if model.severity.isActive %}
-        <!--<p><strong class="govuk-!-font-weight-bold">{{model.severity.subTitle}} - {{model.severity.tagline.toLowerCase()}}</strong></p>-->
-      {% else %}
-        <p>Last time in force: <time datetime="{{model.flood.severityChanged}}">{{model.flood.severityChanged | formatDate}}</time><p>
-        {% endif %}
-        <p class="govuk-body">{{model.flood.message}}</p>
-        <p class="govuk-body-s">Updated: <time datetime="{{model.flood.messageChanged}}">{{model.flood.messageChanged | formatDate}}</time></p>
-        <p class="govuk-body"><a href="">View map</a> of flood risk area</p>
-        <div class="govuk-inset-text">
-          You need to <a href="">take action</a> if you live in this area</p>
+        <div class="govuk-warning-text govuk-warning-text--{{ model.severity.hash.toLowerCase() }} govuk-!-margin-bottom-8">
+          <span class="govuk-warning-text__icon"></span>
+          <strong class="govuk-warning-text__text">
+            <span class="govuk-warning-text__assistive">{{ model.severity.title }}</span>
+              {{ model.severity.subTitle }}<!-- - be prepared -->
+          </strong>
         </div>
-      {#
-        <p>
-          Could this information be better? <a href="/target-area/{{model.area.code}}/feedback">Tell us how to improve it</a>.
-        </p>
-      #}
+      {% endif %}
+      <p class="govuk-body">{{model.flood.message}}</p>
     {% endif %}
 
     <div class="app-map">
@@ -75,14 +56,30 @@
       </div>
     </div>
 
+    {% if model.flood %}
+    <p class="govuk-body">Could this information be better? <a href="/target-area/{{model.area.code}}/feedback">Tell us how to improve it</a>.</p>
+    {% endif %}
+
+    {% if model.flood and model.severity.isActive %}
+    <div class="govuk-inset-text">
+      {% if model.severity.hash == 'severe-flood-warning' %}
+      You <a href="/what-to-do-in-a-flood/getting-a-severe-flood-warning">must act now</a> if you live in this area.
+      {% elif model.severity.hash == 'flood-warning' %}
+      You need to <a href="/what-to-do-in-a-flood/getting-a-flood-warning">take action</a> if you live in this area.
+      {% else %}
+      <a href="/what-to-do-in-a-flood/getting-a-flood-alert">Be prepared</a> if you live in this area
+      {% endif %}
+    </div>
+    {% endif %}
+
     <h2 class="govuk-heading-m">Other ways to check your current flood risk</h2>
+    <p class="govuk-body">For river and sea flooding, call the 24-hour Floodline service.</p>
     <p class="govuk-body">
-      <strong class="govuk-!-font-weight-bold">Floodline</strong><br>
-      Telephone: 0345 988 1188<br>
-      Type talk: 0345 602 6340 (for the hard of hearing)<br>
-      24-hour service<br>
+      Telephone: 0345 988 1188<br />
+      Type talk: 0345 602 6340 (for the hard of hearing)<br />
       <a class="govuk-link" href="https://gov.uk/call-charges">Find out more about call charges</a>.
     </p>
+    <p class="govuk-body">If you are not sure of the source of flooding <a href="https://www.gov.uk/find-local-council">contact your Local Council</a>.</p>
   </div>
 
   <div class="govuk-grid-column-one-third">

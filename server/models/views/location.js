@@ -88,7 +88,7 @@ class ViewModel {
       this.floodsPrimary = primaryStatement
       this.floodsSecondary = secondaryStatement + inactiveStatement
       this.hasFloodsSecondary = !!this.floodsSecondary.length
-      this.hasFloodsList = !!(floods.length > primaryGroup.length || floods.length > 2)
+      this.hasFloodsList = !!(floods.length > primaryGroup.length || floods.length > 1)
       this.activeFloods = activeFloods
       this.hasActiveFloods = hasActiveFloods
       this.inactiveFloods = inactiveFloods
@@ -102,7 +102,7 @@ class ViewModel {
 
     // change value_timestamp from UTC
     for (var s in stations) {
-      stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('HH:mm A')
+      stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('H:mma')
     // stations.splice(stations.findIndex(stations => stations[s].value_erred === null), 1)
     }
 
@@ -110,14 +110,14 @@ class ViewModel {
     // stations = stations.filter(item => item.value_erred !== null)
     // console.log('updatedStations', updatedStations.length)
 
-    // change value into low-med-hign
+    // change value into High, Normal, Low
     for (var v in stations) {
       if (stations[v].value > stations[v].percentile_5) {
         stations[v].value = 'High'
       } else if (stations[v].value < stations[v].percentile_95) {
         stations[v].value = 'Low'
       } else {
-        stations[v].value = 'Med'
+        stations[v].value = 'Normal'
       }
     }
 

@@ -11,7 +11,7 @@
   // Add locator
   container.addLocator(name, coordinates)
 
-  // Ultimately needs to be in the MapContainer
+  // Duplicated: Ultimately needs to be in the MapContainer or somewhere else
   function showFeatureSet(map, state) {
     // Set layers in key
     var layers = document.querySelectorAll('.govuk-checkboxes__input')

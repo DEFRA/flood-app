@@ -16,9 +16,11 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
       Flood risk for England
     </h1>
+    <p class="govuk-body-s govuk-!-margin-bottom-7">Updated: <time class="form-hint" title="{{model.timestamp | formatDate}}" datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time></p>
+
     <!--
     <div class="govuk-accordion govuk-accordion--defra-target-areas govuk-!-margin-bottom-4" data-module="accordion" id="accordion-default">
       <div class="govuk-accordion__section ">
@@ -77,18 +79,16 @@
         {% for group in model.groups %}
           {% if group.floods %}
             <div class="defra-warning-overview__section">
-              <h2 class="defra-warning-overview__section-title">
+              <h2 class="defra-warning-overview__title">
                 <span class="defra-warning-overview__icon defra-warning-overview__icon--{{ group.severity.id }}"></span>
                 {{ group.title | lower }}
-                <span class="govuk-caption-m">{{ group.severity.subTitle }} - {{ group.severity.tagline }}</span>
+                <span class="defra-warning-overview__caption">{{ group.severity.subTitle }}</span>
               </h2>
             </div>
           {% endif %}
         {% endfor %}
       {% else %}
-        <p class="govuk-body">There are currently no flood warnings or alerts in force as of <time class="form-hint" title="{{model.timestamp | formatDate}}"
-          datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time>.
-        </p>
+        <p class="govuk-body">There are currently no flood warnings or alerts in force.</p>
       {% endif %}
     </div>
 
@@ -124,15 +124,13 @@
     </div>
     {% endif %}
 
-    <div class="govuk-inset-text">
-      <p class="govuk-body">If you live near a river or the coast you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
-    </div>
+    <p class="govuk-body">If you live near a river or the coast you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
 
-    <h2 class="govuk-heading-m govuk-!-margin-top-7">
+    <h2 class="govuk-heading-m govuk-!-margin-top-4">
       Flood risk for the next 5 days
     </h2>
     {{ model.outlook | safe }}
-    <p class="govuk-body">
+    <p class="govuk-body-s">
       <time class="form-hint" title="{{model.timestampOutlook | formatDate}}"
         datetime="{{ model.timestampOutlook }}">Updated {{ model.timestampOutlook | formatDate }}</time>
     </p>
@@ -163,7 +161,7 @@
     </div>
     {% endif %}
 
-    <h2 class="govuk-heading-m govuk-!-margin-top-7">Other ways to check your current flood risk</h2>
+    <h2 class="govuk-heading-m govuk-!-margin-top-4">Other ways to check your current flood risk</h2>
     <p class="govuk-body">For river and sea flooding, call the 24-hour Floodline service.</p>
     <p class="govuk-body">
       Telephone: 0345 988 1188<br />

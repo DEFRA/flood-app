@@ -11,7 +11,6 @@ module.exports = {
       const { code } = request.params
       const { floods } = await floodService.getFloods()
       const area = await floodService.getFloodArea(code)
-
       const flood = floods.find(n => n.code === code)
       const model = new ViewModel({ area, flood })
       model.referer = request.headers.referer || config.siteUrl

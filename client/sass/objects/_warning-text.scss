@@ -16,41 +16,40 @@
     top:50%;
     left:20px;
     background: transparent url('#{$govuk-images-path}icon-flood-symbols-2x.png') no-repeat;
-    background-position: -9px -70px;
+    background-position: -12px -12px;
     border-radius: 0;
     border:0;
-    background-size: 180px;
-    width: 42px;
-    height: 42px;
-    margin-top:-21px;
+    background-size: 240px;
+    width: 56px;
+    height: 56px;
+    margin-top:-26px;
     padding: 0;
-    margin-top:-18px;
     font-size: 1em;
     line-height: auto;
     @include mq ($from: tablet) {
-        width: 48px;
-        height: 48px;
-        margin-top:-22px;
-        background-position:-66px -66px;
+        width: 56px;
+        height: 56px;
+        margin-top:-26px;
+        background-position:-92px -92px;
     }
 }
 .govuk-warning-text--flood-warning {
     padding:10px 0 0 0;
     .govuk-warning-text__text {
-        padding-left:52px;
+        padding-left:65px;
         @include govuk-font($size: 24, $weight: bold);
     }
     .govuk-warning-text__icon {
         background: transparent url('#{$govuk-images-path}icon-flood-symbols-2x.png') no-repeat;
-        background-position: -9px -70px;
+        background-position: -92px -92px;
         border-radius: 0;
         border:0;
-        background-size: 180px;
+        background-size: 240px;
         text-indent: -5000px;
-        min-width: 42px;
-        min-height: 42px;
+        min-width: 56px;
+        min-height: 56px;
         padding: 0;
-        margin-top:-18px;
+        margin-top:-26px;
         font-size: 1em;
         line-height: auto;
     }
@@ -58,12 +57,12 @@
 .govuk-warning-text--severe-flood-warning {
     @extend .govuk-warning-text--flood-warning;
     .govuk-warning-text__icon {
-        background-position:-9px -10px;
+        background-position:-92px -12px;
     }
 }
 .govuk-warning-text--flood-alert {
     @extend .govuk-warning-text--flood-warning;
     .govuk-warning-text__icon {
-       background-position:-9px -130px;
+       background-position:-92px -172px;
     }
 }
