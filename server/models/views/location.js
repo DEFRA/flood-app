@@ -97,13 +97,8 @@ class ViewModel {
 
     // change value_timestamp from UTC
     for (var s in stations) {
-      stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('H:mma')
-    // stations.splice(stations.findIndex(stations => stations[s].value_erred === null), 1)
+      stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mm A')
     }
-
-    // console.log('stations', stations)
-    // stations = stations.filter(item => item.value_erred !== null)
-    // console.log('updatedStations', updatedStations.length)
 
     // change value into High, Normal, Low
     for (var v in stations) {
