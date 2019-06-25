@@ -45,13 +45,13 @@ module.exports = [{
         }
 
         const model = new ViewModel({ station, telemetry, forecast, impacts })
-        model.referer = request.headers.referer || config.siteUrl
+        model.referer = request.headers.referer
 
         return h.view('station', { model })
       } else {
         // Non-forecast Station
         const model = new ViewModel({ station, telemetry, impacts })
-        model.referer = request.headers.referer || config.siteUrl
+        model.referer = request.headers.referer
 
         return h.view('station', { model })
       }

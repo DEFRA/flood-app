@@ -30,7 +30,7 @@ module.exports = [{
         return boom.notFound('No rain gauge found')
       }
       const model = new ViewModel(rainGauge, rainMeasures)
-      model.referer = request.headers.referer || config.siteUrl
+      model.referer = request.headers.referer
       return h.view('rain-gauge', { model })
     } catch (err) {
       return err.isBoom

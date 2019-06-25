@@ -1,9 +1,11 @@
 {% extends 'layout.html' %}
 {% block content %}
 
+<p class="govuk-body">{{model | dump}}</p>
+
 {% if model.referer %}
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-full">
     <a href="{{ model.referer }}" class="govuk-back-link govuk-!-margin-bottom-7">Back</a>
   </div>
 </div>
@@ -15,20 +17,20 @@
       {% if model.flood %}
       {{ model.severity.title }}: {{model.area.name}}
       {% else %}
-      Target area: {{model.area.name}}
+      Flood target area: {{model.area.name}}
       {% endif %}
     </h1>
+    {% if model.flood %}
     <p class="govuk-body-s govuk-!-margin-bottom-7">Updated:
-      {% if model.flood %}
-        {% if model.severity.isActive %}
-        <time datetime="{{model.flood.severityChanged}}">{{model.flood.severityChanged | formatDate}}</time>
-        {% else %}
-        <time datetime="{{model.flood.messageChanged}}">{{model.flood.messageChanged | formatDate}}</time>
-        {% endif %}
+      {% if model.severity.isActive %}
+      <time datetime="{{model.flood.severityChanged}}">{{model.flood.severityChanged | formatDate}}</time>
       {% else %}
-      <time datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time>
+      <time datetime="{{model.flood.messageChanged}}">{{model.flood.messageChanged | formatDate}}</time>
       {% endif %}
     </p>
+    {% else %}
+    <p class="govuk-!-margin-top-7">No flood alert or warning currently in force.</p>
+    {% endif %}
 
     <!--<p class="govuk-body-l govuk-!-margin-bottom-2">{{model.area.description}}</p>-->
 
@@ -118,7 +120,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    {#{% include "partials/social.html" %}#}
+    {% include "partials/social.html" %}
   </div>
 </div>
 

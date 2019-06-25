@@ -62,8 +62,7 @@
       </div>
       {% endif %}
     {% else %}
-    <p class="govuk-body-m">There are currently no flood warnings or alerts in force in this area as of <time class="form-hint" title="{{model.timestamp | formatDate}}"
-      datetime="{{model.timestamp}}">{{model.timestamp | formatDate}}</time>.</p>
+    <p class="govuk-body-m">There are currently no flood warnings or alerts in force in this area.</p>
     {% endif %}
 
     {% if ( model.activeImpacts | length > 0 ) %}
