@@ -12,11 +12,18 @@ class ViewModel {
   constructor (options) {
     const { station, telemetry, forecast, impacts } = options
 
-    Object.assign(this, {
-      pageTitle: `Flood information for ${station.name}`
-    })
+    console.log(station)
 
     this.station = new Station(station)
+
+    /* 
+    var levelType = this.station.isGroundwater ? 'Groundwater' : (this.station.isCoastal ? 'Sea' : 'River')
+    
+    Object.assign(this, {
+      pageTitle: `${levelType} level at ${station.name}`
+    })
+    */
+
     this.id = this.station.id
     this.telemetry = telemetry || []
     this.catchments = []
@@ -65,16 +72,16 @@ class ViewModel {
 
     if (this.station.type === 'c') {
       this.title = 'Tidal level'
-      this.pageTitle = 'Tidal level information for ' + this.station.river + ' at ' + this.station.name
-      this.postTitle = 'Latest tidal level information for the ' + this.station.river + ' at ' + this.station.name
+      this.pageTitle = 'Sea level at ' + this.station.name
+      // this.postTitle = 'Latest tidal level information for ' + this.station.river + ' at ' + this.station.name
     } else if (this.station.type === 'g') {
       this.title = 'Groundwater level'
-      this.pageTitle = 'Groundwater level information for ' + this.station.name + ' borehole'
-      this.postTitle = 'Latest groundwater level information for ' + this.station.name + ' borehole'
+      this.pageTitle = 'Groundwater level at ' + this.station.name + ' borehole'
+      // this.postTitle = 'Latest groundwater level information for ' + this.station.name + ' borehole'
     } else {
       this.title = 'River level'
-      this.pageTitle = 'River level information for ' + this.station.river + ' at ' + this.station.name + (this.station.isMulti ? ' (' + this.station.direction + ')' : '')
-      this.postTitle = 'Latest river level information for the ' + this.station.river + ' at ' + this.station.name + (this.station.isMulti ? ' (' + this.station.direction + ')' : '')
+      this.pageTitle = 'River level at ' + this.station.name + ', ' + this.station.river + (this.station.isMulti ? ' (' + this.station.direction + ')' : '')
+      // this.postTitle = 'Latest river level information for the ' + this.station.river + ' at ' + this.station.name + (this.station.isMulti ? ' (' + this.station.direction + ')' : '')
     }
 
     this.isUpstream = this.station.direction === 'upstream'

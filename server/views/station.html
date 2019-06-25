@@ -11,10 +11,27 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">
-      <span class="govuk-caption-xl">River level at</span>
+    <h1 class="govuk-heading-xl{% if model.station.isMulti %} govuk-!-margin-bottom-2{% endif %}">
+      {% if model.station.isGroundwater %}Groundwater{% elif model.station.isCoastal %}Sea{% else %}River{% endif %} level at
       {{ model.station.name }} ({{ model.station.river }})
+      {% if model.station.isMulti %}
+      -
+      {% if model.station.isDownstream %}
+      Downstream
+      {% else %}
+      Upstream
+      {% endif %}
+      {% endif %}
     </h1>
+    {% if model.station.isMulti %}
+    <nav class="govuk-body govuk-!-margin-bottom-7">
+    {% if model.station.isDownstream %}
+    <a href="?direction=u">View upstream level</a>
+    {% else %}
+    <a href="?direction=d">View downstream level</a>
+    {% endif %}
+    </nav>
+    {% endif %}
   </div>
 </div>
 <div class="govuk-grid-row">
@@ -39,7 +56,12 @@
     <p role="text" class="govuk-!-padding-bottom-4">
       <span class="govuk-caption-m">Latest level</span>
       <strong class="govuk-heading-l govuk-!-margin-bottom-1">Normal</strong>
-      <span class="govuk-body">{{ (model.station.recentValue._).toFixed(2) }}m (typical {{ model.station.percentile95 }}m - {{ model.station.percentile5 }}m)</span>
+      <span class="govuk-body">
+        {{ (model.station.recentValue._).toFixed(2) }}m
+        {% if model.station.hasPercentiles %}
+        (typical {{ model.station.percentile95 }}m - {{ model.station.percentile5 }}m)
+        {% endif %}
+       </span>
     </p>
   </div>
   <!--
