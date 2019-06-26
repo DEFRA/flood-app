@@ -4,10 +4,10 @@ class ViewModel {
   constructor (options) {
     const { area, flood } = options
     const severityLevel = flood && severity[flood.severity - 1]
-    var targetAreaState = severityLevel ? severity[flood.severity - 1].title : 'Flood target area'
+    var pageTitle = severityLevel ? severity[flood.severity - 1].title + ': ' + area.name : area.name + ' flood risk area'
 
     Object.assign(this, {
-      pageTitle: `${targetAreaState}: ${area.name}`,
+      pageTitle: pageTitle,
       severity: severityLevel,
       place: {
         name: area.name,

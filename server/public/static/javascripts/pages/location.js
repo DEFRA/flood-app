@@ -81,7 +81,7 @@
 
   if (document.getElementById('map-list-impacts')) {
     var mapListImpacts = flood.createMapList(document.getElementById('map-list-impacts'), {
-      'listButtonText': 'View previous flood impacts',
+      'listButtonText': 'View historic flood impacts',
       'mapButtonText': 'Map'
     })
     // Add map event

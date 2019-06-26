@@ -45,13 +45,13 @@ class ViewModel {
       if (activeFloods) { // alert, warning or severe
         switch (highestSeverity.name) {
           case 'severe':
-            primaryStatement = `${primaryGroup.length} severe flood warning${primaryGroup.length > 1 ? 's are' : ' is'} in force ${activeFloods.length > 1 ? '' : 'for ' + primaryList} where there is a danger to life`
+            primaryStatement = `${primaryGroup.length} severe flood warning${primaryGroup.length > 1 ? 's are' : ' is'} in force ${activeFloods.length > 1 ? '' : 'for ' + primaryList}. Severe flooding is expected in this area.`
             break
           case 'warning':
-            primaryStatement = `${primaryGroup.length} flood warning${primaryGroup.length > 1 ? 's are' : ' is'} in force ${activeFloods.length > 1 ? '' : 'for ' + primaryList} where flooding is expected`
+            primaryStatement = `${primaryGroup.length} flood warning${primaryGroup.length > 1 ? 's are' : ' is'} in force ${activeFloods.length > 1 ? '' : 'for ' + primaryList}. Some flooding is expected in this area.`
             break
           case 'alert':
-            primaryStatement = `${primaryGroup.length > 1 ? primaryGroup.length : 'A'} flood alert${primaryGroup.length > 1 ? 's are' : ' is'} in place ${activeFloods.length > 1 ? '' : 'for ' + primaryList} where some flooding is possible`
+            primaryStatement = `${primaryGroup.length > 1 ? primaryGroup.length : 'A'} flood alert${primaryGroup.length > 1 ? 's are' : ' is'} in place ${activeFloods.length > 1 ? '' : 'for ' + primaryList}. Some flooding is possible in this area.`
             break
         }
       }
@@ -71,6 +71,7 @@ class ViewModel {
 
       // Inactive floods (optional)
       var inactiveStatement = ''
+      /*
       if (hasInactiveFloods) {
         if (inactiveFloods.length > 2 || hasActiveFloods) {
           inactiveStatement = `
@@ -82,6 +83,7 @@ class ViewModel {
           `
         }
       }
+      */
 
       this.highestSeverity = highestSeverity
       this.groupedFloods = groupedFloods

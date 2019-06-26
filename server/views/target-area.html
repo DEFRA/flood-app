@@ -15,7 +15,7 @@
       {% if model.flood %}
       {{ model.severity.title }}: {{model.area.name}}
       {% else %}
-      Flood target area: {{model.area.name}}
+      {{model.area.name}} flood risk area
       {% endif %}
     </h1>
     {% if model.flood %}
