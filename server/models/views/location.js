@@ -98,8 +98,23 @@ class ViewModel {
     }
 
     // change value_timestamp from UTC
+    const today = moment.tz().endOf('day')
     for (var s in stations) {
-      stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mm A')
+      // stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mm A')
+
+      let tempDate = stations[s].value_timestamp
+
+      let dateDiffDays = today.diff(tempDate, 'days')
+
+      // If dateDiffDays is zero then timestamp is today so just show time. If dateDiffDays is 1 then timestamp is 'Yesterday' plus time. Any other value
+      // show the full date/time.
+      if (dateDiffDays === 0) {
+        stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mma')
+      } else if (dateDiffDays === 1) {
+        stations[s].value_timestamp = 'Yesterday ' + moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mma')
+      } else {
+        stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('DD/MM/YYYY h:mma')
+      }
     }
 
     // change value into High, Normal, Low
