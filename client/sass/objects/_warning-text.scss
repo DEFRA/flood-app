@@ -1,68 +1,99 @@
-// Warning components to be merged
-.defra-warning-flood {
-    position:relative;
-    padding:30px 25px 30px 80px;
-    background-color: #E4271B;
-}
-.defra-warning-flood__text {
-    position:relative;
-    @include govuk-font($size: 24);
-    top:2px;
-    font-weight:normal;
-    color:white;
-}
-.defra-warning-flood__icon {
-    position: absolute;
-    top:50%;
-    left:20px;
-    background: transparent url('#{$govuk-images-path}icon-flood-symbols-2x.png') no-repeat;
-    background-position: -12px -12px;
-    border-radius: 0;
-    border:0;
-    background-size: 240px;
-    width: 56px;
-    height: 56px;
-    margin-top:-26px;
-    padding: 0;
-    font-size: 1em;
-    line-height: auto;
-    @include mq ($from: tablet) {
-        width: 56px;
-        height: 56px;
-        margin-top:-26px;
-        background-position:-92px -92px;
-    }
-}
-.govuk-warning-text--flood-warning {
-    padding:10px 0 0 0;
-    .govuk-warning-text__text {
+.defra-warning-text-flood {
+    @extend .govuk-warning-text;
+    padding:10px 0px;
+    .defra-warning-text-flood__text {
+        @extend .govuk-warning-text__text;
         padding-left:65px;
         @include govuk-font($size: 24, $weight: bold);
     }
-    .govuk-warning-text__icon {
+    .defra-warning-text-flood__icon {
+        @extend .govuk-warning-text__icon;
         background: transparent url('#{$govuk-images-path}icon-flood-symbols-2x.png') no-repeat;
-        background-position: -92px -92px;
         border-radius: 0;
         border:0;
         background-size: 240px;
         text-indent: -5000px;
-        min-width: 56px;
-        min-height: 56px;
         padding: 0;
-        margin-top:-26px;
         font-size: 1em;
         line-height: auto;
+        width: 48px;
+        height: 48px;
+        margin-top:-27px;
+        background-position: -12px -92px;
+        @include mq ($from: tablet) {
+            background-position: -92px -92px;
+            width: 56px;
+            height: 56px;
+            margin-top:-30px;
+        }
+    }
+    .defra-warning-text-flood__secondary {
+        display: block;
+        @include govuk-font($size: 19);
+        font-weight: normal;
     }
 }
-.govuk-warning-text--severe-flood-warning {
-    @extend .govuk-warning-text--flood-warning;
+.defra-warning-text-flood--severe-flood-warning {
+    @extend .defra-warning-text-flood;
     .govuk-warning-text__icon {
-        background-position:-92px -12px;
+        background-position: 0px -92px;
+        @include mq ($from: tablet) {
+            background-position:-92px -12px;
+        }
     }
 }
-.govuk-warning-text--flood-alert {
-    @extend .govuk-warning-text--flood-warning;
+.defra-warning-text-flood--flood-alert {
+    @extend .defra-warning-text-flood;
     .govuk-warning-text__icon {
-       background-position:-92px -172px;
+        background-position: -12px -92px;
+        @include mq ($from: tablet) {
+            background-position:-92px -172px;
+        }
+    }
+}
+.defra-warning-text-flood--warning-removed {
+    @extend .defra-warning-text-flood;
+    .govuk-warning-text__icon {
+        background-position: 0px -92px;
+        @include mq ($from: tablet) {
+            background-position:-92px -332px;
+        }
+    }
+}
+.defra-warning-text-flood--large {
+    padding:4px 0px;
+    .defra-warning-text-flood__text {
+        @include mq ($from: tablet) {
+            padding-left:80px;
+        }
+    }
+    .defra-warning-text-flood__icon {
+        @include mq ($from: tablet) {
+            width: 68px;
+            height: 68px;
+            margin-top:-35px;
+            background-position: -166px -86px;
+        }
+    }
+    &.defra-warning-text-flood--flood-alert {
+        .defra-warning-text-flood__icon {
+            @include mq ($from: tablet) {
+                background-position: -166px -166px;
+            }
+        }
+    }
+    &.defra-warning-text-flood--severe-flood-warning {
+        .defra-warning-text-flood__icon {
+            @include mq ($from: tablet) {
+                background-position: -166px -6px;
+            }
+        }
+    }
+    &.defra-warning-text-flood--warning-removed {
+        .defra-warning-text-flood__icon {
+            @include mq ($from: tablet) {
+                background-position: -166px -326px;
+            }
+        }
     }
 }

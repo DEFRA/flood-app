@@ -21,76 +21,21 @@
     </h1>
     <p class="govuk-body-s govuk-!-margin-bottom-7">Updated: <time class="form-hint" title="{{model.timestamp | formatDate}}" datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time></p>
 
-    <!--
-    <div class="govuk-accordion govuk-accordion--defra-target-areas govuk-!-margin-bottom-4" data-module="accordion" id="accordion-default">
-      <div class="govuk-accordion__section ">
-        <div class="govuk-accordion__section-header">
-          <span class="govuk-accordion__section-header-icon"></span>
-          <h2 class="govuk-accordion__section-heading">
-            <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
-              16 Severe flood warnings
-            </span>
-          </h2>
-          <div class="govuk-accordion__section-summary govuk-body govuk-!-margin-top-0" id="accordion-with-summary-sections-summary-1">
-            Severe flooding
+    {% if model.floods.length %}
+      {% for group in model.groups %}
+        {% if group.floods %}
+          <div class="defra-warning-text-flood defra-warning-text-flood--large defra-warning-text-flood--{{ group.severity.hash }}">
+            <span class="defra-warning-text-flood__icon"></span>
+            <strong class="defra-warning-text-flood__text">
+              {{ group.title | lower }}
+              <span class="defra-warning-text-flood__secondary">{{ group.severity.subTitle }}</span>
+            </strong>
           </div>
-        </div>
-        <div id="accordion-default-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-1">
-          <p class='govuk-body'>This is the content for Writing well for the web.</p>
-        </div>
-      </div>
-      <div class="govuk-accordion__section ">
-        <div class="govuk-accordion__section-header">
-          <span class="govuk-accordion__section-header-icon"></span>
-          <h2 class="govuk-accordion__section-heading">
-            <span class="govuk-accordion__section-button" id="accordion-default-heading-2">
-              126 Flood warnings
-            </span>
-          </h2>
-          <div class="govuk-accordion__section-summary govuk-body govuk-!-margin-top-0" id="accordion-with-summary-sections-summary-1">
-            Flooding is expected
-          </div>
-        </div>
-        <div id="accordion-default-content-2" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-2">
-          <p class='govuk-body'>This is the content for Writing well for specialists.</p>
-        </div>
-      </div>
-      <div class="govuk-accordion__section ">
-        <div class="govuk-accordion__section-header">
-          <span class="govuk-accordion__section-header-icon"></span>
-          <h2 class="govuk-accordion__section-heading">
-            <span class="govuk-accordion__section-button" id="accordion-default-heading-2">
-              240 Flood alerts
-            </span>
-          </h2>
-          <div class="govuk-accordion__section-summary govuk-body govuk-!-margin-top-0" id="accordion-with-summary-sections-summary-1">
-            Flooding is possible
-          </div>
-        </div>
-        <div id="accordion-default-content-2" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-2">
-          <p class='govuk-body'>This is the content for Writing well for specialists.</p>
-        </div>
-      </div>
-    </div>
-    -->
-
-    <div class="defra-warning-overview govuk-!-margin-bottom-2">
-      {% if model.floods.length %}
-        {% for group in model.groups %}
-          {% if group.floods %}
-            <div class="defra-warning-overview__section">
-              <h2 class="defra-warning-overview__title">
-                <span class="defra-warning-overview__icon defra-warning-overview__icon--{{ group.severity.id }}"></span>
-                {{ group.title | lower }}
-                <span class="defra-warning-overview__caption">{{ group.severity.subTitle }}</span>
-              </h2>
-            </div>
-          {% endif %}
-        {% endfor %}
-      {% else %}
-        <p class="govuk-body">There are currently no flood warnings or alerts in force.</p>
-      {% endif %}
-    </div>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      <p class="govuk-body">There are currently no flood warnings or alerts in force.</p>
+    {% endif %}
 
     {% if model.floods.length %}
     <div class="app-map">

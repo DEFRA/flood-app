@@ -34,10 +34,10 @@
 
     {% if model.flood %}
       {% if model.severity.isActive %}
-        <div class="govuk-warning-text govuk-warning-text--{{ model.severity.hash.toLowerCase() }} govuk-!-margin-bottom-8">
-          <span class="govuk-warning-text__icon"></span>
-          <strong class="govuk-warning-text__text">
-            <span class="govuk-warning-text__assistive">{{ model.severity.title }}</span>
+        <div class="defra-warning-text-flood defra-warning-text-flood--{{ model.severity.hash.toLowerCase() }} govuk-!-margin-bottom-6">
+          <span class="defra-warning-text-flood__icon"></span>
+          <strong class="defra-warning-text-flood__text">
+            <span class="govuk-visually-hidden">{{ model.severity.title }}</span>
               {{ model.severity.subTitle }}<!-- - be prepared -->
           </strong>
         </div>

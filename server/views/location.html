@@ -22,10 +22,10 @@
 
     <!-- Flood alerts or warnings in force -->
     {% if model.hasActiveFloods %}
-      <div class="govuk-warning-text govuk-warning-text--{{model.highestSeverity.hash}}">
-        <span class="govuk-warning-text__icon"></span>
-        <strong class="govuk-warning-text__text">
-          <span class="govuk-warning-text__assistive">{{model.highestSeverity.title}}</span>
+      <div class="defra-warning-text-flood defra-warning-text-flood--{{model.highestSeverity.hash}}">
+        <span class="defra-warning-text-flood__icon"></span>
+        <strong class="defra-warning-text-flood__text">
+          <span class="govuk-visually-hidden">{{model.highestSeverity.title}}</span>
           {{model.highestSeverity.subTitle}}<!-- - {{model.highestSeverity.tagline.toLowerCase()}} -->
         </strong>
       </div>
