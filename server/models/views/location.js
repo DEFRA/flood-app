@@ -119,21 +119,23 @@ class ViewModel {
 
     // change value into High, Normal, Low
     for (var v in stations) {
-      if (stations[v].value > stations[v].percentile_5) {
-        stations[v].value = 'High'
-      } else if (stations[v].value < stations[v].percentile_95) {
-        stations[v].value = 'Low'
+      if (stations[v].station_type === 'C') {
+        stations[v].value = Math.round(stations[v].value * 10) / 10 + 'm'
       } else {
-        stations[v].value = 'Normal'
+        if (stations[v].value > stations[v].percentile_5) {
+          stations[v].value = 'High'
+        } else if (stations[v].value < stations[v].percentile_95) {
+          stations[v].value = 'Low'
+        } else {
+          stations[v].value = 'Normal'
+        }
       }
     }
 
     // // TO DO re introduce if invalid dates are to be removed
     // var filteredStations = stations.filter(function (value) {
-    //   return value.value_erred === false &&
-    //          value.percentile_5 !== null &&
-    //          value.percentile_95 !== null &&
-    //          value.value_timestamp !== 'Invalid date'
+    //   console.log(value)
+    //   return value.value_timestamp !== 'Invalid date'
     // })
 
     // stations = filteredStations

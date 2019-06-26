@@ -16,9 +16,9 @@ class ViewModel {
 
     this.station = new Station(station)
 
-    /* 
+    /*
     var levelType = this.station.isGroundwater ? 'Groundwater' : (this.station.isCoastal ? 'Sea' : 'River')
-    
+
     Object.assign(this, {
       pageTitle: `${levelType} level at ${station.name}`
     })
@@ -129,12 +129,29 @@ class ViewModel {
     this.forecast = this.ffoi || {}
     this.forecastJSON = this.ffoi ? this.ffoi.forecastJSON : JSON.stringify({})
 
+    // Low/Med/High
+
+    if (this.station.hasPercentiles) {
+      if (this.station.type === 'c') {
+        this.station.level = Math.round(this.station.recentValue._ * 10) / 10 + 'm'
+      } else {
+        if (parseFloat(this.station.recentValue._) > parseFloat(this.station.percentile5)) {
+          this.station.level = 'High'
+        } else if (parseFloat(this.station.recentValue._) < parseFloat(this.station.percentile95)) {
+          this.station.level = 'Low'
+        } else {
+          this.station.level = 'Normal'
+        }
+      }
+    } else {
+      this.station.level = this.station.recentValue._.toFixed(1) + 'm'
+    }
     // Impacts
     if (impacts) {
       // Add Highest level and Top of typical range to imapacts array for sorting purposes
 
       impacts.push({ impactid: 'highest', value: this.station.porMaxValue, description: 'Highest level on record', shortname: 'Highest level on record' })
-      impacts.push({ impactid: 'alert', value: this.station.percentile5, description: 'Top of typical range', shortname: 'Top of typical range' })
+      impacts.push({ impactid: 'alert', value: this.station.percentile5 || 0, description: 'Top of typical range', shortname: 'Top of typical range' })
 
       impacts.sort((a, b) => b.value - a.value)
 
