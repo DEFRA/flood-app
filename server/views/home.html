@@ -70,8 +70,11 @@
   }
 
   function onConfirm (confirmed) {
-    document.getElementById('location').value = confirmed
-    document.getElementsByTagName('form')[0].submit()
+    if (confirmed) {
+      document.querySelector("#main-content form > button").disabled = true
+      document.getElementById('location').value = confirmed
+      document.getElementsByTagName('form')[0].submit()
+    }    
   }
 
   accessibleAutocomplete({
