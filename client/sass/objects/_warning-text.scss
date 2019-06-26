@@ -3,8 +3,11 @@
     padding:10px 0px;
     .defra-warning-text-flood__text {
         @extend .govuk-warning-text__text;
-        padding-left:65px;
         @include govuk-font($size: 24, $weight: bold);
+        padding-left:56px;
+        @include mq ($from: tablet) {
+            padding-left:65px;
+        }
     }
     .defra-warning-text-flood__icon {
         @extend .govuk-warning-text__icon;
@@ -19,7 +22,7 @@
         width: 48px;
         height: 48px;
         margin-top:-27px;
-        background-position: -12px -92px;
+        background-position: -16px -95px;
         @include mq ($from: tablet) {
             background-position: -92px -92px;
             width: 56px;
@@ -36,7 +39,7 @@
 .defra-warning-text-flood--severe-flood-warning {
     @extend .defra-warning-text-flood;
     .govuk-warning-text__icon {
-        background-position: 0px -92px;
+        background-position: -16px -15px;
         @include mq ($from: tablet) {
             background-position:-92px -12px;
         }
@@ -45,7 +48,7 @@
 .defra-warning-text-flood--flood-alert {
     @extend .defra-warning-text-flood;
     .govuk-warning-text__icon {
-        background-position: -12px -92px;
+        background-position: -16px -175px;
         @include mq ($from: tablet) {
             background-position:-92px -172px;
         }
@@ -54,7 +57,7 @@
 .defra-warning-text-flood--warning-removed {
     @extend .defra-warning-text-flood;
     .govuk-warning-text__icon {
-        background-position: 0px -92px;
+        background-position: -16px -335px;
         @include mq ($from: tablet) {
             background-position:-92px -332px;
         }
