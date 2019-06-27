@@ -5,13 +5,11 @@
   function road () {
     return new ol.layer.Tile({
       ref: 'bing-road',
-      /*
       source: new ol.source.BingMaps({
         key: 'Ajou-3bB1TMVLPyXyNvMawg4iBPqYYhAN4QMXvOoZvs47Qmrq7L5zio0VsOOAHUr',
         imagerySet: 'RoadOnDemand'
       }),
-      */
-      source: new ol.source.OSM(),
+      // source: new ol.source.OSM(),
       visible: true,
       zIndex: 0
     })
