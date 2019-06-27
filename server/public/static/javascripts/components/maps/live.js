@@ -65,19 +65,21 @@
         return dateTime.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)
       }
       const isTomorrow = (dateTime) => {
-        const tomorrow = new Date() + 1
+        const tomorrow = new Date()
+        tomorrow.setDate(tomorrow.getDate() +1)
         return dateTime.setHours(0, 0, 0, 0) === tomorrow.setHours(0, 0, 0, 0)
       }
       const isYesterday = (dateTime) => {
-        const yesterday = new Date() - 1
+        const yesterday = new Date()
+        yesterday.setDate(yesterday.getDate() -1)
         return dateTime.setHours(0, 0, 0, 0) === yesterday.setHours(0, 0, 0, 0)
       }
       var date = hours + ':' + minutes + amPm
-      if (isToday) {
+      if (isToday(dateTime)) {
         date += ' today'
-      } else if (isTomorrow) {
+      } else if (isTomorrow(dateTime)) {
         date += ' tomorrow'
-      } else if (isYesterday) {
+      } else if (isYesterday(dateTime)) {
         date += ' yesterday'
       } else {
         date += ' on ' + day + '/' + month + '/' + year
@@ -91,10 +93,10 @@
       let trimId = id.replace('stations.', '')
       var props = feature.getProperties()
       if (props.value_date) {
-        props.value_date = toolTipDate(new Date(props.value_date))
+        props.value_date_tooltip = toolTipDate(new Date(props.value_date))
       }
       if (props.ffoi_date) {
-        props.ffoi_date = toolTipDate(new Date(props.value_date))
+        props.ffoi_date_tooltip = toolTipDate(new Date(props.ffoi_date))
       }
       var html
       if (!props.html) {
