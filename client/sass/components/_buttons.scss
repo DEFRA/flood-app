@@ -22,7 +22,7 @@
 .defra-button-text-s {
     @extend .defra-button-text;
     @extend .govuk-body-s;
-    padding-left:16px;
+    // padding-left:16px;
     &.defra-button-text--show-map:before {
         width:16px;
         height:22px;
