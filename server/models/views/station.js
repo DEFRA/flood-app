@@ -151,7 +151,10 @@ class ViewModel {
       // Add Highest level and Top of typical range to imapacts array for sorting purposes
 
       impacts.push({ impactid: 'highest', value: this.station.porMaxValue, description: 'Highest level on record', shortname: 'Highest level on record' })
-      impacts.push({ impactid: 'alert', value: this.station.percentile5 || 0, description: 'Top of typical range', shortname: 'Top of typical range' })
+      
+      if (this.station.percentile5) { // Only push typical range if it has a percentil5
+        impacts.push({ impactid: 'alert', value: this.station.percentile5, description: 'Top of typical range', shortname: 'Top of typical range' })
+      }
 
       impacts.sort((a, b) => b.value - a.value)
 
