@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+
 {% if model.referer %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
@@ -34,28 +35,13 @@
     {% endif %}
   </div>
 </div>
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    {% if model.station.isClosed or model.station.isClosed or model.station.isSuspended %}
-    <p>
-      {% if model.station.isClosed %}
-      This station is closed and no data is available.
-      {% elif model.recentValue.err %}
-      The latest level recorded is unreliable.
-      {% elif model.station.isSuspended %}
-      {{ model.station.statusReason if model.station.statusReason else "This station is temporarily closed and no data is available." }}
-      {% endif %}
-    </p>
-    {% endif %}
-  </div>
-</div>
 
-{% if model.station.isActive %}
+{% if model.station.isActive and not model.recentValue.err %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-third"> 
     <p role="text" class="govuk-!-padding-bottom-4">
       <span class="govuk-caption-m">Latest level</span>
-      <strong class="govuk-heading-l govuk-!-margin-bottom-1">{{model.station.level}}</strong>
+      <strong class="govuk-heading-l govuk-!-margin-bottom-1">{{ model.station.level }}</strong>
       <span class="govuk-body">
         {% if model.station.hasPercentiles %}
         {{ (model.station.recentValue._).toFixed(2) }}m
@@ -82,6 +68,7 @@
     </p>
   </div>
 </div>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <!--
@@ -97,6 +84,25 @@
     -->
   </div>
 </div>
+
+{% else %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-inset-text govuk-!-margin-top-0">
+      <p class="govuk-body">
+        {% if model.station.isClosed %}
+        This station is closed and no data is available.
+        {% elif model.recentValue.err %}
+        The latest level recorded is unreliable. Reasons for this include very low river levels or a technical fault with the measuring equipment.
+        {% elif model.station.isSuspended %}
+        {{ model.station.statusReason if model.station.statusReason else "This station is temporarily closed and no data is available." }}
+        {% endif %}
+        <a href="/">Check levels at another location</a>.
+      </p>
+    </div>
+  </div>
+</div>
+{% endif %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -163,8 +169,6 @@
     </details>
   </div>
 </div>
-
-{% endif %}
 {% endblock %}
 
 {% block bodyEnd %}

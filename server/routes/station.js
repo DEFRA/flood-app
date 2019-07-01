@@ -51,6 +51,7 @@ module.exports = [{
       } else {
         // Non-forecast Station
         const model = new ViewModel({ station, telemetry, impacts })
+
         model.referer = request.headers.referer
 
         return h.view('station', { model })
