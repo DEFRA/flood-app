@@ -41,7 +41,8 @@ class ViewModel {
     this.geoJson = data.geoJson
     this.timestamp = Date.now()
     this.floods = floods
-    this.outlook = data.full
+    // this.outlook = data.full
+    this.outlook = data.headline
   }
 }
 

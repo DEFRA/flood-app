@@ -3,9 +3,9 @@
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <nav class="defra-search-link govuk-!-margin-bottom-7">
+    <nav class="govuk-!-margin-bottom-7">
       <p>
-        <a href="/"><span class="defra-search-link__icon"></span>Change location</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/national">National view</a>
+        <a href="/">Change location</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/national">National view</a>
       </p>
     </nav>
   </div>
@@ -86,7 +86,7 @@
     {% endif %}
 
     {% if model.rivers %}
-    <p class="govuk-body">[However some flooding is possible as ]4 river levels in this area are currently above typical range. <a href="">View river and sea levels</a>.</p>
+    <p class="govuk-body">[However some flooding is possible as ]4 river levels in this area are currently above typical range. <a href="/river-and-sea-levels">View river and sea levels</a>.</p>
     <!--<h2 class="govuk-heading-m">River and sea levels</h2>
     <p class="govuk-body">River and sea levels are regularly checked by a network of monitoring stations. These levels can help you understand flood risk now and in the next few days.</p>
     <div id="map-list-stations" class="defra-map-list govuk-!-margin-bottom-4">

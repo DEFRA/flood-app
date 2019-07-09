@@ -1,6 +1,6 @@
 module.exports = {
   method: 'GET',
-  path: '/river-sea-levels',
+  path: '/river-and-sea-levels',
   handler: async (request, h) => {
     const model = {}
     model.referer = request.headers.referer

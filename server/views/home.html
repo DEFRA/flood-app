@@ -23,10 +23,7 @@
       {% if errorMessage %}
         {{ govukInput({
           label: {
-            text: "City, town or postcode"
-          },
-          hint: {
-            text: "For example Bakewell or SW1A 2AA"
+            text: "Enter postcode, town or county"
           },
           errorMessage: {
             "text": "Enter location"
@@ -37,10 +34,7 @@
       {% else %}
       {{ govukInput({
         label: {
-          text: "City, town or postcode"
-        },
-        hint: {
-          text: "For example Bakewell or SW1A 2AA"
+          text: "Enter postcode, town or county"
         },
         id: "location",
         name: "location"

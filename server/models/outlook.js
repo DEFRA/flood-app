@@ -118,7 +118,10 @@ function processOutlookData (outlook) {
   full = full.replace(/\r\n\r\n/g, '</p><p class="govuk-body">').replace(/\n\n/g, '</p><p class="govuk-body">')
   full = full.replace(/\r\n/g, '<br />').replace(/\n/g, '<br />')
 
-  return { timestampOutlook, hasOutlookConcern, geoJson, riskLevels, full }
+  let headline = outlook.headline
+  headline = '<p class="govuk-body">' + headline + '</p>'
+
+  return { timestampOutlook, hasOutlookConcern, geoJson, riskLevels, full, headline }
 }
 
 module.exports = processOutlookData
