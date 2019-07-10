@@ -24,3 +24,23 @@
         top: auto;
     }
 }
+.defra-search-summary {
+    position:relative;
+    border-bottom:1px solid govuk-colour('black');
+    .defra-search-summary__count {
+        @extend .govuk-body;
+        @include govuk-responsive-margin(2, 'bottom');
+    }
+    .defra-search-summary__button-map {
+        @extend .defra-button-map;
+        position:absolute;
+        right:0px;
+        top:0px;
+    }
+}
+.defra-search-results {
+    .defra-search-results__section {
+        padding-top:20px;
+        border-bottom:1px solid govuk-colour("grey-2");
+    }
+}

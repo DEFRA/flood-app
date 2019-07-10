@@ -21,70 +21,102 @@
     <div class="govuk-grid-column-two-thirds">
         <div class="govuk-form-group defra-search">
             <label class="govuk-label" for="search">Enter river, postcode or town</label>
-            <input class="govuk-input defra-search__input" id="search" name="search" type="text">
+            <input class="govuk-input defra-search__input" id="search" name="search" type="text" value="River Caldew">
             <button type="submit" class="govuk-button defra-search__button">Search</button>
         </div>
     </div>
 </div>
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-        <p class="govuk-body">130 stations <button class="defra-button-map">View map</button></p>
-        <div class="app-map">
-            <div class="app-map__container">
-            <figure class="map" id="map-live">
-                <div class="map__container">
-                <div class="map__container-inner"></div>
+    <div class="govuk-grid-column-two-thirds">
+        <div class="defra-search-summary govuk-!-margin-top-6">
+            <h2 class="defra-search-summary__count">4 stations</h2>
+            <button class="defra-search-summary__button-map">View map</button>
+            <div class="app-map">
+                <div class="app-map__container">
+                    <figure class="map" id="map-live">
+                        <div class="map__container">
+                            <div class="map__container-inner"></div>
+                        </div>
+                        <figcaption class="govuk-visually-hidden">River and sea levels</figcaption>
+                    </figure>
                 </div>
-                <figcaption class="govuk-visually-hidden">Flood warnings and river and sea levels</figcaption>
-            </figure>
             </div>
         </div>
-        <table class="govuk-table govuk-!-margin-bottom-7">
-            <caption class="govuk-table__caption govuk-visually-hidden">Months and rates</caption>
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header"></th>
-                    <th class="govuk-table__header" scope="col">Level</th>
-                    <th class="govuk-table__header" scope="col">Station</th>
-                    <th class="govuk-table__header" scope="col">Updated</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row" data-id="776" data-level="4.564" data-name="Flooding to footpath">
-                    <th class="govuk-table__header" scope="row" rowspan="3">River Caldew</th>
-                    <td class="govuk-table__cell">[-]</td>
-                    <td class="govuk-table__cell"><a href="">Cummersdale</a></td>
-                    <td class="govuk-table__cell">4:30am</td>
-                </tr>   
-                <tr class="govuk-table__row" data-id="highest" data-level="4.56" data-name="Highest level on record">
-                    <td class="govuk-table__cell">[-]</td>
-                    <td class="govuk-table__cell"><a href="">Denton Holme</a></td>
-                    <td class="govuk-table__cell">4:30am</td>
-                </tr>   
-                <tr class="govuk-table__row" data-id="778" data-level="4.3" data-name="Flooding at West Walls car park">
-                    <td class="govuk-table__cell">[-]</td>
-                    <td class="govuk-table__cell"><a href="">Skew Bridge Carlisle</a></td>
-                    <td class="govuk-table__cell">4:30am</td>
-                </tr>   
-                <tr class="govuk-table__row" data-id="777" data-level="3.9" data-name="Defence at Holme Head weir">
-                    <th class="govuk-table__header" scope="row" rowspan="3">River Eden</th>
-                    <td class="govuk-table__cell">[-]</td>
-                    <td class="govuk-table__cell"><a href="">Linstock</a></td>
-                    <td class="govuk-table__cell">11:30pm yesterday</td>
-                </tr>   
-                <tr class="govuk-table__row" data-id="alert" data-level="2.20" data-name="Top of typical range">
-                    <td class="govuk-table__cell">[-]</td>
-                    <td class="govuk-table__cell"><a href="">Sands Centre, Carlisle</a></td>
-                    <td class="govuk-table__cell">4:30am</td>
-                </tr>   
-                <tr class="govuk-table__row" data-id="alert" data-level="2.20" data-name="Top of typical range">
-                    <td class="govuk-table__cell">[-]</td>
-                    <td class="govuk-table__cell"><a href="">Sheepmount</a></td>
-                    <td class="govuk-table__cell">4:30am</td>
-                </tr>   
-            </tbody>
-        </table>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="defra-search-results govuk-!-margin-top-1">
+            <ul class="govuk-list">
+                <li>
+                    <section class="defra-search-results__section">
+                        <h2 class="govuk-heading-m">River Caldew (Cumbria)</h2>
+                        <dl class="govuk-summary-list govuk-summary-list--no-border">
+                            <div class="govuk-summary-list__row defra-search-results__item">
+                                <dt class="govuk-summary-list__key">
+                                    <span class="govuk-visually-hidden">at</span>
+                                    <a href="">Sebergham</a>
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    <span class="govuk-visually-hidden">Level: normal, updated</span>
+                                    <time datetime="">4:30am</time>
+                                </dd>     
+                            </div>
+                            <div class="govuk-summary-list__row defra-search-results__item">
+                                <dt class="govuk-summary-list__key">
+                                    <span class="govuk-visually-hidden">at</span>
+                                    <a href="">Cummersdale</a>
+                                </dt>    
+                                <dd class="govuk-summary-list__value">
+                                    <span class="govuk-visually-hidden">Level: normal, updated</span>
+                                    <time datetime="">4:30am</time>
+                                </dd>   
+                            </div>                        
+                            <div class="govuk-summary-list__row defra-search-results__item">
+                                <dt class="govuk-summary-list__key">
+                                    <span class="govuk-visually-hidden">at</span>
+                                    <a href="">Denton Holme</a>
+                                </dt>  
+                                <dd class="govuk-summary-list__value">
+                                    <span class="govuk-visually-hidden">Level: normal, updated</span>
+                                    <time datetime="">4:30am</time>
+                                </dd>   
+                            </div>                        
+                            <div class="govuk-summary-list__row defra-search-results__item">
+                                <dt class="govuk-summary-list__key">
+                                    <span class="govuk-visually-hidden">at</span>
+                                    <a href="">Skew Bridge Carlisle</a>
+                                </dt>   
+                                <dd class="govuk-summary-list__value">
+                                    <span class="govuk-visually-hidden">Level: normal, updated</span>
+                                    <time datetime="">4:30am</time>
+                                </dd>   
+                            </div>                        
+                        </dl>
+                    </section>
+                </li>
+                <!--
+                <li>
+                    <section class="defra-search-results__section">
+                        <h2 class="govuk-heading-m">River Eden</h2>
+                        <ul class="govuk-list">      
+                            <li>
+                                <a href="">Linstock</a>
+                            </li>
+                            <li>
+                                <a href="">Sands Centre, Carlisle</a>
+                            </li>
+                            <li>
+                                <a href="">Sheepmount</a>
+                            </li>
+                        </ul>
+                    </section>
+                </li>
+                -->
+            </ul>
+        </div>
     </div>
 </div>
 

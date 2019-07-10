@@ -99,7 +99,7 @@
 .defra-button-map:before {
     content: "";
     position: absolute;
-    top: 2px;
+    top:0px;
     left:0px;
     background-image: url('#{$govuk-images-path}icon-map-controls-2x.png');
     background-color:transparent;
@@ -108,6 +108,9 @@
     background-position: -7px -215px;
     height:20px;
     width:16px;
+    @include mq ($from: tablet) {
+        top: 2px;
+    }
 }
 .defra-button-map:hover:before {
     background-position: -37px -215px;
