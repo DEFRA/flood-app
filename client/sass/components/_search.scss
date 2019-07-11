@@ -77,6 +77,11 @@
             white-space: nowrap;
         }
     }
+    .defra-search-results__meta-error {
+        @include govuk-font($size: 16);
+        margin-top:5px;
+        margin-bottom:0px;
+    }
     .defra-search-results__meta-pair:not(:first-child) {
         display: inline-block;
         white-space: nowrap;
@@ -86,9 +91,12 @@
         position:absolute;
         text-indent:-5000px;
         left:0px;
-        top:0px;
+        top:-2px;
         width:24px;
         height:24px;
         background-color:blue;
+        @include mq ($from: tablet) {
+            top:0px;
+        }
     }
 }
