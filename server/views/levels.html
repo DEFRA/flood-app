@@ -12,7 +12,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl">
-            River and sea levels
+            Find river and sea levels
         </h1>
     </div>
 </div>
@@ -30,16 +30,15 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div class="defra-search-summary govuk-!-margin-top-6">
-            <h2 class="defra-search-summary__count">4 stations</h2>
+            <h2 class="defra-search-summary__count">4 levels</h2>
             <button class="defra-search-summary__button-map">View map</button>
             <div class="app-map">
                 <div class="app-map__container">
-                    <figure class="map" id="map-live">
+                    <div class="map" id="map-live">
                         <div class="map__container">
                             <div class="map__container-inner"></div>
                         </div>
-                        <figcaption class="govuk-visually-hidden">River and sea levels</figcaption>
-                    </figure>
+                    </div>
                 </div>
             </div>
         </div>
@@ -49,72 +48,135 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div class="defra-search-results govuk-!-margin-top-1">
-            <ul class="govuk-list">
+            <ul class="defra-search-results__list">
+                <li>
+                    <section class="defra-search-results__section">
+                        <h2 class="govuk-heading-m">Groundwater level</h2>
+                        <ul class="defra-search-results__section-list">
+                            <li>
+                                <span class="govuk-visually-hidden">at </span><a href="">Location</a>
+                                <dl class="defra-search-results__meta">
+                                    <div class="defra-search-results__meta-pair">
+                                        <dt class="govuk-visually-hidden">Level</dt>
+                                        <dd class="defra-search-results__icon">Normal</dd>
+                                    </div>
+                                    <div class="defra-search-results__meta-pair">
+                                        <dt>Trend</dt>
+                                        <dd>Stable</dd>       
+                                    </div>
+                                    <div class="defra-search-results__meta-pair">
+                                        <dt>Updated</dt>
+                                        <dd><time datetime="">Yesterday at 11:30pm</time></dd> 
+                                    </div>
+                                </dl>
+                            </li>
+                        </ul>                                                 
+                    </section>
+                </li>
+                <li>
+                    <section class="defra-search-results__section">
+                        <h2 class="govuk-heading-m">Sea level</h2>
+                        <ul class="defra-search-results__section-list">
+                            <li>
+                                <span class="govuk-visually-hidden">at </span><a href="">Silloth</a>
+                                <dl class="defra-search-results__meta">
+                                    <div class="defra-search-results__meta-pair">
+                                        <dt class="govuk-visually-hidden">Level</dt>
+                                        <dd class="defra-search-results__icon">Normal</dd>
+                                    </div>
+                                    <div class="defra-search-results__meta-pair">
+                                        <dt>Trend</dt>
+                                        <dd>Stable</dd>       
+                                    </div>
+                                    <div class="defra-search-results__meta-pair">
+                                        <dt>Updated</dt>
+                                        <dd><time datetime="">9 July 2019 at 6:00am</time></dd> 
+                                    </div>
+                                </dl>
+                            </li>
+                        </ul>                                                 
+                    </section>
+                </li>
                 <li>
                     <section class="defra-search-results__section">
                         <h2 class="govuk-heading-m">River Caldew (Cumbria)</h2>
-                        <dl class="govuk-summary-list govuk-summary-list--no-border">
-                            <div class="govuk-summary-list__row defra-search-results__item">
-                                <dt class="govuk-summary-list__key">
-                                    <span class="govuk-visually-hidden">at</span>
-                                    <a href="">Sebergham</a>
-                                </dt>
-                                <dd class="govuk-summary-list__value">
-                                    <span class="govuk-visually-hidden">Level: normal, updated</span>
-                                    <time datetime="">4:30am</time>
-                                </dd>     
-                            </div>
-                            <div class="govuk-summary-list__row defra-search-results__item">
-                                <dt class="govuk-summary-list__key">
-                                    <span class="govuk-visually-hidden">at</span>
-                                    <a href="">Cummersdale</a>
-                                </dt>    
-                                <dd class="govuk-summary-list__value">
-                                    <span class="govuk-visually-hidden">Level: normal, updated</span>
-                                    <time datetime="">4:30am</time>
-                                </dd>   
-                            </div>                        
-                            <div class="govuk-summary-list__row defra-search-results__item">
-                                <dt class="govuk-summary-list__key">
-                                    <span class="govuk-visually-hidden">at</span>
-                                    <a href="">Denton Holme</a>
-                                </dt>  
-                                <dd class="govuk-summary-list__value">
-                                    <span class="govuk-visually-hidden">Level: normal, updated</span>
-                                    <time datetime="">4:30am</time>
-                                </dd>   
-                            </div>                        
-                            <div class="govuk-summary-list__row defra-search-results__item">
-                                <dt class="govuk-summary-list__key">
-                                    <span class="govuk-visually-hidden">at</span>
-                                    <a href="">Skew Bridge Carlisle</a>
-                                </dt>   
-                                <dd class="govuk-summary-list__value">
-                                    <span class="govuk-visually-hidden">Level: normal, updated</span>
-                                    <time datetime="">4:30am</time>
-                                </dd>   
-                            </div>                        
-                        </dl>
+                        <ul class="defra-search-results__section-list">
+                            <li>
+                                <span class="govuk-visually-hidden">at </span><a href="">Sebergham</a>
+                                <dl class="defra-search-results__meta">
+                                    <dt class="govuk-visually-hidden">Level</dt>
+                                    <dd class="defra-search-results__icon">Normal</dd>
+                                    <dt>Trend</dt>
+                                    <dd>Stable</dd>    
+                                    <dt>Updated</dt>
+                                    <dd><time datetime="">4:30am</time></dd> 
+                                </dl>
+                            </li>
+                            <li>
+                                <span class="govuk-visually-hidden">at </span><a href="">Cummersdale</a>
+                                <dl class="defra-search-results__meta">
+                                    <dt class="govuk-visually-hidden">Level</dt>
+                                    <dd class="defra-search-results__icon">Normal</dd>
+                                    <dt>Trend</dt>
+                                    <dd>Stable</dd>    
+                                    <dt>Updated</dt>
+                                    <dd><time datetime="">4:30am</time></dd> 
+                                </dl>
+                            </li>
+                            <li>
+                                <span class="govuk-visually-hidden">at </span><a href="">Denton Holme</a>
+                                <dl class="defra-search-results__meta">
+                                    <dt class="govuk-visually-hidden">Level</dt>
+                                    <dd class="defra-search-results__icon">Normal</dd>
+                                    <dt>Trend</dt>
+                                    <dd>Stable</dd>    
+                                    <dt>Updated</dt>
+                                    <dd><time datetime="">4:30am</time></dd> 
+                                </dl>
+                            </li>                        
+                        </ul>                                                 
                     </section>
                 </li>
-                <!--
                 <li>
                     <section class="defra-search-results__section">
-                        <h2 class="govuk-heading-m">River Eden</h2>
-                        <ul class="govuk-list">      
+                        <h2 class="govuk-heading-m">River Eden (Cumbria)</h2>
+                        <ul class="defra-search-results__section-list">
                             <li>
-                                <a href="">Linstock</a>
+                                <span class="govuk-visually-hidden">at </span><a href="">Linstock</a>
+                                <dl class="defra-search-results__meta">
+                                    <dt class="govuk-visually-hidden">Level</dt>
+                                    <dd class="defra-search-results__icon">Normal</dd>
+                                    <dt>Trend</dt>
+                                    <dd>Stable</dd>       
+                                    <dt>Updated</dt>
+                                    <dd><time datetime="">4:30am</time></dd> 
+                                </dl>
                             </li>
                             <li>
-                                <a href="">Sands Centre, Carlisle</a>
+                                <span class="govuk-visually-hidden">at </span><a href="">Sands Centre, Carlisle</a>
+                                <dl class="defra-search-results__meta">
+                                    <dt class="govuk-visually-hidden">Level</dt>
+                                    <dd class="defra-search-results__icon">Normal</dd>
+                                    <dt>Trend</dt>
+                                    <dd>Stable</dd>    
+                                    <dt>Updated</dt>
+                                    <dd><time datetime="">4:30am</time></dd> 
+                                </dl>
                             </li>
                             <li>
-                                <a href="">Sheepmount</a>
-                            </li>
-                        </ul>
+                                <span class="govuk-visually-hidden">at </span><a href="">Sheepmount</a>
+                                <dl class="defra-search-results__meta">
+                                    <dt class="govuk-visually-hidden">Level</dt>
+                                    <dd class="defra-search-results__icon">Normal</dd>
+                                    <dt>Trend</dt>
+                                    <dd>Stable</dd>    
+                                    <dt>Updated</dt>
+                                    <dd><time datetime="">4:30am</time></dd> 
+                                </dl>
+                            </li>                        
+                        </ul>                                                 
                     </section>
                 </li>
-                -->
             </ul>
         </div>
     </div>

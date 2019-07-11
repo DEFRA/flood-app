@@ -38,9 +38,57 @@
         top:0px;
     }
 }
-.defra-search-results {
-    .defra-search-results__section {
-        padding-top:20px;
-        border-bottom:1px solid govuk-colour("grey-2");
+.defra-search-results__list {
+    @extend .govuk-list;
+    margin:0px;
+    & > li {
+        margin:0px;
+    }
+    & > li:last-child .defra-search-results__section {
+        border-bottom:0px;
+    }
+}
+.defra-search-results__section {
+    @include govuk-responsive-padding(4, 'top');
+    border-bottom:1px solid govuk-colour("grey-2");
+}
+.defra-search-results__section-list {
+    @extend .govuk-list;
+    @include govuk-responsive-margin(4, 'bottom');
+    & > li {
+        position:relative;
+        padding-left:35px;
+        margin-bottom:15px;
+    }
+    .defra-search-results__meta {
+        @include govuk-font($size: 16);
+        @include govuk-responsive-padding(1, 'top');
+        margin:0px;
+        dt {
+            display: inline-block;
+        }
+        dt:after {
+            content:':';
+        }
+        dd {
+            display: inline;
+            margin-left:0;
+            margin-right:0.5em;
+            white-space: nowrap;
+        }
+    }
+    .defra-search-results__meta-pair:not(:first-child) {
+        display: inline-block;
+        white-space: nowrap;
+        margin:0px;
+    }
+    .defra-search-results__icon {
+        position:absolute;
+        text-indent:-5000px;
+        left:0px;
+        top:0px;
+        width:24px;
+        height:24px;
+        background-color:blue;
     }
 }
