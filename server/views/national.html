@@ -21,8 +21,8 @@
     </h1>
     <p class="govuk-body-s govuk-!-margin-bottom-7">Updated: <time class="form-hint" title="{{model.timestamp | formatDate}}" datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time></p>
 
-    {% if model.floods.length %}
-      {% for group in model.groups %}
+    {% if model.floods.floods.length %}
+      {% for group in model.floods.groups %}
         {% if group.floods %}
           <div class="defra-warning-text-flood defra-warning-text-flood--large defra-warning-text-flood--{{ group.severity.hash }}">
             <span class="defra-warning-text-flood__icon"></span>
@@ -37,7 +37,7 @@
       <p class="govuk-body">There are currently no flood warnings or alerts in force.</p>
     {% endif %}
 
-    {% if model.floods.length %}
+    {% if model.floods.floods.length %}
     <div class="app-map">
       <div class="app-map__container">
         <div class="map" id="map-live">
@@ -49,7 +49,7 @@
     </div>
     <div id="map-list-warnings" class="defra-map-list govuk-!-margin-bottom-4">
       <div id="warnings-detail" class="govuk-details__text govuk-details__text--defra-details-flood">
-        {% for group in model.groups %}
+        {% for group in model.floods.groups %}
           {% if group.floods %}
             <h3 class="govuk-heading-s govuk-!-padding-top-0 govuk-!-margin-bottom-3">
               {{ group.severity.pluralisedTitle }}
@@ -74,13 +74,13 @@
     <h2 class="govuk-heading-m govuk-!-margin-top-4">
       Flood risk for the next 5 days
     </h2>
-    {{ model.outlook | safe }}
+    {{ model.outlook.full | safe }}
     <p class="govuk-body-s">
-      <time class="form-hint" title="{{model.timestampOutlook | formatDate}}"
-        datetime="{{ model.timestampOutlook }}">Updated {{ model.timestampOutlook | formatDate }}</time>
+      <time class="form-hint" title="{{model.outlook.timestampOutlook | formatDate}}"
+        datetime="{{ model.outlook.timestampOutlook }}">Updated {{ model.outlook.timestampOutlook | formatDate }}</time>
     </p>
 
-    {% if model.hasOutlookConcern %}
+    {% if model.outlook.hasOutlookConcern %}
     <div class="app-map">
       <div class="app-map__container">
         <div class="map" id="map-outlook" hidden>
@@ -88,7 +88,7 @@
             <div class="map__container-inner">
               <div class="map__outlook-control">
                 <div class="map__outlook-control__inner">
-                  {% for day in model.days %}
+                  {% for day in model.outlook.days %}
                     <div class="map__outlook-control__day">
                       <button class="map__outlook-control__button"
                         aria-selected="{{ "true" if not day.idx else "false" }}"
