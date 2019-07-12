@@ -61,10 +61,9 @@
             <caption class="govuk-visually-hidden">Results</caption>
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-one-half" scope="col"><span class="govuk-visually-hidden">Location</a></th>
-                    <th class="govuk-table__header govuk-!-width-one-quarter" scope="col">Level</th>
-                    <!--<th class="govuk-table__header" scope="col">Trend</th>-->
-                    <th class="govuk-table__header govuk-!-width-one-quarter" scope="col">Updated</th>
+                    <th class="govuk-table__header govuk-!-width-one-half" scope="col" id="c1"><span class="govuk-visually-hidden">Location</a></th>
+                    <th class="govuk-table__header govuk-!-width-one-quarter" scope="col" id="c2">Level</th>
+                    <th class="govuk-table__header govuk-!-width-one-quarter" scope="col" id="c3">Updated</th>
                 </tr>
             </thead>
             <!--
@@ -107,47 +106,89 @@
             -->
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="row" colspan="3">
-                        <span class="govuk-heading-m">River Caldew (Cumbria)</span>
+                    <th class="govuk-table__header" scope="row" colspan="3" id="g1">
+                        <div class="govuk-!-font-size-24 govuk-!-margin-top-2 govuk-!-font-weight-bold">River Caldew (Cumbria)</div>
                     </th>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="row">
+                    <th class="govuk-table__header" scope="row" id="l1" headers="g1 c1">
                         <a href="">Sebergham</a>
                     </th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" headers="g1 l1 c2">
                         Normal
                     </td>
-                    <!--
-                    <td class="govuk-table__cell">
-                        Stable
-                    </td>
-                    -->
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" headers="g1 l1 c3">
                         <time datetime="">4:30am</time>
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="row">
+                    <th class="govuk-table__header" scope="row" id="l2" headers="g1 c1">
                         <a href="">Cummersdale</a>
                     </th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" headers="g1 l2 c2">
                         Normal
                     </td>
-                    <!--
-                    <td class="govuk-table__cell">
-                        Stable
-                    </td>
-                    -->
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" headers="g1 l2 c3">
                         <time datetime="">4:30am</time>
                     </td>
                 </tr>
-            </tbody>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="row" id="l3" headers="g1 c1">
+                        <a href="">Denton Holme</a>
+                    </th>
+                    <td class="govuk-table__cell" headers="g1 l3 c2">
+                        Normal
+                    </td>
+                    <td class="govuk-table__cell" headers="g1 l3 c3">
+                        <time datetime="">4:30am</time>
+                    </td>
+                </tr>
+           </tbody>
+           <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="row" colspan="3" id="g2">
+                        <div class="govuk-!-font-size-24 govuk-!-margin-top-2 govuk-!-font-weight-bold">River Eden (Cumbria)</div>
+                    </th>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="row" id="l4" headers="g2 c1">
+                        <a href="">Linstock</a>
+                    </th>
+                    <td class="govuk-table__cell" headers="g2 l4 c2">
+                        Normal
+                    </td>
+                    <td class="govuk-table__cell" headers="g2 l4 c3">
+                        <time datetime="">4:30am</time>
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="row" id="l5" headers="g2 c1">
+                        <a href="">Sands Centre, Carlisle</a>
+                    </th>
+                    <td class="govuk-table__cell" headers="g2 l5 c2">
+                        Normal
+                    </td>
+                    <td class="govuk-table__cell" headers="g2 l5 c3">
+                        <time datetime="">4:30am</time>
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="row" id="l6" headers="g2 c1">
+                        <a href="">Sheepmount</a>
+                    </th>
+                    <td class="govuk-table__cell" headers="g2 l6 c2">
+                        Normal
+                    </td>
+                    <td class="govuk-table__cell" headers="g2 l6 c3">
+                        <time datetime="">4:30am</time>
+                    </td>
+                </tr>
+           </tbody>
         </table>
     </div>
 </div>
 
+<!--
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div class="defra-search-results govuk-!-margin-top-1">
@@ -300,6 +341,7 @@
         </div>
     </div>
 </div>
+-->
 
 {% endblock %}
 
