@@ -1,0 +1,61 @@
+.defra-table-flood {
+    @extend .govuk-table;
+    @include mq ($until: tablet) {
+        display: block;
+    }
+    &__head {
+        @include mq ($until: tablet) {
+            @include govuk-visually-hidden();
+        }
+    }
+    &__body {
+        @include mq ($until: tablet) {
+            display: block;
+        }
+    }
+    &__row {
+        @extend .govuk-table__row;
+        @include mq ($until: tablet) {
+            display: block;
+        }
+    }
+    &__header {
+        @extend .govuk-table__header;
+        @include mq ($until: tablet) {
+            display: block;
+            border:0px;
+        }
+    }
+    &__cell {
+        @extend .govuk-table__cell;
+        @include mq ($until: tablet) {
+            display: block;
+            border:0px;
+            padding-top:2px;
+            padding-bottom:0px;
+        }
+    }
+    &__row:not(:first-child) &__header {
+        @include mq ($until: tablet) {
+            border-top:1px solid $govuk-border-colour;
+            padding-bottom:0px;
+        }
+    }
+    &__cell:last-child {
+        @include mq ($until: tablet) {
+            padding-bottom:5px;
+        }
+    }
+    &__group-head {
+        display: block;
+        @include govuk-font($size: 24);
+        font-weight:bold;
+        margin-top:5px;
+        margin-bottom:2.5px;
+    }
+    &__title {
+        @include mq ($from: tablet) {
+            @include govuk-visually-hidden();
+        }
+    }
+}
