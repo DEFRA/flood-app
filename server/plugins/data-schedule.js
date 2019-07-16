@@ -22,7 +22,7 @@ module.exports = {
         console.log('Stations geojson cached')
       }
       getStationsGeojson()
-      schedule.scheduleJob('* * * * *', async () => {
+      schedule.scheduleJob('1,16,31,46 * * * *', async () => {
         await getStationsGeojson()
       })
 
@@ -33,7 +33,7 @@ module.exports = {
       }
       // awaiting getOutlook delays the application startup
       await getOutlook()
-      schedule.scheduleJob('*/15 * * * *', async () => {
+      schedule.scheduleJob('1,16,31,46 * * * *', async () => {
         await getOutlook()
       })
     }
