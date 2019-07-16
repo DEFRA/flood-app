@@ -8,7 +8,8 @@ const routes = [].concat(
   require('../routes/api'),
   require('../routes/roadmap'),
   require('../routes/public'),
-  require('../routes/api/stations.geojson')
+  require('../routes/api/stations.geojson'),
+  require('../routes/api/warnings.geojson')
 )
 
 module.exports = {

@@ -16,6 +16,25 @@ class Floods {
         description: item.subTitle
       }
     })
+    this._geojson = {
+      type: 'FeatureCollection',
+      totalFeatures: this._floods.floods.length,
+      features: []
+    }
+    this._geojson.features = this._floods.floods.map(item => {
+      return {
+        type: 'Feature',
+        id: 'flood_warning_alert.' + item.key,
+        geometry: JSON.parse(item.geometry),
+        properties: {
+          fwa_key: item.key,
+          fwa_code: item.code,
+          description: item.description,
+          severity: item.severity,
+          severity_description: item.severityDescription
+        }
+      }
+    })
   }
   get floods () {
     return this._floods.floods
@@ -25,6 +44,9 @@ class Floods {
   }
   get groups () {
     return this._groups
+  }
+  get geojson () {
+    return this._geojson
   }
 }
 module.exports = Floods
