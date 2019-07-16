@@ -16,12 +16,15 @@ module.exports = {
         await getFloods()
       })
 
-      // Schedule telemetry data
-      // const getTelemetry = () => {
-      //   console.log('Telemetry scheduled job')
-      // }
-      // getTelemetry()
-      // schedule.scheduleJob('* * * * *', getTelemetry)
+      // get stations geojson data for map
+      const getStationsGeojson = async () => {
+        floodService.stationsGeojson = await floodService.getStationsGeoJson()
+        console.log('Stations geojson cached')
+      }
+      getStationsGeojson()
+      schedule.scheduleJob('* * * * *', async () => {
+        await getStationsGeojson()
+      })
 
       // Schedule outlook (5df) data
       const getOutlook = async () => {

@@ -7,6 +7,7 @@ const Floods = require('../models/floods')
 const Outlook = require('../models/outlook')
 let floods = null
 let outlook = null
+let stationsGeojson = null
 
 module.exports = {
   // ############ Internals ################
@@ -25,6 +26,14 @@ module.exports = {
   // set cached outlook object
   set outlook (data) {
     outlook = data && new Outlook(data)
+  },
+
+  get stationsGeojson () {
+    return stationsGeojson
+  },
+
+  set stationsGeojson (data) {
+    stationsGeojson = data
   },
 
   // ############### Externals ################
@@ -94,6 +103,11 @@ module.exports = {
 
   async getStationForecastData (id) {
     const url = `${serviceUrl}/station/${id}/forecast/data`
+    return util.getJson(url)
+  },
+
+  getStationsGeoJson () {
+    const url = config.geoserverUrl + '/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&maxFeatures=10000&outputFormat=application/json&srsName=EPSG:4326'
     return util.getJson(url)
   },
 
