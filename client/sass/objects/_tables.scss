@@ -25,6 +25,7 @@
             display: block;
             border:0px;
         }
+        vertical-align: top;
     }
     &__cell {
         @extend .govuk-table__cell;
@@ -33,6 +34,12 @@
             border:0px;
             padding-top:2px;
             padding-bottom:0px;
+        }
+        vertical-align: top;
+    }
+    &__cell:nth-of-type(2) {
+        @include mq ($from: tablet) {
+            @include govuk-font($size: 19, $tabular: true);
         }
     }
     &__row:not(:first-child) &__header {
@@ -57,5 +64,9 @@
         @include mq ($from: tablet) {
             @include govuk-visually-hidden();
         }
+    }
+    &__error-text {
+        font-weight:normal;
+        color: $govuk-error-colour;
     }
 }
