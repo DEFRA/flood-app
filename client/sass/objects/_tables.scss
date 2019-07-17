@@ -67,6 +67,25 @@
     }
     &__error-text {
         font-weight:normal;
-        color: $govuk-error-colour;
+    }
+    &__icon-state {
+        @include mq ($from: tablet) {
+            display: block;
+            width:24px;
+            height:24px;
+            text-indent:-5000px;
+            background-image: url('#{$govuk-images-path}icons-level-state.svg');
+            background-color:white;
+            background-size:96px 24px;
+            background-position:-24px top;
+        }
+        &--high {
+            color: govuk-colour('bright-red');
+            font-weight:bold;
+            text-transform:uppercase;
+            @include mq ($from: tablet) {
+                background-position:-72px top;
+            }
+        }
     }
 }
