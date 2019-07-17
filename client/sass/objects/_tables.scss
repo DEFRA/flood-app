@@ -88,9 +88,6 @@
             }
         }
         &--forecast-high {
-            color: govuk-colour('orange');
-            font-weight:bold;
-            text-transform:uppercase;
             @include mq ($from: tablet) {
                 background-position:-48px top;
             }
