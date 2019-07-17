@@ -12,7 +12,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl">
-            Find river and sea levels
+            River and sea levels
         </h1>
     </div>
 </div>
@@ -38,9 +38,9 @@
 -->
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-full">
         <div class="defra-search-summary govuk-!-margin-top-6">
-            <h2 class="defra-search-summary__count">8 levels</h2>
+            <h2 class="defra-search-summary__count">7 levels</h2>
             <button class="defra-search-summary__button-map">View map</button>
             <div class="app-map">
                 <div class="app-map__container">
@@ -56,148 +56,141 @@
 </div>
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-full">
         <table class="defra-table-flood govuk-!-margin-top-4">
             <caption class="govuk-visually-hidden">Results</caption>
             <thead class="defra-table-flood__head">
-                <tr class="defra-table-flood__row">
-                    <th class="defra-table-flood__header govuk-!-width-one-half" scope="col"><span class="govuk-visually-hidden">Location</a></th>
-                    <th class="defra-table-flood__header govuk-!-width-one-quarter" scope="col">Level</th>
-                    <th class="defra-table-flood__header govuk-!-width-one-quarter" scope="col">Updated</th>
+                <tr class="defra-table-flood__row" role="row">
+                    <th class="defra-table-flood__header" role="columnheader" scope="col">
+                        <span class="govuk-visually-hidden">Location</span>
+                    </th>
+                    <th class="defra-table-flood__header" role="columnheader" scope="col">
+                        State
+                    </th>
+                    <th class="defra-table-flood__header" role="columnheader" scope="col">
+                        Level
+                    </th>
+                    <th class="defra-table-flood__header" role="columnheader" scope="col">
+                        Updated
+                    </th>
                 </tr>
             </thead>
-            <!--
             <tbody class="defra-table-flood__body">
-                <tr class="defra-table-flood__row">
-                    <th class="defra-table-flood__header" scope="row" colspan="3">
-                        <span class="govuk-heading-m">Groundwater level</span>
-                    </th>
-                </tr>
-                <tr class="defra-table-flood__row">
-                    <th class="defra-table-flood__header" scope="row">
-                        <a href="">Preesall Pumping Station, Cockers Dyke</a>
-                    </th>
-                    <td class="defra-table-flood__cell">
-                        Normal
-                    </td>
-                    <td class="defra-table-flood__cell">
-                        <time datetime="">Yesterday at 11:30pm</time>
-                    </td>
-                </tr>
-            </tbody>
-            <tbody class="defra-table-flood__body">
-                <tr class="defra-table-flood__row">
-                    <th class="defra-table-flood__header" scope="row" colspan="3">
-                        <span class="govuk-heading-m">Sea level</span>
-                    </th>
-                </tr>
-                <tr class="defra-table-flood__row">
-                    <th class="defra-table-flood__header" scope="row">
-                        <a href="">Silloth</a>
-                    </th>
-                    <td class="defra-table-flood__cell">
-                        Normal
-                    </td>
-                    <td class="defra-table-flood__cell">
-                        <time datetime="">21 Nov at 11:00pm</time>
-                    </td>
-                </tr>
-            </tbody>
-            -->
-            <tbody class="defra-table-flood__body">
-                <tr class="defra-table-flood__row">
-                    <th class="defra-table-flood__header" scope="row" colspan="3" id="g1">
+                <tr class="defra-table-flood__row" role="row">
+                    <th class="defra-table-flood__header" role="rowheader" scope="row" colspan="4" id="g1">
                         <span class="defra-table-flood__group-head">Sea levels</span>
                     </th>
                 </tr>
-                <tr class="defra-table-flood__row">
-                    <th class="defra-table-flood__header" scope="row" id="l1" headers="g1">
+                <tr class="defra-table-flood__row" role="row">
+                    <th class="defra-table-flood__header" role="rowheader" scope="row" id="l1" headers="g1">
                         <span class="govuk-visually-hidden">Location: </span><a href="">Silloth</a>
                     </th>
-                    <td class="defra-table-flood__cell" headers="g1 l1">
-                        <span class="defra-table-flood__title">Level: </span>4.24m
+                    <td class="defra-table-flood__cell" role="cell" headers="g1 l1">
+                        <span class="defra-table-flood__title">State:</span>
+                        <abbr title="not available">n/a</abbr>
                     </td>
-                    <td class="defra-table-flood__cell" headers="g1 l1">
+                    <td class="defra-table-flood__cell" role="cell" headers="g1 l1">
+                        <span class="defra-table-flood__title">Level: </span>1.25m
+                    </td>
+                    <td class="defra-table-flood__cell" role="cell" headers="g1 l1">
                         <span class="defra-table-flood__title">Updated: </span><time datetime="">21 Nov at 11:00pm</time>
                     </td>
                 </tr>
            </tbody>
             <tbody class="defra-table-flood__body">
-                <tr class="defra-table-flood__row">
-                    <th class="defra-table-flood__header" scope="row" colspan="3" id="g1">
-                        <span class="defra-table-flood__group-head">River Caldew (Cumbria)</span>
+                <tr class="defra-table-flood__row" role="row">
+                    <th class="defra-table-flood__header" role="rowheader" scope="row" colspan="4" id="g2">
+                        <span class="defra-table-flood__group-head">River Caldew</span>
                     </th>
                 </tr>
-                <tr class="defra-table-flood__row">
-                    <th class="defra-table-flood__header" scope="row" id="l1" headers="g1">
+                <tr class="defra-table-flood__row" role="row">
+                    <th class="defra-table-flood__header" role="rowheader" scope="row" id="l2" headers="g2">
                         <span class="govuk-visually-hidden">Location: </span><a href="">Sebergham</a>
                     </th>
-                    <td class="defra-table-flood__cell" headers="g1 l1">
-                        <span class="defra-table-flood__title">Level: </span>Normal
+                    <td class="defra-table-flood__cell" role="cell" headers="g2 l2">
+                        <span class="defra-table-flood__title">State: </span>Normal
                     </td>
-                    <td class="defra-table-flood__cell" headers="g1 l1">
+                    <td class="defra-table-flood__cell" role="cell" headers="g2 l2">
+                        <span class="defra-table-flood__title">Level: </span>1.25m
+                    </td>
+                    <td class="defra-table-flood__cell" role="cell" headers="g2 l2">
                         <span class="defra-table-flood__title">Updated: </span><time datetime="">4:30am</time>
                     </td>
                 </tr>
-                <tr class="defra-table-flood__row">
-                    <th class="defra-table-flood__header" scope="row" id="l2" headers="g1">
+                <tr class="defra-table-flood__row" role="row">
+                    <th class="defra-table-flood__header" role="rowheader" scope="row" id="l3" headers="g2">
                         <span class="govuk-visually-hidden">Location: </span><a href="">Cummersdale</a>
                     </th>
-                    <td class="defra-table-flood__cell" headers="g1 l2">
-                        <span class="defra-table-flood__title">Level: </span>Normal
+                    <td class="defra-table-flood__cell" role="cell" headers="g2 l3">
+                        <span class="defra-table-flood__title">State: </span>Normal
                     </td>
-                    <td class="defra-table-flood__cell" headers="g1 l2">
+                    <td class="defra-table-flood__cell" role="cell" headers="g2 l3">
+                        <span class="defra-table-flood__title">Level: </span>1.25m
+                    </td>
+                    <td class="defra-table-flood__cell" role="cell" headers="g2 l3">
                         <span class="defra-table-flood__title">Updated: </span><time datetime="">4:30am</time>
                     </td>
                 </tr>
-                <tr class="defra-table-flood__row">
-                    <th class="defra-table-flood__header" scope="row" id="l3" headers="g1">
+                <tr class="defra-table-flood__row" role="row">
+                    <th class="defra-table-flood__header" role="rowheader" scope="row" id="l4" headers="g2">
                         <span class="govuk-visually-hidden">Location: </span><a href="">Denton Holme</a>
                     </th>
-                    <td class="defra-table-flood__cell" headers="g1 l3">
-                        <span class="defra-table-flood__title">Level: </span>Normal
+                    <td class="defra-table-flood__cell" role="cell" headers="g2 l4">
+                        <span class="defra-table-flood__title">State: </span>Normal
                     </td>
-                    <td class="defra-table-flood__cell" headers="g1 l3">
+                    <td class="defra-table-flood__cell" role="cell" headers="g2 l4">
+                        <span class="defra-table-flood__title">Level: </span>1.25m
+                    </td>
+                    <td class="defra-table-flood__cell" role="cell" headers="g2 l4">
                         <span class="defra-table-flood__title">Updated: </span><time datetime="">4:30am</time>
                     </td>
                 </tr>
            </tbody>
            <tbody class="defra-table-flood__body">
-                <tr class="defra-table-flood__row">
-                    <th class="defra-table-flood__header" scope="row" colspan="3" id="g2">
-                        <span class="defra-table-flood__group-head">River Eden (Cumbria)</span>
+                <tr class="defra-table-flood__row" role="row">
+                    <th class="defra-table-flood__header" role="rowheader" scope="row" colspan="4" id="g3">
+                        <span class="defra-table-flood__group-head">River Eden</span>
                     </th>
                 </tr>
-                <tr class="defra-table-flood__row">
-                    <th class="defra-table-flood__header" scope="row" id="l4" headers="g2">
+                <tr class="defra-table-flood__row" role="row">
+                    <th class="defra-table-flood__header" role="rowheader" scope="row" id="l5" headers="g3">
                         <span class="govuk-visually-hidden">Location: </span><a href="">Linstock</a>
                     </th>
-                    <td class="defra-table-flood__cell" headers="g2 l4">
-                        <span class="defra-table-flood__title">Level: </span>Normal
+                    <td class="defra-table-flood__cell" role="cell" headers="g3 l5">
+                        <span class="defra-table-flood__title">State: </span>Normal
                     </td>
-                    <td class="defra-table-flood__cell" headers="g2 l4">
-                        <span class="defra-table-flood__title">Updated: </span><time datetime="">4:30am</time>
+                    <td class="defra-table-flood__cell" role="cell" headers="g3 l5">
+                        <span class="defra-table-flood__title">Level: </span>1.25m
+                    </td>
+                    <td class="defra-table-flood__cell" role="cell" headers="g3 l5">
+                        <span class="defra-table-flood__title">Updated: </span><time datetime="">Yesterday at 9:00pm</time>
                     </td>
                 </tr>
-                <tr class="defra-table-flood__row">
-                    <th class="defra-table-flood__header" scope="row" id="l5" headers="g2">
+                <tr class="defra-table-flood__row" role="row">
+                    <th class="defra-table-flood__header" role="rowheader" scope="row" id="l6" headers="g3">
                         <span class="govuk-visually-hidden">Location: </span><a href="">Sands Centre, Carlisle</a>
                     </th>
-                    <td class="defra-table-flood__cell" headers="g2 l5">
-                        <span class="defra-table-flood__title">Level: </span>Normal
+                    <td class="defra-table-flood__cell" role="cell" headers="g3 l6">
+                        <span class="defra-table-flood__title">State: </span>Normal
                     </td>
-                    <td class="defra-table-flood__cell" headers="g2 l5">
+                    <td class="defra-table-flood__cell" role="cell" headers="g3 l6">
+                        <span class="defra-table-flood__title">Level: </span>1.25m
+                    </td>
+                    <td class="defra-table-flood__cell" role="cell" headers="g3 l6">
                         <span class="defra-table-flood__title">Updated: </span><time datetime="">4:30am</time>
                     </td>
                 </tr>
-                <tr class="defra-table-flood__row">
-                    <th class="defra-table-flood__header" scope="row" id="l6" headers="g2">
+                <tr class="defra-table-flood__row" role="row">
+                    <th class="defra-table-flood__header" role="rowheader" scope="row" id="l7" headers="g3">
                         <span class="govuk-visually-hidden">Location: </span><a href="">Sheepmount</a>
                     </th>
-                    <td class="defra-table-flood__cell" headers="g2 l6">
-                        <span class="defra-table-flood__title">Level: </span>Normal
+                    <td class="defra-table-flood__cell" role="cell" headers="g3 l7">
+                        <span class="defra-table-flood__title">State: </span>Normal
                     </td>
-                    <td class="defra-table-flood__cell" headers="g2 l6">
+                    <td class="defra-table-flood__cell" role="cell" headers="g3 l7">
+                        <span class="defra-table-flood__title">Level: </span>1.25m
+                    </td>
+                    <td class="defra-table-flood__cell" role="cell" headers="g3 l7">
                         <span class="defra-table-flood__title">Updated: </span><time datetime="">4:30am</time>
                     </td>
                 </tr>
@@ -205,161 +198,6 @@
         </table>
     </div>
 </div>
-
-<!--
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <div class="defra-search-results govuk-!-margin-top-1">
-            <ul class="defra-search-results__list">
-                <li>
-                    <section class="defra-search-results__section">
-                        <h2 class="govuk-heading-m">Groundwater level</h2>
-                        <ul class="defra-search-results__section-list">
-                            <li>
-                                <span class="govuk-visually-hidden">at </span><a href="">Station name</a>
-                                <dl class="defra-search-results__meta">
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt class="govuk-visually-hidden">Level</dt>
-                                        <dd class="defra-search-results__icon">Normal</dd>
-                                    </div>
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt>Updated</dt>
-                                        <dd><time datetime="">Yesterday at 11:30pm</time></dd> 
-                                    </div>
-                                </dl>
-                            </li>
-                        </ul>                                                 
-                    </section>
-                </li>
-                <li>
-                    <section class="defra-search-results__section">
-                        <h2 class="govuk-heading-m">Sea level</h2>
-                        <ul class="defra-search-results__section-list">
-                            <li>
-                                <span class="govuk-visually-hidden">at </span><a href="">Silloth</a>
-                                <dl class="defra-search-results__meta">
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt class="govuk-visually-hidden">Level</dt>
-                                        <dd class="defra-search-results__icon">Normal</dd>
-                                    </div>
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt>Trend</dt>
-                                        <dd>Stable</dd>       
-                                    </div>
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt>Updated</dt>
-                                        <dd><time datetime="">21 Nov at 11:00pm</time></dd> 
-                                    </div>
-                                </dl>
-                            </li>
-                        </ul>                                                 
-                    </section>
-                </li>
-                <li>
-                    <section class="defra-search-results__section">
-                        <h2 class="govuk-heading-m">River Caldew (Cumbria)</h2>
-                        <ul class="defra-search-results__section-list">
-                            <li>
-                                <span class="govuk-visually-hidden">at </span><a href="">Sebergham</a>
-                                <dl class="defra-search-results__meta">
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt class="govuk-visually-hidden">Level</dt>
-                                        <dd class="defra-search-results__icon">Normal</dd>
-                                    </div>
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt>Updated</dt>
-                                        <dd><time datetime="">4:30am</time></dd> 
-                                    </div>
-                                </dl>
-                            </li>
-                            <li>
-                                <span class="govuk-visually-hidden">at </span><a href="">Cummersdale</a>
-                                <span class="defra-search-results__icon"></span>
-                                <p class="defra-search-results__meta-error">Temporarily unavailable</p>
-                            </li>
-                            <li>
-                                <span class="govuk-visually-hidden">at </span><a href="">Denton Holme</a>
-                                <dl class="defra-search-results__meta">
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt class="govuk-visually-hidden">Level</dt>
-                                        <dd class="defra-search-results__icon">Normal</dd>
-                                    </div>
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt>Trend</dt>
-                                        <dd>Stable</dd>    
-                                    </div>
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt>Updated</dt>
-                                        <dd><time datetime="">4:30am</time></dd>
-                                    </div>
-                                </dl>
-                            </li>                        
-                        </ul>                                                 
-                    </section>
-                </li>
-                <li>
-                    <section class="defra-search-results__section">
-                        <h2 class="govuk-heading-m">River Eden (Cumbria)</h2>
-                        <ul class="defra-search-results__section-list">
-                            <li>
-                                <span class="govuk-visually-hidden">at </span><a href="">Linstock</a>
-                                <dl class="defra-search-results__meta">
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt class="govuk-visually-hidden">Level</dt>
-                                        <dd class="defra-search-results__icon">Normal</dd>
-                                    </div>
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt>Trend</dt>
-                                        <dd>Stable</dd>       
-                                    </div>
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt>Updated</dt>
-                                        <dd><time datetime="">4:30am</time></dd>
-                                    </div>
-                                </dl>
-                            </li>
-                            <li>
-                                <span class="govuk-visually-hidden">at </span><a href="">Sands Centre, Carlisle</a>
-                                <dl class="defra-search-results__meta">
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt class="govuk-visually-hidden">Level</dt>
-                                        <dd class="defra-search-results__icon">Normal</dd>
-                                    </div>
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt>Trend</dt>
-                                        <dd>Stable</dd>    
-                                    </div>
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt>Updated</dt>
-                                        <dd><time datetime="">4:30am</time></dd> 
-                                    </div>
-                                </dl>
-                            </li>
-                            <li>
-                                <span class="govuk-visually-hidden">at </span><a href="">Sheepmount</a>
-                                <dl class="defra-search-results__meta">
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt class="govuk-visually-hidden">Level</dt>
-                                        <dd class="defra-search-results__icon">Normal</dd>
-                                    </div>
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt>Trend</dt>
-                                        <dd>Stable</dd>    
-                                    </div>
-                                    <div class="defra-search-results__meta-pair">
-                                        <dt>Updated</dt>
-                                        <dd><time datetime="">4:30am</time></dd>
-                                    </div>
-                                </dl>
-                            </li>                        
-                        </ul>                                                 
-                    </section>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
--->
 
 {% endblock %}
 
