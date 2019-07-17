@@ -26,6 +26,11 @@
             border:0px;
         }
         vertical-align: top;
+        a {
+            @include mq ($from: tablet) {
+                font-weight:normal;
+            }
+        }
     }
     &__cell {
         @extend .govuk-table__cell;
