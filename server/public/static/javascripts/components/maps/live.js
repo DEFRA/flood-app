@@ -12,7 +12,7 @@
   var forEach = flood.utils.forEach
   var MapContainer = maps.MapContainer
 
-  function LiveMap (elementId /*, place*/) {
+  function LiveMap (elementId /*, place */) {
     /*
     var zoom = place ? 11 : 6
     var center = ol.proj.transform(place
@@ -66,12 +66,12 @@
       }
       const isTomorrow = (dateTime) => {
         const tomorrow = new Date()
-        tomorrow.setDate(tomorrow.getDate() +1)
+        tomorrow.setDate(tomorrow.getDate() + 1)
         return dateTime.setHours(0, 0, 0, 0) === tomorrow.setHours(0, 0, 0, 0)
       }
       const isYesterday = (dateTime) => {
         const yesterday = new Date()
-        yesterday.setDate(yesterday.getDate() -1)
+        yesterday.setDate(yesterday.getDate() - 1)
         return dateTime.setHours(0, 0, 0, 0) === yesterday.setHours(0, 0, 0, 0)
       }
       var date = hours + ':' + minutes + amPm
@@ -90,7 +90,7 @@
     // Load tooltip
     async function ensureFeatureTooltipHtml (feature) {
       var id = feature.getId()
-      let trimId = id.replace('stations.', '')
+      const trimId = id.replace('stations.', '')
       var props = feature.getProperties()
       if (props.value_date) {
         props.value_date_tooltip = toolTipDate(new Date(props.value_date))
@@ -110,7 +110,7 @@
           const upDownData = async () => {
             const upDownUrl = '/stations-upstream-downstream/' + trimId + '/' + props.direction
             try {
-              const response = await fetch(upDownUrl)
+              const response = await window.fetch(upDownUrl)
               const upDownJson = await response.json()
               return upDownJson
             } catch (err) {
@@ -133,7 +133,7 @@
           const rainfallData = async () => {
             const rainfallUrl = '/rain-gauge-tooltip/' + props.stationReference + '/' + props.label + '/100'
             try {
-              const response = await fetch(rainfallUrl)
+              const response = await window.fetch(rainfallUrl)
               const rainfallJson = await response.json()
               return rainfallJson
             } catch (err) {
@@ -207,7 +207,7 @@
       var l = [i, s, r, a, w, sw].filter(Boolean).join(',')
       url = addOrUpdateParameter(url, 'l', l)
       // Replace history entry
-      var state = { 'cz': cz, 'l': l }
+      var state = { cz: cz, l: l }
       var title = document.title
       window.history.replaceState(state, title, url)
     }
@@ -224,7 +224,7 @@
         'propertyName=fwa_code,severity,description&' +
         'bbox=' + extent.join() + ',urn:ogc:def:crs:EPSG:3857&' +
         'outputFormat=application/json'
-      var xhr = new XMLHttpRequest()
+      var xhr = new window.XMLHttpRequest()
       xhr.open('GET', url)
       var onError = function () {
         console.log('Error: getPropertyValue')
@@ -278,25 +278,25 @@
               } else if (input.getAttribute('data-layer') === 'impacts') {
                 impacts.getSource().forEachFeatureInExtent(extent, function (feature) {
                   featuresInViewPort.push({
-                    'id': feature.getId(),
-                    'description': feature.get('label'),
-                    'layer': 'impacts'
+                    id: feature.getId(),
+                    description: feature.get('label'),
+                    layer: 'impacts'
                   })
                 })
               } else if (input.getAttribute('data-layer') === 'stations') {
                 stations.getSource().forEachFeatureInExtent(extent, function (feature) {
                   featuresInViewPort.push({
-                    'id': feature.getId(),
-                    'description': feature.get('name'),
-                    'layer': 'stations'
+                    id: feature.getId(),
+                    description: feature.get('name'),
+                    layer: 'stations'
                   })
                 })
               } else if (input.getAttribute('data-layer') === 'rain') {
                 rain.getSource().forEachFeatureInExtent(extent, function (feature) {
                   featuresInViewPort.push({
-                    'id': feature.getId(),
-                    'description': feature.get('label'),
-                    'layer': 'rain'
+                    id: feature.getId(),
+                    description: feature.get('label'),
+                    layer: 'rain'
                   })
                 })
               }
@@ -318,9 +318,9 @@
                     break
                 }
                 featuresInViewPort.push({
-                  'id': feature.id,
-                  'description': feature.properties.description,
-                  'layer': layer
+                  id: feature.id,
+                  description: feature.properties.description,
+                  layer: layer
                 })
               }
             })
@@ -328,9 +328,9 @@
             floodCentroids.getSource().forEachFeatureInExtent(extent, function (feature) {
               if (visibleSeverities.indexOf(parseInt(feature.get('severity'))) > -1) {
                 featuresInViewPort.push({
-                  'id': feature.getId(),
-                  'description': feature.get('description'),
-                  'layer': 'floodCentroids'
+                  id: feature.getId(),
+                  description: feature.get('description'),
+                  layer: 'floodCentroids'
                 })
               }
             })
@@ -480,12 +480,12 @@
     // Set initial layers views from querystring
     if (getParameterByName('l')) {
       var layers = getParameterByName('l').split(',')
-      keyForm.querySelector('#severeFloodWarnings').checked = layers.includes('sw') ? true : false
-      keyForm.querySelector('#floodWarnings').checked = layers.includes('w') ? true : false
-      keyForm.querySelector('#floodAlerts').checked = layers.includes('a') ? true : false
-      keyForm.querySelector('#impacts').checked = layers.includes('i') ? true : false
-      keyForm.querySelector('#stations').checked = layers.includes('s') ? true : false
-      keyForm.querySelector('#rain').checked = layers.includes('r') ? true : false
+      keyForm.querySelector('#severeFloodWarnings').checked = !!layers.includes('sw')
+      keyForm.querySelector('#floodWarnings').checked = !!layers.includes('w')
+      keyForm.querySelector('#floodAlerts').checked = !!layers.includes('a')
+      keyForm.querySelector('#impacts').checked = !!layers.includes('i')
+      keyForm.querySelector('#stations').checked = !!layers.includes('s')
+      keyForm.querySelector('#rain').checked = !!layers.includes('r')
     }
 
     //
@@ -500,7 +500,7 @@
       // setPointVisibility()
       // Toggle key section if features are in viewport
       forEach(keyForm.querySelectorAll('.govuk-checkboxes__input'), function (input) {
-        setLayerVisibility(input)       
+        setLayerVisibility(input)
       })
       updateKeyAndCanvas()
     })
@@ -624,7 +624,7 @@
 
     // Key form layer toggle
     keyForm.addEventListener('change', function (e) {
-      setLayerVisibility (e.target)
+      setLayerVisibility(e.target)
       updateUrl()
       updateKeyAndCanvas()
     })

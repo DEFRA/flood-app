@@ -36,15 +36,19 @@ class Floods {
       }
     })
   }
+
   get floods () {
     return this._floods.floods
   }
+
   get timestamp () {
     return this._floods.timestamp
   }
+
   get groups () {
     return this._groups
   }
+
   get geojson () {
     return this._geojson
   }

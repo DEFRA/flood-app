@@ -7,7 +7,7 @@ module.exports = [{
     if (typeof request.yar.get('displayError') === 'undefined') {
       return h.view('home')
     } else {
-      let errMess = request.yar.get('displayError')
+      const errMess = request.yar.get('displayError')
       request.yar.set('displayError', {})
       return h.view('home', errMess)
     }

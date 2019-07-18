@@ -52,7 +52,7 @@ async function find (location) {
     }
   }
 
-  let isEngland = await floodServices.getIsEngland(center[0], center[1])
+  const isEngland = await floodServices.getIsEngland(center[0], center[1])
 
   return {
     name,

@@ -34,8 +34,8 @@
         url: '/ows?service=wms',
         serverType: 'geoserver',
         params: {
-          'LAYERS': 'flood_warning_alert',
-          'CQL_FILTER': 'severity = 1'
+          LAYERS: 'flood_warning_alert',
+          CQL_FILTER: 'severity = 1'
         }
       }),
       visible: false
@@ -50,8 +50,8 @@
         url: '/ows?service=wms',
         serverType: 'geoserver',
         params: {
-          'LAYERS': 'flood_warning_alert',
-          'CQL_FILTER': 'severity = 2'
+          LAYERS: 'flood_warning_alert',
+          CQL_FILTER: 'severity = 2'
         }
       }),
       visible: false
@@ -66,8 +66,8 @@
         url: '/ows?service=wms',
         serverType: 'geoserver',
         params: {
-          'LAYERS': 'flood_warning_alert',
-          'CQL_FILTER': 'severity = 3'
+          LAYERS: 'flood_warning_alert',
+          CQL_FILTER: 'severity = 3'
         }
       }),
       visible: false
@@ -115,8 +115,8 @@
         url: '/ows?service=wms',
         serverType: 'geoserver',
         params: {
-          'LAYERS': 'flood_warning_alert',
-          'CQL_FILTER': 'severity = 4'
+          LAYERS: 'flood_warning_alert',
+          CQL_FILTER: 'severity = 4'
         }
       }),
       visible: false

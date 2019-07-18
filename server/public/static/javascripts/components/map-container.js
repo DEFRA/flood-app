@@ -75,7 +75,7 @@
         window.history.back()
       } else {
         this.removeFullScreen()
-        var state = { 'v': '' }
+        var state = { v: '' }
         var title = document.title
         var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'v', '')
         window.history.replaceState(state, title, url)
@@ -90,9 +90,9 @@
     }.bind(this))
 
     // Show map
-    this.show = function() {
+    this.show = function () {
       this.setFullScreen()
-      var state = { 'v': el.id }
+      var state = { v: el.id }
       var title = document.title
       var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'v', el.id)
       window.history.pushState(state, title, url)
@@ -134,18 +134,18 @@
     })
 
     // Set center
-    this.setCenter = function(coordinates) {
+    this.setCenter = function (coordinates) {
       var center = ol.proj.transform(coordinates, 'EPSG:4326', 'EPSG:3857')
       map.getView().setCenter(center)
     }
 
     // Set zoom
-    this.setZoom = function(zoom) {
+    this.setZoom = function (zoom) {
       map.getView().setZoom(zoom)
     }
 
     // Add locator: Could this be an exception as a locator may be common to all maps?
-    this.addLocator = function(name, coordinates) {
+    this.addLocator = function (name, coordinates) {
       map.addLayer(maps.layers.location(name, coordinates))
     }
 
@@ -264,7 +264,7 @@
     }
 
     // Toggle fullscreen view on browser history change
-    window.addEventListener('popstate', function (e) { 
+    window.addEventListener('popstate', function (e) {
       if (e && e.state && getParameterByName('v') === el.id) {
         this.setFullScreen()
       } else {
@@ -296,9 +296,8 @@
                 e.preventDefault()
                 lastFocusableElement.focus()
               }
-            }
-            // Tab (forwards) 
-            else {
+            } else {
+              // Tab (forwards)
               if (document.activeElement === lastFocusableElement) {
                 e.preventDefault()
                 firstFocusableElement.focus()

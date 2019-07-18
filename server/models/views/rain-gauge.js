@@ -86,13 +86,13 @@ function Graph (period, endTime, values, threshold, verticalAxisMax = 0) {
   var columns = []
   for (var i = 0; i < values.length; i++) {
     var column = {
-      'timestamp': startTime.format(),
-      'period': period === 'days' ? startTime.format('DD/MM') : startTime.format('HH:mm'),
-      'value': values[i],
-      'vPercentile': ((100 / vMaxValue) * values[i]).toFixed(2),
-      'hPercentile': (i * hTickPercentile).toFixed(2),
-      'hWidthPercentile': hTickPercentile.toFixed(2),
-      'isTick': false
+      timestamp: startTime.format(),
+      period: period === 'days' ? startTime.format('DD/MM') : startTime.format('HH:mm'),
+      value: values[i],
+      vPercentile: ((100 / vMaxValue) * values[i]).toFixed(2),
+      hPercentile: (i * hTickPercentile).toFixed(2),
+      hWidthPercentile: hTickPercentile.toFixed(2),
+      isTick: false
     }
     if ((i + hTickFirstOffset) % hTickIncrement === 0) {
       // THis is also an hTick tick
@@ -113,13 +113,13 @@ function Graph (period, endTime, values, threshold, verticalAxisMax = 0) {
 
   // Graph object
   return {
-    'columns': columns,
-    'vMaxValue': vMaxValue,
-    'vTickValue': vTickValue,
-    'vTicksCount': vTicksCount,
-    'vTickPercentile': vTickPercentile,
-    'threshold': (threshold > 0) ? threshold : '',
-    'thresholdPercentile': (thresholdPercentile > 0) ? thresholdPercentile : ''
+    columns: columns,
+    vMaxValue: vMaxValue,
+    vTickValue: vTickValue,
+    vTicksCount: vTicksCount,
+    vTickPercentile: vTickPercentile,
+    threshold: (threshold > 0) ? threshold : '',
+    thresholdPercentile: (thresholdPercentile > 0) ? thresholdPercentile : ''
   }
 }
 
@@ -132,8 +132,8 @@ class ViewModel {
     //
     // 6 hour data
     //
-    let endDateMinutes = rainMeasures.items[0].dateTime // Start from latest entry
-    let measuresMinutes = rainMeasures.items.slice(0, 24).map(a => a.value).reverse() // reversed for display
+    const endDateMinutes = rainMeasures.items[0].dateTime // Start from latest entry
+    const measuresMinutes = rainMeasures.items.slice(0, 24).map(a => a.value).reverse() // reversed for display
     this.graphMinutes = new Graph(
       'minutes',
       new Date(endDateMinutes),

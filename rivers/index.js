@@ -8,16 +8,16 @@ var stations = []
 dataStations.features.forEach((feature) => {
   // Find the station in its own river
   var river = dataRivers.find(x => JSON.stringify(x.stations).includes(JSON.stringify({
-    "id": feature.id,
-    "type": ""
+    id: feature.id,
+    type: ''
   })))
   stations.push({
-    'id': feature.id,
-    'name': feature.properties.name,
-    'river': river ? river.name : feature.properties.river,
-    'riverId': river ? river.id : '',
-    'upstream': feature.properties.upstream = [],
-    'downstream': feature.properties.downstream = []
+    id: feature.id,
+    name: feature.properties.name,
+    river: river ? river.name : feature.properties.river,
+    riverId: river ? river.id : '',
+    upstream: feature.properties.upstream = [],
+    downstream: feature.properties.downstream = []
   })
 })
 
@@ -37,10 +37,10 @@ dataRivers.forEach((river) => {
           var nextUpstream = stations.find(x => x.id === stationRefs[i].id)
           if (nextUpstream) {
             upstreamStations.push({
-              'id': nextUpstream.id,
-              'river': nextUpstream.river,
-              'isTrib': stationRefs[i].type === 'T' ? true : false
-            }) 
+              id: nextUpstream.id,
+              river: nextUpstream.river,
+              isTrib: stationRefs[i].type === 'T'
+            })
           } else {
             console.log('Error: Upstream ' + stationRefs[i].id + ' missing.')
           }
@@ -55,19 +55,19 @@ dataRivers.forEach((river) => {
       // Add all downstream stations
       if (position < (stationRefs.length - 1)) {
         var downstreamStations = []
-        for (i = (position + 1); i < stationRefs.length; i++) {
-          var nextDownstream = stations.find(x => x.id === stationRefs[i].id)
+        for (var ii = (position + 1); ii < stationRefs.length; ii++) {
+          var nextDownstream = stations.find(x => x.id === stationRefs[ii].id)
           if (nextDownstream) {
-            if (stationRefs[i].type !== 'T') {
+            if (stationRefs[ii].type !== 'T') {
               downstreamStations.push({
-                'id': nextDownstream.id,
-                'river': nextDownstream.river
+                id: nextDownstream.id,
+                river: nextDownstream.river
               })
               // Break when we have the next station that is not a tributary
               break
             }
           } else {
-            console.log('Error: Downstream ' + stationRefs[i].id + ' missing.')
+            console.log('Error: Downstream ' + stationRefs[ii].id + ' missing.')
           }
         }
         // Array already n correct order
@@ -85,12 +85,12 @@ dataRivers.forEach((river) => {
     if (stationRef.type === 'T') {
       var position = stationRefs.indexOf(stationRef)
       var stationToUpdate = stations.find(x => x.id === stationRef.id)
-      for (i = (position + 1); i < stationRefs.length; i++) {
+      for (var i = (position + 1); i < stationRefs.length; i++) {
         if (stationRefs[i].type !== 'T') {
           var nextDownstream = stations.find(x => x.id === stationRefs[i].id)
           stationToUpdate.downstream.push({
-            'id': nextDownstream.id,
-            'river': nextDownstream.river
+            id: nextDownstream.id,
+            river: nextDownstream.river
           })
           // Break when we have the next station that is not a tributary
           break

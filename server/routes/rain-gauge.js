@@ -55,7 +55,7 @@ module.exports = [{
       readingsUrl += '&_limit=' + 25
     }
     try {
-      const thisWreck = wreckExt ? wreckExt : wreck
+      const thisWreck = wreckExt || wreck
       // const { res, payload } = await wreck.get(readingsUrl, { json: true })
       const { res, payload } = await thisWreck.get(readingsUrl, { json: true })
       payload.label = label
@@ -66,9 +66,9 @@ module.exports = [{
       }
 
       let latestDailyRainfallTotal = 0
-      let sixHourArray = []
-      let dayArray = []
-      let monthArray = []
+      const sixHourArray = []
+      const dayArray = []
+      const monthArray = []
       let cumHourlyValue = 0
       let cumDailyValue = 0
       let latestDate = ''

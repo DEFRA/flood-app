@@ -158,7 +158,7 @@
       // Add thresholds
       thresholds.forEach(threshold => {
         var thresholdContainer = thresholdsContainer.append('g').attr('class', 'threshold  threshold--' + threshold.id)
-        thresholdContainer.classed('threshold--selected', threshold.isSelected ? true : false)
+        thresholdContainer.classed('threshold--selected', !!threshold.isSelected)
         var bg = thresholdContainer.append('rect').attr('class', 'threshold__bg').attr('x', 0).attr('y', -4).attr('height', 8)
         var line = thresholdContainer.append('line').attr('class', 'threshold__line')
         var label = thresholdContainer.append('g').attr('class', 'threshold-label')
@@ -166,18 +166,18 @@
         var labelBgPath = label.append('path').attr('class', 'threshold-label__bg')
         var text = label.append('text').attr('class', 'threshold-label__text').html(threshold.name)
         var remove = label.append('g').attr('class', 'threshold__remove')
-        remove.append('rect').attr('x',-6).attr('y',-6).attr('width',20).attr('height',20)
-        remove.append('line').attr('x1',0).attr('y1',0).attr('x2',8).attr('y2',8)
-        remove.append('line').attr('x1',8).attr('y1',0).attr('x2',0).attr('y2',8)
+        remove.append('rect').attr('x', -6).attr('y', -6).attr('width', 20).attr('height', 20)
+        remove.append('line').attr('x1', 0).attr('y1', 0).attr('x2', 8).attr('y2', 8)
+        remove.append('line').attr('x1', 8).attr('y1', 0).attr('x2', 0).attr('y2', 8)
         // Set individual elements size and position
         var textWidth = text.node().getBBox().width
         // var textHeight = text.node().getBBox().height
         // labelBg.attr('width', textWidth + 24 + 18 ).attr('height', textHeight + 18)
         // labelBgHeight = labelBg.node().getBBox().height
-        labelBgPath.attr('d','m0,0 l' + (textWidth + 40) + ',0 l0,36 l-' + ((textWidth + 40)-50) + ',0 l-8,8 l-8,-8 l-34,0 l0,-36 l0,0')
+        labelBgPath.attr('d', 'm0,0 l' + (textWidth + 40) + ',0 l0,36 l-' + ((textWidth + 40) - 50) + ',0 l-8,8 l-8,-8 l-34,0 l0,-36 l0,0')
         text.attr('x', 12).attr('y', 10)
         remove.attr('transform', 'translate(' + (textWidth + 20) + ',' + 14 + ')')
-        var labelX = x(xExtent[1])/8
+        var labelX = x(xExtent[1]) / 8
         // var labelY = -(labelBg.node().getBBox().height / 2)
         label.attr('transform', 'translate(' + labelX + ',' + -46 + ')')
         thresholdContainer.attr('transform', 'translate(0,' + y(threshold.level) + ')')
@@ -187,7 +187,7 @@
         remove.on('click', function () {
           d3.event.stopPropagation()
           // console.log(thresholds)
-          thresholds = thresholds.filter(function(x) {
+          thresholds = thresholds.filter(function (x) {
             return x.id !== threshold.id
           })
           // console.log(thresholds)
@@ -195,7 +195,7 @@
           modifyAxis()
           updateDimensions()
           render()
-        }.bind(this))
+        })
         /*
         thresholdContainer.append('line').attr('class', 'threshold-cross').attr('x1', 17).attr('y1', -3).attr('x2', 23).attr('y2', 3)
         thresholdContainer.append('line').attr('class', 'threshold-cross').attr('x1', 23).attr('y1', -3).attr('x2', 17).attr('y2', 3)
@@ -206,21 +206,21 @@
           thresholds.forEach(x => { x.isSelected = false })
           threshold.isSelected = true
           // Bring to front
-          thresholds = thresholds.filter(function(x) {
+          thresholds = thresholds.filter(function (x) {
             return x.id !== threshold.id
           })
           thresholds.push(threshold)
           // Re render
           render()
         })
-        thresholdContainer.on('mousemove', function (d) { 
-          d3.event.stopPropagation() 
+        thresholdContainer.on('mousemove', function (d) {
+          d3.event.stopPropagation()
         })
-        thresholdContainer.on('mouseover', function (d) { 
-          d3.select(this).classed('threshold--mouseover', true) 
+        thresholdContainer.on('mouseover', function (d) {
+          d3.select(this).classed('threshold--mouseover', true)
         })
-        thresholdContainer.on('mouseout', function (d) { 
-          d3.select(this).classed('threshold--mouseover', false) 
+        thresholdContainer.on('mouseout', function (d) {
+          d3.select(this).classed('threshold--mouseover', false)
         })
       })
 
@@ -232,7 +232,7 @@
         // Add 'today' class to x axis tick
         svg.selectAll('.x .tick')
           .filter(function (d) {
-            return new Date(d).getDay() === new Date(data.now).getDay() && new Date(d).getUTCHours() == 12
+            return new Date(d).getDay() === new Date(data.now).getDay() && new Date(d).getUTCHours() === 12
           })
           .attr('class', 'tick tick-today')
       }
@@ -253,7 +253,6 @@
       // Update locator position
       locator.attr('transform', 'translate(' + locatorX + ',' + 0 + ')')
       locator.select('.locator-point').attr('transform', 'translate(' + 0 + ',' + locatorY + ')')
-
     }
 
     function modifyAxis () {
@@ -441,7 +440,7 @@
     }
 
     this.removeThreshold = function (id) {
-      thresholds = thresholds.filter(function (x) { return x.id != id })
+      thresholds = thresholds.filter(function (x) { return x.id !== id })
       svg.select('.threshold--' + id).remove()
       modifyAxis()
       render()
@@ -454,8 +453,8 @@
         return x.id === threshold.id
       })
       if (foundThreshold) {
-        thresholds = thresholds.filter(function(x) {
-            return x.id !== threshold.id
+        thresholds = thresholds.filter(function (x) {
+          return x.id !== threshold.id
         })
       }
       thresholds.push(threshold)

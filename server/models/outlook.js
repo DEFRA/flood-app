@@ -60,26 +60,26 @@ class Outlook {
         riskAreaBlock.days.forEach(day => {
           riskAreaBlock.polys.forEach(poly => {
             const feature = {
-              'type': 'Feature',
-              'properties': {
-                'type': 'concernArea',
-                'day': day,
+              type: 'Feature',
+              properties: {
+                type: 'concernArea',
+                day: day,
                 'risk-level': riskLevel,
                 'z-index': zIndex,
-                'html': '<p class="govuk-body-s">Details of source, likelyhood and impact</p>'
+                html: '<p class="govuk-body-s">Details of source, likelyhood and impact</p>'
               }
             }
 
             if (poly.poly_type === 'inland') {
               feature.geometry = {
-                'type': 'Polygon',
-                'coordinates': poly.coordinates
+                type: 'Polygon',
+                coordinates: poly.coordinates
               }
               feature.properties.polyType = 'inland'
             } else if (poly.poly_type === 'coastal') {
               feature.geometry = {
-                'type': 'LineString',
-                'coordinates': poly.coordinates
+                type: 'LineString',
+                coordinates: poly.coordinates
               }
               feature.properties.polyType = 'coastal'
               // Put coastal areas on top of inland areas
@@ -139,18 +139,23 @@ class Outlook {
   get timestampOutlook () {
     return this._timestampOutlook
   }
+
   get hasOutlookConcern () {
     return this._hasOutlookConcern
   }
+
   get geoJson () {
     return this._geoJson
   }
+
   get riskLevels () {
     return this._riskLevels
   }
+
   get full () {
     return this._full
   }
+
   get days () {
     return this._days
   }

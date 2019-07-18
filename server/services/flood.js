@@ -82,7 +82,7 @@ module.exports = {
 
   async getStationsUpstreamDownstream (id, direction) {
     const url = `${serviceUrl}/stations-upstream-downstream/${id}/${direction}`
-    let result = await util.getJson(url)
+    const result = await util.getJson(url)
     return result
   },
 
