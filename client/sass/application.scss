@@ -10,9 +10,6 @@ $govuk-global-styles: true;
 // Tools such as mixins
 @import "tools/mixins"; // Dan Leech (Mixins for common helper classes)
 
-// Custom patterns that aren't in Frontend or prorotpye kit
-@import "patterns/map"; // Dan Leech (Pattern for buttons, progressive disclousre and map figure)
-
 // Custom objects overides for existing components
 @import "objects/warning-text"; // Dan Leech (modifiers for govuk-warning-text)
 @import "objects/details"; // Dan Leech (modifier for govuk-details)
