@@ -1,8 +1,15 @@
 .defra-table-flood {
     @extend .govuk-table;
     @include mq ($until: tablet) {
-        display: block;
+        //display:block
     }
+    &:after {
+        @include mq ($until: tablet) {
+            content: '';
+            display: table;
+            clear: both;
+        }
+    } 
     &__head {
         @include mq ($until: tablet) {
             @include govuk-visually-hidden();
@@ -10,19 +17,30 @@
     }
     &__body {
         @include mq ($until: tablet) {
-            display: block;
+            width: 100%;
+            float: left;
+            clear:left;
+            margin:0px;
+            //display: block;
         }
     }
     &__row {
         @extend .govuk-table__row;
         @include mq ($until: tablet) {
-            display: block;
+            width: 100%;
+            float: left;
+            clear:left;
+            //display: block;
         }
     }
     &__header {
         @extend .govuk-table__header;
         @include mq ($until: tablet) {
-            display: block;
+            width: 100%;
+            float: left;
+            clear:left;
+            padding-right:0px;
+            //display: block;
             border:0px;
         }
         vertical-align: top;
@@ -35,7 +53,11 @@
     &__cell {
         @extend .govuk-table__cell;
         @include mq ($until: tablet) {
-            display: block;
+            width: 100%;
+            float: left;
+            clear:left;
+            padding-right:0px;
+            //display: block;
             border:0px;
             padding-top:2px;
             padding-bottom:0px;
