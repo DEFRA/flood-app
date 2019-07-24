@@ -81,12 +81,12 @@
             text-indent:-5000px;
             background-image: url('#{$govuk-images-path}icons-level-state.svg');
             background-color:white;
-            background-size:96px 24px;
-            background-position:-24px top;
+            background-size:120px 24px;
+            background-position:-48px top;
         }
         &--low {
             @include mq ($from: tablet) {
-                background-position:0px top;
+                background-position:-24px top;
             }
         }
         &--high {
@@ -94,12 +94,17 @@
             font-weight:bold;
             text-transform:uppercase;
             @include mq ($from: tablet) {
-                background-position:-72px top;
+                background-position:-96px top;
             }
         }
         &--forecast-high {
             @include mq ($from: tablet) {
-                background-position:-48px top;
+                background-position:-72px top;
+            }
+        }
+        &--error {
+            @include mq ($from: tablet) {
+                background-position:0px top;
             }
         }
     }
