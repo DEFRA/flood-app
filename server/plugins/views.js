@@ -8,7 +8,7 @@ const {
 } = config
 
 module.exports = {
-  plugin: require('vision'),
+  plugin: require('@hapi/vision'),
   options: {
     engines: {
       html: {

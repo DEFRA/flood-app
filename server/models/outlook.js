@@ -1,4 +1,4 @@
-const turf = require('turf')
+const turf = require('@turf/turf')
 const polygonSmooth = require('@turf/polygon-smooth')
 
 class Outlook {

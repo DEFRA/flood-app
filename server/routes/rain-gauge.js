@@ -1,16 +1,16 @@
 const rainService = require('../services/rain')
 const config = require('../config')
-const Joi = require('joi')
-const boom = require('boom')
+const Joi = require('@hapi/joi')
+const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/rain-gauge')
 const HttpsProxyAgent = require('https-proxy-agent')
-const wreck = require('wreck').defaults({
+const wreck = require('@hapi/wreck').defaults({
   timeout: config.restClientTimeoutMillis
 })
 
 let wreckExt
 if (config.httpsProxy) {
-  wreckExt = require('wreck').defaults({
+  wreckExt = require('@hapi/wreck').defaults({
     timeout: config.httpTimeoutMs,
     agent: new HttpsProxyAgent(config.httpsProxy)
   })

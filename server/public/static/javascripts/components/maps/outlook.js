@@ -22,7 +22,7 @@
     })
 
     var geoJson = new window.ol.format.GeoJSON()
-    var outlookGeoJson = flood.model.geoJson
+    var outlookGeoJson = flood.model.floods._geojson
 
     var areasOfConcernFeatures = geoJson.readFeatures(outlookGeoJson, {
       dataProjection: 'EPSG:4326',
