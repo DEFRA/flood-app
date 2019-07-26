@@ -6,7 +6,6 @@ module.exports = [{
   method: 'GET',
   path: '/',
   handler: async (request, h) => {
-
     if (typeof request.yar === 'undefined' || typeof request.yar.get('displayError') === 'undefined') {
       return h.view('home')
     } else {
