@@ -1,32 +1,42 @@
-// $govuk-assets-path: "/govuk/assets/";
-// $govuk-images-path: "/govuk/assets/images/";
-// $govuk-fonts-path: "/govuk/assets/fonts/";
-// $govuk-images-path: "/assets/images/";
 $govuk-global-styles: true;
 
+// GOV.UK Frontend
 @import "node_modules/govuk-frontend/all";
+
+// Defra Form builder
 @import "node_modules/digital-form-builder-designer/client/index";
 
-// Tools such as mixins
-@import "tools/mixins"; // Dan Leech (Mixins for common helper classes)
+//
+// ITCSS
+// https://designnotes.blog.gov.uk/2018/02/19/developing-new-typography-and-spacing-for-gov-uk-frontend/
+//
 
-// Custom objects overides for existing components
-@import "objects/warning-text"; // Dan Leech (modifiers for govuk-warning-text)
-@import "objects/details"; // Dan Leech (modifier for govuk-details)
-@import "objects/lists"; // Dan Leech (modifier for govuk-list)
-@import "objects/tables"; // Dan Leech (modifier for govuk-table to make it responsive)
-@import "objects/typography"; // Dan Leech (modifier to remove margins when a warning is used)
+// Settings
 
-// Components that aren't in Frontend
+// Tools
+@import "tools/mixins";
+
+// Generic
+
+// Elements
+
+// Objects
+@import "objects/warning-text";
+@import "objects/details";
+@import "objects/lists";
+@import "objects/tables";
+@import "objects/typography";
+
+// Components
 @import "components/cookie-banner";
-
-// Custom components that aren't in Frontend or prorotpye kit
 @import "components/related-items";
-@import "components/map"; // Dan Leech
-@import "components/bar-chart"; // Dan Leech
-@import "components/line-chart"; // Dan Leech
-@import "components/tabs"; // Dan Leech (modifier link display to improve affordance issues)
-@import "components/banners"; // Dan Leech (Warnings and alert banners)
-@import "components/flood-details"; // Dan Leech (Flood warning details)
-@import "components/buttons"; // Dan Leech (Button overides)
-@import "components/search"; // Dan Leech (Content search or list filter)
+@import "components/map";
+@import "components/bar-chart";
+@import "components/line-chart";
+@import "components/tabs";
+@import "components/banners";
+@import "components/flood-details";
+@import "components/buttons";
+@import "components/search";
+
+// Utilities

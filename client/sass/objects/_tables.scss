@@ -12,7 +12,7 @@
     } 
     &__head {
         @include mq ($until: tablet) {
-            @include govuk-visually-hidden();
+            @include defra-visually-hidden();
         }
     }
     &__body {
@@ -89,7 +89,7 @@
     }
     &__title {
         @include mq ($from: tablet) {
-            @include govuk-visually-hidden();
+            @include defra-visually-hidden();
         }
     }
     &__error-text {
