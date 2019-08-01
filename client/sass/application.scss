@@ -21,22 +21,21 @@ $govuk-global-styles: true;
 // Elements
 
 // Objects
-@import "objects/warning-text";
-@import "objects/details";
 @import "objects/lists";
 @import "objects/tables";
 @import "objects/typography";
+@import "objects/buttons";
 
 // Components
 @import "components/cookie-banner";
+@import "components/warning-text";
 @import "components/related-items";
 @import "components/map";
 @import "components/bar-chart";
 @import "components/line-chart";
-@import "components/tabs";
 @import "components/banners";
 @import "components/flood-details";
-@import "components/buttons";
 @import "components/search";
 
 // Utilities
+@import "utilities/details";
