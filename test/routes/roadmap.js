@@ -6,7 +6,7 @@ const Code = require('code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 
-lab.experiment('Routes test - home', () => {
+lab.experiment('Routes test - radmap', () => {
   let sandbox
   let server
 
@@ -30,10 +30,10 @@ lab.experiment('Routes test - home', () => {
     await sandbox.restore()
   })
 
-  lab.test('GET /', async () => {
+  lab.test('GET /roadmap', async () => {
     const options = {
       method: 'GET',
-      url: '/'
+      url: '/roadmap'
     }
 
     const response = await server.inject(options)

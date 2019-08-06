@@ -1,12 +1,13 @@
 'use strict'
 
-const Hapi = require('@hapi/hapi')
 const Lab = require('@hapi/lab')
-const Code = require('code')
-const sinon = require('sinon')
+const Hapi = require('@hapi/hapi')
+// const Code = require('code')
 const lab = exports.lab = Lab.script()
+const sinon = require('sinon')
+// const config = require('../../server/config')
 
-lab.experiment('Routes test - home', () => {
+lab.experiment('router logging test', () => {
   let sandbox
   let server
 
@@ -17,11 +18,11 @@ lab.experiment('Routes test - home', () => {
       port: 3000,
       host: 'localhost'
     })
-
     await server.register(require('@hapi/inert'))
     await server.register(require('@hapi/h2o2'))
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/router'))
+    await server.register(require('../../server/plugins/logging'))
     await server.initialize()
   })
 
@@ -30,14 +31,6 @@ lab.experiment('Routes test - home', () => {
     await sandbox.restore()
   })
 
-  lab.test('GET /', async () => {
-    const options = {
-      method: 'GET',
-      url: '/'
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.headers['content-type']).to.include('text/html')
+  lab.test('Plugin logging successfully loads', async () => {
   })
 })
