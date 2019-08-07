@@ -1,5 +1,5 @@
-@import '../../../node_modules/govuk-frontend/helpers/media-queries';
-@import '../../../node_modules/govuk-frontend/settings/colours-palette';
+@import '../../../node_modules/govuk-frontend/govuk/helpers/_media-queries';
+@import '../../../node_modules/govuk-frontend/govuk/settings/colours-palette';
 
 // Graphs
 .graph {
@@ -131,7 +131,8 @@
     margin-bottom: em(30, 19);
   }
   .data-level-item-heading {
-    border-bottom: 1px solid govuk-colour("grey-3");
+    // border-bottom: 1px solid govuk-colour("grey-3");
+    border-bottom: 1px solid  govuk-colour("mid-grey", $legacy: "grey-3");
     line-height: 1.5;
     margin-bottom: 0.5em;
     padding-left: 1.5em;
