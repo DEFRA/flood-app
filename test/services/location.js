@@ -30,11 +30,11 @@ lab.experiment('location service test', () => {
 
   lab.test('Check for invalid location', async () => {
     delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
-    const fakeLocationData1 = () => {
+    const fakeLocationData = () => {
       return {}
     }
 
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData1)
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
 
     const location = require('../../server/services/location')
@@ -52,7 +52,7 @@ lab.experiment('location service test', () => {
 
   lab.test('Check for valid location', async () => {
     delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
-    const fakeLocationData2 = () => {
+    const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
@@ -92,7 +92,7 @@ lab.experiment('location service test', () => {
       }
     }
 
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData2)
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
 
     const location = require('../../server/services/location')
@@ -110,7 +110,7 @@ lab.experiment('location service test', () => {
 
   lab.test('Check for Bing call returning low confidence and hence no results', async () => {
     delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
-    const fakeLocationData2 = () => {
+    const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
@@ -150,7 +150,7 @@ lab.experiment('location service test', () => {
       }
     }
 
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData2)
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
 
     const location = require('../../server/services/location')
@@ -166,7 +166,7 @@ lab.experiment('location service test', () => {
 
   lab.test('Check for Bing call returning medium confidence and hence no results', async () => {
     delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
-    const fakeLocationData2 = () => {
+    const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
@@ -206,7 +206,7 @@ lab.experiment('location service test', () => {
       }
     }
 
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData2)
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
 
     const location = require('../../server/services/location')
@@ -222,7 +222,7 @@ lab.experiment('location service test', () => {
 
   lab.test('Check for Bing call returning no data resources and hence no results', async () => {
     delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
-    const fakeLocationData2 = () => {
+    const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
@@ -239,7 +239,7 @@ lab.experiment('location service test', () => {
       }
     }
 
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData2)
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
 
     const location = require('../../server/services/location')
@@ -255,7 +255,7 @@ lab.experiment('location service test', () => {
 
   lab.test('Check for Bing call returning invalid query', async () => {
     delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
-    const fakeLocationData2 = () => {
+    const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
@@ -271,7 +271,7 @@ lab.experiment('location service test', () => {
       }
     }
 
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData2)
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
 
     const location = require('../../server/services/location')
@@ -289,7 +289,7 @@ lab.experiment('location service test', () => {
 
   lab.test('Check for Bing call returning duplicate location name in description', async () => {
     delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
-    const fakeLocationData2 = () => {
+    const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
@@ -335,7 +335,7 @@ lab.experiment('location service test', () => {
       }
     }
 
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData2)
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
 
     const location = require('../../server/services/location')
@@ -353,7 +353,7 @@ lab.experiment('location service test', () => {
 
   lab.test('Check for Bing valid autosuggest call ', async () => {
     delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
-    const fakeLocationData2 = () => {
+    const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
@@ -420,7 +420,7 @@ lab.experiment('location service test', () => {
       }
     }
 
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData2)
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
 
     const location = require('../../server/services/location')
     sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
@@ -437,7 +437,7 @@ lab.experiment('location service test', () => {
 
   lab.test('Check for Bing empty autosuggest call ', async () => {
     delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
-    const fakeLocationData2 = () => {
+    const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
@@ -459,7 +459,7 @@ lab.experiment('location service test', () => {
       }
     }
 
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData2)
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
 
     const location = require('../../server/services/location')
@@ -476,12 +476,12 @@ lab.experiment('location service test', () => {
 
   lab.test('Check for Bing auto suggest no with no query and hence no results', async () => {
     delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
-    const fakeLocationData2 = () => {
+    const fakeLocationData = () => {
       return {
       }
     }
 
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData2)
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
 
     const location = require('../../server/services/location')
@@ -499,7 +499,7 @@ lab.experiment('location service test', () => {
 
   lab.test('Check for Bing auto suggest with estimatedTotal = 0', async () => {
     delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
-    const fakeLocationData2 = () => {
+    const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
@@ -521,7 +521,7 @@ lab.experiment('location service test', () => {
       }
     }
 
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData2)
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
 
     const location = require('../../server/services/location')
