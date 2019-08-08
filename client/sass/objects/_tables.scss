@@ -80,17 +80,17 @@
             padding-bottom:5px;
         }
     }
+    &__cell span[aria-hidden=true] {
+        @include mq ($from: tablet) {
+            display:none;
+        }
+    }
     &__group-head {
         display: block;
         @include govuk-font($size: 24);
         font-weight:bold;
         margin-top:5px;
         margin-bottom:2.5px;
-    }
-    &__title {
-        @include mq ($from: tablet) {
-            @include defra-visually-hidden();
-        }
     }
     &__error-text {
         font-weight:normal;
