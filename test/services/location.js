@@ -29,7 +29,7 @@ lab.experiment('location service test', () => {
   // })
 
   lab.test('Check for invalid location', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
+    delete require.cache[require.resolve('../../server/services/location')]
     const fakeLocationData = () => {
       return {}
     }
@@ -51,7 +51,7 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for valid location', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
+    delete require.cache[require.resolve('../../server/services/location')]
     const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
@@ -109,7 +109,7 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing call returning low confidence and hence no results', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
+    delete require.cache[require.resolve('../../server/services/location')]
     const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
@@ -165,7 +165,7 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing call returning medium confidence and hence no results', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
+    delete require.cache[require.resolve('../../server/services/location')]
     const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
@@ -221,7 +221,7 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing call returning no data resources and hence no results', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
+    delete require.cache[require.resolve('../../server/services/location')]
     const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
@@ -254,7 +254,7 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing call returning invalid query', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
+    delete require.cache[require.resolve('../../server/services/location')]
     const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
@@ -288,7 +288,7 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing call returning duplicate location name in description', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
+    delete require.cache[require.resolve('../../server/services/location')]
     const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
@@ -352,7 +352,7 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing valid autosuggest call ', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
+    delete require.cache[require.resolve('../../server/services/location')]
     const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
@@ -436,7 +436,7 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing empty autosuggest call ', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
+    delete require.cache[require.resolve('../../server/services/location')]
     const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
@@ -475,7 +475,7 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing auto suggest no with no query and hence no results', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
+    delete require.cache[require.resolve('../../server/services/location')]
     const fakeLocationData = () => {
       return {
       }
@@ -498,7 +498,7 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing auto suggest with estimatedTotal = 0', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/location.js']
+    delete require.cache[require.resolve('../../server/services/location')]
     const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
