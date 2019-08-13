@@ -63,7 +63,7 @@
         height:7px;
         border:3px solid govuk-colour('grey-2');
         border-radius: 100%;
-        background-color: govuk-colour('grey-2');;
+        background-color: white;
         @include mq ($from: tablet) {
             top:5px;
         }
@@ -76,9 +76,9 @@
         border-color: govuk-colour('red');
         background-color: govuk-colour('red');
     }
-    &__title--error:before {
+    &__title--low:before {
         border-color: govuk-colour('grey-2');
-        background-color: white;
+        background-color: govuk-colour('grey-2');
     }
     &__levels--has-relation:before {
         position:absolute;
