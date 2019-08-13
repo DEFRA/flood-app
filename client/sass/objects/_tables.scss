@@ -33,34 +33,89 @@
             //display: block;
         }
     }
-    &__header {
+    thead &__header {
         @extend .govuk-table__header;
+        border:0px;
+        padding-bottom:0px;
+        text-align:left;
+    }
+    tbody &__group-header {
+        @extend .govuk-table__header;
+        @include govuk-font($size: 24, $weight: bold);
+        position:relative;
+        padding-top:12.5px;
+        padding-bottom:10px;
         @include mq ($until: tablet) {
             width: 100%;
             float: left;
             clear:left;
             padding-right:0px;
-            //display: block;
+            border:0px;
+        }
+    }
+    tbody &__header {
+        @extend .govuk-table__header;
+        padding-left:40px;
+        position:relative;
+        @include mq ($until: tablet) {
+            box-sizing: border-box;
+            width: 100%;
+            float: left;
+            clear:left;
+            padding-right:0px;
             border:0px;
         }
         vertical-align: top;
-        a {
-            @include mq ($from: tablet) {
-                font-weight:normal;
-            }
+    }
+    &__group-header:before,
+    &__header:before {
+        content:'';
+        position:absolute;
+        left:0;
+        top:-1px;
+        width:40px;
+        height:1px;
+        background-color:white;
+    }
+    &__header:after {
+        content:'';
+        position:absolute;
+        left:0;
+        bottom:-1px;
+        width:40px;
+        height:1px;
+        background-color:white;
+    }
+    &__header a {
+        position:relative;
+        @include mq ($from: tablet) {
+            font-weight:normal;
+        }
+    }
+    &__header a:before {
+        position:absolute;
+        content:'';
+        top:2px;
+        left:-30px;
+        width:12px;
+        height:12px;
+        border-radius: 100%;
+        background-color:white;
+        border:2px solid govuk-colour('grey-1');
+        @include mq ($from: tablet) {
+            top:4px;
         }
     }
     &__cell {
         @extend .govuk-table__cell;
+        position:relative;
         @include mq ($until: tablet) {
+            box-sizing: border-box;
             width: 100%;
             float: left;
             clear:left;
-            padding-right:0px;
-            //display: block;
+            padding:2px 0px 0px 40px;
             border:0px;
-            padding-top:2px;
-            padding-bottom:0px;
         }
         vertical-align: top;
     }
@@ -71,26 +126,19 @@
     }
     &__row:not(:first-child) &__header {
         @include mq ($until: tablet) {
-            border-top:1px solid $govuk-border-colour;
             padding-bottom:0px;
         }
     }
     &__cell:last-child {
         @include mq ($until: tablet) {
             padding-bottom:5px;
+            // border-bottom:1px solid $govuk-border-colour;
         }
     }
     &__cell span[aria-hidden=true] {
         @include mq ($from: tablet) {
             display:none;
         }
-    }
-    &__group-head {
-        display: block;
-        @include govuk-font($size: 24);
-        font-weight:bold;
-        margin-top:5px;
-        margin-bottom:2.5px;
     }
     &__error-text {
         font-weight:normal;
