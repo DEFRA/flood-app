@@ -109,12 +109,12 @@
     &__levels--has-relation:after {
         position:absolute;
         content:'';
-        bottom:12px;    
-        left:9px;
-        width:6px;
-        height:6px;
-        border-right: 3px solid govuk-colour('grey-2');
-        border-bottom: 3px solid govuk-colour('grey-2');
-        transform: rotate(45deg);
+        bottom:10px;    
+        left:8px;
+        width:1px;
+        height:1px;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid govuk-colour('grey-2');
     }
 }
