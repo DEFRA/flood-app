@@ -9,25 +9,24 @@
     }
     &__title {
         position:relative;
+        padding-left:40px;
         @include mq ($from: tablet) {
-            display: block;
+            display: table-cell;
             width:50%;
         }
     }
     & &__levels {
-        @extend .govuk-list;
         position:relative;
-        padding-left:40px;
         margin-bottom:5px;
         @include mq ($from: tablet) {
             margin-top:15px;
         }
-        > li {
-            list-style: none;
-            display: block;
+        > div {
             padding-bottom:10px;
             margin-bottom:0px;
             @include mq ($from: tablet) {
+                display: table;
+                width:100%;
                 position:relative;
                 padding-bottom:15px;
                 margin-bottom:0px;
@@ -42,11 +41,12 @@
     }
     &__meta {
         display: block;
+        padding-left:40px;
+        margin:0px;
         @include mq ($from: tablet) {
-            position:absolute;
+            display: table-cell;
+            padding-left:1em;
             width:50%;
-            top:0px;
-            right:0px;
         }
     }
     &:last-of-type {
@@ -57,26 +57,43 @@
     &__title:before {
         position: absolute;
         content:'';
-        top:3px;
-        left:-35px;
         width:7px;
         height:7px;
-        border:3px solid govuk-colour('grey-2');
-        border-radius: 100%;
-        background-color: white;
+        border:3px solid white;
+        background-color:white;
+        top:4px;
+        left:7px;
         @include mq ($from: tablet) {
             top:5px;
         }
     }
-    &__title--normal:before {
+    &__title:after {
+        position: absolute;
+        content:'';
+        top:5px;
+        left:8px;
+        width:7px;
+        height:7px;
+        border:2px solid govuk-colour('grey-2');
+        border-radius: 100%;
+        background-color: white;
+        @include mq ($from: tablet) {
+            top:6px;
+        }
+    }
+    &__title--normal:after {
         border-color: govuk-colour('green');
         background-color: govuk-colour('green');
     }
-    &__title--high:before {
+    &__title--forecast-high:after {
+        border-color: govuk-colour('orange');
+        background-color: govuk-colour('orange');
+    }
+    &__title--high:after {
         border-color: govuk-colour('red');
         background-color: govuk-colour('red');
     }
-    &__title--low:before {
+    &__title--low:after {
         border-color: govuk-colour('grey-2');
         background-color: govuk-colour('grey-2');
     }
@@ -85,8 +102,19 @@
         content:'';
         top:-2px;    
         bottom:13px;
-        left:10px;
+        left:12px;
         width:3px;
         background-color: govuk-colour('grey-2');
+    }
+    &__levels--has-relation:after {
+        position:absolute;
+        content:'';
+        bottom:12px;    
+        left:9px;
+        width:6px;
+        height:6px;
+        border-right: 3px solid govuk-colour('grey-2');
+        border-bottom: 3px solid govuk-colour('grey-2');
+        transform: rotate(45deg);
     }
 }
