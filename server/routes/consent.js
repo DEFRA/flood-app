@@ -2,7 +2,6 @@ module.exports = {
   method: 'GET',
   path: '/consent',
   options: {
-    description: 'Consent - Flood information service - GOV.UK',
     handler: {
       view: {
         template: 'consent',
