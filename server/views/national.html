@@ -22,19 +22,22 @@
     {% if model.floods.length %}
       {% for group in model.groups %}
         {% if group.floods %}
+          {% if group.id < 4 %}
           <div class="defra-warning-flood defra-warning-flood--{{ group.severity.hash }}">
             <span class="defra-warning-flood__icon"></span>
             <div class="defra-warning-flood__text">
               <strong>
                 <a href="">
-                  {{ group.title | lower }}
+                  {{ group.title | lower }} in place
                 </a>
               </strong>
-              {% if group.id < 4 %}
-              {{ group.severity.subTitle }}
-              {% endif %}
             </div>
           </div>
+          {% else %}
+          <p class="govuk-body">
+            <a href="">{{ group.count }} flood warnings have been removed.</a>
+          </p>
+          {% endif %}
         {% endif %}
       {% endfor %}
     {% else %}

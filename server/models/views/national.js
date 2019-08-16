@@ -18,6 +18,7 @@ class ViewModel {
         id: item.id,
         name: item.name,
         severity: item,
+        count: count,
         title: `${count} ${count === 1 ? item.title : item.pluralisedTitle}`,
         floods: group,
         description: item.subTitle
