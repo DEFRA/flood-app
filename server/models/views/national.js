@@ -15,7 +15,8 @@ class ViewModel {
       const group = grouped[item.id]
       const count = group ? group.length : 0
       return {
-        name: item.id,
+        id: item.id,
+        name: item.name,
         severity: item,
         title: `${count} ${count === 1 ? item.title : item.pluralisedTitle}`,
         floods: group,

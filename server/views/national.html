@@ -22,12 +22,18 @@
     {% if model.floods.length %}
       {% for group in model.groups %}
         {% if group.floods %}
-          <div class="defra-warning-text-flood defra-warning-text-flood--large defra-warning-text-flood--{{ group.severity.hash }}">
-            <span class="defra-warning-text-flood__icon"></span>
-            <strong class="defra-warning-text-flood__text">
-              {{ group.title | lower }}
-              <span class="defra-warning-text-flood__secondary">{{ group.severity.subTitle }}</span>
-            </strong>
+          <div class="defra-warning-flood defra-warning-flood--{{ group.severity.hash }}">
+            <span class="defra-warning-flood__icon"></span>
+            <div class="defra-warning-flood__text">
+              <strong>
+                <a href="">
+                  {{ group.title | lower }}
+                </a>
+              </strong>
+              {% if group.id < 4 %}
+              {{ group.severity.subTitle }}
+              {% endif %}
+            </div>
           </div>
         {% endif %}
       {% endfor %}
@@ -35,6 +41,7 @@
       <p class="govuk-body">There are currently no flood warnings or alerts in force.</p>
     {% endif %}
 
+    <!--
     {% if model.floods.length %}
     <div class="defra-app-map">
       <div class="defra-app-map__container">
@@ -66,7 +73,7 @@
       </div>
     </div>
     {% endif %}
-
+    -->
     <p class="govuk-body">If you live near a river or the coast you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
 
     <h2 class="govuk-heading-m govuk-!-margin-top-4">
@@ -79,7 +86,7 @@
     </p>
 
     {% if model.hasOutlookConcern %}
-    <div class="app-map">
+    <div class="app-map govuk-!-margin-bottom-6">
       <div class="app-map__container">
         <div class="map" id="map-outlook" hidden>
           <div class="map__container">

@@ -27,11 +27,11 @@ const severity = [{
   isActive: true
 }, {
   id: 4,
-  name: 'Warning removed',
+  name: 'warning removed',
   title: 'Warning removed',
   pluralisedTitle: 'Warnings removed',
   hash: 'warning-removed',
-  subTitle: 'Within the last 24 hours',
+  subTitle: 'within the last 24 hours',
   tagline: '',
   isActive: false
 }]
