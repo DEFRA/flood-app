@@ -27,7 +27,7 @@
             <span class="defra-warning-flood__icon"></span>
             <div class="defra-warning-flood__text">
               <strong>
-                <a href="">
+                <a href="/flood-warnings#{{ group.severity.hash }}s">
                   {{ group.title | lower }} in place
                 </a>
               </strong>
@@ -35,7 +35,7 @@
           </div>
           {% else %}
           <p class="govuk-body">
-            <a href="">{{ group.count }} flood warnings have been removed.</a>
+            <a href="">{{ group.count }} flood warnings removed</a> within the last 24 hours.
           </p>
           {% endif %}
         {% endif %}

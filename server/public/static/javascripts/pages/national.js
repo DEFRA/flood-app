@@ -2,10 +2,11 @@
   var maps = flood.maps
 
   // Live map
-  var mapLive = maps.createLiveMap('map-live')
+  // var mapLive = maps.createLiveMap('map-live')
 
+  /*
   // Ultimately needs to be in the MapContainer
-  function showLayer(map, state) {
+  function showLayer (map, state) {
     // Set layers in key
     var layers = document.querySelectorAll('.govuk-checkboxes__input')
     layers.forEach(input => {
@@ -70,10 +71,26 @@
       showLayer(mapLive.map, 'warnings')
     })
   }
+  */
 
   // Outlook map
   if (document.getElementById('map-outlook')) {
     maps.createOutlookMap('map-outlook')
   }
-  
+
+  // Warning enhancement
+  var warningLinks = document.querySelectorAll('.defra-warning-flood a')
+  for (var i = 0; i < warningLinks.length; ++i) {
+    var href = warningLinks[i].href
+    var warning = warningLinks[i].closest('.defra-warning-flood')
+    warning.addEventListener('mouseenter', function (e) {
+      this.classList.add('defra-warning-flood--hover')
+    })
+    warning.addEventListener('mouseleave', function (e) {
+      this.classList.remove('defra-warning-flood--hover')
+    })
+    warning.addEventListener('click', function (e) {
+      window.location = href
+    })
+  }
 })(window, window.flood)

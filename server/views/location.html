@@ -22,12 +22,18 @@
 
     <!-- Flood alerts or warnings in force -->
     {% if model.hasActiveFloods %}
-      <div class="defra-warning-text-flood defra-warning-text-flood--{{model.highestSeverity.hash}}">
-        <span class="defra-warning-text-flood__icon"></span>
-        <strong class="defra-warning-text-flood__text">
-          <span class="govuk-visually-hidden">{{model.highestSeverity.title}}</span>
-          {{model.highestSeverity.subTitle}}<!-- - {{model.highestSeverity.tagline.toLowerCase()}} -->
-        </strong>
+      <div class="defra-warning-flood defra-warning-flood--{{model.highestSeverity.hash}}">
+        <span class="defra-warning-flood__icon">
+            <span class="govuk-visually-hidden">{{model.highestSeverity.title}}</span>
+        </span>
+        <div class="defra-warning-flood__text">
+          <strong>
+            <a href="">
+              {{model.highestSeverity.title}}
+            </a>
+          </strong>
+          {{model.highestSeverity.subTitle}}
+        </div>
       </div>
       <p class="govuk-body-m">
         {{ model.floodsPrimary | safe }}{{ model.floodsSecondary | safe }}
