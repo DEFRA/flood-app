@@ -6,7 +6,7 @@ const Code = require('code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 
-lab.experiment('Routes test - radmap', () => {
+lab.experiment('Routes test - roadmap', () => {
   let sandbox
   let server
 
@@ -18,10 +18,19 @@ lab.experiment('Routes test - radmap', () => {
       host: 'localhost'
     })
 
+    const roadmapPlugin = {
+      plugin: {
+        name: 'roadmap',
+        register: (server, options) => {
+          server.route(require('../../server/routes/roadmap'))
+        }
+      }
+    }
+
     await server.register(require('@hapi/inert'))
     await server.register(require('@hapi/h2o2'))
     await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/router'))
+    await server.register(roadmapPlugin)
     await server.initialize()
   })
 

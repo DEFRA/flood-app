@@ -18,10 +18,19 @@ lab.experiment('Routes test - home', () => {
       host: 'localhost'
     })
 
+    const homePlugin = {
+      plugin: {
+        name: 'home',
+        register: (server, options) => {
+          server.route(require('../../server/routes/home'))
+        }
+      }
+    }
+
     await server.register(require('@hapi/inert'))
     await server.register(require('@hapi/h2o2'))
     await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/router'))
+    await server.register(homePlugin)
     await server.initialize()
   })
 

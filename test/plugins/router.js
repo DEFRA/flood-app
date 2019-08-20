@@ -18,14 +18,21 @@ lab.experiment('router plugin test', () => {
       port: 3000,
       host: 'localhost'
     })
-    await server.register(require('@hapi/inert'))
-    await server.register(require('@hapi/h2o2'))
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/router'))
+    // await server.register(require('@hapi/inert'))
+    // await server.register(require('@hapi/h2o2'))
+    // await server.register(require('../../server/plugins/views'))
+    // await server.register(require('../../server/plugins/router'))
     await server.initialize()
   })
 
   lab.afterEach(async () => {
+    const regex = /.\/server\/services\/./
+    Object.keys(require.cache).forEach((key) => {
+      if (key.match(regex)) {
+        delete require.cache[key]
+      }
+    })
+    // delete require.cache[require.resolve('../../server/routes')]
     await server.stop()
     await sandbox.restore()
   })

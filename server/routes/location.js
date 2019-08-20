@@ -9,7 +9,7 @@ module.exports = {
   handler: async (request, h) => {
     const { q: location } = request.query
     const place = await locationService.find(location)
-    if (typeof place === 'undefined') {
+    if (typeof place === 'undefined' || place === '') {
       request.yar.set('displayError', { errorMessage: 'Enter a valid location' })
       return h.redirect('/')
     }

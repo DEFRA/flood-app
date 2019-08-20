@@ -169,8 +169,8 @@ lab.experiment('location service test', () => {
     const fakeLocationData = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
-        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
-        copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
+        brandLogoUri: 'brand-logo-uri',
+        copyright: 'Copyright ',
         resourceSets: [
           {
             estimatedTotal: 1,
@@ -202,7 +202,7 @@ lab.experiment('location service test', () => {
         ],
         statusCode: 200,
         statusDescription: 'OK',
-        traceId: '8e730b29a377433eb4b5f7a0ede6810b|DU00000B74|7.7.0.0|Ref A: BB9C9D05115F48BDA6C70C0A40AB8304 Ref B: DB3EDGE1510 Ref C: 2019-07-31T14:43:28Z'
+        traceId: 'trace-id'
       }
     }
 
