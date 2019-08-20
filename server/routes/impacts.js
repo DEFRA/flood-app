@@ -1,6 +1,6 @@
 module.exports = {
   method: 'GET',
-  path: '/impacts',
+  path: '/previous-impacts',
   handler: async (request, h) => {
     const model = {}
     model.referer = request.headers.referer

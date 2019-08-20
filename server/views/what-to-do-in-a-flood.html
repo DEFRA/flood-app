@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<!-- if model.referer -->
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <a href="{{ model.referer }}" class="govuk-back-link govuk-!-margin-bottom-7">Back</a>
+  </div>
+</div>
+<!-- endif -->
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            What to do in a flood
+        </h1>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <nav class="defra-contents">
+            <h2 class="defra-contents__title">Contents</h2>
+            <ul class="defra-contents__list">
+                <li class="defra-contents__item">
+                    What the flood warnings mean
+                </li>
+                <li class="defra-contents__item">
+                    <a href="#flood-alert">What to do if you get a flood alert</a>
+                </li>
+                <li class="defra-contents__item">
+                    <a href="#flood-warning">What to do if you get a flood warning</a>
+                </li>
+                <li class="defra-contents__item">
+                    <a href="#severe-flood-warning">What to do if you get a severe flood warning</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block bodyEnd %}
+{{ super() }}
+  <script src="{{assetPath}}/javascripts/templates.js"></script>
+  <script src="{{ assetPath }}/nunjucks-slim.min.js"></script>
+  <script>nunjucks.configure()</script>
+{% endblock %}
