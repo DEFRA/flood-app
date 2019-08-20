@@ -34,37 +34,9 @@
       </div>
       <p class="govuk-body-m">
         {{ model.floodsPrimary | safe }}{{ model.floodsSecondary | safe }}
-        {% if not model.hasFloodsList %}
-        <span id="map-list-warnings"></span>
-        {% endif %}
       </p>
-      
-      {% if model.hasFloodsList %}
-      <div id="map-list-warnings" class="defra-map-list govuk-!-margin-bottom-4">
-        <div id="warnings-detail" class="govuk-details__text govuk-details__text--defra-details-flood">
-          {% for group in model.groupedFloods %}
-            <h2 class="govuk-heading-s govuk-!-padding-top-0 govuk-!-margin-bottom-3">
-              {{group.severity.pluralisedTitle}}
-              <br/>
-              <span class="govuk-!-font-weight-regular">{{group.severity.subTitle}}</span>
-            </h2>
-            <ul class="defra-list-flood">
-              {% for flood in group.floods %}
-                <li class="defra-list-flood__item">
-                  <a href="/target-area/{{flood.code}}">{{flood.description}}</a>
-                  <!--
-                  <div class="defra-list-flood__meta">
-                    Updated: 00:00, 28 Jan 2019
-                  </div>         
-                  -->
-                </li>
-              {% endfor %}
-            </ul>
-          {% endfor %}
-        </div>
-      </div>
-      {% endif %}
     {% else %}
+    <!-- No alerts or warnings in force -->
     <div class="govuk-inset-text">
       There are currently no flood warnings or alerts in force in this area.
     </div>
@@ -89,31 +61,17 @@
     {% endif %}
 
     {% if model.rivers %}
-    <p class="govuk-body">[However some flooding is possible as ]4 river levels in this area are currently above typical range. <a href="/river-and-sea-levels">View river and sea levels</a>.</p>
-    <!--<h2 class="govuk-heading-m">River and sea levels</h2>
-    <p class="govuk-body">River and sea levels are regularly checked by a network of monitoring stations. These levels can help you understand flood risk now and in the next few days.</p>
-    <div id="map-list-stations" class="defra-map-list govuk-!-margin-bottom-4">
-      <div id="level-detail" class="govuk-details__text govuk-details__text--defra-details-flood">
-        {% for name, river in model.rivers %}
-        <h2 class="govuk-heading-s govuk-!-margin-bottom-3">{{name}} at:</h2>
-        <ul class="defra-list-flood">
-          {% for station in river %}
-          <li class="defra-list-flood__item">
-            {% if station.value_timestamp === "Invalid date" %}
-            {{station.external_name}}
-            {% else %}
-            <a href="/station/{{station.rloi_id}}">{{station.external_name}}</a>
-            <div class="defra-list-flood__meta">
-              Level: {{station.value}}, Updated: {{station.value_timestamp}}
-            </div>
-            {% endif %}
-          </li>
-          {% endfor %}
-        </ul>
-        {% endfor %}
-      </div>
-    </div>
-    -->
+    <p class="govuk-body">
+      {% if model.hasHighLevels %}
+        {% if model.hasActiveFloods %}
+        <a href="/river-and-sea-levels?q=">View river and sea levels in this area</a> that are currently above typical range.
+        {% else %}
+        However flooding is possible as some <a href="/river-and-sea-levels?q=">river and sea levels in this area</a> are currently above typical range. 
+        {% endif %}
+      {% else %}
+      River and sea levels are regularly checked by a network of monitoring stations. These levels can help you understand flood risk now and in the next few days. <a href="/river-and-sea-levels?q=">View river and sea levels in this area</a>.
+      {% endif %}
+    </p>
     {% endif %}
 
     <p class="govuk-body">If you live near a river or the coast you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>

@@ -35,7 +35,7 @@
           </div>
           {% else %}
           <p class="govuk-body">
-            <a href="">{{ group.count }} flood warnings removed</a> within the last 24 hours.
+            <a href="">{{ group.title | lower }}</a> within the last 24 hours.
           </p>
           {% endif %}
         {% endif %}

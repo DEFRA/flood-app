@@ -27,9 +27,9 @@ const severity = [{
   isActive: true
 }, {
   id: 4,
-  name: 'warning removed',
-  title: 'Warning removed',
-  pluralisedTitle: 'Warnings removed',
+  name: 'flood warning removed',
+  title: 'Flood warning removed',
+  pluralisedTitle: 'Flood warnings removed',
   hash: 'warning-removed',
   subTitle: 'within the last 24 hours',
   tagline: '',

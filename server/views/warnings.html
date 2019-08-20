@@ -12,20 +12,22 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl">
-            River and sea levels
+            Flood alerts and warnings
         </h1>
     </div>
 </div>
 
+<!--
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div class="govuk-form-group defra-search">
-            <label class="govuk-label" for="search">Enter river, postcode or town</label>
+            <label class="govuk-label" for="search">Enter postcode or town</label>
             <input class="govuk-input defra-search__input" id="search" name="search" type="text" value="River Caldew">
             <button type="submit" class="govuk-button defra-search__button">Search</button>
         </div>
     </div>
 </div>
+-->
 
 <!--
 <div class="govuk-grid-row">
@@ -47,8 +49,8 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <div class="defra-search-summary govuk-!-margin-top-6">
-            <h2 class="defra-search-summary__count">8 levels</h2>
+        <div class="defra-search-summary govuk-!-margin-top-4">
+            <h2 class="defra-search-summary__count">5 results</h2>
             <button class="defra-search-summary__button-map">View map</button>
             <div class="app-map">
                 <div class="app-map__container">
@@ -68,88 +70,67 @@
         <ul class="defra-flood-list govuk-!-margin-top-6">
             <li>
                 <span class="defra-flood-list__group-title">
-                    Sea levels <span class="govuk-visually-hidden">at:</span>
+                    Flood warnings in place
+                    <span>Flooding is expected - take action</span>
                 </span>
-                <dl class="defra-flood-list__items--levels">
-                    <div>
+                <dl class="defra-flood-list__items--warnings">
+                    <div class="defra-flood-list__item--warning">
                         <dt>
-                            <a href="">Silloth</a>
+                            <a href="">Keswick campsite</a>
                         </dt>
                         <dd>
-                            0.25m on <time datetime="2018-11-21 11:00">21 Nov at 11:00pm</time>
+                            Issued on <time datetime="2018-11-21 11:00">21 Nov at 11:00pm</time>
+                        </dd>
+                    </div>
+                    <div class="defra-flood-list__item--warning">
+                        <dt>
+                            <a href="">River Greta at Keswick, Calvert's Bridge area</a>
+                        </dt>
+                        <dd>
+                            Updated at <time datetime="2018-11-21 11:00">11:30pm</time>
+                        </dd>
+                    </div>
+                    <div class="defra-flood-list__item--warning">
+                        <dt>
+                            <a href="">River Derwent at Keswick</a>
+                        </dt>
+                        <dd>
+                            Updated at <time datetime="2018-11-21 11:00">11:30pm</time>
                         </dd>
                     </div>
                 </dl>
             </li>
             <li>
                 <span class="defra-flood-list__group-title">
-                    River Caldew <span class="govuk-visually-hidden">at:</span>
+                    Flood alerts in place
+                    <span>Some flooding is possible - be prepared</span>
                 </span>
-                <dl class="defra-flood-list__items--levels defra-flood-list__items--has-relation">
-                    <div class="defra-flood-list__item--high">
+                <dl class="defra-flood-list__items--warnings">
+                    <div class="defra-flood-list__item--alert">
                         <dt>
-                            <a href="">Cummersdale</a>
+                            <a href="">Upper River Derwent, Stonethwaite Beck and Derwent Water</a>
                         </dt>
                         <dd>
-                            <span class="govuk-visually-hidden">High, </span>0.65m at <time datetime="2018-11-23 16:30">4:30pm</time>
-                        </dd>
-                    </div>
-                    <div class="defra-flood-list__item--normal">
-                        <dt>
-                            <a href="">Denton Holme</a>
-                        </dt>
-                        <dd>
-                            <span class="govuk-visually-hidden">Normal, </span>0.45m at <time datetime="2018-11-23 16:30">4:30pm</time>
-                        </dd>
-                    </div>
-                    <div class="defra-flood-list__item--normal">
-                        <dt>
-                            <a href="">Skew Bridge, Carlisle</a>
-                        </dt>
-                        <dd>
-                            <span class="govuk-visually-hidden">Normal, </span>0.35m at <time datetime="2018-11-23 16:30">4:30pm</time>
+                            Issued on <time datetime="2018-11-21 11:00">21 Nov at 11:00pm</time>
                         </dd>
                     </div>
                 </dl>
             </li>
             <li>
                 <span class="defra-flood-list__group-title">
-                    River Eden <span class="govuk-visually-hidden">at:</span>
+                    Warnings no longer in place
+                    <span>Removed within the last 24 hours</span>
                 </span>
-                <dl class="defra-flood-list__items--levels defra-flood-list__items--has-relation">
-                    <div class="defra-flood-list__item--normal">
+                <dl class="defra-flood-list__items--warnings">
+                    <div class="defra-flood-list__item--removed">
                         <dt>
-                            <a href="">Great Corby</a>
+                            <a href="">Upper River Derwent, Stonethwaite Beck and Derwent Water</a>
                         </dt>
                         <dd>
-                            <span class="govuk-visually-hidden">Normal, </span>0.35m at <time datetime="2018-11-23 16:30">4:30pm</time>
+                            Removed on <time datetime="2018-11-21 11:00">21 Nov at 11:00pm</time>
                         </dd>
                     </div>
-                    <div>
-                        <dt>
-                            <a href="">Linstock</a>
-                        </dt>
-                        <dd>
-                            Error message
-                        </dd>
-                    </div>
-                    <div class="defra-flood-list__item--normal">
-                        <dt>
-                            <a href="">Sheepmount</a>
-                        </dt>
-                        <dd>
-                            <span class="govuk-visually-hidden">Normal, </span>0.30m at <time datetime="2018-11-23 16:30">4:30pm</time>
-                        </dd>
-                    </div>
-                    <div class="defra-flood-list__item--low">
-                        <dt>
-                            <a href="">Sands Centre, Carlisle</a>
-                        </dt>
-                        <dd>
-                            <span class="govuk-visually-hidden">Low, </span>0.35m <time datetime="2018-11-22 16:00">yesterday at 4:00pm</time>
-                        </dd>
-                    </div>
-                </ul>
+                </dl>
             </li>
         </ul>
     </div>

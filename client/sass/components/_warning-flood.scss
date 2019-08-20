@@ -30,11 +30,11 @@
         display: block;
         content:'';
         background: transparent url('#{$govuk-images-path}icon-flood-symbols.svg') no-repeat;
-        background-size: 40px 200px;
+        background-size: 80px 200px;
         width: 40px;
         height: 40px;
         @include mq ($from: tablet) {
-            background-size: 50px 250px;
+            background-size: 100px 250px;
             width: 50px;
             height: 50px;
         }
@@ -56,10 +56,7 @@
         color:white;
     }
     .defra-warning-flood__icon:after {
-        background-position: 0% 0%;
-        @include mq ($from: tablet) {
-            background-position: 0% 0%;
-        }
+        background-position: 100% 0%;
     }
     &:before {
         content:'';
@@ -76,10 +73,7 @@
     background-color: mix(white, #e3000f, 80%);
     border-color:#e3000f;
     .defra-warning-flood__icon:after {
-        background-position: 0% 25%;
-        @include mq ($from: tablet) {
-            background-position: 0% 25%;
-        }
+        background-position: 100% 25%;
     }
 }
 .defra-warning-flood--flood-alert {
@@ -87,19 +81,13 @@
     background-color: mix(white, #f18700, 80%);
     border-color:#f18700;
     .defra-warning-flood__icon:after {
-        background-position: 0% 50%;
-        @include mq ($from: tablet) {
-            background-position: 0% 50%;
-        }
+        background-position: 100% 50%;
     }
 }
 .defra-warning-flood--warning-removed {
     @extend .defra-warning-flood;
     background-color:govuk-colour('grey-3');
     .defra-warning-flood__icon:after {
-        background-position: 0% 75%;
-        @include mq ($from: tablet) {
-            background-position: 0% 75%;
-        }
+        background-position: 100% 75%;
     }
 }

@@ -13,7 +13,7 @@ class ViewModel {
       location: title,
       pageTitle: `${title} flood risk`
     })
-
+    
     // Floods
     if (floods.length) {
       const activeFloods = floods.filter(flood => flood.severity < 4)
@@ -65,8 +65,6 @@ class ViewModel {
         if (alertFloods.length && (severeFloods.length || warningFloods.length)) {
           secondaryStatement += ` and ${alertFloods.length} flood alert${alertFloods.length > 1 ? 's (some flooding is possible) are' : ' (some flooding is possible) is'} ${!!severeFloods.length && !!warningFloods.length ? 'also' : ''} in place in the wider area.`
         }
-      } else {
-        secondaryStatement += `.`
       }
 
       // Inactive floods (optional)
@@ -124,6 +122,7 @@ class ViewModel {
       } else {
         if (stations[v].value > stations[v].percentile_5) {
           stations[v].value = 'High'
+          this.levelsHighCount += 1
         } else if (stations[v].value < stations[v].percentile_95) {
           stations[v].value = 'Low'
         } else {
@@ -131,6 +130,18 @@ class ViewModel {
         }
       }
     }
+
+    // Count stations that are 'high'
+    var highLevelsCount = 0
+    var hasHighLevels = false
+    for (var w in stations) {
+      if (stations[w].value === 'High') {
+        highLevelsCount += 1
+        hasHighLevels = true
+      }
+    }
+    this.hasHighLevels = hasHighLevels
+    this.highLevelsCount = highLevelsCount
 
     // // TO DO re introduce if invalid dates are to be removed
     // var filteredStations = stations.filter(function (value) {

@@ -6,16 +6,12 @@
     }
     &__group-title {
         @include govuk-font($size: 24, $weight: bold);
-    }
-    &__title {
-        position:relative;
-        padding-left:40px;
-        @include mq ($from: tablet) {
-            display: table-cell;
-            width:50%;
+        span {
+            @include govuk-font($size: 19);
+            display:block;
         }
     }
-    & &__levels {
+    dl {
         position:relative;
         margin-bottom:5px;
         @include mq ($from: tablet) {
@@ -33,71 +29,88 @@
             }
         }
     }
-    &__level:last-child {
+    dl:last-child {
         padding-bottom:0;
     }   
+    dt {
+        position:relative;
+        padding-left:40px;
+    }
     a {
         font-weight:bold;
     }
-    &__meta {
+    dd {
+        @include govuk-font($size: 16);
         display: block;
         padding-left:40px;
         margin:0px;
-        @include mq ($from: tablet) {
-            display: table-cell;
-            padding-left:1em;
-            width:50%;
-        }
     }
-    &:last-of-type {
-        border-bottom:0;
-        padding-bottom:0;
+    &__items--warnings {
         margin-bottom:0;
+        div:not(:last-child) {
+            border-bottom: 1px solid govuk-colour('grey-2');
+            margin-bottom:15px;
+        }
+        dt:after {
+            position: absolute;
+            content:'';
+            width:26px;
+            height:26px;
+            top:0px;
+            left:2px;
+            background: transparent url('#{$govuk-images-path}icon-flood-symbols.svg') no-repeat;
+            background-size: 52px 130px;
+            @include mq ($from: tablet) {
+                width:30px;
+                height:30px;
+                background-size: 60px 150px;
+                left:0px;
+            }
+        }
     }
-    &__title:before {
-        position: absolute;
-        content:'';
-        width:7px;
-        height:7px;
-        border:3px solid white;
-        background-color:white;
-        top:4px;
-        left:7px;
-        @include mq ($from: tablet) {
+    &__items--levels {
+        dt {
+            @include mq ($from: tablet) {
+                display: table-cell;
+                width:50%;
+            }
+        }
+        dt:before {
+            position: absolute;
+            content:'';
+            width:7px;
+            height:7px;
+            border:3px solid white;
+            background-color:white;
+            top:4px;
+            left:7px;
+            @include mq ($from: tablet) {
+                top:5px;
+            }
+        }
+        dt:after {
+            position: absolute;
+            content:'';
             top:5px;
+            left:8px;
+            width:7px;
+            height:7px;
+            border:2px solid govuk-colour('grey-2');
+            border-radius: 100%;
+            background-color: white;
+            @include mq ($from: tablet) {
+                top:6px;
+            }
+        }
+        dd {
+            @include mq ($from: tablet) {
+                display: table-cell;
+                padding-left:1em;
+                width:50%;
+            }
         }
     }
-    &__title:after {
-        position: absolute;
-        content:'';
-        top:5px;
-        left:8px;
-        width:7px;
-        height:7px;
-        border:2px solid govuk-colour('grey-2');
-        border-radius: 100%;
-        background-color: white;
-        @include mq ($from: tablet) {
-            top:6px;
-        }
-    }
-    &__title--normal:after {
-        border-color: govuk-colour('green');
-        background-color: govuk-colour('green');
-    }
-    &__title--forecast-high:after {
-        border-color: govuk-colour('orange');
-        background-color: govuk-colour('orange');
-    }
-    &__title--high:after {
-        border-color: govuk-colour('red');
-        background-color: govuk-colour('red');
-    }
-    &__title--low:after {
-        border-color: govuk-colour('grey-2');
-        background-color: govuk-colour('grey-2');
-    }
-    &__levels--has-relation:before {
+    &__items--has-relation:before {
         position:absolute;
         content:'';
         top:-2px;    
@@ -106,7 +119,7 @@
         width:3px;
         background-color: govuk-colour('grey-2');
     }
-    &__levels--has-relation:after {
+    &__items--has-relation:after {
         position:absolute;
         content:'';
         bottom:10px;    
@@ -116,5 +129,42 @@
         border-left: 5px solid transparent;
         border-right: 5px solid transparent;
         border-top: 5px solid govuk-colour('grey-2');
+    }
+    &:last-of-type {
+        border-bottom:0;
+        padding-bottom:0;
+        margin-bottom:0;
+    }
+    &__item {
+        // Warning symbols
+        &--severe dt:after {
+            background-position: 0% 0%;
+        }
+        &--warning dt:after {
+            background-position: 0% 25%;
+        }
+        &--alert dt:after {
+            background-position: 0% 50%;
+        }
+        &--removed dt:after {
+            background-position: 0% 75%;
+        }
+        // River level symbols
+        &--normal dt:after {
+            border-color: govuk-colour('green');
+            background-color: govuk-colour('green');
+        }
+        &--forecast-high dt:after {
+            border-color: govuk-colour('orange');
+            background-color: govuk-colour('orange');
+        }
+        &--high dt:after {
+            border-color: govuk-colour('red');
+            background-color: govuk-colour('red');
+        }
+        &--low dt:after {
+            border-color: govuk-colour('grey-2');
+            background-color: govuk-colour('grey-2');
+        }
     }
 }
