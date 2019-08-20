@@ -1,0 +1,107 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<!-- if model.referer -->
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <a href="{{ model.referer }}" class="govuk-back-link govuk-!-margin-bottom-7">Back</a>
+  </div>
+</div>
+<!-- endif -->
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            River and sea levels
+        </h1>
+    </div>
+</div>
+
+<!--
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-form-group defra-search">
+            <label class="govuk-label" for="search">Enter river, postcode or town</label>
+            <input class="govuk-input defra-search__input" id="search" name="search" type="text" value="River Caldew">
+            <button type="submit" class="govuk-button defra-search__button">Search</button>
+        </div>
+    </div>
+</div>
+-->
+<!--
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-!-margin-top-6">
+            <p class="govuk-body">
+                <strong>No river, sea or groundwater levels found.</strong>    
+            </p>
+            <p class="govuk-body">There are approximatley 2200 water level measuring stations in England. These are located mostly along main rivers and the coast.</p>
+            <p class="govuk-body">Improve your search results by:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>searching a broader location</li>
+                <li>double-checking your spelling</li>
+            </ul>
+        </div>
+    </div>
+</div>
+-->
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="defra-search-summary govuk-!-margin-top-6">
+            <h2 class="defra-search-summary__count">3 impacts</h2>
+            <button class="defra-search-summary__button-map">View map</button>
+            <div class="app-map">
+                <div class="app-map__container">
+                    <div class="map" id="map-live">
+                        <div class="map__container">
+                            <div class="map__container-inner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <ul class="defra-flood-list govuk-!-margin-top-6">
+            <li>
+                <span class="defra-flood-list__group-title">
+                    Sea levels <span class="govuk-visually-hidden">at:</span>
+                </span>
+                <dl class="defra-flood-list__items--levels">
+                    <div>
+                        <dt>
+                            <a href="">Silloth</a>
+                        </dt>
+                        <dd>
+                            0.25m on <time datetime="2018-11-21 11:00">21 Nov at 11:00pm</time>
+                        </dd>
+                    </div>
+                </dl>
+            </li>
+            <li>
+        </ul>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block bodyEnd %}
+{{ super() }}
+<script src="{{assetPath}}/javascripts/ol.js"></script>
+  <script src="{{assetPath}}/javascripts/components/maps.js"></script>
+  <script src="{{assetPath}}/javascripts/components/maps-styles.js"></script>
+  <script src="{{assetPath}}/javascripts/components/maps-layers.js"></script>
+  <script src="{{assetPath}}/javascripts/components/map-container.js"></script>
+  <script src="{{assetPath}}/javascripts/components/maps/live.js"></script>
+  <script src="{{assetPath}}/javascripts/templates.js"></script>
+  <script src="{{ assetPath }}/nunjucks-slim.min.js"></script>
+  <script>nunjucks.configure()</script>
+<script>
+  window.flood.model = {{ model | dump(2) | safe }}
+</script>
+<script src="{{assetPath}}/javascripts/pages/levels.js"></script>
+{% endblock %}

@@ -7,6 +7,7 @@ const routes = [].concat(
   require('../routes/rain-gauge'),
   require('../routes/levels'),
   require('../routes/warnings'),
+  require('../routes/impacts'),
   require('../routes/api'),
   require('../routes/roadmap'),
   require('../routes/public')
