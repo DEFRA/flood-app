@@ -13,10 +13,6 @@
     "test": "npm run lint && npm run unit-test",
     "postinstall": "npm run build"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/DEFRA/digital-form-builder"
-  },
   "author": "defra",
   "license": "ISC",
   "dependencies": {
@@ -35,8 +31,6 @@
     "@turf/polygon-smooth": "^5.0.1",
     "@turf/turf": "^5.1.6",
     "accessible-autocomplete": "1.6.2",
-    "digital-form-builder-designer": "0.1.7",
-    "digital-form-builder-engine": "0.1.4",
     "geojson": "0.5.0",
     "govuk-frontend": "^2.13.0",
     "http-proxy-agent": "^2.1.0",

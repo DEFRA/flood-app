@@ -5,7 +5,6 @@
 $govuk-global-styles: true;
 
 @import "node_modules/govuk-frontend/all";
-@import "node_modules/digital-form-builder-designer/client/index";
 
 // Patterns that aren't in Frontend
 @import "patterns/check-your-answers";

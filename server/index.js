@@ -19,7 +19,6 @@ async function createServer () {
   await server.register(require('@hapi/h2o2'))
   await server.register(require('./plugins/views'))
   await server.register(require('./plugins/router'))
-  // await server.register(require('./plugins/builder'))
   await server.register(require('./plugins/error-pages'))
   await server.register(require('./plugins/full-url'))
   await server.register(require('./plugins/session'))
