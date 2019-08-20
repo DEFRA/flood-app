@@ -8,7 +8,7 @@ const lab = exports.lab = Lab.script()
 // const createServer = require('../../server')
 const config = require('../../server/config')
 
-lab.experiment('Routes test - home', () => {
+lab.experiment('Routes test', () => {
   let sandbox
   let server
 
@@ -71,6 +71,7 @@ lab.experiment('Routes test - home', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('Give your consent before using the flood information service prototype')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
   lab.test('2 - GET /start-page', async () => {
@@ -81,6 +82,7 @@ lab.experiment('Routes test - home', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('Check if a location in England is at risk of flooding now')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
   lab.test('3 - GET /location-not-england', async () => {
@@ -91,6 +93,7 @@ lab.experiment('Routes test - home', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('This service provides flood warning information for England only')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
   lab.test('4 - GET /sms-auto-opt-in-info', async () => {
@@ -101,6 +104,7 @@ lab.experiment('Routes test - home', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('This phone number has been automatically opted-in to receive flood warnings')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
   lab.test('5 - GET /what-to-do-in-a-flood/what-the-flood-warnings-mean', async () => {
@@ -111,6 +115,7 @@ lab.experiment('Routes test - home', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('What the flood warnings mean')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
   lab.test('6 - GET /plan-ahead-for-flooding', async () => {
@@ -121,6 +126,7 @@ lab.experiment('Routes test - home', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('How to plan ahead for flooding')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
   lab.test('7 - GET /what-happens-after-a-flood', async () => {
@@ -131,6 +137,7 @@ lab.experiment('Routes test - home', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('What happens after a flood')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
   lab.test('8 - GET /recovering-after-a-flood', async () => {
@@ -141,6 +148,7 @@ lab.experiment('Routes test - home', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('How to recover after a flood')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
   lab.test('9 - GET /what-to-do-in-a-flood/getting-a-flood-alert', async () => {
@@ -151,6 +159,7 @@ lab.experiment('Routes test - home', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('What the flood warnings mean')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
   lab.test('10 - GET /what-to-do-in-a-flood/getting-a-flood-warning', async () => {
@@ -161,6 +170,7 @@ lab.experiment('Routes test - home', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('What the flood warnings mean')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
   lab.test('11 - GET /what-to-do-in-a-flood/getting-a-severe-flood-warning', async () => {
@@ -171,6 +181,7 @@ lab.experiment('Routes test - home', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('What the flood warnings mean')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
   lab.test('12 - GET /', async () => {
