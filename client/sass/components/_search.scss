@@ -3,6 +3,7 @@
     box-sizing:border-box;
     width:100%;
     padding-right:50px;
+    @include govuk-responsive-margin(8, 'bottom');
     .defra-search__input {
         height: 50px;
     }

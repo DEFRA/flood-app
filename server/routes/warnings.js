@@ -1,6 +1,6 @@
 module.exports = {
   method: 'GET',
-  path: '/warnings',
+  path: '/alerts-and-warnings',
   handler: async (request, h) => {
     const model = {}
     model.referer = request.headers.referer

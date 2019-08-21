@@ -1,5 +1,11 @@
 .defra-flood-list {
-    @extend .govuk-list;
+    // @extend .govuk-list;
+    margin:0px;
+    padding:0px;
+    list-style:none;
+    ul {
+        list-style:none;
+    }
     > li:not(:last-child) {
         margin-bottom:20px;
         border-bottom:1px solid govuk-colour('grey-2');
@@ -11,52 +17,30 @@
             display:block;
         }
     }
-    dl {
+    &__items {
         position:relative;
         margin-bottom:5px;
+        padding:0px;
+        margin-top:10px;
         @include mq ($from: tablet) {
-            margin-top:15px;
-        }
-        > div {
-            padding-bottom:10px;
-            margin-bottom:0px;
-            @include mq ($from: tablet) {
-                display: table;
-                width:100%;
-                position:relative;
-                padding-bottom:15px;
-                margin-bottom:0px;
-            }
+            margin-top:10px;
         }
     }
-    dl:last-child {
+    &__items:last-child {
         padding-bottom:0;
-    }   
-    dt {
-        position:relative;
-        padding-left:40px;
-    }
-    a {
-        font-weight:bold;
-    }
-    dd {
-        @include govuk-font($size: 16);
-        display: block;
-        padding-left:40px;
-        margin:0px;
     }
     &__items--warnings {
         margin-bottom:0;
-        div:not(:last-child) {
+        li:not(:last-child) {
             border-bottom: 1px solid govuk-colour('grey-2');
             margin-bottom:15px;
         }
-        dt:after {
+        span:after {
             position: absolute;
             content:'';
             width:26px;
             height:26px;
-            top:0px;
+            top:1px;
             left:2px;
             background: transparent url('#{$govuk-images-path}icon-flood-symbols.svg') no-repeat;
             background-size: 52px 130px;
@@ -130,23 +114,70 @@
         border-right: 5px solid transparent;
         border-top: 5px solid govuk-colour('grey-2');
     }
-    &:last-of-type {
-        border-bottom:0;
-        padding-bottom:0;
-        margin-bottom:0;
+    &__item {
+        padding-bottom:10px;
+        margin-bottom:0px;
+        @include mq ($from: tablet) {
+            display: table;
+            width:100%;
+            position:relative;
+            padding-bottom:15px;
+            margin-bottom:0px;
+        }
+    }
+    &__item-title {
+        position:relative;
+        display: block;
+        padding-left:40px;
+        @include govuk-font($size: 19);
+    }
+    &__item-desc,
+    &__item-meta {
+        @include govuk-font($size: 16);
+        display: block;
+        padding-left:40px;
+        margin:0px;
+    }
+    &__item-meta {
+        div {
+            @include mq ($from: tablet) {
+                display: inline;
+            }
+        }
+        dt {
+            display:inline;
+        }
+        dt:after {
+            content:':';
+            margin-right:0.25em;
+        }
+        dd {
+            display: inline;
+            margin:0px;
+        }
+        dd:after {
+            @include mq ($from: tablet) {
+                content:'.';
+            }
+        }
+        div:last-child dd:after {
+            @include mq ($from: tablet) {
+                content:'';
+            }
+        }
     }
     &__item {
         // Warning symbols
-        &--severe dt:after {
+        &--severe span:after {
             background-position: 0% 0%;
         }
-        &--warning dt:after {
+        &--warning span:after {
             background-position: 0% 25%;
         }
-        &--alert dt:after {
+        &--alert span:after {
             background-position: 0% 50%;
         }
-        &--removed dt:after {
+        &--removed span:after {
             background-position: 0% 75%;
         }
         // River level symbols
