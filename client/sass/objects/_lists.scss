@@ -161,9 +161,7 @@
             }
         }
         div:last-child dd:after {
-            @include mq ($from: tablet) {
-                content:'';
-            }
+            content:'';
         }
     }
     &__item {
