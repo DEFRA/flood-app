@@ -101,20 +101,20 @@
     position: absolute;
     top:0px;
     left:0px;
-    background-image: url('#{$govuk-images-path}icon-map-controls-2x.png');
+    background-image: url('#{$govuk-images-path}icon-map.svg');
     background-color:transparent;
-    background-size:90px;
+    background-size:45px 20px;
     background-repeat: no-repeat;
-    background-position: -7px -215px;
+    background-position: 0px 0px;
     height:20px;
-    width:16px;
+    width:15px;
     @include mq ($from: tablet) {
         top: 2px;
     }
 }
 .defra-button-map:hover:before {
-    background-position: -37px -215px;
+    background-position: 50% 0%;
 }
 .defra-button-map:focus:before {
-    background-position: -67px -215px;
+    background-position: 100% 0%;
 }
