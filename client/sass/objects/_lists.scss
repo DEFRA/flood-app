@@ -11,6 +11,7 @@
         border-bottom:1px solid govuk-colour('grey-2');
     }
     &__group-title {
+        display: block;
         @include govuk-font($size: 24, $weight: bold);
         span {
             @include govuk-font($size: 19);
@@ -30,11 +31,6 @@
         padding-bottom:0;
     }
     &__items--warnings {
-        margin-bottom:0;
-        li:not(:last-child) {
-            border-bottom: 1px solid govuk-colour('grey-2');
-            margin-bottom:15px;
-        }
         span:after {
             position: absolute;
             content:'';
