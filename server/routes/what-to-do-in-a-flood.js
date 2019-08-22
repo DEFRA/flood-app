@@ -1,10 +1,10 @@
 module.exports = {
   method: 'GET',
-  path: '/what-to-do-in-a-flood/what-the-flood-warnings-mean',
+  path: '/what-to-do-in-a-flood',
   options: {
     handler: {
       view: {
-        template: 'what-the-flood-warnings-mean',
+        template: 'what-to-do-in-a-flood',
         context: {
           pageTitle: 'What to do in a flood - GOV.UK',
           heading: 'Flood information service'

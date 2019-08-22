@@ -1,0 +1,139 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<!-- if model.referer -->
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <a href="{{ model.referer }}" class="govuk-back-link govuk-!-margin-bottom-7">Back</a>
+  </div>
+</div>
+<!-- endif -->
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            What to do in a flood
+        </h1>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <nav class="defra-contents govuk-!-margin-bottom-8">
+            <h2 class="defra-contents__title">Contents</h2>
+            <ol class="defra-contents__list defra-contents__list--number">
+                <li class="defra-contents__item">
+                    <a href="#what-the-flood-warnings-mean">1. What the flood warnings mean</a>
+                </li>
+                <li class="defra-contents__item">
+                    <a href="#what-to-do-if-you-get-a-flood-alert">2. What to do if you get a flood alert</a>
+                </li>
+                <li class="defra-contents__item">
+                    <a href="#what-to-do-if-you-get-a-flood-warning">3. What to do if you get a flood warning</a>
+                </li>
+                <li class="defra-contents__item">
+                    <a href="#what-to-do-if-you-get-a-severe-flood-warning">4. What to do if you get a severe flood warning</a>
+                </li>
+            </ol>
+        </nav>
+        <h2 id="what-the-flood-warnings-mean" class="govuk-heading-m">1. What the flood warnings mean</h2>
+        <p class="govuk-text">We issue 3 levels of flood warning:</p>
+        <h3 class="defra-heading-s-image">
+            <img src="/assets/images/symbol-flood-alert.svg" width="50" height="50" alt="Flood alert symbol"/>
+            Flood alert - Prepare
+        </h3>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>prepare a bag that includes medicines and insurance documents</li>
+            <li>check flood warnings</li>
+        </ul>
+        <h3 class="defra-heading-s-image">
+            <img src="/assets/images/symbol-flood-warning.svg" width="50" height="50" alt="Flood warning symbol"/>
+            Flood warning - Act
+        </h3>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>turn off gas, water and electricity</li>
+            <li>move things upstairs or to safety</li>
+            <li>move family, pets and car to safety</li>
+        </ul>
+        <h3 class="defra-heading-s-image">
+            <img src="/assets/images/symbol-flood-warning-severe.svg" width="50" height="50" alt="Severe flood warning symbol"/>
+            Severe flood warning - Survive
+        </h3>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>call 999 if in immediate danger</li>
+            <li>follow advice from emergency services</li>
+            <li>keep yourself and your family safe</li>
+        </ul>
+        <p class="govuk-text">All floods are different and you should take advice from the emergency services and your local authority if you’re in a flood.</p>
+
+        <h2 id="what-to-do-if-you-get-a-flood-alert" class="govuk-heading-m">2. What to do if you get a flood alert</h2>
+        <p class="govuk-text">A flood alert means you need to prepare: flooding is possible.</p>
+        <p class="govuk-text">If you haven’t already done so, you should:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li><a href="https://flood-warning-information.service.gov.uk/long-term-flood-risk">check your flood risk</a></li>
+            <li><a href="https://www.gov.uk/sign-up-for-flood-warnings">sign up for flood warnings</a></li>
+            <li>keep up to date with the <a href="https://flood-warning-information.service.gov.uk/warnings">latest situation</a> - call Floodline on 0345 988 1188 or follow @EnvAgency and #floodaware on Twitter for the latest flood updates</li>
+            <li>have a bag ready with vital items like insurance documents and medications in case you need to leave your home</li>
+            <li>check you know how to turn off your gas, electricity and water mains supplies</li>
+            <li>plan how you'll move family and pets to safety</li>
+        </ul>
+
+        <h2 id="what-to-do-if-you-get-a-flood-warning" class="govuk-heading-m">3. What to do if you get a flood warning</h2>
+        <p class="govuk-text">A flood warning means you need to act: flooding is expected. You should do all the actions for a flood alert, but also:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>move vehicles to higher ground if it’s safe to do so</li>
+            <li>move family and pets to safety</li>
+            <li>move important items upstairs or to a safe place in your property, starting with cherished items and valuables, then furniture and furnishings</li>
+            <li>turn off gas, electricity and water supplies if it’s safe to do so; never touch an electrical switch if you’re standing in water</li>
+            <li>if you have property protection products such as flood barriers, or air brick covers, use them now</li>
+            <li>keep track of the <a href="https://flood-warning-information.service.gov.uk/warnings">latest situation</a></li>
+        </ul>
+
+        <h2 id="what-to-do-if-you-get-a-severe-flood-warning" class="govuk-heading-m">4. What to do if you get a severe flood warning</h2>
+        <p class="govuk-text">A severe flood warning means there is danger to life: you must act now.</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>call 999 if you’re in immediate danger</li>
+            <li>follow advice from the emergency services and evacuate if you’re told to do so</li>
+            <li>make sure you have an emergency kit including a torch, spare batteries, mobile phone and charger, warm clothes, important numbers like your home insurance, water, food, first aid kit and any medicines and babycare items you may need</li>
+            <li>alert neighbours and offer help if it's safe to do so</li>
+            <li>avoid driving or walking through flood water: just 30cm (1 foot) of fast flowing water could move your car and even shallow moving water can knock you off your feet</li>
+            <li>keep your family and pets away from floodwater – it may contain heavy debris, sharp objects, open manhole covers, sewage and chemicals</li>
+            <li>wash your hands if you’ve been in contact with flood water which may contain toxic substances</li>
+        </ul>
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <aside class="defra-related-items" role="complementary">
+            <h2 class="govuk-heading-s" id="subsection-title">
+                Related content
+            </h2>
+            <nav role="navigation" aria-labelledby="subsection-title">
+                <ul class="govuk-list govuk-!-font-size-16">
+                    <li>
+                        <a class="govuk-link" href="">
+                            How to plan ahead for flooding
+                        </a>
+                    </li>
+                    <li>
+                        <a class="govuk-link" href="">
+                            How to recover after a flood
+                        </a>
+                    </li>
+                    <li>
+                        <a class="govuk-link" href="">
+                            What happens after a flood
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block bodyEnd %}
+{{ super() }}
+  <script src="{{assetPath}}/javascripts/templates.js"></script>
+  <script src="{{ assetPath }}/nunjucks-slim.min.js"></script>
+  <script>nunjucks.configure()</script>
+{% endblock %}

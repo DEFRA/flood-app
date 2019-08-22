@@ -14,10 +14,7 @@ const routes = [].concat(
   require('../routes/start-page'),
   require('../routes/location-not-england'),
   require('../routes/sms-auto-opt-in-info'),
-  require('../routes/what-to-do-in-a-flood/what-the-flood-warnings-mean'),
-  require('../routes/what-to-do-in-a-flood/getting-a-flood-alert'),
-  require('../routes/what-to-do-in-a-flood/getting-a-flood-warning'),
-  require('../routes/what-to-do-in-a-flood/getting-a-severe-flood-warning'),
+  require('../routes/what-to-do-in-a-flood'),
   require('../routes/plan-ahead-for-flooding'),
   require('../routes/what-happens-after-a-flood'),
   require('../routes/recovering-after-a-flood')
