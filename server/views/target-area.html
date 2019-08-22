@@ -63,11 +63,11 @@
     {% if model.flood and model.severity.isActive %}
     <div class="govuk-inset-text">
       {% if model.severity.hash == 'severe-flood-warning' %}
-      You <a href="/what-to-do-in-a-flood/getting-a-severe-flood-warning">must act now</a> if you live in this area.
+      You <a href="/what-to-do-in-a-flood">must act now</a> if you live in this area.
       {% elif model.severity.hash == 'flood-warning' %}
-      You need to <a href="/what-to-do-in-a-flood/getting-a-flood-warning">take action</a> if you live in this area.
+      You need to <a href="/what-to-do-in-a-flood">take action</a> if you live in this area.
       {% else %}
-      <a href="/what-to-do-in-a-flood/getting-a-flood-alert">Be prepared</a> if you live in this area
+      <a href="/what-to-do-in-a-flood">Be prepared</a> if you live in this area
       {% endif %}
     </div>
     {% endif %}
