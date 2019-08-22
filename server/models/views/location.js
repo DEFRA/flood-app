@@ -45,13 +45,13 @@ class ViewModel {
       if (activeFloods) { // alert, warning or severe
         switch (highestSeverity.name) {
           case 'severe':
-            primaryStatement = `${primaryGroup.length} severe flood warning${primaryGroup.length > 1 ? 's are' : ' is'} in force ${activeFloods.length > 1 ? '' : 'for ' + primaryList}. Severe flooding is expected in this area.`
+            primaryStatement = `${primaryGroup.length > 1 ? '' : '<a href="">'}${primaryGroup.length} severe flood warning${primaryGroup.length > 1 ? 's' : '</a>'} ${primaryGroup.length > 1 ? 'are' : 'is'} in place${activeFloods.length > 1 ? '' : ' for ' + primaryList}. Severe flooding is expected in ${primaryGroup.length > 1 ? 'these areas' : 'this area'}.`
             break
           case 'warning':
-            primaryStatement = `${primaryGroup.length} flood warning${primaryGroup.length > 1 ? 's are' : ' is'} in force ${activeFloods.length > 1 ? '' : 'for ' + primaryList}. Some flooding is expected in this area.`
+            primaryStatement = `${primaryGroup.length > 1 ? '' : '<a href="">'}${primaryGroup.length} flood warning${primaryGroup.length > 1 ? 's' : '</a>'} ${primaryGroup.length > 1 ? 'are' : 'is'} in place${activeFloods.length > 1 ? '' : ' for ' + primaryList}. Some flooding is expected in ${primaryGroup.length > 1 ? 'these areas' : 'this area'}.`
             break
           case 'alert':
-            primaryStatement = `${primaryGroup.length > 1 ? primaryGroup.length : 'A'} flood alert${primaryGroup.length > 1 ? 's are' : ' is'} in place ${activeFloods.length > 1 ? '' : 'for ' + primaryList}. Some flooding is possible in this area.`
+            primaryStatement = `${primaryGroup.length > 1 ? '' : '<a href="">'}${primaryGroup.length > 1 ? primaryGroup.length : 'A'} flood alert${primaryGroup.length > 1 ? 's' : '</a>'} ${primaryGroup.length > 1 ? 'are' : 'is'} in place${activeFloods.length > 1 ? '' : ' for ' + primaryList}. Some flooding is possible in ${primaryGroup.length > 1 ? 'these areas' : 'this area'}.`
             break
         }
       }
@@ -60,10 +60,10 @@ class ViewModel {
       var secondaryStatement = ''
       if (floods.length > primaryGroup.length || floods.length > 2) {
         if (warningFloods.length && severeFloods.length) {
-          secondaryStatement += `${alertFloods.length ? ', ' : ' and '} ${warningFloods.length} flood warning${warningFloods.length > 1 ? 's (flooding is expected) are' : ' (flooding is expected) is'} also in force ${alertFloods.length ? 'and' : '.'}`
+          secondaryStatement += ` <a href="">${warningFloods.length} flood warning${alertFloods.length > 1 ? 's' : ''}</a> ${warningFloods.length > 1 ? 'are' : 'is'} in place. Some flooding is expected in ${warningFloods.length > 1 ? 'these areas' : 'this area'}.`
         }
         if (alertFloods.length && (severeFloods.length || warningFloods.length)) {
-          secondaryStatement += ` and ${alertFloods.length} flood alert${alertFloods.length > 1 ? 's (some flooding is possible) are' : ' (some flooding is possible) is'} ${!!severeFloods.length && !!warningFloods.length ? 'also' : ''} in place in the wider area.`
+          secondaryStatement += ` <a href="">${alertFloods.length} flood alert${alertFloods.length > 1 ? 's' : ''}</a> ${alertFloods.length > 1 ? 'are' : 'is'} in place in the wider area where some flooding is possible.`
         }
       }
 
