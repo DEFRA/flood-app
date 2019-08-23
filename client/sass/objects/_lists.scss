@@ -28,7 +28,7 @@
         padding:0px;
         margin-top:10px;
         @include mq ($from: tablet) {
-            margin-top:10px;
+            margin-top:15px;
         }
     }
     &__items:last-child {
@@ -171,6 +171,10 @@
             margin-bottom:15px;
             padding-bottom:15px;
             border-bottom:1px solid govuk-colour('grey-2');
+        }
+        &--impact:last-child {
+            border:none;
+            margin-bottom:0;
         }
         &--impact span:after {
             position: absolute;
