@@ -2,24 +2,34 @@
     position:relative;
     box-sizing:border-box;
     width:100%;
-    padding-right:50px;
+    padding-right:40px;
     @include govuk-responsive-margin(8, 'bottom');
-    .defra-search__input {
-        height: 50px;
-    }
     .defra-search__button {
         position:absolute;
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         right:0px;
         bottom:0px;
         margin-bottom:0px;
         box-shadow:none;
         text-indent:-5000px;
-        background-image: url('#{$govuk-images-path}icon-search-2x.png');
-        background-position: -2px center;
-        background-size:100px;
+        background-color:govuk-colour('blue');
+    }
+    .defra-search__button:after {
+        position:absolute;
+        content:'';
+        width:20px;
+        height:20px;
+        top:50%;
+        left:50%;
+        margin:-10px 0px 0px -10px;
+        background-image: url('#{$govuk-images-path}icon-search.svg');
+        background-position: 0% 0%;
+        background-size:40px 20px;
         background-repeat: no-repeat;
+    }
+    .defra-search__button:hover {
+        background-color: govuk-colour('light-blue');
     }
     .defra-search__button:active {
         top: auto;
