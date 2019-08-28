@@ -1,0 +1,39 @@
+{
+  "place": {
+    "name": "Stonethwaite Beck",
+    "center": [
+      -3.1554999351501465,
+      54.5281982421875
+    ],
+    "bbox": [
+      -3.1466255887627805,
+      54.53206095975818,
+      -3.1643742815375124,
+      54.52433552461682
+    ],
+    "address": "Stonethwaite Beck, United Kingdom",
+    "isEngland": {
+      "is_england": true
+    }
+  },
+  "floods": [
+    {
+      "code": "011WAFDW",
+      "key": 174166,
+      "description": "Upper River Derwent, Stonethwaite Beck and Derwent Water",
+      "quickdialnumber": "141029",
+      "region": "North West",
+      "area": "North",
+      "floodtype": "f",
+      "severity": 1,
+      "severitydescription": "Flood Alert",
+      "warningkey": 106501,
+      "raised": "2019-08-23T08:51:00.000Z",
+      "severitychanged": "2019-08-10T07:52:00.000Z",
+      "messagechanged": "2019-08-23T08:51:00.000Z",
+      "message": "Lake level is now dropping in response to drier weather in the area. The gauge at Lodore is forecast to continue to drop steadily through today, Friday 23/8/19, but is likely to remain above the 1.4m flood alert level, meaning that low lying land around the lake, and possibly near to the river, may remain flooded. A Flood Warning remains in force for Keswick Campsite. We continue to monitor the situation closely and will update this message if the situation changes"
+    }
+  ],
+  "stations": [],
+  "impacts": []
+}

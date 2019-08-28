@@ -4,6 +4,7 @@ const moment = require('moment-timezone')
 
 class ViewModel {
   constructor ({ place, floods, stations, impacts }) {
+    // console.log('NW : place', place, ' floods :', floods, ' stations : ', stations, 'impacts : ', impacts)
     const title = place.name
 
     Object.assign(this, {
@@ -37,6 +38,7 @@ class ViewModel {
 
       const primaryGroup = groupedFloods[0].floods
       const primaryList = primaryGroup.map((flood, i) => {
+        // console.log('primaryGroup', flood, i)
         return `${primaryGroup.length > 1 && i === primaryGroup.length - 1 ? 'and ' : ''}${primaryGroup.length > 0 ? `<a href="/target-area/${primaryGroup[i].code}">${primaryGroup[i].description}</a>` : ''}`
       }).join(' ')
 
