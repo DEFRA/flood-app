@@ -68,7 +68,7 @@ class ViewModel {
           secondaryStatement += ` and ${alertFloods.length} flood alert${alertFloods.length > 1 ? 's (some flooding is possible) are' : ' (some flooding is possible) is'} ${!!severeFloods.length && !!warningFloods.length ? 'also' : ''} in place in the wider area.`
         }
       } else {
-        secondaryStatement += `.`
+        secondaryStatement += '.'
       }
 
       // Inactive floods (optional)
