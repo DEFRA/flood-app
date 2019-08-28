@@ -65,7 +65,7 @@ module.exports = {
 
     // Until we get the FGS feed sorted and returned from
     // the service, use a temporary cache as this call is slow.
-    const url = `https://api.ffc-environment-agency.fgs.metoffice.gov.uk/api/public/statements`
+    const url = 'https://api.ffc-environment-agency.fgs.metoffice.gov.uk/api/public/statements'
     const result = await util.getJson(url, true)
     return result.statements[0]
   },
