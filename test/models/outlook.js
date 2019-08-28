@@ -407,36 +407,6 @@ lab.experiment('Outlook model test', () => {
   })
   lab.test('Check outlook days', async () => {
     const Result = await outlook.days
-    console.log('days', Result)
-
-    const daysOutput = [
-      {
-        idx: 1,
-        level: 0,
-        date: '2019-08-08T09:30:00.000Z'
-      },
-      {
-        idx: 2,
-        level: 0,
-        date: '2019-08-09T09:30:00.000Z'
-      },
-      {
-        idx: 3,
-        level: 0,
-        date: '2019-08-10T09:30:00.000Z'
-      },
-      {
-        idx: 4,
-        level: 0,
-        date: '2019-08-11T09:30:00.000Z'
-      },
-      {
-        idx: 5,
-        level: 1,
-        date: '2019-08-12T09:30:00.000Z'
-      }]
-
-    console.log(daysOutput[0].date)
 
     Code.expect(Result[0].idx).to.be.equal(1)
     Code.expect(Result[0].level).to.be.equal(0)

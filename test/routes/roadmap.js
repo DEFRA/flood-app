@@ -37,6 +37,12 @@ lab.experiment('Routes test - roadmap', () => {
   lab.afterEach(async () => {
     await server.stop()
     await sandbox.restore()
+    const regex = /.\/server\/models\/./
+    Object.keys(require.cache).forEach((key) => {
+      if (key.match(regex)) {
+        delete require.cache[key]
+      }
+    })
   })
 
   lab.test('GET /roadmap', async () => {

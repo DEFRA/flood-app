@@ -4,8 +4,6 @@ const Lab = require('@hapi/lab')
 const Code = require('code')
 const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
-// const location = require('../../server/services/location')
-const util = require('../../server/util')
 const floodService = require('../../server/services/flood')
 
 const isEngland = () => {
@@ -17,6 +15,7 @@ lab.experiment('location service test', () => {
 
   // Use a Sinon sandbox to manage spies, stubs and mocks for each test.
   lab.beforeEach(async () => {
+    delete require.cache[require.resolve('../../server/services/location')]
     sandbox = await sinon.createSandbox()
   })
 
@@ -29,10 +28,11 @@ lab.experiment('location service test', () => {
   // })
 
   lab.test('Check for invalid location', async () => {
-    delete require.cache[require.resolve('../../server/services/location')]
     const fakeLocationData = () => {
       return {}
     }
+
+    const util = require('../../server/util')
 
     sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
@@ -51,10 +51,11 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for valid location', async () => {
-    delete require.cache[require.resolve('../../server/services/location')]
+    const util = require('../../server/util')
+
     const fakeLocationData = () => {
       return {
-        authenticationResultCode: 'ValidCredentials',
+        authenticationResultCode: 'ValidCredentials 1',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
         copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
         resourceSets: [
@@ -109,10 +110,11 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing call returning low confidence and hence no results', async () => {
-    delete require.cache[require.resolve('../../server/services/location')]
+    const util = require('../../server/util')
+
     const fakeLocationData = () => {
       return {
-        authenticationResultCode: 'ValidCredentials',
+        authenticationResultCode: 'ValidCredentials 2',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
         copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
         resourceSets: [
@@ -165,10 +167,11 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing call returning medium confidence and hence no results', async () => {
-    delete require.cache[require.resolve('../../server/services/location')]
+    const util = require('../../server/util')
+
     const fakeLocationData = () => {
       return {
-        authenticationResultCode: 'ValidCredentials',
+        authenticationResultCode: 'ValidCredentials 3',
         brandLogoUri: 'brand-logo-uri',
         copyright: 'Copyright ',
         resourceSets: [
@@ -221,10 +224,11 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing call returning no data resources and hence no results', async () => {
-    delete require.cache[require.resolve('../../server/services/location')]
+    const util = require('../../server/util')
+
     const fakeLocationData = () => {
       return {
-        authenticationResultCode: 'ValidCredentials',
+        authenticationResultCode: 'ValidCredentials 4',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
         copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
         resourceSets: [
@@ -254,10 +258,11 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing call returning invalid query', async () => {
-    delete require.cache[require.resolve('../../server/services/location')]
+    const util = require('../../server/util')
+
     const fakeLocationData = () => {
       return {
-        authenticationResultCode: 'ValidCredentials',
+        authenticationResultCode: 'ValidCredentials 5',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
         copyright: 'Copyright © 201 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
         errorDetails: [
@@ -288,10 +293,11 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing call returning duplicate location name in description', async () => {
-    delete require.cache[require.resolve('../../server/services/location')]
+    const util = require('../../server/util')
+
     const fakeLocationData = () => {
       return {
-        authenticationResultCode: 'ValidCredentials',
+        authenticationResultCode: 'ValidCredentials 6',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
         copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
         resourceSets: [
@@ -352,10 +358,11 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing valid autosuggest call ', async () => {
-    delete require.cache[require.resolve('../../server/services/location')]
+    const util = require('../../server/util')
+
     const fakeLocationData = () => {
       return {
-        authenticationResultCode: 'ValidCredentials',
+        authenticationResultCode: 'ValidCredentials 7',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
         copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
         resourceSets: [
@@ -436,10 +443,11 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing empty autosuggest call ', async () => {
-    delete require.cache[require.resolve('../../server/services/location')]
+    const util = require('../../server/util')
+
     const fakeLocationData = () => {
       return {
-        authenticationResultCode: 'ValidCredentials',
+        authenticationResultCode: 'ValidCredentials 8',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
         copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
         resourceSets: [
@@ -475,7 +483,8 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing auto suggest no with no query and hence no results', async () => {
-    delete require.cache[require.resolve('../../server/services/location')]
+    const util = require('../../server/util')
+
     const fakeLocationData = () => {
       return {
       }
@@ -498,10 +507,11 @@ lab.experiment('location service test', () => {
   })
 
   lab.test('Check for Bing auto suggest with estimatedTotal = 0', async () => {
-    delete require.cache[require.resolve('../../server/services/location')]
+    const util = require('../../server/util')
+
     const fakeLocationData = () => {
       return {
-        authenticationResultCode: 'ValidCredentials',
+        authenticationResultCode: 'ValidCredentials 9',
         brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
         copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
         resourceSets: [
