@@ -1,0 +1,58 @@
+{
+  "place": {
+    "name": "Station, Coastal",
+    "center": [
+      -3.139090061187744,
+      54.60173034667969
+    ],
+    "bbox": [
+      -3.0994129180908203,
+      54.61249923706055,
+      -3.163532018661499,
+      54.5888671875
+    ],
+    "address": "Keswick, Cumbria",
+    "isEngland": {
+      "is_england": true
+    }
+  },
+  "floods": [
+    {
+      "code": "011TESTC6KC",
+      "key": 174150,
+      "description": "Coastal Station",
+      "quickdialnumber": "302056",
+      "region": "North West",
+      "area": "North",
+      "floodtype": "f",
+      "severity": 2,
+      "severitydescription": "Flood Warning",
+      "warningkey": 106599,
+      "raised": "2019-08-22T14:43:00.000Z",
+      "severitychanged": "2019-08-22T08:26:00.000Z",
+      "messagechanged": "2019-08-22T14:43:00.000Z",
+      "message": "The Lake level remains high following heavy rainfall in the area. The gauge at Lodore is forecast to peak around 1.9m this evening, this warning will remain in force overnight and levels are expected to fall in the early hours of tomorrow morning.  We continue to monitor the situation closely and will update this message if the situation changes."
+    }
+  ],
+  "stations": [
+    {
+      "rloi_id": 5174,
+      "telemetry_id": "751007",
+      "region": "North West",
+      "catchment": "Derwent West Cumbria and Duddon",
+      "wiski_river_name": "River Derwent",
+      "agency_name": "Portinscale",
+      "external_name": "Portinscale",
+      "station_type": "C",
+      "status": "Suspended",
+      "qualifier": "u",
+      "iswales": false,
+      "value": "1.268",
+      "value_timestamp": "2019-08-23T04:30:00.000Z",
+      "value_erred": false,
+      "percentile_5": "1.327",
+      "percentile_95": "0.307"
+    }
+  ],
+  "impacts": []
+}
