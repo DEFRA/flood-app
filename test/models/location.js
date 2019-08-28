@@ -66,9 +66,35 @@ lab.experiment('Outlook model test', () => {
     const viewModel = new ViewModel(warningAndAlert)
 
     const Result = await viewModel
-    console.log(Result)
 
     Code.expect(Result.floodsPrimary).to.equal('1 flood warning is in force . Some flooding is expected in this area.')
     Code.expect(Result.floodsSecondary).to.equal(' and 1 flood alert (some flooding is possible) is  in place in the wider area.')
+  })
+  lab.test('Test alternate primaryStatement with multiple Flood Alert', async () => {
+    const multipleFloodAlerts = data.multipleFloodAlerts
+    const viewModel = new ViewModel(multipleFloodAlerts)
+
+    const Result = await viewModel
+
+    Code.expect(Result.floodsPrimary).to.equal('2 flood alerts are in place . Some flooding is possible in this area.')
+    Code.expect(Result.floodsSecondary).to.equal('.')
+  })
+  lab.test('Test alternate primaryStatement with multiple Flood Warnings', async () => {
+    const multipleFloodWarnings = data.multipleFloodWarnings
+    const viewModel = new ViewModel(multipleFloodWarnings)
+
+    const Result = await viewModel
+
+    Code.expect(Result.floodsPrimary).to.equal('2 flood warnings are in force . Some flooding is expected in this area.')
+    Code.expect(Result.floodsSecondary).to.equal('.')
+  })
+  lab.test('Test alternate primaryStatement with multiple Severe Flood Warnings', async () => {
+    const multipleSevereFloodWarnings = data.multipleSevereFloodWarnings
+    const viewModel = new ViewModel(multipleSevereFloodWarnings)
+
+    const Result = await viewModel
+
+    Code.expect(Result.floodsPrimary).to.equal('2 severe flood warnings are in force . Severe flooding is expected in this area.')
+    Code.expect(Result.floodsSecondary).to.equal('.')
   })
 })

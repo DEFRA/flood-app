@@ -26,7 +26,7 @@
       "area": "North",
       "floodtype": "f",
       "severity": 1,
-      "severitydescription": "Flood Alert",
+      "severitydescription": "Severe Flood Warning",
       "warningkey": 106501,
       "raised": "2019-08-23T08:51:00.000Z",
       "severitychanged": "2019-08-10T07:52:00.000Z",
