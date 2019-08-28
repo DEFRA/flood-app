@@ -26,22 +26,26 @@ lab.experiment('Flood service test', () => {
 
   lab.test('Test for flood warnings', async () => {
     const fakeFloodData = () => {
-      return { floods: [{ code: '013FWFD5',
-        key: 174393,
-        description: 'River Goyt at Whaley Bridge',
-        quickdialnumber: '143052',
-        region: 'North West',
-        area: 'South',
-        floodtype: 'f',
-        severity: 1,
-        severitydescription: 'Severe Flood Warning',
-        warningkey: 106435,
-        raised: '2019-08-04T18:38:00.000Z',
-        severitychanged: '2019-08-01T12:51:00.000Z',
-        messagechanged: '2019-08-04T18:38:00.000Z',
-        message: 'River levels in the River Goyt could still rise rapidly as a result of water potentially flowing from Toddbrook Reservoir on 4th August 2019. \n\nPotential for short lived intense rain showers for this evening (04/08/19) and for a band of rain moving quickly through the area in the early hours of Monday morning (05/08/19). \n\nEvacuation plans have been implemented in Whaley Bridge. \n\nIf you believe that you are in immediate danger, please call 999. Please be aware of your surroundings, keep up to date with the current situation, and avoid using low lying footpaths near local watercourses.',
-        geometry: '{"type":"Point","coordinates":[-1.98390234673153,53.3296569611127]}' }
-      ] }
+      return {
+        floods: [{
+          code: '013FWFD5',
+          key: 174393,
+          description: 'River Goyt at Whaley Bridge',
+          quickdialnumber: '143052',
+          region: 'North West',
+          area: 'South',
+          floodtype: 'f',
+          severity: 1,
+          severitydescription: 'Severe Flood Warning',
+          warningkey: 106435,
+          raised: '2019-08-04T18:38:00.000Z',
+          severitychanged: '2019-08-01T12:51:00.000Z',
+          messagechanged: '2019-08-04T18:38:00.000Z',
+          message: 'River levels in the River Goyt could still rise rapidly as a result of water potentially flowing from Toddbrook Reservoir on 4th August 2019. \n\nPotential for short lived intense rain showers for this evening (04/08/19) and for a band of rain moving quickly through the area in the early hours of Monday morning (05/08/19). \n\nEvacuation plans have been implemented in Whaley Bridge. \n\nIf you believe that you are in immediate danger, please call 999. Please be aware of your surroundings, keep up to date with the current situation, and avoid using low lying footpaths near local watercourses.',
+          geometry: '{"type":"Point","coordinates":[-1.98390234673153,53.3296569611127]}'
+        }
+        ]
+      }
     }
 
     const floodService = require('../../server/services/flood')
