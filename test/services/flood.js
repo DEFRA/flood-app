@@ -3,7 +3,6 @@
 const Lab = require('@hapi/lab')
 const Code = require('code')
 const lab = exports.lab = Lab.script()
-const util = require('../../server/util')
 const sinon = require('sinon')
 
 lab.experiment('Flood service test', () => {
@@ -11,6 +10,8 @@ lab.experiment('Flood service test', () => {
 
   // Use a Sinon sandbox to manage spies, stubs and mocks for each test.
   lab.beforeEach(async () => {
+    delete require.cache[require.resolve('../../server/services/flood.js')]
+    delete require.cache[require.resolve('../../server/util.js')]
     sandbox = await sinon.createSandbox()
   })
 
@@ -24,7 +25,6 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test for flood warnings', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
     const fakeFloodData = () => {
       return { floods: [{ code: '013FWFD5',
         key: 174393,
@@ -56,7 +56,6 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test for outlook', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
     const fakeOutlookData = () => {
       return {
         id: 1105,
@@ -269,9 +268,9 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getFloods endpoint', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
-
     const fakeFloodData = () => { return { getFloods: 'TEST' } }
+
+    const util = require('../../server/util')
 
     sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
 
@@ -284,9 +283,9 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getFloodsWithin endpoint', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
-
     const fakeFloodData = () => { return { getFloodsWithin: 'TEST' } }
+
+    const util = require('../../server/util')
 
     sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
 
@@ -299,9 +298,9 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getFloodArea endpoint', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
-
     const fakeFloodData = () => { return { getFloodArea: 'TEST' } }
+
+    const util = require('../../server/util')
 
     sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
 
@@ -314,9 +313,9 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getOutlook endpoint', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
-
     const fakeFloodData = () => { return { statements: ['TEST'] } }
+
+    const util = require('../../server/util')
 
     sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
 
@@ -329,9 +328,9 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getStationById endpoint', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
-
     const fakeFloodData = () => { return { getStationById: 'TEST' } }
+
+    const util = require('../../server/util')
 
     sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
 
@@ -344,9 +343,9 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getStationsWithin endpoint', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
-
     const fakeFloodData = () => { return { getStationsWithin: 'TEST' } }
+
+    const util = require('../../server/util')
 
     sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
 
@@ -359,9 +358,9 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getStationsUpstreamDownstream endpoint', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
-
     const fakeFloodData = () => { return { getStationsUpstreamDownstream: 'TEST' } }
+
+    const util = require('../../server/util')
 
     sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
 
@@ -374,9 +373,9 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getStationsWithinRadius endpoint', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
-
     const fakeFloodData = () => { return { getStationsWithinRadius: 'TEST' } }
+
+    const util = require('../../server/util')
 
     sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
 
@@ -389,9 +388,9 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getStationTelemetry endpoint', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
-
     const fakeFloodData = () => { return { getStationTelemetry: 'TEST' } }
+
+    const util = require('../../server/util')
 
     sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
 
@@ -404,9 +403,9 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getStationForecastThresholds endpoint', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
-
     const fakeFloodData = () => { return { getStationForecastThresholds: 'TEST' } }
+
+    const util = require('../../server/util')
 
     sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
 
@@ -419,9 +418,9 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getStationForecastData endpoint', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
-
     const fakeFloodData = () => { return { getStationForecastData: 'TEST' } }
+
+    const util = require('../../server/util')
 
     sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
 
@@ -434,9 +433,9 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getStationsGeoJson endpoint', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
-
     const fakeFloodData = () => { return { getStationsGeoJson: 'TEST' } }
+
+    const util = require('../../server/util')
 
     sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
 
@@ -449,9 +448,9 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getIsEngland endpoint', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
-
     const fakeFloodData = () => { return { getIsEngland: 'TEST' } }
+
+    const util = require('../../server/util')
 
     sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
 
@@ -464,9 +463,9 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getImpactData endpoint', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
-
     const fakeFloodData = () => { return { getImpactData: 'TEST' } }
+
+    const util = require('../../server/util')
 
     sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
 
@@ -479,9 +478,9 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getImpactsWithin endpoint', async () => {
-    delete require.cache['/home/developer/GitHub/flood-app/server/services/flood.js']
-
     const fakeFloodData = () => { return { getImpactsWithin: 'TEST' } }
+
+    const util = require('../../server/util')
 
     sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
 

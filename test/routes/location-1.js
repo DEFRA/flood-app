@@ -12,7 +12,6 @@ lab.experiment('Routes test - location - 1', () => {
 
   // Use a Sinon sandbox to manage spies, stubs and mocks for each test.
   lab.beforeEach(async () => {
-    // delete require.cache[require.resolve('../../server')]
     sandbox = await sinon.createSandbox()
     server = Hapi.server({
       port: 3000,
@@ -26,13 +25,6 @@ lab.experiment('Routes test - location - 1', () => {
   })
 
   lab.test('GET /location with no query parameters', async () => {
-    const fakeGetJson = () => {
-      return { test: 'TEST' }
-    }
-
-    const util = require('../../server/util')
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
-
     const locationPlugin = {
       plugin: {
         name: 'location',
@@ -42,14 +34,12 @@ lab.experiment('Routes test - location - 1', () => {
       }
     }
 
-    // await server.register(require('@hapi/inert'))
-    // await server.register(require('@hapi/h2o2'))
-    // await server.register(require('../../server/plugins/views'))
-    // await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
 
     await server.initialize()
+
     // Tests JOI validation
+
     const options = {
       method: 'GET',
       url: '/location'

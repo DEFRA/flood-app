@@ -2,10 +2,8 @@
 
 const Lab = require('@hapi/lab')
 const Hapi = require('@hapi/hapi')
-// const Code = require('code')
 const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
-// const config = require('../../server/config')
 
 lab.experiment('router plugin test', () => {
   let sandbox
@@ -18,10 +16,6 @@ lab.experiment('router plugin test', () => {
       port: 3000,
       host: 'localhost'
     })
-    // await server.register(require('@hapi/inert'))
-    // await server.register(require('@hapi/h2o2'))
-    // await server.register(require('../../server/plugins/views'))
-    // await server.register(require('../../server/plugins/router'))
     await server.initialize()
   })
 
@@ -32,7 +26,6 @@ lab.experiment('router plugin test', () => {
         delete require.cache[key]
       }
     })
-    // delete require.cache[require.resolve('../../server/routes')]
     await server.stop()
     await sandbox.restore()
   })

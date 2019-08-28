@@ -66,7 +66,6 @@ lab.experiment('Outlook model test', () => {
     const viewModel = new ViewModel(warningAndAlert)
 
     const Result = await viewModel
-    console.log(Result)
 
     Code.expect(Result.floodsPrimary).to.equal('1 flood warning is in force . Some flooding is expected in this area.')
     Code.expect(Result.floodsSecondary).to.equal(' and 1 flood alert (some flooding is possible) is  in place in the wider area.')
