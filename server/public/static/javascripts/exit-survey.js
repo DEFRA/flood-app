@@ -28,8 +28,10 @@
   function persistHasGoneToSurvey () {
     Cookies.set(cookieHasGoneToSurvey,
       true,
-      { path: cookiePaths,
-        expires: 365 })
+      {
+        path: cookiePaths,
+        expires: 365
+      })
   }
 
   function persistDismissedAt () {
@@ -37,16 +39,20 @@
     Cookies.set(
       cookieDismissedAt,
       new Date(),
-      { path: cookiePaths,
-        expires: expires })
+      {
+        path: cookiePaths,
+        expires: expires
+      })
   }
 
   function persistFirstRecentVisitAt () {
     var in30Mins = new Date(new Date().getTime() + minsDefiningARecentVisit * 60000)
     Cookies.set(cookieFirstRecentVisitAt,
       new Date(),
-      { path: cookiePaths,
-        expires: in30Mins })
+      {
+        path: cookiePaths,
+        expires: in30Mins
+      })
   }
 
   function showDialogAfterWait (seconds) {

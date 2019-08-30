@@ -2,7 +2,7 @@ class NationalViewModel {
   constructor (options) {
     const { floods, outlook } = options
     Object.assign(this, {
-      pageTitle: `Flood risk for England`
+      pageTitle: 'Flood risk for England'
     }, options)
 
     this.timestamp = Date.now()

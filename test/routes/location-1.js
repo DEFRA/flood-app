@@ -6,7 +6,7 @@ const Code = require('code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 
-lab.experiment('Routes test - home', () => {
+lab.experiment('Routes test - location - 1', () => {
   let sandbox
   let server
 
@@ -17,21 +17,6 @@ lab.experiment('Routes test - home', () => {
       port: 3000,
       host: 'localhost'
     })
-
-    const homePlugin = {
-      plugin: {
-        name: 'home',
-        register: (server, options) => {
-          server.route(require('../../server/routes/home'))
-        }
-      }
-    }
-
-    await server.register(require('@hapi/inert'))
-    await server.register(require('@hapi/h2o2'))
-    await server.register(require('../../server/plugins/views'))
-    await server.register(homePlugin)
-    await server.initialize()
   })
 
   lab.afterEach(async () => {
@@ -39,14 +24,29 @@ lab.experiment('Routes test - home', () => {
     await sandbox.restore()
   })
 
-  lab.test('GET /', async () => {
-    const options = {
-      method: 'GET',
-      url: '/'
+  lab.test('GET /location with no query parameters', async () => {
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
     }
 
+    await server.register(locationPlugin)
+
+    await server.initialize()
+
+    // Tests JOI validation
+
+    const options = {
+      method: 'GET',
+      url: '/location'
+    }
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.headers['content-type']).to.include('text/html')
+    const payload = JSON.parse(response.payload)
+    Code.expect(response.statusCode).to.equal(400)
+    Code.expect(payload.message).to.equal('Invalid request query input')
   })
 })

@@ -15,7 +15,6 @@ lab.experiment('Missing resource test', () => {
   // })
   lab.before(async () => {
     // server = await createServer()
-    // await server.initialize()
     server = await hapi.server({
       port: config.port,
       routes: {
@@ -44,6 +43,7 @@ lab.experiment('Missing resource test', () => {
     await server.register(require('../server/plugins/error-pages'))
     await server.register(require('../server/plugins/full-url'))
     // await server.register(require('../server/plugins/session'))
+    await server.initialize()
   })
 
   // Stop server after the tests.

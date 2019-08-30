@@ -6,7 +6,7 @@ const Code = require('code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 
-lab.experiment('Routes test - home', () => {
+lab.experiment('Routes test - roadmap', () => {
   let sandbox
   let server
 
@@ -18,11 +18,11 @@ lab.experiment('Routes test - home', () => {
       host: 'localhost'
     })
 
-    const homePlugin = {
+    const roadmapPlugin = {
       plugin: {
-        name: 'home',
+        name: 'roadmap',
         register: (server, options) => {
-          server.route(require('../../server/routes/home'))
+          server.route(require('../../server/routes/roadmap'))
         }
       }
     }
@@ -30,19 +30,25 @@ lab.experiment('Routes test - home', () => {
     await server.register(require('@hapi/inert'))
     await server.register(require('@hapi/h2o2'))
     await server.register(require('../../server/plugins/views'))
-    await server.register(homePlugin)
+    await server.register(roadmapPlugin)
     await server.initialize()
   })
 
   lab.afterEach(async () => {
     await server.stop()
     await sandbox.restore()
+    const regex = /.\/server\/models\/./
+    Object.keys(require.cache).forEach((key) => {
+      if (key.match(regex)) {
+        delete require.cache[key]
+      }
+    })
   })
 
-  lab.test('GET /', async () => {
+  lab.test('GET /roadmap', async () => {
     const options = {
       method: 'GET',
-      url: '/'
+      url: '/roadmap'
     }
 
     const response = await server.inject(options)
