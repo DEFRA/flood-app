@@ -23,11 +23,8 @@ async function createServer () {
   await server.register(require('./plugins/full-url'))
   await server.register(require('./plugins/session'))
   await server.register(require('./plugins/data-schedule'))
-
-  if (config.isDev) {
-    await server.register(require('blipp'))
-    await server.register(require('./plugins/logging'))
-  }
+  await server.register(require('blipp'))
+  await server.register(require('./plugins/logging'))
 
   if (config.errbit.postErrors) {
     await server.register({

@@ -8,3 +8,4 @@ rivers/output.json
 rivers/rivers.json
 rivers/stations.json
 coverage
+lcov.info

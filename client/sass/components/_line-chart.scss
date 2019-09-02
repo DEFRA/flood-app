@@ -270,8 +270,9 @@ table.table-levels {
         stroke-width: 2;
         fill: none;
     }
-    .forecast-area { 
-        fill: govuk-colour('grey-3');
+    .forecast-area {
+        fill: govuk-colour("light-grey", $legacy: "grey-3")
+        // fill: govuk-colour('grey-3');
     }
     // Locator
     .locator-point {

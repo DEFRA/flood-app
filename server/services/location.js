@@ -9,8 +9,12 @@ async function find (location) {
 
   let data = await getJson(url, true)
 
+  if (data === undefined) {
+    throw new Error('Invalid data returned from third party location search')
+  }
+
   // Check that the json is relevant
-  if (!data.resourceSets || !data.resourceSets.length) {
+  if (data === null || !data.resourceSets || !data.resourceSets.length) {
     throw new Error('Invalid geocode results (no resourceSets)')
   }
 
