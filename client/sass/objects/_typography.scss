@@ -7,13 +7,8 @@
 .govuk-caption--normal {
     color: $govuk-secondary-text-colour;
 }
-.defra-heading-s-image {
-    @extend .govuk-heading-s;
-    padding:10px !important;
-    border:1px solid $govuk-border-colour;
-    img {
-        display: inline-block;
-        vertical-align: middle;
-        margin-right:5px;
-    }
+.defra-flood-heading-image {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right:2px;
 }

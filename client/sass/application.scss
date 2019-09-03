@@ -9,7 +9,6 @@ $govuk-global-styles: true;
 // Patterns that aren't in Frontend
 @import "patterns/check-your-answers";
 @import "patterns/task-list";
-@import "patterns/related-items";
 
 // Custom patterns that aren't in Frontend or prorotpye kit
 @import "patterns/risk-detail"; // Dan Leech
@@ -37,4 +36,5 @@ $govuk-global-styles: true;
 @import "components/buttons"; // Dan Leech (Button overides)
 @import "components/search-link"; // Dan Leech (Flood warning overview)
 @import "components/modal-dialog"; // https://github.com/edenspiekermann/a11y-dialog
+@import "components/related-items";
 @import "components/contents"; 
