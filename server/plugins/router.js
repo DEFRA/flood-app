@@ -10,7 +10,6 @@ const routes = [].concat(
   require('../routes/public'),
   require('../routes/api/stations.geojson'),
   require('../routes/api/warnings.geojson'),
-  require('../routes/consent'),
   require('../routes/start-page'),
   require('../routes/location-not-england'),
   require('../routes/sms-auto-opt-in-info'),
