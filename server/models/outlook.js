@@ -108,7 +108,7 @@ class Outlook {
 
       // Convert linestrings to polygons
       if (feature.geometry.type === 'LineString') {
-        const buffer = turf.buffer(feature, 3, 'miles')
+        const buffer = turf.buffer(feature, 3, { units: 'miles' })
         const coordinates = buffer.geometry.coordinates
         feature.geometry.type = 'Polygon'
         feature.geometry.coordinates = coordinates
