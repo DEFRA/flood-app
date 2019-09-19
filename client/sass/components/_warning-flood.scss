@@ -86,7 +86,7 @@
 }
 .defra-warning-flood--warning-removed {
     @extend .defra-warning-flood;
-    background-color:govuk-colour('grey-3');
+    background-color:govuk-colour('light-grey');
     .defra-warning-flood__icon:after {
         background-position: 100% 75%;
     }

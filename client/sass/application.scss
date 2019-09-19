@@ -1,10 +1,7 @@
 $govuk-global-styles: true;
 
 // GOV.UK Frontend
-@import "node_modules/govuk-frontend/all";
-
-// Defra Form builder
-@import "node_modules/digital-form-builder-designer/client/index";
+@import "node_modules/govuk-frontend/govuk/all";
 
 //
 // ITCSS

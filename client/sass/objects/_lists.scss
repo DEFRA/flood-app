@@ -8,7 +8,7 @@
     }
     &__group {
         margin-bottom:20px;
-        border-bottom:1px solid govuk-colour('grey-2');
+        border-bottom:1px solid govuk-colour('mid-grey');
         &:last-child {
             margin-bottom:0px;
             border:none;
@@ -79,7 +79,7 @@
             left:8px;
             width:7px;
             height:7px;
-            border:2px solid govuk-colour('grey-2');
+            border:2px solid govuk-colour('mid-grey');
             border-radius: 100%;
             background-color: white;
             @include mq ($from: tablet) {
@@ -102,7 +102,7 @@
         bottom:13px;
         left:12px;
         width:3px;
-        background-color: govuk-colour('grey-2');
+        background-color: govuk-colour('mid-grey');
     }
     &__items--has-relation:after {
         position:absolute;
@@ -113,7 +113,7 @@
         height:1px;
         border-left: 5px solid transparent;
         border-right: 5px solid transparent;
-        border-top: 5px solid govuk-colour('grey-2');
+        border-top: 5px solid govuk-colour('mid-grey');
     }
     &__item {
         padding-bottom:10px;
@@ -170,7 +170,7 @@
         &--impact {
             margin-bottom:15px;
             padding-bottom:15px;
-            border-bottom:1px solid govuk-colour('grey-2');
+            border-bottom:1px solid govuk-colour('mid-grey');
         }
         &--impact:last-child {
             border:none;
@@ -220,8 +220,8 @@
             background-color: govuk-colour('red');
         }
         &--low dt:after {
-            border-color: govuk-colour('grey-2');
-            background-color: govuk-colour('grey-2');
+            border-color: govuk-colour('mid-grey');
+            background-color: govuk-colour('mid-grey');
         }
     }
 }
