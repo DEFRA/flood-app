@@ -1,4 +1,4 @@
-const joi = require('joi')
+const joi = require('@hapi/joi')
 
 const defaultPort = 3009
 
@@ -38,7 +38,7 @@ const config = {
   serviceUrl: process.env.FLOOD_APP_SERVICE_URL,
   geoserverUrl: process.env.FLOOD_APP_GEOSERVER_URL,
   rainfallApiUrl: process.env.FLOOD_APP_RAINFALL_API_URL,
-  bingKey: process.env.FLOOD_APP_BING_KEY,
+  bingKey: process.env.FLOOD_APP_BING_KEY || 'TEST',
   httpsProxy: process.env.HTTPS_PROXY,
   httpTimeoutMs: process.env.FLOOD_APP_HTTP_TIMEOUT,
   gaAccId: process.env.FLOOD_APP_GA_ID,

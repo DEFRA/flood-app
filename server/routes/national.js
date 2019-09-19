@@ -1,13 +1,17 @@
 const floodService = require('../services/flood')
-const ViewModel = require('../models/views/national')
+const NationalViewModel = require('../models/views/national')
 
 module.exports = {
   method: 'GET',
   path: '/national',
   handler: async (request, h) => {
-    const { floods } = await floodService.getFloods()
-    const outlook = await floodService.getOutlook()
-    const model = new ViewModel({ floods, outlook })
+    // get the cached floods
+    const floods = floodService.floods
+
+    // get the cached outlook
+    const outlook = floodService.outlook
+
+    const model = new NationalViewModel({ floods, outlook })
 
     return h.view('national', { model })
   }

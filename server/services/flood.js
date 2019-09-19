@@ -2,17 +2,42 @@ const util = require('../util')
 const config = require('../config')
 const serviceUrl = config.serviceUrl
 
-// Temporary statement cache
-let cachedOutlook = null
-
-const setOutlook = (outlook) => {
-  cachedOutlook = outlook
-  // Clear after 5 mins
-  setTimeout(() => { cachedOutlook = null }, 5 * 60 * 1000)
-  return outlook
-}
+// cached flood data
+const Floods = require('../models/floods')
+const Outlook = require('../models/outlook')
+let floods = null
+let outlook = null
+let stationsGeojson = null
 
 module.exports = {
+  // ############ Internals ################
+  // get cached floods object
+  get floods () {
+    return floods
+  },
+  // set the cached floods object
+  set floods (data) {
+    floods = data && new Floods(data)
+  },
+  // get cached outlook object
+  get outlook () {
+    return outlook
+  },
+  // set cached outlook object
+  set outlook (data) {
+    outlook = data && new Outlook(data)
+  },
+
+  get stationsGeojson () {
+    return stationsGeojson
+  },
+
+  set stationsGeojson (data) {
+    stationsGeojson = data
+  },
+
+  // ############### Externals ################
+  // get floods from service (should only be used by serverside scheduled job)
   async getFloods () {
     const url = `${serviceUrl}/floods`
     return util.getJson(url)
@@ -40,13 +65,9 @@ module.exports = {
 
     // Until we get the FGS feed sorted and returned from
     // the service, use a temporary cache as this call is slow.
-    if (cachedOutlook) {
-      return Promise.resolve(cachedOutlook)
-    } else {
-      const url = `https://api.ffc-environment-agency.fgs.metoffice.gov.uk/api/public/statements`
-      const result = await util.getJson(url, true)
-      return setOutlook(result.statements[0])
-    }
+    const url = 'https://api.ffc-environment-agency.fgs.metoffice.gov.uk/api/public/statements'
+    const result = await util.getJson(url, true)
+    return result.statements[0]
   },
 
   async getStationById (id, direction) {
@@ -61,7 +82,7 @@ module.exports = {
 
   async getStationsUpstreamDownstream (id, direction) {
     const url = `${serviceUrl}/stations-upstream-downstream/${id}/${direction}`
-    let result = await util.getJson(url)
+    const result = await util.getJson(url)
     return result
   },
 
@@ -82,6 +103,11 @@ module.exports = {
 
   async getStationForecastData (id) {
     const url = `${serviceUrl}/station/${id}/forecast/data`
+    return util.getJson(url)
+  },
+
+  getStationsGeoJson () {
+    const url = config.geoserverUrl + '/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&maxFeatures=10000&outputFormat=application/json&srsName=EPSG:4326'
     return util.getJson(url)
   },
 

@@ -1,13 +1,13 @@
 const moment = require('moment-timezone')
 const HttpsProxyAgent = require('https-proxy-agent')
 const config = require('./config')
-const wreck = require('wreck').defaults({
+const wreck = require('@hapi/wreck').defaults({
   timeout: config.httpTimeoutMs
 })
 
 let wreckExt
 if (config.httpsProxy) {
-  wreckExt = require('wreck').defaults({
+  wreckExt = require('@hapi/wreck').defaults({
     timeout: config.httpTimeoutMs,
     agent: new HttpsProxyAgent(config.httpsProxy)
   })

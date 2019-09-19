@@ -11,15 +11,7 @@ module.exports = [{
   path: '/assets/all.js',
   options: {
     handler: {
-      file: 'node_modules/govuk-frontend/all.js'
-    }
-  }
-}, {
-  method: 'GET',
-  path: '/assets/designer.js',
-  options: {
-    handler: {
-      file: 'node_modules/digital-form-builder-designer/dist/designer.js'
+      file: 'node_modules/govuk-frontend/govuk/all.js'
     }
   }
 }, {
@@ -31,7 +23,7 @@ module.exports = [{
         path: [
           'server/public/static',
           'server/public/build',
-          'node_modules/govuk-frontend/assets',
+          'node_modules/govuk-frontend/govuk/assets',
           'node_modules/accessible-autocomplete/dist',
           'node_modules/nunjucks/browser'
         ]

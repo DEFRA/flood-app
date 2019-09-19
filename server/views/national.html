@@ -82,10 +82,10 @@
     <h2 class="govuk-heading-m govuk-!-margin-top-4">
       Flood risk for the next 5 days
     </h2>
-    {{ model.outlook | safe }}
+    {{ model.outlook.full | safe }}
     <p class="govuk-body-s">
-      <time class="form-hint" title="{{model.timestampOutlook | formatDate}}"
-        datetime="{{ model.timestampOutlook }}">Updated {{ model.timestampOutlook | formatDate }}</time>
+      <time class="form-hint" title="{{model.outlook.timestampOutlook | formatDate}}"
+        datetime="{{ model.outlook.timestampOutlook }}">Updated {{ model.outlook.timestampOutlook | formatDate }}</time>
     </p>
 
     {% if model.hasOutlookConcern %}

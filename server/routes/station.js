@@ -1,5 +1,5 @@
-const Joi = require('joi')
-const boom = require('boom')
+const Joi = require('@hapi/joi')
+const boom = require('@hapi/boom')
 const floodService = require('../services/flood')
 const ViewModel = require('../models/views/station')
 const additionalWelshStations = [4162, 4170, 4173, 4174, 4176]
@@ -51,7 +51,6 @@ module.exports = [{
       } else {
         // Non-forecast Station
         const model = new ViewModel({ station, telemetry, impacts })
-
         model.referer = request.headers.referer
 
         return h.view('station', { model })

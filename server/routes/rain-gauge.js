@@ -1,16 +1,16 @@
 const rainService = require('../services/rain')
 const config = require('../config')
-const Joi = require('joi')
-const boom = require('boom')
+const Joi = require('@hapi/joi')
+const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/rain-gauge')
 const HttpsProxyAgent = require('https-proxy-agent')
-const wreck = require('wreck').defaults({
+const wreck = require('@hapi/wreck').defaults({
   timeout: config.restClientTimeoutMillis
 })
 
 let wreckExt
 if (config.httpsProxy) {
-  wreckExt = require('wreck').defaults({
+  wreckExt = require('@hapi/wreck').defaults({
     timeout: config.httpTimeoutMs,
     agent: new HttpsProxyAgent(config.httpsProxy)
   })
@@ -55,7 +55,7 @@ module.exports = [{
       readingsUrl += '&_limit=' + 25
     }
     try {
-      const thisWreck = wreckExt ? wreckExt : wreck
+      const thisWreck = wreckExt || wreck
       // const { res, payload } = await wreck.get(readingsUrl, { json: true })
       const { res, payload } = await thisWreck.get(readingsUrl, { json: true })
       payload.label = label
@@ -66,9 +66,9 @@ module.exports = [{
       }
 
       let latestDailyRainfallTotal = 0
-      let sixHourArray = []
-      let dayArray = []
-      let monthArray = []
+      const sixHourArray = []
+      const dayArray = []
+      const monthArray = []
       let cumHourlyValue = 0
       let cumDailyValue = 0
       let latestDate = ''

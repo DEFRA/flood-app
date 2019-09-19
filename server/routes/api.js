@@ -1,13 +1,13 @@
 const config = require('../config')
 const joi = require('joi')
 const HttpsProxyAgent = require('https-proxy-agent')
-const wreck = require('wreck').defaults({
+const wreck = require('@hapi/wreck').defaults({
   timeout: config.restClientTimeoutMillis
 })
 
 let wreckExt
 if (config.httpsProxy) {
-  wreckExt = require('wreck').defaults({
+  wreckExt = require('@hapi/wreck').defaults({
     timeout: config.httpTimeoutMs,
     agent: new HttpsProxyAgent(config.httpsProxy)
   })
@@ -61,8 +61,8 @@ module.exports = [{
       const thisWreck = wreckExt || wreck
       const { payload } = await thisWreck.get(url, { json: true })
       const geojsonObject = {
-        'type': 'FeatureCollection',
-        'features': [
+        type: 'FeatureCollection',
+        features: [
         ]
       }
       if (payload.items === undefined || payload.items.length === 0) {
@@ -71,19 +71,19 @@ module.exports = [{
       }
       for (let i = 0; i < payload.items.length; i++) {
         geojsonObject.features.push({
-          'type': 'Feature',
-          'id': 'rain.' + payload.items[i].stationReference,
-          'properties': {
-            'label': payload.items[i].label,
-            'stationReference': payload.items[i].stationReference,
-            'gridRef': payload.items[i].gridReference,
-            'value': 0,
-            'latestDate': momentDate,
-            'stationDetails': payload.items[i]['@id']
+          type: 'Feature',
+          id: 'rain.' + payload.items[i].stationReference,
+          properties: {
+            label: payload.items[i].label,
+            stationReference: payload.items[i].stationReference,
+            gridRef: payload.items[i].gridReference,
+            value: 0,
+            latestDate: momentDate,
+            stationDetails: payload.items[i]['@id']
           },
-          'geometry': {
-            'type': 'Point',
-            'coordinates': [
+          geometry: {
+            type: 'Point',
+            coordinates: [
               payload.items[i].long,
               payload.items[i].lat
             ]
@@ -116,25 +116,25 @@ module.exports = [{
 
     try {
       const geojsonObject = {
-        'type': 'FeatureCollection',
-        'features': [
+        type: 'FeatureCollection',
+        features: [
         ]
       }
       for (let i = 0; i < impacts.length; i++) {
         var obsDate = impacts[i].obsfloodmonth && impacts[i].obsfloodyear ? '(' + impacts[i].obsfloodmonth + ' ' + impacts[i].obsfloodyear + ')' : ''
         geojsonObject.features.push({
-          'type': 'Feature',
-          'id': 'impacts.' + impacts[i].impactid,
-          'properties': {
-            'shortName': impacts[i].shortname,
-            'description': impacts[i].description,
-            'stationId': impacts[i].rloiid,
-            'impactId': impacts[i].impactid,
-            'stationName': impacts[i].gauge,
-            'value': impacts[i].value,
-            'obsDate': obsDate
+          type: 'Feature',
+          id: 'impacts.' + impacts[i].impactid,
+          properties: {
+            shortName: impacts[i].shortname,
+            description: impacts[i].description,
+            stationId: impacts[i].rloiid,
+            impactId: impacts[i].impactid,
+            stationName: impacts[i].gauge,
+            value: impacts[i].value,
+            obsDate: obsDate
           },
-          'geometry': JSON.parse(impacts[i].coordinates)
+          geometry: JSON.parse(impacts[i].coordinates)
         })
       }
       return geojsonObject

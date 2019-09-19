@@ -1,5 +1,5 @@
-const joi = require('joi')
-const boom = require('boom')
+const joi = require('@hapi/joi')
+const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/target-area')
 const floodService = require('../services/flood')
 
