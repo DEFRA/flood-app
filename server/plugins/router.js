@@ -16,7 +16,10 @@ const routes = [].concat(
   require('../routes/what-to-do-in-a-flood'),
   require('../routes/plan-ahead-for-flooding'),
   require('../routes/what-happens-after-a-flood'),
-  require('../routes/recovering-after-a-flood')
+  require('../routes/recovering-after-a-flood'),
+  require('../routes/warnings'),
+  require('../routes/levels'),
+  require('../routes/impacts')
 )
 
 module.exports = {
