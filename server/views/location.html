@@ -2,31 +2,27 @@
 
 {% block content %}
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
+  <div class="govuk-grid-column-two-thirds">
     <nav class="govuk-!-margin-bottom-7">
       <p>
         <a href="/">Change location</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/national">National view</a>
       </p>
     </nav>
+    <h1 class="govuk-heading-xl">
+      Flood risk: {{ model.location }}
+    </h1>
   </div>
 </div>
 
-<!--<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-7">-->
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
-      Flood risk: {{ model.location }}
-    </h1>
-    <p class="govuk-body-s govuk-!-margin-bottom-7">Updated: <time datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time></p>
-
     <!-- Flood alerts or warnings in force -->
     {% if model.hasActiveFloods %}
-      <div class="defra-warning-flood defra-warning-flood--{{model.highestSeverity.hash}}">
-        <span class="defra-warning-flood__icon">
+      <div class="defra-flood-status defra-flood-status--{{model.highestSeverity.hash}}">
+        <span class="defra-flood-status__icon">
             <span class="govuk-visually-hidden">{{model.highestSeverity.title}}</span>
         </span>
-        <div class="defra-warning-flood__text">
+        <div class="defra-flood-status__text">
           <strong>
             {{model.highestSeverity.subTitle}}
           </strong>
@@ -37,10 +33,14 @@
       </p>
     {% else %}
     <!-- No alerts or warnings in force -->
-    <div class="govuk-inset-text">
-      There are currently no flood warnings or alerts in force in this area.
+    <div class="defra-flood-status">
+      <div class="defra-flood-status__text">
+        There are currently no flood warnings or alerts in force in this area.
+      </div>
     </div>
     {% endif %}
+
+    <p class="govuk-body-s govuk-!-margin-bottom-4">Updated <time datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time></p>
 
     {% if ( model.activeImpacts | length > 0 ) %}
     <p class="govuk-body">Historic records show {{ model.activeImpacts.length }} flood impact(s) in this area when river levels reached their present height.</p>

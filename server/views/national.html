@@ -3,31 +3,44 @@
 {% block content %}
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
+  <div class="govuk-grid-column-two-thirds">
     <nav class="govuk-!-margin-bottom-7">
       <p class="govuk-body">
         <a href="/">Check flood risk near you</a>
       </p>
     </nav>
+    <h1 class="govuk-heading-xl">
+      Flood risk for England
+    </h1>
   </div>
 </div>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
-      Flood risk for England
-    </h1>
-    <p class="govuk-body-s govuk-!-margin-bottom-7">Updated: <time class="form-hint" title="{{model.timestamp | formatDate}}" datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time></p>
+    <div class="defra-flood-status defra-flood-status--flood-alert">
+      <span class="defra-flood-status__icon"></span>
+      <div class="defra-flood-status__text">
+        <strong>
+          <a href="/alerts-and-warnings#flood-alerts">
+            4 flood alerts in place
+          </a>
+        </strong>
+      </div>
+    </div>
+    <p class="govuk-body">
+      <a href="/alerts-and-warnings#flood-warnings-removed">2 flood warnings removed</a> within the last 24 hours.
+    </p>
+    <p class="govuk-body-s govuk-!-margin-bottom-4">Updated <time class="form-hint" title="{{model.timestamp | formatDate}}" datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time></p>
 
     {% if model.floods.length %}
       {% for group in model.groups %}
         {% if group.floods %}
           {% if group.id < 4 %}
-          <div class="defra-warning-flood defra-warning-flood--{{ group.severity.hash }}">
-            <span class="defra-warning-flood__icon"></span>
-            <div class="defra-warning-flood__text">
+          <div class="defra-flood-status defra-flood-status--{{ group.severity.hash }}">
+            <span class="defra-flood-status__icon"></span>
+            <div class="defra-flood-status__text">
               <strong>
-                <a href="/flood-warnings#{{ group.severity.hash }}s">
+                <a href="/alerts-and-warnings#{{ group.severity.hash }}s">
                   {{ group.title | lower }} in place
                 </a>
               </strong>
@@ -35,13 +48,13 @@
           </div>
           {% else %}
           <p class="govuk-body">
-            <a href="">{{ group.title | lower }}</a> within the last 24 hours.
+            <a href="/alerts-and-warnings#{{ group.severity.hash }}s">{{ group.title | lower }}</a> within the last 24 hours.
           </p>
           {% endif %}
         {% endif %}
       {% endfor %}
     {% else %}
-      <p class="govuk-body">There are currently no flood warnings or alerts in force.</p>
+      <!--<p class="govuk-body">There are currently no flood warnings or alerts in force.</p>-->
     {% endif %}
 
     <!--
