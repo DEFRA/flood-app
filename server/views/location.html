@@ -35,12 +35,14 @@
     <!-- No alerts or warnings in force -->
     <div class="defra-flood-status">
       <div class="defra-flood-status__text">
-        There are currently no flood warnings or alerts in force in this area.
+        There are currently no flood warnings or alerts in place in this area.
       </div>
     </div>
     {% endif %}
 
-    <p class="govuk-body-s govuk-!-margin-bottom-4">Updated <time datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time></p>
+    <p class="defra-updated">
+      Updated at <time datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time>
+    </p>
 
     {% if ( model.activeImpacts | length > 0 ) %}
     <p class="govuk-body">Historic records show {{ model.activeImpacts.length }} flood impact(s) in this area when river levels reached their present height.</p>
