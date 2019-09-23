@@ -22,9 +22,10 @@
       <div class="defra-flood-status__text">
         <strong>
           <a href="/alerts-and-warnings#flood-warnings">
-            2 flood warnings in place
+            3 flood warnings in place
           </a>
         </strong>
+        <span>Flooding is expected</span>
       </div>
     </div>
     <div class="defra-flood-status defra-flood-status--flood-alert">
@@ -32,16 +33,17 @@
       <div class="defra-flood-status__text">
         <strong>
           <a href="/alerts-and-warnings#flood-alerts">
-            4 flood alerts in place
+            1 flood alerts in place
           </a>
         </strong>
+        <span>Flooding is possible</span>
       </div>
     </div>
+    <p class="govuk-body">
+      <a href="/alerts-and-warnings#flood-warnings-removed">1 flood warning removed</a> within the last 24 hours.
+    </p>
     <p class="defra-updated">
       Updated at <time class="form-hint" title="{{model.timestamp | formatDate}}" datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time>
-    </p>
-    <p class="govuk-body">
-      <a href="/alerts-and-warnings#flood-warnings-removed">2 flood warnings removed</a> within the last 24 hours.
     </p>
 
     {% if model.floods.length %}
