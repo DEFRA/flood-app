@@ -17,26 +17,28 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <div class="defra-flood-status defra-flood-status--flood-warning">
-      <span class="defra-flood-status__icon"></span>
-      <div class="defra-flood-status__text">
-        <strong>
-          <a href="/alerts-and-warnings#flood-warnings">
-            3 flood warnings in place
-          </a>
-        </strong>
-        <span>Flooding is expected</span>
+    <div class="defra-flood-status">
+      <div class="defra-flood-status-item defra-flood-status-item--flood-warning">
+        <span class="defra-flood-status-item__icon"></span>
+        <div class="defra-flood-status-item__text">
+          <strong>
+            <a href="/alerts-and-warnings#flood-warnings">
+              3 flood warnings in place
+            </a>
+          </strong>
+          <span>Flooding is expected</span>
+        </div>
       </div>
-    </div>
-    <div class="defra-flood-status defra-flood-status--flood-alert">
-      <span class="defra-flood-status__icon"></span>
-      <div class="defra-flood-status__text">
-        <strong>
-          <a href="/alerts-and-warnings#flood-alerts">
-            1 flood alerts in place
-          </a>
-        </strong>
-        <span>Flooding is possible</span>
+      <div class="defra-flood-status-item defra-flood-status-item--flood-alert">
+        <span class="defra-flood-status-item__icon"></span>
+        <div class="defra-flood-status-item__text">
+          <strong>
+            <a href="/alerts-and-warnings#flood-alerts">
+              1 flood alert in place
+            </a>
+          </strong>
+          <span>Flooding is possible</span>
+        </div>
       </div>
     </div>
     <p class="govuk-body">
@@ -50,9 +52,9 @@
       {% for group in model.groups %}
         {% if group.floods %}
           {% if group.id < 4 %}
-          <div class="defra-flood-status defra-flood-status--{{ group.severity.hash }}">
-            <span class="defra-flood-status__icon"></span>
-            <div class="defra-flood-status__text">
+          <div class="defra-flood-status-item defra-flood-status-item--{{ group.severity.hash }}">
+            <span class="defra-flood-status-item__icon"></span>
+            <div class="defra-flood-status-item__text">
               <strong>
                 <a href="/alerts-and-warnings#{{ group.severity.hash }}s">
                   {{ group.title | lower }} in place

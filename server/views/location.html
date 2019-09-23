@@ -17,12 +17,13 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <!-- Flood alerts or warnings in force -->
-    {% if model.hasActiveFloods %}
-      <div class="defra-flood-status defra-flood-status--{{model.highestSeverity.hash}}">
-        <span class="defra-flood-status__icon">
-            <span class="govuk-visually-hidden">{{model.highestSeverity.title}}</span>
+    <div class="defra-flood-status">
+      {% if model.hasActiveFloods %}
+      <div class="defra-flood-status-item defra-flood-status-item--{{model.highestSeverity.hash}}">
+        <span class="defra-flood-status-item__icon">
+          <span class="govuk-visually-hidden">{{model.highestSeverity.title}}</span>
         </span>
-        <div class="defra-flood-status__text">
+        <div class="defra-flood-status-item__text">
           <strong>
             {{model.highestSeverity.subTitle}}
           </strong>
@@ -31,11 +32,12 @@
       <p class="govuk-body">
         {{ model.floodsPrimary | safe }}{{ model.floodsSecondary | safe }}
       </p>
-    {% else %}
-    <!-- No alerts or warnings in force -->
-    <div class="defra-flood-status">
-      <div class="defra-flood-status__text">
-        There are currently no flood warnings or alerts in place in this area.
+      {% else %}
+      <!-- No alerts or warnings in force -->
+      <div class="defra-flood-status-item">
+        <div class="defra-flood-status-item__text">
+          No flood warnings or alerts currently in place in this area.
+        </div>
       </div>
     </div>
     {% endif %}

@@ -11,24 +11,27 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
-      {% if model.flood %}
-      {{ model.severity.title }}: {{model.area.name}}
-      {% else %}
-      {{model.area.name}} flood risk area
-      {% endif %}
+    <h1 class="govuk-heading-xl">
+      Flood risk area: {{ model.area.name }}
     </h1>
-    {% if model.flood %}
-    <p class="govuk-body-s govuk-!-margin-bottom-7">Updated:
-      {% if model.severity.isActive %}
-      <time datetime="{{model.flood.severityChanged}}">{{model.flood.severityChanged | formatDate}}</time>
-      {% else %}
-      <time datetime="{{model.flood.messageChanged}}">{{model.flood.messageChanged | formatDate}}</time>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="defra-flood-status">
+      {% if model.flood %}
+      {% if model.flood.severity < 4 %}
+      <p>Status</p>
       {% endif %}
-    </p>
-    {% else %}
-    <p class="govuk-!-margin-top-7">No flood alert or warning currently in force.</p>
-    {% endif %}
+      {% else %}
+      <div class="defra-flood-status-item">
+        <div class="defra-flood-status-item__text">
+          No flood alert or warning currently in place
+        </div>
+      </div>
+      {% endif %}
+    </div>
 
     <!--<p class="govuk-body-l govuk-!-margin-bottom-2">{{model.area.description}}</p>-->
 
@@ -45,23 +48,8 @@
       <p class="govuk-body">{{model.flood.message}}</p>
     {% endif %}
 
-    <div class="defra-app-map">
-      <div class="defra-app-map__container">
-        <figure class="map" id="map-live">
-          <div class="map__container">
-            <div class="map__container-inner"></div>
-          </div>
-          <figcaption class="govuk-visually-hidden">Flood warnings and river and sea levels</figcaption>
-        </figure>
-      </div>
-    </div>
-
-    {% if model.flood %}
-    <p class="govuk-body">Could this information be better? <a href="/target-area/{{model.area.code}}/feedback">Tell us how to improve it</a>.</p>
-    {% endif %}
-
     {% if model.flood and model.severity.isActive %}
-    <div class="govuk-inset-text">
+    <p class="govuk-body">
       {% if model.severity.hash == 'severe-flood-warning' %}
       You <a href="/what-to-do-in-a-flood/getting-a-severe-flood-warning">must act now</a> if you live in this area.
       {% elif model.severity.hash == 'flood-warning' %}
@@ -69,8 +57,22 @@
       {% else %}
       <a href="/what-to-do-in-a-flood/getting-a-flood-alert">Be prepared</a> if you live in this area
       {% endif %}
-    </div>
+    </p>
     {% endif %}
+
+    {% if model.flood %}
+    <p class="govuk-body">Could this information be better? <a href="/target-area/{{model.area.code}}/feedback">Tell us how to improve it</a>.</p>
+    {% endif %}
+
+    <p class="defra-updated">
+      Updated at {% if model.severity.isActive %}<time datetime="{{model.flood.severityChanged}}">{{model.flood.severityChanged | formatDate}}</time>{% else %}<time datetime="{{model.flood.messageChanged}}">{{model.flood.messageChanged | formatDate}}</time>{% endif %}
+    </p>
+
+    <button class="defra-button-map govuk-!-margin-bottom-4">View map of flood risk area</button>
+
+    <p class="govuk-body">
+      Some water levels of the <a href="/river-and-sea-levels?river=river-derwent">River Derwent</a> are currently high.
+    </p>
 
     <h2 class="govuk-heading-m">Other ways to check your current flood risk</h2>
     <p class="govuk-body"><a href="https://www.gov.uk/find-local-council">Contact your local council</a> if you are not sure of the source of flooding.</p>
@@ -119,6 +121,12 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     {% include "partials/social.html" %}
+  </div>
+</div>
+
+<div class="map" id="map-live">
+  <div class="map__container">
+    <div class="map__container-inner"></div>
   </div>
 </div>
 
