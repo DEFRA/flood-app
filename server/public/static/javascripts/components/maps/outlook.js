@@ -22,7 +22,7 @@
     })
 
     var geoJson = new window.ol.format.GeoJSON()
-    var outlookGeoJson = flood.model.geoJson
+    var outlookGeoJson = flood.model.outlook._geoJson
 
     var areasOfConcernFeatures = geoJson.readFeatures(outlookGeoJson, {
       dataProjection: 'EPSG:4326',
@@ -95,12 +95,12 @@
     // Add map view button
     var mapButton = document.createElement('button')
     mapButton.innerText = 'View map showing risk areas'
-    mapButton.className = 'defra-button-map'
+    mapButton.className = 'defra-button-map govuk-!-margin-bottom-4'
     mapButton.addEventListener('click', function (e) {
       e.preventDefault()
       container.show()
     })
-    document.getElementById(elementId).closest('.app-map').prepend(mapButton)
+    document.getElementById(elementId).parentNode.insertBefore(mapButton, document.getElementById(elementId))
 
     var outlookControl = container.element.querySelector('.map__outlook-control')
     var outlookButtons = outlookControl.querySelectorAll('button')

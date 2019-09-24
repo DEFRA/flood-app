@@ -1,13 +1,12 @@
 class ViewModel {
   constructor (options) {
-    const { floods, outlook } = options
+    const { floods } = options
     Object.assign(this, {
-      pageTitle: 'Flood risk for England'
+      pageTitle: 'Flood alerts and warnings'
     }, options)
 
     this.timestamp = Date.now()
     this.floods = floods
-    this.outlook = outlook
   }
 }
 

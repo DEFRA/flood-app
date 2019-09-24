@@ -1,5 +1,5 @@
 const floodService = require('../services/flood')
-const NationalViewModel = require('../models/views/national')
+const ViewModel = require('../models/views/national')
 
 module.exports = {
   method: 'GET',
@@ -11,7 +11,7 @@ module.exports = {
     // get the cached outlook
     const outlook = floodService.outlook
 
-    const model = new NationalViewModel({ floods, outlook })
+    const model = new ViewModel({ floods, outlook })
 
     return h.view('national', { model })
   }
