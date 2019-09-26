@@ -32,7 +32,7 @@
         <span class="defra-flood-status-item__icon"></span>
         <div class="defra-flood-status-item__text">
           <strong>
-            <a href="/alerts-and-warnings#{{ group.severity.hash }}s">
+            <a href="/alerts-and-warnings#{{ group.severity.pluralisedHash }}">
               {{ group.title | lower }}
             </a>
           </strong>
@@ -41,7 +41,7 @@
       </div>
       {% else %}
       <p class="defra-flood-status__text">
-        <a href="/alerts-and-warnings#flood-warnings-removed">1 flood warning removed</a> within the last 24 hours.
+        <a href="/alerts-and-warnings#{{ group.severity.pluralisedHash }}">{{ group.title | lower }}</a> {{ group.severity.subTitle }}
       </p>
       {% endif %}
       {% endif %}

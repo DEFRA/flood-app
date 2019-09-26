@@ -35,6 +35,22 @@ class ViewModel {
       const highestSeverityId = Math.min(...floods.map(flood => flood.severity))
       const highestSeverity = severity[highestSeverityId - 1]
 
+      /*
+      1st sentence single
+
+      A severe flood warning is in force for Keswick campsite - danger to life.
+      A flood warning is in place for Keswick campsite - flooding is expected.
+      A flood alert is in place for Upper Derwent valley where some flooding is possible.
+      The flood warning for Cockermouth centre has been removed.
+      
+      1st sentence multiple or remaining sentence
+      
+      3 severe flood warnings are|is in force - danger to life.
+      3 flood warnings are|is in place - flooding is expected.
+      2 flood alerts are|is in place in the wider area where some flooding is possible.
+      2 flood warnings have|has been removed.
+      */
+
       const primaryGroup = groupedFloods[0].floods
       const primaryList = primaryGroup.map((flood, i) => {
         return `${primaryGroup.length > 1 && i === primaryGroup.length - 1 ? 'and ' : ''}${primaryGroup.length > 0 ? `<a href="/target-area/${primaryGroup[i].code}">${primaryGroup[i].description}</a>` : ''}`

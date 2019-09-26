@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <nav class="govuk-!-margin-bottom-7">
@@ -29,9 +30,7 @@
           </strong>
         </div>
       </div>
-      <p class="govuk-body">
-        {{ model.floodsPrimary | safe }}{{ model.floodsSecondary | safe }}
-      </p>
+      <p class="govuk-body">Summary...</p>
       {% else %}
       <!-- No alerts or warnings in force -->
       <div class="defra-flood-status-item">
@@ -68,9 +67,9 @@
     <p class="govuk-body">
       {% if model.hasHighLevels %}
         {% if model.hasActiveFloods %}
-        <a href="/river-and-sea-levels?q=">View river and sea levels in this area</a> that are currently above typical range.
+        <a href="/river-and-sea-levels?q=">View river and sea levels in this area</a>.
         {% else %}
-        However flooding is possible as some <a href="/river-and-sea-levels?q=">river and sea levels in this area</a> are currently above typical range. 
+        However some <a href="/river-and-sea-levels?q=">river and sea levels in this area</a> are currently high. 
         {% endif %}
       {% else %}
       River and sea levels are regularly checked by a network of monitoring stations. These levels can help you understand flood risk now and in the next few days. <a href="/river-and-sea-levels?q=">View river and sea levels in this area</a>.

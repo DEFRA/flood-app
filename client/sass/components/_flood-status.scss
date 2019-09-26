@@ -60,7 +60,7 @@
         }
     }
 }
-.defra-flood-status-item--severe-flood-warning {
+.defra-flood-status-item--severe {
     background-color: #e3000f;
     border-color:#e3000f;
     color:white;
@@ -80,25 +80,27 @@
         background-color: white;
     }
 }
-.defra-flood-status-item--flood-warning {
+.defra-flood-status-item--warning {
     background-color: mix(white, #e3000f, 80%);
     border-color:#e3000f;
     .defra-flood-status-item__icon:after {
         background-position: 100% 25%;
     }
 }
-.defra-flood-status-item--flood-alert {
+.defra-flood-status-item--alert {
     background-color: mix(white, #f18700, 80%);
     border-color:#f18700;
     .defra-flood-status-item__icon:after {
         background-position: 100% 50%;
     }
 }
-.defra-flood-status-item--warning-removed {
+/*
+.defra-flood-status-item--removed {
     .defra-flood-status-item__icon:after {
         background-position: 100% 75%;
     }
 }
+*/
 .defra-flood-status__text {
     @extend .govuk-body;
     @include govuk-responsive-margin(4, 'top');

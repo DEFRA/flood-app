@@ -3,8 +3,6 @@ const { groupBy } = require('../util')
 
 class Floods {
   constructor (data) {
-    const active = data.floods.filter(item => item.severity < 4)
-    this._hasActiveFloods = !!active.length
     this._floods = data
     const grouped = groupBy(data.floods, 'severity')
     this._groups = severity.map(item => {
@@ -37,6 +35,7 @@ class Floods {
         }
       }
     })
+    this._count = data.floods.length
   }
 
   get floods () {

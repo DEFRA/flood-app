@@ -41,20 +41,25 @@
         <ul class="defra-flood-list">
             {% for group in model.floods.groups %}
             {% if group.floods %}
-            <li id="{{ group.severity.hash }}s" class="defra-flood-list__group">
+            <li id="{{ group.severity.pluralisedHash }}" class="defra-flood-list__group">
                 <span class="defra-flood-list__group-title">
                     {{ group.severity.pluralisedTitle }}
                     <span>{{ group.severity.subTitle }}</span>
                 </span>
                 <ul class="defra-flood-list__items defra-flood-list__items--warnings">
                     {% for item in group.floods %}
-                    <li class="defra-flood-list__item defra-flood-list__item--{{ group.severity.name }}">
+                    <li class="defra-flood-list__item defra-flood-list__item--{{ group.severity.hash }}">
                         <span class="defra-flood-list__item-title">
                             <a href="/target-area/{{ item.code }}">{{ item.description }}</a>
                         </span>
                         <dl class="defra-flood-list__item-meta">
                             <div>
-                                <dt>Updated</dt><dd><time datetime="{{ item.messagechanged }}">{{ item.messagechanged | formatDate }}</time></dd>
+                                <dt>
+                                    {% if item.severity == 4 %}Removed{% else %}Updated{% endif %}
+                                </dt>
+                                <dd>
+                                    <time datetime="{{ item.messagechanged }}">{{ item.messagechanged | formatDate }}</time>
+                                </dd>
                             </div>
                         </dl>
                     </li>
