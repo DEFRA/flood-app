@@ -20,7 +20,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <!-- Flood alerts or warnings in force -->
+    <!-- Flood alerts or warnings in place -->
     <div class="defra-flood-status">
       {% if model.hasActiveFloods %}
       <div class="defra-flood-status-item defra-flood-status-item--{{model.highestSeverity.hash}}">
@@ -33,9 +33,8 @@
           </strong>
         </div>
       </div>
-      <p class="govuk-body">Summary...</p>
       {% else %}
-      <!-- No alerts or warnings in force -->
+      <!-- No alerts or warnings in place -->
       <div class="defra-flood-status-item">
         <div class="defra-flood-status-item__text">
           No flood warnings or alerts currently in place in this area.
@@ -43,7 +42,11 @@
       </div>
       {% endif %}
     </div>
-    
+
+    {% if model.hasFloods %}
+    <p class="govuk-body">{{ model.summary | safe }}</p>
+    {% endif %}
+
     {% if ( model.activeImpacts | length > 0 ) %}
     <p class="govuk-body">Historic records show {{ model.activeImpacts.length }} flood impact(s) in this area when river levels reached their present height.</p>
     <div id="map-list-impacts" class="defra-map-list govuk-!-margin-bottom-4">

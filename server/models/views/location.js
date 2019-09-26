@@ -14,16 +14,20 @@ class ViewModel {
       pageTitle: `${title} flood risk`
     })
     
+    const hasFloods = !!floods.length
+
     // Floods
-    if (floods.length) {
+    if (hasFloods) {
       const activeFloods = floods.filter(flood => flood.severity < 4)
-      const severeFloods = floods.filter(flood => flood.severity === 1)
-      const warningFloods = floods.filter(flood => flood.severity === 2)
-      const alertFloods = floods.filter(flood => flood.severity === 3)
       const inactiveFloods = floods.filter(flood => flood.severity === 4)
 
-      const hasActiveFloods = !!activeFloods.length
-      const hasInactiveFloods = !!inactiveFloods.length
+      this.hasFloods = hasFloods
+      this.hasActiveFloods = !!activeFloods.length
+      this.hasInactiveFloods = !!inactiveFloods.length
+
+      const highestSeverityId = Math.min(...floods.map(flood => flood.severity))
+      this.highestSeverity = severity[highestSeverityId - 1]
+
       const groups = groupBy(floods, 'severity')
       const groupedFloods = Object.keys(groups).map(group => {
         return {
@@ -32,8 +36,40 @@ class ViewModel {
         }
       })
 
-      const highestSeverityId = Math.min(...floods.map(flood => flood.severity))
-      const highestSeverity = severity[highestSeverityId - 1]
+      const summary = []
+      groupedFloods.forEach(function (group, i) {
+        switch (group.severity.hash) {
+          case 'severe':
+            if (i === 0 && group.floods.length === 1) {
+              summary.push(`${i}A severe flood warning is in force for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a> - danger to life.`)
+            } else {
+              summary.push(`<a href="/alerts-and-warnings?q=location#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;severe flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'} in force - danger to life.`)
+            }
+            break
+          case 'warning':
+            if (i === 0 && group.floods.length === 1) {
+              summary.push(`A flood warning is in place for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a> - flooding is expected.`)
+            } else {
+              summary.push(`<a href="/alerts-and-warnings?q=location#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'} in place - flooding is expected.`)
+            }
+            break
+          case 'alert':
+            if (i === 0 && group.floods.length === 1) {
+              summary.push(`A flood alert is in place for the <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a> where some flooding is possible.`)
+            } else {
+              summary.push(`<a href="/alerts-and-warnings?q=location#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;flood alert${group.floods.length > 1 ? 's</a> are' : '</a> is'} in place in the wider area where some flooding is possible.`)
+            }
+            break
+          case 'removed':
+            if (i === 0 && group.floods.length === 1) {
+              summary.push(`The flood warning for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a> is no longer in place.`)
+            } else {
+              summary.push(`</p><p><a href="/alerts-and-warnings?q=location#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;flood warning${group.floods.length > 1 ? 's are' : ' is'} no longer in place</a>.`)
+            }
+            break
+        }
+      })
+      this.summary = summary.join(' ')
 
       /*
       1st sentence single
@@ -50,65 +86,6 @@ class ViewModel {
       2 flood alerts are|is in place in the wider area where some flooding is possible.
       2 flood warnings have|has been removed.
       */
-
-      const primaryGroup = groupedFloods[0].floods
-      const primaryList = primaryGroup.map((flood, i) => {
-        return `${primaryGroup.length > 1 && i === primaryGroup.length - 1 ? 'and ' : ''}${primaryGroup.length > 0 ? `<a href="/target-area/${primaryGroup[i].code}">${primaryGroup[i].description}</a>` : ''}`
-      }).join(' ')
-
-      // Primary statement (first sentence)
-      var primaryStatement = ''
-      if (activeFloods) { // alert, warning or severe
-        switch (highestSeverity.name) {
-          case 'severe':
-            primaryStatement = `${primaryGroup.length > 1 ? '' : '<a href="">'}${primaryGroup.length} severe flood warning${primaryGroup.length > 1 ? 's' : '</a>'} ${primaryGroup.length > 1 ? 'are' : 'is'} in place${activeFloods.length > 1 ? '' : ' for ' + primaryList}. Severe flooding is expected in ${primaryGroup.length > 1 ? 'these areas' : 'this area'}.`
-            break
-          case 'warning':
-            primaryStatement = `${primaryGroup.length > 1 ? '' : '<a href="">'}${primaryGroup.length} flood warning${primaryGroup.length > 1 ? 's' : '</a>'} ${primaryGroup.length > 1 ? 'are' : 'is'} in place${activeFloods.length > 1 ? '' : ' for ' + primaryList}. Some flooding is expected in ${primaryGroup.length > 1 ? 'these areas' : 'this area'}.`
-            break
-          case 'alert':
-            primaryStatement = `${primaryGroup.length > 1 ? '' : '<a href="">'}${primaryGroup.length > 1 ? primaryGroup.length : 'A'} flood alert${primaryGroup.length > 1 ? 's' : '</a>'} ${primaryGroup.length > 1 ? 'are' : 'is'} in place${activeFloods.length > 1 ? '' : ' for ' + primaryList}. Some flooding is possible in ${primaryGroup.length > 1 ? 'these areas' : 'this area'}.`
-            break
-        }
-      }
-
-      // Secondary statement (optional)
-      var secondaryStatement = ''
-      if (floods.length > primaryGroup.length || floods.length > 2) {
-        if (warningFloods.length && severeFloods.length) {
-          secondaryStatement += ` <a href="">${warningFloods.length} flood warning${alertFloods.length > 1 ? 's' : ''}</a> ${warningFloods.length > 1 ? 'are' : 'is'} in place. Some flooding is expected in ${warningFloods.length > 1 ? 'these areas' : 'this area'}.`
-        }
-        if (alertFloods.length && (severeFloods.length || warningFloods.length)) {
-          secondaryStatement += ` <a href="">${alertFloods.length} flood alert${alertFloods.length > 1 ? 's' : ''}</a> ${alertFloods.length > 1 ? 'are' : 'is'} in place in the wider area where some flooding is possible.`
-        }
-      }
-
-      // Inactive floods (optional)
-      var inactiveStatement = ''
-      /*
-      if (hasInactiveFloods) {
-        if (inactiveFloods.length > 2 || hasActiveFloods) {
-          inactiveStatement = `
-            ${inactiveFloods.length} flood warning${inactiveFloods.length > 1 ? 's have' : ' has'} been removed.
-          `
-        } else {
-          inactiveStatement = `
-            ${primaryGroup.length > 1 ? 'Flood warnings' : 'The flood warning'} for ${primaryList} ${primaryGroup.length > 1 ? 'have' : 'has'} been removed.
-          `
-        }
-      }
-      */
-
-      this.highestSeverity = highestSeverity
-      this.groupedFloods = groupedFloods
-      this.floodsPrimary = primaryStatement
-      this.floodsSecondary = secondaryStatement + inactiveStatement
-      this.hasFloodsSecondary = !!this.floodsSecondary.length
-      this.hasFloodsList = !!(floods.length > primaryGroup.length || floods.length > 1)
-      this.activeFloods = activeFloods
-      this.hasActiveFloods = hasActiveFloods
-      this.inactiveFloods = inactiveFloods
-      this.hasInactiveFloods = hasInactiveFloods
     }
 
     // change value_timestamp from UTC
@@ -117,7 +94,6 @@ class ViewModel {
       // stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mm A')
 
       let tempDate = stations[s].value_timestamp
-
       let dateDiffDays = today.diff(tempDate, 'days')
 
       // If dateDiffDays is zero then timestamp is today so just show time. If dateDiffDays is 1 then timestamp is 'Yesterday' plus time. Any other value
