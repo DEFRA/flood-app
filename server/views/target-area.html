@@ -11,9 +11,16 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
       Flood risk area: {{ model.area.name }}
     </h1>
+    <p class="defra-updated govuk-!-margin-bottom-8">
+      {% if model.flood and not model.severity.isActive %}
+      Removed at <time datetime="{{model.flood.severityChanged}}">{{model.flood.messageChanged | formatDate}}</time>
+      {% else %}
+      Updated at <time datetime="{{model.flood.messageChanged}}">{{model.flood.messageChanged | formatDate}}</time>
+      {% endif %}
+    </p>
   </div>
 </div>
 
@@ -40,20 +47,12 @@
       {% endif %}
     </div>
 
-    <p class="defra-updated">
-      {% if model.flood and not model.severity.isActive %}
-      Removed at <time datetime="{{model.flood.severityChanged}}">{{model.flood.messageChanged | formatDate}}</time>
-      {% else %}
-      Updated at <time datetime="{{model.flood.messageChanged}}">{{model.flood.messageChanged | formatDate}}</time>
-      {% endif %}
-    </p>
-
     {% if model.flood %}
     <p class="govuk-body">{{model.flood.message}}</p>
     {% endif %}
 
     <p class="govuk-body">
-      <button class="defra-button-map">View map</button> of the flood risk area.
+      <button class="defra-button-map">View map of the flood risk area</button>.
     </p>
 
     <p class="govuk-body">

@@ -6,6 +6,9 @@
     padding:0px;
   }
 }
+.map + .govuk-heading-m {
+  padding-top:10px;
+}
 .map canvas { // Open layers bug fix
   display:block !important;
   -webkit-tap-highlight-color: rgba(0,0,0,0);

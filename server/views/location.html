@@ -9,9 +9,12 @@
         <a href="/">Change location</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/national">National view</a>
       </p>
     </nav>
-    <h1 class="govuk-heading-xl">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
       Flood risk: {{ model.location }}
     </h1>
+    <p class="defra-updated govuk-!-margin-bottom-8">
+      Updated at <time datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time>
+    </p>
   </div>
 </div>
 
@@ -38,13 +41,9 @@
           No flood warnings or alerts currently in place in this area.
         </div>
       </div>
+      {% endif %}
     </div>
-    {% endif %}
-
-    <p class="defra-updated">
-      Updated at <time datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time>
-    </p>
-
+    
     {% if ( model.activeImpacts | length > 0 ) %}
     <p class="govuk-body">Historic records show {{ model.activeImpacts.length }} flood impact(s) in this area when river levels reached their present height.</p>
     <div id="map-list-impacts" class="defra-map-list govuk-!-margin-bottom-4">
