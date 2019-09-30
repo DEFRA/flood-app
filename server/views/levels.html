@@ -47,6 +47,7 @@
 </div>
 -->
 
+{% if model.levels %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div class="defra-search-summary">
@@ -64,6 +65,33 @@
         </div>
     </div>
 </div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <ul class="defra-flood-list">
+            {% for name, group in model.levels %}
+            <li class="defra-flood-list__group">
+                <span class="defra-flood-list__group-title">
+                    {{ name }} <span class="govuk-visually-hidden">at:</span>
+                </span>
+                <dl class="defra-flood-list__items defra-flood-list__items--levels">
+                    {% for station in group %}
+                    <div class="defra-flood-list__item">
+                        <dt class="defra-flood-list__item-title">
+                            <a href="/station/{{station.rloi_id}}">{{ station.external_name }}</a>
+                        </dt>
+                        <dd class="defra-flood-list__item-desc">
+                            {% if station.state == 'High' %}<strong>{{ station.state }}</strong>{% else %}{{ station.state }}{% endif %} ({{ station.value }} at <time datetime="{{ station.value_timestamp }}">{{ station.value_timeDisplay }}</time>)
+                        </dd>
+                    </div>
+                    {% endfor %}
+                </dl>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
