@@ -44,37 +44,26 @@
     </div>
 
     {% if model.hasFloods %}
-    <p class="govuk-body">{{ model.summary | safe }}</p>
-    {% endif %}
-
-    {% if ( model.activeImpacts | length > 0 ) %}
-    <p class="govuk-body">Historic records show {{ model.activeImpacts.length }} flood impact(s) in this area when river levels reached their present height.</p>
-    <div id="map-list-impacts" class="defra-map-list govuk-!-margin-bottom-4">
-      <div id="impact-detail" class="govuk-details__text govuk-details__text--defra-details-flood">
-        <ul class="defra-list-flood">
-          {% for impact in model.activeImpacts %}
-          <li class="defra-list-flood__item">
-            {{ impact.description }}
-            <div class="defra-list-flood__meta">
-              Source: <a href="/station/{{ impact.rloiid }}?i={{ impact.impactid }}">{{ impact.gauge }}</a>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-    {% endif %}
-
-    {% if model.rivers %}
     <p class="govuk-body">
-      {% if model.hasHighLevels %}
-        {% if model.hasActiveFloods %}
-        <a href="/river-and-sea-levels?q=">View river and sea levels in this area</a>.
-        {% else %}
-        However some <a href="/river-and-sea-levels?q=">river and sea levels in this area</a> are currently high. 
-        {% endif %}
+      {{ model.floodSummary | safe }}
+    </p>
+    {% endif %}
+
+    {% if model.hasActiveImpacts %}
+    <p class="govuk-body">
+      Historic records show <a href="/historic-impacts?q=location">{{ model.activeImpacts.length }} flood impact{% if model.activeImpacts.length > 1 %}s{% endif %}</a> in this area when river and sea levels previously reached this height.
+    </p>
+    {% endif %}
+
+    {% if model.hasLevels %}
+    <p class="govuk-body">
+      {% if not model.hasFloods and model.hasHighLevel %}
+      However some <a href="/river-and-sea-levels?q=location">river and sea levels in this area</a> are currently high.
       {% else %}
-      River and sea levels are regularly checked by a network of monitoring stations. These levels can help you understand flood risk now and in the next few days. <a href="/river-and-sea-levels?q=">View river and sea levels in this area</a>.
+        {% if not model.hasFloods %}
+        River and sea levels are regularly checked by a network of monitoring stations. These levels can help you understand flood risk now and in the next few days.
+        {% endif %}
+        You can <a href="/river-and-sea-levels?q=location">view river and sea levels in this area</a>.
       {% endif %}
     </p>
     {% endif %}

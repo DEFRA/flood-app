@@ -20,6 +20,7 @@ class ViewModel {
     if (hasFloods) {
       const activeFloods = floods.filter(flood => flood.severity < 4)
       const inactiveFloods = floods.filter(flood => flood.severity === 4)
+      const warnings = floods.filter(flood => flood.severity === 1 || flood.severity === 2)
 
       this.hasFloods = hasFloods
       this.hasActiveFloods = !!activeFloods.length
@@ -36,56 +37,40 @@ class ViewModel {
         }
       })
 
-      const summary = []
+      const floodSummary = []
       groupedFloods.forEach(function (group, i) {
         switch (group.severity.hash) {
           case 'severe':
             if (i === 0 && group.floods.length === 1) {
-              summary.push(`${i}A severe flood warning is in force for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a> - danger to life.`)
+              floodSummary.push(`${i}A severe flood warning is in force for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a>. There is a danger to life in this area.`)
             } else {
-              summary.push(`<a href="/alerts-and-warnings?q=location#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;severe flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'} in force - danger to life.`)
+              floodSummary.push(`<a href="/alerts-and-warnings?q=location#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;severe flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'} in force nearby. There is a danger to life in these areas.`)
             }
             break
           case 'warning':
             if (i === 0 && group.floods.length === 1) {
-              summary.push(`A flood warning is in place for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a> - flooding is expected.`)
+              floodSummary.push(`A flood warning is in place for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a>. Flooding is expected in this area.`)
             } else {
-              summary.push(`<a href="/alerts-and-warnings?q=location#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'} in place - flooding is expected.`)
+              floodSummary.push(`<a href="/alerts-and-warnings?q=location#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'} in place nearby. Flooding is expected in these areas.`)
             }
             break
           case 'alert':
             if (i === 0 && group.floods.length === 1) {
-              summary.push(`A flood alert is in place for the <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a> where some flooding is possible.`)
+              floodSummary.push(`A flood alert is in place for the <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a> where some flooding is possible.`)
             } else {
-              summary.push(`<a href="/alerts-and-warnings?q=location#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;flood alert${group.floods.length > 1 ? 's</a> are' : '</a> is'} in place in the wider area where some flooding is possible.`)
+              floodSummary.push(`<a href="/alerts-and-warnings?q=location#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;flood alert${group.floods.length > 1 ? 's</a> are' : '</a> is'} ${warnings.length >= 1 ? 'also' : ''} in place in the wider area where some flooding is possible.`)
             }
             break
           case 'removed':
             if (i === 0 && group.floods.length === 1) {
-              summary.push(`The flood warning for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a> is no longer in place.`)
+              floodSummary.push(`The flood warning for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a> has been removed.`)
             } else {
-              summary.push(`</p><p><a href="/alerts-and-warnings?q=location#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;flood warning${group.floods.length > 1 ? 's are' : ' is'} no longer in place</a>.`)
+              floodSummary.push(`${groupedFloods.length > 3 ? '</p><p>' : ''}${group.floods.length}&nbsp;flood warning${group.floods.length > 1 ? 's have' : ' has'} been <a href="/alerts-and-warnings?q=location#${group.severity.pluralisedHash}">removed</a> within the last 24 hours.`)
             }
             break
         }
       })
-      this.summary = summary.join(' ')
-
-      /*
-      1st sentence single
-
-      A severe flood warning is in force for Keswick campsite - danger to life.
-      A flood warning is in place for Keswick campsite - flooding is expected.
-      A flood alert is in place for Upper Derwent valley where some flooding is possible.
-      The flood warning for Cockermouth centre has been removed.
-      
-      1st sentence multiple or remaining sentence
-      
-      3 severe flood warnings are|is in force - danger to life.
-      3 flood warnings are|is in place - flooding is expected.
-      2 flood alerts are|is in place in the wider area where some flooding is possible.
-      2 flood warnings have|has been removed.
-      */
+      this.floodSummary = floodSummary.join(' ')
     }
 
     // change value_timestamp from UTC
@@ -93,8 +78,8 @@ class ViewModel {
     for (var s in stations) {
       // stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mm A')
 
-      let tempDate = stations[s].value_timestamp
-      let dateDiffDays = today.diff(tempDate, 'days')
+      const tempDate = stations[s].value_timestamp
+      const dateDiffDays = today.diff(tempDate, 'days')
 
       // If dateDiffDays is zero then timestamp is today so just show time. If dateDiffDays is 1 then timestamp is 'Yesterday' plus time. Any other value
       // show the full date/time.
@@ -143,22 +128,16 @@ class ViewModel {
 
     // stations = filteredStations
 
-    // Rivers
-    if (stations.length) {
-      this.rivers = groupBy(stations, 'wiski_river_name')
-    }
+    // River and sea levels
+    this.hasLevels = !!stations.length
+    this.levels = groupBy(stations, 'wiski_river_name')
 
     // Impacts
-    if (impacts) {
-      // sort impacts order by value
-      impacts.sort((a, b) => b.value - a.value)
-
-      // create an array of all active impacts
-      const activeImpacts = impacts.filter(active => active.telemetryactive === true)
-
-      this.impacts = impacts
-      this.activeImpacts = activeImpacts
-    }
+    // sort impacts order by value
+    impacts.sort((a, b) => b.value - a.value)
+    // create an array of all active impacts
+    this.activeImpacts = impacts.filter(active => active.telemetryactive === true)
+    this.hasActiveImpacts = !!this.activeImpacts.length
   }
 }
 
