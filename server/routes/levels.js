@@ -17,7 +17,7 @@ module.exports = {
       return h.redirect('/location-not-england')
     }
     const stations = await floodService.getStationsWithin(place.bbox)
-    const model = new ViewModel({ place, stations })
+    const model = new ViewModel({ location, place, stations })
     return h.view('levels', { model })
   },
   options: {

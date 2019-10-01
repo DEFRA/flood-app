@@ -1,5 +1,5 @@
 .defra-updated {
-    @extend .govuk-body-s;
+    @include govuk-font($size: 14);
     color:$govuk-secondary-text-colour;
     @include govuk-responsive-margin(4, 'bottom');
     position:relative;
@@ -11,9 +11,9 @@
     top:3px;
     margin-right:2.5px;
     background: transparent url('#{$govuk-images-path}icon-time.svg') no-repeat;
-    background-size: 16px 16px;
-    width: 16px;
-    height: 16px;
+    background-size: 14px 14px;
+    width: 14px;
+    height: 14px;
     @include mq ($from: tablet) {
         top:2px;
     }

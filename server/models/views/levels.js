@@ -2,47 +2,57 @@ const { groupBy } = require('../../util')
 const moment = require('moment-timezone')
 
 class ViewModel {
-  constructor ({ place, stations }) {
+  constructor ({ location, place, stations }) {
     const title = place.name
 
     Object.assign(this, {
+      q: location,
       place,
       location: title,
       pageTitle: `${title} river and sea levels`
     })
 
-    // change value_timestamp from UTC
     const today = moment.tz().endOf('day')
-    for (var s in stations) {
-      // stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mm A')
+    var levelsCount = 0
 
+    for (var s in stations) {
+      // Create display date property from UTC
       const tempDate = stations[s].value_timestamp
       const dateDiffDays = today.diff(tempDate, 'days')
-
       // If dateDiffDays is zero then timestamp is today so just show time. If dateDiffDays is 1 then timestamp is 'Yesterday' plus time. Any other value
       // show the full date/time.
       if (dateDiffDays === 0) {
-        stations[s].value_timeDisplay = moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mma')
+        stations[s].value_time = 'at ' + moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mma')
       } else if (dateDiffDays === 1) {
-        stations[s].value_timeDisplay = 'Yesterday ' + moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mma')
+        stations[s].value_time = 'at ' + moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mma') + ' yesterday'
       } else {
-        stations[s].value_timeDisplay = moment.tz(stations[s].value_timestamp, 'Europe/London').format('DD/MM/YYYY h:mma')
+        stations[s].value_time = 'on ' + moment.tz(stations[s].value_timestamp, 'Europe/London').format('DD/MM/YYYY h:mma')
       }
-    }
-
-    // Add High, Normal, Low states
-    for (var v in stations) {
-      if (stations[v].station_type !== 'C' && stations[v].station_type !== 'G') {
-        if (stations[v].value > stations[v].percentile_5) {
-          stations[v].state = 'High'
-          this.levelsHighCount += 1
-        } else if (stations[v].value < stations[v].percentile_95) {
-          stations[v].state = 'Low'
+      // Create state property
+      if (stations[s].station_type !== 'C' && stations[s].station_type !== 'G' && stations[s].value) {
+        if (stations[s].value > stations[s].percentile_5) {
+          stations[s].state = 'high'
+        } else if (stations[s].value < stations[s].percentile_95) {
+          stations[s].state = 'low'
         } else {
-          stations[v].state = 'Normal'
+          stations[s].state = 'normal'
         }
       }
-      stations[v].value = parseFloat(Math.round(stations[v].value * 100) / 100).toFixed(2) + 'm'
+
+      // Create data display property
+      if (moment(stations[s].value_timestamp) && !isNaN(parseFloat(stations[s].value))) {
+        // Valid data
+        stations[s].value = parseFloat(Math.round(stations[s].value * 100) / 100).toFixed(2) + 'm'
+        if (stations[s].station_type === 'S' || stations[s].station_type === 'M') {
+          stations[s].valueHtml = stations[s].state === 'high' ? '<strong>High</strong>' : stations[s].state.charAt(0).toUpperCase() + stations[s].state.slice(1)
+          stations[s].valueHtml += ' (' + stations[s].value + ' <time datetime="' + stations[s].value_timestamp + '">' + stations[s].value_time + '</time>)'
+        } else {
+          stations[s].valueHtml = stations[s].value + ' ' + ' <time datetime="' + stations[s].value_timestamp + '">' + stations[s].value_time + '</time>'
+        }
+      } else {
+        // Error in data
+        stations[s].valueHtml = 'Data not available'
+      }
     }
 
     // Levels

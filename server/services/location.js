@@ -4,7 +4,8 @@ const floodServices = require('./flood')
 
 async function find (location) {
   const query = encodeURIComponent(location)
-  const url = `https://dev.virtualearth.net/REST/v1/Locations?query=${query},UK&userRegion=GB&include=ciso2&c=en-GB&maxResults=1&userIP=127.0.0.1&key=${bingKey}`
+  // const url = `https://dev.virtualearth.net/REST/v1/Locations?query=${query},UK&userRegion=GB&include=ciso2&c=en-GB&maxResults=1&userIP=127.0.0.1&key=${bingKey}`
+  const url = `https://dev.virtualearth.net/REST/v1/Locations?query=${query},UK&userRegion=GB&include=ciso2&c=en-GB&maxResults=2&userIP=127.0.0.1&key=${bingKey}&includeEntityTypes=PopulatedPlace,AdminDivision2`
   // const url = `https://dev.virtualearth.net/REST/v1/Locations/UK/${query}?key=${bingKey}&maxResults=1&userIP=127.0.0.1`
 
   let data = await getJson(url, true)
@@ -40,6 +41,11 @@ async function find (location) {
     address: { formattedAddress: address },
     point: { coordinates: center }
   } = data
+
+  // Replace name if only one item in result set and entityType is a populated place
+  if (data.entityType === 'PopulatedPlace') {
+    name = set.resources.length > 1 ? data.name : data.address.locality
+  }
 
   // Reverse as Bing returns as [y (lat), x (long)]
   bbox.reverse()
@@ -81,6 +87,7 @@ async function suggest (query) {
 
   // Ensure we have some results
   const set = data.resourceSets[0]
+
   if (set.estimatedTotal === 0) {
     return
   }

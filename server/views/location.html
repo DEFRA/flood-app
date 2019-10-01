@@ -51,19 +51,19 @@
 
     {% if model.hasActiveImpacts %}
     <p class="govuk-body">
-      Historic records show <a href="/historic-impacts?q=location">{{ model.activeImpacts.length }} flood impact{% if model.activeImpacts.length > 1 %}s{% endif %}</a> in this area when river and sea levels previously reached this height.
+      Historic records show <a href="/historic-impacts?q={{ model.q }}">{{ model.activeImpacts.length }} flood impact{% if model.activeImpacts.length > 1 %}s{% endif %}</a> in this area when river and sea levels previously reached this height.
     </p>
     {% endif %}
 
     {% if model.hasLevels %}
     <p class="govuk-body">
       {% if not model.hasFloods and model.hasHighLevel %}
-      However some <a href="/river-and-sea-levels?q=location">river and sea levels in this area</a> are currently high.
+      However some <a href="/river-and-sea-levels?q={{ model.q }}">river and sea levels in this area</a> are currently high.
       {% else %}
         {% if not model.hasFloods %}
         River and sea levels are regularly checked by a network of monitoring stations. These levels can help you understand flood risk now and in the next few days.
         {% endif %}
-        You can <a href="/river-and-sea-levels?q=location">view river and sea levels in this area</a>.
+        You can <a href="/river-and-sea-levels?q={{ model.q }}">view river and sea levels in this area</a>.
       {% endif %}
     </p>
     {% endif %}

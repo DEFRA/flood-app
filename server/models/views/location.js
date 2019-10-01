@@ -3,10 +3,11 @@ const { groupBy } = require('../../util')
 const moment = require('moment-timezone')
 
 class ViewModel {
-  constructor ({ place, floods, stations, impacts }) {
+  constructor ({ location, place, floods, stations, impacts }) {
     const title = place.name
 
     Object.assign(this, {
+      q: location,
       place,
       floods,
       impacts,
@@ -71,41 +72,6 @@ class ViewModel {
         }
       })
       this.floodSummary = floodSummary.join(' ')
-    }
-
-    // change value_timestamp from UTC
-    const today = moment.tz().endOf('day')
-    for (var s in stations) {
-      // stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mm A')
-
-      const tempDate = stations[s].value_timestamp
-      const dateDiffDays = today.diff(tempDate, 'days')
-
-      // If dateDiffDays is zero then timestamp is today so just show time. If dateDiffDays is 1 then timestamp is 'Yesterday' plus time. Any other value
-      // show the full date/time.
-      if (dateDiffDays === 0) {
-        stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mma')
-      } else if (dateDiffDays === 1) {
-        stations[s].value_timestamp = 'Yesterday ' + moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mma')
-      } else {
-        stations[s].value_timestamp = moment.tz(stations[s].value_timestamp, 'Europe/London').format('DD/MM/YYYY h:mma')
-      }
-    }
-
-    // change value into High, Normal, Low
-    for (var v in stations) {
-      if (stations[v].station_type === 'C') {
-        stations[v].value = Math.round(stations[v].value * 10) / 10 + 'm'
-      } else {
-        if (stations[v].value > stations[v].percentile_5) {
-          stations[v].value = 'High'
-          this.levelsHighCount += 1
-        } else if (stations[v].value < stations[v].percentile_95) {
-          stations[v].value = 'Low'
-        } else {
-          stations[v].value = 'Normal'
-        }
-      }
     }
 
     // Count stations that are 'high'
