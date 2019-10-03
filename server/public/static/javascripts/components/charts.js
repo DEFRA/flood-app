@@ -187,7 +187,7 @@
         remove.on('click', function () {
           d3.event.stopPropagation()
           // console.log(thresholds)
-          thresholds = thresholds.filter(function(x) {
+          thresholds = thresholds.filter(function (x) {
             return x.id !== threshold.id
           })
           // console.log(thresholds)
@@ -206,7 +206,7 @@
           thresholds.forEach(x => { x.isSelected = false })
           threshold.isSelected = true
           // Bring to front
-          thresholds = thresholds.filter(function(x) {
+          thresholds = thresholds.filter(function (x) {
             return x.id !== threshold.id
           })
           thresholds.push(threshold)
@@ -253,7 +253,6 @@
       // Update locator position
       locator.attr('transform', 'translate(' + locatorX + ',' + 0 + ')')
       locator.select('.locator-point').attr('transform', 'translate(' + 0 + ',' + locatorY + ')')
-
     }
 
     function modifyAxis () {
@@ -454,8 +453,8 @@
         return x.id === threshold.id
       })
       if (foundThreshold) {
-        thresholds = thresholds.filter(function(x) {
-            return x.id !== threshold.id
+        thresholds = thresholds.filter(function (x) {
+          return x.id !== threshold.id
         })
       }
       thresholds.push(threshold)

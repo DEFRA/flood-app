@@ -14,13 +14,27 @@
         <h1 class="govuk-heading-xl">
             Historic flood impacts
         </h1>
+        <!--
+        <p class="govuk-!-margin-bottom-7">Find historic flood impacts where current river levels have reached or exceed the recorded level.</p>
+        -->
     </div>
 </div>
 
 <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        <div class="govuk-form-group defra-search">
+            <label class="govuk-label" for="search">Enter postcode or town</label>
+            <input class="govuk-input defra-search__input" id="search" name="search" type="text" value="{{ model.place.name }}">
+            <button type="submit" class="govuk-button defra-search__button">Search</button>
+        </div>
+    </div>
+</div>
+
+{% if model.hasActiveImpacts %}
+<div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div class="defra-search-summary">
-            <h2 class="defra-search-summary__count">2 flood impacts</h2>
+            <h2 class="defra-search-summary__count">{{ model.activeImpacts.length }} impact{% if model.activeImpacts.length > 1 %}s{% endif %} (level exceeded)</h2>
             <button class="defra-search-summary__button-map">View on map</button>
             <div class="app-map">
                 <div class="app-map__container">
@@ -34,39 +48,46 @@
         </div>
     </div>
 </div>
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <ul class="defra-flood-list">
+            {% for impact in model.activeImpacts %}
             <li class="defra-flood-list__item defra-flood-list__item--impact">
                 <span class="defra-flood-list__item-title">
-                    Lorem ipsum dolor sit amet consectetur
+                    {{ impact.description }}
                 </span>
                 <dl class="defra-flood-list__item-meta">
                     <div>
-                        <dt>Source</dt><dd><a href="">Station name</a></dd>
+                        <dt>Source</dt>
+                        <dd><a href="/station/{{ impact.rloiid }}?i={{ impact.impactid }}">{{ impact.gauge }}</a></dd>
                     </div>
                     <div>
-                        <dt>Recorded</dt><dd><time datetime="2018-11-21 11:00">21 Nov at 11:00pm</time></dd>
+                        <dt>Recorded</dt>
+                        <dd><time datetime="timestamp">1/1/1970</time></dd>
                     </div>
                 </dl>
             </li>
-            <li class="defra-flood-list__item defra-flood-list__item--impact">
-                <span class="defra-flood-list__item-title">
-                    Ut enim ad minim veniam nostrud exercitation quis
-                </span>
-                <dl class="defra-flood-list__item-meta">
-                    <div>
-                        <dt>Source</dt><dd><a href="">Station name</a></dd>
-                    </div>
-                    <div>
-                        <dt>Recorded</dt><dd><time datetime="2018-11-21 11:00">21 Nov at 11:00pm</time></dd>
-                    </div>
-                </dl>
-            </li>
+            {% endfor %}
         </ul>
     </div>
 </div>
+{% else %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-!-margin-top-6">
+            <p class="govuk-body">
+                <strong>No historic flood impacts likely... or thresholds a re below...</strong>    
+            </p>
+            <p class="govuk-body">There are approximatley 2200 water level measuring stations in England. These are located mostly along main rivers and the coast.</p>
+            <p class="govuk-body">Improve your search results by:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>searching a broader location</li>
+                <li>double-checking your spelling</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endif %}
 
 {% endblock %}
 

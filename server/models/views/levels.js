@@ -3,13 +3,11 @@ const moment = require('moment-timezone')
 
 class ViewModel {
   constructor ({ location, place, stations }) {
-    const title = place.name
 
     Object.assign(this, {
       q: location,
-      place,
-      location: title,
-      pageTitle: `${title} river and sea levels`
+      placeName: place.name,
+      pageTitle: `${place.name} river and sea levels`
     })
 
     const today = moment.tz().endOf('day')

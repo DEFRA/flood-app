@@ -16,6 +16,8 @@ class Floods {
         description: item.subTitle
       }
     })
+    // Temporaily removed as service method getFloodsWithin(bbox) doesn't return any geometry
+    /*
     this._geojson = {
       type: 'FeatureCollection',
       totalFeatures: this._floods.floods.length,
@@ -35,6 +37,7 @@ class Floods {
         }
       }
     })
+    */
     this._count = data.floods.length
   }
 

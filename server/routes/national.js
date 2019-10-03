@@ -7,7 +7,6 @@ module.exports = {
   handler: async (request, h) => {
     // get the cached floods
     const floods = floodService.floods
-    console.log(floods)
 
     // get the cached outlook
     const outlook = floodService.outlook

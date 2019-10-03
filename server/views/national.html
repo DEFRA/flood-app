@@ -21,14 +21,14 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <div class="defra-flood-status">
-      {% if not model.floods._hasActiveFloods %}
+      {% if not model.hasActiveFloods %}
       <div class="defra-flood-status-item">
         <div class="defra-flood-status-item__text">
           There are currently no flood warnings or alerts in force.
         </div>
       </div>
       {% endif %}
-      {% for group in model.floods.groups %}
+      {% for group in model.floods %}
       {% if group.floods %}
       {% if group.severity.id < 4 %}
       <div class="defra-flood-status-item defra-flood-status-item--{{ group.severity.hash }}">

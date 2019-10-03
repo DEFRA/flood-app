@@ -29,24 +29,6 @@
     </div>
 </div>
 
-<!--
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <div class="govuk-!-margin-top-6">
-            <p class="govuk-body">
-                <strong>No river, sea or groundwater levels found.</strong>    
-            </p>
-            <p class="govuk-body">There are approximatley 2200 water level measuring stations in England. These are located mostly along main rivers and the coast.</p>
-            <p class="govuk-body">Improve your search results by:</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>searching a broader location</li>
-                <li>double-checking your spelling</li>
-            </ul>
-        </div>
-    </div>
-</div>
--->
-
 {% if model.levels %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -65,7 +47,6 @@
         </div>
     </div>
 </div>
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <ul class="defra-flood-list">
@@ -89,6 +70,22 @@
             </li>
             {% endfor %}
         </ul>
+    </div>
+</div>
+{% else %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-!-margin-top-6">
+            <p class="govuk-body">
+                <strong>No river, sea or groundwater levels found.</strong>    
+            </p>
+            <p class="govuk-body">There are approximatley 2200 water level measuring stations in England. These are located mostly along main rivers and the coast.</p>
+            <p class="govuk-body">Improve your search results by:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>searching a broader location</li>
+                <li>double-checking your spelling</li>
+            </ul>
+        </div>
     </div>
 </div>
 {% endif %}

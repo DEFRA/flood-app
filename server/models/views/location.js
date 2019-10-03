@@ -75,16 +75,15 @@ class ViewModel {
     }
 
     // Count stations that are 'high'
-    var highLevelsCount = 0
     var hasHighLevels = false
-    for (var w in stations) {
-      if (stations[w].value === 'High') {
-        highLevelsCount += 1
-        hasHighLevels = true
+    for (var s in stations) {
+      if (stations[s].station_type !== 'C' && stations[s].station_type !== 'G' && stations[s].value) {
+        if (stations[s].value > stations[s].percentile_5) {
+          hasHighLevels = true
+        }
       }
     }
     this.hasHighLevels = hasHighLevels
-    this.highLevelsCount = highLevelsCount
 
     // // TO DO re introduce if invalid dates are to be removed
     // var filteredStations = stations.filter(function (value) {

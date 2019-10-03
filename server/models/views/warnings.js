@@ -1,12 +1,20 @@
 class ViewModel {
-  constructor (options) {
-    const { floods } = options
-    Object.assign(this, {
-      pageTitle: 'Flood alerts and warnings'
-    }, options)
+  constructor ({ location, place, floods }) {
+    const placeName = place ? place.name : ''
+    const pageTitle = `${placeName ? placeName + ' f' : 'F'}lood alerts and warnings`
 
+    Object.assign(this, {
+      q: location,
+      placeName: placeName,
+      pageTitle: pageTitle
+    })
+
+    const inactiveFloods = floods.floods.filter(flood => flood.severity === 4)
+
+    this.countFloods = floods.floods.length
+    this.countInactiveFloods = inactiveFloods.length
+    this.floods = floods.groups
     this.timestamp = Date.now()
-    this.floods = floods
   }
 }
 

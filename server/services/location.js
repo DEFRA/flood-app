@@ -9,7 +9,6 @@ async function find (location) {
   // const url = `https://dev.virtualearth.net/REST/v1/Locations/UK/${query}?key=${bingKey}&maxResults=1&userIP=127.0.0.1`
 
   let data = await getJson(url, true)
-
   if (data === undefined) {
     throw new Error('Invalid data returned from third party location search')
   }
@@ -31,7 +30,13 @@ async function find (location) {
   // This is a check to see if "no results" found, because search is biased to GB if a search term can't be matched
   // the service tends to return the UK with a medium confidence, so this is a good indication that no results were found
   const noConfidence = (data.confidence.toLowerCase() === 'medium' || data.confidence.toLowerCase() === 'low')
+  /*
   if (data.entityType.toLowerCase() === 'countryregion' && noConfidence) {
+    return
+  }
+  */
+  // Dan Leech - 'countryregion' filter removed to address =PopulatedPlace results appearing with low confidecne in Russia?
+  if (noConfidence) {
     return
   }
 
