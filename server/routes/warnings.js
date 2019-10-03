@@ -14,6 +14,7 @@ module.exports = {
     if (typeof location === 'undefined' || location === '') {
       const floods = floodService.floods
       model = new ViewModel({ location, place, floods })
+      model.hasBackButton = Boolean(request.headers.referer)
       return h.view('warnings', { model })
     }
     place = await locationService.find(location)
@@ -29,6 +30,7 @@ module.exports = {
     const data = await floodService.getFloodsWithin(place.bbox)
     const floods = new Floods(data)
     model = new ViewModel({ location, place, floods })
+    model.hasBackButton = Boolean(request.headers.referer)
     return h.view('warnings', { model })
   }
 }

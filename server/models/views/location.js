@@ -1,6 +1,5 @@
 const severity = require('../severity')
 const { groupBy } = require('../../util')
-const moment = require('moment-timezone')
 
 class ViewModel {
   constructor ({ location, place, floods, stations, impacts }) {
@@ -14,7 +13,7 @@ class ViewModel {
       location: title,
       pageTitle: `${title} flood risk`
     })
-    
+
     const hasFloods = !!floods.length
 
     // Floods
@@ -45,28 +44,28 @@ class ViewModel {
             if (i === 0 && group.floods.length === 1) {
               floodSummary.push(`${i}A severe flood warning is in force for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a>. There is a danger to life in this area.`)
             } else {
-              floodSummary.push(`<a href="/alerts-and-warnings?q=location#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;severe flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'} in force nearby. There is a danger to life in these areas.`)
+              floodSummary.push(`<a href="/alerts-and-warnings?q=${location}#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;severe flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'} in force nearby. There is a danger to life in these areas.`)
             }
             break
           case 'warning':
             if (i === 0 && group.floods.length === 1) {
               floodSummary.push(`A flood warning is in place for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a>. Flooding is expected in this area.`)
             } else {
-              floodSummary.push(`<a href="/alerts-and-warnings?q=location#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'} in place nearby. Flooding is expected in these areas.`)
+              floodSummary.push(`<a href="/alerts-and-warnings?q=${location}#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'} in place nearby. Flooding is expected in these areas.`)
             }
             break
           case 'alert':
             if (i === 0 && group.floods.length === 1) {
               floodSummary.push(`A flood alert is in place for the <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a> where some flooding is possible.`)
             } else {
-              floodSummary.push(`<a href="/alerts-and-warnings?q=location#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;flood alert${group.floods.length > 1 ? 's</a> are' : '</a> is'} ${warnings.length >= 1 ? 'also' : ''} in place in the wider area where some flooding is possible.`)
+              floodSummary.push(`<a href="/alerts-and-warnings?q=${location}#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;flood alert${group.floods.length > 1 ? 's</a> are' : '</a> is'} ${warnings.length >= 1 ? 'also' : ''} in place in the wider area where some flooding is possible.`)
             }
             break
           case 'removed':
             if (i === 0 && group.floods.length === 1) {
               floodSummary.push(`The flood warning for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a> has been removed.`)
             } else {
-              floodSummary.push(`${groupedFloods.length > 3 ? '</p><p>' : ''}${group.floods.length}&nbsp;flood warning${group.floods.length > 1 ? 's have' : ' has'} been <a href="/alerts-and-warnings?q=location#${group.severity.pluralisedHash}">removed</a> within the last 24 hours.`)
+              floodSummary.push(`${groupedFloods.length > 3 ? '</p><p>' : ''}${group.floods.length}&nbsp;flood warning${group.floods.length > 1 ? 's have' : ' has'} been <a href="/alerts-and-warnings?q=${location}#${group.severity.pluralisedHash}">removed</a> within the last 24 hours.`)
             }
             break
         }

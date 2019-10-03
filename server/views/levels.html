@@ -3,13 +3,11 @@
 
 <!-- ** Prefix meta title with search term -->
 
-<!-- if model.referer -->
+{% if model.hasBackButton %}
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <a href="{{ model.referer }}" class="govuk-back-link govuk-!-margin-bottom-7">Back</a>
-  </div>
+    <div class="govuk-grid-column-full" id="browserBackButton"></div>
 </div>
-<!-- endif -->
+{% endif %}
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -23,7 +21,7 @@
     <div class="govuk-grid-column-one-half">
         <div class="govuk-form-group defra-search">
             <label class="govuk-label" for="search">Enter river name, postcode or town</label>
-            <input class="govuk-input defra-search__input" id="search" name="search" type="text" value="{{ model.place.name }}">
+            <input class="govuk-input defra-search__input" id="search" name="search" type="text" value="{{ model.placeName }}">
             <button type="submit" class="govuk-button defra-search__button">Search</button>
         </div>
     </div>
@@ -75,7 +73,7 @@
 {% else %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <div class="govuk-!-margin-top-6">
+        <div class="govuk-!-margin-top-2">
             <p class="govuk-body">
                 <strong>No river, sea or groundwater levels found.</strong>    
             </p>

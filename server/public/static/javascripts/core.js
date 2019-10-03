@@ -42,6 +42,19 @@
     getParameterByName: function (name) {
       var v = window.location.search.match(new RegExp('(?:[\?\&]' + name + '=)([^&]+)'))
       return v ? v[1] : null
+    },
+    addBrowserBackButton: function() {
+      const container = document.getElementById('browserBackButton')
+      const hyperlink = document.createElement('a')
+      hyperlink.href = document.referrer
+      hyperlink.href = hyperlink.pathname + hyperlink.search
+      hyperlink.innerText = 'Back'
+      hyperlink.className = 'govuk-back-link govuk-!-margin-bottom-7'
+      hyperlink.addEventListener('click', function (e) {
+        e.preventDefault()
+        window.history.back()
+      })
+      container.append(hyperlink)
     }
   }
 

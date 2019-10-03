@@ -1,4 +1,7 @@
 (function (window, flood) {
+  // Add back button
+  window.flood.utils.addBrowserBackButton()
+
   var maps = flood.maps
   var model = flood.model
 

@@ -1,13 +1,11 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<!-- if model.referer -->
+{% if model.hasBackButton %}
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <a href="{{ model.referer }}" class="govuk-back-link govuk-!-margin-bottom-7">Back</a>
-  </div>
+    <div class="govuk-grid-column-full" id="browserBackButton"></div>
 </div>
-<!-- endif -->
+{% endif %}
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -79,6 +77,22 @@
             {% endif %}
             {% endfor %}
         </ul>
+    </div>
+</div>
+{% else %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-!-margin-top-2">
+            <p class="govuk-body">
+                <strong>No flood alerts or warnings in place {% if model.placeName %} near this location{% endif %}.</strong>    
+            </p>
+            <p class="govuk-body">There are approximatley 2200 water level measuring stations in England. These are located mostly along main rivers and the coast.</p>
+            <p class="govuk-body">Improve your search results by:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>searching a broader location</li>
+                <li>double-checking your spelling</li>
+            </ul>
+        </div>
     </div>
 </div>
 {% endif %}

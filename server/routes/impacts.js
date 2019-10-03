@@ -18,6 +18,7 @@ module.exports = {
     }
     const impacts = await floodService.getImpactsWithin(place.bbox)
     const model = new ViewModel({ location, place, impacts })
+    model.hasBackButton = Boolean(request.headers.referer)
     return h.view('impacts', { model })
   },
   options: {
