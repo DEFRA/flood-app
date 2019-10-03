@@ -49,9 +49,9 @@ class ViewModel {
             break
           case 'warning':
             if (i === 0 && group.floods.length === 1) {
-              floodSummary.push(`A flood warning is in place for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a>. Flooding is expected in this area.`)
+              floodSummary.push(`A flood warning is in place for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a>. Some flooding is expected in this area.`)
             } else {
-              floodSummary.push(`<a href="/alerts-and-warnings?q=${location}#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'} in place nearby. Flooding is expected in these areas.`)
+              floodSummary.push(`<a href="/alerts-and-warnings?q=${location}#${group.severity.pluralisedHash}">${group.floods.length}&nbsp;flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'} in place nearby. Some flooding is expected in these areas.`)
             }
             break
           case 'alert':
