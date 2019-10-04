@@ -19,7 +19,7 @@
   // Add map button and setup map
   if (model.countActiveImpacts) {
     // Create map button
-    const buttonContainer = document.getElementById('defraSearchSummary')
+    const buttonContainer = document.getElementById('searchSummary')
     if (buttonContainer) {
       const button = document.createElement('button')
       button.innerText = 'View on map'
@@ -27,7 +27,7 @@
       button.addEventListener('click', function (e) {
         e.preventDefault()
         container.show()
-        container.setBbox(bbox)
+        container.setExtentFromBbox(bbox)
         map.showFeatureSet('impacts')
       })
       buttonContainer.append(button)

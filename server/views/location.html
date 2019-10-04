@@ -54,7 +54,7 @@
 
     {% if model.hasActiveImpacts %}
     <p class="govuk-body">
-      Historic records show <a href="/historic-impacts?q={{ model.q }}">{{ model.activeImpacts.length }} flood impact{% if model.activeImpacts.length > 1 %}s{% endif %}</a> in this area when river and sea levels previously reached this height.
+      Historic records show <a href="/historic-impacts?q={{ model.q }}">{{ model.activeImpacts.length }} flood impact{% if model.activeImpacts.length > 1 %}s{% endif %}</a> in this area when river and sea levels previously reached current levels.
     </p>
     {% endif %}
 

@@ -11,7 +11,6 @@ const routes = [].concat(
   require('../routes/api/stations.geojson'),
   require('../routes/api/warnings.geojson'),
   require('../routes/start-page'),
-  require('../routes/location-not-england'),
   require('../routes/sms-auto-opt-in-info'),
   require('../routes/what-to-do-in-a-flood'),
   require('../routes/plan-ahead-for-flooding'),

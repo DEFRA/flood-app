@@ -11,10 +11,10 @@ module.exports = {
     const place = await locationService.find(location)
     if (typeof place === 'undefined' || place === '') {
       request.yar.set('displayError', { errorMessage: 'Enter a valid location' })
-      return h.redirect('/')
+      return h.view('404').code(404)
     }
     if (!place.isEngland.is_england) {
-      return h.redirect('/location-not-england')
+      return h.view('location-not-england')
     }
     const stations = await floodService.getStationsWithin(place.bbox)
     var model = new ViewModel({ location, place, stations })

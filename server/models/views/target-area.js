@@ -8,11 +8,9 @@ class ViewModel {
 
     Object.assign(this, {
       pageTitle: pageTitle,
-      severity: severityLevel,
-      place: {
-        name: area.name,
-        center: JSON.parse(area.centroid).coordinates
-      }
+      placeName: area.name,
+      placeCentre: JSON.parse(area.centroid).coordinates,
+      severity: severityLevel
     }, options)
   }
 }

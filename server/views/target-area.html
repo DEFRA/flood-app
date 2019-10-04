@@ -62,12 +62,10 @@
     </p>
     {% endif %}
 
+    <div id="mapButtonContainer"></div>
+    
     <p class="govuk-body">
       <a href="/river-and-sea-levels?river=river-name">View the latest river and sea levels</a> that impact this area.
-    </p>
-
-    <p class="govuk-body">
-      <button class="defra-button-map">View map of the flood risk area</button>.
     </p>
 
     <!--
@@ -126,10 +124,10 @@
   </div>
 </div>
 
-<div class="map" id="map-live">
-  <div class="map__container">
-    <div class="map__container-inner"></div>
-  </div>
+<div class="defra-map" id="map-live">
+    <div class="defra-map__container">
+        <div class="defra-map__container-inner"></div>
+    </div>
 </div>
 
 {% endblock %}

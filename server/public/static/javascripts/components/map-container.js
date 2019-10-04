@@ -144,8 +144,8 @@
       map.getView().setZoom(zoom)
     }
 
-    // Set Bbox
-    this.setBbox = function (bbox) {
+    // Set Extent from Bbox
+    this.setExtentFromBbox = function (bbox) {
       const extent = bbox.length ? ol.proj.transformExtent(bbox, 'EPSG:4326', 'EPSG:3857') : maps.extent
       /*
       var feature = new window.ol.Feature({
@@ -170,6 +170,19 @@
         constrainResolution: false,
         padding: [0, 0, 0, 0]
       })
+    }
+
+    // Set Extent from Bbox
+    this.setExtentFromGeometry = function (data) {
+      const feature = new ol.Feature(JSON.parse(data))
+      // const extent = feature.getExtent()
+      console.log(feature)
+      /*
+      map.getView().fit(extent, {
+        constrainResolution: false,
+        padding: [0, 0, 0, 0]
+      })
+      */
     }
 
     // Add locator: Could this be an exception as a locator may be common to all maps?

@@ -30,13 +30,7 @@ async function find (location) {
   // This is a check to see if "no results" found, because search is biased to GB if a search term can't be matched
   // the service tends to return the UK with a medium confidence, so this is a good indication that no results were found
   const noConfidence = (data.confidence.toLowerCase() === 'medium' || data.confidence.toLowerCase() === 'low')
-  /*
-  if (data.entityType.toLowerCase() === 'countryregion' && noConfidence) {
-    return
-  }
-  */
-  // Dan Leech - 'countryregion' filter removed to address =PopulatedPlace results appearing with low confidecne in Russia?
-  if (noConfidence) {
+  if (noConfidence || data.entityType.toLowerCase() === 'countryregion') {
     return
   }
 
@@ -59,7 +53,7 @@ async function find (location) {
   // Strip the "U.K" part of the address
   name = name.replace(', United Kingdom', '')
 
-  // Dan Leech temporary addition to remove the duplicate city/town name
+  // Temporary addition to remove the duplicate city/town name
   if (name.split(',').length === 2) {
     var parts = name.toLowerCase().split(',')
     if (parts[0].trim() === parts[1].trim()) {
