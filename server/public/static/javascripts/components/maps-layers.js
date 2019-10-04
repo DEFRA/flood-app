@@ -284,7 +284,6 @@
     var locationPoint = new window.ol.source.Vector({
       features: [feature]
     })
-
     return new window.ol.layer.Vector({
       ref: 'location',
       renderMode: 'hybrid',

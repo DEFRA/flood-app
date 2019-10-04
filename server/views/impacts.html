@@ -28,21 +28,11 @@
     </div>
 </div>
 
-{% if model.hasActiveImpacts %}
+{% if model.countActiveImpacts %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <div class="defra-search-summary">
-            <h2 class="defra-search-summary__count">{{ model.activeImpacts.length }} impact{% if model.activeImpacts.length > 1 %}s{% endif %} (level exceeded)</h2>
-            <button class="defra-search-summary__button-map">View on map</button>
-            <div class="app-map">
-                <div class="app-map__container">
-                    <div class="map" id="map-live">
-                        <div class="map__container">
-                            <div class="map__container-inner"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="defra-search-summary" id="defraSearchSummary">
+            <h2 class="defra-search-summary__count">{{ model.countActiveImpacts }} impact{% if model.countActiveImpacts > 1 %}s{% endif %} (level exceeded)</h2>
         </div>
     </div>
 </div>
@@ -86,6 +76,12 @@
     </div>
 </div>
 {% endif %}
+
+<div class="defra-map" id="map-live">
+    <div class="defra-map__container">
+        <div class="defra-map__container-inner"></div>
+    </div>
+</div>
 
 {% endblock %}
 

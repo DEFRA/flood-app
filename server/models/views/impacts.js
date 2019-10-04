@@ -1,20 +1,17 @@
-const moment = require('moment-timezone')
-
 class ViewModel {
   constructor ({ location, place, impacts }) {
-
     Object.assign(this, {
       q: location,
+      pageTitle: `${place.name} historic flood impacts`,
       placeName: place.name,
-      pageTitle: `${place.name} historic flood impacts`
+      placeBbox: place.bbox,
+      placeCentre: place.center
     })
 
-    // Impacts
-    // sort impacts order by value
     impacts.sort((a, b) => b.value - a.value)
-    // create an array of all active impacts
-    this.activeImpacts = impacts.filter(active => active.telemetryactive === true)
-    this.hasActiveImpacts = !!this.activeImpacts.length
+    const activeImpacts = impacts.filter(active => active.telemetryactive === true)
+    this.countActiveImpacts = activeImpacts.length
+    this.activeImpacts = activeImpacts
   }
 }
 

@@ -75,7 +75,7 @@
         window.history.back()
       } else {
         this.removeFullScreen()
-        var state = { 'v': '' }
+        var state = { 'v' : '' }
         var title = document.title
         var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'v', '')
         window.history.replaceState(state, title, url)
@@ -90,9 +90,9 @@
     }.bind(this))
 
     // Show map
-    this.show = function() {
+    this.show = function () {
       this.setFullScreen()
-      var state = { 'v': el.id }
+      var state = { 'v' : el.id }
       var title = document.title
       var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'v', el.id)
       window.history.pushState(state, title, url)
@@ -134,18 +134,46 @@
     })
 
     // Set center
-    this.setCenter = function(coordinates) {
+    this.setCenter = function (coordinates) {
       var center = ol.proj.transform(coordinates, 'EPSG:4326', 'EPSG:3857')
       map.getView().setCenter(center)
     }
 
     // Set zoom
-    this.setZoom = function(zoom) {
+    this.setZoom = function (zoom) {
       map.getView().setZoom(zoom)
     }
 
+    // Set Bbox
+    this.setBbox = function (bbox) {
+      const extent = bbox.length ? ol.proj.transformExtent(bbox, 'EPSG:4326', 'EPSG:3857') : maps.extent
+      /*
+      var feature = new window.ol.Feature({
+        geometry: ol.geom.Polygon.fromExtent(extent)
+      })
+      var source = new window.ol.source.Vector({
+        features: [feature]
+      })
+      var bounds = new window.ol.layer.Vector({
+        ref: 'bounds',
+        title: 'bounds',
+        source: source,
+        renderMode: 'hybrid',
+        style: new ol.style.Style({
+          fill: new ol.style.Fill({ color: 'rgba(0, 0, 0, 0.2)' })
+        }),
+        zIndex: 2
+      })
+      map.addLayer(bounds)
+      */
+      map.getView().fit(extent, {
+        constrainResolution: false,
+        padding: [0, 0, 0, 0]
+      })
+    }
+
     // Add locator: Could this be an exception as a locator may be common to all maps?
-    this.addLocator = function(name, coordinates) {
+    this.addLocator = function (name, coordinates) {
       map.addLayer(maps.layers.location(name, coordinates))
     }
 

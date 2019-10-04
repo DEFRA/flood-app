@@ -45,16 +45,18 @@
     },
     addBrowserBackButton: function() {
       const container = document.getElementById('browserBackButton')
-      const hyperlink = document.createElement('a')
-      hyperlink.href = document.referrer
-      hyperlink.href = hyperlink.pathname + hyperlink.search
-      hyperlink.innerText = 'Back'
-      hyperlink.className = 'govuk-back-link govuk-!-margin-bottom-7'
-      hyperlink.addEventListener('click', function (e) {
-        e.preventDefault()
-        window.history.back()
-      })
-      container.append(hyperlink)
+      if (container) {
+        const hyperlink = document.createElement('a')
+        hyperlink.href = document.referrer
+        hyperlink.href = hyperlink.pathname + hyperlink.search
+        hyperlink.innerText = 'Back'
+        hyperlink.className = 'govuk-back-link govuk-!-margin-bottom-7'
+        hyperlink.addEventListener('click', function (e) {
+          e.preventDefault()
+          window.history.back()
+        })
+        container.append(hyperlink)
+      }
     }
   }
 

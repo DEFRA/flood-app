@@ -59,9 +59,9 @@
     </p>
     {{ model.outlook.full | safe }}
     {% if model.outlook.hasOutlookConcern %}
-    <div class="map" id="map-outlook">
-      <div class="map__container">
-        <div class="map__container-inner">
+    <div class="defra-map" id="map-outlook">
+      <div class="defra-map__container">
+        <div class="defra-map__container-inner">
           <div class="map__outlook-control">
             <div class="map__outlook-control__inner">
               {% for day in model.outlook.days %}

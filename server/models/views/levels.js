@@ -3,15 +3,15 @@ const moment = require('moment-timezone')
 
 class ViewModel {
   constructor ({ location, place, stations }) {
-
     Object.assign(this, {
       q: location,
+      pageTitle: `${place.name} river and sea levels`,
       placeName: place.name,
-      pageTitle: `${place.name} river and sea levels`
+      placeBbox: place.bbox,
+      placeCentre: place.center
     })
 
     const today = moment.tz().endOf('day')
-    var levelsCount = 0
 
     for (var s in stations) {
       // Create display date property from UTC
@@ -54,9 +54,8 @@ class ViewModel {
     }
 
     // Levels
-    if (stations.length) {
-      this.levels = groupBy(stations, 'wiski_river_name')
-    }
+    this.countLevels = stations.length
+    this.levels = groupBy(stations, 'wiski_river_name')
   }
 }
 
