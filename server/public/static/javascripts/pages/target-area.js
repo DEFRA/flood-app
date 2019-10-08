@@ -3,27 +3,25 @@
   const maps = flood.maps
   const utils = flood.utils
   const model = flood.model
-  const mapLive = maps.createLiveMap('map-live')
-  const container = mapLive.container
-  const map = mapLive.map
-  const geometry = model.area.geom
 
   // Add browser back button
   utils.addBrowserBackButton()
 
-  // Add map button and setup map
-  // Create map button
-  const buttonContainer = document.getElementById('mapButtonContainer')
+  // Create map button and set up map
+  const buttonContainer = document.getElementById('map-live')
   if (buttonContainer) {
     const button = document.createElement('button')
     button.innerText = 'View map of the flood risk area'
     button.className = 'defra-button-map govuk-!-margin-bottom-4'
     button.addEventListener('click', function (e) {
       e.preventDefault()
-      container.show()
-      container.setExtentFromGeometry(geometry)
-      map.showFeatureSet('warnings')
+      // Instantiate and show map
+      maps.createLiveMap({ l: 'sw,w,a', f: model.featureId })
     })
-    buttonContainer.append(button)
+    buttonContainer.parentNode.insertBefore(button, buttonContainer)
+    // Instantiate and show map if querystring parameter
+    if (flood.utils.getParameterByName('v') === 'map-live') {
+      maps.createLiveMap({ l: 'sw,w,a', f: model.featureId })
+    }
   }
 })(window, window.flood)

@@ -19,20 +19,22 @@
       keyTemplate: ''
     }
 
-    this.options = Object.assign({}, defaults, options)
+    options = Object.assign({}, defaults, options)
 
     //
     // Map to DOM container elements
     //
 
-    this.element = el.firstElementChild
-    this.mapContainerInnerElement = el.firstElementChild.firstElementChild
+    this.el = el
+    this.element = document.createElement('div')
+    this.element.className = 'defra-map__container'
+    el.append(this.element)
 
     var hasKey = false
     // Experimental adding key via client side template
 
-    if (this.options.keyTemplate !== '') {
-      var keyHtml = window.nunjucks.render(this.options.keyTemplate)
+    if (options.keyTemplate !== '') {
+      var keyHtml = window.nunjucks.render(options.keyTemplate)
       hasKey = true
       this.keyElement = document.createElement('div')
       this.keyElement.innerHTML = keyHtml
@@ -65,49 +67,56 @@
       element: this.zoomButton
     })
 
-    // Hide map
-    var historyAdvanced = false
+    // History advance flag used by popstate
+    window.flood.historyAdvanced = false
+
+    // Hide map button
     this.hideMapButton = document.createElement('button')
     this.hideMapButton.className = 'ol-full-screen ol-full-screen-back'
     this.hideMapButton.appendChild(document.createTextNode('Exit map'))
     this.hideMapButton.addEventListener('click', function (e) {
-      if (historyAdvanced) {
+      if (window.flood.historyAdvanced) {
         window.history.back()
       } else {
-        this.removeFullScreen()
-        var state = { 'v' : '' }
+        el.removeChild(el.firstChild)
+        var url = window.location.pathname
+        var state = { v: '' }
         var title = document.title
-        var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'v', '')
         window.history.replaceState(state, title, url)
-        historyAdvanced = false
       }
       // Todo - set keyboard focus to the next link
-    }.bind(this))
+    })
     this.hideMapButton.addEventListener('keyup', function (e) {
       if (e.keyCode === 13 || e.keyCode === 32) {
         this.showMapButton.style.display === 'none' ? this.hideMapButton.focus() : this.showMapButton.focus()
       }
-    }.bind(this))
+    })
 
-    // Show map
-    this.show = function () {
-      this.setFullScreen()
-      var state = { 'v' : el.id }
+    // Open map from button press
+    if (!(getParameterByName('v') === el.id)) {
+      // Advance history if button pressed
+      var state = { v: el.id }
       var title = document.title
-      var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'v', el.id)
+      var url = window.location.pathname + window.location.search
+      url = addOrUpdateParameter(url, 'v', el.id)
+      if (options.queryStringParameters) {
+        // Add any querystring parameters that may have been passed in
+        Object.keys(options.queryStringParameters).forEach(function (key, index) {
+          url = addOrUpdateParameter(url, key, options.queryStringParameters[key])
+        })
+      }
       window.history.pushState(state, title, url)
-      historyAdvanced = true
-    }.bind(this)
-    var view = this.options.view
+      window.flood.historyAdvanced = true
+    }
 
     // Add key and fullscreen buttons
     if (hasKey) {
       el.classList.add('map--has-key')
-      this.mapContainerInnerElement.appendChild(this.keyElement)
+      this.element.appendChild(this.keyElement)
       this.keyElement.insertBefore(this.keyToggleElement, this.keyElement.firstChild)
       this.keyElement.prepend(this.hideMapButton)
     } else {
-      this.mapContainerInnerElement.prepend(this.hideMapButton)
+      this.element.prepend(this.hideMapButton)
     }
 
     // Add remaining controls
@@ -117,75 +126,19 @@
       attribution: false
     }).extend([zoom])
 
-    // Add layers to map
-    var layers = this.options.layers
-
     // Render map
     var map = new ol.Map({
-      target: this.mapContainerInnerElement,
+      target: this.element,
       controls: controls,
-      layers: layers,
-      view: view
-      /*
-      interactions: ol.interaction.defaults({
-        mouseWheelZoom: false
-      })
-      */
+      layers: options.layers,
+      view: options.view
     })
 
-    // Set center
-    this.setCenter = function (coordinates) {
-      var center = ol.proj.transform(coordinates, 'EPSG:4326', 'EPSG:3857')
-      map.getView().setCenter(center)
-    }
+    //
+    // External methods
+    //
 
-    // Set zoom
-    this.setZoom = function (zoom) {
-      map.getView().setZoom(zoom)
-    }
-
-    // Set Extent from Bbox
-    this.setExtentFromBbox = function (bbox) {
-      const extent = bbox.length ? ol.proj.transformExtent(bbox, 'EPSG:4326', 'EPSG:3857') : maps.extent
-      /*
-      var feature = new window.ol.Feature({
-        geometry: ol.geom.Polygon.fromExtent(extent)
-      })
-      var source = new window.ol.source.Vector({
-        features: [feature]
-      })
-      var bounds = new window.ol.layer.Vector({
-        ref: 'bounds',
-        title: 'bounds',
-        source: source,
-        renderMode: 'hybrid',
-        style: new ol.style.Style({
-          fill: new ol.style.Fill({ color: 'rgba(0, 0, 0, 0.2)' })
-        }),
-        zIndex: 2
-      })
-      map.addLayer(bounds)
-      */
-      map.getView().fit(extent, {
-        constrainResolution: false,
-        padding: [0, 0, 0, 0]
-      })
-    }
-
-    // Set Extent from Bbox
-    this.setExtentFromGeometry = function (data) {
-      const feature = new ol.Feature(JSON.parse(data))
-      // const extent = feature.getExtent()
-      console.log(feature)
-      /*
-      map.getView().fit(extent, {
-        constrainResolution: false,
-        padding: [0, 0, 0, 0]
-      })
-      */
-    }
-
-    // Add locator: Could this be an exception as a locator may be common to all maps?
+    // Add locator
     this.addLocator = function (name, coordinates) {
       map.addLayer(maps.layers.location(name, coordinates))
     }
@@ -194,12 +147,12 @@
     var mouseWheelZoom = new ol.interaction.MouseWheelZoom()
     map.addInteraction(mouseWheelZoom)
 
-    this.map = map
-
     // Open key
     if (this.isKeyOpen) {
       this.openKey()
     }
+
+    this.map = map
 
     //
     // Map events
@@ -226,22 +179,6 @@
     el.addEventListener('mouseout', function (e) {
       mouseWheelZoom.setActive(false)
     })
-
-    // Set fullscreen state
-    this.setFullScreen = function () {
-      el.removeAttribute('hidden')
-      el.classList.add('map--fullscreen')
-      this.isFullScreen = true
-      map.updateSize()
-    }
-
-    // Remove fullscreen state
-    this.removeFullScreen = function () {
-      el.setAttribute('hidden', true)
-      el.classList.remove('map--fullscreen')
-      this.isFullScreen = false
-      map.updateSize()
-    }
 
     // Open key
     this.openKey = function () {
@@ -299,20 +236,6 @@
       }
     }
 
-    // Set fullscreen state
-    if (getParameterByName('v') === el.id) {
-      this.setFullScreen()
-    }
-
-    // Toggle fullscreen view on browser history change
-    window.addEventListener('popstate', function (e) { 
-      if (e && e.state && getParameterByName('v') === el.id) {
-        this.setFullScreen()
-      } else {
-        this.removeFullScreen()
-      }
-    }.bind(this))
-
     // Constrain keyboard focus
     this.element.addEventListener('keydown', function (e) {
       if (this.element.contains(document.activeElement)) {
@@ -337,9 +260,7 @@
                 e.preventDefault()
                 lastFocusableElement.focus()
               }
-            }
-            // Tab (forwards) 
-            else {
+            } else { // Tab (forwards) 
               if (document.activeElement === lastFocusableElement) {
                 e.preventDefault()
                 firstFocusableElement.focus()

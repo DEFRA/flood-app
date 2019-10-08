@@ -25,7 +25,8 @@ module.exports = {
     validate: {
       query: {
         q: joi.string().required(),
-        cz: joi.string(),
+        e: joi.string(),
+        f: joi.string(),
         l: joi.string(),
         v: joi.string()
       }

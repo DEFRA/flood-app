@@ -217,6 +217,7 @@
   }
 
   // Style to highlight selected polygon
+  /*
   function floodPolygon () {
     return new ol.style.Style({
       fill: new ol.style.Fill({
@@ -224,13 +225,14 @@
       })
     })
   }
+  */
 
   styles.floods = floods
   styles.impacts = impacts
   styles.stations = stations
   styles.rain = rain
   styles.location = location
-  styles.floodPolygon = floodPolygon
+  // styles.floodPolygon = floodPolygon
 
   maps.styles = styles
 })(window, window.flood.maps)

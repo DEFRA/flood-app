@@ -26,6 +26,7 @@
     })
   }
 
+  /*
   function floodPolygonsSevere () {
     return new ol.layer.Image({
       ref: 'floods-severe',
@@ -72,41 +73,10 @@
       }),
       visible: false
     })
-
-    /*
-    return new ol.layer.Vector({
-      ref: 'floods-alert',
-      maxResolution: 200,
-      source: new ol.source.Vector({
-        format: new ol.format.GeoJSON(),
-        loader: function(extent, resolution, projection) {
-          var source = this
-          var proj = projection.getCode();
-          var url = '/ows?service=wfs&' +
-              'version=1.3.0&request=GetFeature&typename=flood:flood_warning_alert&' +
-              'outputFormat=application/json&srsname=' + proj + '&' +
-              'bbox=' + extent.join(',') + ',' + proj
-          var xhr = new XMLHttpRequest()
-          xhr.open('GET', url)
-          var onError = function() {
-            source.removeLoadedExtent(extent)
-          }
-          xhr.onerror = onError
-          xhr.onload = function() {
-            if (xhr.status == 200) {
-              source.addFeatures(source.getFormat().readFeatures(xhr.responseText))
-            } else {
-              onError()
-            }
-          }
-          xhr.send()
-        },
-        strategy: ol.loadingstrategy.bbox
-      })
-    })
-    */
   }
+  */
 
+  /*
   function floodPolygonsNotInForce () {
     return new ol.layer.Image({
       ref: 'floods-notinforce',
@@ -122,12 +92,49 @@
       visible: false
     })
   }
+  */
 
+  /*
   function floodPolygon () {
     return new ol.layer.Vector({
       ref: 'flood-polygon',
       maxResolution: 200,
       style: maps.styles.floodPolygon
+    })
+  }
+  */
+
+  function polygons () {
+    return new ol.layer.Vector({
+      ref: 'floods-polygons',
+      maxResolution: 200,
+      source: new ol.source.Vector({
+        format: new ol.format.GeoJSON(),
+        loader: function (extent, resolution, projection) {
+          var source = this
+          var proj = projection.getCode()
+          var url = '/ows?service=wfs&' +
+              'version=2.0.0&request=GetFeature&typename=flood:flood_warning_alert&' +
+              'outputFormat=application/json&srsname=' + proj + '&' +
+              'bbox=' + extent.join(',') + ',' + proj
+          var xhr = new XMLHttpRequest ()
+          xhr.open('GET', url)
+          var onError = function () {
+            source.removeLoadedExtent(extent)
+          }
+          xhr.onerror = onError
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              source.addFeatures(source.getFormat().readFeatures(xhr.responseText))
+            } else {
+              onError()
+            }
+          }
+          xhr.send()
+        },
+        strategy: ol.loadingstrategy.bbox
+      }),
+      style: new ol.style.Style({})
     })
   }
 
@@ -136,11 +143,11 @@
       ref: 'flood-centroids',
       minResolution: 200,
       source: new ol.source.Vector({
-        url: '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert_centroid&maxFeatures=10000&outputFormat=application/json',
-        format: new ol.format.GeoJSON()
+        format: new ol.format.GeoJSON(),
+        projection: 'EPSG:3857',
+        url: '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert_centroid&maxFeatures=10000&outputFormat=application/json'
       }),
-      style: maps.styles.floods,
-      visible: false
+      style: new ol.style.Style({})
     })
   }
 
@@ -157,79 +164,6 @@
     })
   }
 
-  // function rain () {
-  //   var geojsonObject = {
-  //     'type': 'FeatureCollection',
-  //     'features': [
-  //       {
-  //         'type': 'Feature',
-  //         'id': 'rain.50112',
-  //         'properties': {
-  //           'label': 'Rain gauge name',
-  //           'gridRef': 'SS777481',
-  //           'value': 0,
-  //           'latestDate': '2019-02-12T04:00:00Z'
-  //         },
-  //         'geometry': {
-  //           'type': 'Point',
-  //           'coordinates': [
-  //             -3.75,
-  //             51.22
-  //           ]
-  //         }
-  //       },
-  //       {
-  //         'type': 'Feature',
-  //         'id': 'rain.45101',
-  //         'properties': {
-  //           'label': 'Rain gauge name',
-  //           'gridRef': 'SS770391',
-  //           'value': 0,
-  //           'latestDate': '2019-02-12T04:00:00Z'
-  //         },
-  //         'geometry': {
-  //           'type': 'Point',
-  //           'coordinates': [
-  //             -3.76,
-  //             51.14
-  //           ]
-  //         }
-  //       },
-  //       {
-  //         'type': 'Feature',
-  //         'id': 'rain.45100',
-  //         'properties': {
-  //           'label': 'Rain gauge name',
-  //           'gridRef': 'SS763417',
-  //           'value': 0,
-  //           'latestDate': '2019-02-12T04:00:00Z'
-  //         },
-  //         'geometry': {
-  //           'type': 'Point',
-  //           'coordinates': [
-  //             -3.77,
-  //             51.16
-  //           ]
-  //         }
-  //       }
-  //     ]
-  //   }
-
-  //   var features = new ol.format.GeoJSON().readFeatures(geojsonObject, {
-  //     featureProjection: 'EPSG:3857'
-  //   })
-
-  //   return new ol.layer.Vector({
-  //     ref: 'rain',
-  //     title: 'rain',
-  //     source: new ol.source.Vector({
-  //       features: features
-  //     }),
-  //     style: maps.styles.rain,
-  //     visible: false
-  //   })
-  // }
-
   function rain () {
     return new ol.layer.Vector({
       ref: 'rain',
@@ -241,15 +175,6 @@
       }),
       style: new ol.style.Style({})
     })
-    // return new ol.layer.Vector({
-    //   ref: 'rain',
-    //   title: 'rain',
-    //   source: new ol.source.Vector({
-    //     features: features
-    //   }),
-    //   style: maps.styles.rain,
-    //   visible: false
-    // })
   }
 
   function impacts () {
@@ -263,15 +188,6 @@
       }),
       style: new ol.style.Style({})
     })
-    // return new ol.layer.Vector({
-    //   ref: 'rain',
-    //   title: 'rain',
-    //   source: new ol.source.Vector({
-    //     features: features
-    //   }),
-    //   style: maps.styles.rain,
-    //   visible: false
-    // })
   }
 
   function location (name, center) {
@@ -294,20 +210,24 @@
   }
 
   function selectedPointFeature () {
-    return new window.ol.layer.Vector({
+    return new ol.layer.Vector({
       ref: 'selected-point-feature',
       renderMode: 'hybrid',
-      zIndex: 10
+      zIndex: 10,
+      source: new ol.source.Vector()
     })
   }
 
   layers.road = road
   layers.satellite = satellite
+  /*
   layers.floodsSevere = floodPolygonsSevere
   layers.floodsWarning = floodPolygonsWarning
   layers.floodsAlert = floodPolygonsAlert
   layers.floodsNotInForce = floodPolygonsNotInForce
   layers.floodPolygon = floodPolygon
+  */
+  layers.polygons = polygons
   layers.floodCentroids = floodCentroids
   layers.stations = stations
   layers.impacts = impacts

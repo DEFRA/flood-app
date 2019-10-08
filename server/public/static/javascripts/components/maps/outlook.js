@@ -2,23 +2,28 @@
 // It uses the MapContainer
 
 (function (window, flood) {
-  var ol = window.ol
-  var maps = flood.maps
-  var MapContainer = maps.MapContainer
-  var forEach = flood.utils.forEach
+  const ol = window.ol
+  const maps = flood.maps
+  const MapContainer = maps.MapContainer
+  const forEach = flood.utils.forEach
+  const getParameterByName = flood.utils.getParameterByName
 
-  function OutlookMap (elementId) {
+  function OutlookMap () {
+    // Container element
+    var elementId = 'map-outlook'
+    var containerEl = document.getElementById(elementId)
+
+    var center = ol.proj.transform(maps.center, 'EPSG:4326', 'EPSG:3857')
+
     // options = options || {}
 
-    // Outlook map
     var road = maps.layers.road()
 
     var view = new ol.View({
-      center: ol.proj.transform(maps.center, 'EPSG:4326', 'EPSG:3857'),
       zoom: 6,
       minZoom: 6,
       maxZoom: 7,
-      extent: maps.extent
+      center: center
     })
 
     var geoJson = new window.ol.format.GeoJSON()
@@ -82,26 +87,42 @@
       })
     }
 
-    var container = new MapContainer(document.getElementById(elementId), {
+    // MapContainer options
+    var mapOptions = {
       keyTemplate: 'map-key-outlook.html',
       view: view,
       layers: [
         road,
         areasOfConcern
       ]
-    })
+    }
 
-    // Add show map button
-    // Add map view button
-    var mapButton = document.createElement('button')
-    mapButton.innerText = 'View map showing risk areas'
-    mapButton.className = 'defra-button-map govuk-!-margin-bottom-4'
-    mapButton.addEventListener('click', function (e) {
-      e.preventDefault()
-      container.show()
-    })
-    document.getElementById(elementId).parentNode.insertBefore(mapButton, document.getElementById(elementId))
+    // Create MapContainer
+    var container = new MapContainer(containerEl, mapOptions)
+    var map = container.map
 
+    // Add outlook day controls
+    /*
+    <div class="defra-map__container">
+        <div class="defra-map__container-inner">
+          <div class="map__outlook-control">
+            <div class="map__outlook-control__inner">
+              {% for day in model.outlook.days %}
+                <div class="map__outlook-control__day">
+                  <button class="map__outlook-control__button"
+                    aria-selected="{{ "true" if not day.idx else "false" }}"
+                    data-day="{{day.idx}}">{{ day.date | formatDate('ddd D') }}
+                    <span class="map__outlook-control__icon map__outlook-control__icon--risk-level-{{day.level}}"></span>
+                  </button>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    */
+
+    /*
     var outlookControl = container.element.querySelector('.map__outlook-control')
     var outlookButtons = outlookControl.querySelectorAll('button')
 
@@ -113,13 +134,40 @@
         setDay(day)
       })
     })
+    */
+
+    //
+    // Events
+    //
+
+    // Precompose - setup view and features first
+    map.once('precompose', function (e) {
+      // Set map extent to intial extent
+      const extent = getParameterByName('e') ? getParameterByName('e').split(',').map(Number) : maps.extent
+      map.getView().fit(extent, { constrainResolution: false, padding: [0, 0, 0, 0] })
+    })
+
+    // Toggle fullscreen view on browser history change
+    function popStateListener (e) {
+      if (e && e.state && getParameterByName('v') === elementId) {
+        window.removeEventListener('popstate', popStateListener)
+        maps.createOutlookMap()
+        window.flood.historyAdvanced = true
+      } else {
+        var el = document.getElementById(elementId)
+        if (el.firstChild) {
+          el.removeChild(el.firstChild)
+        }
+      }
+    }
+    window.addEventListener('popstate', popStateListener)
   }
 
   // Export a helper factory to create this map
   // onto the `maps` object.
   // (This is done mainly to avoid the rule
   // "do not use 'new' for side effects. (no-new)")
-  maps.createOutlookMap = function (containerId) {
-    return new OutlookMap(containerId)
+  maps.createOutlookMap = function () {
+    return new OutlookMap()
   }
 })(window, window.flood)

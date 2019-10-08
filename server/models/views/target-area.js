@@ -10,6 +10,7 @@ class ViewModel {
       pageTitle: pageTitle,
       placeName: area.name,
       placeCentre: JSON.parse(area.centroid).coordinates,
+      featureId: area.id,
       severity: severityLevel
     }, options)
   }

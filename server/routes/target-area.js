@@ -16,6 +16,7 @@ module.exports = {
       model.hasBackButton = Boolean(request.headers.referer)
       return h.view('target-area', { model })
     } catch (err) {
+      console.log(err)
       return err.isBoom
         ? err
         : boom.badRequest('Failed to get target area', err)
@@ -25,6 +26,13 @@ module.exports = {
     validate: {
       params: {
         code: joi.string().required()
+      },
+      query: {
+        q: joi.string().optional(),
+        e: joi.string().optional(),
+        f: joi.string().optional(),
+        l: joi.string().optional(),
+        v: joi.string().optional()
       }
     }
   }

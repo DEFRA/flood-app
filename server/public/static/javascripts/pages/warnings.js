@@ -3,18 +3,9 @@
   const maps = flood.maps
   const utils = flood.utils
   const model = flood.model
-  const mapLive = maps.createLiveMap('map-live')
-  const container = mapLive.container
-  const map = mapLive.map
-  const centre = model.placeCentre
-  const bbox = model.placeBbox
-  const name = model.placeName
 
   // Add browser back button
   utils.addBrowserBackButton()
-
-  // Add locator
-  container.addLocator(name, centre)
 
   // Add map button and setup map
   if (model.countFloods) {
@@ -26,11 +17,14 @@
       button.className = 'defra-search-summary__button-map'
       button.addEventListener('click', function (e) {
         e.preventDefault()
-        container.show()
-        container.setExtentFromBbox(bbox)
-        map.showFeatureSet('warnings')
+        // Instantiate and show map when button pressed
+        maps.createLiveMap({ l: 'sw,w,a' })
       })
       buttonContainer.append(button)
+      // Instantiate and show map if querystring parameter present
+      if (flood.utils.getParameterByName('v') === 'map-live') {
+        maps.createLiveMap({ l: 'sw,w,a' })
+      }
     }
   }
 })(window, window.flood)

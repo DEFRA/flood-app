@@ -2,8 +2,21 @@
   var maps = flood.maps
 
   // Outlook map
-  if (document.getElementById('map-outlook')) {
-    maps.createOutlookMap('map-outlook')
+  const outlookMapContainer = document.getElementById('map-outlook')
+  if (outlookMapContainer) {
+    const button = document.createElement('button')
+    button.innerText = 'View map showing risk areas'
+    button.className = 'defra-button-map govuk-!-margin-bottom-4'
+    button.addEventListener('click', function (e) {
+      e.preventDefault()
+      // Instantiate and show map
+      maps.createOutlookMap()
+    })
+    outlookMapContainer.parentNode.insertBefore(button, outlookMapContainer)
+    // Instantiate and show map if querystring parameter
+    if (flood.utils.getParameterByName('v') === 'map-outlook') {
+      maps.createOutlookMap()
+    }
   }
 
   // Warning enhancement
