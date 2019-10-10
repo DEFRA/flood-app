@@ -67,7 +67,6 @@
     hideMapButton.appendChild(document.createTextNode('Exit map'))
     hideMapButton.addEventListener('click', function (e) {
       // Return focus to original map button
-      console.log(getParameterByName('btn'))
       if (getParameterByName('btn')) {
         var btn = document.getElementById(getParameterByName('btn'))
         btn.focus()
