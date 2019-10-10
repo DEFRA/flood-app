@@ -7,24 +7,33 @@
   // Add browser back button
   utils.addBrowserBackButton()
 
-  // Add map button and setup map
+  // Instantiate a LiveMap
   if (model.countFloods) {
-    // Create map button
-    const buttonContainer = document.getElementById('searchSummary')
+    // Create LiveMap if querystring is present
+    if (utils.getParameterByName('v') === 'map-live') {
+      maps.createLiveMap('map-live')
+    }
+    // Create LiveMap if show map button pressed
+    var buttonContainer = document.getElementById('searchSummary')
     if (buttonContainer) {
       const button = document.createElement('button')
       button.innerText = 'View on map'
       button.className = 'defra-search-summary__button-map'
       button.addEventListener('click', function (e) {
         e.preventDefault()
-        // Instantiate and show map when button pressed
-        maps.createLiveMap({ l: 'sw,w,a' })
+        maps.createLiveMap('map-live', { l: 'sw,w,a' })
       })
       buttonContainer.append(button)
-      // Instantiate and show map if querystring parameter present
-      if (flood.utils.getParameterByName('v') === 'map-live') {
-        maps.createLiveMap({ l: 'sw,w,a' })
-      }
     }
+    // Create LiveMap if history changes
+    var mapContainer = document.getElementById('map-live')
+    window.addEventListener('popstate', function (e) {
+      if (mapContainer.firstChild) {
+        mapContainer.removeChild(mapContainer.firstChild)
+      }
+      if (e && e.state) {
+        maps.createLiveMap('map-live')
+      }
+    })
   }
 })(window, window.flood)

@@ -12,11 +12,9 @@
   const forEach = flood.utils.forEach
   const MapContainer = maps.MapContainer
 
-  function LiveMap (queryStringParameters) {
+  function LiveMap (containerId, displaySettings) {
     // Container element
-    var elementId = 'map-live'
-    var containerEl = document.getElementById(elementId)
-
+    const containerEl = document.getElementById(containerId)
     var center = ol.proj.transform(maps.center, 'EPSG:4326', 'EPSG:3857')
 
     // ol.View
@@ -136,10 +134,11 @@
     }
 
     // MapContainer options
-    var mapOptions = {
+    var options = {
       minIconResolution: 200,
       view: view,
       keyTemplate: 'map-key-live.html',
+      displaySettings: displaySettings,
       layers: [
         road,
         satellite,
@@ -147,144 +146,15 @@
         rain,
         stations,
         impacts,
-        floodCentroids
-      ],
-      queryStringParameters: queryStringParameters
+        floodCentroids,
+        selectedPointFeature
+      ]
     }
-    // Selected point feature last in zIndex
-    mapOptions.layers.push(selectedPointFeature)
 
     // Create MapContainer
-    var container = new MapContainer(containerEl, mapOptions)
+    var container = new MapContainer(containerEl, options)
     var map = container.map
-
-    // Handle key interactions
-    var keyForm = container.keyElement.querySelector('form')
-
-    // Update Key and Canvas depending on visible features in extent
-    function updateKeyAndCanvas () {
-      var extent = map.getView().calculateExtent()
-      var showSevere = showWarning = showAlert = false
-
-      // Set booleans for flood centroids
-      polygons.getSource().forEachFeatureInExtent(extent, function (feature) {
-        if (feature.get('severity') === 1) {
-          showSevere = true
-        } else if (feature.get('severity') === 2) {
-          showWarning = true
-        } else if (feature.get('severity') === 3) {
-          showAlert = true
-        }
-      })
-
-      // Set booleans for flood centroids
-      floodCentroids.getSource().forEachFeatureInExtent(extent, function (feature) {
-        if (feature.get('severity') === 1) {
-          showSevere = true
-        } else if (feature.get('severity') === 2) {
-          showWarning = true
-        } else if (feature.get('severity') === 3) {
-          showAlert = true
-        }
-      })
-
-      // Set booleans for stations and rain centroids
-      var showImpacts = !!impacts.getSource().getFeaturesInExtent(extent).length
-      var showStations = !!stations.getSource().getFeaturesInExtent(extent).length
-      var showRain = !!rain.getSource().getFeaturesInExtent(extent).length
-
-      // Update key ul or li
-      if (showSevere || showWarning || showAlert) {
-        keyForm.querySelector('#severeFloodWarnings').closest('ul').style.display = 'block'
-        keyForm.querySelector('#severeFloodWarnings').closest('li').style.display = showSevere ? 'block' : 'none'
-        keyForm.querySelector('#floodWarnings').closest('li').style.display = showWarning ? 'block' : 'none'
-        keyForm.querySelector('#floodAlerts').closest('li').style.display = showAlert ? 'block' : 'none'
-      } else {
-        keyForm.querySelector('#severeFloodWarnings').closest('ul').style.display = 'none'
-      }
-      keyForm.querySelector('#impacts').closest('ul').style.display = showImpacts ? 'block' : 'none'
-      keyForm.querySelector('#stations').closest('ul').style.display = showStations ? 'block' : 'none'
-      keyForm.querySelector('#rain').closest('ul').style.display = showRain ? 'block' : 'none'
-
-      // Get visible features in view port
-      /*
-      var featuresInViewPort = []
-      var visibleSeverities = []
-      forEach(keyForm.querySelectorAll('.govuk-checkboxes__input'), function (input) {
-        if (input.checked) {
-          if (input.hasAttribute('data-severity')) {
-            visibleSeverities.push(parseInt(input.getAttribute('data-severity')))
-          } else if (input.getAttribute('data-layer') === 'impacts') {
-            impacts.getSource().forEachFeatureInExtent(extent, function (feature) {
-              featuresInViewPort.push({
-                'id': feature.getId(),
-                'description': feature.get('label'),
-                'layer': 'impacts'
-              })
-            })
-          } else if (input.getAttribute('data-layer') === 'stations') {
-            stations.getSource().forEachFeatureInExtent(extent, function (feature) {
-              featuresInViewPort.push({
-                'id': feature.getId(),
-                'description': feature.get('name'),
-                'layer': 'stations'
-              })
-            })
-          } else if (input.getAttribute('data-layer') === 'rain') {
-            rain.getSource().forEachFeatureInExtent(extent, function (feature) {
-              featuresInViewPort.push({
-                'id': feature.getId(),
-                'description': feature.get('label'),
-                'layer': 'rain'
-              })
-            })
-          }
-        }
-      })
-      if (map.getView().getResolution() <= options.minIconResolution) {
-        floodsPolygons.features.forEach(function (feature) {
-          if (visibleSeverities.indexOf(feature.properties.severity) > -1) {
-            var layer = ''
-            switch (feature.properties.severity) {
-              case 1:
-                layer = 'floodsSevere'
-                break
-              case 2:
-                layer = 'floodsWarning'
-                break
-              case 3:
-                layer = 'floodsAlert'
-                break
-            }
-            featuresInViewPort.push({
-              'id': feature.id,
-              'description': feature.properties.description,
-              'layer': layer
-            })
-          }
-        })
-      } else {
-        floodCentroids.getSource().forEachFeatureInExtent(extent, function (feature) {
-          if (visibleSeverities.indexOf(parseInt(feature.get('severity'))) > -1) {
-            featuresInViewPort.push({
-              'id': feature.getId(),
-              'description': feature.get('description'),
-              'layer': 'floodCentroids'
-            })
-          }
-        })
-      }
-      // Add to canvas
-      const canvas = containerEl.querySelector('canvas')
-      if (featuresInViewPort.length <= 20) {
-        canvas.innerHTML = '<a href="/test1">Test link</a>,<a href="/test2">Test link 2</a>'
-      }
-      canvas.innerHTML = window.nunjucks.render('canvas-live.html', {
-        features: featuresInViewPort.length <= 20 ? featuresInViewPort : [],
-        numFeatures: featuresInViewPort.length
-      })
-      */
-    }
+    var key = container.key
 
     // Set flood layers visibility
     /*
@@ -347,72 +217,8 @@
     }
     */
 
-    // Sets the source of selected point feature
-    function setSelectedPointFeatureSource (source) {
-      selectedPointFeature.setSource(source)
-      // Set feature style
-      if (source) {
-        // *** Need a schema for all GeoJson features
-        var id = source.getFeatures()[0].getId()
-        if (id.startsWith('impacts')) {
-          selectedPointFeature.setStyle(maps.styles.impacts)
-        } else if (id.startsWith('stations')) {
-          selectedPointFeature.setStyle(maps.styles.stations)
-        } else if (id.startsWith('flood_warning_alert')) {
-          selectedPointFeature.setStyle(maps.styles.floods)
-        } else if (id.startsWith('rain')) {
-          selectedPointFeature.setStyle(maps.styles.rain)
-        } else {
-          selectedPointFeature.setStyle(maps.styles.location)
-        }
-      }
-    }
 
-    // Pan map
-    function panMap (feature) {
-      var bounds = map.getView().calculateExtent(map.getSize())
-      bounds = ol.extent.buffer(bounds, -1000)
-      if (!ol.extent.containsExtent(bounds, feature.getGeometry().getExtent())) {
-        map.getView().setCenter(feature.getGeometry().getCoordinates())
-      }
-    }
 
-    // Layer visibility
-    function setFeatureSetVisibility() {
-      forEach(keyForm.querySelectorAll('.map-key__features input'), function (input) {
-        // Set layer visiblity or feature style
-        if (input.id === 'mapView') {
-          if (input.checked) {
-            road.setVisible(true)
-            satellite.setVisible(false)
-          } else {
-            road.setVisible(false)
-            satellite.setVisible(true)
-          }
-        } else if (input.id === 'stations') {
-          if (input.checked) {
-            stations.setStyle(maps.styles.stations)
-          } else {
-            stations.setStyle(new ol.style.Style({}))
-          }
-          // stations.setVisible(true)
-        } else if (input.id === 'impacts') {
-          if (input.checked) {
-            impacts.setStyle(maps.styles.impacts)
-          } else {
-            impacts.setStyle(new ol.style.Style({}))
-          }
-          // impacts.setVisible(true)
-        } else if (input.id === 'rain') {
-          if (input.checked) {
-            rain.setStyle(maps.styles.rain)
-          } else {
-            rain.setStyle(new ol.style.Style({}))
-          }
-          // rain.setVisible(true)
-        }
-      })
-    }
         /*
         if (target.name === 'baselayer') {
           if (target.value === 'mapView') {
@@ -531,7 +337,212 @@
     */
 
     //
-    // Events
+    // Map internal methods
+    //
+
+    // Update Key and Canvas depending on visible features in extent
+    function updateKeyAndCanvas () {
+      var extent = map.getView().calculateExtent()
+      var showSevere = showWarning = showAlert = false
+
+      // Set booleans for flood centroids
+      polygons.getSource().forEachFeatureInExtent(extent, function (feature) {
+        if (feature.get('severity') === 1) {
+          showSevere = true
+        } else if (feature.get('severity') === 2) {
+          showWarning = true
+        } else if (feature.get('severity') === 3) {
+          showAlert = true
+        }
+      })
+
+      // Set booleans for flood centroids
+      floodCentroids.getSource().forEachFeatureInExtent(extent, function (feature) {
+        if (feature.get('severity') === 1) {
+          showSevere = true
+        } else if (feature.get('severity') === 2) {
+          showWarning = true
+        } else if (feature.get('severity') === 3) {
+          showAlert = true
+        }
+      })
+
+      // Set booleans for stations and rain centroids
+      var showImpacts = !!impacts.getSource().getFeaturesInExtent(extent).length
+      var showStations = !!stations.getSource().getFeaturesInExtent(extent).length
+      var showRain = !!rain.getSource().getFeaturesInExtent(extent).length
+
+      // Update key ul or li
+      if (showSevere || showWarning || showAlert) {
+        key.querySelector('#severeFloodWarnings').closest('ul').style.display = 'block'
+        key.querySelector('#severeFloodWarnings').closest('li').style.display = showSevere ? 'block' : 'none'
+        key.querySelector('#floodWarnings').closest('li').style.display = showWarning ? 'block' : 'none'
+        key.querySelector('#floodAlerts').closest('li').style.display = showAlert ? 'block' : 'none'
+      } else {
+        key.querySelector('#severeFloodWarnings').closest('ul').style.display = 'none'
+      }
+      key.querySelector('#impacts').closest('ul').style.display = showImpacts ? 'block' : 'none'
+      key.querySelector('#stations').closest('ul').style.display = showStations ? 'block' : 'none'
+      key.querySelector('#rain').closest('ul').style.display = showRain ? 'block' : 'none'
+
+      // Get visible features in view port
+      /*
+      var featuresInViewPort = []
+      var visibleSeverities = []
+      forEach(keyForm.querySelectorAll('.govuk-checkboxes__input'), function (input) {
+        if (input.checked) {
+          if (input.hasAttribute('data-severity')) {
+            visibleSeverities.push(parseInt(input.getAttribute('data-severity')))
+          } else if (input.getAttribute('data-layer') === 'impacts') {
+            impacts.getSource().forEachFeatureInExtent(extent, function (feature) {
+              featuresInViewPort.push({
+                'id': feature.getId(),
+                'description': feature.get('label'),
+                'layer': 'impacts'
+              })
+            })
+          } else if (input.getAttribute('data-layer') === 'stations') {
+            stations.getSource().forEachFeatureInExtent(extent, function (feature) {
+              featuresInViewPort.push({
+                'id': feature.getId(),
+                'description': feature.get('name'),
+                'layer': 'stations'
+              })
+            })
+          } else if (input.getAttribute('data-layer') === 'rain') {
+            rain.getSource().forEachFeatureInExtent(extent, function (feature) {
+              featuresInViewPort.push({
+                'id': feature.getId(),
+                'description': feature.get('label'),
+                'layer': 'rain'
+              })
+            })
+          }
+        }
+      })
+      if (map.getView().getResolution() <= options.minIconResolution) {
+        floodsPolygons.features.forEach(function (feature) {
+          if (visibleSeverities.indexOf(feature.properties.severity) > -1) {
+            var layer = ''
+            switch (feature.properties.severity) {
+              case 1:
+                layer = 'floodsSevere'
+                break
+              case 2:
+                layer = 'floodsWarning'
+                break
+              case 3:
+                layer = 'floodsAlert'
+                break
+            }
+            featuresInViewPort.push({
+              'id': feature.id,
+              'description': feature.properties.description,
+              'layer': layer
+            })
+          }
+        })
+      } else {
+        floodCentroids.getSource().forEachFeatureInExtent(extent, function (feature) {
+          if (visibleSeverities.indexOf(parseInt(feature.get('severity'))) > -1) {
+            featuresInViewPort.push({
+              'id': feature.getId(),
+              'description': feature.get('description'),
+              'layer': 'floodCentroids'
+            })
+          }
+        })
+      }
+      // Add to canvas
+      const canvas = containerEl.querySelector('canvas')
+      if (featuresInViewPort.length <= 20) {
+        canvas.innerHTML = '<a href="/test1">Test link</a>,<a href="/test2">Test link 2</a>'
+      }
+      canvas.innerHTML = window.nunjucks.render('canvas-live.html', {
+        features: featuresInViewPort.length <= 20 ? featuresInViewPort : [],
+        numFeatures: featuresInViewPort.length
+      })
+      */
+    }
+
+    // Sets the source of selected point feature
+    function setSelectedPointFeatureSource (source) {
+      selectedPointFeature.setSource(source)
+      // Set feature style
+      if (source) {
+        // *** Need a schema for all GeoJson features
+        var id = source.getFeatures()[0].getId()
+        if (id.startsWith('impacts')) {
+          selectedPointFeature.setStyle(maps.styles.impacts)
+        } else if (id.startsWith('stations')) {
+          selectedPointFeature.setStyle(maps.styles.stations)
+        } else if (id.startsWith('flood_warning_alert')) {
+          selectedPointFeature.setStyle(maps.styles.floods)
+        } else if (id.startsWith('rain')) {
+          selectedPointFeature.setStyle(maps.styles.rain)
+        } else {
+          selectedPointFeature.setStyle(maps.styles.location)
+        }
+      }
+    }
+
+    // Pan map
+    function panMap (feature) {
+      var bounds = map.getView().calculateExtent(map.getSize())
+      bounds = ol.extent.buffer(bounds, -1000)
+      if (!ol.extent.containsExtent(bounds, feature.getGeometry().getExtent())) {
+        map.getView().setCenter(feature.getGeometry().getCoordinates())
+      }
+    }
+
+    // Layer visibility
+    function setFeatureSetVisibility() {
+      forEach(document.querySelectorAll('.map-key__features input'), function (input) {
+        // Set layer visiblity or feature style
+        if (input.id === 'mapView') {
+          if (input.checked) {
+            road.setVisible(true)
+            satellite.setVisible(false)
+          } else {
+            road.setVisible(false)
+            satellite.setVisible(true)
+          }
+        } else if (input.id === 'stations') {
+          if (input.checked) {
+            stations.setStyle(maps.styles.stations)
+          } else {
+            stations.setStyle(new ol.style.Style({}))
+          }
+          // stations.setVisible(true)
+        } else if (input.id === 'impacts') {
+          if (input.checked) {
+            impacts.setStyle(maps.styles.impacts)
+          } else {
+            impacts.setStyle(new ol.style.Style({}))
+          }
+          // impacts.setVisible(true)
+        } else if (input.id === 'rain') {
+          if (input.checked) {
+            rain.setStyle(maps.styles.rain)
+          } else {
+            rain.setStyle(new ol.style.Style({}))
+          }
+          // rain.setVisible(true)
+        }
+      })
+    }
+
+    //
+    // Map external methods
+    //
+
+    // Add locator
+    map.addLocator = function (name, coordinates) {
+      map.addLayer(maps.layers.location(name, coordinates))
+    }
+
+    //
+    // Map events
     //
 
     // Precompose - setup view and features first
@@ -542,12 +553,12 @@
       // Set initial layer views from querystring
       if (getParameterByName('l')) {
         var layers = getParameterByName('l').split(',')
-        keyForm.querySelector('#severeFloodWarnings').checked = layers.includes('sw') ? true : false
-        keyForm.querySelector('#floodWarnings').checked = layers.includes('w') ? true : false
-        keyForm.querySelector('#floodAlerts').checked = layers.includes('a') ? true : false
-        keyForm.querySelector('#impacts').checked = layers.includes('i') ? true : false
-        keyForm.querySelector('#stations').checked = layers.includes('s') ? true : false
-        keyForm.querySelector('#rain').checked = layers.includes('r') ? true : false
+        key.querySelector('#severeFloodWarnings').checked = layers.includes('sw') ? true : false
+        key.querySelector('#floodWarnings').checked = layers.includes('w') ? true : false
+        key.querySelector('#floodAlerts').checked = layers.includes('a') ? true : false
+        key.querySelector('#impacts').checked = layers.includes('i') ? true : false
+        key.querySelector('#stations').checked = layers.includes('s') ? true : false
+        key.querySelector('#rain').checked = layers.includes('r') ? true : false
       }
     })
 
@@ -559,7 +570,7 @@
         layer.getSource().on('change', function (e) {
           if (this.getState() === 'ready') {
             layerLoadedCount +=1
-            if (layerLoadedCount >= 6) {
+            if (layerLoadedCount >= 4) {
               // All layers are loaded (we only need 6 of the 7)
               updateKeyAndCanvas()
               setFeatureSetVisibility()
@@ -570,6 +581,7 @@
     })
 
     // Reactions based on pan/zoom change on map
+    var timer = null
     map.addEventListener('moveend', function (e) {
       // Update layer opacity setting for different map resolutions
       var resolution = map.getView().getResolution()
@@ -585,23 +597,27 @@
       }
       // setFloodsOpacity(layerOpacity)
       // Key icons
-      if (resolution <= mapOptions.minIconResolution) {
+      if (resolution <= options.minIconResolution) {
         // Key polygons
-        forEach(keyForm.querySelectorAll('[data-style]'), function (symbol) {
+        forEach(document.querySelectorAll('[data-style]'), function (symbol) {
           symbol.style = symbol.getAttribute('data-style-offset')
         })
       } else {
         // Key icons
-        forEach(keyForm.querySelectorAll('[data-style]'), function (symbol) {
+        forEach(document.querySelectorAll('[data-style]'), function (symbol) {
           symbol.style = symbol.getAttribute('data-style')
         })
       }
       const extent = map.getView().calculateExtent().join(',')
       // const extent = ol.proj.transformExtent(e.split(','), 'EPSG:3857', 'EPSG:4326')
-      const state = { v: elementId }
+      const state = { v: containerId }
       const url = addOrUpdateParameter(window.location.pathname + window.location.search, 'e', extent)
       const title = document.title
-      window.history.replaceState(state, title, url)
+      // timer used to stop 100 replaces in 30 seconds limit
+      clearTimeout(timer)
+      timer = setTimeout(function () {
+        window.history.replaceState(state, title, url)
+      }, 100)
       updateKeyAndCanvas()
     })
 
@@ -705,25 +721,29 @@
     })
 
     // Key input change
-    keyForm.addEventListener('change', function (e) {
-      setFeatureSetVisibility()
-      // Update key and canvas
-      // updateKeyAndCanvas()
-      // Update url layers
-      var sw = keyForm.querySelector('#severeFloodWarnings').checked ? 'sw' : ''
-      var w = keyForm.querySelector('#floodWarnings').checked ? 'w' : ''
-      var a = keyForm.querySelector('#floodAlerts').checked ? 'a' : ''
-      var i = keyForm.querySelector('#impacts').checked ? 'i' : ''
-      var s = keyForm.querySelector('#stations').checked ? 's' : ''
-      var r = keyForm.querySelector('#rain').checked ? 'r' : ''
-      var l = [i, s, r, a, w, sw].filter(Boolean).join(',')
-      const url = addOrUpdateParameter(window.location.pathname + window.location.search, 'l', l)
-      const title = document.title
-      window.history.replaceState(null, title, url)
+    key.addEventListener('change', function (e) {
+      console.log('Input chnage')
+      if (e.target.nodeName === 'input' ) {
+        setFeatureSetVisibility()
+        // Update key and canvas
+        // updateKeyAndCanvas()
+        // Update url layers
+        var sw = key.querySelector('#severeFloodWarnings').checked ? 'sw' : ''
+        var w = key.querySelector('#floodWarnings').checked ? 'w' : ''
+        var a = key.querySelector('#floodAlerts').checked ? 'a' : ''
+        var i = key.querySelector('#impacts').checked ? 'i' : ''
+        var s = key.querySelector('#stations').checked ? 's' : ''
+        var r = key.querySelector('#rain').checked ? 'r' : ''
+        var l = [i, s, r, a, w, sw].filter(Boolean).join(',')
+        const url = addOrUpdateParameter(window.location.pathname + window.location.search, 'l', l)
+        const title = document.title
+        window.history.replaceState(null, title, url)
+      }
     })
 
     // Overlay river level navigation button click
-    document.querySelector('.ol-overlaycontainer-stopevent').addEventListener('click', async function (e) {
+    document.addEventListener('click', async function (e) {
+      //document.querySelector('.ol-overlaycontainer-stopevent').addEventListener('click', async function (e) {
       if (e.target.classList.contains('overlay-navigation-button')) {
         var nextStationId = e.target.getAttribute('data-id')
         var feature = stations.getSource().getFeatureById(nextStationId)
@@ -735,6 +755,7 @@
         await ensureFeatureTooltipHtml(feature)
         container.showOverlay(feature)
       }
+      //})
     })
 
     // Keyboard access to features
@@ -760,30 +781,16 @@
       }
     })
 
-    // Toggle fullscreen view on browser history change
-    function popStateListener (e) {
-      if (e && e.state && getParameterByName('v') === elementId) {
-        window.removeEventListener('popstate', popStateListener)
-        maps.createLiveMap()
-        window.flood.historyAdvanced = true
-      } else {
-        var el = document.getElementById(elementId)
-        if (el.firstChild) {
-          el.removeChild(el.firstChild)
-        }
-      }
-    }
-    window.addEventListener('popstate', popStateListener)
-
-    this.map = map
+    // External properties
     this.container = container
+    this.map = map
   }
 
   // Export a helper factory to create this map
   // onto the `maps` object.
   // (This is done mainly to avoid the rule
   // "do not use 'new' for side effects. (no-new)")
-  maps.createLiveMap = function (queryStringParameters = {}) {
-    return new LiveMap(queryStringParameters)
+  maps.createLiveMap = function (containerId, displaySettings = {}) {
+    return new LiveMap(containerId, displaySettings)
   }
 })(window, window.flood)

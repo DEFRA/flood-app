@@ -13,7 +13,7 @@
   var addOrUpdateParameter = flood.utils.addOrUpdateParameter
   var getParameterByName = flood.utils.getParameterByName
 
-  function MapContainer (el, options) {
+  function MapContainer (containerElement, options) {
     var defaults = {
       minIconResolution: 200,
       keyTemplate: ''
@@ -21,105 +21,64 @@
 
     options = Object.assign({}, defaults, options)
 
-    //
-    // Map to DOM container elements
-    //
+    // Container internal properties
+    var isKeyOpen = false
 
-    this.el = el
-    this.element = document.createElement('div')
-    this.element.className = 'defra-map__container'
-    el.append(this.element)
+    // Create DOM elements
+    var mapElement = document.createElement('div')
+    mapElement.className = 'defra-map__container'
+    containerElement.append(mapElement)
 
-    var hasKey = false
-    // Experimental adding key via client side template
-
+    // Create key
     if (options.keyTemplate !== '') {
+      var keyElement = document.createElement('div')
       var keyHtml = window.nunjucks.render(options.keyTemplate)
-      hasKey = true
-      this.keyElement = document.createElement('div')
-      this.keyElement.innerHTML = keyHtml
-      this.keyElement.className = 'map-key'
-
-      // Key toggle button
-      this.keyToggleElement = document.createElement('button')
-      this.keyToggleElement.innerHTML = 'Key'
-      this.keyToggleElement.title = 'Add or remove information from the map'
-      this.keyToggleElement.className = 'map-key__toggle'
-      this.keyToggleElement.addEventListener('click', function (e) {
-        // Toggle key
-        if (!this.isKeyOpen) {
-          this.openKey()
-        } else {
-          this.closeKey()
-        }
-      }.bind(this))
+      keyElement.innerHTML = keyHtml
+      keyElement.className = 'map-key'
+      // Create key toggle button
+      var keyToggleElement = document.createElement('button')
+      keyToggleElement.innerHTML = 'Show key'
+      keyToggleElement.title = 'Add or remove information from the map'
+      keyToggleElement.className = 'map-key__toggle'
+      keyToggleElement.addEventListener('click', function (e) {
+        e.preventDefault()
+        isKeyOpen ? closeKey() : openKey()
+      })
+      mapElement.classList.add('map--has-key')
+      mapElement.appendChild(keyElement)
+      keyElement.insertBefore(keyToggleElement, keyElement.firstChild)
     }
 
-    // Overlay component
-    this.overlayInnerElement = document.createElement('div')
-    this.overlayInnerElement.classList.add('ol-overlay-inner')
+    // Create overlay
+    var overlayInnerElement = document.createElement('div')
+    overlayInnerElement.classList.add('ol-overlay-inner')
 
-    // Zoom buttons
-    this.zoomButton = document.createElement('button')
-    this.zoomButton.appendChild(document.createTextNode('Zoom'))
-    this.zoomButton.className = 'ol-zoom'
+    // Create zoom buttons
+    var zoomButton = document.createElement('button')
+    zoomButton.appendChild(document.createTextNode('Zoom'))
+    zoomButton.className = 'ol-zoom'
     var zoom = new ol.control.Zoom({
-      element: this.zoomButton
+      element: zoomButton
     })
 
-    // History advance flag used by popstate
-    window.flood.historyAdvanced = false
-
-    // Hide map button
-    this.hideMapButton = document.createElement('button')
-    this.hideMapButton.className = 'ol-full-screen ol-full-screen-back'
-    this.hideMapButton.appendChild(document.createTextNode('Exit map'))
-    this.hideMapButton.addEventListener('click', function (e) {
-      if (window.flood.historyAdvanced) {
-        window.history.back()
-      } else {
-        el.removeChild(el.firstChild)
-        var url = window.location.pathname
-        var state = { v: '' }
-        var title = document.title
-        window.history.replaceState(state, title, url)
-      }
+    // Create exit map button
+    var hideMapButton = document.createElement('button')
+    hideMapButton.className = 'defra-map__btn-exit-map'
+    hideMapButton.appendChild(document.createTextNode('Exit map'))
+    hideMapButton.addEventListener('click', function (e) {
+      window.history.back()
       // Todo - set keyboard focus to the next link
     })
-    this.hideMapButton.addEventListener('keyup', function (e) {
+    mapElement.prepend(hideMapButton)
+    /*
+    hideMapButton.addEventListener('keyup', function (e) {
       if (e.keyCode === 13 || e.keyCode === 32) {
         this.showMapButton.style.display === 'none' ? this.hideMapButton.focus() : this.showMapButton.focus()
       }
     })
+    */
 
-    // Open map from button press
-    if (!(getParameterByName('v') === el.id)) {
-      // Advance history if button pressed
-      var state = { v: el.id }
-      var title = document.title
-      var url = window.location.pathname + window.location.search
-      url = addOrUpdateParameter(url, 'v', el.id)
-      if (options.queryStringParameters) {
-        // Add any querystring parameters that may have been passed in
-        Object.keys(options.queryStringParameters).forEach(function (key, index) {
-          url = addOrUpdateParameter(url, key, options.queryStringParameters[key])
-        })
-      }
-      window.history.pushState(state, title, url)
-      window.flood.historyAdvanced = true
-    }
-
-    // Add key and fullscreen buttons
-    if (hasKey) {
-      el.classList.add('map--has-key')
-      this.element.appendChild(this.keyElement)
-      this.keyElement.insertBefore(this.keyToggleElement, this.keyElement.firstChild)
-      this.keyElement.prepend(this.hideMapButton)
-    } else {
-      this.element.prepend(this.hideMapButton)
-    }
-
-    // Add remaining controls
+    // Controls - could be moved to instance
     var controls = ol.control.defaults({
       zoom: false,
       rotate: false,
@@ -128,74 +87,49 @@
 
     // Render map
     var map = new ol.Map({
-      target: this.element,
+      target: mapElement,
       controls: controls,
       layers: options.layers,
       view: options.view
     })
 
-    //
-    // External methods
-    //
-
-    // Add locator
-    this.addLocator = function (name, coordinates) {
-      map.addLayer(maps.layers.location(name, coordinates))
-    }
-
-    // Add mouse wheel zoom interaction
-    var mouseWheelZoom = new ol.interaction.MouseWheelZoom()
-    map.addInteraction(mouseWheelZoom)
-
-    // Open key
-    if (this.isKeyOpen) {
-      this.openKey()
-    }
-
-    this.map = map
-
-    //
-    // Map events
-    //
-
-    // Close key or overlay if map is clicked
-    map.on('click', function (e) {
-      // Re-enable mouse wheel scroll
-      // mouseWheelZoom.setActive(true)
-
-      // Hide overlay if exists
-      this.hideOverlay()
-
-      // Set a short timeout to allow downstream events to fire
-      // and set `e.hit`. Hide the key when nothing is clicked (hit).
-      setTimeout(function () {
-        if (hasKey && this.isKeyOpen) {
-          this.closeKey()
-        }
-      }.bind(this), 100)
-    }.bind(this))
-
-    // Disable mouse wheel when point moves away from the map
-    el.addEventListener('mouseout', function (e) {
-      mouseWheelZoom.setActive(false)
-    })
-
-    // Open key
-    this.openKey = function () {
-      if (!this.isFullScreen) {
-        this.hideMapButton.click()
+    // Create a new history entry if show map button pressed
+    if (!(getParameterByName('v') === containerElement.id)) {
+      // Advance history if button pressed
+      var state = { v: containerElement.id }
+      var title = document.title
+      var url = window.location.pathname + window.location.search
+      url = addOrUpdateParameter(url, 'v', containerElement.id)
+      if (options.displaySettings) {
+        // Add any querystring parameters that may have been passed in
+        Object.keys(options.displaySettings).forEach(function (key, index) {
+          url = addOrUpdateParameter(url, key, options.displaySettings[key])
+        })
       }
-      el.classList.add('map--key-open')
-      this.keyToggleElement.innerHTML = 'Close'
-      this.isKeyOpen = true
+      window.history.pushState(state, title, url)
+    }
+
+    //
+    // Container internal methods
+    //
+
+    // Open key
+    function openKey () {
+      mapElement.classList.add('map--key-open')
+      keyToggleElement.innerHTML = 'Close'
+      isKeyOpen = true
     }
 
     // Close key
-    this.closeKey = function () {
-      el.classList.remove('map--key-open')
-      this.keyToggleElement.innerHTML = 'Key'
-      this.isKeyOpen = false
+    function closeKey () {
+      mapElement.classList.remove('map--key-open')
+      keyToggleElement.innerHTML = 'Show key'
+      isKeyOpen = false
     }
+
+    //
+    // Container external methods
+    //
 
     // Show overlay
     this.showOverlay = function (feature) {
@@ -203,26 +137,26 @@
       // Store selected feature
       this.selectedFeature = feature
       // Add class to map
-      el.classList.add('map--overlay-open')
+      mapElement.classList.add('map--overlay-open')
       // Add feature html
-      this.overlayInnerElement.innerHTML = feature.get('html')
+      overlayInnerElement.innerHTML = feature.get('html')
 
       // Create overlay object
-      this.overlay = new ol.Overlay({
+      var overlay = new ol.Overlay({
         element: this.overlayInnerElement,
         positioning: 'bottom-left',
         insertFirst: false,
         className: 'ol-overlay'
       })
 
-      this.overlay.element.style.display = 'block'
-      map.addOverlay(this.overlay)
+      overlay.element.style.display = 'block'
+      map.addOverlay(overlay)
     }
 
     // Hide overlay
     this.hideOverlay = function () {
       // Add class to map
-      el.classList.remove('map--overlay-open')
+      mapElement.classList.remove('map--overlay-open')
       // Disable last selected feature
       if (this.selectedFeature) {
         // Target areas have two point and polygon on different layers
@@ -236,42 +170,74 @@
       }
     }
 
-    // Constrain keyboard focus
-    this.element.addEventListener('keydown', function (e) {
-      if (this.element.contains(document.activeElement)) {
+    //
+    // Container events
+    //
+
+    // Close key or overlay if map is clicked
+    map.on('click', function (e) {
+      // Hide overlay if exists
+      this.hideOverlay()
+
+      // Set a short timeout to allow downstream events to fire
+      // and set `e.hit`. Hide the key when nothing is clicked (hit).
+      /*
+      setTimeout(function () {
+        if (isKeyOpen) {
+          this.closeKey()
+        }
+      }.bind(this), 100)
+      */
+
+      // Disable mouse wheel when point moves away from the map
+      /*
+      containerElement.addEventListener('mouseout', function (e) {
+        mouseWheelZoom.setActive(false)
+      })
+      */
+    }.bind(this))
+
+    // Constrain keyboard focus to components of the map
+    mapElement.addEventListener('keydown', function (e) {
+      if (mapElement.contains(document.activeElement)) {
         // Tab key
         if (e.keyCode === 9) {
-          if (this.isFullScreen) {
-            // Select only elements that can have focus
-            var focusableElements = this.element.querySelectorAll('button:not(:disabled), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
-            // Filter to remove any elements that are not currently visible
-            var validElements = []
-            for (var i = 0; i < focusableElements.length; i++) {
-              if (focusableElements[i].offsetParent !== null) {
-                validElements.push(focusableElements[i])
-              }
+          // Select only elements that can have focus
+          var focusableElements = mapElement.querySelectorAll('button:not(:disabled), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+          // Filter to remove any elements that are not currently visible
+          var validElements = []
+          for (var i = 0; i < focusableElements.length; i++) {
+            if (focusableElements[i].offsetParent !== null) {
+              validElements.push(focusableElements[i])
             }
-            // Set first and last focusable elements
-            var firstFocusableElement = validElements[0]
-            var lastFocusableElement = validElements[validElements.length - 1]
-            // Shift tab (backwards)
-            if (e.shiftKey) {
-              if (document.activeElement === firstFocusableElement) {
-                e.preventDefault()
-                lastFocusableElement.focus()
-              }
-            } else { // Tab (forwards) 
-              if (document.activeElement === lastFocusableElement) {
-                e.preventDefault()
-                firstFocusableElement.focus()
-              }
+          }
+          // Set first and last focusable elements
+          var firstFocusableElement = validElements[0]
+          var lastFocusableElement = validElements[validElements.length - 1]
+          // Shift tab (backwards)
+          if (e.shiftKey) {
+            if (document.activeElement === firstFocusableElement) {
+              e.preventDefault()
+              lastFocusableElement.focus()
+            }
+          } else { // Tab (forwards) 
+            if (document.activeElement === lastFocusableElement) {
+              e.preventDefault()
+              firstFocusableElement.focus()
             }
           }
         }
         // Add map pan (cursor keys)
         // Add map zoom (plus and minus keys)
       }
-    }.bind(this))
+    })
+
+    //
+    // Container external properties
+    //
+
+    this.map = map
+    this.key = keyElement
   }
 
   maps.MapContainer = MapContainer
