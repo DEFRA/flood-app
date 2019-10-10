@@ -18,10 +18,11 @@
     if (buttonContainer) {
       const button = document.createElement('button')
       button.innerText = 'View on map'
+      button.id = 'map-btn'
       button.className = 'defra-search-summary__button-map'
       button.addEventListener('click', function (e) {
         e.preventDefault()
-        maps.createLiveMap('map-live', { l: 'sw,w,a' })
+        maps.createLiveMap('map-live', { btn: 'map-btn', l: 'sw,w,a' })
       })
       buttonContainer.append(button)
     }

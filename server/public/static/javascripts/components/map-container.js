@@ -39,7 +39,7 @@
       var keyToggleElement = document.createElement('button')
       keyToggleElement.innerHTML = 'Show key'
       keyToggleElement.title = 'Add or remove information from the map'
-      keyToggleElement.className = 'map-key__toggle'
+      keyToggleElement.className = 'defra-map-key__toggle-key-btn'
       keyToggleElement.addEventListener('click', function (e) {
         e.preventDefault()
         isKeyOpen ? closeKey() : openKey()
@@ -63,13 +63,22 @@
 
     // Create exit map button
     var hideMapButton = document.createElement('button')
-    hideMapButton.className = 'defra-map__btn-exit-map'
+    hideMapButton.className = 'defra-map__exit-map-btn'
     hideMapButton.appendChild(document.createTextNode('Exit map'))
     hideMapButton.addEventListener('click', function (e) {
+      // Return focus to original map button
+      console.log(getParameterByName('btn'))
+      if (getParameterByName('btn')) {
+        var btn = document.getElementById(getParameterByName('btn'))
+        btn.focus()
+      }
+      // Ideally need to detect if cant go back??
       window.history.back()
       // Todo - set keyboard focus to the next link
     })
     mapElement.prepend(hideMapButton)
+    // Move focus to exit map button
+    hideMapButton.focus()
     /*
     hideMapButton.addEventListener('keyup', function (e) {
       if (e.keyCode === 13 || e.keyCode === 32) {
@@ -220,7 +229,7 @@
               e.preventDefault()
               lastFocusableElement.focus()
             }
-          } else { // Tab (forwards) 
+          } else { // Tab (forwards)
             if (document.activeElement === lastFocusableElement) {
               e.preventDefault()
               firstFocusableElement.focus()
@@ -229,6 +238,31 @@
         }
         // Add map pan (cursor keys)
         // Add map zoom (plus and minus keys)
+      }
+    })
+
+    // If radio group is in focus disable openlayers keyboard pan
+    var keyboardPan
+    var hasKeyboardPan = true
+    mapElement.addEventListener('keyup', function (e) {
+      if (mapElement.contains(document.activeElement)) {
+        if (document.activeElement.type === 'radio') {
+          map.getInteractions().forEach(function (interaction) {
+            if (interaction instanceof ol.interaction.KeyboardPan) {
+              keyboardPan = interaction
+            }
+          }, this)
+          if (keyboardPan) {
+            map.removeInteraction(keyboardPan)
+            hasKeyboardPan = false
+          }
+          map.removeInteraction(keyboardPan)
+        } else {
+          if (!hasKeyboardPan) {
+            map.addInteraction(keyboardPan)
+            hasKeyboardPan = true
+          }
+        }
       }
     })
 
