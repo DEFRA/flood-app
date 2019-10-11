@@ -7,21 +7,30 @@
   // Add browser back button
   utils.addBrowserBackButton()
 
-  // Create map button and set up map
-  const buttonContainer = document.getElementById('map-live')
-  if (buttonContainer) {
+  // Create LiveMap if querystring is present
+  if (utils.getParameterByName('v') === 'map-live') {
+    maps.createLiveMap('map-live')
+  }
+  // Create LiveMap if show map button pressed
+  var mapContainer = document.getElementById('map-live')
+  if (mapContainer) {
     const button = document.createElement('button')
-    button.innerText = 'View map of the flood risk area'
+    button.id = 'map-btn'
     button.className = 'defra-button-map govuk-!-margin-bottom-4'
+    button.innerText = 'View map of the flood risk area'
     button.addEventListener('click', function (e) {
       e.preventDefault()
-      // Instantiate and show map
-      maps.createLiveMap({ l: 'sw,w,a', f: model.featureId })
+      maps.createLiveMap('map-live', { btn: 'map-btn', lyr: 'ts,tw,ta', fid: model.featureId })
     })
-    buttonContainer.parentNode.insertBefore(button, buttonContainer)
-    // Instantiate and show map if querystring parameter
-    if (flood.utils.getParameterByName('v') === 'map-live') {
-      maps.createLiveMap({ l: 'sw,w,a', f: model.featureId })
-    }
+    mapContainer.parentNode.insertBefore(button, mapContainer)
   }
+  // Create LiveMap if history changes
+  window.addEventListener('popstate', function (e) {
+    if (mapContainer.firstChild) {
+      mapContainer.removeChild(mapContainer.firstChild)
+    }
+    if (e && e.state) {
+      maps.createLiveMap('map-live')
+    }
+  })
 })(window, window.flood)

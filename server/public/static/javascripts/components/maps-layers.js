@@ -4,7 +4,7 @@
 
   function road () {
     return new ol.layer.Tile({
-      ref: 'bing-road',
+      ref: 'road',
       source: new ol.source.BingMaps({
         key: 'Ajou-3bB1TMVLPyXyNvMawg4iBPqYYhAN4QMXvOoZvs47Qmrq7L5zio0VsOOAHUr',
         imagerySet: 'RoadOnDemand'
@@ -17,7 +17,7 @@
 
   function satellite () {
     return new ol.layer.Tile({
-      ref: 'bing-aerial',
+      ref: 'satellite',
       source: new ol.source.BingMaps({
         key: 'Ajou-3bB1TMVLPyXyNvMawg4iBPqYYhAN4QMXvOoZvs47Qmrq7L5zio0VsOOAHUr',
         imagerySet: 'AerialWithLabelsOnDemand'
@@ -106,7 +106,7 @@
 
   function polygons () {
     return new ol.layer.Vector({
-      ref: 'floods-polygons',
+      ref: 'polygons',
       maxResolution: 200,
       source: new ol.source.Vector({
         format: new ol.format.GeoJSON(),
@@ -134,20 +134,20 @@
         },
         strategy: ol.loadingstrategy.bbox
       }),
-      style: new ol.style.Style({})
+      style: maps.styles.floods
     })
   }
 
   function floodCentroids () {
     return new ol.layer.Vector({
-      ref: 'flood-centroids',
+      ref: 'floods',
       minResolution: 200,
       source: new ol.source.Vector({
         format: new ol.format.GeoJSON(),
         projection: 'EPSG:3857',
         url: '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert_centroid&maxFeatures=10000&outputFormat=application/json'
       }),
-      style: new ol.style.Style({})
+      style: maps.styles.floods
     })
   }
 
@@ -214,7 +214,7 @@
       ref: 'selected-point-feature',
       renderMode: 'hybrid',
       zIndex: 10,
-      source: new ol.source.Vector()
+      source: new ol.source.Vector({})
     })
   }
 

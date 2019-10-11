@@ -7,7 +7,6 @@
   // Add browser back button
   utils.addBrowserBackButton()
 
-  // Instantiate a LiveMap
   if (model.countFloods) {
     // Create LiveMap if querystring is present
     if (utils.getParameterByName('v') === 'map-live') {
@@ -22,7 +21,7 @@
       button.className = 'defra-search-summary__button-map'
       button.addEventListener('click', function (e) {
         e.preventDefault()
-        maps.createLiveMap('map-live', { btn: 'map-btn', l: 'sw,w,a' })
+        maps.createLiveMap('map-live', { btn: 'map-btn', lyr: 'ts,tw,ta' })
       })
       buttonContainer.append(button)
     }

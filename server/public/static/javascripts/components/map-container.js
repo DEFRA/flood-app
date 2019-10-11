@@ -71,9 +71,8 @@
         var btn = document.getElementById(getParameterByName('btn'))
         btn.focus()
       }
-      // Ideally need to detect if cant go back??
       window.history.back()
-      // Todo - set keyboard focus to the next link
+      // Todo - need to detect when not to use history back
     })
     mapElement.prepend(hideMapButton)
     // Move focus to exit map button
@@ -171,7 +170,6 @@
         this.selectedFeature.set('isSelected', false)
         this.selectedFeature = null
       }
-
       // Remove overlay object
       if (this.overlay) {
         map.removeOverlay(this.overlay)
