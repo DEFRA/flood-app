@@ -140,7 +140,6 @@
 
     // Show overlay
     this.showOverlay = function (feature) {
-      feature.set('isSelected', true)
       // Store selected feature
       this.selectedFeature = feature
       // Add class to map
@@ -184,7 +183,9 @@
     map.on('click', function (e) {
       // Hide overlay if exists
       this.hideOverlay()
-
+      if (isKeyOpen) {
+        closeKey()
+      }
       // Set a short timeout to allow downstream events to fire
       // and set `e.hit`. Hide the key when nothing is clicked (hit).
       /*

@@ -15,123 +15,36 @@
   function LiveMap (containerId, displaySettings) {
     // Container element
     const containerEl = document.getElementById(containerId)
+
+    // Internal objects used to store state of layers, orginial and new extent and selected feature properties
+    // 'ts': Target Area Severe, 'st': Stations etc. 'inp': Input checked boolean and 'vpt': Within wiewport boolean
+    var layers = { ts: {}, tw: {}, ta: {}, hi: {}, st: {}, rf: {} }
+    Object.keys(layers).forEach(function (key) { layers[key] = { inp: false, vpt: false } })
+    // Used to store orignal extent and new extent to enable reset extent option 
+    var extent = { org: maps.extent, new: maps.extent }
+    // Used to store selected feature
+    var selected
+
+    // Layers
+    var road = maps.layers.road()
+    var satellite = maps.layers.satellite()
+    var polygons = maps.layers.polygons()
+    var floods = maps.layers.floods()
+    var stations = maps.layers.stations()
+    var rain = maps.layers.rain()
+    var impacts = maps.layers.impacts()
+    var top = maps.layers.top()
+
+    // Default center - Needed by openlayers however calculations use extent instead of center and zoom
     var center = ol.proj.transform(maps.center, 'EPSG:4326', 'EPSG:3857')
 
-    // ol.View
+    // View
     var view = new ol.View({
       zoom: 6,
       minZoom: 6,
       maxZoom: 18,
       center: center
     })
-
-    // ol.Layers
-    var road = maps.layers.road()
-    var satellite = maps.layers.satellite()
-    var polygons = maps.layers.polygons()
-    var floodCentroids = maps.layers.floodCentroids()
-    var stations = maps.layers.stations()
-    var rain = maps.layers.rain()
-    var impacts = maps.layers.impacts()
-    var selectedPointFeature = maps.layers.selectedPointFeature()
-
-    // Format date
-    function toolTipDate (dateTime) {
-      var hours = dateTime.getHours() > 12 ? dateTime.getHours() - 12 : dateTime.getHours()
-      var minutes = (dateTime.getMinutes() < 10 ? '0' : '') + dateTime.getMinutes()
-      var amPm = (dateTime.getHours() > 12) ? 'pm' : 'am'
-      var day = dateTime.getDate()
-      var month = parseInt(dateTime.getMonth()) + 1
-      var year = dateTime.getFullYear().toString().substr(-2)
-      const isToday = (dateTime) => {
-        const today = new Date()
-        return dateTime.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)
-      }
-      const isTomorrow = (dateTime) => {
-        const tomorrow = new Date() + 1
-        return dateTime.setHours(0, 0, 0, 0) === tomorrow.setHours(0, 0, 0, 0)
-      }
-      const isYesterday = (dateTime) => {
-        const yesterday = new Date() - 1
-        return dateTime.setHours(0, 0, 0, 0) === yesterday.setHours(0, 0, 0, 0)
-      }
-      var date = hours + ':' + minutes + amPm
-      if (isToday) {
-        date += ' today'
-      } else if (isTomorrow) {
-        date += ' tomorrow'
-      } else if (isYesterday) {
-        date += ' yesterday'
-      } else {
-        date += ' on ' + day + '/' + month + '/' + year
-      }
-      return date
-    }
-
-    // Load tooltip
-    async function ensureFeatureTooltipHtml (feature) {
-      var id = feature.getId()
-      let trimId = id.replace('stations.', '')
-      var props = feature.getProperties()
-      if (props.value_date) {
-        props.value_date = toolTipDate(new Date(props.value_date))
-      }
-      if (props.ffoi_date) {
-        props.ffoi_date = toolTipDate(new Date(props.value_date))
-      }
-      var html
-      if (!props.html) {
-        if (id.startsWith('impacts')) {
-          html = window.nunjucks.render('tooltip.html', {
-            type: 'impact',
-            props: props
-          })
-        } else if (id.startsWith('stations')) {
-          // Get upstream - downstream data
-          const upDownData = async () => {
-            const upDownUrl = '/stations-upstream-downstream/' + trimId + '/' + props.direction
-            try {
-              const response = await fetch(upDownUrl)
-              const upDownJson = await response.json()
-              return upDownJson
-            } catch (err) {
-              return { error: 'Unable to display latest upstream / downstream readings' }
-            }
-          }
-          html = window.nunjucks.render('tooltip-station.html', {
-            type: 'station',
-            props: props,
-            upDown: await upDownData(),
-            stationId: id.substr(9)
-          })
-        } else if (id.startsWith('flood_warning_alert')) {
-          html = window.nunjucks.render('tooltip.html', {
-            type: 'warnings',
-            props: props
-          })
-        } else if (id.startsWith('rain')) {
-          // Get rainfall data for station
-          const rainfallData = async () => {
-            const rainfallUrl = '/rain-gauge-tooltip/' + props.stationReference + '/' + props.label + '/100'
-            try {
-              const response = await fetch(rainfallUrl)
-              const rainfallJson = await response.json()
-              return rainfallJson
-            } catch (err) {
-              return { error: 'Unable to display latest readings' }
-            }
-          }
-          html = window.nunjucks.render('tooltip.html', {
-            type: 'rain',
-            props: props,
-            // rainGaugeId: id.substring(id.lastIndexOf('.') + 1)
-            rainfallValues: await rainfallData()
-          })
-        }
-
-        feature.set('html', html)
-      }
-    }
 
     // MapContainer options
     var options = {
@@ -146,23 +59,15 @@
         rain,
         stations,
         impacts,
-        floodCentroids,
-        selectedPointFeature
+        floods,
+        top
       ]
     }
 
     // Create MapContainer
     var container = new MapContainer(containerEl, options)
-
-    //
-    // Map internal properties
-    //
-
     var map = container.map
     var key = container.key
-    var states = { ts: false, tw: false, ta: false, hi: false, wl: false, rf: false }
-    var extent = { org: maps.extent, new: maps.extent }
-    var feature
 
     // Set flood layers visibility
     /*
@@ -348,42 +253,139 @@
     // Map internal methods
     //
 
+    // Format date
+    function toolTipDate (dateTime) {
+      var hours = dateTime.getHours() > 12 ? dateTime.getHours() - 12 : dateTime.getHours()
+      var minutes = (dateTime.getMinutes() < 10 ? '0' : '') + dateTime.getMinutes()
+      var amPm = (dateTime.getHours() > 12) ? 'pm' : 'am'
+      var day = dateTime.getDate()
+      var month = parseInt(dateTime.getMonth()) + 1
+      var year = dateTime.getFullYear().toString().substr(-2)
+      const isToday = (dateTime) => {
+        const today = new Date()
+        return dateTime.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)
+      }
+      const isTomorrow = (dateTime) => {
+        const tomorrow = new Date() + 1
+        return dateTime.setHours(0, 0, 0, 0) === tomorrow.setHours(0, 0, 0, 0)
+      }
+      const isYesterday = (dateTime) => {
+        const yesterday = new Date() - 1
+        return dateTime.setHours(0, 0, 0, 0) === yesterday.setHours(0, 0, 0, 0)
+      }
+      var date = hours + ':' + minutes + amPm
+      if (isToday) {
+        date += ' today'
+      } else if (isTomorrow) {
+        date += ' tomorrow'
+      } else if (isYesterday) {
+        date += ' yesterday'
+      } else {
+        date += ' on ' + day + '/' + month + '/' + year
+      }
+      return date
+    }
+
+    // Load tooltip
+    async function ensureFeatureTooltipHtml (feature) {
+      var id = feature.getId()
+      let trimId = id.replace('stations.', '')
+      var props = feature.getProperties()
+      if (props.value_date) {
+        props.value_date = toolTipDate(new Date(props.value_date))
+      }
+      if (props.ffoi_date) {
+        props.ffoi_date = toolTipDate(new Date(props.value_date))
+      }
+      var html
+      if (!props.html) {
+        if (id.startsWith('impacts')) {
+          html = window.nunjucks.render('tooltip.html', {
+            type: 'impact',
+            props: props
+          })
+        } else if (id.startsWith('stations')) {
+          // Get upstream - downstream data
+          const upDownData = async () => {
+            const upDownUrl = '/stations-upstream-downstream/' + trimId + '/' + props.direction
+            try {
+              const response = await fetch(upDownUrl)
+              const upDownJson = await response.json()
+              return upDownJson
+            } catch (err) {
+              return { error: 'Unable to display latest upstream / downstream readings' }
+            }
+          }
+          html = window.nunjucks.render('tooltip-station.html', {
+            type: 'station',
+            props: props,
+            upDown: await upDownData(),
+            stationId: id.substr(9)
+          })
+        } else if (id.startsWith('flood')) {
+          html = window.nunjucks.render('tooltip.html', {
+            type: 'warnings',
+            props: props
+          })
+        } else if (id.startsWith('rain')) {
+          // Get rainfall data for station
+          const rainfallData = async () => {
+            const rainfallUrl = '/rain-gauge-tooltip/' + props.stationReference + '/' + props.label + '/100'
+            try {
+              const response = await fetch(rainfallUrl)
+              const rainfallJson = await response.json()
+              return rainfallJson
+            } catch (err) {
+              return { error: 'Unable to display latest readings' }
+            }
+          }
+          html = window.nunjucks.render('tooltip.html', {
+            type: 'rain',
+            props: props,
+            // rainGaugeId: id.substring(id.lastIndexOf('.') + 1)
+            rainfallValues: await rainfallData()
+          })
+        }
+
+        feature.set('html', html)
+      }
+    }
+
     // Update Key ul's and li's and <canvas> content
-    function updateKeyAndCanvas () {
-      var extent = map.getView().calculateExtent()
+    function updateKeyCanvasHtml () {
+      extent.new = map.getView().calculateExtent()
       // Feature groups that are within the current viewport
-      var vpStates = { ts: false, tw: false, ta: false, hi: false, wl: false, rf: false }
-      // Set booleans for polygons
-      polygons.getSource().forEachFeatureInExtent(extent, function (feature) {
+      // Update state for polygons
+      polygons.getSource().forEachFeatureInExtent(extent.new, function (feature) {
         if (feature.get('severity') === 1) {
-          vpStates.ts = true
+          layers.ts.vpt = true
         } else if (feature.get('severity') === 2) {
-          vpStates.tw = true
+          layers.tw.vpt = true
         } else if (feature.get('severity') === 3) {
-          vpStates.ta = true
+          layers.ta.vpt = true
         }
       })
       // Set booleans for flood centroids
-      floodCentroids.getSource().forEachFeatureInExtent(extent, function (feature) {
+      floods.getSource().forEachFeatureInExtent(extent.new, function (feature) {
         if (feature.get('severity') === 1) {
-          vpStates.ts = true
+          layers.ts.vpt = true
         } else if (feature.get('severity') === 2) {
-          vpStates.tw = true
+          layers.tw.vpt = true
         } else if (feature.get('severity') === 3) {
-          vpStates.ta = true
+          layers.ta.vpt = true
         }
       })
       // Set booleans for remaining centroids
-      vpStates.hi = !!impacts.getSource().getFeaturesInExtent(extent).length
-      vpStates.wl = !!stations.getSource().getFeaturesInExtent(extent).length
-      vpStates.rf = !!rain.getSource().getFeaturesInExtent(extent).length
+      layers.hi.vpt = !!impacts.getSource().getFeaturesInExtent(extent.new).length
+      layers.st.vpt = !!stations.getSource().getFeaturesInExtent(extent.new).length
+      layers.rf.vpt = !!rain.getSource().getFeaturesInExtent(extent.new).length
       // Conditionally show 'ul' and/or 'li' elements
       forEach(key.querySelectorAll('input:not([type="radio"])'), function (input) {
         if (['ts','tw','ta'].includes(input.id)) {
-          input.closest('li').style.display = vpStates[input.id] ? 'block' : 'none'
-          input.closest('ul').style.display = vpStates.ts || vpStates.tw || vpStates.ta ? 'block' : 'none'
+          input.closest('li').style.display = layers[input.id].vpt ? 'block' : 'none'
+          input.closest('ul').style.display = layers.ts.vpt || layers.tw.vpt || layers.ta.vpt ? 'block' : 'none'
         } else {
-          input.closest('ul').style.display = vpStates[input.id] ? 'block' : 'none'
+          input.closest('ul').style.display = layers[input.id].vpt ? 'block' : 'none'
         }
       })
 
@@ -467,23 +469,46 @@
       */
     }
 
-    // Sets the source of selected point feature
-    function setSelectedPointFeatureSource (source) {
-      selectedPointFeature.setSource(source)
+    // Adds the selected point feature to the top layer
+    function addTopFeature (feature) {
+      top.getSource().addFeature(feature)
       // Set feature style
       // *** Need a schema for all GeoJson features
-      var id = source.getFeatures()[0].getId()
+      var id = feature.getId()
       if (id.startsWith('impacts')) {
-        selectedPointFeature.setStyle(maps.styles.impacts)
+        top.setStyle(maps.styles.impacts)
       } else if (id.startsWith('stations')) {
-        selectedPointFeature.setStyle(maps.styles.stations)
-      } else if (id.startsWith('flood_warning_alert')) {
-        selectedPointFeature.setStyle(maps.styles.floods)
+        top.setStyle(maps.styles.stations)
+      } else if (id.startsWith('flood')) {
+        top.setStyle(maps.styles.floods)
       } else if (id.startsWith('rain')) {
-        selectedPointFeature.setStyle(maps.styles.rain)
+        top.setStyle(maps.styles.rain)
       } else {
-        selectedPointFeature.setStyle(maps.styles.location)
+        top.setStyle(maps.styles.location)
       }
+    }
+
+    // Set the selected feature
+    function setSelectedFeature (feature) {
+      // A new feature has been selected
+      console.log(feature.getId())
+      feature.set('isSelected', true)
+      if (feature.getGeometry().getType() === 'Point') {
+        addTopFeature(feature)
+      }
+      selected = feature
+      // Change active element if exists
+      /*
+      document.querySelectorAll('.map-feature-list button').forEach(function (button) {
+        if (button.getAttribute('data-id') === feature.getId()) {
+          button.focus()
+        }
+      })
+      */
+      /*
+      await ensureFeatureTooltipHtml(selected.point)
+      container.showOverlay(selected.point)
+      */
     }
 
     // Pan map
@@ -493,6 +518,7 @@
       if (!ol.extent.containsExtent(bounds, feature.getGeometry().getExtent())) {
         map.getView().setCenter(feature.getGeometry().getCoordinates())
       }
+      extent.new = map.getView().calculateExtent(map.getSize())
     }
 
     // Layer visibility
@@ -505,18 +531,15 @@
         } else if (layer.get('ref') === 'floods' || layer.get('ref') === 'polygons') {
           layer.getSource().forEachFeature(function (feature) {
             var severity = feature.get('severity')
-            if ((severity === 3 && states.ta) || (severity === 2 && states.tw) || (severity === 1 && states.ts)) {
-              feature.set('isVisible', true)
-            } else {
-              feature.set('isVisible', false)
-            }
+            feature.set('isVisible', (severity === 3 && layers.ta.inp) || (severity === 2 && layers.tw.inp) || (severity === 1 && layers.ts.inp) ? true : false)
+            feature.set('isSelected', selected && selected.get('fwa_key') === feature.get('fwa_key') ? true : false)
           })
         } else if (layer.get('ref') === 'stations') {
-          states.wl ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
+          layers.st.inp ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
         } else if (layer.get('ref') === 'impacts') {
-          states.hi ? impacts.setStyle(maps.styles.impacts) : impacts.setStyle(new ol.style.Style({}))
+          layers.hi.inp ? impacts.setStyle(maps.styles.impacts) : impacts.setStyle(new ol.style.Style({}))
         } else if (layer.get('ref') === 'rain') {
-          states.rf ? rain.setStyle(maps.styles.rain) : rain.setStyle(new ol.style.Style({}))
+          layers.rf.inp ? rain.setStyle(maps.styles.rain) : rain.setStyle(new ol.style.Style({}))
         }
       })
     }
@@ -536,33 +559,37 @@
 
     // Precompose - setup view and features first
     map.once('precompose', function (e) {
+      // Get selected feature
+      // selected = getParameterByName('fid')
       // Set map extent to intial extent
-      const extent = getParameterByName('ext') ? getParameterByName('ext').split(',').map(Number) : maps.extent
-      map.getView().fit(extent, { constrainResolution: false, padding: [0, 0, 0, 0] })
+      extent.org = getParameterByName('ext') ? getParameterByName('ext').split(',').map(Number) : maps.extent
+      map.getView().fit(extent.org, { constrainResolution: false, padding: [10, 10, 10, 10] })
       // Set initial layer views from querystring
       if (getParameterByName('lyr')) {
-        var layers = getParameterByName('lyr').split(',')
-        // Set internal lyrState property for other methods
-        Object.keys(states).forEach(function (key) { states[key] = layers.includes(key) })
+        var lyr = getParameterByName('lyr').split(',')
+        // Update state object from querystring
+        Object.keys(layers).forEach(function (key) { layers[key].inp = lyr.includes(key) })
         // Update input checked state in key
         forEach(key.querySelectorAll('input:not([type="radio"])'), function (input) {
-          input.checked = states[input.id]
+          input.checked = layers[input.id].inp
         })
       }
     })
 
     // Only way to determin all layers have been loaded as
     // 'rendercomplete' sometimes fires before layers are loaded
-    var lyrStates = { polygons: false, floods: false, stations: false, impacts: false, rain: false }
+    var lyrReady = { polygons: false, floods: false, stations: false, impacts: false, rain: false }
     map.getLayers().forEach(function (layer) {
       if (layer.getSource()) {
         var listener = layer.getSource().on('change', function (e) {
           if (this.getState() === 'ready') {
-            lyrStates[layer.get('ref')] = true
+            lyrReady[layer.get('ref')] = true
             // Remove listener when layer is ready
-            if ((lyrStates.polygons || lyrStates.floods) && lyrStates.stations && lyrStates.impacts && lyrStates.rain) {
+            if ((lyrReady.polygons || lyrReady.floods) && lyrReady.stations && lyrReady.impacts && lyrReady.rain) {
+              // Listener removed to stop unecessary calls to below
+              ol.Observable.unByKey(listener)
               // All layers we need are loaded
-              updateKeyAndCanvas()
+              updateKeyCanvasHtml()
               setFeatureVisibility()
             }
           }
@@ -585,7 +612,6 @@
       } else {
         layerOpacity = 0.4
       }
-      // setFloodsOpacity(layerOpacity)
       // Key icons
       forEach(key.querySelectorAll('[data-style]'), function (symbol) {
         var style = symbol.getAttribute('data-style')
@@ -593,48 +619,33 @@
         symbol.style = resolution <= options.minIconResolution ? offsetStyle : style 
       })
       // Replace history state
-      const extent = map.getView().calculateExtent().join(',')
-      const state = { v: containerId }
-      const url = addOrUpdateParameter(window.location.pathname + window.location.search, 'ext', extent)
-      const title = document.title
+      extent.new = map.getView().calculateExtent().join(',')
+      var state = { v: containerId }
+      var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'ext', extent.new)
+      var title = document.title
       // Timer used to stop 100 replaces in 30 seconds limit
       clearTimeout(timer)
       timer = setTimeout(function () {
         window.history.replaceState(state, title, url)
       }, 350)
-      updateKeyAndCanvas()
-      // setFeatureVisibility()
+      updateKeyCanvasHtml()
+      // Use of bbox loading means we have new features each time the map pan/zooms
+      setFeatureVisibility()
     })
 
     // Close key or select feature if map is clicked
     map.addEventListener('click', async function (e) {
+      // Remove any previous selected feature
+      if (selected) {
+        selected.set('isSelected', false)
+        selected = void 0
+        setFeatureVisibility()
+        top.getSource().clear()
+      }
       // Get mouse coordinates and check for feature if not the highlighted flood polygon
       var feature = map.forEachFeatureAtPixel(e.pixel, function (feature, layer) { return feature })
-      var layer = map.forEachFeatureAtPixel(e.pixel, function (feature, layer) { return layer })
-
-      // A new feature has been selected
       if (feature) {
-        // Change active element if exists
-        /*
-        document.querySelectorAll('.map-feature-list button').forEach(function (button) {
-          if (button.getAttribute('data-id') === feature.getId()) {
-            button.focus()
-          }
-        })
-        */
-        // Clone selected point feature to top layer
-        if (layer.get('ref') != 'polygons') {
-          console.log(layer.get('ref'))
-          setSelectedPointFeatureSource(new ol.source.Vector({
-            features: [feature],
-            format: new ol.format.GeoJSON()
-          }))
-        }
-        await ensureFeatureTooltipHtml(feature)
-        container.showOverlay(feature)
-      } else {
-        // Clear any existing selected point feature
-        setSelectedPointFeatureSource()
+        setSelectedFeature(feature)
       }
     })
 
@@ -651,12 +662,12 @@
     key.addEventListener('change', function (e) {
       if (e.target.nodeName.toLowerCase() === 'input') {
         var input = e.target
-        states[input.id] = input.checked
-        var lyr = Object.keys(states).filter(key => states[key]).join(',')
+        layers[input.id].inp = input.checked
+        var lyr = Object.keys(layers).filter(key => layers[key].inp).join(',')
         const url = addOrUpdateParameter(window.location.pathname + window.location.search, 'lyr', lyr)
         const title = document.title
         window.history.replaceState(null, title, url)
-        updateKeyAndCanvas()
+        updateKeyCanvasHtml()
         setFeatureVisibility()
       }
     })
@@ -668,7 +679,7 @@
         var nextStationId = e.target.getAttribute('data-id')
         var feature = stations.getSource().getFeatureById(nextStationId)
         container.selectedFeature.set('isSelected', false)
-        setSelectedPointFeatureSource()
+        setSelectedSource()
         feature.set('isSelected', true)
         container.selectedFeature = feature
         panMap(feature)
@@ -693,7 +704,7 @@
           var feature = eval(layer).getSource().getFeatureById(featureId)
           feature.set('isSelected', true)
           container.selectedFeature = feature
-          setSelectedPointFeatureSource(new ol.source.Vector({
+          setSelectedSource(new ol.source.Vector({
             features: [feature],
             format: new ol.format.GeoJSON()
           }))

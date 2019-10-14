@@ -1,5 +1,6 @@
 // Add back button
 (function (window, flood) {
+  const ol = window.ol
   const maps = flood.maps
   const utils = flood.utils
   const model = flood.model
@@ -14,13 +15,16 @@
   // Create LiveMap if show map button pressed
   var mapContainer = document.getElementById('map-live')
   if (mapContainer) {
+    var cooridnates = ol.proj.fromLonLat(JSON.parse(model.area.geom).coordinates, 'EPSG:4326', 'EPSG:3857')
+    var feature = new ol.Feature({ geometry: new ol.geom.MultiPolygon(cooridnates) })
+    var extent = ol.proj.transformExtent(feature.getGeometry().getExtent(), 'EPSG:4326', 'EPSG:3857')
     const button = document.createElement('button')
     button.id = 'map-btn'
     button.className = 'defra-button-map govuk-!-margin-bottom-4'
     button.innerText = 'View map of the flood risk area'
     button.addEventListener('click', function (e) {
       e.preventDefault()
-      maps.createLiveMap('map-live', { btn: 'map-btn', lyr: 'ts,tw,ta', fid: model.featureId })
+      maps.createLiveMap('map-live', { btn: 'map-btn', lyr: 'ts,tw,ta', fid: 'flood.' + model.featureId, ext: extent.join(',') })
     })
     mapContainer.parentNode.insertBefore(button, mapContainer)
   }

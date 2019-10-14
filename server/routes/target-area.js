@@ -28,11 +28,11 @@ module.exports = {
         code: joi.string().required()
       },
       query: {
-        q: joi.string().optional(),
-        e: joi.string().optional(),
-        f: joi.string().optional(),
-        l: joi.string().optional(),
-        v: joi.string().optional()
+        v: joi.string().optional(),
+        btn: joi.string().optional(),
+        lyr: joi.string().optional(),
+        fid: joi.string().optional(),
+        ext: joi.string().optional()
       }
     }
   }

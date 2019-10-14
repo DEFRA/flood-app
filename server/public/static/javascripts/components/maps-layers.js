@@ -126,6 +126,10 @@
           xhr.onload = function () {
             if (xhr.status === 200) {
               source.addFeatures(source.getFormat().readFeatures(xhr.responseText))
+              // Temporary fix to create usable id as per other features
+              source.getFeatures().forEach((feature) => {
+                feature.setId('flood.' + feature.get('fwa_key'))
+              })
             } else {
               onError()
             }
@@ -138,7 +142,7 @@
     })
   }
 
-  function floodCentroids () {
+  function floods () {
     return new ol.layer.Vector({
       ref: 'floods',
       minResolution: 200,
@@ -209,12 +213,15 @@
     })
   }
 
-  function selectedPointFeature () {
+  function top () {
     return new ol.layer.Vector({
-      ref: 'selected-point-feature',
+      ref: 'top',
       renderMode: 'hybrid',
       zIndex: 10,
-      source: new ol.source.Vector({})
+      source: new ol.source.Vector({
+        features: [],
+        format: new ol.format.GeoJSON()
+      })
     })
   }
 
@@ -228,12 +235,12 @@
   layers.floodPolygon = floodPolygon
   */
   layers.polygons = polygons
-  layers.floodCentroids = floodCentroids
+  layers.floods = floods
   layers.stations = stations
   layers.impacts = impacts
   layers.rain = rain
   layers.location = location
-  layers.selectedPointFeature = selectedPointFeature
+  layers.top = top
 
   maps.layers = layers
 })(window, window.flood.maps)

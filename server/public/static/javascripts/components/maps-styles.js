@@ -73,6 +73,7 @@
     var strokeColour, fillColour, zIndex
     var source = '/assets/images/icon-map-features-2x.png' // Icon sprite image source
     var offset = [0, 0] // Icon sprite offset
+    var image
     var isSelected = feature.get('isSelected')
 
     if (feature.get('severity') === 1) {
@@ -101,6 +102,13 @@
     if (resolution > 200) {
       strokeColour = 'transparent'
       fillColour = 'transparent'
+      image = new ol.style.Icon({
+        src: source,
+        size: [86, 86],
+        anchor: [0.5, 0.75],
+        scale: 0.5,
+        offset: offset
+      })
     }
 
     // Selected feature
@@ -111,13 +119,7 @@
 
     // Generate style
     var style = new ol.style.Style({
-      image: new ol.style.Icon({
-        src: source,
-        size: [86, 86],
-        anchor: [0.5, 0.75],
-        scale: 0.5,
-        offset: offset
-      }),
+      image: image,
       fill: new ol.style.Fill({ color: fillColour }),
       stroke: new ol.style.Stroke({
         color: strokeColour,
@@ -279,17 +281,6 @@
 
     return style
   }
-
-  // Style to highlight selected polygon
-  /*
-  function floodPolygon () {
-    return new ol.style.Style({
-      fill: new ol.style.Fill({
-        color: 'RGB(0, 0, 0, 0.2)'
-      })
-    })
-  }
-  */
 
   // styles.polygons = polygons
   styles.impacts = impacts
