@@ -24,7 +24,7 @@
     button.innerText = 'View map of the flood risk area'
     button.addEventListener('click', function (e) {
       e.preventDefault()
-      maps.createLiveMap('map-live', { btn: 'map-btn', lyr: 'ts,tw,ta', fid: 'flood.' + model.featureId, ext: extent.join(',') })
+      maps.createLiveMap('map-live', { btn: 'map-btn', lyr: 'ts,tw,ta', fid: 'flood.' + model.area.code.toLowerCase(), ext: extent.join(',') })
     })
     mapContainer.parentNode.insertBefore(button, mapContainer)
   }

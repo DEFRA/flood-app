@@ -128,7 +128,7 @@
               source.addFeatures(source.getFormat().readFeatures(xhr.responseText))
               // Temporary fix to create usable id as per other features
               source.getFeatures().forEach((feature) => {
-                feature.setId('flood.' + feature.get('fwa_key'))
+                feature.setId('flood.' + feature.get('fwa_code').toLowerCase())
               })
             } else {
               onError()

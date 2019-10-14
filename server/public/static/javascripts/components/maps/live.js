@@ -491,7 +491,6 @@
     // Set the selected feature
     function setSelectedFeature (feature) {
       // A new feature has been selected
-      console.log(feature.getId())
       feature.set('isSelected', true)
       if (feature.getGeometry().getType() === 'Point') {
         addTopFeature(feature)
@@ -559,12 +558,12 @@
 
     // Precompose - setup view and features first
     map.once('precompose', function (e) {
-      // Get selected feature
-      // selected = getParameterByName('fid')
-      // Set map extent to intial extent
-      extent.org = getParameterByName('ext') ? getParameterByName('ext').split(',').map(Number) : maps.extent
+      // Set map extent
+      if (getParameterByName('ext')) {
+        extent.org = getParameterByName('ext').split(',').map(Number)
+      }
       map.getView().fit(extent.org, { constrainResolution: false, padding: [10, 10, 10, 10] })
-      // Set initial layer views from querystring
+      // Set initial layer views
       if (getParameterByName('lyr')) {
         var lyr = getParameterByName('lyr').split(',')
         // Update state object from querystring
@@ -589,6 +588,10 @@
               // Listener removed to stop unecessary calls to below
               ol.Observable.unByKey(listener)
               // All layers we need are loaded
+              // Set selected feature
+              if (getParameterByName('fid') && !selected) {
+                selected = layer.getSource().getFeatureById(getParameterByName('fid'))          
+              }
               updateKeyCanvasHtml()
               setFeatureVisibility()
             }
