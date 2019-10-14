@@ -531,7 +531,7 @@
           layer.getSource().forEachFeature(function (feature) {
             var severity = feature.get('severity')
             feature.set('isVisible', (severity === 3 && layers.ta.inp) || (severity === 2 && layers.tw.inp) || (severity === 1 && layers.ts.inp) ? true : false)
-            feature.set('isSelected', selected && selected.get('fwa_key') === feature.get('fwa_key') ? true : false)
+            feature.set('isSelected', selected && selected.getId() === 'flood.' + feature.get('fwa_code').toLowerCase() ? true : false)
           })
         } else if (layer.get('ref') === 'stations') {
           layers.st.inp ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))

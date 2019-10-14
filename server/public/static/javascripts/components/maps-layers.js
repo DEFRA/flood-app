@@ -125,11 +125,13 @@
           xhr.onerror = onError
           xhr.onload = function () {
             if (xhr.status === 200) {
-              source.addFeatures(source.getFormat().readFeatures(xhr.responseText))
+              // source.addFeatures(source.getFormat().readFeatures(xhr.responseText))
               // Temporary fix to create usable id as per other features
-              source.getFeatures().forEach((feature) => {
+              var features = source.getFormat().readFeatures(xhr.responseText)
+              features.forEach((feature) => {
                 feature.setId('flood.' + feature.get('fwa_code').toLowerCase())
               })
+              source.addFeatures(features)
             } else {
               onError()
             }
