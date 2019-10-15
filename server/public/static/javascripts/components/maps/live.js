@@ -469,33 +469,26 @@
       */
     }
 
-    // Adds the selected point feature to the top layer
-    function addTopFeature (feature) {
-      top.getSource().addFeature(feature)
-      // Set feature style
-      // *** Need a schema for all GeoJson features
-      var id = feature.getId()
-      if (id.startsWith('impacts')) {
-        top.setStyle(maps.styles.impacts)
-      } else if (id.startsWith('stations')) {
-        top.setStyle(maps.styles.stations)
-      } else if (id.startsWith('flood')) {
-        top.setStyle(maps.styles.floods)
-      } else if (id.startsWith('rain')) {
-        top.setStyle(maps.styles.rain)
-      } else {
-        top.setStyle(maps.styles.location)
-      }
-    }
-
     // Set the selected feature
     function setSelectedFeature (feature) {
       // A new feature has been selected
       feature.set('isSelected', true)
       if (feature.getGeometry().getType() === 'Point') {
-        addTopFeature(feature)
+        top.getSource().addFeature(feature)
+        var id = feature.getId()
+        if (id.startsWith('impacts')) {
+          top.setStyle(maps.styles.impacts)
+        } else if (id.startsWith('stations')) {
+          top.setStyle(maps.styles.stations)
+        } else if (id.startsWith('flood')) {
+          top.setStyle(maps.styles.floods)
+        } else if (id.startsWith('rain')) {
+          top.setStyle(maps.styles.rain)
+        } else {
+          top.setStyle(maps.styles.location)
+        }
       }
-      selected = feature
+
       // Change active element if exists
       /*
       document.querySelectorAll('.map-feature-list button').forEach(function (button) {
@@ -531,7 +524,8 @@
           layer.getSource().forEachFeature(function (feature) {
             var severity = feature.get('severity')
             feature.set('isVisible', (severity === 3 && layers.ta.inp) || (severity === 2 && layers.tw.inp) || (severity === 1 && layers.ts.inp) ? true : false)
-            feature.set('isSelected', selected && selected.getId() === 'flood.' + feature.get('fwa_code').toLowerCase() ? true : false)
+            // Set isSelected paired polygon and flood feature
+            feature.set('isSelected', selected && selected.get('fwa_code').toLowerCase() === feature.get('fwa_code').toLowerCase() ? true : false)
           })
         } else if (layer.get('ref') === 'stations') {
           layers.st.inp ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
@@ -556,14 +550,14 @@
     // Map events
     //
 
-    // Precompose - setup view and features first
+    // Precompose - setup view and layers. Fires before features have been loaded
     map.once('precompose', function (e) {
-      // Set map extent
+      // Set map extent from querystring
       if (getParameterByName('ext')) {
         extent.org = getParameterByName('ext').split(',').map(Number)
       }
       map.getView().fit(extent.org, { constrainResolution: false, padding: [10, 10, 10, 10] })
-      // Set initial layer views
+      // Set initial layer views from querystring
       if (getParameterByName('lyr')) {
         var lyr = getParameterByName('lyr').split(',')
         // Update state object from querystring
@@ -575,23 +569,22 @@
       }
     })
 
-    // Only way to determin all layers have been loaded as
+    // Only way to determin all features in the current viewport have been loaded as
     // 'rendercomplete' sometimes fires before layers are loaded
     var lyrReady = { polygons: false, floods: false, stations: false, impacts: false, rain: false }
     map.getLayers().forEach(function (layer) {
-      if (layer.getSource()) {
+      if (layer.getSource() && Object.keys(lyrReady).includes(layer.get('ref'))) {
         var listener = layer.getSource().on('change', function (e) {
           if (this.getState() === 'ready') {
             lyrReady[layer.get('ref')] = true
             // Remove listener when layer is ready
+            ol.Observable.unByKey(listener)
+            // Set initial selected feature from querystring
+            if (getParameterByName('fid') && !selected) {
+              selected = layer.getSource().getFeatureById(getParameterByName('fid'))       
+            }
+            // All features are loaded for current viewport
             if ((lyrReady.polygons || lyrReady.floods) && lyrReady.stations && lyrReady.impacts && lyrReady.rain) {
-              // Listener removed to stop unecessary calls to below
-              ol.Observable.unByKey(listener)
-              // All layers we need are loaded
-              // Set selected feature
-              if (getParameterByName('fid') && !selected) {
-                selected = layer.getSource().getFeatureById(getParameterByName('fid'))          
-              }
               updateKeyCanvasHtml()
               setFeatureVisibility()
             }
@@ -621,7 +614,7 @@
         var offsetStyle = symbol.getAttribute('data-style-offset')
         symbol.style = resolution <= options.minIconResolution ? offsetStyle : style 
       })
-      // Replace history state
+      // Update history state (url) to reflect new extent
       extent.new = map.getView().calculateExtent().join(',')
       var state = { v: containerId }
       var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'ext', extent.new)
@@ -631,8 +624,8 @@
       timer = setTimeout(function () {
         window.history.replaceState(state, title, url)
       }, 350)
-      updateKeyCanvasHtml()
       // Use of bbox loading means we have new features each time the map pan/zooms
+      updateKeyCanvasHtml()
       setFeatureVisibility()
     })
 
@@ -645,10 +638,11 @@
         setFeatureVisibility()
         top.getSource().clear()
       }
-      // Get mouse coordinates and check for feature if not the highlighted flood polygon
-      var feature = map.forEachFeatureAtPixel(e.pixel, function (feature, layer) { return feature })
+      // Get mouse coordinates and check for feature
+      var feature = map.forEachFeatureAtPixel(e.pixel, function (feature) { return feature })
       if (feature) {
-        setSelectedFeature(feature)
+        selected = feature
+        setSelectedFeature(selected)
       }
     })
 
@@ -666,10 +660,12 @@
       if (e.target.nodeName.toLowerCase() === 'input') {
         var input = e.target
         layers[input.id].inp = input.checked
+        // Update history state (url) to reflect new layer choices
         var lyr = Object.keys(layers).filter(key => layers[key].inp).join(',')
         const url = addOrUpdateParameter(window.location.pathname + window.location.search, 'lyr', lyr)
         const title = document.title
         window.history.replaceState(null, title, url)
+        // Changing layers requires features and Html to be updated
         updateKeyCanvasHtml()
         setFeatureVisibility()
       }

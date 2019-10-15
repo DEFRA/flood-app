@@ -141,7 +141,7 @@
     // Show overlay
     this.showOverlay = function (feature) {
       // Store selected feature
-      this.selectedFeature = feature
+      // this.selectedFeature = feature
       // Add class to map
       mapElement.classList.add('map--overlay-open')
       // Add feature html
@@ -164,11 +164,13 @@
       // Add class to map
       mapElement.classList.remove('map--overlay-open')
       // Disable last selected feature
+      /*
       if (this.selectedFeature) {
         // Target areas have two point and polygon on different layers
         this.selectedFeature.set('isSelected', false)
         this.selectedFeature = null
       }
+      */
       // Remove overlay object
       if (this.overlay) {
         map.removeOverlay(this.overlay)

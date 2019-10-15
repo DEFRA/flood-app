@@ -221,7 +221,6 @@
       renderMode: 'hybrid',
       zIndex: 10,
       source: new ol.source.Vector({
-        features: [],
         format: new ol.format.GeoJSON()
       })
     })
