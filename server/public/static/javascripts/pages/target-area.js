@@ -15,9 +15,12 @@
   // Create LiveMap if show map button pressed
   var mapContainer = document.getElementById('map-live')
   if (mapContainer) {
+    // Get extent LatLon from target area
     var cooridnates = ol.proj.fromLonLat(JSON.parse(model.area.geom).coordinates, 'EPSG:4326', 'EPSG:3857')
     var feature = new ol.Feature({ geometry: new ol.geom.MultiPolygon(cooridnates) })
-    var extent = ol.proj.transformExtent(feature.getGeometry().getExtent(), 'EPSG:4326', 'EPSG:3857')
+    var extent = feature.getGeometry().getExtent()
+    extent = extent.map(function (x) { return Number(x.toFixed(6)) })
+    // Create map button with parameters
     const button = document.createElement('button')
     button.id = 'map-btn'
     button.className = 'defra-button-map govuk-!-margin-bottom-4'

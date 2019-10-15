@@ -525,7 +525,7 @@
             var severity = feature.get('severity')
             feature.set('isVisible', (severity === 3 && layers.ta.inp) || (severity === 2 && layers.tw.inp) || (severity === 1 && layers.ts.inp) ? true : false)
             // Set isSelected paired polygon and flood feature
-            feature.set('isSelected', selected && selected.get('fwa_code').toLowerCase() === feature.get('fwa_code').toLowerCase() ? true : false)
+            feature.set('isSelected', selected && selected.get('fwa_code') === feature.get('fwa_code') ? true : false)
           })
         } else if (layer.get('ref') === 'stations') {
           layers.st.inp ? stations.setStyle(maps.styles.stations) : stations.setStyle(new ol.style.Style({}))
@@ -555,6 +555,7 @@
       // Set map extent from querystring
       if (getParameterByName('ext')) {
         extent.org = getParameterByName('ext').split(',').map(Number)
+        extent.org = ol.proj.transformExtent(extent.org, 'EPSG:4326', 'EPSG:3857')
       }
       map.getView().fit(extent.org, { constrainResolution: false, padding: [10, 10, 10, 10] })
       // Set initial layer views from querystring
@@ -615,9 +616,12 @@
         symbol.style = resolution <= options.minIconResolution ? offsetStyle : style 
       })
       // Update history state (url) to reflect new extent
-      extent.new = map.getView().calculateExtent().join(',')
+      extent.new = map.getView().calculateExtent(map.getSize())
+      var ext = ol.proj.transformExtent(extent.new, 'EPSG:3857', 'EPSG:4326')
+      ext = ext.map(function (x) { return Number(x.toFixed(6)) })
+      ext = ext.join(',')
       var state = { v: containerId }
-      var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'ext', extent.new)
+      var url = addOrUpdateParameter(window.location.pathname + window.location.search, 'ext', ext)
       var title = document.title
       // Timer used to stop 100 replaces in 30 seconds limit
       clearTimeout(timer)

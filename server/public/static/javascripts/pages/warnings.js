@@ -1,5 +1,6 @@
 // Add back button
 (function (window, flood) {
+  const ol = window.ol
   const maps = flood.maps
   const utils = flood.utils
   const model = flood.model
@@ -15,13 +16,17 @@
     // Create LiveMap if show map button pressed
     var buttonContainer = document.getElementById('searchSummary')
     if (buttonContainer) {
+      // Get extent LatLon from target area
+      var extent = model.placeBbox
+      extent = extent.map(function (x) { return Number(x.toFixed(6)) })
+      // Create map button with parameters
       const button = document.createElement('button')
       button.innerText = 'View on map'
       button.id = 'map-btn'
       button.className = 'defra-search-summary__button-map'
       button.addEventListener('click', function (e) {
         e.preventDefault()
-        maps.createLiveMap('map-live', { btn: 'map-btn', lyr: 'ts,tw,ta' })
+        maps.createLiveMap('map-live', { btn: 'map-btn', lyr: 'ts,tw,ta', ext: extent.join(',') })
       })
       buttonContainer.append(button)
     }
