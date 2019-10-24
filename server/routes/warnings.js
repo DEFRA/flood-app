@@ -4,7 +4,7 @@ const Floods = require('../models/floods')
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
 
-module.exports = {
+module.exports = [{
   method: 'GET',
   path: '/alerts-and-warnings',
   handler: async (request, h) => {
@@ -32,5 +32,41 @@ module.exports = {
     model = new ViewModel({ location, place, floods })
     model.hasBackButton = Boolean(request.headers.referer)
     return h.view('warnings', { model })
+  },
+  options: {
+    validate: {
+      query: {
+        q: joi.string(),
+        btn: joi.string(),
+        ext: joi.string(),
+        fid: joi.string(),
+        lyr: joi.string(),
+        v: joi.string()
+      }
+    }
   }
-}
+}, {
+  method: 'POST',
+  path: '/alerts-and-warnings',
+  handler: async (request, h) => {
+    const { location } = request.payload
+    var model = null
+    var place = null
+    if (typeof location === 'undefined' || location === '') {
+      const floods = floodService.floods
+      model = new ViewModel({ location, place, floods })
+      model.hasBackButton = Boolean(request.headers.referer)
+      return h.redirect('/alerts-and-warnings')
+    }
+    place = await locationService.find(location)
+    if (typeof place === 'undefined' || place === '') {
+      return h.view('warnings', { errorMessage: 'Location cant be found' })
+    }
+    // Data passed to floods model so the schema is the same as cached floods
+    const data = await floodService.getFloodsWithin(place.bbox)
+    const floods = new Floods(data)
+    model = new ViewModel({ location, place, floods })
+    model.hasBackButton = Boolean(request.headers.referer)
+    return h.redirect(`/alerts-and-warnings?q=${location}`)
+  }
+}]

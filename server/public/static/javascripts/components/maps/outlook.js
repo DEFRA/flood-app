@@ -74,19 +74,6 @@
       style: styleFeature
     })
 
-    // Outlook set first day
-    function setDay (day) {
-      areasOfConcern.getSource().forEachFeature(function (feature) {
-        var featureDay = feature.get('day')
-        var visible = featureDay === day
-        feature.setStyle(visible ? null : new ol.style.Style({}))
-      })
-
-      forEach(outlookButtons, function (btn, i) {
-        btn.setAttribute('aria-selected', i + 1 === day ? 'true' : 'false')
-      })
-    }
-
     // MapContainer options
     var mapOptions = {
       keyTemplate: 'map-key-outlook.html',
@@ -102,39 +89,44 @@
     var map = container.map
 
     // Add outlook day controls
-    /*
-    <div class="defra-map__container">
-        <div class="defra-map__container-inner">
-          <div class="map__outlook-control">
-            <div class="map__outlook-control__inner">
-              {% for day in model.outlook.days %}
-                <div class="map__outlook-control__day">
-                  <button class="map__outlook-control__button"
-                    aria-selected="{{ "true" if not day.idx else "false" }}"
-                    data-day="{{day.idx}}">{{ day.date | formatDate('ddd D') }}
-                    <span class="map__outlook-control__icon map__outlook-control__icon--risk-level-{{day.level}}"></span>
-                  </button>
-                </div>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-      </div>
-    */
-
-    /*
-    var outlookControl = container.element.querySelector('.map__outlook-control')
-    var outlookButtons = outlookControl.querySelectorAll('button')
-
-    setDay(1)
-
-    forEach(outlookButtons, function (button) {
+    var outlookControl = document.createElement('div')
+    outlookControl.className = 'map__outlook-control'
+    outlookControl.innerHTML = '<div class="map__outlook-control__inner"></div>'
+    flood.model.outlook._days.forEach(function (day) {
+      var div = document.createElement('div')
+      div.className = 'map__outlook-control__day'
+      var button = document.createElement('button')
+      button.className = 'map__outlook-control__button'
+      button.setAttribute('aria-selected', !!day.idx)
+      button.setAttribute('data-day', day.idx)
+      var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      var d = new Date(day.date)
+      button.innerHTML = `
+        ${days[d.getDay()] + ' ' + d.getDate()}
+        <span class="map__outlook-control__icon map__outlook-control__icon--risk-level-${day.level}"></span>`
       button.addEventListener('click', function (e) {
         var day = +button.getAttribute('data-day')
         setDay(day)
       })
+      div.append(button)
+      outlookControl.childNodes[0].append(div)
     })
-    */
+    container.mapElement.append(outlookControl)
+
+    // Outlook set day function
+    function setDay (day) {
+      areasOfConcern.getSource().forEachFeature(function (feature) {
+        var featureDay = feature.get('day')
+        var visible = featureDay === day
+        feature.setStyle(visible ? null : new ol.style.Style({}))
+      })
+      forEach(outlookControl.querySelectorAll('button'), function (btn, i) {
+        btn.setAttribute('aria-selected', i + 1 === day ? 'true' : 'false')
+      })
+    }
+
+    // Outlook set first day
+    setDay(1)
 
     //
     // Events

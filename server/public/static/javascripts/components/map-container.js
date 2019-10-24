@@ -107,10 +107,10 @@
       var title = document.title
       var url = window.location.pathname + window.location.search
       url = addOrUpdateParameter(url, 'v', containerElement.id)
-      if (options.displaySettings) {
+      if (options.display) {
         // Add any querystring parameters that may have been passed in
-        Object.keys(options.displaySettings).forEach(function (key, index) {
-          url = addOrUpdateParameter(url, key, options.displaySettings[key])
+        Object.keys(options.display).forEach(function (key, index) {
+          url = addOrUpdateParameter(url, key, options.display[key])
         })
       }
       window.history.pushState(state, title, url)
@@ -271,7 +271,8 @@
     //
 
     this.map = map
-    this.key = keyElement
+    this.mapElement = mapElement
+    this.keyElement = keyElement
   }
 
   maps.MapContainer = MapContainer

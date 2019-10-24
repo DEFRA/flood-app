@@ -25,10 +25,10 @@ module.exports = {
   options: {
     validate: {
       query: {
-        q: joi.string().required(),
-        cz: joi.string(),
-        l: joi.string(),
-        v: joi.string()
+        q: joi.string().required()
+      },
+      failAction: (request, h, err) => {
+        return h.view('404').code(404)
       }
     }
   }

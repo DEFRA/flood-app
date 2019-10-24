@@ -25,9 +25,14 @@ module.exports = {
     validate: {
       query: {
         q: joi.string().required(),
-        cz: joi.string(),
-        l: joi.string(),
+        btn: joi.string(),
+        ext: joi.string(),
+        fid: joi.string(),
+        lyr: joi.string(),
         v: joi.string()
+      },
+      failAction: (request, h, err) => {
+        return h.view('404').code(404)
       }
     }
   }

@@ -2,6 +2,123 @@
   var ol = window.ol
   var layers = {}
 
+  // Single callback for multiple XMLHttpRequests
+  // https://gist.github.com/elrumordelaluz/cf32e84319126585ba6d
+  // Can be removed when all features come from GeoServer
+  var combinedRequest = {
+    init: function (urlArray, callback) {
+      var theFeatures = []
+      combinedRequest.requestWrapper(urlArray, theFeatures, callback)
+    },
+    requestWrapper: function (urlArray, theFeatures, callback) {
+      var requestObject = makeRequestObject()
+      requestObject.onreadystatechange = processRequest
+      /* (Defined below, as functions inside requestWrapper */
+      var url = urlArray[0]
+      requestObject.open('GET', url, true)
+      requestObject.send(null)
+      function makeRequestObject () {
+        if (window.XMLHttpRequest) {
+          return new XMLHttpRequest()
+        } else if (window.ActiveXObject) {
+          return new ActiveXObject('Microsoft.XMLHTTP')
+        }
+      }
+      function processRequest () {
+        if (requestObject.readyState === 4) {
+          if (requestObject.status === 200) {
+            combinedRequest.takeText(urlArray, theFeatures, requestObject.responseText, callback)
+          }
+        }
+      }
+    },
+    takeText: function (urlArray, theFeatures, responseText, callback) {
+      theFeatures = theFeatures.concat(JSON.parse(responseText).features)
+      urlArray.shift()
+      if (urlArray.length > 0) {
+        combinedRequest.requestWrapper(urlArray, theFeatures, callback)
+      } else {
+        combinedRequest.doCallback(theFeatures, callback)
+      }
+    },
+    doCallback: function (theFeatures, callback) {
+      callback(theFeatures)
+    }
+  }
+
+  combinedRequest.init([
+    '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert_centroid&maxFeatures=10000&outputFormat=application/json',
+    '/ows?service=wfs&version=2.0.0&request=GetFeature&typeNames=flood:stations&propertyName=status,atrisk,type,is_ffoi_at_risk&outputFormat=application/json',
+    '/impacts',
+    '/rainfall'
+  ], function (features) {
+    features.forEach((feature, i) => {
+      if (feature.id.substring(0, 4) === 'floo') {
+        feature.id = 't' + feature.properties.fwa_code.toLowerCase()
+        feature.geometry.coordinates[0] = Number(feature.geometry.coordinates[0].toFixed(6))
+        feature.geometry.coordinates[1] = Number(feature.geometry.coordinates[1].toFixed(6))
+        feature.properties.s = (feature.properties.severity * 10)
+        feature.properties.pId = 'p' + feature.properties.fwa_code.toLowerCase()
+        delete feature.properties.severity
+        delete feature.geometry_name
+        delete feature.properties.bbox
+        delete feature.properties.fwa_code
+        delete feature.properties.fwa_key
+        delete feature.properties.severity_description
+      } else if (feature.id.substring(0, 4) === 'stat') {
+        feature.id = 's' + feature.id.slice(feature.id.lastIndexOf('.') + 1, feature.id.length)
+        feature.geometry = {
+          type: 'Point',
+          coordinates: [Number(feature.properties.bbox[1].toFixed(6)), Number(feature.properties.bbox[0].toFixed(6))]
+        }
+        feature.properties.s = 14
+        var status = feature.properties.status
+        var atrisk = feature.properties.atrisk
+        var isFfoiAtRisk = feature.properties.is_ffoi_at_risk
+        if (status === 'Active' && atrisk) {
+          feature.properties.s = 11
+        } else if (status === 'Active' && isFfoiAtRisk) {
+          feature.properties.s = 12
+        } else if (status === 'Active') {
+          feature.properties.s = 13
+        }
+        feature.properties.pId = ''
+        delete feature.properties.status
+        delete feature.properties.atrisk
+        delete feature.properties.is_ffoi_at_risk
+        delete feature.properties.type
+        delete feature.properties.bbox
+      } else if (feature.id.substring(0, 4) === 'rain') {
+        feature.id = 'r' + feature.id.slice(feature.id.lastIndexOf('.') + 1, feature.id.length).toLowerCase()
+        feature.properties.pId = ''
+        feature.properties.s = 21
+        delete feature.properties.label
+        delete feature.properties.stationReference
+        delete feature.properties.gridRef
+        delete feature.properties.value
+        delete feature.properties.latestDate
+        delete feature.properties.stationDetails
+      } else if (feature.id.substring(0, 4) === 'impa') {
+        feature.id = 'i' + feature.id.slice(feature.id.lastIndexOf('.') + 1, feature.id.length)
+        feature.properties.pId = ''
+        feature.properties.s = 31
+        delete feature.properties.shortName
+        delete feature.properties.description
+        delete feature.properties.stationId
+        delete feature.properties.impactId
+        delete feature.properties.stationName
+        delete feature.properties.value
+        delete feature.properties.obsDate
+      }
+    })
+    /*
+    console.log(JSON.stringify({
+      type: 'FeatureCollection',
+      features: features
+    }))
+    */
+  })
+
   function road () {
     return new ol.layer.Tile({
       ref: 'road',
@@ -110,14 +227,15 @@
       maxResolution: 200,
       source: new ol.source.Vector({
         format: new ol.format.GeoJSON(),
+        projection: 'EPSG:3857',
         loader: function (extent, resolution, projection) {
+          extent = ol.proj.transformExtent(extent, 'EPSG:3857', 'EPSG:4326')
+          extent = [extent[1], extent[0], extent[3], extent[2]]
           var source = this
-          var proj = projection.getCode()
           var url = '/ows?service=wfs&' +
               'version=2.0.0&request=GetFeature&typename=flood:flood_warning_alert&' +
-              'outputFormat=application/json&srsname=' + proj + '&' +
-              'bbox=' + extent.join(',') + ',' + proj
-          var xhr = new XMLHttpRequest ()
+              'outputFormat=application/json&bbox=' + extent.join(',')
+          var xhr = new XMLHttpRequest()
           xhr.open('GET', url)
           var onError = function () {
             source.removeLoadedExtent(extent)
@@ -129,6 +247,7 @@
               // Temporary fix to create usable id as per other features
               var features = source.getFormat().readFeatures(xhr.responseText)
               features.forEach((feature) => {
+                feature.getGeometry().transform('EPSG:4326', 'EPSG:3857')
                 feature.setId('flood.' + feature.get('fwa_code').toLowerCase())
               })
               source.addFeatures(features)
@@ -137,6 +256,33 @@
             }
           }
           xhr.send()
+        },
+        strategy: ol.loadingstrategy.bbox
+      }),
+      style: maps.styles.floods
+    })
+  }
+
+  function centroids () {
+    return new ol.layer.Vector({
+      ref: 'centroids',
+      source: new ol.source.Vector({
+        format: new ol.format.GeoJSON(),
+        projection: 'EPSG:3857',
+        loader: function (extent, resolution, projection) {
+          extent = ol.proj.transformExtent(extent, 'EPSG:3857', 'EPSG:4326')
+          extent = [extent[1], extent[0], extent[3], extent[2]]
+          var source = this
+          var features = combinedRequest.init([
+            '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert_centroid&maxFeatures=10000&outputFormat=application/json',
+            '/ows?service=wfs&version=2.0.0&request=GetFeature&typeNames=flood:stations&propertyName=status,atrisk,type,is_ffoi_at_risk&outputFormat=application/json',
+            '/impacts',
+            '/rainfall'
+          ], function (data) {
+            console.log(data)
+            return data
+          })
+          source.add(features)
         },
         strategy: ol.loadingstrategy.bbox
       }),
@@ -160,7 +306,47 @@
   function stations () {
     return new ol.layer.Vector({
       ref: 'stations',
-      title: 'stations',
+      source: new ol.source.Vector({
+        format: new ol.format.GeoJSON(),
+        projection: 'EPSG:3857',
+        loader: function (extent) {
+          var source = this
+          var url = '/ows?service=wfs&' +
+              'version=2.0.0&request=GetFeature&typeNames=flood:stations&propertyName=status,atrisk,type,is_ffoi_at_risk&' +
+              'outputFormat=application/json'
+          var xhr = new XMLHttpRequest()
+          xhr.open('GET', url)
+          var onError = function () {
+            source.removeLoadedExtent(extent)
+          }
+          xhr.onerror = onError
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              // source.addFeatures(source.getFormat().readFeatures(xhr.responseText))
+              // Temporary fix to minimal feature properties. Gets geometry from bounding box
+              var features = source.getFormat().readFeatures(xhr.responseText)
+              features.forEach((feature) => {
+                var coordinates = ol.proj.transform([feature.get('bbox')[1], feature.get('bbox')[0]], 'EPSG:4326', 'EPSG:3857')
+                feature.setGeometry(new ol.geom.Point(coordinates))
+                feature.unset('bbox')
+              })
+              source.addFeatures(features)
+            } else {
+              onError()
+            }
+          }
+          xhr.send()
+        },
+        strategy: ol.loadingstrategy.all
+      }),
+      style: new ol.style.Style({})
+    })
+  }
+
+  /*
+  function stations () {
+    return new ol.layer.Vector({
+      ref: 'stations',
       source: new ol.source.Vector({
         format: new ol.format.GeoJSON(),
         projection: 'EPSG:3857',
@@ -169,11 +355,11 @@
       style: new ol.style.Style({})
     })
   }
+  */
 
   function rain () {
     return new ol.layer.Vector({
       ref: 'rain',
-      title: 'rain',
       source: new ol.source.Vector({
         format: new ol.format.GeoJSON(),
         projection: 'EPSG:3857',
@@ -186,7 +372,6 @@
   function impacts () {
     return new ol.layer.Vector({
       ref: 'impacts',
-      title: 'impacts',
       source: new ol.source.Vector({
         format: new ol.format.GeoJSON(),
         projection: 'EPSG:3857',

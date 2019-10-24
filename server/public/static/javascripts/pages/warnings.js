@@ -1,6 +1,5 @@
 // Add back button
 (function (window, flood) {
-  const ol = window.ol
   const maps = flood.maps
   const utils = flood.utils
   const model = flood.model

@@ -20,8 +20,9 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
         <div class="govuk-form-group defra-search">
-            <label class="govuk-label" for="search">Enter river name, postcode or town</label>
-            <input class="govuk-input defra-search__input" id="search" name="search" type="text" value="{{ model.placeName }}">
+            <label class="govuk-label" for="location">Enter river name, postcode or town</label>
+            <input class="govuk-input defra-search__input" id="location" name="location" type="text" value="{{ model.placeName }}">
+            <button type="submit" class="govuk-button defra-search__button">Search</button>
         </div>
     </div>
 </div>
@@ -77,11 +78,7 @@
 </div>
 {% endif %}
 
-<div class="defra-map" id="map-live">
-    <div class="defra-map__container">
-        <div class="defra-map__container-inner"></div>
-    </div>
-</div>
+<div class="defra-map" id="map-live"></div>
 
 {% endblock %}
 

@@ -1,8 +1,6 @@
 .defra-search {
     position:relative;
-    box-sizing:border-box;
     width:100%;
-    padding-right:40px;
     @include govuk-responsive-margin(8, 'bottom');
     .defra-search__button {
         position:absolute;

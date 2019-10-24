@@ -24,7 +24,7 @@
     const button = document.createElement('button')
     button.id = 'map-btn'
     button.className = 'defra-button-map govuk-!-margin-bottom-4'
-    button.innerText = 'View map of the flood risk area'
+    button.innerText = 'View a map of the flood risk area'
     button.addEventListener('click', function (e) {
       e.preventDefault()
       maps.createLiveMap('map-live', { btn: 'map-btn', lyr: 'ts,tw,ta', fid: 'flood.' + model.area.code.toLowerCase(), ext: extent.join(',') })

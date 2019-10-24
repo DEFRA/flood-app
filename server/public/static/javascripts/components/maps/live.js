@@ -12,7 +12,7 @@
   const forEach = flood.utils.forEach
   const MapContainer = maps.MapContainer
 
-  function LiveMap (containerId, displaySettings) {
+  function LiveMap (containerId, display) {
     // Container element
     const containerEl = document.getElementById(containerId)
 
@@ -35,15 +35,12 @@
     var impacts = maps.layers.impacts()
     var top = maps.layers.top()
 
-    // Default center - Needed by openlayers however calculations use extent instead of center and zoom
-    var center = ol.proj.transform(maps.center, 'EPSG:4326', 'EPSG:3857')
-
     // View
     var view = new ol.View({
       zoom: 6,
       minZoom: 6,
       maxZoom: 18,
-      center: center
+      center: maps.center
     })
 
     // MapContainer options
@@ -51,7 +48,7 @@
       minIconResolution: 200,
       view: view,
       keyTemplate: 'map-key-live.html',
-      displaySettings: displaySettings,
+      display: display,
       layers: [
         road,
         satellite,
@@ -67,7 +64,7 @@
     // Create MapContainer
     var container = new MapContainer(containerEl, options)
     var map = container.map
-    var key = container.key
+    var key = container.keyElement
 
     // Set flood layers visibility
     /*
@@ -575,11 +572,11 @@
     var lyrReady = { polygons: false, floods: false, stations: false, impacts: false, rain: false }
     map.getLayers().forEach(function (layer) {
       if (layer.getSource() && Object.keys(lyrReady).includes(layer.get('ref'))) {
-        var listener = layer.getSource().on('change', function (e) {
+        var allReady = layer.getSource().on('change', function (e) {
           if (this.getState() === 'ready') {
             lyrReady[layer.get('ref')] = true
-            // Remove listener when layer is ready
-            ol.Observable.unByKey(listener)
+            // Remove allReady when layer is ready
+            ol.Observable.unByKey(allReady)
             // Set initial selected feature from querystring
             if (getParameterByName('fid') && !selected) {
               selected = layer.getSource().getFeatureById(getParameterByName('fid'))       
@@ -592,6 +589,11 @@
           }
         })
       }
+    })
+
+    // Fix window.onresize and bbox strategy
+    map.on('change', function (e) {
+      console.log('Map change')
     })
 
     // Reactions based on pan/zoom change on map
@@ -724,7 +726,7 @@
   // onto the `maps` object.
   // (This is done mainly to avoid the rule
   // "do not use 'new' for side effects. (no-new)")
-  maps.createLiveMap = function (containerId, displaySettings = {}) {
-    return new LiveMap(containerId, displaySettings)
+  maps.createLiveMap = function (containerId, display = {}) {
+    return new LiveMap(containerId, display)
   }
 })(window, window.flood)

@@ -57,16 +57,16 @@
       {% elif model.severity.hash == 'flood-warning' %}
       You need to take action if you live in this area. Find out <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-warning">what to do in you get a flood warning</a>.
       {% else %}
-      You should be prepared if you live in this area. Find out <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-alert">what to do in you get a flood alert</a>.
+      <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-alert">Find out what to do in you get a flood alert</a>.
       {% endif %}
     </p>
     {% endif %}
-
-    <div class="defra-map" id="map-live"></div>
     
     <p class="govuk-body">
-      <a href="/river-and-sea-levels?river=river-name">View the latest river and sea levels</a> that impact this area.
+      <a href="/river-and-sea-levels?river=river-name">View the latest river and sea levels in this area</a>.
     </p>
+
+    <div class="defra-map" id="map-live"></div>
 
     <!--
     {% if model.flood %}
