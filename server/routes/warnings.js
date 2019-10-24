@@ -9,8 +9,7 @@ module.exports = [{
   path: '/alerts-and-warnings',
   handler: async (request, h) => {
     const { q: location } = request.query
-    var model = null
-    var place = null
+    var model, place, floods
     if (typeof location === 'undefined' || location === '') {
       const floods = floodService.floods
       model = new ViewModel({ location, place, floods })
@@ -19,8 +18,10 @@ module.exports = [{
     }
     place = await locationService.find(location)
     if (typeof place === 'undefined' || place === '') {
-      // Place error
-      return h.view('404').code(404)
+      // If no place return empty floods
+      model = new ViewModel({ location, place, floods })
+      model.hasBackButton = Boolean(request.headers.referer)
+      return h.view('warnings', { model })
     }
     if (!place.isEngland.is_england) {
       // Place ok but not in England
@@ -28,7 +29,7 @@ module.exports = [{
     }
     // Data passed to floods model so the schema is the same as cached floods
     const data = await floodService.getFloodsWithin(place.bbox)
-    const floods = new Floods(data)
+    floods = new Floods(data)
     model = new ViewModel({ location, place, floods })
     model.hasBackButton = Boolean(request.headers.referer)
     return h.view('warnings', { model })
@@ -59,15 +60,6 @@ module.exports = [{
       model.hasBackButton = Boolean(request.headers.referer)
       return h.redirect('/alerts-and-warnings')
     }
-    place = await locationService.find(location)
-    if (typeof place === 'undefined' || place === '') {
-      return h.redirect(`/alerts-and-warnings${q ? '?q=' + q : ''}`)
-    }
-    // Data passed to floods model so the schema is the same as cached floods
-    const data = await floodService.getFloodsWithin(place.bbox)
-    const floods = new Floods(data)
-    model = new ViewModel({ location, place, floods })
-    model.hasBackButton = Boolean(request.headers.referer)
     return h.redirect(`/alerts-and-warnings?q=${location}`)
   }
 }]

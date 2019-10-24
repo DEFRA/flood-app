@@ -131,10 +131,7 @@
         position:relative;
         display: block;
         padding-left:40px;
-        @include govuk-font($size: 19, $weight: bold);
-        a {
-            text-decoration: none;
-        }
+        @include govuk-font($size: 19);
     }
     &__item-desc,
     &__item-meta {

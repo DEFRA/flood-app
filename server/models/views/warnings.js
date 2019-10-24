@@ -13,11 +13,11 @@ class ViewModel {
       placeCentre: placeCentre
     })
 
-    const inactiveFloods = floods.floods.filter(flood => flood.severity === 4)
+    const inactiveFloods = floods ? floods.floods.filter(flood => flood.severity === 4) : []
 
-    this.countFloods = floods.floods.length
+    this.countFloods = floods ? floods.floods.length : 0
     this.countInactiveFloods = inactiveFloods.length
-    this.floods = floods.groups
+    this.floods = floods ? floods.groups : []
     this.timestamp = Date.now()
   }
 }
