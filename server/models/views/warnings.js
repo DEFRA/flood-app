@@ -14,9 +14,8 @@ class ViewModel {
     })
 
     const inactiveFloods = floods ? floods.floods.filter(flood => flood.severity === 4) : []
-
-    this.countFloods = floods ? floods.floods.length : 0
     this.countInactiveFloods = inactiveFloods.length
+    this.countFloods = floods ? floods.floods.length : 0
     this.floods = floods ? floods.groups : []
     this.timestamp = Date.now()
   }
