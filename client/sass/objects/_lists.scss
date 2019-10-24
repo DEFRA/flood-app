@@ -41,7 +41,7 @@
             content:'';
             width:26px;
             height:26px;
-            top:1px;
+            top:-1px;
             left:2px;
             background: transparent url('#{$govuk-images-path}icon-flood-symbols.svg') no-repeat;
             background-size: 52px 130px;
@@ -131,7 +131,10 @@
         position:relative;
         display: block;
         padding-left:40px;
-        @include govuk-font($size: 19);
+        @include govuk-font($size: 19, $weight: bold);
+        a {
+            text-decoration: none;
+        }
     }
     &__item-desc,
     &__item-meta {
