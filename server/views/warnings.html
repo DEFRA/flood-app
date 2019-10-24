@@ -1,4 +1,8 @@
 {% extends 'layout.html' %}
+
+{% from "error-summary/macro.njk" import govukErrorSummary %}
+{% from "input/macro.njk" import govukInput %}
+
 {% block content %}
 
 {% if model.hasBackButton %}
@@ -18,7 +22,18 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-third">
         <div class="govuk-form-group defra-search">
-            <form action="/alerts-and-warnings" method="post">
+            {% if errorMessage %}
+            {{ govukErrorSummary({
+                titleText: "There is a problem",
+                errorList: [
+                {
+                    text: errorMessage,
+                    href: "#location"
+                }
+                ]
+            }) }}
+            {% endif %}
+            <form method="post">
                 <label class="govuk-label govuk-!-padding-bottom-1" for="location">Postcode or town</label>
                 <input class="govuk-input" id="location" name="location" type="text" value="{{ model.placeName }}">
                 <!--<button type="submit" class="govuk-button defra-search__button">Filter</button>-->

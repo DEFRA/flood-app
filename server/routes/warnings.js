@@ -50,6 +50,7 @@ module.exports = [{
   path: '/alerts-and-warnings',
   handler: async (request, h) => {
     const { location } = request.payload
+    const { q } = request.query
     var model = null
     var place = null
     if (typeof location === 'undefined' || location === '') {
@@ -60,7 +61,7 @@ module.exports = [{
     }
     place = await locationService.find(location)
     if (typeof place === 'undefined' || place === '') {
-      return h.view('warnings', { errorMessage: 'Location cant be found' })
+      return h.redirect(`/alerts-and-warnings${q ? '?q=' + q : ''}`)
     }
     // Data passed to floods model so the schema is the same as cached floods
     const data = await floodService.getFloodsWithin(place.bbox)
