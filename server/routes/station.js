@@ -23,8 +23,8 @@ module.exports = {
       const station = await floodService.getStationById(id, direction)
 
       // If station is multi but neither param is specified redirect to upstream
-      if (station.station_type === 'M' && !request.params.direction) {
-        return h.redirect(`/station/${id}/upstream`)
+      if (station.station_type === 'M' && request.params.direction === 'upstream') {
+        return h.redirect(`/station/${id}`)
       }
 
       if (!station) {
