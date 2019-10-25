@@ -18,32 +18,26 @@
 </div>
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half">
+    <div class="govuk-grid-column-one-third">
         <div class="govuk-form-group defra-search">
-            <label class="govuk-label" for="location">Enter river name, postcode or town</label>
-            <input class="govuk-input defra-search__input" id="location" name="location" type="text" value="{{ model.placeName }}">
-            <button type="submit" class="govuk-button defra-search__button">Search</button>
+            <form method="post">
+                <label class="govuk-label govuk-!-padding-bottom-1" for="location">Search by location or river</label>
+                <input class="govuk-input" id="location" name="location" type="text" value="{{ model.placeName }}">
+            </form>
         </div>
     </div>
-</div>
-
-{% if model.countLevels %}
-<div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div class="defra-search-summary" id="searchSummary">
             <h2 class="defra-search-summary__count">{{ model.countLevels }} level{% if model.countLevels > 1 %}s{% endif %}</h2>
         </div>
-    </div>
-</div>
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+        {% if model.countLevels %}
         <ul class="defra-flood-list">
             {% for name, group in model.levels %}
             <li class="defra-flood-list__group">
                 <span class="defra-flood-list__group-title">
                     {{ name }} <span class="govuk-visually-hidden">at:</span>
                 </span>
-                <dl class="defra-flood-list__items defra-flood-list__items--levels"><!-- Optional modifier 'defra-flood-list__items--has-relation' -->
+                <dl class="defra-flood-list__items defra-flood-list__items--levels defra-flood-list__items--has-relation"><!-- Optional modifier 'defra-flood-list__items--has-relation' -->
                     {% for station in group %}
                     <div class="defra-flood-list__item{% if station.state %} defra-flood-list__item--{{ station.state }}{% endif %}">
                         <dt class="defra-flood-list__item-title">
@@ -58,25 +52,19 @@
             </li>
             {% endfor %}
         </ul>
+        {% else %}
+        <p class="govuk-body govuk-!-margin-top-4">
+            <strong>No river, sea or groundwater levels found.</strong>    
+        </p>
+        <p class="govuk-body">There are approximatley 2200 water level measuring stations in England. These are located mostly along main rivers and the coast.</p>
+        <p class="govuk-body">Improve your search results by:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>searching a broader location</li>
+            <li>double-checking your spelling</li>
+        </ul>
+        {% endif %}
     </div>
 </div>
-{% else %}
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <div class="govuk-!-margin-top-2">
-            <p class="govuk-body">
-                <strong>No river, sea or groundwater levels found.</strong>    
-            </p>
-            <p class="govuk-body">There are approximatley 2200 water level measuring stations in England. These are located mostly along main rivers and the coast.</p>
-            <p class="govuk-body">Improve your search results by:</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>searching a broader location</li>
-                <li>double-checking your spelling</li>
-            </ul>
-        </div>
-    </div>
-</div>
-{% endif %}
 
 <div class="defra-map" id="map-live"></div>
 

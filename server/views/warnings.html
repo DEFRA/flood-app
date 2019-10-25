@@ -23,7 +23,7 @@
     <div class="govuk-grid-column-one-third">
         <div class="govuk-form-group defra-search">
             <form method="post">
-                <label class="govuk-label govuk-!-padding-bottom-1" for="location">Postcode or town</label>
+                <label class="govuk-label govuk-!-padding-bottom-1" for="location">Filter by postcode or town</label>
                 <input class="govuk-input" id="location" name="location" type="text" value="{% if model.placeName %}{{ model.placeName }}{% else %}{{ model.q }}{% endif %}">
                 <!--<button type="submit" class="govuk-button defra-search__button">Filter</button>-->
             </form>
