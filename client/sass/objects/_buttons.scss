@@ -64,7 +64,7 @@
     background-color:transparent;
     background-size:45px 20px;
     background-repeat: no-repeat;
-    background-position: 0px 0px;
+    background-position: top right;
     height:20px;
     width:15px;
     @include mq ($from: tablet) {

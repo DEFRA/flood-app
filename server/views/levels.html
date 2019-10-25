@@ -22,13 +22,13 @@
         <div class="govuk-form-group defra-search">
             <form method="post">
                 <label class="govuk-label govuk-!-padding-bottom-1" for="location">Search by location or river</label>
-                <input class="govuk-input" id="location" name="location" type="text" value="{{ model.placeName }}">
+                <input class="defra-input defra-input--search" id="location" name="location" type="text" value="{% if model.placeName %}{{ model.placeName }}{% else %}{{ model.q }}{% endif %}">
             </form>
         </div>
     </div>
     <div class="govuk-grid-column-two-thirds">
         <div class="defra-search-summary" id="searchSummary">
-            <h2 class="defra-search-summary__count">{{ model.countLevels }} level{% if model.countLevels > 1 %}s{% endif %}</h2>
+            <h2 class="defra-search-summary__count">{{ model.countLevels }} level{% if model.countLevels != 1 %}s{% endif %}</h2>
         </div>
         {% if model.countLevels %}
         <ul class="defra-flood-list">

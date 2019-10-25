@@ -51,13 +51,7 @@ module.exports = [{
   path: '/alerts-and-warnings',
   handler: async (request, h) => {
     const { location } = request.payload
-    const { q } = request.query
-    var model = null
-    var place = null
     if (typeof location === 'undefined' || location === '') {
-      const floods = floodService.floods
-      model = new ViewModel({ location, place, floods })
-      model.hasBackButton = Boolean(request.headers.referer)
       return h.redirect('/alerts-and-warnings')
     }
     return h.redirect(`/alerts-and-warnings?q=${location}`)

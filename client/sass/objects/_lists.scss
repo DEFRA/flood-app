@@ -68,7 +68,7 @@
             top:4px;
             left:-33px;
             @include mq ($from: tablet) {
-                top:5px;
+                top:7px;
             }
         }
         dt:after {
@@ -82,7 +82,7 @@
             border-radius: 100%;
             background-color: white;
             @include mq ($from: tablet) {
-                top:6px;
+                top:8px;
             }
         }
         dd {
@@ -104,7 +104,10 @@
     &__items--has-relation:before {
         position:absolute;
         content:'';
-        top:5px;    
+        top:4px;    
+        @include mq ($from: tablet) {
+            top:7px;
+        }
         bottom:13px;
         left:12px;
         width:3px;
@@ -113,7 +116,7 @@
     &__items--has-relation:after {
         position:absolute;
         content:'';
-        bottom:10px;    
+        bottom:8px;    
         left:8px;
         width:1px;
         height:1px;

@@ -8,7 +8,7 @@
   utils.addBrowserBackButton()
 
   // Add map button and setup map
-  if (model.levels) {
+  if (model.countLevels) {
     // Create LiveMap if querystring is present
     if (utils.getParameterByName('v') === 'map-live') {
       maps.createLiveMap('map-live')

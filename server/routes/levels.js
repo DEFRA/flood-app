@@ -8,23 +8,26 @@ module.exports = [{
   path: '/river-and-sea-levels',
   handler: async (request, h) => {
     const { q: location } = request.query
-    const place = await locationService.find(location)
+    var model, place, stations
+    place = await locationService.find(location)
     if (typeof place === 'undefined' || place === '') {
-      request.yar.set('displayError', { errorMessage: 'Enter a valid location' })
-      return h.view('404').code(404)
+      stations = floodService.stations
+      model = new ViewModel({ location, place, stations })
+      model.hasBackButton = Boolean(request.headers.referer)
+      return h.view('levels', { model })
     }
     if (!place.isEngland.is_england) {
       return h.view('location-not-england')
     }
-    const stations = await floodService.getStationsWithin(place.bbox)
-    var model = new ViewModel({ location, place, stations })
+    stations = await floodService.getStationsWithin(place.bbox)
+    model = new ViewModel({ location, place, stations })
     model.hasBackButton = Boolean(request.headers.referer)
     return h.view('levels', { model })
   },
   options: {
     validate: {
       query: {
-        q: joi.string().required(),
+        q: joi.string(),
         btn: joi.string(),
         ext: joi.string(),
         fid: joi.string(),
@@ -32,7 +35,8 @@ module.exports = [{
         v: joi.string()
       },
       failAction: (request, h, err) => {
-        return h.view('404').code(404)
+        console.log('Fail action')
+        return h.view('404').code(404).takeover()
       }
     }
   }
@@ -41,27 +45,9 @@ module.exports = [{
   path: '/river-and-sea-levels',
   handler: async (request, h) => {
     const { location } = request.payload
-    const place = await locationService.find(location)
-    if (typeof place === 'undefined' || place === '') {
-      request.yar.set('displayError', { errorMessage: 'Enter a valid location' })
-      return h.view('404').code(404)
+    if (typeof location === 'undefined' || location === '') {
+      return h.redirect('/river-and-sea-levels')
     }
-    if (!place.isEngland.is_england) {
-      return h.view('location-not-england')
-    }
-    const stations = await floodService.getStationsWithin(place.bbox)
-    var model = new ViewModel({ location, place, stations })
-    model.hasBackButton = Boolean(request.headers.referer)
-    return h.view('levels', { model })
-  },
-  options: {
-    validate: {
-      payload: {
-        location: joi.string().required()
-      },
-      failAction: (request, h, err) => {
-        return h.view('levels', { errorMessage: 'Enter a valid location' }).takeover()
-      }
-    }
+    return h.redirect(`/river-and-sea-levels?q=${location}`)
   }
 }]

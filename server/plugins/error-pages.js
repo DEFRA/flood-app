@@ -16,7 +16,7 @@ module.exports = {
           '/historic-impacts'
         ]
 
-        if (response.isBoom && !(excludePaths.includes(request.route.path) && request.route.method === 'post')) {
+        if (response.isBoom && !excludePaths.includes(request.route.path)) {
           // An error was raised during
           // processing the request
           const statusCode = response.output.statusCode

@@ -67,8 +67,14 @@
         </ul>   
         {% else %}
         <p class="govuk-body govuk-!-margin-top-4">
-            <strong>No flood alerts or warnings in place{% if model.placeName %} near this location{% endif %}.</strong>
+            <strong>No flood alerts or warnings{% if model.placeName or model.q %} near this location{% endif %}.</strong>
         </p>
+        <p class="govuk-body">Improve your search results by:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>removing the filter</li>
+            <li>searching a broader location</li>
+            <li>double-checking your spelling</li>
+        </ul>
         {% endif %}
     </div>
 </div>
