@@ -42,7 +42,7 @@ module.exports = {
       env: config.env,
       appVersion: pkg.version,
       assetPath: '/assets',
-      serviceName: 'Flood information service',
+      serviceName: 'Check flood risk',
       gaAccId,
       fbAppId
     }
