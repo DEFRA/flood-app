@@ -77,3 +77,11 @@
 .defra-button-map:focus:before {
     background-position: 100% 0%;
 }
+.defra-table-impact__button {
+    @extend .defra-button-text-s;
+    span {
+        @include mq ($until: tablet) {
+            @include defra-visually-hidden;
+        }
+    }
+}
