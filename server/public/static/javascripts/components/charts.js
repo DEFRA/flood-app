@@ -96,8 +96,8 @@
 
     // Add tooltip container
     var toolTip = chartWrapper.append('g').attr('class', 'tool-tip')
-    toolTip.append('rect').attr('class', 'tool-tip-bg')
-    toolTip.append('text').attr('class', 'tool-tip-text')
+    toolTip.append('rect').attr('class', 'tool-tip-bg').attr('width', 147)
+    toolTip.append('text').attr('class', 'tool-tip-text').attr('x', 12).attr('y', 20)
 
     // Set level and date formats
     var parseTime = d3.timeFormat('%-I:%M%p')
@@ -158,7 +158,7 @@
       // Add thresholds
       thresholds.forEach(threshold => {
         var thresholdContainer = thresholdsContainer.append('g').attr('class', 'threshold  threshold--' + threshold.id)
-        thresholdContainer.classed('threshold--selected', threshold.isSelected ? true : false)
+        thresholdContainer.classed('threshold--selected', !!threshold.isSelected)
         var bg = thresholdContainer.append('rect').attr('class', 'threshold__bg').attr('x', 0).attr('y', -4).attr('height', 8)
         var line = thresholdContainer.append('line').attr('class', 'threshold__line')
         var label = thresholdContainer.append('g').attr('class', 'threshold-label')
@@ -166,21 +166,25 @@
         var labelBgPath = label.append('path').attr('class', 'threshold-label__bg')
         var text = label.append('text').attr('class', 'threshold-label__text').html(threshold.name)
         var remove = label.append('g').attr('class', 'threshold__remove')
-        remove.append('rect').attr('x',-6).attr('y',-6).attr('width',20).attr('height',20)
-        remove.append('line').attr('x1',0).attr('y1',0).attr('x2',8).attr('y2',8)
-        remove.append('line').attr('x1',8).attr('y1',0).attr('x2',0).attr('y2',8)
+        remove.append('rect').attr('x', -6).attr('y', -6).attr('width', 20).attr('height', 20)
+        remove.append('line').attr('x1', -0.5).attr('y1', -0.5).attr('x2', 7.5).attr('y2', 7.5)
+        remove.append('line').attr('x1', 7.5).attr('y1', -0.5).attr('x2', -0.5).attr('y2', 7.5)
+        /*
+        remove.append('line').attr('x1', 0).attr('y1', 0).attr('x2', 8).attr('y2', 8)
+        remove.append('line').attr('x1', 8).attr('y1', 0).attr('x2', 0).attr('y2', 8)
+        */
         // Set individual elements size and position
         var textWidth = text.node().getBBox().width
         // var textHeight = text.node().getBBox().height
         // labelBg.attr('width', textWidth + 24 + 18 ).attr('height', textHeight + 18)
         // labelBgHeight = labelBg.node().getBBox().height
-        labelBgPath.attr('d','m0,0 l' + (textWidth + 40) + ',0 l0,36 l-' + ((textWidth + 40)-50) + ',0 l-8,8 l-8,-8 l-34,0 l0,-36 l0,0')
+        labelBgPath.attr('d', 'm-0.5,-0.5 l' + Math.round(textWidth + 40) + ',0 l0,36 l-' + (Math.round(textWidth + 40) - 50) + ',0 l-7.5,7.5 l-7.5,-7.5 l-35,0 l0,-36 l0,0')
         text.attr('x', 12).attr('y', 10)
-        remove.attr('transform', 'translate(' + (textWidth + 20) + ',' + 14 + ')')
-        var labelX = x(xExtent[1])/8
+        remove.attr('transform', 'translate(' + Math.round(textWidth + 20) + ',' + 14 + ')')
+        var labelX = Math.round(x(xExtent[1]) / 8)
         // var labelY = -(labelBg.node().getBBox().height / 2)
         label.attr('transform', 'translate(' + labelX + ',' + -46 + ')')
-        thresholdContainer.attr('transform', 'translate(0,' + y(threshold.level) + ')')
+        thresholdContainer.attr('transform', 'translate(0,' + Math.round(y(threshold.level)) + ')')
         bg.attr('width', x(xExtent[1]))
         line.attr('x2', x(xExtent[1])).attr('y2', 0)
         // Remove button
@@ -195,7 +199,7 @@
           modifyAxis()
           updateDimensions()
           render()
-        }.bind(this))
+        })
         /*
         thresholdContainer.append('line').attr('class', 'threshold-cross').attr('x1', 17).attr('y1', -3).attr('x2', 23).attr('y2', 3)
         thresholdContainer.append('line').attr('class', 'threshold-cross').attr('x1', 23).attr('y1', -3).attr('x2', 17).attr('y2', 3)
@@ -213,14 +217,14 @@
           // Re render
           render()
         })
-        thresholdContainer.on('mousemove', function (d) { 
-          d3.event.stopPropagation() 
+        thresholdContainer.on('mousemove', function (d) {
+          d3.event.stopPropagation()
         })
-        thresholdContainer.on('mouseover', function (d) { 
-          d3.select(this).classed('threshold--mouseover', true) 
+        thresholdContainer.on('mouseover', function (d) {
+          d3.select(this).classed('threshold--mouseover', true)
         })
-        thresholdContainer.on('mouseout', function (d) { 
-          d3.select(this).classed('threshold--mouseover', false) 
+        thresholdContainer.on('mouseout', function (d) {
+          d3.select(this).classed('threshold--mouseover', false)
         })
       })
 
@@ -232,7 +236,7 @@
         // Add 'today' class to x axis tick
         svg.selectAll('.x .tick')
           .filter(function (d) {
-            return new Date(d).getDay() === new Date(data.now).getDay() && new Date(d).getUTCHours() == 12
+            return new Date(d).getDay() === new Date(data.now).getDay() && new Date(d).getUTCHours() === 12
           })
           .attr('class', 'tick tick-today')
       }
@@ -354,10 +358,9 @@
       // Set Background size
       var bg = toolTip.select('rect')
       var text = toolTip.select('text')
-      var textWidth = text.node().getBBox().width
-      var textHeight = text.node().getBBox().height
-      text.attr('x', 12).attr('y', 12)
-      bg.attr('width', textWidth + 24).attr('height', textHeight + 18)
+      // var textWidth = text.node().getBBox().width
+      var textHeight = Math.round(text.node().getBBox().height)
+      bg.attr('height', textHeight + 18)
       var toolTipWidth = bg.node().getBBox().width
       var toolTipHeight = bg.node().getBBox().height
       // Set background left or right position
@@ -405,8 +408,8 @@
         toolTipX = x(new Date(dataPoint.ts))
         toolTipY = (d3.mouse(this)[1])
         toolTip.select('text').html(
-          '<tspan class="tool-tip-text__strong">' + Number(dataPoint._).toFixed(2) + 'm</tspan>' +
-          '<tspan x="12" dy="1.4em">' + parseTime(new Date(dataPoint.ts)).toLowerCase() + ', ' + parseDateShort(new Date(dataPoint.ts)) + '</tspan>')
+          '<tspan class="tool-tip-text__strong" dominant-baseline="middle">' + Number(dataPoint._).toFixed(2) + 'm</tspan>' +
+          '<tspan x="12" dy="1.4em" dominant-baseline="middle">' + parseTime(new Date(dataPoint.ts)).toLowerCase() + ', ' + parseDateShort(new Date(dataPoint.ts)) + '</tspan>')
         // Set locator position
         dataPointLocator = dataPoint
       }
@@ -440,7 +443,7 @@
     }
 
     this.removeThreshold = function (id) {
-      thresholds = thresholds.filter(function (x) { return x.id != id })
+      thresholds = thresholds.filter(function (x) { return x.id !== id })
       svg.select('.threshold--' + id).remove()
       modifyAxis()
       render()

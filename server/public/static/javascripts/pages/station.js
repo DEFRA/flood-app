@@ -28,7 +28,7 @@
       })
     }
     document.querySelectorAll('.defra-table-impact__row').forEach(impact => {
-      impact.querySelector('.defra-button-text-s').addEventListener('click', function (e) {
+      impact.querySelector('.defra-table-impact__button').addEventListener('click', function (e) {
         lineChart.addThreshold({
           id: impact.getAttribute('data-id'),
           level: Number(impact.getAttribute('data-level')),

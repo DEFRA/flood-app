@@ -342,7 +342,8 @@ table.table-levels {
     .threshold__remove line {
         stroke-width: 2;
         stroke: $govuk-text-colour;
-        shape-rendering: auto;
+        shape-rendering: crispEdges;
+        stroke-linecap: square;
     }
     .threshold__remove rect {
         stroke-width: 0;
@@ -360,6 +361,7 @@ table.table-levels {
         stroke-width: 1;
         stroke: $govuk-text-colour;
         shape-rendering: auto;
+        stroke-linecap: square;
     }
     .threshold-label__text {
         @include govuk-font($size: 16);
