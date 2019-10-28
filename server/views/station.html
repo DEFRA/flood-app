@@ -124,14 +124,14 @@
         <tr class="defra-table-impact__row govuk-table__row" data-id="{{ impact.impactid }}" data-level="{{ impact.value }}" data-name="{{ impact.shortname }}">
           <th class="govuk-table__header" scope="row">{{ impact.value }}m</th>
           <td class="govuk-table__cell">{{ impact.description }} {% if impact.obsfloodmonth and impact.obsfloodyear %}({{ impact.obsfloodmonth }} {{ impact.obsfloodyear }}){% endif %}</td>
-          <td class="govuk-table__cell"><button class="defra-button-text-s">Show on chart</button></td>
+          <td class="govuk-table__cell"><button class="defra-table-impact__button"><span>Show on </span>chart</button></td>
         </tr>   
         {% endfor %}
         {% if model.warningThreshold %}
           <tr class="defra-table-impact__row govuk-table__row" data-id="warning" data-level="{{ model.warningThreshold }}" data-name="Flood warning threshold">
             <th class="govuk-table__header" scope="row">{{ model.warningThreshold }}m</th>
             <td class="govuk-table__cell">Flood warning threshold</td>
-            <td class="govuk-table__cell"><button class="defra-button-text-s">Show on chart</button></td>
+            <td class="govuk-table__cell"><button class="defra-table-impact__button"><span>Show on </span>chart</button></td>
           </tr>
         {% endif %}
       </tbody>
