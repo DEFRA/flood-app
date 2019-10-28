@@ -13,7 +13,7 @@ module.exports = [{
     if (typeof place === 'undefined' || place === '') {
       stations = floodService.stations
       model = new ViewModel({ location, place, stations })
-      model.hasBackButton = Boolean(request.headers.referer)
+      model.referer = request.headers.referer
       return h.view('levels', { model })
     }
     if (!place.isEngland.is_england) {
@@ -21,7 +21,7 @@ module.exports = [{
     }
     stations = await floodService.getStationsWithin(place.bbox)
     model = new ViewModel({ location, place, stations })
-    model.hasBackButton = Boolean(request.headers.referer)
+    model.referer = request.headers.referer
     return h.view('levels', { model })
   },
   options: {

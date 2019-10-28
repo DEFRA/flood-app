@@ -13,14 +13,14 @@ module.exports = [{
     if (typeof location === 'undefined' || location === '') {
       const floods = floodService.floods
       model = new ViewModel({ location, place, floods })
-      model.hasBackButton = Boolean(request.headers.referer)
+      model.referer = request.headers.referer
       return h.view('warnings', { model })
     }
     place = await locationService.find(location)
     if (typeof place === 'undefined' || place === '') {
       // If no place return empty floods
       model = new ViewModel({ location, place, floods })
-      model.hasBackButton = Boolean(request.headers.referer)
+      model.referer = request.headers.referer
       return h.view('warnings', { model })
     }
     if (!place.isEngland.is_england) {
@@ -31,7 +31,7 @@ module.exports = [{
     const data = await floodService.getFloodsWithin(place.bbox)
     floods = new Floods(data)
     model = new ViewModel({ location, place, floods })
-    model.hasBackButton = Boolean(request.headers.referer)
+    model.referer = request.headers.referer
     return h.view('warnings', { model })
   },
   options: {
