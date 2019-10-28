@@ -142,14 +142,6 @@ class ViewModel {
       this.pageTitle = 'River level at ' + this.station.name + ', ' + this.station.river + (this.station.isMulti ? ' (' + this.station.direction + ')' : '')
     }
 
-    // Set remaining station properties
-    this.isUpstream = this.station.direction === 'upstream'
-    this.isDownstream = this.station.direction === 'downstream'
-    this.centroidJSON = JSON.stringify(coordinates)
-    this.stationJSON = JSON.stringify(this.station)
-    this.forecast = this.ffoi || {}
-    this.forecastJSON = this.ffoi ? this.ffoi.forecastJSON : JSON.stringify({})
-
     // Impacts
     if (impacts) {
       // Add Highest level and Top of typical range to imapacts array for sorting purposes
@@ -163,6 +155,15 @@ class ViewModel {
 
       this.impacts = impacts
     }
+
+    // Set remaining station properties
+    this.isUpstream = this.station.direction === 'upstream'
+    this.isDownstream = this.station.direction === 'downstream'
+    this.centroidJSON = JSON.stringify(coordinates)
+    this.stationJSON = JSON.stringify(this.station)
+    this.forecast = this.ffoi || {}
+    this.forecastJSON = this.ffoi ? this.ffoi.forecastJSON : JSON.stringify({})
+
     // Page category for feedback categorisation
     this.pageCategory = this.isFfoi ? 'station-ffoi' : ''
   }

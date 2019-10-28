@@ -89,13 +89,13 @@
         {% elif model.station.isSuspended %}
         {{ model.station.statusReason if model.station.statusReason else "This station is temporarily closed and no data is available." }}
         {% endif %}
-        <a href="/">Check levels at another location</a>.
       </p>
     </div>
   </div>
 </div>
 {% endif %}
 
+{% if model.station.isActive %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <p class="govuk-text govuk-!-margin-bottom-6">Find out <a href="/how-river-sea-groundwater-levels-are-measured">how river, sea and groundwater levels are measured</a>.</p>
@@ -133,6 +133,7 @@
     </table>
   </div>
 </div>
+{% endif %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
