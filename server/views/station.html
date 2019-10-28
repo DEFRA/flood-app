@@ -2,7 +2,7 @@
 
 {% block content %}
 
-{% if model.hasBackButton %}
+{% if model.referer %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full" id="browserBackButton"></div>
 </div>
@@ -88,6 +88,11 @@
         The latest level recorded is unreliable. Reasons for this include very low river levels or a technical fault with the measuring equipment.
         {% elif model.station.isSuspended %}
         {{ model.station.statusReason if model.station.statusReason else "This station is temporarily closed and no data is available." }}
+        {% endif %}
+        {% if model.referer and 'river-and-sea-levels' in model.referer %}
+        You can <a href="{{ model.referer }}">check a river or sea level nearby</a>.
+        {% else %}
+        You can <a href="/">check flood risk</a> in another location.
         {% endif %}
       </p>
     </div>

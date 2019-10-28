@@ -54,9 +54,7 @@ class ViewModel {
       this.station.recentValue = this.recentValue
     }
 
-    
     if (this.recentValue) {
-
       // Get most recent value time
       this.recentValue.formattedTime = moment(this.recentValue.ts).format('h:mma')
       var today = moment().startOf('day')
@@ -126,20 +124,19 @@ class ViewModel {
     // Set Lat long
     const coordinates = JSON.parse(this.station.coordinates).coordinates
     coordinates.reverse()
+    /*
     this.lat = coordinates[0]
     this.long = coordinates[1]
     this.warningsUrl = `/warnings?stationid=${this.id}`
+    */
 
     // Set station type
     if (this.station.type === 'c') {
-      this.title = 'Tidal level'
       this.pageTitle = 'Sea level at ' + this.station.name
     } else if (this.station.type === 'g') {
-      this.title = 'Groundwater level'
       this.pageTitle = 'Groundwater level at ' + this.station.name + ' borehole'
     } else {
-      this.title = 'River level'
-      this.pageTitle = 'River level at ' + this.station.name + ', ' + this.station.river + (this.station.isMulti ? ' (' + this.station.direction + ')' : '')
+      this.pageTitle = 'River level at ' + this.station.name + (this.station.isMulti ? ', ' + this.station.direction : '') + ' (' + this.station.river + ')'
     }
 
     // Impacts
@@ -159,13 +156,15 @@ class ViewModel {
     // Set remaining station properties
     this.isUpstream = this.station.direction === 'upstream'
     this.isDownstream = this.station.direction === 'downstream'
+    /*
     this.centroidJSON = JSON.stringify(coordinates)
     this.stationJSON = JSON.stringify(this.station)
     this.forecast = this.ffoi || {}
     this.forecastJSON = this.ffoi ? this.ffoi.forecastJSON : JSON.stringify({})
+    */
 
     // Page category for feedback categorisation
-    this.pageCategory = this.isFfoi ? 'station-ffoi' : ''
+    // this.pageCategory = this.isFfoi ? 'station-ffoi' : ''
   }
 }
 
