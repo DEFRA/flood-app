@@ -1,6 +1,8 @@
 {% extends 'layout.html' %}
 {% block content %}
 
+<!-- ** Prefix meta title with search term -->
+
 {% if model.hasBackButton %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full" id="browserBackButton"></div>
@@ -19,25 +21,19 @@
 </div>
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half">
+    <div class="govuk-grid-column-one-third">
         <div class="govuk-form-group defra-search">
-            <label class="govuk-label" for="search">Enter postcode or town</label>
-            <input class="govuk-input defra-search__input" id="search" name="search" type="text" value="{{ model.placeName }}">
-            <button type="submit" class="govuk-button defra-search__button">Search</button>
+            <form method="post">
+                <label class="govuk-label govuk-!-padding-bottom-1" for="location">Search by location</label>
+                <input class="defra-input defra-input--search" id="location" name="location" type="text" value="{% if model.placeName %}{{ model.placeName }}{% else %}{{ model.q }}{% endif %}">
+            </form>
         </div>
     </div>
-</div>
-
-{% if model.countActiveImpacts %}
-<div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div class="defra-search-summary" id="searchSummary">
             <h2 class="defra-search-summary__count">{{ model.countActiveImpacts }} impact{% if model.countActiveImpacts > 1 %}s{% endif %} (level exceeded)</h2>
         </div>
-    </div>
-</div>
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+        {% if model.countActiveImpacts %}
         <ul class="defra-flood-list">
             {% for impact in model.activeImpacts %}
             <li class="defra-flood-list__item defra-flood-list__item--impact">
@@ -57,31 +53,20 @@
             </li>
             {% endfor %}
         </ul>
+        {% else %}
+        <p class="govuk-body govuk-!-margin-top-4">
+            <strong>No historic impacts found.</strong>    
+        </p>
+        <p class="govuk-body">Improve your search results by:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>searching a broader location</li>
+            <li>double-checking your spelling</li>
+        </ul>
+        {% endif %}
     </div>
 </div>
-{% else %}
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <div class="govuk-!-margin-top-2">
-            <p class="govuk-body">
-                <strong>No historic flood impacts likely... or thresholds a re below...</strong>    
-            </p>
-            <p class="govuk-body">There are approximatley 2200 water level measuring stations in England. These are located mostly along main rivers and the coast.</p>
-            <p class="govuk-body">Improve your search results by:</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>searching a broader location</li>
-                <li>double-checking your spelling</li>
-            </ul>
-        </div>
-    </div>
-</div>
-{% endif %}
 
-<div class="defra-map" id="map-live">
-    <div class="defra-map__container">
-        <div class="defra-map__container-inner"></div>
-    </div>
-</div>
+<div class="defra-map" id="map-live"></div>
 
 {% endblock %}
 

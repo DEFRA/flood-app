@@ -35,7 +35,6 @@ module.exports = [{
         v: joi.string()
       },
       failAction: (request, h, err) => {
-        console.log('Fail action')
         return h.view('404').code(404).takeover()
       }
     }

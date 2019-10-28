@@ -15,6 +15,7 @@ module.exports = {
     // Convert human readable url to service parameter
     direction = direction === 'downstream' ? 'd' : 'u'
 
+    // Welsh stations
     if (additionalWelshStations.indexOf(id) > -1) {
       return h.redirect(nrwStationUrl + id)
     }
@@ -27,14 +28,17 @@ module.exports = {
         return h.redirect(`/station/${id}`)
       }
 
+      // Welsh stations
       if (!station) {
         return boom.notFound('No station found')
       }
 
+      // Welsh stations
       if ((station.region || '').toLowerCase() === 'wales') {
         return h.redirect(nrwStationUrl + id)
       }
 
+      // Get telemetry
       const telemetry = await floodService.getStationTelemetry(id, direction)
 
       // Get thresholds first as this will tell us if should be a forecast or not
@@ -47,22 +51,14 @@ module.exports = {
       if (Object.keys(thresholds).length) { // DL: getStationForecastThresholds can return an empty object??
         // Forecast station
         const values = await floodService.getStationForecastData(station.wiski_id)
-
-        const forecast = {
-          thresholds,
-          values
-        }
-
+        const forecast = { thresholds, values }
         const model = new ViewModel({ station, telemetry, forecast, impacts })
-
         model.hasBackButton = Boolean(request.headers.referer)
-
         return h.view('station', { model })
       } else {
         // Non-forecast Station
         const model = new ViewModel({ station, telemetry, impacts })
         model.hasBackButton = Boolean(request.headers.referer)
-
         return h.view('station', { model })
       }
     } catch (err) {

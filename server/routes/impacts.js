@@ -3,21 +3,24 @@ const ViewModel = require('../models/views/impacts')
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
 
-module.exports = {
+module.exports = [{
   method: 'GET',
   path: '/historic-impacts',
   handler: async (request, h) => {
     const { q: location } = request.query
-    const place = await locationService.find(location)
+    var model, place, impacts
+    place = await locationService.find(location)
     if (typeof place === 'undefined' || place === '') {
-      request.yar.set('displayError', { errorMessage: 'Enter a valid location' })
-      return h.view('404').code(404)
+      impacts = []
+      model = new ViewModel({ location, place, impacts })
+      model.hasBackButton = Boolean(request.headers.referer)
+      return h.view('impacts', { model })
     }
     if (!place.isEngland.is_england) {
       return h.view('location-not-england')
     }
-    const impacts = await floodService.getImpactsWithin(place.bbox)
-    const model = new ViewModel({ location, place, impacts })
+    impacts = await floodService.getImpactsWithin(place.bbox)
+    model = new ViewModel({ location, place, impacts })
     model.hasBackButton = Boolean(request.headers.referer)
     return h.view('impacts', { model })
   },
@@ -32,8 +35,18 @@ module.exports = {
         v: joi.string()
       },
       failAction: (request, h, err) => {
-        return h.view('404').code(404)
+        return h.view('404').code(404).takeover()
       }
     }
   }
-}
+}, {
+  method: 'POST',
+  path: '/historic-impacts',
+  handler: async (request, h) => {
+    const { location } = request.payload
+    if (typeof location === 'undefined' || location === '') {
+      return h.redirect('/historic-impacts')
+    }
+    return h.redirect(`/historic-impacts?q=${location}`)
+  }
+}]
