@@ -31,7 +31,7 @@
     </div>
     <div class="govuk-grid-column-two-thirds">
         <div class="defra-search-summary" id="searchSummary">
-            <h2 class="defra-search-summary__count">{{ model.countActiveImpacts }} impact{% if model.countActiveImpacts > 1 %}s{% endif %} (level exceeded)</h2>
+            <h2 class="defra-search-summary__count">{{ model.countActiveImpacts }} impact{% if model.countActiveImpacts > 1 %}s{% endif %} (historic level exceeded)</h2>
         </div>
         {% if model.countActiveImpacts %}
         <ul class="defra-flood-list">
@@ -46,8 +46,8 @@
                         <dd><a href="/station/{{ impact.rloiid }}?i={{ impact.impactid }}">{{ impact.gauge }}</a></dd>
                     </div>
                     <div>
-                        <dt>Recorded</dt>
-                        <dd><time datetime="timestamp">1/1/1970</time></dd>
+                        <dt>Level (historic/latest)</dt>
+                        <dd>{{ impact.value }}m/{{ impact.telemetrylatest }}m</dd>
                     </div>
                 </dl>
             </li>

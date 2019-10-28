@@ -159,11 +159,13 @@
         margin:0px;
     }
     &__item-meta {
+        /*
         div {
             @include mq ($from: tablet) {
                 display: inline;
             }
         }
+        */
         dt {
             display:inline;
         }
@@ -176,6 +178,7 @@
             display: inline;
             margin:0px;
         }
+        /*
         dd:after {
             @include mq ($from: tablet) {
                 content:',';
@@ -184,6 +187,7 @@
         div:last-child dd:after {
             content:'';
         }
+        */
     }
     &__item {
         // Impacts
