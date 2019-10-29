@@ -31,7 +31,7 @@
     </div>
     <div class="govuk-grid-column-two-thirds">
         <div class="defra-search-summary" id="searchSummary">
-            <h2 class="defra-search-summary__count">{{ model.countFloods }} result{% if model.countFloods != 1 %}s{% endif %} {% if model.countInactiveFloods %}({{ model.countInactiveFloods }} removed){% endif %}</h2>
+            <h2 class="defra-search-summary__count">{{ model.countFloods }} result{% if model.countFloods != 1 %}s{% endif %}</h2>
         </div>
         {% if model.countFloods %}
         <ul class="defra-flood-list">
@@ -39,7 +39,7 @@
             {% if group.floods %}
             <li id="{{ group.severity.pluralisedHash }}" class="defra-flood-list__group">
                 <span class="defra-flood-list__group-title">
-                    {{ group.severity.pluralisedTitle }}
+                    {{ group.floods.length }} {% if group.floods.length != 1 %}{{ group.severity.pluralisedTitle | lower }}{% else %}{{ group.severity.title | lower }}{% endif %}
                     <span>{{ group.severity.subTitle }}</span>
                 </span>
                 <ul class="defra-flood-list__items defra-flood-list__items--warnings">
