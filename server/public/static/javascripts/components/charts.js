@@ -81,8 +81,7 @@
     if (data.now) {
       var nowContainer = chartWrapper.append('g').classed('time', true)
       nowContainer.append('line').classed('time-line', true)
-      nowContainer.append('rect').attr('class', 'time-now-bg').attr('x', -22).attr('y', 20).attr('height', 25).attr('width', 44)
-      nowContainer.append('text').attr('class', 'time-now-text').attr('x', -16).attr('y', 37).text('Now')
+      nowContainer.append('text').attr('class', 'time-now-text').attr('x', -17).text('Now')
       var now = svg.select('.time')
     }
 
@@ -179,7 +178,7 @@
         // labelBg.attr('width', textWidth + 24 + 18 ).attr('height', textHeight + 18)
         // labelBgHeight = labelBg.node().getBBox().height
         labelBgPath.attr('d', 'm-0.5,-0.5 l' + Math.round(textWidth + 40) + ',0 l0,36 l-' + (Math.round(textWidth + 40) - 50) + ',0 l-7.5,7.5 l-7.5,-7.5 l-35,0 l0,-36 l0,0')
-        text.attr('x', 12).attr('y', 10)
+        text.attr('x', 10).attr('y', 9.5)
         remove.attr('transform', 'translate(' + Math.round(textWidth + 20) + ',' + 14 + ')')
         var labelX = Math.round(x(xExtent[1]) / 8)
         // var labelY = -(labelBg.node().getBBox().height / 2)
@@ -233,6 +232,13 @@
         timeX = Math.floor(x(new Date(data.now)))
         svg.select('.time-line').attr('y1', 0).attr('y2', height)
         now.attr('y1', 0).attr('y2', height).attr('transform', 'translate(' + timeX + ',0)')
+        now.select('.time-now-text').attr('y', height + 11)
+        // Add 'hide' class to x axis tick if it may overlap now label
+        svg.selectAll('.x .tick')
+          .filter(function (d) {
+            return (d.getTime() + (60 * 60 * 18 * 1000)) > data.now.getTime()
+          })
+          .attr('class', 'tick tick-hide')
         // Add 'today' class to x axis tick
         svg.selectAll('.x .tick')
           .filter(function (d) {

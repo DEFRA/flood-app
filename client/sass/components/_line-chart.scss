@@ -219,8 +219,10 @@ table.table-levels {
     .axis.x .tick line {
         visibility:hidden;
     }
-    .axis.x .tick-today {
-        font-weight:bold;
+    .axis.x .tick-today,
+    .axis.x .tick-hide {
+        // font-weight:bold;
+        display:none;
     }
     .grid line {
         fill: none;
@@ -318,13 +320,8 @@ table.table-levels {
         shape-rendering: crispEdges; 
     }
     .time-now-text {
-        @include govuk-font($size: 16);
-    }
-    .time-now-bg {
-        fill:white;
-        stroke-width: 1;
-        stroke: $govuk-secondary-text-colour;
-        shape-rendering: crispEdges;
+        @include govuk-font($size: 16, $weight: bold);
+        dominant-baseline:hanging;
     }
     // Thresholds
     .threshold__line {
@@ -359,7 +356,7 @@ table.table-levels {
     .threshold-label__bg {
         fill:white;
         stroke-width: 1;
-        stroke: $govuk-text-colour;
+        stroke: govuk-colour('dark-grey');
         shape-rendering: auto;
         stroke-linecap: square;
     }
