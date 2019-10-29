@@ -51,7 +51,16 @@
   <div class="govuk-grid-column-one-third"> 
     <p role="text" class="govuk-!-margin-bottom-6">
       <span class="govuk-caption-m">Latest level</span>
-      <strong class="defra-flood-heading-l{% if model.station.level == 'High' %} defra-flood-heading-l--warning{% endif %} govuk-!-margin-bottom-1">{{ model.station.level }}</strong>
+      <strong class="
+        defra-flood-heading-l
+        {% if model.station.level == 'High' %}
+        defra-flood-heading-l--warning
+        {% elif model.station.level == 'Normal' %}
+        defra-flood-heading-l--normal
+        {% endif %}
+        govuk-!-margin-bottom-1">
+        {{ model.station.level }}
+      </strong>
       <span class="govuk-body">
         {% if model.station.hasPercentiles %}
         {{ (model.station.recentValue._).toFixed(2) }}m
