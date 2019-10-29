@@ -4,6 +4,11 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full" {% if model.referer %}id="browserBackButton"{% endif %}>
+    {% if model.station.isRiver and not model.referer %}
+    <a href="/river-and-sea-levels?r={river-name}" class="defra-river-nav-link">
+      {{ model.station.river }}
+    </a>
+    {% endif %}
     <a href="" class="defra-river-nav-link">
       <svg role="presentation" focusable="false" class="defra-river-nav__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="15" viewBox="0 0 13 15">
         <path fill="currentColor" d="m6.5,0l-6.5,6.5l1.4,1.5l4,-4l0,10.7l2,0l0,-10.7l4.3,4l1.3,-1.6l-6.5,-6.4z"></path>
@@ -44,7 +49,7 @@
   <div class="govuk-grid-column-one-third"> 
     <p role="text" class="govuk-!-margin-bottom-6">
       <span class="govuk-caption-m">Latest level</span>
-      <strong class="govuk-heading-l govuk-!-margin-bottom-1">{{ model.station.level }}</strong>
+      <strong class="defra-flood-heading-l{% if model.station.level == 'High' %} defra-flood-heading-l--warning{% endif %} govuk-!-margin-bottom-1">{{ model.station.level }}</strong>
       <span class="govuk-body">
         {% if model.station.hasPercentiles %}
         {{ (model.station.recentValue._).toFixed(2) }}m
@@ -104,7 +109,7 @@
 </div>
 {% endif %}
 
-{% if model.station.isActive %}
+{% if model.station.isActive and not model.recentValue.err %}
 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-6">
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">

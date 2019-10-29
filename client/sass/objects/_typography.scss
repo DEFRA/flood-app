@@ -11,3 +11,9 @@
     vertical-align: middle;
     margin-right:2px;
 }
+.defra-flood-heading-l {
+    @extend .govuk-heading-l;
+    &--warning {
+        color: govuk-colour('red');
+    }
+}

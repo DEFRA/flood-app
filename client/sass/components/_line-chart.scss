@@ -391,13 +391,15 @@ table.table-levels {
     // Typical/Alert
     .threshold--alert {
         .threshold__line {
-            stroke: #F8C37F;
+            // stroke: #F8C37F;
+            stroke: $govuk-border-colour;
         }
     }
     .threshold.threshold--selected.threshold--alert,
     .threshold.threshold--mouseover.threshold--alert {
         .threshold__line {
-            stroke: #F18700;
+            // stroke: #F18700;
+            stroke: $govuk-text-colour;
         }
     }
 }
