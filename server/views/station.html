@@ -4,11 +4,12 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full" {% if model.referer %}id="browserBackButton"{% endif %}>
-    {% if model.station.isRiver and not model.referer %}
+    {% if model.station.isRiver %}
     <a href="/river-and-sea-levels?r={river-name}" class="defra-river-nav-link">
       {{ model.station.river }}
     </a>
     {% endif %}
+    <!--
     <a href="" class="defra-river-nav-link">
       <svg role="presentation" focusable="false" class="defra-river-nav__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="15" viewBox="0 0 13 15">
         <path fill="currentColor" d="m6.5,0l-6.5,6.5l1.4,1.5l4,-4l0,10.7l2,0l0,-10.7l4.3,4l1.3,-1.6l-6.5,-6.4z"></path>
@@ -21,6 +22,7 @@
         </svg>
         <span>Downstream</span>
     </a>
+    -->
   </div>
 </div>
 
@@ -113,7 +115,10 @@
 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-6">
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <p class="govuk-text govuk-!-margin-bottom-6">Find out <a href="/how-river-sea-groundwater-levels-are-measured">how river, sea and groundwater levels are measured</a>.</p>
+    <button class="defra-button-map govuk-!-margin-bottom-4">View map showing measurment location</button>
+    <p class="govuk-text govuk-!-margin-bottom-6">
+      Find out <a href="/how-river-sea-groundwater-levels-are-measured">how river, sea and groundwater levels are measured</a>.    
+    </p>
     <h2 class="govuk-heading-m">What effect could the level here have on nearby areas?</h2>
     <table class="defra-table-impact govuk-table govuk-!-font-size-16 govuk-!-margin-bottom-7">
       <caption class="govuk-table__caption govuk-visually-hidden">Months and rates</caption>
