@@ -50,12 +50,12 @@
         hyperlink.href = document.referrer
         hyperlink.href = hyperlink.pathname + hyperlink.search
         hyperlink.innerText = 'Back'
-        hyperlink.className = 'govuk-back-link govuk-!-margin-bottom-7'
+        hyperlink.className = 'govuk-back-link govuk-!-margin-bottom-7 govuk-!-margin-right-2'
         hyperlink.addEventListener('click', function (e) {
           e.preventDefault()
           window.history.back()
         })
-        container.append(hyperlink)
+        container.prepend(hyperlink)
       }
     }
   }

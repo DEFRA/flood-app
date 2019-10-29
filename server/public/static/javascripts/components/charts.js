@@ -14,11 +14,6 @@
     //
 
     var chart = document.getElementById(containerId)
-    // If javascript is enabled make content visible to all but assitive technology
-    // var figure = chart.parentNode
-    chart.setAttribute('aria-hidden', true)
-    chart.removeAttribute('hidden')
-    chart.removeAttribute('style')
 
     // Setup array to combine observed and forecast points
     // and identify startPoint for locator

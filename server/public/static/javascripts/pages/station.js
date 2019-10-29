@@ -1,11 +1,18 @@
 (function (window, flood) {
   const utils = flood.utils
+  const charts = flood.charts
 
   // Add browser back button
   utils.addBrowserBackButton()
 
-  var charts = flood.charts
-  if (document.getElementById('line-chart')) {
+  var chart = document.getElementsByClassName('defra-line-chart')
+
+  if (chart.length) {
+    // If javascript is enabled make content visible to all but assitive technology
+    // var figure = chart.parentNode
+    chart[0].setAttribute('aria-hidden', true)
+    chart[0].removeAttribute('hidden')
+    // Create line chart instance
     var lineChart = charts.createLineChart('line-chart', {
       now: new Date(),
       observed: window.flood.model.telemetry,
@@ -13,7 +20,7 @@
     })
     if (flood.utils.getParameterByName('i')) {
       var impactId = flood.utils.getParameterByName('i')
-      var impact = flood.model.impacts.find(x => x.impactid === parseInt(impactId) )
+      var impact = flood.model.impacts.find(x => x.impactid === parseInt(impactId))
       // console.log(impact)
       lineChart.addThreshold({
         id: impactId,

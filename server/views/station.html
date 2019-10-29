@@ -2,11 +2,22 @@
 
 {% block content %}
 
-{% if model.referer %}
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full" id="browserBackButton"></div>
+  <div class="govuk-grid-column-full" {% if model.referer %}id="browserBackButton"{% endif %}>
+    <a href="" class="defra-river-nav-link">
+      <svg role="presentation" focusable="false" class="defra-river-nav__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="15" viewBox="0 0 13 15">
+        <path fill="currentColor" d="m6.5,0l-6.5,6.5l1.4,1.5l4,-4l0,10.7l2,0l0,-10.7l4.3,4l1.3,-1.6l-6.5,-6.4z"></path>
+      </svg>
+      <span>Upstream</span>
+    </a>
+    <a href="" class="defra-river-nav-link">
+        <svg role="presentation" focusable="false" class="defra-river-nav__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="15" viewBox="0 0 13 15">
+          <path fill="currentColor" d="m6.5,0l-6.5,6.5l1.4,1.5l4,-4l0,10.7l2,0l0,-10.7l4.3,4l1.3,-1.6l-6.5,-6.4z" transform="rotate(180,6.5,7.5)"></path>
+        </svg>
+        <span>Downstream</span>
+    </a>
+  </div>
 </div>
-{% endif %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -31,7 +42,7 @@
 {% if model.station.isActive and not model.recentValue.err %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-third"> 
-    <p role="text" class="govuk-!-padding-bottom-4">
+    <p role="text" class="govuk-!-margin-bottom-6">
       <span class="govuk-caption-m">Latest level</span>
       <strong class="govuk-heading-l govuk-!-margin-bottom-1">{{ model.station.level }}</strong>
       <span class="govuk-body">
@@ -53,7 +64,7 @@
     </div>
   -->
   <div class="govuk-grid-column-one-third"> 
-    <p role="text" class="govuk-!-padding-bottom-4">
+    <p role="text" class="govuk-!-margin-bottom-6">
       <span class="govuk-caption-m">Last updated</span>
       <time datetime="" class="govuk-heading-l govuk-!-margin-bottom-1">{{ model.station.recentValue.formattedTime }}</time>
       <span class="govuk-body">{{ model.station.recentValue.dateWhen }}</span>
@@ -63,17 +74,10 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <!--
-      If D3 available (Javascript, SVG or VML)
-      remove hidden class and hidden attribute
-    -->
-    <figure class="defra-line-chart govuk-!-margin-bottom-4">
+    <figure class="defra-line-chart" aria-hidden="true" hidden>
       <figcaption class="defra-line-chart__caption">Level measured over the last 5 days {% if model.isFfoi %}and next 36 hours{% endif %}</figcaption>
-      <div id="line-chart" class="defra-line-chart__container" role="presentation" aria-hidden="true" hidden></div>
+      <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
     </figure>
-    <!--
-      End D3 available
-    -->
   </div>
 </div>
 
@@ -101,14 +105,10 @@
 {% endif %}
 
 {% if model.station.isActive %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <p class="govuk-text govuk-!-margin-bottom-6">Find out <a href="/how-river-sea-groundwater-levels-are-measured">how river, sea and groundwater levels are measured</a>.</p>
-  </div>
-</div>
-
+<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-6">
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
+    <p class="govuk-text govuk-!-margin-bottom-6">Find out <a href="/how-river-sea-groundwater-levels-are-measured">how river, sea and groundwater levels are measured</a>.</p>
     <h2 class="govuk-heading-m">What effect could the level here have on nearby areas?</h2>
     <table class="defra-table-impact govuk-table govuk-!-font-size-16 govuk-!-margin-bottom-7">
       <caption class="govuk-table__caption govuk-visually-hidden">Months and rates</caption>

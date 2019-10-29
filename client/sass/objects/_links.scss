@@ -1,0 +1,16 @@
+.defra-river-nav-link {
+    @extend .govuk-back-link;
+    position:relative;
+    padding-left:0px;
+    margin-right:10px;
+    @include govuk-responsive-margin(7, 'bottom');
+}
+.defra-river-nav-link:before {
+    content:none;
+}
+.defra-river-nav__icon {
+    position: relative;
+    left:0px;
+    top:2px;
+    margin-right:2px;
+}
