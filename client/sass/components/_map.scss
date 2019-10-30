@@ -329,27 +329,21 @@
   background-size: 400px;
   background-repeat: no-repeat;
 }
+.map__outlook-control__icon--risk-level-0 {
+  background-position: -303px -203px;
+}
 .map__outlook-control__icon--risk-level-1 {
-  background-position: -256px -203px;
+  // background-position: -303px -253px;
+  background-position: -303px -303px;
 }
 .map__outlook-control__icon--risk-level-2 {
-  background-position: -256px -303px;
+  background-position: -303px -303px;
 }
 .map__outlook-control__icon--risk-level-3 {
-  background-position: -256px -353px;
+  background-position: -303px -353px;
 }
 .map__outlook-control__icon--risk-level-4 {
-  background-position: -256px -403px;
-}
-.map__outlook-control__icon--risk-level-0 {
-  background:none;
-  width:50px;
-  color:$govuk-text-colour;
-  line-height:1.1em;
-}
-.map__outlook-control__icon--risk-level-0:after {
-  content:'Very Low';
-  font-weight: normal;
+  background-position: -303px -403px;
 }
 
 //

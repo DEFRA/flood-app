@@ -34,19 +34,44 @@
       featureProjection: 'EPSG:3857'
     })
 
+    var pattern = function () {
+      var canvas = document.createElement('canvas')
+      var dpr = window.devicePixelRatio || 1
+      canvas.width = 8 * dpr
+      canvas.height = 8 * dpr
+      var ctx = canvas.getContext('2d')
+      ctx.scale(dpr, dpr)
+      ctx.fillStyle = 'transparent'
+      ctx.fillRect(0, 0, 8, 8)
+      ctx.beginPath()
+      ctx.lineCap = 'square'
+      ctx.strokeStyle = '#ffbf47'
+      ctx.lineWidth = 2
+      ctx.moveTo(-2, 2)
+      ctx.lineTo(2, -2)
+      ctx.stroke()
+      ctx.moveTo(-2, 10)
+      ctx.lineTo(10, -2)
+      ctx.stroke()
+      ctx.moveTo(6, 10)
+      ctx.lineTo(10, 6)
+      ctx.stroke()
+      ctx.restore()
+      return ctx.createPattern(canvas, 'repeat')
+    }
+
     function styleFeature (feature) {
       // var strokeColour = '#6f777b'
       // var strokeWidth = 2
       var zIndex = feature.get('z-index')
       var lineDash = [2, 3]
-      var fillColour = 'rgba(133,153,75, 0.8)' // '#85994b'
-
+      var fillColour = pattern()
       if (feature.get('risk-level') === 2) {
-        fillColour = 'rgba(255,191,71, 0.8)' // '#ffbf47'
+        fillColour = '#ffbf47'
       } else if (feature.get('risk-level') === 3) {
-        fillColour = 'rgba(244,119,56, 0.8)' // '#F47738'
+        fillColour = '#F47738'
       } else if (feature.get('risk-level') === 4) {
-        fillColour = 'rgba(223,48,52, 0.8)' // '#df3034'
+        fillColour = '#df3034'
       }
 
       return new ol.style.Style({
