@@ -294,7 +294,10 @@
   position: relative;
   vertical-align: top;
   text-align:center;
-  height:74px;
+  height:66px;
+  @include mq ($from: tablet) {
+    height:74px;
+  }
   width:100%;
   @include govuk-font($size: 16);
   color:$govuk-text-colour;
@@ -314,36 +317,38 @@
   border-top: 4px solid $govuk-link-colour;
   font-weight:bold;
   background-color:white;
-  height:78px;
+  height:70px;
+  @include mq ($from: tablet) {
+    height:78px;
+  }
   margin-top:-4px;
 }
 .map__outlook-control__icon {
   display:block;
   width:26px;
   height:32px;
-  margin:3px auto auto auto;
+  margin:4px auto auto auto;
   background-color: transparent;
   background-image: url('#{$govuk-images-path}icon-map-features-2x.png');
   background-color:transparent;
   background-position: -5000px;
-  background-size: 400px;
+  background-size: 350px;
   background-repeat: no-repeat;
 }
 .map__outlook-control__icon--risk-level-0 {
-  background-position: -303px -203px;
+  background-position: -202px -801px;
 }
 .map__outlook-control__icon--risk-level-1 {
-  // background-position: -303px -253px;
-  background-position: -303px -303px;
+  background-position: -302px -801px;
 }
 .map__outlook-control__icon--risk-level-2 {
-  background-position: -303px -303px;
+  background-position: -302px -301px;
 }
 .map__outlook-control__icon--risk-level-3 {
-  background-position: -303px -353px;
+  background-position: -302px -351px;
 }
 .map__outlook-control__icon--risk-level-4 {
-  background-position: -303px -403px;
+  background-position: -302px -401px;
 }
 
 //
@@ -879,14 +884,14 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
   width:30px;
   height:32px;
   margin-left:-37px;
-  margin-top:-9px;
+  margin-top:-8px;
   @include mq ($from: tablet) {
-    margin-top:-7px;
+    margin-top:-6px;
   }
   background-image: url('#{$govuk-images-path}icon-map-features-2x.png');
   background-color:transparent;
   background-position:0 0;
-  background-size:400px;
+  background-size:350px;
   background-repeat: no-repeat;
   border:0;
 }
@@ -904,16 +909,19 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
   }
   .govuk-checkboxes__label,
   .govuk-radios__label {
-    padding: 7px 10px 5px 10px;
+    padding: 6px 10px 5px 10px;
     @include govuk-font($size: 16);
     @include mq ($from: tablet) {
-      padding: 5px 10px 4px 12px;
+      padding: 4px 10px 4px 12px;
     }
   }
   .govuk-label__inner {
     position: relative;
     display: block;
     margin-left: 36px;
+    &--multi {
+      margin-top:20px;
+    }
   }
   .govuk-checkboxes__input + .govuk-checkboxes__label::before,
   .govuk-radios__input + .govuk-radios__label::before {

@@ -153,15 +153,17 @@
         zIndex = 1
         break
       case props.atrisk && props.type !== 'C' && props.type !== 'G':
-        offset = [0, 300]
+        offset = [0, 400]
         zIndex = 3
         break
+      /*
       case props.is_ffoi_at_risk:
-        offset = [0, 200]
+        offset = [0, 300]
         zIndex = 4
         break
+      */
       default:
-        offset = [0, 100]
+        offset = [0, 200]
         zIndex = 2
         break
     }
