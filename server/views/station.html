@@ -9,6 +9,7 @@
       {{ model.station.river }}
     </a>
     {% endif %}
+    <a href="" class="defra-river-nav-link">Map</a>
     <!--
     <a href="" class="defra-river-nav-link">
       <svg role="presentation" focusable="false" class="defra-river-nav__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="15" viewBox="0 0 13 15">
@@ -124,12 +125,8 @@
 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-6">
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <button class="defra-button-map govuk-!-margin-bottom-4">View map of measurment location</button>
-    <p class="govuk-text govuk-!-margin-bottom-6">
-      Find out <a href="/how-river-sea-groundwater-levels-are-measured">how river, sea and groundwater levels are measured</a>.    
-    </p>
     <h2 class="govuk-heading-m">What effect could the level here have on nearby areas?</h2>
-    <table class="defra-table-impact govuk-table govuk-!-font-size-16 govuk-!-margin-bottom-7">
+    <table class="defra-table-impact govuk-table govuk-!-font-size-16 govuk-!-margin-bottom-6">
       <caption class="govuk-table__caption govuk-visually-hidden">Months and rates</caption>
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
@@ -160,8 +157,8 @@
 {% endif %}
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <details class="govuk-details">
+  <div class="govuk-grid-column-full">   
+    <details class="govuk-details govuk-!-margin-bottom-4">
       <summary class="govuk-details__summary">
         <span class="govuk-details__summary-text">
           View technical details about this gauging station
@@ -184,6 +181,9 @@
         </dl>
       </div>
     </details>
+    <p class="govuk-text">
+      <a href="/how-river-sea-groundwater-levels-are-measured">Find out how river, sea and groundwater levels are measured</a>.    
+    </p> 
   </div>
 </div>
 {% endblock %}
