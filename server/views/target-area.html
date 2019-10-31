@@ -9,23 +9,9 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
-      Flood risk area: {{ model.area.name }}
-    </h1>
-    <p class="defra-updated govuk-!-margin-bottom-8">
-      {% if model.flood and not model.severity.isActive %}
-      Removed at <time datetime="{{model.flood.severityChanged}}">{{model.flood.messageChanged | formatDate}}</time>
-      {% else %}
-      Updated at <time datetime="{{model.flood.messageChanged}}">{{model.flood.messageChanged | formatDate}}</time>
-      {% endif %}
-    </p>
-  </div>
-</div>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <div class="defra-flood-status">
-      {% if model.flood %}
+    {% if model.flood %}
+    <div class="defra-flood-status govuk-!-margin-bottom-3">
       <div class="defra-flood-status-item defra-flood-status-item--{{model.severity.hash}}">
         {% if model.severity.id < 4 %}<span class="defra-flood-status-item__icon"></span>{% endif %}
         <div class="defra-flood-status-item__text">
@@ -37,25 +23,45 @@
           {% endif %}
         </div>
       </div>
+    </div>
+    {% endif %}
+
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
+      Flood risk area: {{ model.area.name }}
+    </h1>
+    <p class="defra-updated govuk-!-margin-bottom-7">
+      {% if model.flood and not model.severity.isActive %}
+      Removed at <time datetime="{{model.flood.severityChanged}}">{{model.flood.messageChanged | formatDate}}</time>
       {% else %}
+      Updated at <time datetime="{{model.flood.messageChanged}}">{{model.flood.messageChanged | formatDate}}</time>
+      {% endif %}
+    </p>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {% if not model.flood %}
+    <div class="defra-flood-status govuk-!-margin-bottom-1">
       <div class="defra-flood-status-item">
         <div class="defra-flood-status-item__text">
           No flood alert or warning currently in place
         </div>
       </div>
-      {% endif %}
     </div>
+    {% endif %}
 
-    {% if model.flood %}
+    {% if model.flood and model.flood.message %}
     <p class="govuk-body">{{model.flood.message}}</p>
     {% endif %}
 
     {% if model.flood and model.severity.isActive %}
     <p class="govuk-body">
-      {% if model.severity.hash == 'severe-flood-warning' %}
-      You must act now if you live in this area. Find out <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-severe-flood-warning">what to do in you get a severe flood warning</a>.
-      {% elif model.severity.hash == 'flood-warning' %}
-      You need to take action if you live in this area. Find out <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-warning">what to do in you get a flood warning</a>.
+      {% if model.severity.id == 1 %}
+      <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-severe-flood-warning">Find out what to do in you get a severe flood warning</a>.
+      {% elif model.severity.id == 2 %}
+      <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-warning">Find out what to do in you get a flood warning</a>.
       {% else %}
       <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-alert">Find out what to do in you get a flood alert</a>.
       {% endif %}
