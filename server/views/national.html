@@ -53,7 +53,7 @@
 
     <p class="govuk-body">If you live near a river or the coast you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
 
-    <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Flood risk for the next 5 days</h2>
+    <h2 class="govuk-heading-m govuk-!-margin-bottom-1" id="outlook">Flood risk for the next 5 days</h2>
     <p class="defra-updated govuk-!-margin-bottom-4">
       <time title="{{model.outlook.timestampOutlook | formatDate}}" datetime="{{ model.outlook.timestampOutlook }}">Updated at {{ model.outlook.timestampOutlook | formatDate }}</time>
     </p>
