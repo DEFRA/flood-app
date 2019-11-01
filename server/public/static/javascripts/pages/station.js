@@ -34,7 +34,7 @@
         name: 'Top of typical range'
       })
     }
-    document.querySelectorAll('.defra-table-impact__row').forEach(impact => {
+    document.querySelectorAll('.defra-table-impact tbody tr').forEach(impact => {
       impact.querySelector('.defra-table-impact__button').addEventListener('click', function (e) {
         lineChart.addThreshold({
           id: impact.getAttribute('data-id'),
