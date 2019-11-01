@@ -20,3 +20,16 @@
     top:2px;
     margin-right:2px;
 }
+a.defra-link-meta {
+    @extend .govuk-link;
+    color: $govuk-text-colour;
+    &:visited {
+        color:$govuk-link-visited-colour;
+    }
+    &:hover {
+        color:$govuk-link-hover-colour;
+    }
+    &:active {
+        color:$govuk-link-active-colour;
+    }
+}

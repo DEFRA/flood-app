@@ -17,7 +17,6 @@
         <div class="defra-flood-status-item__text">
           {% if model.severity.id < 4 %}
           <strong>{{model.severity.title}}</strong>
-          <span>{{model.severity.subTitle}}</span>
           {% else %}
           Flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warning{% else %}alert{% endif %} no longer in place
           {% endif %}
@@ -27,7 +26,7 @@
     {% endif %}
 
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
-      Flood risk area: {{ model.area.name }}
+      Target area: {{ model.area.name }}
     </h1>
     <p class="defra-updated govuk-!-margin-bottom-7">
       {% if model.flood and not model.severity.isActive %}

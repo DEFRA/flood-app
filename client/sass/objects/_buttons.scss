@@ -54,6 +54,9 @@
     position:relative;
     display:inline-block;
     padding-left:20px;
+    &--meta {
+        color: $govuk-text-colour;
+    }
 }
 .defra-button-map:before {
     content: "";

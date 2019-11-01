@@ -9,22 +9,6 @@
         <a href="/">Change location</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/national">National view</a>
       </p>
     </nav>
-
-    {% if model.hasActiveFloods %}
-    <div class="defra-flood-status govuk-!-margin-bottom-3">
-      <div class="defra-flood-status-item defra-flood-status-item--{{model.highestSeverity.hash}}">
-        <span class="defra-flood-status-item__icon">
-          <span class="govuk-visually-hidden">{{model.highestSeverity.title}}</span>
-        </span>
-        <div class="defra-flood-status-item__text">
-          <strong>
-            {{model.highestSeverity.subTitle}}
-          </strong>
-        </div>
-      </div>
-    </div>
-    {% endif %}
-
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
       Flood risk: {{ model.location }}
     </h1>
@@ -36,9 +20,20 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-
-    {% if not model.hasActiveFloods %}
+   
     <div class="defra-flood-status govuk-!-margin-bottom-1">
+      {% if model.hasActiveFloods %}
+      <div class="defra-flood-status-item defra-flood-status-item--{{model.highestSeverity.hash}}">
+        <span class="defra-flood-status-item__icon">
+          <span class="govuk-visually-hidden">{{model.highestSeverity.title}}</span>
+        </span>
+        <div class="defra-flood-status-item__text">
+          <strong>
+            {{model.highestSeverity.subTitle}}
+          </strong>
+        </div>
+      </div>
+      {% else %}
       <div class="defra-flood-status-item">
         <div class="defra-flood-status-item__text">
           No flood warnings or alerts currently in place in this area. 
@@ -47,9 +42,9 @@
           {% endif %}
         </div>
       </div>
+      {% endif %}
     </div>
-    {% endif %}
-
+    
     {% if model.hasFloods %}
     <p class="govuk-body">
       {{ model.floodSummary | safe }}
