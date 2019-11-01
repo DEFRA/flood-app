@@ -22,7 +22,7 @@ const severity = [{
   pluralisedTitle: 'Flood alerts',
   hash: 'alert',
   pluralisedHash: 'alerts',
-  subTitle: 'Some flooding is possible',
+  subTitle: 'Flooding is possible',
   tagline: 'Be prepared',
   isActive: true
 }, {
