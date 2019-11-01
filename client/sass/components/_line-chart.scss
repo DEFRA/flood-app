@@ -259,7 +259,7 @@ table.table-levels {
     // Observed
     .observed-line { 
         stroke: $govuk-link-colour;
-        stroke-width: 2;
+        stroke-width: 3;
         fill: none;
     }
     .observed-area { 
@@ -269,7 +269,7 @@ table.table-levels {
     .forecast-line { 
         stroke-dasharray: 4, 2; 
         stroke: $govuk-secondary-text-colour;
-        stroke-width: 2;
+        stroke-width: 3;
         fill: none;
     }
     .forecast-area { 
@@ -277,7 +277,7 @@ table.table-levels {
     }
     // Locator
     .locator-point {
-        stroke-width: 2;
+        stroke-width: 3;
         stroke: $govuk-link-colour;
         fill: white; 
     }
@@ -326,7 +326,7 @@ table.table-levels {
     // Thresholds
     .threshold__line {
         stroke: $govuk-border-colour;
-        stroke-width: 2;
+        stroke-width: 3;
         shape-rendering: crispEdges;
     }
     .threshold__bg {

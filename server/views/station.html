@@ -124,11 +124,11 @@
 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-6">
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <p class="govuk-text">
+    <p class="govuk-text govuk-!-margin-bottom-6">
       <a href="/how-river-sea-groundwater-levels-are-measured">Find out how river, sea and groundwater levels are measured</a>.    
     </p>
     <h2 class="govuk-heading-m">What effect could the level here have on nearby areas?</h2>
-    <table class="defra-table-impact govuk-table govuk-!-font-size-16 govuk-!-margin-bottom-6">
+    <table class="govuk-table defra-table-impact govuk-!-margin-bottom-7">
       <caption class="govuk-table__caption govuk-visually-hidden">Months and rates</caption>
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
@@ -139,14 +139,14 @@
       </thead>
       <tbody class="govuk-table__body">
         {% for impact in model.impacts %}
-        <tr class="defra-table-impact__row govuk-table__row" data-id="{{ impact.impactid }}" data-level="{{ impact.value }}" data-name="{{ impact.shortname }}">
+        <tr class="govuk-table__row" data-id="{{ impact.impactid }}" data-level="{{ impact.value }}" data-name="{{ impact.shortname }}">
           <th class="govuk-table__header" scope="row">{{ impact.value }}m</th>
           <td class="govuk-table__cell">{{ impact.description }} {% if impact.obsfloodmonth and impact.obsfloodyear %}({{ impact.obsfloodmonth }} {{ impact.obsfloodyear }}){% endif %}</td>
           <td class="govuk-table__cell"><button class="defra-table-impact__button"><span>Show on </span>chart</button></td>
         </tr>   
         {% endfor %}
         {% if model.warningThreshold %}
-          <tr class="defra-table-impact__row govuk-table__row" data-id="warning" data-level="{{ model.warningThreshold }}" data-name="Flood warning threshold">
+          <tr class="govuk-table__row" data-id="warning" data-level="{{ model.warningThreshold }}" data-name="Flood warning threshold">
             <th class="govuk-table__header" scope="row">{{ model.warningThreshold }}m</th>
             <td class="govuk-table__cell">Flood warning threshold</td>
             <td class="govuk-table__cell"><button class="defra-table-impact__button"><span>Show on </span>chart</button></td>
@@ -161,51 +161,40 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">   
     <h2 class="govuk-heading-m">Technical details about this gauging station</h2>
-    <dl>
-      <div class="govuk-body">
-        <dt class="govuk-body-s govuk-!-margin-bottom-1">Location:</dt>
-        <dd class="govuk-body govuk-!-margin-0">
-          Grid ref NY 12345 12345, <button class="defra-button-map defra-button-map--meta">View map</button>
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Location
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <button class="defra-button-map defra-button-map--small" title="View map">Grid ref NY 12345 12345</button>
         </dd>
       </div>
-      <div class="govuk-body">
-        <dt class="govuk-body-s govuk-!-margin-bottom-1">Site datum:</dt>
-        <dd class="govuk-body govuk-!-margin-0">{{ model.station.stageDatum }}<a href="/how-river-sea-groundwater-levels-are-measured#site-datum" class="defra-link-meta" title="What this means">mAOD</a></dd>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Site datum
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{ model.station.stageDatum }}<a href="/how-river-sea-groundwater-levels-are-measured#site-datum" class="defra-link-meta" title="What this means">mAOD</a>
+        </dd>
       </div>
-      <div class="govuk-body">
-        <dt class="govuk-body-s govuk-!-margin-bottom-1">ID / Name:</dt>
-        <dd class="govuk-body govuk-!-margin-0">{{ model.station.id }} / {{ model.station.name }}</dd>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Station name
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{ model.station.name }}
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Station ID
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{ model.station.id }}
+        </dd>
       </div>
     </dl>
-    <!--
-    <details class="govuk-details govuk-!-margin-bottom-4">
-      <summary class="govuk-details__summary">
-        <span class="govuk-details__summary-text">
-          View technical details about this gauging station
-        </span>
-      </summary>
-      <div class="govuk-details__text govuk-!-padding-right-0">
-        <dl class="govuk-summary-list govuk-!-font-size-16">
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Station name</dt>
-            <dd class="govuk-summary-list__value">{{ model.station.name }}</dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Station ID:</dt>
-            <dd class="govuk-summary-list__value">{{ model.station.id }}</dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Site datum:</dt>
-            <dd class="govuk-summary-list__value">{{ model.station.stageDatum }}mAOD (<a href="/how-river-sea-groundwater-levels-are-measured#site-datum">what does this mean?</a>)</dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Grid reference:</dt>
-            <dd class="govuk-summary-list__value">??</dd>
-          </div>
-        </dl>
-      </div>
-    </details>
-    -->
   </div>
 </div>
 {% endblock %}
