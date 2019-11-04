@@ -55,6 +55,11 @@
     display:inline-block;
     padding-left:20px;
     &--small {
+        padding-left:18px;
+        @include mq ($from: tablet) {
+            padding-left:20px;
+        }
+        @include govuk-font($size: 16);
         color: $govuk-text-colour;
     }
 }
@@ -72,6 +77,12 @@
     width:15px;
     @include mq ($from: tablet) {
         top: 3px;
+    }
+}
+.defra-button-map--small:before {
+    top:-1px;
+    @include mq ($from: tablet) {
+        top: 1px;
     }
 }
 .defra-button-map:hover:before {

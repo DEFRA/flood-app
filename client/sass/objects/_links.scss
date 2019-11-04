@@ -24,7 +24,8 @@ a.defra-link-meta {
     @extend .govuk-link;
     color: $govuk-text-colour;
     &:visited {
-        color:$govuk-link-visited-colour;
+        // color:$govuk-link-visited-colour;
+        color: $govuk-text-colour;
     }
     &:hover {
         color:$govuk-link-hover-colour;

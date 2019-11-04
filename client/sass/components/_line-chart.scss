@@ -219,11 +219,6 @@ table.table-levels {
     .axis.x .tick line {
         visibility:hidden;
     }
-    .axis.x .tick-today,
-    .axis.x .tick-hide {
-        // font-weight:bold;
-        display:none;
-    }
     .grid line {
         fill: none;
         stroke: rgba($govuk-text-colour, 0.1);
@@ -273,7 +268,7 @@ table.table-levels {
         fill: none;
     }
     .forecast-area { 
-        fill: govuk-colour('light-grey');
+        fill: rgba($govuk-border-colour, 0.1);
     }
     // Locator
     .locator-point {

@@ -7,7 +7,7 @@
     // Settings
     var windowBreakPoint = 640
     var svgBreakPoint = 576
-    var xCutOff = 9
+    var xAxisType = 'daily'
 
     //
     // Progressive enhancement
@@ -73,12 +73,10 @@
     }
 
     // Add timeline
-    if (data.now) {
-      var nowContainer = chartWrapper.append('g').classed('time', true)
-      nowContainer.append('line').classed('time-line', true)
-      nowContainer.append('text').attr('class', 'time-now-text').attr('x', -17).text('Now')
-      var now = svg.select('.time')
-    }
+    var nowContainer = chartWrapper.append('g').classed('time', true)
+    nowContainer.append('line').classed('time-line', true)
+    nowContainer.append('text').attr('class', 'time-now-text').attr('x', -17).text('Now')
+    var now = svg.select('.time')
 
     // Add locator
     var locator = chartWrapper.append('g').classed('locator', true)
@@ -125,7 +123,7 @@
       chartWrapper.attr('transform', 'translate(' + (margin.left + margin.right) + ',' + 0 + ')')
 
       // Update the axis and line
-      xAxis.scale(x)
+      xAxis.scale(x).ticks(xAxisType === 'daily' ? d3.timeDay : d3.timeMonth, 1)
       yAxis.scale(y)
       svg.select('.x.axis').attr('transform', 'translate(0,' + height + ')').call(xAxis)
       svg.selectAll('.x.axis text').attr('y', 12)
@@ -135,7 +133,7 @@
       svg.select('.x.grid')
         .attr('transform', 'translate(0,' + height + ')')
         .call(d3.axisBottom(x)
-          .ticks(d3.timeDay, 1)
+          .ticks(xAxisType === 'daily' ? d3.timeDay : d3.timeMonth, 1)
           .tickSize(-height, 0, 0)
           .tickFormat('')
         )
@@ -223,24 +221,18 @@
       })
 
       // Update time line
-      if (data.now) {
-        timeX = Math.floor(x(new Date(data.now)))
-        svg.select('.time-line').attr('y1', 0).attr('y2', height)
-        now.attr('y1', 0).attr('y2', height).attr('transform', 'translate(' + timeX + ',0)')
-        now.select('.time-now-text').attr('y', height + 11)
-        // Add 'hide' class to x axis tick if it may overlap now label
-        svg.selectAll('.x .tick')
-          .filter(function (d) {
-            return (d.getTime() + (60 * 60 * 18 * 1000)) > data.now.getTime()
-          })
-          .attr('class', 'tick tick-hide')
-        // Add 'today' class to x axis tick
-        svg.selectAll('.x .tick')
-          .filter(function (d) {
-            return new Date(d).getDay() === new Date(data.now).getDay() && new Date(d).getUTCHours() === 12
-          })
-          .attr('class', 'tick tick-today')
-      }
+      timeX = Math.floor(x(new Date(data.now)))
+      svg.select('.time-line').attr('y1', 0).attr('y2', height)
+      now.attr('y1', 0).attr('y2', height).attr('transform', 'translate(' + timeX + ',0)')
+      now.select('.time-now-text').attr('y', height + 11)
+      // Add 'today' class to x axis tick
+      /*
+      svg.selectAll('.x .tick')
+        .filter(function (d) {
+          return new Date(d).getDay() === new Date(data.now).getDay() && new Date(d).getUTCHours() === 12
+        })
+        .attr('class', 'tick tick-today')
+      */
 
       // Add height to locator line
       svg.select('.locator-line').attr('y1', 0).attr('y2', height)
@@ -265,9 +257,10 @@
       xExtent = d3.extent(lines, function (d, i) { return new Date(d.ts) })
       yExtent = d3.extent(lines, function (d, i) { return d._ })
 
-      // Increase X range to minimum of 6 hours beyond now value
+      // Increase X range by 5% from now value
       var date = new Date(data.now)
-      date.setHours(date.getHours() + 8)
+      var percentile = Math.round(Math.abs(xExtent[0] - date) * 0.05)
+      date = new Date(Number(data.now) + Number(percentile))
       var xRange = [xExtent[0], xExtent[1]]
       xRange.push(date)
       xExtent[0] = Math.min.apply(Math, xRange)
@@ -290,9 +283,6 @@
         yExtent[1] = yExtent[1] <= maxThresholdBuffered ? maxThresholdBuffered : yExtent[1]
       }
 
-      // Round Y Axis upper to an even number
-      // yExtent[1] = (2 * Math.round((yExtent[1]*10)/2))/10
-
       // Setup scales
       x = d3.scaleTime().domain(xExtent)
       y = d3.scaleLinear().domain(yExtent)
@@ -312,35 +302,68 @@
       margin.left = 28
       margin.right = 28
 
-      var xCutOffLeft = d3.timeHour.offset(xExtent[0], +xCutOff).getTime()
-      var xCutOffRight = d3.timeHour.offset(xExtent[1], -xCutOff).getTime()
+      var xCutOffLeft, xCutOffRight
 
       // Get dimensions based on parent size
       parentWidth = Math.floor(d3.select('#' + containerId).node().getBoundingClientRect().width)
       parentHeight = Math.floor(d3.select('#' + containerId).node().getBoundingClientRect().height)
 
-      // Mobile first
-      xAxis.ticks(d3.timeHour, 12).tickFormat(function (d) {
-        if (d.getHours() === 12 & d >= xCutOffLeft & d <= xCutOffRight) {
-          var formatter = d3.timeFormat('%-e/%-m')
-          return formatter(d)
-        } else {
-          return null
-        }
-      })
+      // Number of days in x range
+      var daysInRange = Math.round(Math.abs(xExtent[1] - xExtent[0]) / 1000 / 60 / 60 / 24)
 
-      // Greater than window or svg breakpoint
+      // X Axis labels
       if (window.innerWidth > windowBreakPoint && parentWidth > svgBreakPoint) {
-        xAxis.ticks(d3.timeHour, 12).tickFormat(function (d) {
-          if (d.getHours() === 12 & d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
-            var formatter = d3.timeFormat('%a, %e %b')
-            return formatter(d)
-          } else {
-            return null
-          }
-        })
+        // Tablet
+        xCutOffLeft = x.invert(20)
+        xCutOffRight = x.invert(timeX - 75) // After which labels need to be hidden
+        if (daysInRange < 7) {
+          // Tablet daily
+          xAxis.ticks(d3.timeHour, 12).tickFormat(function (d) {
+            if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
+              var formatter = d3.timeFormat('%a, %e %b')
+              return formatter(d)
+            } else {
+              return null
+            }
+          })
+        } else {
+          // Tablet monthly
+          xAxis.ticks(d3.timeMonth, 1).tickFormat(function (d) {
+            if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
+              var formatter = d3.timeFormat('%e %b')
+              return formatter(d)
+            } else {
+              return null
+            }
+          })
+        }
         margin.left = 34
         margin.right = 34
+      } else {
+        // Mobile
+        xCutOffLeft = x.invert(10)
+        xCutOffRight = x.invert(timeX - 50) // After which labels need to be hidden
+        if (daysInRange < 7) {
+          // Mobile daily
+          xAxis.ticks(d3.timeHour, 12).tickFormat(function (d) {
+            if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
+              var formatter = d3.timeFormat('%-e/%-m')
+              return formatter(d)
+            } else {
+              return null
+            }
+          })
+        } else {
+          // Mobile monthly
+          xAxis.ticks(d3.timeMonth, 1).tickFormat(function (d) {
+            if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
+              var formatter = d3.timeFormat('%-e/%-m')
+              return formatter(d)
+            } else {
+              return null
+            }
+          })
+        }
       }
       width = parentWidth - margin.left - margin.right
       height = parentHeight - margin.top - margin.bottom
