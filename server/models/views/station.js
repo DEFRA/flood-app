@@ -59,11 +59,11 @@ class ViewModel {
       this.recentValue.formattedTime = moment(this.recentValue.ts).format('h:mma')
       var today = moment().startOf('day')
       var yesterday = moment().subtract(1, 'days').startOf('day')
-      this.recentValue.dateWhen = '(' + moment(this.recentValue.ts).format('D/MM/YY') + ')'
+      this.recentValue.dateWhen = 'on ' + moment(this.recentValue.ts).format('D/MM/YY')
       if (moment(this.recentValue.ts).isSame(today, 'd')) {
-        this.recentValue.dateWhen = ''
+        this.recentValue.dateWhen = 'today'
       } else if (moment(this.recentValue.ts).isSame(yesterday, 'd')) {
-        this.recentValue.dateWhen = '(Yesterday)'
+        this.recentValue.dateWhen = 'yesterday'
       }
 
       // FFOI processing
@@ -106,18 +106,16 @@ class ViewModel {
       // Low/Med/High
       if (this.station.hasPercentiles) {
         if (this.station.type === 'c') {
-          this.station.level = Math.round(this.station.recentValue._ * 10) / 10 + 'm'
+          this.station.state = Math.round(this.station.recentValue._ * 10) / 10 + 'm'
         } else {
           if (parseFloat(this.station.recentValue._) > parseFloat(this.station.percentile5)) {
-            this.station.level = 'High'
+            this.station.state = 'High'
           } else if (parseFloat(this.station.recentValue._) < parseFloat(this.station.percentile95)) {
-            this.station.level = 'Low'
+            this.station.state = 'Low'
           } else {
-            this.station.level = 'Normal'
+            this.station.state = 'Normal'
           }
         }
-      } else {
-        this.station.level = this.station.recentValue._.toFixed(1) + 'm'
       }
     }
 

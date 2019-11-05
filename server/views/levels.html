@@ -41,7 +41,12 @@
                     {% for station in group %}
                     <div class="defra-flood-list__item{% if station.state %} defra-flood-list__item--{{ station.state }}{% endif %}">
                         <dt class="defra-flood-list__item-title">
-                            <a href="/station/{{station.rloi_id}}">{{ station.external_name }}</a>
+                            <a href="/station/{{station.rloi_id}}{% if station.qualifier == 'd' %}/downstream{% endif %}">
+                                {{ station.external_name }}
+                                {% if station.qualifier == 'd' %}
+                                (downstream)
+                                {% endif %}
+                            </a>
                         </dt>
                         <dd class="defra-flood-list__item-desc">
                             {{ station.valueHtml | safe }}
