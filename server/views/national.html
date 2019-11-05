@@ -51,7 +51,7 @@
       {% endfor %}
     </div>
 
-    <h2 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-margin-bottom-1" id="outlook">Flood risk for the next 5 days</h2>
+    <h2 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-margin-bottom-1" id="outlook">Flood forecast for the next 5 days</h2>
     <p class="defra-updated govuk-!-margin-bottom-4">
       <time title="{{model.outlook.timestampOutlook | formatDate}}" datetime="{{ model.outlook.timestampOutlook }}">Updated at {{ model.outlook.timestampOutlook | formatDate }}</time>
     </p>

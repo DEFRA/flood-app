@@ -10,16 +10,12 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    {% if model.flood %}
+    {% if model.flood and model.severity.id < 4 %}
     <div class="defra-flood-status govuk-!-margin-bottom-3">
       <div class="defra-flood-status-item defra-flood-status-item--{{model.severity.hash}}">
-        {% if model.severity.id < 4 %}<span class="defra-flood-status-item__icon"></span>{% endif %}
+        <span class="defra-flood-status-item__icon"></span>
         <div class="defra-flood-status-item__text">
-          {% if model.severity.id < 4 %}
           <strong>{{model.severity.title}}</strong>
-          {% else %}
-          Flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warning{% else %}alert{% endif %} no longer in place
-          {% endif %}
         </div>
       </div>
     </div>
@@ -29,11 +25,7 @@
       Target area: {{ model.area.name }}
     </h1>
     <p class="defra-updated govuk-!-margin-bottom-7">
-      {% if model.flood and not model.severity.isActive %}
-      Removed at <time datetime="{{model.flood.severityChanged}}">{{model.flood.messageChanged | formatDate}}</time>
-      {% else %}
-      Updated at <time datetime="{{model.flood.messageChanged}}">{{model.flood.messageChanged | formatDate}}</time>
-      {% endif %}
+      Updated at <time datetime="{{model.flood.severityChanged}}">{{model.flood.messageChanged | formatDate}}</time>
     </p>
   </div>
 </div>
@@ -41,19 +33,27 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    {% if not model.flood %}
+    {% if (model.flood and model.severity.id == 4) or not model.flood %}
     <div class="defra-flood-status govuk-!-margin-bottom-1">
       <div class="defra-flood-status-item">
         <div class="defra-flood-status-item__text">
+          {% if not model.flood %}
           No flood alert or warning currently in place
+          {% else %}
+          Flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warning{% else %}alert{% endif %} no longer in place
+          {% endif %}
         </div>
       </div>
     </div>
     {% endif %}
 
+    <p class="govuk-body">
     {% if model.flood and model.flood.message %}
-    <p class="govuk-body">{{model.flood.message}}</p>
+    {{model.flood.message}}
+    {% else %}
+    Copy about this target area... or generic text about alert or warning target area...??
     {% endif %}
+    </p>
 
     {% if model.flood and model.severity.isActive %}
     <p class="govuk-body">
