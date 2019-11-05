@@ -116,7 +116,7 @@ class Outlook {
     })
 
     this._full = outlook.public_forecast.english_forecast
-    this._full = '<p class="govuk-body">' + this._full + '</p>'
+    this._full = this._full
     /*
     this._full = this._full.replace(/\r\n\r\n/g, '</p><p class="govuk-body">').replace(/\n\n/g, '</p><p class="govuk-body">')
     this._full = this._full.replace(/\r\n/g, '<br />').replace(/\n/g, '<br />')

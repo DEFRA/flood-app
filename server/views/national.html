@@ -51,18 +51,19 @@
       {% endfor %}
     </div>
 
-    <p class="govuk-body">If you live near a river or the coast you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
-
-    <h2 class="govuk-heading-m govuk-!-margin-bottom-1" id="outlook">Flood risk for the next 5 days</h2>
+    <h2 class="govuk-heading-m govuk-!-margin-top-3 govuk-!-margin-bottom-1" id="outlook">Flood risk for the next 5 days</h2>
     <p class="defra-updated govuk-!-margin-bottom-4">
       <time title="{{model.outlook.timestampOutlook | formatDate}}" datetime="{{ model.outlook.timestampOutlook }}">Updated at {{ model.outlook.timestampOutlook | formatDate }}</time>
     </p>
-    {{ model.outlook.full | safe }}
+    <p class="govuk-body govuk-!-margin-bottom-0 govuk-!-padding-bottom-4">
+      {{ model.outlook.full | safe }}
+    </p>
     {% if model.outlook.hasOutlookConcern %}
     <div class="defra-map" id="map-outlook"></div>
     {% endif %}
 
-    <h2 class="govuk-heading-m">Other ways to check your current flood risk</h2>
+    <h2 class="govuk-heading-m govuk-!-margin-top-3">Other ways to check your current flood risk</h2>
+    <p class="govuk-body">If you live near a river or the coast you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
     <p class="govuk-body"><a href="https://www.gov.uk/find-local-council">Contact your local council</a> if you are not sure of the source of flooding.</p>
     <p class="govuk-body">For river and sea flooding, call the 24-hour Floodline service.</p>
     <p class="govuk-body">

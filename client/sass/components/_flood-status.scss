@@ -104,5 +104,5 @@
 .defra-flood-status__text {
     @extend .govuk-body;
     @include govuk-responsive-margin(4, 'top');
-    margin-bottom:5px;
+    margin-bottom:0px;
 }

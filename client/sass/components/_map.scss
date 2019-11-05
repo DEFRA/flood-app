@@ -1,9 +1,6 @@
 .defra-map {
   -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
-.defra-map + .govuk-heading-m {
-  padding-top:10px;
-}
 .defra-map canvas { // Open layers bug fix
   display:block !important;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
