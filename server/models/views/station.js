@@ -1,4 +1,4 @@
-// const hoek = require('hoek')
+// const hoek = require('@hapi/hoek')
 const moment = require('moment-timezone')
 const config = require('../../config')
 const Station = require('./station-data')

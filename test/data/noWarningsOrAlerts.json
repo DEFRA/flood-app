@@ -1,0 +1,22 @@
+{
+  "place": {
+    "name": "WA8 7DW, Widnes, Halton",
+    "center": [
+      -2.7408180236816406,
+      53.37359619140625
+    ],
+    "bbox": [
+      -2.732185995234121,
+      53.37745890897693,
+      -2.74945005212916,
+      53.36973347383557
+    ],
+    "address": "WA8 7DW, Widnes, Halton",
+    "isEngland": {
+      "is_england": true
+    }
+  },
+  "floods": [],
+  "stations": [],
+  "impacts": []
+}

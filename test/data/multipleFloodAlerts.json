@@ -1,0 +1,146 @@
+{
+    "place": {
+      "name": "Keswick, Cumbria",
+      "center": [
+        -3.139090061187744,
+        54.60173034667969
+      ],
+      "bbox": [
+        -3.0994129180908203,
+        54.61249923706055,
+        -3.163532018661499,
+        54.5888671875
+      ],
+      "address": "Keswick, Cumbria",
+      "isEngland": {
+        "is_england": true
+      }
+    },
+    "floods": [
+      {
+        "code": "011FWFNC6KC",
+        "key": 174150,
+        "description": "Keswick Campsite",
+        "quickdialnumber": "302056",
+        "region": "North West",
+        "area": "North",
+        "floodtype": "f",
+        "severity": 3,
+        "severitydescription": "Flood Alert",
+        "warningkey": 106599,
+        "raised": "2019-08-22T14:43:00.000Z",
+        "severitychanged": "2019-08-22T08:26:00.000Z",
+        "messagechanged": "2019-08-22T14:43:00.000Z",
+        "message": "The Lake level remains high following heavy rainfall in the area. The gauge at Lodore is forecast to peak around 1.9m this evening, this warning will remain in force overnight and levels are expected to fall in the early hours of tomorrow morning.  We continue to monitor the situation closely and will update this message if the situation changes."
+      },
+      {
+        "code": "011WAFDW",
+        "key": 174166,
+        "description": "Upper River Derwent, Stonethwaite Beck and Derwent Water",
+        "quickdialnumber": "141029",
+        "region": "North West",
+        "area": "North",
+        "floodtype": "f",
+        "severity": 3,
+        "severitydescription": "Flood Alert",
+        "warningkey": 106501,
+        "raised": "2019-08-23T08:51:00.000Z",
+        "severitychanged": "2019-08-10T07:52:00.000Z",
+        "messagechanged": "2019-08-23T08:51:00.000Z",
+        "message": "Lake level is now dropping in response to drier weather in the area. The gauge at Lodore is forecast to continue to drop steadily through today, Friday 23/8/19, but is likely to remain above the 1.4m flood alert level, meaning that low lying land around the lake, and possibly near to the river, may remain flooded. A Flood Warning remains in force for Keswick Campsite. We continue to monitor the situation closely and will update this message if the situation changes"
+      }
+    ],
+    "stations": [
+      {
+        "rloi_id": 5174,
+        "telemetry_id": "751007",
+        "region": "North West",
+        "catchment": "Derwent West Cumbria and Duddon",
+        "wiski_river_name": "River Derwent",
+        "agency_name": "Portinscale",
+        "external_name": "Portinscale",
+        "station_type": "S",
+        "status": "Suspended",
+        "qualifier": "u",
+        "iswales": false,
+        "value": "1.268",
+        "value_timestamp": "2019-08-23T04:30:00.000Z",
+        "value_erred": false,
+        "percentile_5": "1.327",
+        "percentile_95": "0.307"
+      },
+      {
+        "rloi_id": 5060,
+        "telemetry_id": "750832",
+        "region": "North West",
+        "catchment": "Derwent West Cumbria and Duddon",
+        "wiski_river_name": "River Greta",
+        "agency_name": "Greta Bridge",
+        "external_name": "Greta Bridge",
+        "station_type": "S",
+        "status": "Active",
+        "qualifier": "u",
+        "iswales": false,
+        "value": "1.53",
+        "value_timestamp": "2019-08-23T04:30:00.000Z",
+        "value_erred": false,
+        "percentile_5": "2.7",
+        "percentile_95": "0.948"
+      }
+    ],
+    "impacts": [
+      {
+        "impactid": 2267,
+        "gauge": "River Greta at Greta Bridge",
+        "rloiid": 5060,
+        "value": "4.75",
+        "units": "mALD",
+        "geom": "0101000020E6100000E31B0A9FAD2309C08C497F2F854D4B40",
+        "coordinates": {
+          "type": "Point",
+          "coordinates": [
+            -3.142421,
+            54.605627
+          ]
+        },
+        "comment": "Crosthwaite Road, High Hill and Southey Hill defences overtop",
+        "shortname": "Defence at Crossthwaite Road",
+        "description": "Flood defences at Crossthwaite Road overtop",
+        "type": "Defence Impact",
+        "obsfloodyear": null,
+        "obsfloodmonth": null,
+        "source": "Flood Resiliance",
+        "telemetrylatest": "1.53",
+        "telemetryactive": false,
+        "forecastmax": "1.896",
+        "forecastactive": false
+      },
+      {
+        "impactid": 2268,
+        "gauge": "River Greta at Greta Bridge",
+        "rloiid": 5060,
+        "value": "4.75",
+        "units": "mALD",
+        "geom": "0101000020E6100000D9429083122609C005A22765524D4B40",
+        "coordinates": {
+          "type": "Point",
+          "coordinates": [
+            -3.14359,
+            54.604077
+          ]
+        },
+        "comment": "Crosthwaite Road, High Hill and Southey Hill defences overtop",
+        "shortname": "Defence at High Hill",
+        "description": "Flood defences at High Hill overtop",
+        "type": "Defence Impact",
+        "obsfloodyear": null,
+        "obsfloodmonth": null,
+        "source": "Flood Resiliance",
+        "telemetrylatest": "1.53",
+        "telemetryactive": false,
+        "forecastmax": "1.896",
+        "forecastactive": false
+      }
+    ]
+  }
+  

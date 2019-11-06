@@ -263,19 +263,21 @@
         return dateTime.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)
       }
       const isTomorrow = (dateTime) => {
-        const tomorrow = new Date() + 1
+        const tomorrow = new Date()
+        tomorrow.setDate(tomorrow.getDate() + 1)
         return dateTime.setHours(0, 0, 0, 0) === tomorrow.setHours(0, 0, 0, 0)
       }
       const isYesterday = (dateTime) => {
-        const yesterday = new Date() - 1
+        const yesterday = new Date()
+        yesterday.setDate(yesterday.getDate() - 1)
         return dateTime.setHours(0, 0, 0, 0) === yesterday.setHours(0, 0, 0, 0)
       }
       var date = hours + ':' + minutes + amPm
-      if (isToday) {
+      if (isToday(dateTime)) {
         date += ' today'
-      } else if (isTomorrow) {
+      } else if (isTomorrow(dateTime)) {
         date += ' tomorrow'
-      } else if (isYesterday) {
+      } else if (isYesterday(dateTime)) {
         date += ' yesterday'
       } else {
         date += ' on ' + day + '/' + month + '/' + year
@@ -286,13 +288,13 @@
     // Load tooltip
     async function ensureFeatureTooltipHtml (feature) {
       var id = feature.getId()
-      let trimId = id.replace('stations.', '')
+      const trimId = id.replace('stations.', '')
       var props = feature.getProperties()
       if (props.value_date) {
-        props.value_date = toolTipDate(new Date(props.value_date))
+        props.value_date_tooltip = toolTipDate(new Date(props.value_date))
       }
       if (props.ffoi_date) {
-        props.ffoi_date = toolTipDate(new Date(props.value_date))
+        props.ffoi_date_tooltip = toolTipDate(new Date(props.ffoi_date))
       }
       var html
       if (!props.html) {
@@ -306,7 +308,7 @@
           const upDownData = async () => {
             const upDownUrl = '/stations-upstream-downstream/' + trimId + '/' + props.direction
             try {
-              const response = await fetch(upDownUrl)
+              const response = await window.fetch(upDownUrl)
               const upDownJson = await response.json()
               return upDownJson
             } catch (err) {
@@ -329,7 +331,7 @@
           const rainfallData = async () => {
             const rainfallUrl = '/rain-gauge-tooltip/' + props.stationReference + '/' + props.label + '/100'
             try {
-              const response = await fetch(rainfallUrl)
+              const response = await window.fetch(rainfallUrl)
               const rainfallJson = await response.json()
               return rainfallJson
             } catch (err) {

@@ -152,8 +152,8 @@
         url: '/ows?service=wms',
         serverType: 'geoserver',
         params: {
-          'LAYERS': 'flood_warning_alert',
-          'CQL_FILTER': 'severity = 1'
+          LAYERS: 'flood_warning_alert',
+          CQL_FILTER: 'severity = 1'
         }
       }),
       visible: false
@@ -168,8 +168,8 @@
         url: '/ows?service=wms',
         serverType: 'geoserver',
         params: {
-          'LAYERS': 'flood_warning_alert',
-          'CQL_FILTER': 'severity = 2'
+          LAYERS: 'flood_warning_alert',
+          CQL_FILTER: 'severity = 2'
         }
       }),
       visible: false
@@ -184,8 +184,8 @@
         url: '/ows?service=wms',
         serverType: 'geoserver',
         params: {
-          'LAYERS': 'flood_warning_alert',
-          'CQL_FILTER': 'severity = 3'
+          LAYERS: 'flood_warning_alert',
+          CQL_FILTER: 'severity = 3'
         }
       }),
       visible: false
@@ -350,7 +350,7 @@
       source: new ol.source.Vector({
         format: new ol.format.GeoJSON(),
         projection: 'EPSG:3857',
-        url: '/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&maxFeatures=10000&outputFormat=application/json&srsName=EPSG:4326'
+        url: '/api/stations.geojson'
       }),
       style: new ol.style.Style({})
     })

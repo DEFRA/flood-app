@@ -33,7 +33,7 @@
 </p>
 {% if props.value %}
 <strong>
-  {{props.value.toFixed(2)}}m at <time datetime="{{ props.value_date }}">{{ props.value_date }}</time>
+  {{props.value.toFixed(2)}}m at <time datetime="{{ props.value_date }}">{{ props.value_date_tooltip }}</time>
 </strong>
 {% else %}
 <strong>
@@ -47,7 +47,7 @@
 {% endif %}
 {% if props.is_ffoi_at_risk and props.ffoi_max %}
 <p class="govuk-body-s govuk-!-margin-bottom-0">
-  <strong>{{props.ffoi_max.toFixed(2)}}m</strong> forecast at <time datetime="{{ props.ffoi_date }}">{{ props.ffoi_date }}</time>
+  <strong>{{props.ffoi_max.toFixed(2)}}m</strong> forecast at <time datetime="{{ props.ffoi_date }}">{{ props.ffoi_date_tooltip }}</time>
 </p>
 {% endif %}
 

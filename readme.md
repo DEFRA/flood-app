@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/DEFRA/flood-app.svg?branch=master)](https://travis-ci.com/DEFRA/flood-app)[![Maintainability](https://api.codeclimate.com/v1/badges/07543b76346b60d1fa9d/maintainability)](https://codeclimate.com/github/DEFRA/flood-app/maintainability)[![Test Coverage](https://api.codeclimate.com/v1/badges/07543b76346b60d1fa9d/test_coverage)](https://codeclimate.com/github/DEFRA/flood-app/test_coverage)
+
 # flood-app
 
 ## Getting started
