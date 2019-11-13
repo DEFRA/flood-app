@@ -44,8 +44,15 @@
       return v ? v[1] : null
     },
     addBrowserBackButton: function() {
-      const container = document.getElementById('browserBackButton')
+      const container = document.getElementById('browserBackContainer')
       if (container) {
+        var nav
+        if (container.nodeName.toLowerCase() !== 'nav') {
+          nav = document.createElement('nav')
+          container.append(nav)
+        } else {
+          nav = container
+        }
         const hyperlink = document.createElement('a')
         hyperlink.href = document.referrer
         hyperlink.href = hyperlink.pathname + hyperlink.search
@@ -55,7 +62,7 @@
           e.preventDefault()
           window.history.back()
         })
-        container.prepend(hyperlink)
+        nav.prepend(hyperlink)
       }
     }
   }

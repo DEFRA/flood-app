@@ -55,11 +55,9 @@
     </p>
     {% endif %}
 
-    <p class="govuk-body">If you live near a river or the coast you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
-
     {% if model.hasActiveImpacts %}
     <p class="govuk-body">
-      Historic records show <a href="/historic-impacts?q={{ model.q }}">{{ model.activeImpacts.length }} flood impact{% if model.activeImpacts.length > 1 %}s{% endif %}</a> in this area when river and sea levels previously reached their current height.
+      Historic records show <a href="/historic-impacts?q={{ model.q }}">{{ model.activeImpacts.length }} flood impact{% if model.activeImpacts.length > 1 %}s{% endif %}</a> in this area at current river levels.
     </p>
     {% endif %}
 
@@ -76,13 +74,15 @@
     <p class="govuk-body">Flooding can also be caused by surface water, burst water mains or overflowing drains. You can <a href="https://www.gov.uk/report-flood-cause">report a flood or possible cause of flooding</a>.</p>
 
     <h2 class="govuk-heading-m">Other ways to check your current flood risk</h2>
-    <p class="govuk-body"><a href="https://www.gov.uk/find-local-council">Contact your local council</a> if you are not sure of the source of flooding.</p>
-    <p class="govuk-body">For river and sea flooding, call the 24-hour Floodline service.</p>
-    <p class="govuk-body">
+    <p>If you live near a river or the coast you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
+    <p>For river and sea flooding, call the 24-hour Floodline service.</p>
+    <p>
       Telephone: 0345 988 1188<br />
       Type talk: 0345 602 6340 (for the hard of hearing)<br />
-      <a class="govuk-link" href="https://gov.uk/call-charges">Find out more about call charges</a>.
-    </p>
+      <a href="https://gov.uk/call-charges">Find out more about call charges</a>.
+    </p>  
+    <p><a href="https://www.gov.uk/find-local-council">Contact your local council</a> if you are not sure of the source of flooding.</p>
+    
   </div>
   <div class="govuk-grid-column-one-third">
     <!-- The Related items component is not part of GOV.UK Frontend but will be styled if used in the Prototype Kit -->

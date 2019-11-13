@@ -128,28 +128,80 @@ class ViewModel {
     this.warningsUrl = `/warnings?stationid=${this.id}`
     */
 
-    // Set station type
+    // Set pageTitle, metaDescription and metaKeywords
+    var stationType, stationLocation
     if (this.station.type === 'c') {
-      this.pageTitle = 'Sea level at ' + this.station.name
+      stationLocation = this.station.name
+      stationType = 'Sea'
     } else if (this.station.type === 'g') {
-      this.pageTitle = 'Groundwater level at ' + this.station.name + ' borehole'
+      stationLocation = `${this.station.name} borehole`
+      stationType = 'Groundwater'
     } else {
-      this.pageTitle = 'River level at ' + this.station.name + (this.station.isMulti ? ', ' + this.station.direction : '') + ' (' + this.station.river + ')'
+      stationLocation = `${this.station.name + (this.station.isMulti ? ', ' + this.station.direction : '')} (${this.station.river})`
+      stationType = 'River'
+    }
+    this.pageTitle = `${stationType} level at ${stationLocation}`
+    this.metaDescription = `Check the latest recorded ${stationType.toLowerCase()} level${forecast ? ',' : ' and'} recent 5-day trend ${forecast ? ' and 36 hour forecast' : ''} at ${stationLocation}`
+    this.metaKeywords = `${stationType} level, ${this.station.name}${this.station.isRiver ? ', ' + this.station.river : ''}${forecast ? ', forecast level' : ''}, flood risk, flood map, gov.uk`
+
+    // Thresholds
+    var thresholds = []
+    if (this.station.porMaxValue) {
+      thresholds.push({
+        id: 'highest',
+        value: this.station.porMaxValue,
+        description: 'Highest level on record',
+        shortname: 'Highest level on record'
+      })
+    }
+    if (this.station.percentile5) { // Only push typical range if it has a percentil5
+      thresholds.push({
+        id: 'alert',
+        value: this.station.percentile5,
+        description: 'Top of typical range. Above this flooding to low-laying land is possible',
+        shortname: 'Top of typical range'
+      })
+    }
+    if (this.warningThreshold) {
+      thresholds.push({
+        id: 'warning',
+        value: this.warningThreshold,
+        description: 'Flood warning may be issued',
+        shortname: 'Flood warning possible'
+      })
     }
 
-    // Impacts
+    // Add impacts
     if (impacts) {
-      // Add Highest level and Top of typical range to imapacts array for sorting purposes
-
-      impacts.push({ impactid: 'highest', value: this.station.porMaxValue, description: 'Highest level on record', shortname: 'Highest level on record' })
-      if (this.station.percentile5) { // Only push typical range if it has a percentil5
-        impacts.push({ impactid: 'alert', value: this.station.percentile5, description: 'Top of typical range', shortname: 'Top of typical range' })
-      }
-
-      impacts.sort((a, b) => b.value - a.value)
-
-      this.impacts = impacts
+      impacts.forEach(function (impact) {
+        thresholds.push({
+          id: impact.impactid,
+          value: Number(impact.value).toFixed(2),
+          description: impact.description,
+          shortname: impact.shortname
+        })
+      })
     }
+
+    // Group and sort thresholds
+    thresholds = thresholds.reduce(
+      (result, item) => ({
+        ...result,
+        [item.value]: [
+          ...(result[item.value] || []),
+          item
+        ]
+      }),
+      {}
+    )
+    thresholds = Object.keys(thresholds).map(key => {
+      return {
+        level: key,
+        values: thresholds[key]
+      }
+    })
+    thresholds = thresholds.sort((a, b) => b.level - a.level)
+    this.thresholds = thresholds
 
     // Set remaining station properties
     this.isUpstream = this.station.direction === 'upstream'
@@ -163,6 +215,9 @@ class ViewModel {
 
     // Page category for feedback categorisation
     // this.pageCategory = this.isFfoi ? 'station-ffoi' : ''
+
+    // Set canonical url
+    this.metaCanonical = `/station/${this.station.id}${this.station.direction === 'upstream' ? '' : '/downstream'}`
   }
 }
 

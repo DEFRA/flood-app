@@ -3,6 +3,7 @@ class ViewModel {
     Object.assign(this, {
       q: location,
       pageTitle: `${place.name} historic flood impacts`,
+      metaNoIndex: true,
       placeName: place.name,
       placeBbox: place.bbox,
       placeCentre: place.center

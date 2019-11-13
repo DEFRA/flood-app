@@ -92,11 +92,13 @@
 
     var areasOfConcern = new window.ol.layer.Vector({
       zIndex: 200,
+      renderMode: 'hybrid',
       source: new window.ol.source.Vector({
         format: geoJson,
         features: areasOfConcernFeatures
       }),
-      style: styleFeature
+      style: styleFeature,
+      opacity: 0.9
     })
 
     // MapContainer options
@@ -120,6 +122,7 @@
     flood.model.outlook._days.forEach(function (day) {
       var div = document.createElement('div')
       div.className = 'map__outlook-control__day'
+      div.setAttribute('data-risk-level', day.level)
       var button = document.createElement('button')
       button.className = 'map__outlook-control__button'
       button.setAttribute('aria-selected', !!day.idx)
@@ -150,8 +153,16 @@
       })
     }
 
-    // Outlook set first day
-    setDay(1)
+    // Set day to first day with heightened risk
+    const days = outlookControl.querySelectorAll('.map__outlook-control__day')
+    for (var i = 0; i < days.length; i++) {
+      var riskLevel = Number(days[i].getAttribute('data-risk-level'))
+      if (riskLevel >= 1) {
+        setDay(i + 1)
+        break
+      }
+      setDay(1)
+    }
 
     //
     // Events

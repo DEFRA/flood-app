@@ -8,6 +8,7 @@ class ViewModel {
     Object.assign(this, {
       q: location,
       pageTitle: pageTitle,
+      metaNoIndex: true,
       placeName: placeName,
       placeBbox: placeBbox,
       placeCentre: placeCentre

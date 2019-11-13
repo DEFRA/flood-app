@@ -74,8 +74,10 @@
 
     // Add timeline
     var nowContainer = chartWrapper.append('g').classed('time', true)
+    var dateNow = new Date()
+    var time = (dateNow.getHours() % 12 || 12) + ':' + (dateNow.getMinutes() < 10 ? '0' : '') + dateNow.getMinutes() + (dateNow.getHours() >= 12 ? 'pm' : 'am')
     nowContainer.append('line').classed('time-line', true)
-    nowContainer.append('text').attr('class', 'time-now-text').attr('x', -17).text('Now')
+    nowContainer.append('text').attr('class', 'time-now-text').attr('x', -30).text(time)
     var now = svg.select('.time')
 
     // Add locator

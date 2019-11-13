@@ -61,15 +61,18 @@
     }
 }
 .defra-flood-status-item--severe {
-    background-color: #e3000f;
+    background-color: mix(white, #e3000f, 80%);
     border-color:#e3000f;
+    /*
     color:white;
     a {
         color:white;
     }
+    */
     .defra-flood-status-item__icon:after {
         background-position: 100% 0%;
     }
+    /*
     &:before {
         content:'';
         position:absolute;
@@ -79,6 +82,7 @@
         left:0px;
         background-color: white;
     }
+    */
 }
 .defra-flood-status-item--warning {
     background-color: mix(white, #e3000f, 80%);

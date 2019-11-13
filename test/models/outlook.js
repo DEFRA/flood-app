@@ -281,7 +281,7 @@ lab.experiment('Outlook model test', () => {
             polyType: 'inland',
             'risk-level': 1,
             type: 'concernArea',
-            'z-index': 3
+            'z-index': 98
           },
           type: 'Feature'
         }],

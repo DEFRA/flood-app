@@ -4,7 +4,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <nav {% if model.referer %}id="browserBackButton"{% endif %}>
+    <nav {% if model.referer %}id="browserBackContainer"{% endif %}>
       {% if model.station.isMulti %}
       {% if model.station.isDownstream %}
       <a href="/station/{{ model.station.id }}" class="defra-river-nav-link">Upstream</a>
@@ -35,6 +35,16 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <!--
+    <div class="defra-flood-status govuk-!-margin-bottom-3">
+      <div class="defra-flood-status-item defra-flood-status-item--warning">
+        <span class="defra-flood-status-item__icon"></span>
+        <div class="defra-flood-status-item__text">
+          <strong><a href="/alerts-and-warnings?q={location}">Flood warning in force nearby</a></strong>
+        </div>
+      </div>
+    </div>
+    -->
     <h1 class="govuk-heading-xl">
       {% if model.station.isGroundwater %}Groundwater{% elif model.station.isCoastal %}Sea{% else %}River{% endif %}
       level at {{ model.station.name }}
@@ -46,6 +56,17 @@
 
 {% if model.station.isActive and not model.recentValue.err %}
 <div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-third"> 
+    <p role="text" class="govuk-!-margin-bottom-6">
+      <span class="govuk-caption-m">Latest</span>
+      <strong class="defra-flood-heading-l govuk-!-margin-bottom-1">
+        {{ (model.station.recentValue._).toFixed(2) }}m
+      </strong>
+      <span class="govuk-body">
+        at <time datetime="">{{ model.station.recentValue.formattedTime }}</time> {{ model.station.recentValue.dateWhen }}
+      </span>
+    </p>
+  </div>
   {% if model.station.isRiver %}
   <div class="govuk-grid-column-one-third"> 
     <p role="text" class="govuk-!-margin-bottom-6">
@@ -62,7 +83,7 @@
       </strong>
       <span class="govuk-body">
         {% if model.station.hasPercentiles %}
-        typical {{ model.station.percentile95 }}m&ndash;{{ model.station.percentile5 }}m
+        {{ model.station.percentile95 }}m&ndash;{{ model.station.percentile5 }}m typical <span class="govuk-visually-hidden">level here</span>
         {% endif %}
        </span>
     </p>
@@ -72,33 +93,41 @@
     <div class="station-data__item">
       <span class="station-data__icon"></span>
       <div class="station-data__copy">
-        <span class="station-data__item-name">Current trend</span>
+        <span class="station-data__item-name">Trend</span>
         <strong class="station-data__item-value">Stable</strong>
         <span class="station-data__item-secondary">Forecast within typical range</span>
       </div>
     </div>
   -->
-  <div class="govuk-grid-column-one-third"> 
-    <p role="text" class="govuk-!-margin-bottom-6">
-      <span class="govuk-caption-m">Latest</span>
-      <strong class="defra-flood-heading-l govuk-!-margin-bottom-1">
-        {{ (model.station.recentValue._).toFixed(2) }}m
-      </strong>
-      <span class="govuk-body">
-        at <time datetime="">{{ model.station.recentValue.formattedTime }}</time> {{ model.station.recentValue.dateWhen }}
-      </span>
-    </p>
-  </div>
 </div>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <figure class="defra-line-chart" aria-hidden="true" hidden>
-      <figcaption class="defra-line-chart__caption">Water level measured over the last 5 days {% if model.isFfoi %}and the <a href="/how-river-sea-groundwater-levels-are-measured#forecast">36 hour forecast</a>{% endif %}</figcaption>
+      <figcaption class="defra-line-chart__caption">Water level measured over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
       <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
     </figure>
   </div>
 </div>
+
+{% if model.isFfoi %}
+<div class="govuk-grid-row">
+  <!--
+  <div class="govuk-grid-column-full">
+    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-6">
+  </div>
+  -->
+  <div class="govuk-grid-column-full">
+    <div class="defra-line-chart-data">
+      <p>This measuring station has a computer generated forecast.</p>
+      <p>The highest level forecast here in the next 36 hours is <strong>{{ model.ffoi.maxValue._ | round(2) }}m at {{ model.ffoi.maxValue.formattedTimestamp }}</strong>.</p>
+    </div>
+    <div class="govuk-inset-text govuk-!-margin-top-0">
+      <p>Forecasts contain uncertainty and can change frequently. <a href="/how-river-sea-groundwater-levels-are-measured#forecasts">Find out how forecasts are produced</a>.</p>
+    </div>
+  </div>
+</div>
+{% endif %}
 
 {% else %}
 <div class="govuk-grid-row">
@@ -125,6 +154,7 @@
 
 {% if model.station.isActive and not model.recentValue.err %}
 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-6">
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <h2 class="govuk-heading-m">What effect could the level here have on nearby areas?</h2>
@@ -138,25 +168,19 @@
         </tr>
       </thead>
       <tbody class="govuk-table__body">
-        {% for impact in model.impacts %}
-        <tr class="govuk-table__row" data-id="{{ impact.impactid }}" data-level="{{ impact.value }}" data-name="{{ impact.shortname }}">
-          <th class="govuk-table__header" scope="row">{{ impact.value }}m</th>
-          <td class="govuk-table__cell">{{ impact.description }} {% if impact.obsfloodmonth and impact.obsfloodyear %}({{ impact.obsfloodmonth }} {{ impact.obsfloodyear }}){% endif %}</td>
-          <td class="govuk-table__cell"><button class="defra-table-impact__button"><span>Show on </span>chart</button></td>
+        {% for band in model.thresholds %}
+        {% for threshold in band.values %}
+        <tr class="govuk-table__row" data-id="{{ threshold.id }}" data-level="{{ threshold.value }}" data-name="{{ threshold.shortname }}">
+          {% if loop.index == 1 %}
+          <th class="govuk-table__header defra-table-impact__cell--numeric" scope="row" {% if band.values.length > 1 %}rowspan="{{ band.values.length }}"{% endif %}>{{ threshold.value }}m</th>
+          {% endif %}
+          <td class="govuk-table__cell">{{ threshold.description }}</td>
+          <td class="govuk-table__cell"></td>
         </tr>   
         {% endfor %}
-        {% if model.warningThreshold %}
-          <tr class="govuk-table__row" data-id="warning" data-level="{{ model.warningThreshold }}" data-name="Flood warning threshold">
-            <th class="govuk-table__header" scope="row">{{ model.warningThreshold }}m</th>
-            <td class="govuk-table__cell">Flood warning threshold</td>
-            <td class="govuk-table__cell"><button class="defra-table-impact__button"><span>Show on </span>chart</button></td>
-          </tr>
-        {% endif %}
+        {% endfor %}
       </tbody>
     </table>
-    <p class="govuk-text govuk-!-margin-bottom-6">
-      <a href="/how-river-sea-groundwater-levels-are-measured">Find out how river, sea and groundwater levels are measured</a>.    
-    </p>  
   </div>
 </div>
 {% endif %}
@@ -169,8 +193,8 @@
         <dt class="govuk-summary-list__key">
           Location
         </dt>
-        <dd class="govuk-summary-list__value">
-          <button class="defra-button-map defra-button-map--small" title="View map">Grid ref NY 12345 12345</button>
+        <dd class="govuk-summary-list__value" id="location">
+          Grid ref NY 12345 12345
         </dd>
       </div>
       <div class="govuk-summary-list__row">
@@ -198,6 +222,9 @@
         </dd>
       </div>
     </dl>
+    <p class="govuk-text govuk-!-margin-bottom-6">
+      <a href="/how-river-sea-groundwater-levels-are-measured">Find out how river, sea and groundwater levels are measured</a>.    
+    </p>  
   </div>
 </div>
 {% endblock %}

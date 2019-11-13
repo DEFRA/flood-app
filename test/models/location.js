@@ -33,7 +33,7 @@ lab.experiment('Outlook model test', () => {
 
     const Result = await viewModel
 
-    Code.expect(Result.floodSummary).to.equal('A flood alert is in place for the <a href="/target-area/011FWFNC6KC">Keswick Campsite</a> where some flooding is possible.')
+    Code.expect(Result.floodSummary).to.equal('A flood alert is in place for the <a href="/target-area/011FWFNC6KC">Keswick Campsite</a>. Some flooding is possible in this area.')
     // Code.expect(Result.floodsSecondary).to.equal('.')
   })
   lab.test('Test location viewModel a with Severe flood warning alert', async () => {

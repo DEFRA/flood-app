@@ -4,8 +4,8 @@ const severity = [{
   pluralisedTitle: 'Severe flood warnings',
   hash: 'severe',
   pluralisedHash: 'severe',
-  subTitle: 'Severe flooding',
-  tagline: 'Danger to life',
+  subTitle: 'There is a danger to life',
+  tagline: 'Must act now',
   isActive: true
 }, {
   id: 2,

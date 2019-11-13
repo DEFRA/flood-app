@@ -5,7 +5,7 @@
 
 {% if model.referer %}
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full" id="browserBackButton"></div>
+    <div class="govuk-grid-column-full" id="browserBackContainer"></div>
 </div>
 {% endif %}
 
@@ -31,7 +31,7 @@
     </div>
     <div class="govuk-grid-column-two-thirds">
         <div class="defra-search-summary" id="searchSummary">
-            <h2 class="defra-search-summary__count">{{ model.countActiveImpacts }} impact{% if model.countActiveImpacts > 1 %}s{% endif %} (historic level exceeded)</h2>
+            <h2 class="defra-search-summary__count">{{ model.countActiveImpacts }} impact{% if model.countActiveImpacts > 1 %}s{% endif %} (level exceeded)</h2>
         </div>
         {% if model.countActiveImpacts %}
         <ul class="defra-flood-list">
@@ -43,11 +43,11 @@
                 <dl class="defra-flood-list__item-meta">
                     <div>
                         <dt>Source</dt>
-                        <dd><a href="/station/{{ impact.rloiid }}?i={{ impact.impactid }}">{{ impact.gauge }}</a></dd>
+                        <dd><a href="/station/{{ impact.rloiid }}?t={{ impact.impactid }}">{{ impact.gauge }}</a></dd>
                     </div>
                     <div>
-                        <dt>Level (historic/latest)</dt>
-                        <dd>{{ impact.value }}m/{{ impact.telemetrylatest }}m</dd>
+                        <dt>Level (historic/current)</dt>
+                        <dd>{{ impact.value | round(2) }}m/{{ impact.telemetrylatest | round(2) }}m</dd>
                     </div>
                 </dl>
             </li>

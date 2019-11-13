@@ -3,7 +3,7 @@
 
 {% if model.referer %}
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full" id="browserBackButton"></div>
+    <div class="govuk-grid-column-full" id="browserBackContainer"></div>
 </div>
 {% endif %}
 
@@ -15,7 +15,7 @@
       <div class="defra-flood-status-item defra-flood-status-item--{{model.severity.hash}}">
         <span class="defra-flood-status-item__icon"></span>
         <div class="defra-flood-status-item__text">
-          <strong>{{model.severity.title}}</strong>
+          <strong>{{model.severity.title}} - {{model.severity.subTitle | lower}}</strong>
         </div>
       </div>
     </div>
@@ -47,31 +47,34 @@
     </div>
     {% endif %}
 
-    <p class="govuk-body">
+    
+    <p>
     {% if model.flood and model.flood.message %}
     {{model.flood.message}}
     {% else %}
-    Copy about this target area... or generic text about alert or warning target area...??
+    <span style="color:#d4351c">We need to explain what a flood target/alert/warning area is; detail the risk from future flooding and direct citizens who live in this area to how to plan ahead for flooding... </span>
     {% endif %}
     </p>
+    
 
+    <p>Area {% if model.flood and model.severity.id < 4 %}affected{% else %}description{% endif %}: {{ model.area.description }}</p>
+    <div class="defra-map" id="map-live"></div>
+    
     {% if model.flood and model.severity.isActive %}
-    <p class="govuk-body">
+    <div class="govuk-inset-text govuk-!-margin-top-2">
       {% if model.severity.id == 1 %}
-      <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-severe-flood-warning">Find out what to do in you get a severe flood warning</a>.
+      A severe flood warning means there is a danger to life. <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-severe-flood-warning">Find out what to do in you get a severe flood warning</a>.
       {% elif model.severity.id == 2 %}
-      <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-warning">Find out what to do in you get a flood warning</a>.
+      A flood warning means flooding is expected and you need to act now. <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-warning">Find out what to do in you get a flood warning</a>.
       {% else %}
-      <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-alert">Find out what to do in you get a flood alert</a>.
+      A flood alert means flooding is possible and you need to be prepared. <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-alert">Find out what to do in you get a flood alert</a>.
       {% endif %}
-    </p>
+    </div>
     {% endif %}
     
     <p class="govuk-body">
       <a href="/river-and-sea-levels?river=river-name">View the latest river and sea levels in this area</a>.
     </p>
-
-    <div class="defra-map" id="map-live"></div>
 
     <!--
     {% if model.flood %}
@@ -80,13 +83,15 @@
     -->
 
     <h2 class="govuk-heading-m govuk-!-padding-top-2">Other ways to check your current flood risk</h2>
-    <p class="govuk-body"><a href="https://www.gov.uk/find-local-council">Contact your local council</a> if you are not sure of the source of flooding.</p>
-    <p class="govuk-body">For river and sea flooding, call the 24-hour Floodline service.</p>
-    <p class="govuk-body">
+    <p>If you live near a river or the coast you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
+    <p>For river and sea flooding, call the 24-hour Floodline service.</p>
+    <p>
       Telephone: 0345 988 1188<br />
       Type talk: 0345 602 6340 (for the hard of hearing)<br />
-      <a class="govuk-link" href="https://gov.uk/call-charges">Find out more about call charges</a>.
-    </p>
+      <a href="https://gov.uk/call-charges">Find out more about call charges</a>.
+    </p>  
+    <p><a href="https://www.gov.uk/find-local-council">Contact your local council</a> if you are not sure of the source of flooding.</p>
+    
   </div>
 
   <div class="govuk-grid-column-one-third">

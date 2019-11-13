@@ -32,7 +32,15 @@ function Forecast (data, isCoastal, latestObserved) {
 
     this.values.forEach(function (value) {
       value.ts = moment(value.$.date + 'T' + value.$.time + 'Z')
-      value.formattedTimestamp = value.ts.format('MMMM Do YYYY, h:mm:ss a')
+      var today = moment().startOf('day')
+      var tomorrow = moment().add(1, 'days').startOf('day')
+      var dateWhen = ' on ' + moment(value.ts).format('D/MM/YY')
+      if (moment(value.ts).isSame(today, 'd')) {
+        dateWhen = ' today'
+      } else if (moment(value.ts).isSame(tomorrow, 'd')) {
+        dateWhen = ' tomorrow'
+      }
+      value.formattedTimestamp = moment(value.ts).format('h:mma') + dateWhen
       if (value.ts.isBefore(this.forecastStart) || value.ts.isAfter(this.truncateDate)) {
         return
       }

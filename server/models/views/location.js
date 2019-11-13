@@ -11,7 +11,8 @@ class ViewModel {
       floods,
       impacts,
       location: title,
-      pageTitle: `${title} flood risk`
+      pageTitle: `${title} flood risk`,
+      metaDescription: `Nearby flood alerts and warnings; latest river and sea levels and flood risk advice for residents living in the ${title} area.`
     })
 
     const hasFloods = !!floods.length
@@ -20,7 +21,8 @@ class ViewModel {
     if (hasFloods) {
       const activeFloods = floods.filter(flood => flood.severity < 4)
       const inactiveFloods = floods.filter(flood => flood.severity === 4)
-      const warnings = floods.filter(flood => flood.severity === 1 || flood.severity === 2)
+      const severeWarnings = floods.filter(flood => flood.severity === 1)
+      const warnings = floods.filter(flood => flood.severity === 2)
 
       this.hasFloods = hasFloods
       this.hasActiveFloods = !!activeFloods.length
@@ -51,14 +53,14 @@ class ViewModel {
             if (i === 0 && group.floods.length === 1) {
               floodSummary.push(`A flood warning is in place for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a>. Some flooding is expected in this area.`)
             } else {
-              floodSummary.push(`<a href="/alerts-and-warnings?q=${location}${group.severity.id > highestSeverityId ? '#' + group.severity.pluralisedHash : ''}">${group.floods.length}&nbsp;flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'} in place nearby. Some flooding is expected in these areas.`)
+              floodSummary.push(`<a href="/alerts-and-warnings?q=${location}${group.severity.id > highestSeverityId ? '#' + group.severity.pluralisedHash : ''}">${group.floods.length}&nbsp;flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'}${severeWarnings.length >= 1 ? ' also ' : ' '}in place nearby. Some flooding is expected in ${group.floods.length > 1 ? 'these areas' : 'this area'}.`)
             }
             break
           case 'alert':
             if (i === 0 && group.floods.length === 1) {
-              floodSummary.push(`A flood alert is in place for the <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a> where some flooding is possible.`)
+              floodSummary.push(`A flood alert is in place for the <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a>. Some flooding is possible in this area.`)
             } else {
-              floodSummary.push(`<a href="/alerts-and-warnings?q=${location}${group.severity.id > highestSeverityId ? '#' + group.severity.pluralisedHash : ''}">${group.floods.length}&nbsp;flood alert${group.floods.length > 1 ? 's</a> are' : '</a> is'} ${warnings.length >= 1 ? 'also' : ''} in place in the wider area where some flooding is possible.`)
+              floodSummary.push(`<a href="/alerts-and-warnings?q=${location}${group.severity.id > highestSeverityId ? '#' + group.severity.pluralisedHash : ''}">${group.floods.length}&nbsp;flood alert${group.floods.length > 1 ? 's</a> are' : '</a> is'} ${group.severity.id > highestSeverityId && !(severeWarnings.length && warnings.length) ? 'also' : ''} in place in the wider area where some flooding is possible.`)
             }
             break
           case 'removed':

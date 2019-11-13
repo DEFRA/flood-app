@@ -5,4 +5,7 @@
     thead tr th:first-child {
         width:19.8%;
     }
+    &__cell--numeric {
+        @include govuk-font($size: false, $tabular: true, $weight: bold);
+    }
 }
