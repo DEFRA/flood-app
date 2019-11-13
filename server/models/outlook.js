@@ -55,7 +55,7 @@ class Outlook {
         }
 
         // Calculate feature z index
-        const zIndex = riskArea.ordering + riskLevel
+        const zIndex = 100 - riskArea.ordering
 
         riskAreaBlock.days.forEach(day => {
           riskAreaBlock.polys.forEach(poly => {
@@ -83,7 +83,7 @@ class Outlook {
               }
               feature.properties.polyType = 'coastal'
               // Put coastal areas on top of inland areas
-              feature.properties['z-index'] = zIndex + 10
+              feature.properties['z-index'] = zIndex + 200
             }
             this._geoJson.features.push(feature)
 
