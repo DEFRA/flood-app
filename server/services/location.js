@@ -13,10 +13,6 @@ async function find (location) {
     throw new Error('Invalid data returned from third party location search')
   }
 
-  if (data === undefined) {
-    throw new Error('Invalid data returned from third party location search')
-  }
-
   // Check that the json is relevant
   if (data === null || !data.resourceSets || !data.resourceSets.length) {
     throw new Error('Invalid geocode results (no resourceSets)')

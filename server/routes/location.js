@@ -11,10 +11,12 @@ module.exports = {
     const place = await locationService.find(location)
     if (typeof place === 'undefined' || place === '') {
       request.yar.set('displayError', { errorMessage: 'Enter a valid location' })
-      return h.view('404').code(404)
+      // return h.view('404').code(404)
+      return h.redirect('/')
     }
     if (!place.isEngland.is_england) {
-      return h.view('location-not-england')
+      // return h.view('location-not-england')
+      return h.redirect('location-not-england')
     }
     const impacts = await floodService.getImpactsWithin(place.bbox)
     const { floods } = await floodService.getFloodsWithin(place.bbox)
@@ -25,10 +27,10 @@ module.exports = {
   options: {
     validate: {
       query: {
-        q: joi.string().required()
-      },
-      failAction: (request, h, err) => {
-        return h.view('404').code(404)
+        q: joi.string().required(),
+        cz: joi.string(),
+        l: joi.string(),
+        v: joi.string()
       }
     }
   }

@@ -25,7 +25,7 @@ lab.experiment('Outlook model test', () => {
 
     Code.expect(Result.floods[0].severitydescription).to.equal('Flood Warning')
     Code.expect(Result.place.name).to.equal('Keswick, Cumbria')
-    Code.expect(Result.floodsPrimary).to.equal('1 flood warning is in force for <a href="/target-area/011FWFNC6KC">Keswick Campsite</a>. Some flooding is expected in this area.')
+    Code.expect(Result.floodSummary).to.equal('A flood warning is in place for <a href="/target-area/011FWFNC6KC">Keswick Campsite</a>. Some flooding is expected in this area.')
   })
   lab.test('Test location viewModel a with flood alert', async () => {
     const floodAlert = data.floodAlert
@@ -33,8 +33,8 @@ lab.experiment('Outlook model test', () => {
 
     const Result = await viewModel
 
-    Code.expect(Result.floodsPrimary).to.equal('A flood alert is in place for <a href="/target-area/011FWFNC6KC">Keswick Campsite</a>. Some flooding is possible in this area.')
-    Code.expect(Result.floodsSecondary).to.equal('.')
+    Code.expect(Result.floodSummary).to.equal('A flood alert is in place for the <a href="/target-area/011FWFNC6KC">Keswick Campsite</a> where some flooding is possible.')
+    // Code.expect(Result.floodsSecondary).to.equal('.')
   })
   lab.test('Test location viewModel a with Severe flood warning alert', async () => {
     const fakeSevereFloodWarning = data.severeFloodWarning
@@ -42,7 +42,7 @@ lab.experiment('Outlook model test', () => {
 
     const Result = await viewModel
 
-    Code.expect(Result.floodsPrimary).to.equal('1 severe flood warning is in force for <a href="/target-area/011WAFDW">Upper River Derwent, Stonethwaite Beck and Derwent Water</a>. Severe flooding is expected in this area.')
+    Code.expect(Result.floodSummary).to.equal('A severe flood warning is in force for <a href="/target-area/011WAFDW">Upper River Derwent, Stonethwaite Beck and Derwent Water</a>. There is a danger to life in this area.')
     Code.expect(Result.floods.length).to.equal(1)
   })
   lab.test('Test location viewModel no warnings or alerts', async () => {
@@ -67,8 +67,7 @@ lab.experiment('Outlook model test', () => {
 
     const Result = await viewModel
 
-    Code.expect(Result.floodsPrimary).to.equal('1 flood warning is in force . Some flooding is expected in this area.')
-    Code.expect(Result.floodsSecondary).to.equal(' and 1 flood alert (some flooding is possible) is  in place in the wider area.')
+    Code.expect(Result.floodSummary).to.equal('A flood warning is in place for <a href="/target-area/011FWFNC6KC">Keswick Campsite</a>. Some flooding is expected in this area. <a href="/alerts-and-warnings?q=undefined#alerts">1&nbsp;flood alert</a> is also in place in the wider area where some flooding is possible.')
   })
   lab.test('Test alternate primaryStatement with multiple Flood Alert', async () => {
     const multipleFloodAlerts = data.multipleFloodAlerts
@@ -76,8 +75,7 @@ lab.experiment('Outlook model test', () => {
 
     const Result = await viewModel
 
-    Code.expect(Result.floodsPrimary).to.equal('2 flood alerts are in place . Some flooding is possible in this area.')
-    Code.expect(Result.floodsSecondary).to.equal('.')
+    Code.expect(Result.floodSummary).to.equal('<a href="/alerts-and-warnings?q=undefined">2&nbsp;flood alerts</a> are  in place in the wider area where some flooding is possible.')
   })
   lab.test('Test alternate primaryStatement with multiple Flood Warnings', async () => {
     const multipleFloodWarnings = data.multipleFloodWarnings
@@ -85,8 +83,7 @@ lab.experiment('Outlook model test', () => {
 
     const Result = await viewModel
 
-    Code.expect(Result.floodsPrimary).to.equal('3 flood warnings are in force . Some flooding is expected in this area.')
-    Code.expect(Result.floodsSecondary).to.equal('')
+    Code.expect(Result.floodSummary).to.equal('<a href="/alerts-and-warnings?q=undefined">3&nbsp;flood warnings</a> are in place nearby. Some flooding is expected in these areas.')
   })
   lab.test('Test alternate primaryStatement with multiple Severe Flood Warnings', async () => {
     const multipleSevereFloodWarnings = data.multipleSevereFloodWarnings
@@ -94,8 +91,7 @@ lab.experiment('Outlook model test', () => {
 
     const Result = await viewModel
 
-    Code.expect(Result.floodsPrimary).to.equal('2 severe flood warnings are in force . Severe flooding is expected in this area.')
-    Code.expect(Result.floodsSecondary).to.equal('.')
+    Code.expect(Result.floodSummary).to.equal('<a href="/alerts-and-warnings?q=undefined">2&nbsp;severe flood warnings</a> are in force nearby. There is a danger to life in these areas.')
   })
   lab.test('Test Flood Warning at Coastal Station', async () => {
     const floodWarningCoastal = data.floodWarningCoastal
@@ -103,8 +99,7 @@ lab.experiment('Outlook model test', () => {
 
     const Result = await viewModel
 
-    Code.expect(Result.floodsPrimary).to.equal('1 flood warning is in force for <a href="/target-area/011TESTC6KC">Coastal Station</a>. Some flooding is expected in this area.')
-    Code.expect(Result.floodsSecondary).to.equal('.')
+    Code.expect(Result.floodSummary).to.equal('A flood warning is in place for <a href="/target-area/011TESTC6KC">Coastal Station</a>. Some flooding is expected in this area.')
   })
   lab.test('Test Station level get set to High', async () => {
     const floodWarningStationHigh = data.floodWarningStationHigh
@@ -112,7 +107,6 @@ lab.experiment('Outlook model test', () => {
 
     const Result = await viewModel
 
-    Code.expect(Result.floodsPrimary).to.equal('1 flood warning is in force for <a href="/target-area/011TESTC6KC">High level Station</a>. Some flooding is expected in this area.')
-    Code.expect(Result.floodsSecondary).to.equal('.')
+    Code.expect(Result.floodSummary).to.equal('A flood warning is in place for <a href="/target-area/011TESTC6KC">High level Station</a>. Some flooding is expected in this area.')
   })
 })

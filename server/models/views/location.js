@@ -42,7 +42,7 @@ class ViewModel {
         switch (group.severity.hash) {
           case 'severe':
             if (i === 0 && group.floods.length === 1) {
-              floodSummary.push(`${i}A severe flood warning is in force for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a>. There is a danger to life in this area.`)
+              floodSummary.push(`A severe flood warning is in force for <a href="/target-area/${group.floods[0].code}">${group.floods[0].description}</a>. There is a danger to life in this area.`)
             } else {
               floodSummary.push(`<a href="/alerts-and-warnings?q=${location}${group.severity.id > highestSeverityId ? '#' + group.severity.pluralisedHash : ''}">${group.floods.length}&nbsp;severe flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'} in force nearby. There is a danger to life in these areas.`)
             }
