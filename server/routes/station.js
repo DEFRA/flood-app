@@ -36,7 +36,7 @@ module.exports = [{
       const impacts = await floodService.getImpactData(station.rloi_id)
 
       // Check if it's a forecast station
-      if (thresholds) {
+      if (thresholds.length > 0) {
         const values = await floodService.getStationForecastData(station.wiski_id)
 
         const forecast = {
