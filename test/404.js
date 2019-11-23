@@ -2,7 +2,7 @@
 const hapi = require('@hapi/hapi')
 const config = require('../server/config')
 const Lab = require('@hapi/lab')
-const Code = require('code')
+const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 // const createServer = require('../server')
 
