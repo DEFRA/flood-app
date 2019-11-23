@@ -24,12 +24,12 @@ module.exports = {
   },
   options: {
     validate: {
-      query: {
+      query: joi.object({
         q: joi.string().required(),
         cz: joi.string(),
         l: joi.string(),
         v: joi.string()
-      }
+      })
     }
   }
 }

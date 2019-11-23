@@ -1,6 +1,6 @@
 const rainService = require('../services/rain')
 const config = require('../config')
-const Joi = require('@hapi/joi')
+const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/rain-gauge')
 const HttpsProxyAgent = require('https-proxy-agent')
@@ -131,14 +131,14 @@ module.exports = [{
   },
   options: {
     validate: {
-      params: {
-        id: Joi.string().required(),
-        label: Joi.string(),
-        readingsLimit: Joi.number()
-      },
-      query: {
-        direction: Joi.string().valid('d', 'u').default('u')
-      }
+      params: joi.object({
+        id: joi.string().required(),
+        label: joi.string(),
+        readingsLimit: joi.number()
+      }),
+      query: joi.object({
+        direction: joi.string().valid('d', 'u').default('u')
+      })
     }
   }
 }]

@@ -3,7 +3,7 @@ const joi = require('@hapi/joi')
 const defaultPort = 3009
 
 // Define config schema
-const schema = {
+const schema = joi.object({
   restClientTimeoutMillis: joi.number().default(15000),
   port: joi.number().default(defaultPort),
   env: joi.string().valid('development', 'test', 'production').default('development'),
@@ -28,7 +28,7 @@ const schema = {
       proxy: joi.string()
     })
   })
-}
+})
 
 // Build config
 const config = {
@@ -56,7 +56,7 @@ const config = {
 }
 
 // Validate config
-const result = joi.validate(config, schema, {
+const result = schema.validate(config, {
   abortEarly: false
 })
 

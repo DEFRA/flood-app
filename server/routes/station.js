@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi')
+const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
 const floodService = require('../services/flood')
 const ViewModel = require('../models/views/station')
@@ -63,13 +63,13 @@ module.exports = [{
   },
   options: {
     validate: {
-      params: {
-        id: Joi.number().required()
-      },
-      query: {
-        direction: Joi.string().valid('d', 'u').default('u'),
-        i: Joi.string()
-      }
+      params: joi.object({
+        id: joi.number().required()
+      }),
+      query: joi.object({
+        direction: joi.string().valid('d', 'u').default('u'),
+        i: joi.string()
+      })
     }
   }
 }, {
@@ -94,10 +94,10 @@ module.exports = [{
   },
   options: {
     validate: {
-      params: {
-        id: Joi.string().required(),
-        direction: Joi.string().valid('d', 'u').default('u')
-      }
+      params: joi.object({
+        id: joi.string().required(),
+        direction: joi.string().valid('d', 'u').default('u')
+      })
     }
   }
 }]

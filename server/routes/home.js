@@ -23,9 +23,9 @@ module.exports = [{
   },
   options: {
     validate: {
-      payload: {
+      payload: joi.object({
         location: joi.string().required()
-      },
+      }),
       failAction: (request, h, err) => {
         return h.view('home', { errorMessage: 'Enter a valid location' }).takeover()
       }

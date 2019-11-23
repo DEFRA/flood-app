@@ -1,5 +1,5 @@
 const config = require('../config')
-const joi = require('joi')
+const joi = require('@hapi/joi')
 const HttpsProxyAgent = require('https-proxy-agent')
 const wreck = require('@hapi/wreck').defaults({
   timeout: config.restClientTimeoutMillis
@@ -32,9 +32,9 @@ module.exports = [{
   options: {
     description: 'Autosuggest / autocomplete',
     validate: {
-      query: {
+      query: joi.object({
         q: joi.string().required()
-      }
+      })
     }
   }
 }, {
