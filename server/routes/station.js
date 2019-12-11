@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi')
+const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
 const floodService = require('../services/flood')
 const ViewModel = require('../models/views/station')
@@ -69,10 +69,10 @@ module.exports = {
   },
   options: {
     validate: {
-      params: {
-        id: Joi.number().required(),
-        direction: Joi.string().valid('downstream', 'upstream')
-      }
+      params: joi.object({
+        id: joi.number().required(),
+        direction: joi.string().valid('downstream', 'upstream')
+      })
     }
   }
 }

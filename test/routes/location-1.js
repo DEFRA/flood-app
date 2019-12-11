@@ -2,7 +2,7 @@
 
 const Hapi = require('@hapi/hapi')
 const Lab = require('@hapi/lab')
-const Code = require('code')
+const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 

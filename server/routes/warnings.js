@@ -36,14 +36,14 @@ module.exports = [{
   },
   options: {
     validate: {
-      query: {
+      query: joi.object({
         q: joi.string(),
         btn: joi.string(),
         ext: joi.string(),
         fid: joi.string(),
         lyr: joi.string(),
         v: joi.string()
-      }
+      })
     }
   }
 }, {

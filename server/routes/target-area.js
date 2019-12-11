@@ -24,16 +24,16 @@ module.exports = {
   },
   options: {
     validate: {
-      params: {
+      params: joi.object({
         code: joi.string().required()
-      },
-      query: {
+      }),
+      query: joi.object({
         v: joi.string().optional(),
         btn: joi.string().optional(),
         lyr: joi.string().optional(),
         fid: joi.string().optional(),
         ext: joi.string().optional()
-      }
+      })
     }
   }
 }
