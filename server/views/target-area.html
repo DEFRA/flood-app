@@ -3,88 +3,100 @@
 
 {% if model.referer %}
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <a href="{{ model.referer }}" class="govuk-back-link govuk-!-margin-bottom-7">Back</a>
-  </div>
+    <div class="govuk-grid-column-full" id="browserBackContainer"></div>
 </div>
 {% endif %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
-      {% if model.flood %}
-      {{ model.severity.title }}: {{model.area.name}}
-      {% else %}
-      {{model.area.name}} flood risk area
-      {% endif %}
-    </h1>
-    {% if model.flood %}
-    <p class="govuk-body-s govuk-!-margin-bottom-7">Updated:
-      {% if model.severity.isActive %}
-      <time datetime="{{model.flood.severityChanged}}">{{model.flood.severityChanged | formatDate}}</time>
-      {% else %}
-      <time datetime="{{model.flood.messageChanged}}">{{model.flood.messageChanged | formatDate}}</time>
-      {% endif %}
-    </p>
-    {% else %}
-    <p class="govuk-!-margin-top-7">No flood alert or warning currently in force.</p>
-    {% endif %}
 
-    <!--<p class="govuk-body-l govuk-!-margin-bottom-2">{{model.area.description}}</p>-->
-
-    {% if model.flood %}
-      {% if model.severity.isActive %}
-        <div class="defra-warning-text-flood defra-warning-text-flood--{{ model.severity.hash.toLowerCase() }} govuk-!-margin-bottom-6">
-          <span class="defra-warning-text-flood__icon"></span>
-          <strong class="defra-warning-text-flood__text">
-            <span class="govuk-visually-hidden">{{ model.severity.title }}</span>
-              {{ model.severity.subTitle }}<!-- - be prepared -->
-          </strong>
+    {% if model.flood and model.severity.id < 4 %}
+    <div class="defra-flood-status govuk-!-margin-bottom-3">
+      <div class="defra-flood-status-item defra-flood-status-item--{{model.severity.hash}}">
+        <span class="defra-flood-status-item__icon"></span>
+        <div class="defra-flood-status-item__text">
+          <strong>{{model.severity.title}} - {{model.severity.subTitle | lower}}</strong>
         </div>
-      {% endif %}
-      <p class="govuk-body">{{model.flood.message}}</p>
-    {% endif %}
-
-    <div class="app-map">
-      <div class="app-map__container">
-        <figure class="map" id="map-live">
-          <div class="map__container">
-            <div class="map__container-inner"></div>
-          </div>
-          <figcaption class="govuk-visually-hidden">Flood warnings and river and sea levels</figcaption>
-        </figure>
       </div>
     </div>
+    {% endif %}
 
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
+      Target area: {{ model.area.name }}
+    </h1>
+    <p class="defra-updated govuk-!-margin-bottom-7">
+      Updated at <time datetime="{{model.flood.severityChanged}}">{{model.flood.messageChanged | formatDate}}</time>
+    </p>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {% if (model.flood and model.severity.id == 4) or not model.flood %}
+    <div class="defra-flood-status govuk-!-margin-bottom-1">
+      <div class="defra-flood-status-item">
+        <div class="defra-flood-status-item__text">
+          {% if not model.flood %}
+          No flood alert or warning currently in place
+          {% else %}
+          Flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warning{% else %}alert{% endif %} no longer in place
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    
+    <p>
+    {% if model.flood and model.flood.message %}
+    {{model.flood.message}}
+    {% else %}
+    <span style="color:#d4351c">We need to explain what a flood target/alert/warning area is; detail the risk from future flooding and direct citizens who live in this area to how to plan ahead for flooding... </span>
+    {% endif %}
+    </p>
+    
+
+    <p>Area {% if model.flood and model.severity.id < 4 %}affected{% else %}description{% endif %}: {{ model.area.description }}</p>
+    <div class="defra-map" id="map-live"></div>
+    
+    {% if model.flood and model.severity.isActive %}
+    <div class="govuk-inset-text govuk-!-margin-top-2">
+      {% if model.severity.id == 1 %}
+      A severe flood warning means there is a danger to life. <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-severe-flood-warning">Find out what to do in you get a severe flood warning</a>.
+      {% elif model.severity.id == 2 %}
+      A flood warning means flooding is expected and you need to act now. <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-warning">Find out what to do in you get a flood warning</a>.
+      {% else %}
+      A flood alert means flooding is possible and you need to be prepared. <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-alert">Find out what to do in you get a flood alert</a>.
+      {% endif %}
+    </div>
+    {% endif %}
+    
+    <p class="govuk-body">
+      <a href="/river-and-sea-levels?river=river-name">View the latest river and sea levels in this area</a>.
+    </p>
+
+    <!--
     {% if model.flood %}
     <p class="govuk-body">Could this information be better? <a href="/target-area/{{model.area.code}}/feedback">Tell us how to improve it</a>.</p>
     {% endif %}
+    -->
 
-    {% if model.flood and model.severity.isActive %}
-    <div class="govuk-inset-text">
-      {% if model.severity.hash == 'severe-flood-warning' %}
-      You <a href="/what-to-do-in-a-flood">must act now</a> if you live in this area.
-      {% elif model.severity.hash == 'flood-warning' %}
-      You need to <a href="/what-to-do-in-a-flood">take action</a> if you live in this area.
-      {% else %}
-      <a href="/what-to-do-in-a-flood">Be prepared</a> if you live in this area
-      {% endif %}
-    </div>
-    {% endif %}
-
-    <h2 class="govuk-heading-m">Other ways to check your current flood risk</h2>
-    <p class="govuk-body"><a href="https://www.gov.uk/find-local-council">Contact your local council</a> if you are not sure of the source of flooding.</p>
-    <p class="govuk-body">For river and sea flooding, call the 24-hour Floodline service.</p>
-    <p class="govuk-body">
+    <h2 class="govuk-heading-m govuk-!-padding-top-2">Other ways to check your current flood risk</h2>
+    <p>If you live near a river or the coast you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
+    <p>For river and sea flooding, call the 24-hour Floodline service.</p>
+    <p>
       Telephone: 0345 988 1188<br />
       Type talk: 0345 602 6340 (for the hard of hearing)<br />
-      <a class="govuk-link" href="https://gov.uk/call-charges">Find out more about call charges</a>.
-    </p>
+      <a href="https://gov.uk/call-charges">Find out more about call charges</a>.
+    </p>  
+    <p><a href="https://www.gov.uk/find-local-council">Contact your local council</a> if you are not sure of the source of flooding.</p>
+    
   </div>
 
   <div class="govuk-grid-column-one-third">
     <!-- The Related items component is not part of GOV.UK Frontend but will be styled if used in the Prototype Kit -->
-    <aside class="app-related-items" role="complementary" style="border-width:2px">
+    <aside class="defra-related-items" role="complementary" style="border-width:2px">
       <h2 class="govuk-heading-s" id="subsection-title">
         Related content
       </h2>

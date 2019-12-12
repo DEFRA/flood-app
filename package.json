@@ -54,9 +54,12 @@
   },
   "standard": {
     "ignore": [
+      "server/public/static/javascripts/ol-v5.js",
       "server/public/static/javascripts/ol.js",
+      "server/public/static/javascripts/ol5.js",
       "server/public/static/javascripts/components/maps/live.js",
       "server/public/static/javascripts/components/a11y-dialog.js",
+      "server/public/static/javascripts/components/maps-layers.js",
       "server/public/static/javascripts/core.js"
     ]
   }

@@ -140,8 +140,7 @@
     top:0px;
     width:2px;
     height:5px;
-    background-color: govuk-colour("mid-grey", $legacy: "grey-2");
-    // background-color: govuk-colour('grey-2');
+    background-color: govuk-colour('mid-grey');
 }   
 // Quick mobile fix but may not work for other offsets and increments
 tr:nth-of-type(2n) .defra-bar-chart__h-tick {
@@ -163,8 +162,7 @@ tr:nth-of-type(2n) .defra-bar-chart__h-tick {
     position:relative;
     left:0px;
     right:0px;
-    border-bottom:1px solid govuk-colour("light-grey", $legacy: "grey-3");
-    // border-bottom:1px solid govuk-colour('grey-3');
+    border-bottom:1px solid govuk-colour('light-grey');
     z-index:-1; // Ensure v tick line is behind threshold mask
 }
 .defra-bar-chart__v-tick:first-child {

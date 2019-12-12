@@ -16,6 +16,7 @@ module.exports = {
       model.referer = request.headers.referer
       return h.view('target-area', { model })
     } catch (err) {
+      console.log(err)
       return err.isBoom
         ? err
         : boom.badRequest('Failed to get target area', err)
@@ -25,6 +26,13 @@ module.exports = {
     validate: {
       params: joi.object({
         code: joi.string().required()
+      }),
+      query: joi.object({
+        v: joi.string().optional(),
+        btn: joi.string().optional(),
+        lyr: joi.string().optional(),
+        fid: joi.string().optional(),
+        ext: joi.string().optional()
       })
     }
   }

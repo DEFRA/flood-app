@@ -42,6 +42,28 @@
     getParameterByName: function (name) {
       var v = window.location.search.match(new RegExp('(?:[\?\&]' + name + '=)([^&]+)'))
       return v ? v[1] : null
+    },
+    addBrowserBackButton: function() {
+      const container = document.getElementById('browserBackContainer')
+      if (container) {
+        var nav
+        if (container.nodeName.toLowerCase() !== 'nav') {
+          nav = document.createElement('nav')
+          container.append(nav)
+        } else {
+          nav = container
+        }
+        const hyperlink = document.createElement('a')
+        hyperlink.href = document.referrer
+        hyperlink.href = hyperlink.pathname + hyperlink.search
+        hyperlink.innerText = 'Back'
+        hyperlink.className = 'govuk-back-link govuk-!-margin-bottom-7 govuk-!-margin-right-2'
+        hyperlink.addEventListener('click', function (e) {
+          e.preventDefault()
+          window.history.back()
+        })
+        nav.prepend(hyperlink)
+      }
     }
   }
 

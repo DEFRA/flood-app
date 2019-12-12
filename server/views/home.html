@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-xl">Enter a location in England</h1>
     {% if errorMessage %}
     {{ govukErrorSummary({
@@ -19,75 +19,43 @@
     }) }}
     {% endif %}
     <form method="post">
-      <div id="autocomplete-container" class="govuk-body">
       {% if errorMessage %}
-        {{ govukInput({
-          label: {
-            text: "City, town or postcode"
-          },
-          hint: {
-            text: "For example Bakewell or SW1A 2AA"
-          },
-          errorMessage: {
-            "text": "Enter location"
-          },
-          id: "location",
-          name: "location"
-        }) }}
+      {{ govukInput({
+        label: {
+          text: "Enter postcode, town or county"
+        },
+        errorMessage: {
+          "text": errorMessage
+        },
+        id: "location",
+        name: "location",
+        value: value,
+        attributes: {
+          autocomplete: "off",
+          autocorrect: "off",
+          autocapitalize: "off",
+          spellcheck: "false"
+        },
+        classes: "govuk-!-width-one-half"
+      }) }}
       {% else %}
       {{ govukInput({
         label: {
-          text: "City, town or postcode"
-        },
-        hint: {
-          text: "For example Bakewell or SW1A 2AA"
+          text: "Enter postcode, town or county"
         },
         id: "location",
-        name: "location"
+        name: "location",
+        attributes: {
+          autocomplete: "off",
+          autocorrect: "off",
+          autocapitalize: "off",
+          spellcheck: "false"
+        },
+        classes: "govuk-!-width-one-half"
       }) }}
       {% endif %}
-    </div>
-    <button type="submit" class="govuk-button">Continue</button>
-  </form>
+      <button type="submit" class="govuk-button">Continue</button>
+    </form>
+  </div>
 </div>
-</div>
-{% endblock %}
-
-{% block bodyEnd %}
-{{ super() }}
-<link rel="stylesheet" href="{{assetPath}}/accessible-autocomplete.min.css" />
-<script src="{{assetPath}}/accessible-autocomplete.min.js"></script>
-<script>
-  function suggest(query, populate) {
-    window.flood.utils.xhr('/suggest?q=' + query, function (err, results) {
-      if (err) {
-        console.error(err)
-        return
-      }
-
-      populate(results)
-    })
-  }
-
-  function onConfirm (confirmed) {
-    if (confirmed) {
-      document.querySelector("#main-content form > button").disabled = true
-      document.getElementById('location').value = confirmed
-      document.getElementsByTagName('form')[0].submit()
-    }    
-  }
-
-  accessibleAutocomplete({
-    element: document.getElementById('autocomplete-container'),
-    id: 'location',
-    name: 'location',
-    source: suggest,
-    onConfirm: onConfirm,
-    minLength: 3
-  })
-
-  // Remove the original input
-  document.getElementById('location').remove()
-  document.getElementById('autocomplete-container').classList.add('govuk-!-width-two-thirds')
-</script>
 {% endblock %}

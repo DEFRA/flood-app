@@ -11,12 +11,15 @@ const routes = [].concat(
   require('../routes/api/stations.geojson'),
   require('../routes/api/warnings.geojson'),
   require('../routes/start-page'),
-  require('../routes/location-not-england'),
   require('../routes/sms-auto-opt-in-info'),
+  require('../routes/location-not-england'),
   require('../routes/what-to-do-in-a-flood'),
   require('../routes/plan-ahead-for-flooding'),
   require('../routes/what-happens-after-a-flood'),
-  require('../routes/recovering-after-a-flood')
+  require('../routes/recovering-after-a-flood'),
+  require('../routes/warnings'),
+  require('../routes/levels'),
+  require('../routes/impacts')
 )
 
 module.exports = {

@@ -7,12 +7,19 @@
 .defra-line-chart {
     position:relative;
     border-top:1px solid $govuk-border-colour;
-    border-bottom:1px solid $govuk-border-colour;
     padding-top:20px;
     @include mq ($from: tablet) {
-        padding-top:32px
+        padding-top:30px;
+        padding-bottom:15px;
     }    
     margin:0;
+}
+.defra-line-chart-data {
+    border-top:1px solid $govuk-border-colour;
+    padding-top:20px;
+}
+.js-enabled .defra-line-chart-data {
+    @extend .govuk-visually-hidden;;
 }
 .defra-line-chart__caption {
     display:block;
@@ -219,9 +226,6 @@ table.table-levels {
     .axis.x .tick line {
         visibility:hidden;
     }
-    .axis.x .tick-today {
-        font-weight:bold;
-    }
     .grid line {
         fill: none;
         stroke: rgba($govuk-text-colour, 0.1);
@@ -257,7 +261,7 @@ table.table-levels {
     // Observed
     .observed-line { 
         stroke: $govuk-link-colour;
-        stroke-width: 2;
+        stroke-width: 3;
         fill: none;
     }
     .observed-area { 
@@ -267,16 +271,15 @@ table.table-levels {
     .forecast-line { 
         stroke-dasharray: 4, 2; 
         stroke: $govuk-secondary-text-colour;
-        stroke-width: 2;
+        stroke-width: 3;
         fill: none;
     }
-    .forecast-area {
-        fill: govuk-colour("light-grey", $legacy: "grey-3")
-        // fill: govuk-colour('grey-3');
+    .forecast-area { 
+        fill: rgba($govuk-border-colour, 0.1);
     }
     // Locator
     .locator-point {
-        stroke-width: 2;
+        stroke-width: 3;
         stroke: $govuk-link-colour;
         fill: white; 
     }
@@ -319,18 +322,13 @@ table.table-levels {
         shape-rendering: crispEdges; 
     }
     .time-now-text {
-        @include govuk-font($size: 16);
-    }
-    .time-now-bg {
-        fill:white;
-        stroke-width: 1;
-        stroke: $govuk-secondary-text-colour;
-        shape-rendering: crispEdges;
+        @include govuk-font($size: 16, $weight: bold);
+        dominant-baseline:hanging;
     }
     // Thresholds
     .threshold__line {
         stroke: $govuk-border-colour;
-        stroke-width: 2;
+        stroke-width: 3;
         shape-rendering: crispEdges;
     }
     .threshold__bg {
@@ -343,7 +341,8 @@ table.table-levels {
     .threshold__remove line {
         stroke-width: 2;
         stroke: $govuk-text-colour;
-        shape-rendering: auto;
+        shape-rendering: crispEdges;
+        stroke-linecap: square;
     }
     .threshold__remove rect {
         stroke-width: 0;
@@ -359,8 +358,9 @@ table.table-levels {
     .threshold-label__bg {
         fill:white;
         stroke-width: 1;
-        stroke: $govuk-text-colour;
+        stroke: govuk-colour('dark-grey');
         shape-rendering: auto;
+        stroke-linecap: square;
     }
     .threshold-label__text {
         @include govuk-font($size: 16);
@@ -393,13 +393,15 @@ table.table-levels {
     // Typical/Alert
     .threshold--alert {
         .threshold__line {
-            stroke: #F8C37F;
+            // stroke: #F8C37F;
+            stroke: $govuk-border-colour;
         }
     }
     .threshold.threshold--selected.threshold--alert,
     .threshold.threshold--mouseover.threshold--alert {
         .threshold__line {
-            stroke: #F18700;
+            // stroke: #F18700;
+            stroke: $govuk-text-colour;
         }
     }
 }

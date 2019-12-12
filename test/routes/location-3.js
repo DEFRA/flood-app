@@ -117,6 +117,6 @@ lab.experiment('Routes test - location - 3', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.statusCode).to.equal(302)
   })
 })

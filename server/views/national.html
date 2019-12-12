@@ -3,121 +3,78 @@
 {% block content %}
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <nav class="defra-search-link govuk-!-margin-bottom-7">
+  <div class="govuk-grid-column-two-thirds">
+    <nav class="govuk-!-margin-bottom-7">
       <p class="govuk-body">
-        <a href="/">
-          <span class="defra-search-link__icon"></span>Check warnings and river levels near you
-        </a>
+        <a href="/">Check flood risk near you</a>
       </p>
     </nav>
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
+      Flood risk for England
+    </h1>
+    <p class="defra-updated govuk-!-margin-bottom-7">
+      Updated at <time class="form-hint" datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time>
+    </p>
   </div>
 </div>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
-      Flood risk for England
-    </h1>
-    <p class="govuk-body-s govuk-!-margin-bottom-7">Updated: <time class="form-hint" title="{{model.timestamp | formatDate}}" datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time></p>
-
-    {% if model.floods.floods.length %}
-      {% for group in model.floods.groups %}
-        {% if group.floods %}
-          <div class="defra-warning-text-flood defra-warning-text-flood--large defra-warning-text-flood--{{ group.severity.hash }}">
-            <span class="defra-warning-text-flood__icon"></span>
-            <strong class="defra-warning-text-flood__text">
+    <div class="defra-flood-status">
+      {% if not model.hasActiveFloods %}
+      <div class="defra-flood-status-item">
+        <div class="defra-flood-status-item__text">
+          There are currently no flood warnings or alerts in force.
+        </div>
+      </div>
+      {% endif %}
+      {% for group in model.floods %}
+      {% if group.floods %}
+      {% if group.severity.id < 4 %}
+      <div class="defra-flood-status-item defra-flood-status-item--{{ group.severity.hash }}">
+        <span class="defra-flood-status-item__icon"></span>
+        <div class="defra-flood-status-item__text">
+          <strong>
+            <a href="/alerts-and-warnings{% if group.severity.id > model.highestSeverityId %}#{{ group.severity.pluralisedHash }}{% endif %}">
               {{ group.title | lower }}
-              <span class="defra-warning-text-flood__secondary">{{ group.severity.subTitle }}</span>
-            </strong>
-          </div>
-        {% endif %}
+            </a>
+          </strong>
+          <span>{{ group.severity.subTitle }}</span>
+        </div>
+      </div>
+      {% else %}
+      <p class="defra-flood-status__text">
+        <a href="/alerts-and-warnings#{{ group.severity.pluralisedHash }}">{{ group.title | lower }}</a> {{ group.severity.subTitle }}
+      </p>
+      {% endif %}
+      {% endif %}
       {% endfor %}
-    {% else %}
-      <p class="govuk-body">There are currently no flood warnings or alerts in force.</p>
-    {% endif %}
-
-    {% if model.floods.floods.length %}
-    <div class="app-map">
-      <div class="app-map__container">
-        <div class="map" id="map-live">
-          <div class="map__container">
-            <div class="map__container-inner"></div>
-          </div>
-        </div>
-      </div>
     </div>
-    <div id="map-list-warnings" class="defra-map-list govuk-!-margin-bottom-4">
-      <div id="warnings-detail" class="govuk-details__text govuk-details__text--defra-details-flood">
-        {% for group in model.floods.groups %}
-          {% if group.floods %}
-            <h3 class="govuk-heading-s govuk-!-padding-top-0 govuk-!-margin-bottom-3">
-              {{ group.severity.pluralisedTitle }}
-              <br/>
-              <span class="govuk-!-font-weight-regular">{{group.severity.subTitle}}</span>
-            </h3>
-            <ul class="defra-list-flood">
-              {% for flood in group.floods %}
-                <li class="defra-list-flood__item">
-                  <a href="/target-area/{{flood.code}}">{{ flood.description }}</a>
-                </li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-    {% endif %}
 
-    <p class="govuk-body">If you live near a river or the coast you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
-
-    <h2 class="govuk-heading-m govuk-!-margin-top-4">
-      Flood risk for the next 5 days
-    </h2>
-    {{ model.outlook.full | safe }}
-    <p class="govuk-body-s">
-      <time class="form-hint" title="{{model.outlook.timestampOutlook | formatDate}}"
-        datetime="{{ model.outlook.timestampOutlook }}">Updated {{ model.outlook.timestampOutlook | formatDate }}</time>
+    <h2 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-margin-bottom-1" id="outlook">Flood forecast for the next 5 days</h2>
+    <p class="defra-updated govuk-!-margin-bottom-4">
+      <time title="{{model.outlook.timestampOutlook | formatDate}}" datetime="{{ model.outlook.timestampOutlook }}">Updated at {{ model.outlook.timestampOutlook | formatDate }}</time>
     </p>
-
+    <p class="govuk-body govuk-!-margin-bottom-0 govuk-!-padding-bottom-4">
+      {{ model.outlook.full | safe }}
+    </p>
     {% if model.outlook.hasOutlookConcern %}
-    <div class="app-map">
-      <div class="app-map__container">
-        <div class="map" id="map-outlook" hidden>
-          <div class="map__container">
-            <div class="map__container-inner">
-              <div class="map__outlook-control">
-                <div class="map__outlook-control__inner">
-                  {% for day in model.outlook.days %}
-                    <div class="map__outlook-control__day">
-                      <button class="map__outlook-control__button"
-                        aria-selected="{{ "true" if not day.idx else "false" }}"
-                        data-day="{{day.idx}}">{{ day.date | formatDate('ddd D') }}
-                        <span class="map__outlook-control__icon map__outlook-control__icon--risk-level-{{day.level}}"></span>
-                      </button>
-                    </div>
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="defra-map" id="map-outlook"></div>
     {% endif %}
 
-    <h2 class="govuk-heading-m">Other ways to check your current flood risk</h2>
-    <p class="govuk-body"><a href="https://www.gov.uk/find-local-council">Contact your local council</a> if you are not sure of the source of flooding.</p>
-    <p class="govuk-body">For river and sea flooding, call the 24-hour Floodline service.</p>
-    <p class="govuk-body">
+    <h2 class="govuk-heading-m govuk-!-margin-top-3">Other ways to check your current flood risk</h2>
+    <p>If you live near a river or the coast you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
+    <p>For river and sea flooding, call the 24-hour Floodline service.</p>
+    <p>
       Telephone: 0345 988 1188<br />
       Type talk: 0345 602 6340 (for the hard of hearing)<br />
-      <a class="govuk-link" href="https://gov.uk/call-charges">Find out more about call charges</a>.
-    </p>    
+      <a href="https://gov.uk/call-charges">Find out more about call charges</a>.
+    </p>  
+    <p><a href="https://www.gov.uk/find-local-council">Contact your local council</a> if you are not sure of the source of flooding.</p>
+
   </div>
   <div class="govuk-grid-column-one-third">
-    <!-- The Related items component is not part of GOV.UK Frontend but will be styled if used in the Prototype Kit -->
-    <aside class="app-related-items" role="complementary" style="border-width:2px">
+    <aside class="defra-related-items" role="complementary">
       <h2 class="govuk-heading-s" id="subsection-title">
         Related content
       </h2>
@@ -166,6 +123,5 @@
 <script>
   window.flood.model = {{ model | dump(2) | safe }}
 </script>
-<script src="{{assetPath}}/javascripts/components/map-list.js"></script>
 <script src="{{assetPath}}/javascripts/pages/national.js"></script>
 {% endblock %}

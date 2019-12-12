@@ -54,114 +54,170 @@ class ViewModel {
       this.station.recentValue = this.recentValue
     }
 
-    this.recentValue.formattedTime = moment(this.recentValue.ts).format('h:mma')
-    var today = moment().startOf('day')
-    var yesterday = moment().subtract(1, 'days').startOf('day')
-    this.recentValue.dateWhen = '(' + moment(this.recentValue.ts).format('D/MM/YY') + ')'
-    if (moment(this.recentValue.ts).isSame(today, 'd')) {
-      this.recentValue.dateWhen = ''
-    } else if (moment(this.recentValue.ts).isSame(yesterday, 'd')) {
-      this.recentValue.dateWhen = '(Yesterday)'
-    }
-
-    const coordinates = JSON.parse(this.station.coordinates).coordinates
-    coordinates.reverse()
-    this.lat = coordinates[0]
-    this.long = coordinates[1]
-    this.warningsUrl = `/warnings?stationid=${this.id}`
-
-    if (this.station.type === 'c') {
-      this.title = 'Tidal level'
-      this.pageTitle = 'Sea level at ' + this.station.name
-      // this.postTitle = 'Latest tidal level information for ' + this.station.river + ' at ' + this.station.name
-    } else if (this.station.type === 'g') {
-      this.title = 'Groundwater level'
-      this.pageTitle = 'Groundwater level at ' + this.station.name + ' borehole'
-      // this.postTitle = 'Latest groundwater level information for ' + this.station.name + ' borehole'
-    } else {
-      this.title = 'River level'
-      this.pageTitle = 'River level at ' + this.station.name + ', ' + this.station.river + (this.station.isMulti ? ' (' + this.station.direction + ')' : '')
-      // this.postTitle = 'Latest river level information for the ' + this.station.river + ' at ' + this.station.name + (this.station.isMulti ? ' (' + this.station.direction + ')' : '')
-    }
-
-    this.isUpstream = this.station.direction === 'upstream'
-    this.isDownstream = this.station.direction === 'downstream'
-
-    // FFOI processing
-    if (forecast) {
-      const { thresholds } = forecast
-      this.isFfoi = thresholds.length > 0
-      if (this.isFfoi) {
-        this.ffoi = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
-        this.hasForecast = this.ffoi.hasForecastData
-        this.alertThreshold = this.ffoi.alertThreshold || this.station.percentile5
-        this.warningThreshold = this.ffoi.warningThreshold || null
+    if (this.recentValue) {
+      // Get most recent value time
+      this.recentValue.formattedTime = moment(this.recentValue.ts).format('h:mma')
+      var today = moment().startOf('day')
+      var yesterday = moment().subtract(1, 'days').startOf('day')
+      this.recentValue.dateWhen = 'on ' + moment(this.recentValue.ts).format('D/MM/YY')
+      if (moment(this.recentValue.ts).isSame(today, 'd')) {
+        this.recentValue.dateWhen = 'today'
+      } else if (moment(this.recentValue.ts).isSame(yesterday, 'd')) {
+        this.recentValue.dateWhen = 'yesterday'
       }
-      this.phase = this.isFfoi ? 'beta' : false
-    }
 
-    // River level and forecast message
-    this.atRiskFAL = this.alertThreshold &&
-      ((this.recentValue && parseFloat(this.recentValue._)) >= parseFloat(this.alertThreshold) ||
-      (this.hasForecast && this.ffoi.maxValue && parseFloat(this.ffoi.maxValue._) >= parseFloat(this.alertThreshold)))
+      // FFOI processing
+      if (forecast) {
+        const { thresholds } = forecast
+        this.isFfoi = thresholds.length > 0
+        if (this.isFfoi) {
+          this.ffoi = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
+          this.hasForecast = this.ffoi.hasForecastData
+          this.alertThreshold = this.ffoi.alertThreshold || this.station.percentile5
+          this.warningThreshold = this.ffoi.warningThreshold || null
+        }
+        this.phase = this.isFfoi ? 'beta' : false
+      }
 
-    this.atRiskFW = this.warningThreshold &&
-      ((this.recentValue && parseFloat(this.recentValue._)) >= parseFloat(this.warningThreshold) ||
-      (this.hasForecast && this.ffoi.maxValue && parseFloat(this.ffoi.maxValue._) >= parseFloat(this.warningThreshold)))
+      // River level and forecast message
+      this.atRiskFAL = this.alertThreshold &&
+        ((this.recentValue && parseFloat(this.recentValue._)) >= parseFloat(this.alertThreshold) ||
+        (this.hasForecast && this.ffoi.maxValue && parseFloat(this.ffoi.maxValue._) >= parseFloat(this.alertThreshold)))
 
-    // Alerts and percentiles
-    this.station.floodingIsPossible = this.atRiskFAL || this.atRiskFW
+      this.atRiskFW = this.warningThreshold &&
+        ((this.recentValue && parseFloat(this.recentValue._)) >= parseFloat(this.warningThreshold) ||
+        (this.hasForecast && this.ffoi.maxValue && parseFloat(this.ffoi.maxValue._) >= parseFloat(this.warningThreshold)))
 
-    if (this.recentValue && this.station.percentile5 && this.station.percentile95) {
-      if (!isNaN(this.station.percentile5) && !isNaN(this.station.percentile95)) {
-        if (parseFloat(this.recentValue._) >= parseFloat(this.station.percentile5)) {
-          this.station.floodingIsPossible = true
+      // Alerts and percentiles
+      this.station.floodingIsPossible = this.atRiskFAL || this.atRiskFW
+
+      if (this.station.percentile5 && this.station.percentile95) {
+        if (!isNaN(this.station.percentile5) && !isNaN(this.station.percentile95)) {
+          if (parseFloat(this.recentValue._) >= parseFloat(this.station.percentile5)) {
+            this.station.floodingIsPossible = true
+          }
+        } else {
+          this.station.hasPercentiles = false
         }
       } else {
         this.station.hasPercentiles = false
       }
-    } else {
-      this.station.hasPercentiles = false
+
+      // Low/Med/High
+      if (this.station.hasPercentiles) {
+        if (this.station.type === 'c') {
+          this.station.state = Math.round(this.station.recentValue._ * 10) / 10 + 'm'
+        } else {
+          if (parseFloat(this.station.recentValue._) > parseFloat(this.station.percentile5)) {
+            this.station.state = 'High'
+          } else if (parseFloat(this.station.recentValue._) < parseFloat(this.station.percentile95)) {
+            this.station.state = 'Low'
+          } else {
+            this.station.state = 'Normal'
+          }
+        }
+      }
     }
 
+    // Set Lat long
+    const coordinates = JSON.parse(this.station.coordinates).coordinates
+    coordinates.reverse()
+    /*
+    this.lat = coordinates[0]
+    this.long = coordinates[1]
+    this.warningsUrl = `/warnings?stationid=${this.id}`
+    */
+
+    // Set pageTitle, metaDescription and metaKeywords
+    var stationType, stationLocation
+    if (this.station.type === 'c') {
+      stationLocation = this.station.name
+      stationType = 'Sea'
+    } else if (this.station.type === 'g') {
+      stationLocation = `${this.station.name} borehole`
+      stationType = 'Groundwater'
+    } else {
+      stationLocation = `${this.station.name + (this.station.isMulti ? ', ' + this.station.direction : '')} (${this.station.river})`
+      stationType = 'River'
+    }
+    this.pageTitle = `${stationType} level at ${stationLocation}`
+    this.metaDescription = `Check the latest recorded ${stationType.toLowerCase()} level${forecast ? ',' : ' and'} recent 5-day trend ${forecast ? ' and 36 hour forecast' : ''} at ${stationLocation}`
+    this.metaKeywords = `${stationType} level, ${this.station.name}${this.station.isRiver ? ', ' + this.station.river : ''}${forecast ? ', forecast level' : ''}, flood risk, flood map, gov.uk`
+
+    // Thresholds
+    var thresholds = []
+    if (this.station.porMaxValue) {
+      thresholds.push({
+        id: 'highest',
+        value: this.station.porMaxValue,
+        description: 'Highest level on record',
+        shortname: 'Highest level on record'
+      })
+    }
+    if (this.station.percentile5) { // Only push typical range if it has a percentil5
+      thresholds.push({
+        id: 'alert',
+        value: this.station.percentile5,
+        description: 'Top of typical range. Above this flooding to low-laying land is possible',
+        shortname: 'Top of typical range'
+      })
+    }
+    if (this.warningThreshold) {
+      thresholds.push({
+        id: 'warning',
+        value: this.warningThreshold,
+        description: 'Flood warning may be issued',
+        shortname: 'Flood warning possible'
+      })
+    }
+
+    // Add impacts
+    if (impacts) {
+      impacts.forEach(function (impact) {
+        thresholds.push({
+          id: impact.impactid,
+          value: Number(impact.value).toFixed(2),
+          description: impact.description,
+          shortname: impact.shortname
+        })
+      })
+    }
+
+    // Group and sort thresholds
+    thresholds = thresholds.reduce(
+      (result, item) => ({
+        ...result,
+        [item.value]: [
+          ...(result[item.value] || []),
+          item
+        ]
+      }),
+      {}
+    )
+    thresholds = Object.keys(thresholds).map(key => {
+      return {
+        level: key,
+        values: thresholds[key]
+      }
+    })
+    thresholds = thresholds.sort((a, b) => b.level - a.level)
+    this.thresholds = thresholds
+
+    // Set remaining station properties
+    this.isUpstream = this.station.direction === 'upstream'
+    this.isDownstream = this.station.direction === 'downstream'
+    /*
     this.centroidJSON = JSON.stringify(coordinates)
     this.stationJSON = JSON.stringify(this.station)
     this.forecast = this.ffoi || {}
     this.forecastJSON = this.ffoi ? this.ffoi.forecastJSON : JSON.stringify({})
+    */
 
-    // Low/Med/High
-
-    if (this.station.hasPercentiles) {
-      if (this.station.type === 'c') {
-        this.station.level = Math.round(this.station.recentValue._ * 10) / 10 + 'm'
-      } else {
-        if (parseFloat(this.station.recentValue._) > parseFloat(this.station.percentile5)) {
-          this.station.level = 'High'
-        } else if (parseFloat(this.station.recentValue._) < parseFloat(this.station.percentile95)) {
-          this.station.level = 'Low'
-        } else {
-          this.station.level = 'Normal'
-        }
-      }
-    } else {
-      this.station.level = this.station.recentValue._.toFixed(1) + 'm'
-    }
-    // Impacts
-    if (impacts) {
-      // Add Highest level and Top of typical range to imapacts array for sorting purposes
-
-      impacts.push({ impactid: 'highest', value: this.station.porMaxValue, description: 'Highest level on record', shortname: 'Highest level on record' })
-
-      if (this.station.percentile5) { // Only push typical range if it has a percentil5
-        impacts.push({ impactid: 'alert', value: this.station.percentile5, description: 'Top of typical range', shortname: 'Top of typical range' })
-      }
-
-      impacts.sort((a, b) => b.value - a.value)
-
-      this.impacts = impacts
-    }
     // Page category for feedback categorisation
-    this.pageCategory = this.isFfoi ? 'station-ffoi' : ''
+    // this.pageCategory = this.isFfoi ? 'station-ffoi' : ''
+
+    // Set canonical url
+    this.metaCanonical = `/station/${this.station.id}${this.station.direction === 'upstream' ? '' : '/downstream'}`
   }
 }
 

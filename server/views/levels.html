@@ -1,0 +1,118 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<!-- ** Prefix meta title with search term -->
+
+{% if model.referer %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full" id="browserBackContainer"></div>
+</div>
+{% endif %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            River and sea levels
+        </h1>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+        <div class="govuk-form-group defra-search">
+            <form method="post">
+                <label class="govuk-label govuk-!-padding-bottom-1" for="location">Search by location or river</label>
+                <input class="defra-input defra-input--search" id="location" name="location" type="text" value="{% if model.placeName %}{{ model.placeName }}{% else %}{{ model.q }}{% endif %}">
+            </form>
+        </div>
+    </div>
+    <div class="govuk-grid-column-two-thirds">
+        <div class="defra-search-summary" id="searchSummary">
+            <h2 class="defra-search-summary__count">{{ model.countLevels }} level{% if model.countLevels != 1 %}s{% endif %}</h2>
+        </div>
+        {% if model.countLevels %}
+        <ul class="defra-flood-list">
+            {% for name, group in model.levels %}
+            <li class="defra-flood-list__group">
+                <span class="defra-flood-list__group-title">
+                    {{ name }} <span class="govuk-visually-hidden">at:</span>
+                </span>
+                <dl class="defra-flood-list__items defra-flood-list__items--levels defra-flood-list__items--has-relation"><!-- Optional modifier 'defra-flood-list__items--has-relation' -->
+                    {% for station in group %}
+                    <div class="defra-flood-list__item{% if station.state %} defra-flood-list__item--{{ station.state }}{% endif %}">
+                        <dt class="defra-flood-list__item-title">
+                            <a href="/station/{{station.rloi_id}}{% if station.qualifier == 'd' %}/downstream{% endif %}">
+                                {{ station.external_name }}
+                                {% if station.qualifier == 'd' %}
+                                (downstream)
+                                {% endif %}
+                            </a>
+                        </dt>
+                        <dd class="defra-flood-list__item-desc">
+                            {{ station.valueHtml | safe }}
+                        </dd>
+                    </div>
+                    {% endfor %}
+                </dl>
+            </li>
+            {% endfor %}
+        </ul>
+        <!--
+        <nav>
+            <div class="govuk-body pagination__summary">Showing 101 - 150 of 2200 levels</div>
+            <ul class="pagination">
+                <li class="pagination__item">
+                    <a class="pagination__link" href="#0" aria-label="Previous page"><span aria-hidden="true" role="presentation">&laquo;</span> Previous</a>
+                </li>
+                <li class="pagination__item">
+                    <a class="pagination__link" href="#0" aria-label="Page 1">1</a>
+                </li>
+                <li class="pagination__item">
+                    <a class="pagination__link" href="#0" aria-label="Page 2">2</a>
+                </li>
+                <li class="pagination__item">
+                    <a class="pagination__link current" href="#0" aria-current="true" aria-label="Page 3, current page">3</a>
+                </li>
+                <li class="pagination__item">
+                    <a class="pagination__link" href="#0" aria-label="Page 4">4</a>
+                </li>
+                <li class="pagination__item">
+                    <a class="pagination__link" href="#0" aria-label="Next page">Next <span aria-hidden="true" role="presentation">&raquo;</span></a>
+                </li>
+            </ul>
+        </nav>
+        -->
+        {% else %}
+        <p class="govuk-body govuk-!-margin-top-4">
+            <strong>No river, sea or groundwater levels found.</strong>    
+        </p>
+        <p class="govuk-body">There are approximatley 2200 water level measuring stations in England. These are located mostly along main rivers and the coast.</p>
+        <p class="govuk-body">Improve your search results by:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>searching a broader location</li>
+            <li>double-checking your spelling</li>
+        </ul>
+        {% endif %}
+    </div>
+</div>
+
+<div class="defra-map" id="map-live"></div>
+
+{% endblock %}
+
+{% block bodyEnd %}
+{{ super() }}
+<script src="{{assetPath}}/javascripts/ol.js"></script>
+  <script src="{{assetPath}}/javascripts/components/maps.js"></script>
+  <script src="{{assetPath}}/javascripts/components/maps-styles.js"></script>
+  <script src="{{assetPath}}/javascripts/components/maps-layers.js"></script>
+  <script src="{{assetPath}}/javascripts/components/map-container.js"></script>
+  <script src="{{assetPath}}/javascripts/components/maps/live.js"></script>
+  <script src="{{assetPath}}/javascripts/templates.js"></script>
+  <script src="{{ assetPath }}/nunjucks-slim.min.js"></script>
+  <script>nunjucks.configure()</script>
+<script>
+  window.flood.model = {{ model | dump(2) | safe }}
+</script>
+<script src="{{assetPath}}/javascripts/pages/levels.js"></script>
+{% endblock %}

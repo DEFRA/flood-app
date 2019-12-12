@@ -3,8 +3,10 @@
 {% from "footer/macro.njk" import govukFooter %}
 
 {% set metaTitle = (pageTitle or model.pageTitle or 'Check flood risk') + ' - GOV.UK' %}
-{% set metaDescription = model.metadata.description | default('Check your risk of flooding: get current flood warnings, river and sea levels, check the 5-day forecast or use flood risk maps') %}
-{% set metaKeywords = model.metadata.keywords | default('floods,gov.uk,england') %}
+{% set metaDescription = model.metaDescription | default('Check your risk of flooding: get current flood warnings, river and sea levels, check the 5-day forecast or use flood risk maps') %}
+{% set metaKeywords = model.metaKeywords | default('flooding, flood risk, flood map, flood warnings, flood alerts, river levels, advice, guiance, gov.uk, england') %}
+{% set metaCanonical = model.metaCanonical %}
+{% set metaNoIndex = model.metaNoIndex %}
 
 {% block pageTitle %}
   {{ metaTitle }}
@@ -20,6 +22,9 @@
   <meta property="keywords" content="{{metaKeywords}}" />
   <meta property="description" content="{{metaDescription}}" />
   <meta name="google-site-verification" content="HjuKUejT64a0rBdUxxtbnIKNB4_cZ3X3hlXOxk4_OX8" />
+  {% if metaNoIndex %}
+  <meta name="robots" content="noindex" />
+  {% endif %}
 
   <!--[if !IE 8]><!-->
   <link href="{{ assetPath }}/stylesheets/application.css" rel="stylesheet" />
@@ -30,9 +35,13 @@
   <!--[if IE 8]>
     <link href="{{ assetPath }}/govuk-frontend/all-ie8.css" rel="stylesheet" />
   <![endif]-->
-
+  {% if metaCanonical %}
+    <link rel="canonical" href="{{ metaCanonical }}"/>
+  {% endif %}
+  <!--
   <script src="//cdn.polyfill.io/v2/polyfill.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+  -->
   <!-- Hotjar Tracking Code for https://flood-private-beta.aws.defra.cloud/warnings -->
   <!-- <script>
     (function (h, o, t, j, a, r) {
@@ -57,7 +66,7 @@
     homepageUrl: "https://www.gov.uk/",
     containerClasses: "govuk-width-container",
     serviceName: serviceName,
-    serviceUrl: "/"
+    serviceUrl: "/start-page"
   }) }}
 
 {% endblock %}
@@ -66,9 +75,9 @@
 
     {{ govukPhaseBanner({
     tag: {
-      text: "Alpha"
+      text: "Beta"
     },
-    html: 'This is a prototype being used for research purposes only. You can <a class="govuk-link" href="https://flood-warning-information.service.gov.uk">view the live flood information service at any time</a>.'
+    html: 'This is a new service. You can <a class="govuk-link" href="https://flood-warning-information.service.gov.uk">view the live flood information service at any time</a>.'
   }) }}
   {#{{ govukBackLink({
     href: "javascript:window.history.go(-1)",
@@ -81,9 +90,6 @@
 {% endblock %}
 
 {% block bodyEnd %}
-
-{% include "partials/exit-survey-dialog.html" %}
-
   {# DEBUG 
   <details>
     <summary>DEBUG</summary>
@@ -93,6 +99,7 @@
 
   {# Google Analytics #}
   {% if gaAccId %}
+  <!--
     <script type="text/javascript">
       var analyticsAccount = '{{gaAccId}}'
 
@@ -104,14 +111,13 @@
       ga('create', analyticsAccount, 'auto')
       ga('send', 'pageview')
     </script>
+  -->
   {% endif %}
 
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script src="{{ assetPath }}/all.js"></script>
   <script src="{{ assetPath }}/javascripts/core.js"></script>
-  <!-- <script src="{{ assetPath }}/javascripts/components/a11y-dialog.js"></script> -->
   <script>window.GOVUKFrontend.initAll()</script>
-  <!-- <script src="{{ assetPath }}/javascripts/exit-survey.js"></script> -->
 {% endblock %}
 
 {% block footer %}
@@ -137,10 +143,6 @@
         {
           href: "https://www.gov.uk/contact",
           text: "Contact"
-        },
-        {
-          href: "/privacy-policy",
-          text: "Privacy policy"
         },
         {
           href: "/roadmap",

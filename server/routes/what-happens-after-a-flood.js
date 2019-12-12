@@ -1,4 +1,3 @@
-
 module.exports = {
   method: 'GET',
   path: '/what-happens-after-a-flood',

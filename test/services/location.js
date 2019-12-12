@@ -73,7 +73,8 @@ lab.experiment('location service test', () => {
                   countryRegionIso2: 'GB'
                 },
                 confidence: 'High',
-                entityType: 'CountryRegion',
+                entityType: '',
+                // entityType: 'CountryRegion',
                 geocodePoints: [
                   {
                     type: 'Point',
@@ -320,7 +321,8 @@ lab.experiment('location service test', () => {
                   locality: 'Warrington',
                   countryRegionIso2: 'GB'
                 },
-                confidence: 'Medium',
+                // confidence: 'Medium',
+                confidence: 'High',
                 entityType: 'PopulatedPlace',
                 geocodePoints: [
                   {

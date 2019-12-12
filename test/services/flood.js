@@ -55,7 +55,7 @@ lab.experiment('Flood service test', () => {
 
     await Code.expect(floodService.floods.floods[0].code).to.equal('013FWFD5')
     await Code.expect(floodService.floods.groups[0].title).to.equal('1 Severe flood warning')
-    await Code.expect(floodService.floods.geojson.features[0].id).to.equal('flood_warning_alert.174393')
+    // await Code.expect(floodService.floods.geojson.features[0].id).to.equal('flood_warning_alert.174393')
     await Code.expect(floodService.floods.timestamp).to.be.undefined()
   })
 

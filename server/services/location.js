@@ -4,11 +4,11 @@ const floodServices = require('./flood')
 
 async function find (location) {
   const query = encodeURIComponent(location)
-  const url = `https://dev.virtualearth.net/REST/v1/Locations?query=${query},UK&userRegion=GB&include=ciso2&c=en-GB&maxResults=1&userIP=127.0.0.1&key=${bingKey}`
+  // const url = `https://dev.virtualearth.net/REST/v1/Locations?query=${query},UK&userRegion=GB&include=ciso2&c=en-GB&maxResults=1&userIP=127.0.0.1&key=${bingKey}`
+  const url = `https://dev.virtualearth.net/REST/v1/Locations?query=${query},UK&userRegion=GB&include=ciso2&c=en-GB&maxResults=2&userIP=127.0.0.1&key=${bingKey}&includeEntityTypes=PopulatedPlace,AdminDivision2`
   // const url = `https://dev.virtualearth.net/REST/v1/Locations/UK/${query}?key=${bingKey}&maxResults=1&userIP=127.0.0.1`
 
   let data = await getJson(url, true)
-
   if (data === undefined) {
     throw new Error('Invalid data returned from third party location search')
   }
@@ -30,7 +30,7 @@ async function find (location) {
   // This is a check to see if "no results" found, because search is biased to GB if a search term can't be matched
   // the service tends to return the UK with a medium confidence, so this is a good indication that no results were found
   const noConfidence = (data.confidence.toLowerCase() === 'medium' || data.confidence.toLowerCase() === 'low')
-  if (data.entityType.toLowerCase() === 'countryregion' && noConfidence) {
+  if (noConfidence || data.entityType.toLowerCase() === 'countryregion') {
     return
   }
 
@@ -41,6 +41,11 @@ async function find (location) {
     point: { coordinates: center }
   } = data
 
+  // Replace name if only one item in result set and entityType is a populated place
+  if (data.entityType === 'PopulatedPlace') {
+    name = set.resources.length > 1 ? data.name : data.address.locality
+  }
+
   // Reverse as Bing returns as [y (lat), x (long)]
   bbox.reverse()
   center.reverse()
@@ -48,7 +53,7 @@ async function find (location) {
   // Strip the "U.K" part of the address
   name = name.replace(', United Kingdom', '')
 
-  // Dan Leech temporary addition to remove the duplicate city/town name
+  // Temporary addition to remove the duplicate city/town name
   if (name.split(',').length === 2) {
     var parts = name.toLowerCase().split(',')
     if (parts[0].trim() === parts[1].trim()) {
@@ -81,6 +86,7 @@ async function suggest (query) {
 
   // Ensure we have some results
   const set = data.resourceSets[0]
+
   if (set.estimatedTotal === 0) {
     return
   }

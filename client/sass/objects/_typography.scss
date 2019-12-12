@@ -3,7 +3,6 @@
     @include govuk-font($size: 16);
     @include govuk-responsive-margin(1, "top");
 }
-
 .govuk-caption--normal {
     color: $govuk-secondary-text-colour;
 }
@@ -11,4 +10,13 @@
     display: inline-block;
     vertical-align: middle;
     margin-right:2px;
+}
+.defra-flood-heading-l {
+    @extend .govuk-heading-l;
+    &--warning {
+        color: govuk-colour('red');
+    }
+    &--normal {
+        color: govuk-colour('green');
+    }
 }

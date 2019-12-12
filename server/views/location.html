@@ -1,131 +1,92 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <nav class="defra-search-link govuk-!-margin-bottom-7">
-      <p>
-        <a href="/"><span class="defra-search-link__icon"></span>Change location</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/national">National view</a>
-      </p>
-    </nav>
-  </div>
-</div>
-
-<!--<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-7">-->
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <nav class="govuk-!-margin-bottom-7">
+      <p>
+        <a href="/">Change location</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/national">National view</a>
+      </p>
+    </nav>
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
       Flood risk: {{ model.location }}
     </h1>
-    <p class="govuk-body-s govuk-!-margin-bottom-7">Updated: <time datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time></p>
+    <p class="defra-updated govuk-!-margin-bottom-7">
+      Updated at <time datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time>
+    </p>
+  </div>
+</div>
 
-    <!-- Flood alerts or warnings in force -->
-    {% if model.hasActiveFloods %}
-      <div class="defra-warning-text-flood defra-warning-text-flood--{{model.highestSeverity.hash}}">
-        <span class="defra-warning-text-flood__icon"></span>
-        <strong class="defra-warning-text-flood__text">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+   
+    <div class="defra-flood-status govuk-!-margin-bottom-1">
+      {% if model.hasActiveFloods %}
+      <div class="defra-flood-status-item defra-flood-status-item--{{model.highestSeverity.hash}}">
+        <span class="defra-flood-status-item__icon">
           <span class="govuk-visually-hidden">{{model.highestSeverity.title}}</span>
-          {{model.highestSeverity.subTitle}}<!-- - {{model.highestSeverity.tagline.toLowerCase()}} -->
-        </strong>
+        </span>
+        <div class="defra-flood-status-item__text">
+          <strong>
+              {% if model.highestSeverity.id == 1 %}
+              {{model.highestSeverity.subTitle}}
+              {% else %}
+              Some {{model.highestSeverity.subTitle | lower}}
+              {% endif %}
+          </strong>
+        </div>
       </div>
-      <p class="govuk-body-m">
-        {{ model.floodsPrimary | safe }}{{ model.floodsSecondary | safe }}
-        {% if not model.hasFloodsList %}
-        <span id="map-list-warnings"></span>
-        {% endif %}
-      </p>
-      
-      {% if model.hasFloodsList %}
-      <div id="map-list-warnings" class="defra-map-list govuk-!-margin-bottom-4">
-        <div id="warnings-detail" class="govuk-details__text govuk-details__text--defra-details-flood">
-          {% for group in model.groupedFloods %}
-            <h2 class="govuk-heading-s govuk-!-padding-top-0 govuk-!-margin-bottom-3">
-              {{group.severity.pluralisedTitle}}
-              <br/>
-              <span class="govuk-!-font-weight-regular">{{group.severity.subTitle}}</span>
-            </h2>
-            <ul class="defra-list-flood">
-              {% for flood in group.floods %}
-                <li class="defra-list-flood__item">
-                  <a href="/target-area/{{flood.code}}">{{flood.description}}</a>
-                  <!--
-                  <div class="defra-list-flood__meta">
-                    Updated: 00:00, 28 Jan 2019
-                  </div>         
-                  -->
-                </li>
-              {% endfor %}
-            </ul>
-          {% endfor %}
+      {% else %}
+      <div class="defra-flood-status-item">
+        <div class="defra-flood-status-item__text">
+          No flood warnings or alerts currently in place in this area. 
+          {% if model.hasHighLevels %}
+          However some <a href="/river-and-sea-levels?q={{ model.q }}">river and sea levels</a> are currently high.
+          {% endif %}
         </div>
       </div>
       {% endif %}
-    {% else %}
-    <p class="govuk-body-m">There are currently no flood warnings or alerts in force in this area.</p>
+    </div>
+    
+    {% if model.hasFloods %}
+    <p class="govuk-body">
+      {{ model.floodSummary | safe }}
+    </p>
     {% endif %}
 
-    {% if ( model.activeImpacts | length > 0 ) %}
-    <p class="govuk-body">Historic records show {{ model.activeImpacts.length }} flood impact(s) in this area when river levels reached their present height.</p>
-    <div id="map-list-impacts" class="defra-map-list govuk-!-margin-bottom-4">
-      <div id="impact-detail" class="govuk-details__text govuk-details__text--defra-details-flood">
-        <ul class="defra-list-flood">
-          {% for impact in model.activeImpacts %}
-          <li class="defra-list-flood__item">
-            {{ impact.description }}
-            <div class="defra-list-flood__meta">
-              Source: <a href="/station/{{ impact.rloiid }}?i={{ impact.impactid }}">{{ impact.gauge }}</a>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
+    {% if model.hasActiveImpacts %}
+    <p class="govuk-body">
+      Historic records show <a href="/historic-impacts?q={{ model.q }}">{{ model.activeImpacts.length }} flood impact{% if model.activeImpacts.length > 1 %}s{% endif %}</a> in this area at current river levels.
+    </p>
     {% endif %}
 
-    <p class="govuk-body">If you live near a river or the coast you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
-
-    {% if model.rivers %}
-    <h2 class="govuk-heading-m">River and sea levels</h2>
-    <p class="govuk-body">River and sea levels are regularly checked by a network of monitoring stations. These levels can help you understand flood risk now and in the next few days.</p>
-    <div id="map-list-stations" class="defra-map-list govuk-!-margin-bottom-4">
-      <div id="level-detail" class="govuk-details__text govuk-details__text--defra-details-flood">
-        {% for name, river in model.rivers %}
-        <h2 class="govuk-heading-s govuk-!-margin-bottom-3">{{name}} at:</h2>
-        <ul class="defra-list-flood">
-          {% for station in river %}
-          <li class="defra-list-flood__item">
-            {% if station.value_timestamp === "Invalid date" %}
-            {{station.external_name}}
-            {% else %}
-            <a href="/station/{{station.rloi_id}}">{{station.external_name}}</a>
-            <div class="defra-list-flood__meta">
-              Level: {{station.value}}, Updated: {{station.value_timestamp}}
-            </div>
-            {% endif %}
-          </li>
-          {% endfor %}
-        </ul>
-        {% endfor %}
-      </div>
-    </div>
+    {% if model.hasLevels and not(not model.hasActiveFloods and model.hasHighLevels) %}
+    <p class="govuk-body">
+      {% if not model.hasFloods and not model.hasHighLevels %}
+      River and sea levels are regularly checked by a network of monitoring stations. These levels can help you understand flood risk now and in the next few days.
+      {% endif %}
+      <a href="/river-and-sea-levels?q={{ model.q }}">View river and sea levels in this area</a>.
+    </p>
     {% endif %}
 
     <h2 class="govuk-heading-m">Report a flood</h2>
     <p class="govuk-body">Flooding can also be caused by surface water, burst water mains or overflowing drains. You can <a href="https://www.gov.uk/report-flood-cause">report a flood or possible cause of flooding</a>.</p>
 
     <h2 class="govuk-heading-m">Other ways to check your current flood risk</h2>
-    <p class="govuk-body"><a href="https://www.gov.uk/find-local-council">Contact your local council</a> if you are not sure of the source of flooding.</p>
-    <p class="govuk-body">For river and sea flooding, call the 24-hour Floodline service.</p>
-    <p class="govuk-body">
+    <p>If you live near a river or the coast you may be able to <a href="https://www.gov.uk/sign-up-for-flood-warnings">get flood warnings by phone, text or email</a>. This service is free.</p>
+    <p>For river and sea flooding, call the 24-hour Floodline service.</p>
+    <p>
       Telephone: 0345 988 1188<br />
       Type talk: 0345 602 6340 (for the hard of hearing)<br />
-      <a class="govuk-link" href="https://gov.uk/call-charges">Find out more about call charges</a>.
-    </p>
+      <a href="https://gov.uk/call-charges">Find out more about call charges</a>.
+    </p>  
+    <p><a href="https://www.gov.uk/find-local-council">Contact your local council</a> if you are not sure of the source of flooding.</p>
+    
   </div>
   <div class="govuk-grid-column-one-third">
     <!-- The Related items component is not part of GOV.UK Frontend but will be styled if used in the Prototype Kit -->
-    <aside class="app-related-items" role="complementary" style="border-width:2px">
+    <aside class="defra-related-items" role="complementary">
       <h2 class="govuk-heading-s" id="subsection-title">
         Related content
       </h2>
@@ -157,16 +118,6 @@
   </div>
 </div>
 
-<div class="app-map">
-  <div class="app-map__container">
-    <div class="map" id="map-live">
-      <div class="map__container">
-        <div class="map__container-inner"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
 {% endblock %}
 
 {% block bodyEnd %}
@@ -183,6 +134,5 @@
   <script>
     window.flood.model = {{ model | dump(2) | safe }}
   </script>
-  <script src="{{assetPath}}/javascripts/components/map-list.js"></script>
   <script src="{{assetPath}}/javascripts/pages/location.js"></script>
 {% endblock %}

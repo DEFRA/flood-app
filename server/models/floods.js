@@ -4,7 +4,7 @@ const { groupBy } = require('../util')
 class Floods {
   constructor (data) {
     this._floods = data
-    const grouped = groupBy(this._floods.floods, 'severity')
+    const grouped = groupBy(data.floods, 'severity')
     this._groups = severity.map(item => {
       const group = grouped[item.id]
       const count = group ? group.length : 0
@@ -16,6 +16,8 @@ class Floods {
         description: item.subTitle
       }
     })
+    // Temporaily removed as service method getFloodsWithin(bbox) doesn't return any geometry
+    /*
     this._geojson = {
       type: 'FeatureCollection',
       totalFeatures: this._floods.floods.length,
@@ -35,6 +37,8 @@ class Floods {
         }
       }
     })
+    */
+    this._count = data.floods.length
   }
 
   get floods () {

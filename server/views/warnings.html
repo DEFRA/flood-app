@@ -1,0 +1,100 @@
+{% extends 'layout.html' %}
+
+{% from "error-summary/macro.njk" import govukErrorSummary %}
+{% from "input/macro.njk" import govukInput %}
+
+{% block content %}
+
+{% if model.referer %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full" id="browserBackContainer"></div>
+</div>
+{% endif %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            Flood alerts and warnings
+        </h1>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+        <div class="govuk-form-group defra-search">
+            <form method="post">
+                <label class="govuk-label govuk-!-padding-bottom-1" for="location">Filter by postcode or town</label>
+                <input class="defra-input defra-input--search" id="location" name="location" type="text" value="{% if model.placeName %}{{ model.placeName }}{% else %}{{ model.q }}{% endif %}">
+            </form>
+        </div>
+    </div>
+    <div class="govuk-grid-column-two-thirds">
+        <div class="defra-search-summary" id="searchSummary">
+            <h2 class="defra-search-summary__count">{{ model.countFloods }} target area{% if model.countFloods != 1 %}s{% endif %}</h2>
+        </div>
+        {% if model.countFloods %}
+        <ul class="defra-flood-list">
+            {% for group in model.floods %}
+            {% if group.floods %}
+            <li id="{{ group.severity.pluralisedHash }}" class="defra-flood-list__group">
+                <span class="defra-flood-list__group-title">
+                    {{ group.floods.length }} {% if group.floods.length != 1 %}{{ group.severity.pluralisedTitle | lower }}{% else %}{{ group.severity.title | lower }}{% endif %}
+                    <span>{{ group.severity.subTitle }}</span>
+                </span>
+                <ul class="defra-flood-list__items defra-flood-list__items--warnings">
+                    {% for item in group.floods %}
+                    <li class="defra-flood-list__item defra-flood-list__item--{{ group.severity.hash }}">
+                        <span class="defra-flood-list__item-title">
+                            <a href="/target-area/{{ item.code }}">{{ item.description }}</a>
+                        </span>
+                        <dl class="defra-flood-list__item-meta">
+                            <div>
+                                <dt>
+                                    {% if item.severity == 4 %}Removed{% else %}Updated{% endif %}
+                                </dt>
+                                <dd>
+                                    <time datetime="{{ item.messagechanged }}">{{ item.messagechanged | formatDate }}</time>
+                                </dd>
+                            </div>
+                        </dl>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>   
+        {% else %}
+        <p class="govuk-body govuk-!-margin-top-4">
+            <strong>No flood alerts or warnings{% if model.placeName or model.q %} near this location{% endif %}.</strong>
+        </p>
+        <p class="govuk-body">Improve your search results by:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>removing the filter</li>
+            <li>searching a broader location</li>
+            <li>double-checking your spelling</li>
+        </ul>
+        {% endif %}
+    </div>
+</div>
+
+<div class="defra-map" id="map-live"></div>
+
+{% endblock %}
+
+{% block bodyEnd %}
+{{ super() }}
+<script src="{{assetPath}}/javascripts/ol.js"></script>
+  <script src="{{assetPath}}/javascripts/components/maps.js"></script>
+  <script src="{{assetPath}}/javascripts/components/maps-styles.js"></script>
+  <script src="{{assetPath}}/javascripts/components/maps-layers.js"></script>
+  <script src="{{assetPath}}/javascripts/components/map-container.js"></script>
+  <script src="{{assetPath}}/javascripts/components/maps/live.js"></script>
+  <script src="{{assetPath}}/javascripts/templates.js"></script>
+  <script src="{{ assetPath }}/nunjucks-slim.min.js"></script>
+  <script>nunjucks.configure()</script>
+<script>
+  window.flood.model = {{ model | dump(2) | safe }}
+</script>
+<script src="{{assetPath}}/javascripts/pages/warnings.js"></script>
+{% endblock %}

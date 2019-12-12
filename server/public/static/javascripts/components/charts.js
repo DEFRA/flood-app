@@ -7,18 +7,13 @@
     // Settings
     var windowBreakPoint = 640
     var svgBreakPoint = 576
-    var xCutOff = 9
+    var xAxisType = 'daily'
 
     //
     // Progressive enhancement
     //
 
     var chart = document.getElementById(containerId)
-    // If javascript is enabled make content visible to all but assitive technology
-    // var figure = chart.parentNode
-    chart.setAttribute('aria-hidden', true)
-    chart.removeAttribute('hidden')
-    chart.removeAttribute('style')
 
     // Setup array to combine observed and forecast points
     // and identify startPoint for locator
@@ -78,13 +73,12 @@
     }
 
     // Add timeline
-    if (data.now) {
-      var nowContainer = chartWrapper.append('g').classed('time', true)
-      nowContainer.append('line').classed('time-line', true)
-      nowContainer.append('rect').attr('class', 'time-now-bg').attr('x', -22).attr('y', 20).attr('height', 25).attr('width', 44)
-      nowContainer.append('text').attr('class', 'time-now-text').attr('x', -16).attr('y', 37).text('Now')
-      var now = svg.select('.time')
-    }
+    var nowContainer = chartWrapper.append('g').classed('time', true)
+    var dateNow = new Date()
+    var time = (dateNow.getHours() % 12 || 12) + ':' + (dateNow.getMinutes() < 10 ? '0' : '') + dateNow.getMinutes() + (dateNow.getHours() >= 12 ? 'pm' : 'am')
+    nowContainer.append('line').classed('time-line', true)
+    nowContainer.append('text').attr('class', 'time-now-text').attr('x', -30).text(time)
+    var now = svg.select('.time')
 
     // Add locator
     var locator = chartWrapper.append('g').classed('locator', true)
@@ -96,8 +90,8 @@
 
     // Add tooltip container
     var toolTip = chartWrapper.append('g').attr('class', 'tool-tip')
-    toolTip.append('rect').attr('class', 'tool-tip-bg')
-    toolTip.append('text').attr('class', 'tool-tip-text')
+    toolTip.append('rect').attr('class', 'tool-tip-bg').attr('width', 147)
+    toolTip.append('text').attr('class', 'tool-tip-text').attr('x', 12).attr('y', 20)
 
     // Set level and date formats
     var parseTime = d3.timeFormat('%-I:%M%p')
@@ -131,7 +125,7 @@
       chartWrapper.attr('transform', 'translate(' + (margin.left + margin.right) + ',' + 0 + ')')
 
       // Update the axis and line
-      xAxis.scale(x)
+      xAxis.scale(x).ticks(xAxisType === 'daily' ? d3.timeDay : d3.timeMonth, 1)
       yAxis.scale(y)
       svg.select('.x.axis').attr('transform', 'translate(0,' + height + ')').call(xAxis)
       svg.selectAll('.x.axis text').attr('y', 12)
@@ -141,7 +135,7 @@
       svg.select('.x.grid')
         .attr('transform', 'translate(0,' + height + ')')
         .call(d3.axisBottom(x)
-          .ticks(d3.timeDay, 1)
+          .ticks(xAxisType === 'daily' ? d3.timeDay : d3.timeMonth, 1)
           .tickSize(-height, 0, 0)
           .tickFormat('')
         )
@@ -167,20 +161,24 @@
         var text = label.append('text').attr('class', 'threshold-label__text').html(threshold.name)
         var remove = label.append('g').attr('class', 'threshold__remove')
         remove.append('rect').attr('x', -6).attr('y', -6).attr('width', 20).attr('height', 20)
+        remove.append('line').attr('x1', -0.5).attr('y1', -0.5).attr('x2', 7.5).attr('y2', 7.5)
+        remove.append('line').attr('x1', 7.5).attr('y1', -0.5).attr('x2', -0.5).attr('y2', 7.5)
+        /*
         remove.append('line').attr('x1', 0).attr('y1', 0).attr('x2', 8).attr('y2', 8)
         remove.append('line').attr('x1', 8).attr('y1', 0).attr('x2', 0).attr('y2', 8)
+        */
         // Set individual elements size and position
         var textWidth = text.node().getBBox().width
         // var textHeight = text.node().getBBox().height
         // labelBg.attr('width', textWidth + 24 + 18 ).attr('height', textHeight + 18)
         // labelBgHeight = labelBg.node().getBBox().height
-        labelBgPath.attr('d', 'm0,0 l' + (textWidth + 40) + ',0 l0,36 l-' + ((textWidth + 40) - 50) + ',0 l-8,8 l-8,-8 l-34,0 l0,-36 l0,0')
-        text.attr('x', 12).attr('y', 10)
-        remove.attr('transform', 'translate(' + (textWidth + 20) + ',' + 14 + ')')
-        var labelX = x(xExtent[1]) / 8
+        labelBgPath.attr('d', 'm-0.5,-0.5 l' + Math.round(textWidth + 40) + ',0 l0,36 l-' + (Math.round(textWidth + 40) - 50) + ',0 l-7.5,7.5 l-7.5,-7.5 l-35,0 l0,-36 l0,0')
+        text.attr('x', 10).attr('y', 9.5)
+        remove.attr('transform', 'translate(' + Math.round(textWidth + 20) + ',' + 14 + ')')
+        var labelX = Math.round(x(xExtent[1]) / 8)
         // var labelY = -(labelBg.node().getBBox().height / 2)
         label.attr('transform', 'translate(' + labelX + ',' + -46 + ')')
-        thresholdContainer.attr('transform', 'translate(0,' + y(threshold.level) + ')')
+        thresholdContainer.attr('transform', 'translate(0,' + Math.round(y(threshold.level)) + ')')
         bg.attr('width', x(xExtent[1]))
         line.attr('x2', x(xExtent[1])).attr('y2', 0)
         // Remove button
@@ -225,17 +223,18 @@
       })
 
       // Update time line
-      if (data.now) {
-        timeX = Math.floor(x(new Date(data.now)))
-        svg.select('.time-line').attr('y1', 0).attr('y2', height)
-        now.attr('y1', 0).attr('y2', height).attr('transform', 'translate(' + timeX + ',0)')
-        // Add 'today' class to x axis tick
-        svg.selectAll('.x .tick')
-          .filter(function (d) {
-            return new Date(d).getDay() === new Date(data.now).getDay() && new Date(d).getUTCHours() === 12
-          })
-          .attr('class', 'tick tick-today')
-      }
+      timeX = Math.floor(x(new Date(data.now)))
+      svg.select('.time-line').attr('y1', 0).attr('y2', height)
+      now.attr('y1', 0).attr('y2', height).attr('transform', 'translate(' + timeX + ',0)')
+      now.select('.time-now-text').attr('y', height + 11)
+      // Add 'today' class to x axis tick
+      /*
+      svg.selectAll('.x .tick')
+        .filter(function (d) {
+          return new Date(d).getDay() === new Date(data.now).getDay() && new Date(d).getUTCHours() === 12
+        })
+        .attr('class', 'tick tick-today')
+      */
 
       // Add height to locator line
       svg.select('.locator-line').attr('y1', 0).attr('y2', height)
@@ -260,9 +259,10 @@
       xExtent = d3.extent(lines, function (d, i) { return new Date(d.ts) })
       yExtent = d3.extent(lines, function (d, i) { return d._ })
 
-      // Increase X range to minimum of 6 hours beyond now value
+      // Increase X range by 5% from now value
       var date = new Date(data.now)
-      date.setHours(date.getHours() + 8)
+      var percentile = Math.round(Math.abs(xExtent[0] - date) * 0.05)
+      date = new Date(Number(data.now) + Number(percentile))
       var xRange = [xExtent[0], xExtent[1]]
       xRange.push(date)
       xExtent[0] = Math.min.apply(Math, xRange)
@@ -285,9 +285,6 @@
         yExtent[1] = yExtent[1] <= maxThresholdBuffered ? maxThresholdBuffered : yExtent[1]
       }
 
-      // Round Y Axis upper to an even number
-      // yExtent[1] = (2 * Math.round((yExtent[1]*10)/2))/10
-
       // Setup scales
       x = d3.scaleTime().domain(xExtent)
       y = d3.scaleLinear().domain(yExtent)
@@ -307,35 +304,68 @@
       margin.left = 28
       margin.right = 28
 
-      var xCutOffLeft = d3.timeHour.offset(xExtent[0], +xCutOff).getTime()
-      var xCutOffRight = d3.timeHour.offset(xExtent[1], -xCutOff).getTime()
+      var xCutOffLeft, xCutOffRight
 
       // Get dimensions based on parent size
       parentWidth = Math.floor(d3.select('#' + containerId).node().getBoundingClientRect().width)
       parentHeight = Math.floor(d3.select('#' + containerId).node().getBoundingClientRect().height)
 
-      // Mobile first
-      xAxis.ticks(d3.timeHour, 12).tickFormat(function (d) {
-        if (d.getHours() === 12 & d >= xCutOffLeft & d <= xCutOffRight) {
-          var formatter = d3.timeFormat('%-e/%-m')
-          return formatter(d)
-        } else {
-          return null
-        }
-      })
+      // Number of days in x range
+      var daysInRange = Math.round(Math.abs(xExtent[1] - xExtent[0]) / 1000 / 60 / 60 / 24)
 
-      // Greater than window or svg breakpoint
+      // X Axis labels
       if (window.innerWidth > windowBreakPoint && parentWidth > svgBreakPoint) {
-        xAxis.ticks(d3.timeHour, 12).tickFormat(function (d) {
-          if (d.getHours() === 12 & d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
-            var formatter = d3.timeFormat('%a, %e %b')
-            return formatter(d)
-          } else {
-            return null
-          }
-        })
+        // Tablet
+        xCutOffLeft = x.invert(20)
+        xCutOffRight = x.invert(timeX - 75) // After which labels need to be hidden
+        if (daysInRange < 7) {
+          // Tablet daily
+          xAxis.ticks(d3.timeHour, 12).tickFormat(function (d) {
+            if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
+              var formatter = d3.timeFormat('%a, %e %b')
+              return formatter(d)
+            } else {
+              return null
+            }
+          })
+        } else {
+          // Tablet monthly
+          xAxis.ticks(d3.timeMonth, 1).tickFormat(function (d) {
+            if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
+              var formatter = d3.timeFormat('%e %b')
+              return formatter(d)
+            } else {
+              return null
+            }
+          })
+        }
         margin.left = 34
         margin.right = 34
+      } else {
+        // Mobile
+        xCutOffLeft = x.invert(10)
+        xCutOffRight = x.invert(timeX - 50) // After which labels need to be hidden
+        if (daysInRange < 7) {
+          // Mobile daily
+          xAxis.ticks(d3.timeHour, 12).tickFormat(function (d) {
+            if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
+              var formatter = d3.timeFormat('%-e/%-m')
+              return formatter(d)
+            } else {
+              return null
+            }
+          })
+        } else {
+          // Mobile monthly
+          xAxis.ticks(d3.timeMonth, 1).tickFormat(function (d) {
+            if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
+              var formatter = d3.timeFormat('%-e/%-m')
+              return formatter(d)
+            } else {
+              return null
+            }
+          })
+        }
       }
       width = parentWidth - margin.left - margin.right
       height = parentHeight - margin.top - margin.bottom
@@ -354,10 +384,9 @@
       // Set Background size
       var bg = toolTip.select('rect')
       var text = toolTip.select('text')
-      var textWidth = text.node().getBBox().width
-      var textHeight = text.node().getBBox().height
-      text.attr('x', 12).attr('y', 12)
-      bg.attr('width', textWidth + 24).attr('height', textHeight + 18)
+      // var textWidth = text.node().getBBox().width
+      var textHeight = Math.round(text.node().getBBox().height)
+      bg.attr('height', textHeight + 18)
       var toolTipWidth = bg.node().getBBox().width
       var toolTipHeight = bg.node().getBBox().height
       // Set background left or right position
@@ -405,8 +434,8 @@
         toolTipX = x(new Date(dataPoint.ts))
         toolTipY = (d3.mouse(this)[1])
         toolTip.select('text').html(
-          '<tspan class="tool-tip-text__strong">' + Number(dataPoint._).toFixed(2) + 'm</tspan>' +
-          '<tspan x="12" dy="1.4em">' + parseTime(new Date(dataPoint.ts)).toLowerCase() + ', ' + parseDateShort(new Date(dataPoint.ts)) + '</tspan>')
+          '<tspan class="tool-tip-text__strong" dominant-baseline="middle">' + Number(dataPoint._).toFixed(2) + 'm</tspan>' +
+          '<tspan x="12" dy="1.4em" dominant-baseline="middle">' + parseTime(new Date(dataPoint.ts)).toLowerCase() + ', ' + parseDateShort(new Date(dataPoint.ts)) + '</tspan>')
         // Set locator position
         dataPointLocator = dataPoint
       }
