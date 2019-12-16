@@ -26,13 +26,6 @@ async function createServer () {
   await server.register(require('blipp'))
   await server.register(require('./plugins/logging'))
 
-  if (config.errbit.postErrors) {
-    await server.register({
-      plugin: require('node-hapi-airbrake'),
-      options: config.errbit.options
-    })
-  }
-
   return server
 }
 
