@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl" style="color: red;">TODO: copy/design</h1>
+        <h1 class="govuk-heading-xl">Location search services have failed</h1>
+        <p>Please <a href="/">try again</a> or</p>
+        <p>You can check the <a href="/national.html">latest flood risk situation in England</a></p>
+        
+        {% include "partials/other-flood-risk-check.html" %}
+
+      </div>
+    </div>
+</div>
+{% endblock %}

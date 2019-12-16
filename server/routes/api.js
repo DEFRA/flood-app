@@ -1,5 +1,4 @@
 const config = require('../config')
-const joi = require('@hapi/joi')
 const HttpsProxyAgent = require('https-proxy-agent')
 const wreck = require('@hapi/wreck').defaults({
   timeout: config.restClientTimeoutMillis
@@ -16,28 +15,12 @@ if (config.httpsProxy) {
 const moment = require('moment')
 const momentDate = moment()
 
-const locationService = require('../services/location')
-
 const floodService = require('../services/flood')
 
 const uri = config.geoserverUrl + '/geoserver/flood/ows'
 const rainfallApiUri = config.rainfallApiUrl
 
 module.exports = [{
-  method: 'GET',
-  path: '/suggest',
-  handler: (request, h) => {
-    return locationService.suggest(request.query.q)
-  },
-  options: {
-    description: 'Autosuggest / autocomplete',
-    validate: {
-      query: joi.object({
-        q: joi.string().required()
-      })
-    }
-  }
-}, {
   method: 'GET',
   path: '/ows',
   handler: {

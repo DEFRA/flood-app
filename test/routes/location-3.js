@@ -113,10 +113,10 @@ lab.experiment('Routes test - location - 3', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=xxxxxx'
+      url: '/location?q=Warrington'
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.statusCode).to.equal(200)
   })
 })

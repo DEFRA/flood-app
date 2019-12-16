@@ -24,7 +24,7 @@ module.exports = {
           // In the event of 404
           // return the `404` view
           if (statusCode === 404) {
-            return h.view('404').code(statusCode)
+            return h.view('404').code(404)
           }
 
           request.log('error', {
@@ -33,11 +33,9 @@ module.exports = {
             message: response.message
           })
 
-          // In the event of 400
-          // return the invalid location error
+          // Normally a joi request query param validation error
           if (statusCode === 400) {
-            // request.yar.set('displayError', { errorMessage: 'Bad request' })
-            return h.view('404').code(statusCode)
+            return h.view('404').code(404)
           }
 
           // The return the `500` view

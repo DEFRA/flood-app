@@ -8,14 +8,18 @@ module.exports = {
   path: '/location',
   handler: async (request, h) => {
     const { q: location } = request.query
-    const place = await locationService.find(location)
-    if (typeof place === 'undefined' || place === '') {
+    let place
+    try {
+      place = await locationService.find(location)
+    } catch (err) {
+      console.error(err)
+      return h.redirect('/location-error')
+    }
+    if (!place) {
       request.yar.set('displayError', { errorMessage: 'Enter a valid location' })
-      // return h.view('404').code(404)
       return h.redirect('/')
     }
     if (!place.isEngland.is_england) {
-      // return h.view('location-not-england')
       return h.redirect('location-not-england')
     }
     const impacts = await floodService.getImpactsWithin(place.bbox)

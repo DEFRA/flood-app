@@ -6,7 +6,7 @@ const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 
-lab.experiment('Routes test - location - 2', () => {
+lab.experiment('Routes test - location - 3', () => {
   let sandbox
   let server
 
@@ -14,14 +14,13 @@ lab.experiment('Routes test - location - 2', () => {
   lab.beforeEach(async () => {
     delete require.cache[require.resolve('../../server/util.js')]
     delete require.cache[require.resolve('../../server/services/location.js')]
+    delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/routes/location.js')]
-
     sandbox = await sinon.createSandbox()
     server = Hapi.server({
       port: 3000,
       host: 'localhost'
     })
-    console.log('hapi server started: ')
   })
 
   lab.afterEach(async () => {
@@ -29,23 +28,9 @@ lab.experiment('Routes test - location - 2', () => {
     await sandbox.restore()
   })
 
-  lab.test('GET /location with query parameters giving undefined location', async () => {
-    // Tests invalid/unknown location
+  lab.test('GET /location with no query', async () => {
     const fakeGetJson = () => {
-      return {
-        authenticationResultCode: 'ValidCredentials',
-        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
-        copyright: 'Copyright',
-        resourceSets: [
-          {
-            estimatedTotal: 0,
-            resources: []
-          }
-        ],
-        statusCode: 200,
-        tatusDescription: 'OK',
-        traceId: 'trace-id'
-      }
+      throw new Error('test error')
     }
 
     const util = require('../../server/util')
@@ -60,17 +45,18 @@ lab.experiment('Routes test - location - 2', () => {
       }
     }
 
+    await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
 
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=xxxxxx'
+      url: '/location'
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers.location).to.equal('/')
+
+    Code.expect(response.statusCode).to.equal(400)
   })
 })

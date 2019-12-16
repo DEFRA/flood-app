@@ -1,6 +1,8 @@
 const routes = [].concat(
   require('../routes/home'),
   require('../routes/location'),
+  require('../routes/location-not-england'),
+  require('../routes/location-error'),
   require('../routes/national'),
   require('../routes/target-area'),
   require('../routes/station'),
@@ -12,7 +14,6 @@ const routes = [].concat(
   require('../routes/api/warnings.geojson'),
   require('../routes/start-page'),
   require('../routes/sms-auto-opt-in-info'),
-  require('../routes/location-not-england'),
   require('../routes/what-to-do-in-a-flood'),
   require('../routes/plan-ahead-for-flooding'),
   require('../routes/what-happens-after-a-flood'),
