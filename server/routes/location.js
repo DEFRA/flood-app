@@ -25,9 +25,15 @@ module.exports = {
       request.yar.set('displayError', displayErrors['location-not-england'])
       return h.redirect('/')
     }
-    const impacts = await floodService.getImpactsWithin(place.bbox)
-    const { floods } = await floodService.getFloodsWithin(place.bbox)
-    const stations = await floodService.getStationsWithin(place.bbox)
+    const [
+      impacts,
+      { floods },
+      stations
+    ] = await Promise.all([
+      floodService.getImpactsWithin(place.bbox),
+      floodService.getFloodsWithin(place.bbox),
+      floodService.getStationsWithin(place.bbox)
+    ])
     const model = new ViewModel({ location, place, floods, stations, impacts })
     return h.view('location', { model })
   },
