@@ -57,7 +57,7 @@ lab.experiment('Routes test - location - 3', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.headers.location).to.equal('/location-error')
+    Code.expect(response.headers.location).to.equal('/')
     Code.expect(response.statusCode).to.equal(302)
   })
 })

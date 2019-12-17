@@ -2,6 +2,7 @@ const joi = require('@hapi/joi')
 const ViewModel = require('../models/views/location')
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
+const displayErrors = require('../models/display-error')
 
 module.exports = {
   method: 'GET',
@@ -13,14 +14,16 @@ module.exports = {
       place = await locationService.find(location)
     } catch (err) {
       console.error(err)
-      return h.redirect('/location-error')
+      request.yar.set('displayError', displayErrors['location-services-error'])
+      return h.redirect('/')
     }
     if (!place) {
-      request.yar.set('displayError', { errorMessage: 'Enter a valid location' })
+      request.yar.set('displayError', displayErrors['invalid-location'])
       return h.redirect('/')
     }
     if (!place.isEngland.is_england) {
-      return h.redirect('location-not-england')
+      request.yar.set('displayError', displayErrors['location-not-england'])
+      return h.redirect('/')
     }
     const impacts = await floodService.getImpactsWithin(place.bbox)
     const { floods } = await floodService.getFloodsWithin(place.bbox)

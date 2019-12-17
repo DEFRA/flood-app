@@ -1,8 +1,6 @@
 const routes = [].concat(
   require('../routes/home'),
   require('../routes/location'),
-  require('../routes/location-not-england'),
-  require('../routes/location-error'),
   require('../routes/national'),
   require('../routes/target-area'),
   require('../routes/station'),

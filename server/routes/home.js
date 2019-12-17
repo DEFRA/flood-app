@@ -6,12 +6,20 @@ module.exports = [{
   method: 'GET',
   path: '/',
   handler: async (request, h) => {
-    if (typeof request.yar === 'undefined' || typeof request.yar.get('displayError') === 'undefined') {
+    if (typeof request.yar === 'undefined' ||
+    request.yar.get('displayError') === 'undefined' ||
+    request.yar.get('displayError') === {}) {
       return h.view('home')
     } else {
-      const errMess = request.yar.get('displayError')
-      request.yar.set('displayError', {})
-      return h.view('home', errMess)
+      if (request.yar.get('displayError').view) {
+        const view = request.yar.get('displayError').view
+        request.yar.set('displayError', {})
+        return h.view(view)
+      } else {
+        const err = request.yar.get('displayError')
+        request.yar.set('displayError', {})
+        return h.view('home', err)
+      }
     }
   }
 }, {
