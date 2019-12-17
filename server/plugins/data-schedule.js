@@ -10,32 +10,35 @@ module.exports = {
         floodService.floods = await floodService.getFloods()
         console.log('Floods cached')
       }
-      // first seed the data on startup
-      await getFloods()
-      schedule.scheduleJob('* * * * *', async () => {
-        await getFloods()
-      })
-
       // get stations geojson data for map
       const getStationsGeojson = async () => {
         floodService.stationsGeojson = await floodService.getStationsGeoJson()
         console.log('Stations geojson cached')
       }
-      getStationsGeojson()
-      schedule.scheduleJob('1,16,31,46 * * * *', async () => {
-        await getStationsGeojson()
-      })
-
-      // Schedule outlook (5df) data
+      // get outlook (5df) data
       const getOutlook = async () => {
         floodService.outlook = await floodService.getOutlook()
         console.log('Outlook cached')
       }
-      // awaiting getOutlook delays the application startup
-      await getOutlook()
+
+      schedule.scheduleJob('* * * * *', async () => {
+        await getFloods()
+      })
+
+      schedule.scheduleJob('1,16,31,46 * * * *', async () => {
+        await getStationsGeojson()
+      })
+
       schedule.scheduleJob('1,16,31,46 * * * *', async () => {
         await getOutlook()
       })
+      console.log('Caching data please wait...')
+      await Promise.all([
+        getFloods(),
+        getOutlook(),
+        getStationsGeojson()
+      ])
+      console.log('Data cache complete.')
     }
   }
 }
