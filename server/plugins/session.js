@@ -4,11 +4,10 @@ module.exports = {
   plugin: require('@hapi/yar'),
   options: {
     cookieOptions: {
-      password: Array(32).fill(0).map(x => Math.random().toString(36).charAt(2)).join(''),
+      password: config.sessionPassword,
       isSecure: config.siteUrl.substring(0, 5) === 'https',
-      isHttpOnly: true,
-      isSameSite: 'Strict'
+      isHttpOnly: false
     },
-    maxCookieSize: 0
+    maxCookieSize: 1024
   }
 }

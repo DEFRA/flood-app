@@ -18,7 +18,8 @@ const schema = joi.object({
   httpTimeoutMs: joi.number().default(10000),
   gaAccId: joi.string().default(''),
   fbAppId: joi.string().default(''),
-  siteUrl: joi.string().default(`http://localhost:${defaultPort}`)
+  siteUrl: joi.string().default(`http://localhost:${defaultPort}`),
+  sessionPassword: joi.string()
 })
 
 // Build config
@@ -34,7 +35,8 @@ const config = {
   httpTimeoutMs: process.env.FLOOD_APP_HTTP_TIMEOUT,
   gaAccId: process.env.FLOOD_APP_GA_ID,
   fbAppId: process.env.FLOOD_APP_FBAPP_ID,
-  siteUrl: process.env.FLOOD_APP_SITE_URL
+  siteUrl: process.env.FLOOD_APP_SITE_URL,
+  sessionPassword: process.env.FLOOD_APP_SESSION_PASSWORD
 }
 
 // Validate config
