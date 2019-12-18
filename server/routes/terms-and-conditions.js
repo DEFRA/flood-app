@@ -11,8 +11,7 @@ module.exports = {
         context: {
           pageTitle: 'Terms and conditions - Flood information service - GOV.UK',
           metaDescription: description,
-          ogDescription: description,
-          feedback: false
+          ogDescription: description
         }
       }
     }
