@@ -18,7 +18,8 @@ const routes = [].concat(
   require('../routes/recovering-after-a-flood'),
   require('../routes/warnings'),
   require('../routes/levels'),
-  require('../routes/impacts')
+  require('../routes/impacts'),
+  require('../routes/cookies')
 )
 
 module.exports = {
