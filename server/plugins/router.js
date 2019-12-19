@@ -20,7 +20,8 @@ const routes = [].concat(
   require('../routes/levels'),
   require('../routes/impacts'),
   require('../routes/cookies'),
-  require('../routes/terms-and-conditions')
+  require('../routes/terms-and-conditions'),
+  require('../routes/privacy-notice')
 )
 
 module.exports = {
