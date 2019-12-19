@@ -222,4 +222,28 @@ lab.experiment('Get Routes test', () => {
     Code.expect(response.payload).to.include('cookies')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
+  lab.test('GET /terms-and-conditions', async () => {
+    const plugin = {
+      plugin: {
+        name: 'terms-and-conditions',
+        register: (server, options) => {
+          server.route(require('../../server/routes/terms-and-conditions'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(plugin)
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/terms-and-conditions'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('terms and conditions')
+    Code.expect(response.headers['content-type']).to.include('text/html')
+  })
 })

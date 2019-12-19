@@ -19,7 +19,8 @@ const routes = [].concat(
   require('../routes/warnings'),
   require('../routes/levels'),
   require('../routes/impacts'),
-  require('../routes/cookies')
+  require('../routes/cookies'),
+  require('../routes/terms-and-conditions')
 )
 
 module.exports = {
