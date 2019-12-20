@@ -270,4 +270,28 @@ lab.experiment('Get Routes test', () => {
     Code.expect(response.payload).to.include('Privacy notice')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
+  lab.test('GET /privacy-policy', async () => {
+    const plugin = {
+      plugin: {
+        name: 'privacy-policy',
+        register: (server, options) => {
+          server.route(require('../../server/routes/privacy-policy'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(plugin)
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/privacy-policy'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('Privacy policy')
+    Code.expect(response.headers['content-type']).to.include('text/html')
+  })
 })
