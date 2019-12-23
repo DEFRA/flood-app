@@ -48,7 +48,7 @@ function getJson (url, ext = false) {
   return get(url, { json: true }, ext)
 }
 
-function formatDate (value, format = 'D/M/YY h:MMa') {
+function formatDate (value, format = 'D/M/YY h:mma') {
   return moment(value).tz('Europe/London').format(format)
 }
 
