@@ -1,6 +1,7 @@
 'use strict'
 
 const joi = require('@hapi/joi')
+const util = require('../util')
 
 module.exports = [{
   method: 'GET',
@@ -27,7 +28,7 @@ module.exports = [{
   path: '/',
   handler: async (request, h) => {
     const { location } = request.payload
-    return h.redirect(`/location?q=${location}`)
+    return h.redirect(`/location?q=${encodeURIComponent(util.cleanseLocation(location))}`)
   },
   options: {
     validate: {
