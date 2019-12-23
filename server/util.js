@@ -69,6 +69,12 @@ function groupBy (arr, prop) {
   }, {})
 }
 
+function cleanseLocation (location) {
+  if (location) {
+    return location.replace(/[^a-zA-Z0-9',-.& ]/g, '')
+  }
+}
+
 module.exports = {
   get,
   post,
@@ -77,5 +83,6 @@ module.exports = {
   request,
   formatDate,
   toFixed,
-  groupBy
+  groupBy,
+  cleanseLocation
 }

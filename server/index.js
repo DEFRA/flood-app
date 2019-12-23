@@ -10,7 +10,9 @@ async function createServer () {
         options: {
           abortEarly: false
         }
-      }
+      },
+      cors: true,
+      security: true
     }
   })
 

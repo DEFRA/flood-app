@@ -3,6 +3,7 @@ const ViewModel = require('../models/views/location')
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
 const displayErrors = require('../models/display-error')
+const util = require('../util')
 
 module.exports = {
   method: 'GET',
@@ -11,7 +12,7 @@ module.exports = {
     const { q: location } = request.query
     let place
     try {
-      place = await locationService.find(location)
+      place = await locationService.find(util.cleanseLocation(location))
     } catch (err) {
       console.error(err)
       request.yar.set('displayError', displayErrors['location-services-error'])
