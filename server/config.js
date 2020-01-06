@@ -6,7 +6,7 @@ const defaultPort = 3009
 const schema = joi.object({
   restClientTimeoutMillis: joi.number().default(15000),
   port: joi.number().default(defaultPort),
-  env: joi.string().valid('dev', 'tst', 'prd').default('dev'),
+  env: joi.string().valid('dev', 'tst', 'test', 'prd').default('dev'),
   serviceUrl: joi.string().uri().default('http://localhost:8050'),
   geoserverUrl: joi.string().uri().default('http://localhost:8080'),
   rainfallApiUrl: joi.string().uri().default('http://localhost:3000'),
@@ -53,7 +53,7 @@ if (result.error) {
 const value = result.value
 
 // Add some helper props
-value.isDev = value.env === 'development'
-value.isProd = value.env === 'production'
+value.isDev = value.env === 'dev'
+value.isProd = value.env === 'prd'
 
 module.exports = value
