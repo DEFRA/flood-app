@@ -34,7 +34,7 @@ Open your browser at
 
 | name     | description      | required | default |            valid            |             notes             |
 |----------|------------------|:--------:|---------|:---------------------------:|:-----------------------------:|
-| NODE_ENV | Node environment |    no    | development | development, test, production |                               |
+| NODE_ENV | Node environment |    no    | dev | dev, tst, prd |                               |
 | PORT     | Port number      |    no    | 3009    |                             |                               |
 | FLOOD_APP_SERVICE_URL   | flood-service  |    yes    |         |                             | For flood api |
 | FLOOD_APP_BING_KEY   | MS Bing Key  |    yes    |         |                             | For location search |

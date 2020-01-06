@@ -6,7 +6,7 @@ const defaultPort = 3009
 const schema = joi.object({
   restClientTimeoutMillis: joi.number().default(15000),
   port: joi.number().default(defaultPort),
-  env: joi.string().valid('development', 'test', 'production').default('development'),
+  env: joi.string().valid('dev', 'tst', 'prd').default('dev'),
   serviceUrl: joi.string().uri().default('http://localhost:8050'),
   geoserverUrl: joi.string().uri().default('http://localhost:8080'),
   rainfallApiUrl: joi.string().uri().default('http://localhost:3000'),
