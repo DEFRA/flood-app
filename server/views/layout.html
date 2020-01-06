@@ -99,7 +99,6 @@
 
   {# Google Analytics #}
   {% if gaAccId %}
-  <!--
     <script type="text/javascript">
       var analyticsAccount = '{{gaAccId}}'
 
@@ -111,7 +110,6 @@
       ga('create', analyticsAccount, 'auto')
       ga('send', 'pageview')
     </script>
-  -->
   {% endif %}
 
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
