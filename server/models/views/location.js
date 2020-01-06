@@ -1,5 +1,6 @@
 const severity = require('../severity')
 const { groupBy } = require('../../util')
+const { floodRiskUrl } = require('../../config')
 
 class ViewModel {
   constructor ({ location, place, floods, stations, impacts }) {
@@ -12,7 +13,8 @@ class ViewModel {
       impacts,
       location: title,
       pageTitle: `${title} flood risk`,
-      metaDescription: `Nearby flood alerts and warnings; latest river and sea levels and flood risk advice for residents living in the ${title} area.`
+      metaDescription: `Nearby flood alerts and warnings; latest river and sea levels and flood risk advice for residents living in the ${title} area.`,
+      floodRiskUrl
     })
 
     const hasFloods = !!floods.length
