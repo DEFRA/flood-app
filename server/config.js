@@ -19,6 +19,7 @@ const schema = joi.object({
   gaAccId: joi.string().default(''),
   fbAppId: joi.string().default(''),
   siteUrl: joi.string().default(`http://localhost:${defaultPort}`),
+  floodRiskUrl: joi.string().default(`http://localhost:${defaultPort}`),
   sessionPassword: joi.string()
 })
 
@@ -36,6 +37,7 @@ const config = {
   gaAccId: process.env.FLOOD_APP_GA_ID,
   fbAppId: process.env.FLOOD_APP_FBAPP_ID,
   siteUrl: process.env.FLOOD_APP_SITE_URL,
+  floodRiskUrl: process.env.FLOOD_RISK_URL,
   sessionPassword: process.env.FLOOD_APP_SESSION_PASSWORD
 }
 
