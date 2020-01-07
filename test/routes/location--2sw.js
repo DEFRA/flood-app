@@ -6,7 +6,7 @@ const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 
-lab.experiment('Routes test - location - no warnings', () => {
+lab.experiment('Routes test - location - 2 severe warnings', () => {
   let sandbox
   let server
 
@@ -28,7 +28,7 @@ lab.experiment('Routes test - location - no warnings', () => {
     await sandbox.restore()
   })
 
-  lab.test('GET /location with query parameters check for no warnings', async () => {
+  lab.test('GET /location with query parameters check for 2 severe warnings', async () => {
     // Tests known location
 
     const floodService = require('../../server/services/flood')

@@ -6,7 +6,7 @@ const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 
-lab.experiment('Routes test - location - no warnings', () => {
+lab.experiment('Routes test - location - 1 alert 1 nlif', () => {
   let sandbox
   let server
 
@@ -28,7 +28,7 @@ lab.experiment('Routes test - location - no warnings', () => {
     await sandbox.restore()
   })
 
-  lab.test('GET /location with query parameters check for no warnings', async () => {
+  lab.test('GET /location with query parameters check for 1 alert 1 nlif', async () => {
     // Tests known location
 
     const floodService = require('../../server/services/flood')
@@ -55,22 +55,21 @@ lab.experiment('Routes test - location - no warnings', () => {
             severitychanged: '2019-11-07T15:43:00.000Z',
             messagechanged: '2020-01-06T11:58:00.000Z',
             message: 'River levels remain high.  Heavy rain is forecast for Wednesay 8th and Thursday 9th January and we continue to monitor the situation. Environment Agency contractors have repaired the breached banks at Short Ferry. However, Short Ferry road will remain closed for several weeks until the water has been pumped back into the river.  The pumps are operating again now that river levels have fallen sufficiently.  Do not walk on flood banks and please avoid using low lying footpaths near local watercourses, which may be flooded. We are monitoring river levels and will update this message on Tuesday 7th January, or as the situation changes.'
-          },
-          {
-            code: '053WAF116TLW',
-            key: 180378,
-            description: 'Lower River Witham',
-            quickdialnumber: '207011',
+          }, {
+            code: '053WAF117BED',
+            key: 180379,
+            description: 'Barlings Eau and Duckpool Catchwater',
+            quickdialnumber: '207012',
             region: 'Anglian',
             area: 'Northern',
             floodtype: 'f',
-            severity: 3,
-            severitydescription: 'Flood Alert',
-            warningkey: 108310,
-            raised: '2020-01-06T11:54:00.000Z',
-            severitychanged: '2019-11-07T20:46:00.000Z',
-            messagechanged: '2020-01-06T11:54:00.000Z',
-            message: 'River levels remain high. Heavy rain is forecast for Wednesay 8th and Thursday 9th January and we continue to monitor the situation. Environment Agency contractors have undertaken repairs to the breach at Timberland Delph and on the Barlings Eau.  Flooding of low lying land and roads close to the river remains a possibility.  We are monitoring the situation.  Do not walk on flood banks and avoid using low lying footpaths and roads near to watercourses.  This message will be updated on Tuesday, 7th January, or as the situation changes.'
+            severity: 4,
+            severitydescription: 'No longer in force',
+            warningkey: 108229,
+            raised: '2020-01-06T11:58:00.000Z',
+            severitychanged: '2019-11-07T15:43:00.000Z',
+            messagechanged: '2020-01-06T11:58:00.000Z',
+            message: 'River levels remain high.  Heavy rain is forecast for Wednesay 8th and Thursday 9th January and we continue to monitor the situation. Environment Agency contractors have repaired the breached banks at Short Ferry. However, Short Ferry road will remain closed for several weeks until the water has been pumped back into the river.  The pumps are operating again now that river levels have fallen sufficiently.  Do not walk on flood banks and please avoid using low lying footpaths near local watercourses, which may be flooded. We are monitoring river levels and will update this message on Tuesday 7th January, or as the situation changes.'
           }
         ]
       }
@@ -154,5 +153,7 @@ lab.experiment('Routes test - location - no warnings', () => {
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('Some flooding is possible')
+    Code.expect(response.payload).to.contain('A flood alert')
+    Code.expect(response.payload).to.contain('>removed</a> within the last 24 hours.')
   })
 })
