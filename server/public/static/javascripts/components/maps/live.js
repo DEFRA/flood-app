@@ -18,7 +18,7 @@
 
     // Internal objects used to store state of layers, orginial and new extent and selected feature properties
     // 'ts': Target Area Severe, 'st': Stations etc. 'inp': Input checked boolean and 'vpt': Within wiewport boolean
-    var layers = { ts: {}, tw: {}, ta: {}, hi: {}, st: {}, rf: {} }
+    var layers = { mv: {}, sv: {}, ts: {}, tw: {}, ta: {}, hi: {}, st: {}, rf: {} }
     Object.keys(layers).forEach(function (key) { layers[key] = { inp: false, vpt: false } })
     // Used to store orignal extent and new extent to enable reset extent option 
     var extent = { org: maps.extent, new: maps.extent }
