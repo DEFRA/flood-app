@@ -148,15 +148,15 @@
       overlayInnerElement.innerHTML = feature.get('html')
 
       // Create overlay object
-      var overlay = new ol.Overlay({
-        element: this.overlayInnerElement,
+      this.overlay = new ol.Overlay({
+        element: overlayInnerElement,
         positioning: 'bottom-left',
         insertFirst: false,
         className: 'ol-overlay'
       })
 
-      overlay.element.style.display = 'block'
-      map.addOverlay(overlay)
+      this.overlay.element.style.display = 'block'
+      map.addOverlay(this.overlay)
     }
 
     // Hide overlay

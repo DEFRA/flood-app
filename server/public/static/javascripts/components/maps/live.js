@@ -379,6 +379,8 @@
       if (feature) {
         selected = feature
         setSelectedFeature(selected)
+        await ensureFeatureTooltipHtml(feature)
+        container.showOverlay(feature)
       }
     })
 
