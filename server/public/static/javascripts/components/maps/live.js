@@ -126,7 +126,7 @@
         } else if (id.startsWith('stations')) {
           // Get upstream - downstream data
           const upDownData = async () => {
-            const upDownUrl = '/stations-upstream-downstream/' + trimId + '/' + props.direction
+            const upDownUrl = '/api/stations-upstream-downstream/' + trimId + '/' + props.direction
             try {
               const response = await window.fetch(upDownUrl)
               const upDownJson = await response.json()

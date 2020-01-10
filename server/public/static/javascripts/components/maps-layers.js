@@ -90,7 +90,7 @@
         loader: function (extent) {
           var source = this
           var url = '/ows?service=wfs&' +
-              'version=2.0.0&request=GetFeature&typeNames=flood:stations&propertyName=status,atrisk,type,is_ffoi_at_risk&' +
+              'version=2.0.0&request=GetFeature&typeNames=flood:stations&propertyName=name,river,status,atrisk,type,is_ffoi_at_risk,value,value_date&' +
               'outputFormat=application/json'
           var xhr = new XMLHttpRequest()
           xhr.open('GET', url)
