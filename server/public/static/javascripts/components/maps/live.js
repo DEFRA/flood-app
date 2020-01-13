@@ -411,19 +411,23 @@
 
     // Overlay river level navigation button click
     document.addEventListener('click', async function (e) {
-      //document.querySelector('.ol-overlaycontainer-stopevent').addEventListener('click', async function (e) {
       if (e.target.classList.contains('overlay-navigation-button')) {
         var nextStationId = e.target.getAttribute('data-id')
         var feature = stations.getSource().getFeatureById(nextStationId)
-        container.selectedFeature.set('isSelected', false)
-        setSelectedSource()
+        // Remove any previous selected feature
+        if (selected) {
+          selected.set('isSelected', false)
+          selected = void 0
+          setFeatureVisibility()
+          top.getSource().clear()
+        }
         feature.set('isSelected', true)
-        container.selectedFeature = feature
+        selected = feature
+        setSelectedFeature(selected)
         panMap(feature)
         await ensureFeatureTooltipHtml(feature)
         container.showOverlay(feature)
       }
-      //})
     })
 
     // Keyboard access to features

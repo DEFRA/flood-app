@@ -32,7 +32,7 @@ class Floods {
           fwa_code: item.code,
           description: item.description,
           severity: item.severity,
-          severity_description: item.severityDescription
+          severity_description: item.severitydescription
         }
       }
     })
