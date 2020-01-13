@@ -106,8 +106,10 @@ module.exports = {
     return util.getJson(url)
   },
 
-  getStationsGeoJson () {
-    const url = config.geoserverUrl + '/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&maxFeatures=10000&outputFormat=application/json&srsName=EPSG:4326'
+  async getStationsGeoJson () {
+    const url = config.geoserverUrl + '/geoserver/flood/ows?service=wfs&' +
+              'version=2.0.0&request=GetFeature&typeNames=flood:stations&propertyName=name,river,status,atrisk,type,is_ffoi_at_risk,value,value_date&' +
+              'outputFormat=application/json'
     return util.getJson(url)
   },
 
