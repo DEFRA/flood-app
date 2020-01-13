@@ -2,7 +2,7 @@ const severity = require('../models/severity')
 const { groupBy } = require('../util')
 
 class Floods {
-  constructor (data) {
+  constructor (data, national = true) {
     this._floods = data
     const grouped = groupBy(data.floods, 'severity')
     this._groups = severity.map(item => {
@@ -26,7 +26,7 @@ class Floods {
       return {
         type: 'Feature',
         id: 'flood_warning_alert.' + item.key,
-        geometry: JSON.parse(item.geometry),
+        geometry: item.geometry ? JSON.parse(item.geometry) : null,
         properties: {
           fwa_key: item.key,
           fwa_code: item.code,
