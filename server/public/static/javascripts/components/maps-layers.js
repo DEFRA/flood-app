@@ -37,7 +37,7 @@
           extent = ol.proj.transformExtent(extent, 'EPSG:3857', 'EPSG:4326')
           extent = [extent[1], extent[0], extent[3], extent[2]]
           var source = this
-          var url = '/ows?service=wfs&' +
+          var url = '/api/ows?service=wfs&' +
               'version=2.0.0&request=GetFeature&typename=flood:flood_warning_alert&' +
               'outputFormat=application/json&bbox=' + extent.join(',')
           var xhr = new XMLHttpRequest()
@@ -125,7 +125,7 @@
       source: new ol.source.Vector({
         format: new ol.format.GeoJSON(),
         projection: 'EPSG:3857',
-        url: '/rainfall'
+        url: '/api/rainfall'
       }),
       style: new ol.style.Style({})
     })
@@ -137,7 +137,7 @@
       source: new ol.source.Vector({
         format: new ol.format.GeoJSON(),
         projection: 'EPSG:3857',
-        url: '/impacts'
+        url: '/api/impacts'
       }),
       style: new ol.style.Style({})
     })
