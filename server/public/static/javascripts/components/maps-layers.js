@@ -75,7 +75,7 @@
       source: new ol.source.Vector({
         format: new ol.format.GeoJSON(),
         projection: 'EPSG:3857',
-        url: '/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=flood:flood_warning_alert_centroid&maxFeatures=10000&outputFormat=application/json'
+        url: '/api/warnings.geojson'
       }),
       style: maps.styles.floods
     })
