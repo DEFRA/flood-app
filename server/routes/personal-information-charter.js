@@ -2,14 +2,14 @@ const description = 'What data is collected when you use GOV.UK - how it\'s used
 
 module.exports = {
   method: 'GET',
-  path: '/privacy-policy',
+  path: '/personal-information-charter',
   options: {
-    description: 'Privacy policy - Flood information service - GOV.UK',
+    description: 'Personal information charter - Flood information service - GOV.UK',
     handler: {
       view: {
-        template: 'privacy-policy',
+        template: 'personal-information-charter',
         context: {
-          pageTitle: 'Privacy policy - Flood information service - GOV.UK',
+          pageTitle: 'Personal information charter - Flood information service - GOV.UK',
           metaDescription: description,
           ogDescription: description,
           feedback: false

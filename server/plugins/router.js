@@ -25,7 +25,7 @@ const routes = [].concat(
   require('../routes/cookies'),
   require('../routes/terms-and-conditions'),
   require('../routes/privacy-notice'),
-  require('../routes/privacy-policy')
+  require('../routes/personal-information-charter')
 )
 
 module.exports = {
