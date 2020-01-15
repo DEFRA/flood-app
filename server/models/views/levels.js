@@ -6,7 +6,7 @@ class ViewModel {
     const placeName = place ? place.name : ''
     const placeBbox = place ? place.bbox : []
     const placeCentre = place ? place.center : []
-    const pageTitle = `${placeName ? placeName + ' r' : 'R'}iver and sea levels`
+    const pageTitle = `${placeName ? placeName + ' latest r' : 'Latest r'}iver and sea levels`
 
     Object.assign(this, {
       q: location,
