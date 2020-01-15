@@ -21,7 +21,6 @@ lab.experiment('Routes test - location - 2', () => {
       port: 3000,
       host: 'localhost'
     })
-    console.log('hapi server started: ')
   })
 
   lab.afterEach(async () => {
