@@ -40,7 +40,13 @@
       zoom: 6,
       minZoom: 6,
       maxZoom: 18,
-      center: maps.center
+      center: maps.center,
+      extent: ol.proj.transformExtent([
+        -13.930664,
+        47.428087,
+        8.920898,
+        59.040555
+      ], 'EPSG:4326', 'EPSG:3857')
     })
 
     // MapContainer options

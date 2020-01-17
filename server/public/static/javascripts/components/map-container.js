@@ -97,7 +97,12 @@
       target: mapElement,
       controls: controls,
       layers: options.layers,
-      view: options.view
+      view: options.view,
+      pixelRatio: 1,
+      interactions: ol.interaction.defaults({
+        altShiftDragRotate: false,
+        pinchRotate: false
+      })
     })
 
     // Create a new history entry if show map button pressed
