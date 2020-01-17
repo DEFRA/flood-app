@@ -5,6 +5,7 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
+const data = require('../data')
 
 lab.experiment('Test - alerts - warnings', () => {
   let sandbox
@@ -36,132 +37,8 @@ lab.experiment('Test - alerts - warnings', () => {
       return { is_england: true }
     }
     // const fakePlaceData = () => {}
-    const fakeFloodsData = () => {
-      return {
-        floods: [
-          {
-            code: '013FWFCH29',
-            key: 4558714,
-            description: 'Wider area at risk from Sankey Brook at Dallam',
-            quickdialnumber: '305027',
-            region: 'Midlands',
-            area: 'Central',
-            floodtype: 'f',
-            severity: 2,
-            severitydescription: 'Flood Warning',
-            warningkey: 1,
-            raised: '2020-01-08T13:09:09.628Z',
-            severitychanged: '2020-01-08T13:09:09.628Z',
-            messagechanged: '2020-01-08T13:09:09.628Z',
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ex sapien, luctus quis neque sit amet, rutrum semper odio. Mauris metus elit, semper in libero sed, vulputate placerat ante. In bibendum in libero in placerat. Aenean et ante nulla. Nullam tempus leo vitae mattis aliquam. Etiam tempus dignissim efficitur. Nam luctus tempus risus sit amet porttitor. Integer quis dapibus arcu, eu eleifend arcu. Vestibulum non nunc elit. Donec facilisis lorem tristique ultricies dapibus. Sed eleifend sit amet nibh ut tincidunt.\n' +
-            '\n' +
-            'Quisque nec ultrices risus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque viverra, tortor sit amet condimentum laoreet, lorem ante dictum ante, nec hendrerit nisl lacus sit amet diam. Praesent ut ornare lorem. Quisque placerat sollicitudin enim, sit amet laoreet enim consectetur in. Praesent nec nunc a ligula cursus cursus.\n' +
-            '\n' +
-            'Proin a dictum mauris, eget pulvinar augue. Pellentesque non lectus nibh. Pellentesque convallis ultricies enim, vel lacinia metus rhoncus vitae. Donec at porta tellus. In hac habitasse platea dictumst. Vestibulum mollis mollis nibh, sit amet maximus sem suscipit eu. Etiam elementum sed nulla quis tincidunt.'
-          },
-          {
-            code: '013WAFLM',
-            key: 4558677,
-            description: 'Lower River Mersey including Warrington, Runcorn and Lymm areas',
-            quickdialnumber: '143117',
-            region: 'Midlands',
-            area: 'Central',
-            floodtype: 'f',
-            severity: 4,
-            severitydescription: 'No longer in force',
-            warningkey: 1,
-            raised: '2020-01-08T13:09:09.599Z',
-            severitychanged: '2020-01-08T13:09:09.599Z',
-            messagechanged: '2020-01-08T13:09:09.599Z',
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ex sapien, luctus quis neque sit amet, rutrum semper odio. Mauris metus elit, semper in libero sed, vulputate placerat ante. In bibendum in libero in placerat. Aenean et ante nulla. Nullam tempus leo vitae mattis aliquam. Etiam tempus dignissim efficitur. Nam luctus tempus risus sit amet porttitor. Integer quis dapibus arcu, eu eleifend arcu. Vestibulum non nunc elit. Donec facilisis lorem tristique ultricies dapibus. Sed eleifend sit amet nibh ut tincidunt.\n' +
-            '\n' +
-            'Quisque nec ultrices risus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque viverra, tortor sit amet condimentum laoreet, lorem ante dictum ante, nec hendrerit nisl lacus sit amet diam. Praesent ut ornare lorem. Quisque placerat sollicitudin enim, sit amet laoreet enim consectetur in. Praesent nec nunc a ligula cursus cursus.\n' +
-            '\n' +
-            'Proin a dictum mauris, eget pulvinar augue. Pellentesque non lectus nibh. Pellentesque convallis ultricies enim, vel lacinia metus rhoncus vitae. Donec at porta tellus. In hac habitasse platea dictumst. Vestibulum mollis mollis nibh, sit amet maximus sem suscipit eu. Etiam elementum sed nulla quis tincidunt.'
-          },
-          {
-            code: '013WATMEW',
-            key: 4558681,
-            description: 'Mersey Estuary at Warrington',
-            quickdialnumber: '205003',
-            region: 'Midlands',
-            area: 'Central',
-            floodtype: 'f',
-            severity: 3,
-            severitydescription: 'Flood Alert',
-            warningkey: 1,
-            raised: '2020-01-08T13:09:09.599Z',
-            severitychanged: '2020-01-08T13:09:09.599Z',
-            messagechanged: '2020-01-08T13:09:09.599Z',
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ex sapien, luctus quis neque sit amet, rutrum semper odio. Mauris metus elit, semper in libero sed, vulputate placerat ante. In bibendum in libero in placerat. Aenean et ante nulla. Nullam tempus leo vitae mattis aliquam. Etiam tempus dignissim efficitur. Nam luctus tempus risus sit amet porttitor. Integer quis dapibus arcu, eu eleifend arcu. Vestibulum non nunc elit. Donec facilisis lorem tristique ultricies dapibus. Sed eleifend sit amet nibh ut tincidunt.\n' +
-            '\n' +
-            'Quisque nec ultrices risus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque viverra, tortor sit amet condimentum laoreet, lorem ante dictum ante, nec hendrerit nisl lacus sit amet diam. Praesent ut ornare lorem. Quisque placerat sollicitudin enim, sit amet laoreet enim consectetur in. Praesent nec nunc a ligula cursus cursus.\n' +
-            '\n' +
-            'Proin a dictum mauris, eget pulvinar augue. Pellentesque non lectus nibh. Pellentesque convallis ultricies enim, vel lacinia metus rhoncus vitae. Donec at porta tellus. In hac habitasse platea dictumst. Vestibulum mollis mollis nibh, sit amet maximus sem suscipit eu. Etiam elementum sed nulla quis tincidunt.'
-          },
-          {
-            code: '013WAFDI',
-            key: 4558688,
-            description: 'River Ditton catchment including areas around Huyton-with-Roby and Widnes',
-            quickdialnumber: '143114',
-            region: 'Midlands',
-            area: 'Central',
-            floodtype: 'f',
-            severity: 1,
-            severitydescription: 'Flood Alert',
-            warningkey: 1,
-            raised: '2020-01-08T13:09:09.599Z',
-            severitychanged: '2020-01-08T13:09:09.599Z',
-            messagechanged: '2020-01-08T13:09:09.599Z',
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ex sapien, luctus quis neque sit amet, rutrum semper odio. Mauris metus elit, semper in libero sed, vulputate placerat ante. In bibendum in libero in placerat. Aenean et ante nulla. Nullam tempus leo vitae mattis aliquam. Etiam tempus dignissim efficitur. Nam luctus tempus risus sit amet porttitor. Integer quis dapibus arcu, eu eleifend arcu. Vestibulum non nunc elit. Donec facilisis lorem tristique ultricies dapibus. Sed eleifend sit amet nibh ut tincidunt.\n' +
-            '\n' +
-            'Quisque nec ultrices risus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque viverra, tortor sit amet condimentum laoreet, lorem ante dictum ante, nec hendrerit nisl lacus sit amet diam. Praesent ut ornare lorem. Quisque placerat sollicitudin enim, sit amet laoreet enim consectetur in. Praesent nec nunc a ligula cursus cursus.\n' +
-            '\n' +
-            'Proin a dictum mauris, eget pulvinar augue. Pellentesque non lectus nibh. Pellentesque convallis ultricies enim, vel lacinia metus rhoncus vitae. Donec at porta tellus. In hac habitasse platea dictumst. Vestibulum mollis mollis nibh, sit amet maximus sem suscipit eu. Etiam elementum sed nulla quis tincidunt.'
-          },
-          {
-            code: '013WAFGL',
-            key: 4558685,
-            description: 'River Glaze catchment including Leigh and East Wigan',
-            quickdialnumber: '143115',
-            region: 'Midlands',
-            area: 'Central',
-            floodtype: 'f',
-            severity: 3,
-            severitydescription: 'Flood Alert',
-            warningkey: 1,
-            raised: '2020-01-08T13:09:09.599Z',
-            severitychanged: '2020-01-08T13:09:09.599Z',
-            messagechanged: '2020-01-08T13:09:09.599Z',
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ex sapien, luctus quis neque sit amet, rutrum semper odio. Mauris metus elit, semper in libero sed, vulputate placerat ante. In bibendum in libero in placerat. Aenean et ante nulla. Nullam tempus leo vitae mattis aliquam. Etiam tempus dignissim efficitur. Nam luctus tempus risus sit amet porttitor. Integer quis dapibus arcu, eu eleifend arcu. Vestibulum non nunc elit. Donec facilisis lorem tristique ultricies dapibus. Sed eleifend sit amet nibh ut tincidunt.\n' +
-            '\n' +
-            'Quisque nec ultrices risus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque viverra, tortor sit amet condimentum laoreet, lorem ante dictum ante, nec hendrerit nisl lacus sit amet diam. Praesent ut ornare lorem. Quisque placerat sollicitudin enim, sit amet laoreet enim consectetur in. Praesent nec nunc a ligula cursus cursus.\n' +
-            '\n' +
-            'Proin a dictum mauris, eget pulvinar augue. Pellentesque non lectus nibh. Pellentesque convallis ultricies enim, vel lacinia metus rhoncus vitae. Donec at porta tellus. In hac habitasse platea dictumst. Vestibulum mollis mollis nibh, sit amet maximus sem suscipit eu. Etiam elementum sed nulla quis tincidunt.'
-          },
-          {
-            code: '013WAFSA',
-            key: 4558689,
-            description: 'River Sankey catchment with St Helens and Warrington',
-            quickdialnumber: '143122',
-            region: 'Midlands',
-            area: 'Central',
-            floodtype: 'f',
-            severity: 3,
-            severitydescription: 'Flood Alert',
-            warningkey: 1,
-            raised: '2020-01-08T13:09:09.599Z',
-            severitychanged: '2020-01-08T13:09:09.599Z',
-            messagechanged: '2020-01-08T13:09:09.599Z',
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ex sapien, luctus quis neque sit amet, rutrum semper odio. Mauris metus elit, semper in libero sed, vulputate placerat ante. In bibendum in libero in placerat. Aenean et ante nulla. Nullam tempus leo vitae mattis aliquam. Etiam tempus dignissim efficitur. Nam luctus tempus risus sit amet porttitor. Integer quis dapibus arcu, eu eleifend arcu. Vestibulum non nunc elit. Donec facilisis lorem tristique ultricies dapibus. Sed eleifend sit amet nibh ut tincidunt.\n' +
-            '\n' +
-            'Quisque nec ultrices risus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque viverra, tortor sit amet condimentum laoreet, lorem ante dictum ante, nec hendrerit nisl lacus sit amet diam. Praesent ut ornare lorem. Quisque placerat sollicitudin enim, sit amet laoreet enim consectetur in. Praesent nec nunc a ligula cursus cursus.\n' +
-            '\n' +
-            'Proin a dictum mauris, eget pulvinar augue. Pellentesque non lectus nibh. Pellentesque convallis ultricies enim, vel lacinia metus rhoncus vitae. Donec at porta tellus. In hac habitasse platea dictumst. Vestibulum mollis mollis nibh, sit amet maximus sem suscipit eu. Etiam elementum sed nulla quis tincidunt.'
-          }
-        ]
-      }
-    }
+    const fakeFloodsData = () => data.fakeFloodsData
+
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
 
