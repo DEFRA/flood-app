@@ -12,8 +12,6 @@ class ViewModel {
   constructor (options) {
     const { station, telemetry, forecast, impacts } = options
 
-    // console.log(station)
-
     this.station = new Station(station)
 
     /*

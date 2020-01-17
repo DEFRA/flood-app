@@ -7,6 +7,7 @@ async function find (location) {
   const url = `https://dev.virtualearth.net/REST/v1/Locations?query=${query},UK&userRegion=GB&include=ciso2&c=en-GB&maxResults=2&userIP=127.0.0.1&key=${bingKey}&includeEntityTypes=PopulatedPlace,AdminDivision2`
 
   let data = await getJson(url, true)
+
   if (data === undefined) {
     throw new Error('Invalid data returned from third party location search')
   }
