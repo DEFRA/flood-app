@@ -108,7 +108,7 @@ module.exports = {
 
   async getStationsGeoJson () {
     const url = config.geoserverUrl + '/geoserver/flood/ows?service=wfs&' +
-              'version=2.0.0&request=GetFeature&typeNames=flood:stations&propertyName=name,river,status,atrisk,type,is_ffoi_at_risk,value,value_date&' +
+              'version=2.0.0&request=GetFeature&typeNames=flood:stations&propertyName=name,river,status,atrisk,type,is_ffoi,is_ffoi_at_risk,ffoi_max,ffoi_date,value,value_date,percentile_95,percentile_5&' +
               'outputFormat=application/json'
     return util.getJson(url)
   },

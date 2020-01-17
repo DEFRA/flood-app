@@ -87,7 +87,6 @@
       controls: controls,
       layers: options.layers,
       view: options.view,
-      pixelRatio: 1,
       interactions: ol.interaction.defaults({
         altShiftDragRotate: false,
         pinchRotate: false
