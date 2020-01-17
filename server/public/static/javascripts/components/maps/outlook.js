@@ -23,7 +23,13 @@
       zoom: 6,
       minZoom: 6,
       maxZoom: 7,
-      center: center
+      center: center,
+      extent: ol.proj.transformExtent([
+        -13.930664,
+        47.428087,
+        8.920898,
+        59.040555
+      ], 'EPSG:4326', 'EPSG:3857')
     })
 
     var geoJson = new window.ol.format.GeoJSON()

@@ -10,7 +10,7 @@
   if (model.countFloods) {
     // Create LiveMap if querystring is present
     if (utils.getParameterByName('v') === 'map-live') {
-      maps.createLiveMap('map-live')
+      maps.createLiveMap('map-live', { 'no-back': true })
     }
     // Create LiveMap if show map button pressed
     var buttonContainer = document.getElementById('searchSummary')

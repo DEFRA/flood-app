@@ -65,25 +65,14 @@
     var hideMapButton = document.createElement('button')
     hideMapButton.className = 'defra-map__exit-map-btn'
     hideMapButton.appendChild(document.createTextNode('Exit map'))
+
     hideMapButton.addEventListener('click', function (e) {
-      // Return focus to original map button
-      if (getParameterByName('btn')) {
-        var btn = document.getElementById(getParameterByName('btn'))
-        btn.focus()
-      }
-      window.history.back()
-      // Todo - need to detect when not to use history back
+      hideMap()
     })
+
     mapElement.prepend(hideMapButton)
     // Move focus to exit map button
     hideMapButton.focus()
-    /*
-    hideMapButton.addEventListener('keyup', function (e) {
-      if (e.keyCode === 13 || e.keyCode === 32) {
-        this.showMapButton.style.display === 'none' ? this.hideMapButton.focus() : this.showMapButton.focus()
-      }
-    })
-    */
 
     // Controls - could be moved to instance
     var controls = ol.control.defaults({
@@ -137,6 +126,19 @@
       mapElement.classList.remove('map--key-open')
       keyToggleElement.innerHTML = 'Show key'
       isKeyOpen = false
+    }
+
+    function hideMap () {
+      // Return focus to original map button
+      if (getParameterByName('btn')) {
+        var btn = document.getElementById(getParameterByName('btn'))
+        btn.focus()
+      }
+      if (!options.display['no-back']) {
+        window.history.back()
+      } else {
+        window.location.href = window.location.pathname + (getParameterByName('q') ? '?q=' + getParameterByName('q') : '')
+      }
     }
 
     //
@@ -250,6 +252,9 @@
     var keyboardPan
     var hasKeyboardPan = true
     mapElement.addEventListener('keyup', function (e) {
+      if (e.keyCode === 27) {
+        return hideMap()
+      }
       if (mapElement.contains(document.activeElement)) {
         if (document.activeElement.type === 'radio') {
           map.getInteractions().forEach(function (interaction) {
