@@ -5,7 +5,6 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
-const data = require('../data')
 
 lab.experiment('Test - alerts - warnings', () => {
   let sandbox
@@ -17,7 +16,7 @@ lab.experiment('Test - alerts - warnings', () => {
     delete require.cache[require.resolve('../../server/services/location.js')]
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/routes/location.js')]
-    delete require.cache[require.resolve('../../server/routes/warnings.js')]
+    delete require.cache[require.resolve('../../server/routes/alerts-and-warnings.js')]
     sandbox = await sinon.createSandbox()
     server = Hapi.server({
       port: 3000,
@@ -30,22 +29,14 @@ lab.experiment('Test - alerts - warnings', () => {
     await sandbox.restore()
   })
 
-  lab.test('GET /alerts-and-warnings with query parameters, show alert, warnings and severe', async () => {
+  lab.test('GET /alerts-and-warnings with query parameters of Kinghorn, Scotland', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
-      return { is_england: true }
+      return { is_england: false }
     }
-    // const fakePlaceData = () => {}
-    const fakeFloodsData = () => data.fakeFloodsData
-
-    const fakeStationsData = () => []
-    const fakeImpactsData = () => []
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
 
     const fakeGetJson = () => {
       return {
@@ -58,26 +49,26 @@ lab.experiment('Test - alerts - warnings', () => {
             resources: [
               {
                 __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [53.367538452148437, -2.6395580768585205, 53.420841217041016, -2.5353000164031982],
-                name: 'Warrington, Warrington',
+                bbox: [56.061851501464844, -3.1849100589752197, 56.07693099975586, -3.16759991645813],
+                name: 'Kinghorn, Fife',
                 point: {
                   type: 'Point',
-                  coordinates: [53.393871307373047, -2.5893499851226807]
+                  coordinates: [56.0693359375, -3.1757969856262207]
                 },
                 address: {
-                  adminDistrict: 'England',
-                  adminDistrict2: 'Warrington',
+                  adminDistrict: 'Scotland',
+                  adminDistrict2: 'Fife',
                   countryRegion: 'United Kingdom',
-                  formattedAddress: 'Warrington, Warrington',
-                  locality: 'Warrington',
+                  formattedAddress: 'Kinghorn, Fife',
+                  locality: 'Kinghorn',
                   countryRegionIso2: 'GB'
                 },
-                confidence: 'Medium',
+                confidence: 'High',
                 entityType: 'PopulatedPlace',
                 geocodePoints: [
                   {
                     type: 'Point',
-                    coordinates: [53.393871307373047, -2.5893499851226807],
+                    coordinates: [56.0693359375, -3.1757969856262207],
                     calculationMethod: 'Rooftop',
                     usageTypes: ['Display']
                   }
@@ -100,7 +91,7 @@ lab.experiment('Test - alerts - warnings', () => {
       plugin: {
         name: 'warnings',
         register: (server, options) => {
-          server.route(require('../../server/routes/warnings'))
+          server.route(require('../../server/routes/alerts-and-warnings'))
         }
       }
     }
@@ -112,19 +103,12 @@ lab.experiment('Test - alerts - warnings', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/alerts-and-warnings?q=Warrington'
+      url: '/alerts-and-warnings?q=kinghorn'
     }
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('6 results')
-    Code.expect(response.payload).to.contain('1 flood warning')
-    Code.expect(response.payload).to.contain('1 severe flood warning')
-    Code.expect(response.payload).to.contain('3 flood alerts')
-    Code.expect(response.payload).to.contain('1 flood warning removed')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFGL">River Glaze catchment including Leigh and East Wigan</a>')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013FWFCH29">Wider area at risk from Sankey Brook at Dallam</a>')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFDI">River Ditton catchment including areas around Huyton-with-Roby and Widnes</a>')
+    Code.expect(response.payload).to.contain('<h1 class="govuk-heading-xl">This service provides flood warning information for England only</h1>')
     Code.expect(response.statusCode).to.equal(200)
   })
 })

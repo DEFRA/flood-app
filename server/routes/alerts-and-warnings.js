@@ -1,5 +1,5 @@
 const joi = require('@hapi/joi')
-const ViewModel = require('../models/views/warnings')
+const ViewModel = require('../models/views/alerts-and-warnings')
 const Floods = require('../models/floods')
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
@@ -15,14 +15,14 @@ module.exports = [{
       const floods = floodService.floods
       model = new ViewModel({ location, place, floods })
       model.referer = request.headers.referer
-      return h.view('warnings', { model })
+      return h.view('alerts-and-warnings', { model })
     }
     place = await locationService.find(location)
     if (typeof place === 'undefined' || place === '') {
       // If no place return empty floods
       model = new ViewModel({ location, place, floods })
       model.referer = request.headers.referer
-      return h.view('warnings', { model })
+      return h.view('alerts-and-warnings', { model })
     }
     if (!place.isEngland.is_england) {
       // Place ok but not in England
@@ -33,7 +33,7 @@ module.exports = [{
     floods = new Floods(data)
     model = new ViewModel({ location, place, floods })
     model.referer = request.headers.referer
-    return h.view('warnings', { model })
+    return h.view('alerts-and-warnings', { model })
   },
   options: {
     validate: {
