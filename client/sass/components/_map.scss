@@ -114,7 +114,7 @@
 }
 .ol-zoom-in {
   display: none;
-  @include mq ($from: mobile) {
+  @include mq ($from: tablet) {
     text-indent:-5000px;
     display:block;
     right:10px;
@@ -125,7 +125,7 @@
 }
 .ol-zoom-out {
   display: none;
-  @include mq ($from: mobile) {
+  @include mq ($from: tablet) {
     text-indent:-5000px;
     display:block;
     right:10px;
@@ -251,10 +251,12 @@
   position:absolute;
   bottom:0;
   width:100%;
+  height:auto !important;
   @include mq ($from: tablet) {
     position:static;
     bottom:auto;
     width:auto;
+    height:100% !important;
   }
 }
 
