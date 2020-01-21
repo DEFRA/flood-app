@@ -5,6 +5,7 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
+const data = require('../data')
 
 lab.experiment('Test - alerts - warnings', () => {
   let sandbox
@@ -16,7 +17,7 @@ lab.experiment('Test - alerts - warnings', () => {
     delete require.cache[require.resolve('../../server/services/location.js')]
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/routes/location.js')]
-    delete require.cache[require.resolve('../../server/routes/warnings.js')]
+    delete require.cache[require.resolve('../../server/routes/alerts-and-warnings.js')]
     sandbox = await sinon.createSandbox()
     server = Hapi.server({
       port: 3000,
@@ -29,16 +30,15 @@ lab.experiment('Test - alerts - warnings', () => {
     await sandbox.restore()
   })
 
-  lab.test('GET /alerts-and-warnings with query parameters and no warnings or alerts', async () => {
+  lab.test('GET /alerts-and-warnings with query parameters of Cheshire', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
       return { is_england: true }
     }
     // const fakePlaceData = () => {}
-    const fakeFloodsData = () => {
-      return { floods: [] }
-    }
+    const fakeFloodsData = () => data.floodsByCounty
+
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
 
@@ -58,27 +58,26 @@ lab.experiment('Test - alerts - warnings', () => {
             resources: [
               {
                 __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [53.367538452148437, -2.6395580768585205, 53.420841217041016, -2.5353000164031982],
-                name: 'Warrington, Warrington',
+                bbox: [52.94717025756836, -3.1310698986053467, 53.4810791015625, -1.9720499515533447],
+                name: 'Cheshire, United Kingdom',
                 point: {
                   type: 'Point',
-                  coordinates: [53.393871307373047, -2.5893499851226807]
+                  coordinates: [53.098880767822266, -2.3384079933166504]
                 },
                 address: {
                   adminDistrict: 'England',
-                  adminDistrict2: 'Warrington',
+                  adminDistrict2: 'Cheshire',
                   countryRegion: 'United Kingdom',
-                  formattedAddress: 'Warrington, Warrington',
-                  locality: 'Warrington',
+                  formattedAddress: 'Cheshire, United Kingdom',
                   countryRegionIso2: 'GB'
                 },
-                confidence: 'Medium',
-                entityType: 'PopulatedPlace',
+                confidence: 'High',
+                entityType: 'AdminDivision2',
                 geocodePoints: [
                   {
                     type: 'Point',
-                    coordinates: [53.393871307373047, -2.5893499851226807],
-                    calculationMethod: 'Rooftop',
+                    coordinates: [53.098880767822266, -2.3384079933166504],
+                    calculationMethod: 'None',
                     usageTypes: ['Display']
                   }
                 ],
@@ -100,7 +99,7 @@ lab.experiment('Test - alerts - warnings', () => {
       plugin: {
         name: 'warnings',
         register: (server, options) => {
-          server.route(require('../../server/routes/warnings'))
+          server.route(require('../../server/routes/alerts-and-warnings'))
         }
       }
     }
@@ -112,13 +111,14 @@ lab.experiment('Test - alerts - warnings', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/alerts-and-warnings?q=Warrington'
+      url: '/alerts-and-warnings?q=WA4%201HT'
     }
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('No flood alerts or warnings near this location.')
-    Code.expect(response.payload).to.contain('0 results')
+    Code.expect(response.payload).to.contain('33 results')
+    Code.expect(response.payload).to.contain('18 flood alerts')
+    Code.expect(response.payload).to.contain('<a href="/target-area/013WATDEE">Dee Estuary from Parkgate to Chester</a>')
     Code.expect(response.statusCode).to.equal(200)
   })
 })
