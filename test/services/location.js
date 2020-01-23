@@ -308,12 +308,13 @@ lab.experiment('location service test', () => {
               {
                 __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
                 bbox: [53.367538452148437, -2.6395580768585205, 53.420841217041016, -2.5353000164031982],
-                name: 'Warrington, Warrington',
+                name: 'Test address line, Warrington, Warrington',
                 point: {
                   type: 'Point',
                   coordinates: [53.393871307373047, -2.5893499851226807]
                 },
                 address: {
+                  addressLine: 'Test address line',
                   adminDistrict: 'England',
                   adminDistrict2: 'Warrington',
                   countryRegion: 'United Kingdom',

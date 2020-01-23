@@ -57,6 +57,14 @@ async function find (location) {
     }
   }
 
+  // Strip out addressLine to make address name returned more ambiguous as we're not giving property specific information
+  if (data.address.addressLine && name.indexOf(data.address.addressLine) > -1) {
+    name = name.replace(data.address.addressLine, '')
+    if (name.slice(0, 2) === ', ') {
+      name = name.slice(2, name.length)
+    }
+  }
+
   const isEngland = await floodServices.getIsEngland(center[0], center[1])
 
   return {
