@@ -10,10 +10,10 @@ module.exports = {
         const response = request.response
         // These paths need specific validation for posts requests
         const excludePaths = [
-          '/',
-          '/alerts-and-warnings',
-          '/river-and-sea-levels',
-          '/historic-impacts'
+          // '/',
+          // '/alerts-and-warnings',
+          // '/river-and-sea-levels',
+          // '/historic-impacts'
         ]
 
         if (response.isBoom && !excludePaths.includes(request.route.path)) {

@@ -5,8 +5,9 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
+const data = require('../data')
 
-lab.experiment('Routes test - location - no warnings', () => {
+lab.experiment('Routes test - location - 1 alert 1 nlif', () => {
   let sandbox
   let server
 
@@ -28,7 +29,7 @@ lab.experiment('Routes test - location - no warnings', () => {
     await sandbox.restore()
   })
 
-  lab.test('GET /location with query parameters check for no warnings', async () => {
+  lab.test('GET /location with query parameters check for 1 alert 1 nlif', async () => {
     // Tests known location
 
     const floodService = require('../../server/services/flood')
@@ -40,46 +41,8 @@ lab.experiment('Routes test - location - no warnings', () => {
     const fakeFloodsData = () => {
       return { floods: [] }
     }
-    const fakeStationsData = () => {
-      return [
-        {
-          rloi_id: 6270,
-          telemetry_id: 'E22163',
-          region: 'Anglian',
-          catchment: 'Cam and Ely Ouse (Including South Level)',
-          wiski_river_name: 'River Little Ouse',
-          agency_name: 'Knettishall',
-          external_name: 'Knettishall',
-          station_type: 'S',
-          status: 'Active',
-          qualifier: 'u',
-          iswales: false,
-          value: '0.584',
-          value_timestamp: '2020-01-06T06:45:00.000Z',
-          value_erred: false,
-          percentile_5: '0.295000000000002',
-          percentile_95: '0.0539999999999985'
-        },
-        {
-          rloi_id: 6265,
-          telemetry_id: 'E22152',
-          region: 'Anglian',
-          catchment: 'Cam and Ely Ouse (Including South Level)',
-          wiski_river_name: 'River Thet',
-          agency_name: 'Bridgham',
-          external_name: 'Bridgham',
-          station_type: 'S',
-          status: 'Active',
-          qualifier: 'u',
-          iswales: false,
-          value: '0.524',
-          value_timestamp: '2020-01-06T06:00:00.000Z',
-          value_erred: false,
-          percentile_5: '0.503',
-          percentile_95: '0.0999999999999996'
-        }
-      ]
-    }
+
+    const fakeStationsData = () => []
     const fakeImpactsData = () => []
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
@@ -98,26 +61,26 @@ lab.experiment('Routes test - location - no warnings', () => {
             resources: [
               {
                 __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [53.367538452148437, -2.6395580768585205, 53.420841217041016, -2.5353000164031982],
-                name: 'Warrington, Warrington',
+                bbox: [53.494669295962524, -0.9971808372910244, 53.55261006194763, -0.8673192084853428],
+                name: 'Wroot, North Lincolnshire',
                 point: {
                   type: 'Point',
-                  coordinates: [53.393871307373047, -2.5893499851226807]
+                  coordinates: [53.52363967895508, -0.9322500228881836]
                 },
                 address: {
                   adminDistrict: 'England',
-                  adminDistrict2: 'Warrington',
+                  adminDistrict2: 'North Lincolnshire',
                   countryRegion: 'United Kingdom',
-                  formattedAddress: 'Warrington, Warrington',
-                  locality: 'Warrington',
+                  formattedAddress: 'Wroot, North Lincolnshire',
+                  locality: 'Wroot',
                   countryRegionIso2: 'GB'
                 },
-                confidence: 'Medium',
+                confidence: 'High',
                 entityType: 'PopulatedPlace',
                 geocodePoints: [
                   {
                     type: 'Point',
-                    coordinates: [53.393871307373047, -2.5893499851226807],
+                    coordinates: [53.52363967895508, -0.9322500228881836],
                     calculationMethod: 'Rooftop',
                     usageTypes: ['Display']
                   }
@@ -156,10 +119,10 @@ lab.experiment('Routes test - location - no warnings', () => {
     }
 
     const response = await server.inject(options)
+    console.log(response.payload)
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.not.contain('View river and sea levels in this area')
-    Code.expect(response.payload).to.contain('No flood warnings or alerts currently in place in this area. \n' +
-    '          \n' +
-    '          However some <a href="/river-and-sea-levels?q=Warrington">river and sea levels</a> are currently high.\n')
+    // no flood alerts or warnings but sea levels are high and location is not pickingup and stations to check this, needs content off Elenor 
+    Code.expect(response.payload).to.contain('No flood warnings or alerts currently in place in this area.')
+    Code.expect(response.payload).to.contain('New content and link from Elenor')
   })
 })

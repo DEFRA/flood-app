@@ -3,6 +3,7 @@ const ViewModel = require('../models/views/alerts-and-warnings')
 const Floods = require('../models/floods')
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
+const util = require('../util')
 
 module.exports = [{
   method: 'GET',
@@ -17,7 +18,7 @@ module.exports = [{
       model.referer = request.headers.referer
       return h.view('alerts-and-warnings', { model })
     }
-    place = await locationService.find(location)
+    place = await locationService.find(util.cleanseLocation(location))
     if (typeof place === 'undefined' || place === '') {
       // If no place return empty floods
       model = new ViewModel({ location, place, floods })
