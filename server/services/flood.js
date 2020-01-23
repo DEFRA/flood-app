@@ -124,5 +124,10 @@ module.exports = {
   async getImpactsWithin (bbox) {
     const url = `${serviceUrl}/impacts-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`
     return util.getJson(url)
+  },
+  async getStationsByRiver (location) {
+    const url = `${serviceUrl}/river-stations/${location}`
+    const result = await util.getJson(url)
+    return result
   }
 }

@@ -1,5 +1,6 @@
 const joi = require('@hapi/joi')
-const ViewModel = require('../models/views/river-and-sea-levels')
+const ViewModel = require('../models/views/levels')
+const RiverViewModel = require('../models/views/river-stations')
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
 
@@ -8,19 +9,33 @@ module.exports = [{
   path: '/river-and-sea-levels',
   handler: async (request, h) => {
     const { q: location } = request.query
+    const { type } = request.query
     var model, place, stations
-    place = await locationService.find(location)
+    if (type === 'location') {
+      place = await locationService.find(location)
+
+      if (!place.isEngland.is_england) {
+        return h.view('location-not-england')
+      }
+    } else {
+      place = type
+    }
     if (typeof place === 'undefined' || place === '') {
       stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
       model = new ViewModel({ location, place, stations })
       model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
     }
-    if (!place.isEngland.is_england) {
-      return h.view('location-not-england')
+    if (type === 'location') {
+      stations = await floodService.getStationsWithin(place.bbox)
+      console.log(stations)
+      model = new ViewModel({ location, place, stations })
+      model.referer = request.headers.referer
+      return h.view('levels', { model })
     }
-    stations = await floodService.getStationsWithin(place.bbox)
-    model = new ViewModel({ location, place, stations })
+    stations = await floodService.getStationsByRiver(location)
+    console.log(stations)
+    model = new RiverViewModel({ location, stations })
     model.referer = request.headers.referer
     return h.view('river-and-sea-levels', { model })
   },
@@ -32,7 +47,8 @@ module.exports = [{
         ext: joi.string(),
         fid: joi.string(),
         lyr: joi.string(),
-        v: joi.string()
+        v: joi.string(),
+        type: joi.string()
       }),
       failAction: (request, h, err) => {
         return h.view('404').code(404).takeover()
@@ -44,9 +60,12 @@ module.exports = [{
   path: '/river-and-sea-levels',
   handler: async (request, h) => {
     const { location } = request.payload
-    if (typeof location === 'undefined' || location === '') {
-      return h.redirect('/river-and-sea-levels')
-    }
-    return h.redirect(`/river-and-sea-levels?q=${location}`)
+    const { river } = request.payload
+    if (river === '') {
+      if (typeof location === 'undefined' || location === '') {
+        return h.redirect('/river-and-sea-levels')
+      }
+      return h.redirect(`/river-and-sea-levels?q=${location}&type=location`)
+    } return h.redirect(`/river-and-sea-levels?q=${river}&type=river`)
   }
 }]

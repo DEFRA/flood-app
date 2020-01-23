@@ -23,9 +23,16 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-third">
         <div class="govuk-form-group defra-search">
-            <form method="post">
-                <label class="govuk-label govuk-!-padding-bottom-1" for="location">Search by location</label>
-                <input class="defra-input defra-input--search" id="location" name="location" type="text" value="{% if model.placeName %}{{ model.placeName }}{% else %}{{ model.q }}{% endif %}">
+            <form method="post" autocomplete="off">
+                <label class="govuk-label govuk-!-padding-bottom-1" for="location">
+                    Search by location
+                </label>
+                <div class="defra-search">
+                    <input class="defra-search__input" id="location" name="location" type="text" spellcheck="false" value="{% if model.placeName %}{{ model.placeName }}{% else %}{{ model.q }}{% endif %}">
+                    <div class="defra-search__submit-container">
+                        <button class="defra-search__button">Search</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>

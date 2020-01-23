@@ -1,20 +1,15 @@
 const { groupBy } = require('../../util')
 const moment = require('moment-timezone')
 
-class ViewModel {
-  constructor ({ location, place, stations }) {
-    const placeName = place ? place.name : ''
-    const placeBbox = place ? place.bbox : []
-    const placeCentre = place ? place.center : []
+class RiverViewModel {
+  constructor ({ location, stations }) {
+    const placeName = stations ? stations[0].wiski_river_name : ''
     const pageTitle = `${placeName ? placeName + ' latest r' : 'Latest r'}iver and sea levels`
 
     Object.assign(this, {
       q: location,
       pageTitle: pageTitle,
-      metaNoIndex: true,
-      placeName: placeName,
-      placeBbox: placeBbox,
-      placeCentre: placeCentre
+      metaNoIndex: true
     })
 
     const today = moment.tz().endOf('day')
@@ -68,4 +63,4 @@ class ViewModel {
   }
 }
 
-module.exports = ViewModel
+module.exports = RiverViewModel

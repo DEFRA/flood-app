@@ -1,27 +1,34 @@
-.defra-input {
-    @extend .govuk-input;
-    &--search {
-        padding-left:33px;
-        background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' width='40' height='40'%3E%3Cpath d='M25.7 24.8L21.9 21c.7-1 1.1-2.2 1.1-3.5 0-3.6-2.9-6.5-6.5-6.5S10 13.9 10 17.5s2.9 6.5 6.5 6.5c1.6 0 3-.6 4.1-1.5l3.7 3.7 1.4-1.4zM12 17.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5-2 4.5-4.5 4.5-4.5-2-4.5-4.5z' fill='currentColor'%3E%3C/path%3E%3C/svg%3E") no-repeat -5px -3px;
-    }
-}
-/*
 .defra-search {
-    position:relative;
-    width:100%;
-    @include govuk-responsive-margin(8, 'bottom');
-    .defra-search__button {
-        position:absolute;
+    display:table;
+    &__input {
+        @extend .govuk-input;
+        display: table-cell;
+        position: relative;
+        z-index: 1;
+    }
+    &__input:focus {
+        z-index: 2;
+    }
+    &__submit-container {
+        display: table-cell;
+        vertical-align: top;
+        position: relative;
+    }
+    &__button {
+        display: block;
+        position:relative;
         width: 40px;
         height: 40px;
-        right:0px;
-        bottom:0px;
-        margin-bottom:0px;
+        margin:0px;
+        padding:0px;
         box-shadow:none;
         text-indent:-5000px;
         background-color:govuk-colour('blue');
+        border: 2px solid govuk-colour('blue');
+        z-index: 1;
+        cursor: pointer;
     }
-    .defra-search__button:after {
+    &__button:after {
         position:absolute;
         content:'';
         width:20px;
@@ -34,23 +41,32 @@
         background-size:40px 20px;
         background-repeat: no-repeat;
     }
-    .defra-search__button:hover {
+    &__button:hover {
         background-color: govuk-colour('light-blue');
+        border-color: govuk-colour('light-blue');
     }
-    .defra-search__button:active {
-        top: auto;
+    &__button:focus,
+    &__button:active {
+        background-color: $govuk-focus-colour;
+        border-color: $govuk-focus-colour;
+        outline:0;
+        z-index: 2;
     }
+    &__button:focus:after,
+    &__button:active:after {
+        background-position: 100% 0%;
+    }
+
 }
-*/
 .defra-search-summary {
     position:relative;
     border-bottom:1px solid govuk-colour('black');
     margin-bottom:10px;
-    .defra-search-summary__count {
+    &__count {
         @extend .govuk-body;
         @include govuk-responsive-margin(2, 'bottom');
     }
-    .defra-search-summary__button-map {
+    &__button-map {
         @extend .defra-button-map;
         position:absolute;
         right:0px;
