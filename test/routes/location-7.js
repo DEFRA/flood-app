@@ -5,7 +5,6 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
-const data = require('../data')
 
 lab.experiment('Routes test - location - 1 alert 1 nlif', () => {
   let sandbox
@@ -119,9 +118,8 @@ lab.experiment('Routes test - location - 1 alert 1 nlif', () => {
     }
 
     const response = await server.inject(options)
-    console.log(response.payload)
     Code.expect(response.statusCode).to.equal(200)
-    // no flood alerts or warnings but sea levels are high and location is not pickingup and stations to check this, needs content off Elenor 
+    // no flood alerts or warnings but sea levels are high and location is not pickingup and stations to check this, needs content off Elenor
     Code.expect(response.payload).to.contain('No flood warnings or alerts currently in place in this area.')
     // Code.expect(response.payload).to.contain('New content and link from Elenor')
   })
