@@ -123,6 +123,6 @@ lab.experiment('Routes test - location - 1 alert 1 nlif', () => {
     Code.expect(response.statusCode).to.equal(200)
     // no flood alerts or warnings but sea levels are high and location is not pickingup and stations to check this, needs content off Elenor 
     Code.expect(response.payload).to.contain('No flood warnings or alerts currently in place in this area.')
-    Code.expect(response.payload).to.contain('New content and link from Elenor')
+    // Code.expect(response.payload).to.contain('New content and link from Elenor')
   })
 })
