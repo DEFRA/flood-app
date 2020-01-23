@@ -75,6 +75,10 @@ function cleanseLocation (location) {
   }
 }
 
+function addBufferToBbox (bbox, m) {
+
+}
+
 module.exports = {
   get,
   post,
@@ -84,5 +88,6 @@ module.exports = {
   formatDate,
   toFixed,
   groupBy,
-  cleanseLocation
+  cleanseLocation,
+  addBufferToBbox
 }

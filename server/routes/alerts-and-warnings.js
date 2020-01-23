@@ -19,6 +19,7 @@ module.exports = [{
       return h.view('alerts-and-warnings', { model })
     }
     place = await locationService.find(util.cleanseLocation(location))
+
     if (typeof place === 'undefined' || place === '') {
       // If no place return empty floods
       model = new ViewModel({ location, place, floods })
@@ -29,6 +30,10 @@ module.exports = [{
       // Place ok but not in England
       return h.view('location-not-england')
     }
+
+    // add on 2000m buffer to place.bbox for search
+    place.bbox = util.addBufferToBbox(place.bbox, 2000)
+
     // Data passed to floods model so the schema is the same as cached floods
     const data = await floodService.getFloodsWithin(place.bbox)
     floods = new Floods(data)
