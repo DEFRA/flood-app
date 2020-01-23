@@ -35,6 +35,7 @@ module.exports = {
       floodService.getFloodsWithin(place.bbox),
       floodService.getStationsWithin(place.bbox)
     ])
+    console.log('Floods', stations)
     const model = new ViewModel({ location, place, floods, stations, impacts })
     return h.view('location', { model })
   },
