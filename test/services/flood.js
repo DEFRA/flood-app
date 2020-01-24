@@ -53,10 +53,9 @@ lab.experiment('Flood service test', () => {
 
     floodService.floods = await floodService.getFloods()
 
-    await Code.expect(floodService.floods.floods[0].code).to.equal('013FWFD5')
-    await Code.expect(floodService.floods.groups[0].title).to.equal('1 Severe flood warning')
-    // await Code.expect(floodService.floods.geojson.features[0].id).to.equal('flood_warning_alert.174393')
-    await Code.expect(floodService.floods.timestamp).to.be.undefined()
+    Code.expect(floodService.floods.floods[0].code).to.equal('013FWFD5')
+    Code.expect(floodService.floods.groups[0].title).to.equal('1 Severe flood warning')
+    Code.expect(floodService.floods.timestamp).to.be.undefined()
   })
 
   lab.test('Test for outlook', async () => {
@@ -261,14 +260,14 @@ lab.experiment('Flood service test', () => {
 
     floodService.outlook = await floodService.getOutlook()
 
-    await Code.expect(floodService.outlook.issueDate).to.be.a.date()
-    await Code.expect(floodService.outlook.timestampOutlook).to.equal(1565083800000)
-    await Code.expect(floodService.outlook.hasOutlookConcern).to.be.true
-    await Code.expect(floodService.outlook.geoJson.type).to.equal('FeatureCollection')
-    await Code.expect(floodService.outlook.riskLevels).to.be.an.array()
-    await Code.expect(floodService.outlook.full).to.contain('Local flooding is possible but not expected from surface water')
-    await Code.expect(floodService.outlook.days).to.be.an.array()
-    await Code.expect(floodService.outlook.days.length).to.equal(5)
+    Code.expect(floodService.outlook.issueDate).to.be.a.date()
+    Code.expect(floodService.outlook.timestampOutlook).to.equal(1565083800000)
+    Code.expect(floodService.outlook.hasOutlookConcern).to.equal(true)
+    Code.expect(floodService.outlook.geoJson.type).to.equal('FeatureCollection')
+    Code.expect(floodService.outlook.riskLevels).to.be.an.array()
+    Code.expect(floodService.outlook.full).to.contain('Local flooding is possible but not expected from surface water')
+    Code.expect(floodService.outlook.days).to.be.an.array()
+    Code.expect(floodService.outlook.days.length).to.equal(5)
   })
 
   lab.test('Test getFloods endpoint', async () => {
@@ -282,8 +281,8 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getFloods()
 
-    await Code.expect(result).to.be.an.object()
-    await Code.expect(result.getFloods).to.equal('TEST')
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.getFloods).to.equal('TEST')
   })
 
   lab.test('Test getFloodsWithin endpoint', async () => {
@@ -297,8 +296,8 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getFloodsWithin([1, 2, 3, 4])
 
-    await Code.expect(result).to.be.an.object()
-    await Code.expect(result.getFloodsWithin).to.equal('TEST')
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.getFloodsWithin).to.equal('TEST')
   })
 
   lab.test('Test getFloodArea endpoint', async () => {
@@ -312,8 +311,8 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getFloodArea('1234w')
 
-    await Code.expect(result).to.be.an.object()
-    await Code.expect(result.getFloodArea).to.equal('TEST')
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.getFloodArea).to.equal('TEST')
   })
 
   lab.test('Test getOutlook endpoint', async () => {
@@ -327,8 +326,8 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getOutlook()
 
-    await Code.expect(result).to.be.a.string()
-    await Code.expect(result).to.equal('TEST')
+    Code.expect(result).to.be.a.string()
+    Code.expect(result).to.equal('TEST')
   })
 
   lab.test('Test getStationById endpoint', async () => {
@@ -342,8 +341,8 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationById(1, 'u')
 
-    await Code.expect(result).to.be.an.object()
-    await Code.expect(result.getStationById).to.equal('TEST')
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.getStationById).to.equal('TEST')
   })
 
   lab.test('Test getStationsWithin endpoint', async () => {
@@ -357,8 +356,8 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationsWithin([1, 2, 3, 4])
 
-    await Code.expect(result).to.be.an.object()
-    await Code.expect(result.getStationsWithin).to.equal('TEST')
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.getStationsWithin).to.equal('TEST')
   })
 
   lab.test('Test getStationsUpstreamDownstream endpoint', async () => {
@@ -372,8 +371,8 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationsUpstreamDownstream(1, 'u')
 
-    await Code.expect(result).to.be.an.object()
-    await Code.expect(result.getStationsUpstreamDownstream).to.equal('TEST')
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.getStationsUpstreamDownstream).to.equal('TEST')
   })
 
   lab.test('Test getStationsWithinRadius endpoint', async () => {
@@ -387,8 +386,8 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationsWithinRadius(1.00, 2.00, 1000)
 
-    await Code.expect(result).to.be.an.object()
-    await Code.expect(result.getStationsWithinRadius).to.equal('TEST')
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.getStationsWithinRadius).to.equal('TEST')
   })
 
   lab.test('Test getStationTelemetry endpoint', async () => {
@@ -402,8 +401,8 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationTelemetry('u', 7077)
 
-    await Code.expect(result).to.be.an.object()
-    await Code.expect(result.getStationTelemetry).to.equal('TEST')
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.getStationTelemetry).to.equal('TEST')
   })
 
   lab.test('Test getStationForecastThresholds endpoint', async () => {
@@ -417,8 +416,8 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationForecastThresholds(7077)
 
-    await Code.expect(result).to.be.an.object()
-    await Code.expect(result.getStationForecastThresholds).to.equal('TEST')
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.getStationForecastThresholds).to.equal('TEST')
   })
 
   lab.test('Test getStationForecastData endpoint', async () => {
@@ -432,8 +431,8 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationForecastData(7077)
 
-    await Code.expect(result).to.be.an.object()
-    await Code.expect(result.getStationForecastData).to.equal('TEST')
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.getStationForecastData).to.equal('TEST')
   })
 
   lab.test('Test getStationsGeoJson endpoint', async () => {
@@ -447,8 +446,8 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationsGeoJson()
 
-    await Code.expect(result).to.be.an.object()
-    await Code.expect(result.getStationsGeoJson).to.equal('TEST')
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.getStationsGeoJson).to.equal('TEST')
   })
 
   lab.test('Test getIsEngland endpoint', async () => {
@@ -462,8 +461,8 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getIsEngland()
 
-    await Code.expect(result).to.be.an.object()
-    await Code.expect(result.getIsEngland).to.equal('TEST')
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.getIsEngland).to.equal('TEST')
   })
 
   lab.test('Test getImpactData endpoint', async () => {
@@ -477,8 +476,8 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getImpactData(7077)
 
-    await Code.expect(result).to.be.an.object()
-    await Code.expect(result.getImpactData).to.equal('TEST')
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.getImpactData).to.equal('TEST')
   })
 
   lab.test('Test getImpactsWithin endpoint', async () => {
@@ -492,7 +491,7 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getImpactsWithin([1, 2, 3, 4])
 
-    await Code.expect(result).to.be.an.object()
-    await Code.expect(result.getImpactsWithin).to.equal('TEST')
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.getImpactsWithin).to.equal('TEST')
   })
 })

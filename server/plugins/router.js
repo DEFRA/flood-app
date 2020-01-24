@@ -20,7 +20,7 @@ const routes = [].concat(
   require('../routes/what-happens-after-a-flood'),
   require('../routes/recovering-after-a-flood'),
   require('../routes/alerts-and-warnings'),
-  require('../routes/levels'),
+  require('../routes/river-and-sea-levels'),
   require('../routes/impacts'),
   require('../routes/cookies'),
   require('../routes/terms-and-conditions'),
