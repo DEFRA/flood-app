@@ -1,5 +1,5 @@
 const joi = require('@hapi/joi')
-const ViewModel = require('../models/views/levels')
+const ViewModel = require('../models/views/river-and-sea-levels')
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
 
@@ -22,7 +22,7 @@ module.exports = [{
     stations = await floodService.getStationsWithin(place.bbox)
     model = new ViewModel({ location, place, stations })
     model.referer = request.headers.referer
-    return h.view('levels', { model })
+    return h.view('river-and-sea-levels', { model })
   },
   options: {
     validate: {
