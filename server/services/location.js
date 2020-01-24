@@ -1,5 +1,5 @@
 const { bingKey } = require('../config')
-const { getJson } = require('../util')
+const { getJson, addBufferToBbox } = require('../util')
 const floodServices = require('./flood')
 
 async function find (location) {
@@ -66,6 +66,9 @@ async function find (location) {
   }
 
   const isEngland = await floodServices.getIsEngland(center[0], center[1])
+
+  // add on 2000m buffer to place.bbox for search
+  bbox = addBufferToBbox(bbox, 2000)
 
   return {
     name,
