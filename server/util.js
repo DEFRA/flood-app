@@ -1,3 +1,4 @@
+const turf = require('@turf/turf')
 const moment = require('moment-timezone')
 const HttpsProxyAgent = require('https-proxy-agent')
 const config = require('./config')
@@ -76,7 +77,8 @@ function cleanseLocation (location) {
 }
 
 function addBufferToBbox (bbox, m) {
-
+  // Convert bbox into polygon, add buffer, and convert back to bbox as db query needs a bbox envelope
+  return turf.bbox(turf.buffer(turf.bboxPolygon(bbox), m, { units: 'meters' }))
 }
 
 module.exports = {

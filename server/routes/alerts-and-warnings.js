@@ -31,9 +31,6 @@ module.exports = [{
       return h.view('location-not-england')
     }
 
-    // add on 2000m buffer to place.bbox for search
-    place.bbox = util.addBufferToBbox(place.bbox, 2000)
-
     // Data passed to floods model so the schema is the same as cached floods
     const data = await floodService.getFloodsWithin(place.bbox)
     floods = new Floods(data)

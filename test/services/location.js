@@ -105,9 +105,11 @@ lab.experiment('location service test', () => {
       return error
     })
 
-    await Code.expect(result).to.be.a.object()
-    await Code.expect(result.Error).to.be.false
-    await Code.expect(result.address).to.equal('United Kingdom')
+    Code.expect(result).to.be.a.object()
+    Code.expect(result.Error).to.be.undefined()
+    Code.expect(result.address).to.equal('United Kingdom')
+    // Test that bounding box for location has been given 2km buffer
+    Code.expect(result.bbox).to.equal(JSON.parse('[-18.297640835711686,49.94624559508356,12.557641064593524,60.79096093998717]'))
   })
 
   lab.test('Check for Bing call returning low confidence and hence no results', async () => {
@@ -164,7 +166,7 @@ lab.experiment('location service test', () => {
       return error
     })
 
-    await Code.expect(result).to.be.undefined()
+    Code.expect(result).to.be.undefined()
   })
 
   lab.test('Check for Bing call returning medium confidence and hence no results', async () => {
@@ -221,7 +223,7 @@ lab.experiment('location service test', () => {
       return error
     })
 
-    await Code.expect(result).to.be.undefined()
+    Code.expect(result).to.be.undefined()
   })
 
   lab.test('Check for Bing call returning no data resources and hence no results', async () => {
@@ -255,7 +257,7 @@ lab.experiment('location service test', () => {
       return error
     })
 
-    await Code.expect(result).to.be.undefined()
+    Code.expect(result).to.be.undefined()
   })
 
   lab.test('Check for Bing call returning invalid query', async () => {
@@ -282,15 +284,14 @@ lab.experiment('location service test', () => {
 
     const location = require('../../server/services/location')
 
-    const result = await location.find('').then((resolvedValue) => {
-      return resolvedValue
-    }, (error) => {
-      return error
-    })
+    const rejects = async () => {
+      await location.find('').then((resolvedValue) => {
+        return resolvedValue
+      })
+    }
 
-    await Code.expect(result).to.be.a.object()
-    await Code.expect(result.Error).to.be.true
-    await Code.expect(result.message).to.equal('Invalid geocode results (no resourceSets)')
+    const result = await Code.expect(rejects()).to.reject()
+    Code.expect(result.message).to.equal('Invalid geocode results (no resourceSets)')
   })
 
   lab.test('Check for Bing call returning duplicate location name in description', async () => {
@@ -355,8 +356,8 @@ lab.experiment('location service test', () => {
       return error
     })
 
-    await Code.expect(result).to.be.a.object()
-    await Code.expect(result.Error).to.be.false
-    await Code.expect(result.name).to.equal('Warrington')
+    Code.expect(result).to.be.a.object()
+    Code.expect(result.Error).to.be.undefined()
+    Code.expect(result.name).to.equal('Warrington')
   })
 })
