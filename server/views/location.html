@@ -70,6 +70,12 @@
     </p>
     {% endif %}
 
+    {% if not model.hasLevels %}
+      <p class=“govuk-body”>
+        <a href=“/river-and-sea-levels”>View river and sea levels in the wider area</a>.
+      </p>
+    {% endif %}
+
     <h2 class="govuk-heading-m">Report a flood</h2>
     <p class="govuk-body">Flooding can also be caused by surface water, burst water mains or overflowing drains. You can <a href="https://www.gov.uk/report-flood-cause">report a flood or possible cause of flooding</a>.</p>
 

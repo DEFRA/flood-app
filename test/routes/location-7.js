@@ -38,7 +38,50 @@ lab.experiment('Routes test - location - 1 alert 1 nlif', () => {
     }
     // const fakePlaceData = () => {}
     const fakeFloodsData = () => {
-      return { floods: [] }
+      return {
+        floods: [
+          {
+            code: '122WAF948',
+            key: 4563104,
+            description: 'River Rye catchment',
+            quickdialnumber: '134603',
+            region: 'Midlands',
+            area: 'Central',
+            floodtype: 'f',
+            severity: 3,
+            severitydescription: 'Flood Alert',
+            warningkey: 1,
+            raised: '2020-01-22T15:22:28.240Z',
+            severitychanged: '2020-01-22T15:22:28.240Z',
+            messagechanged: '2020-01-22T15:22:28.240Z',
+            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ex sapien, luctus quis neque sit amet, rutrum semper odio. Mauris metus elit, semper in libero sed, vulputate placerat ante. In bibendum in libero in placerat. Aenean et ante nulla. Nullam tempus leo vitae mattis aliquam. Etiam tempus dignissim efficitur. Nam luctus tempus risus sit amet porttitor. Integer quis dapibus arcu, eu eleifend arcu. Vestibulum non nunc elit. Donec facilisis lorem tristique ultricies dapibus. Sed eleifend sit amet nibh ut tincidunt.\n' +
+            '\n' +
+            'Quisque nec ultrices risus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque viverra, tortor sit amet condimentum laoreet, lorem ante dictum ante, nec hendrerit nisl lacus sit amet diam. Praesent ut ornare lorem. Quisque placerat sollicitudin enim, sit amet laoreet enim consectetur in. Praesent nec nunc a ligula cursus cursus.\n' +
+            '\n' +
+            'Proin a dictum mauris, eget pulvinar augue. Pellentesque non lectus nibh. Pellentesque convallis ultricies enim, vel lacinia metus rhoncus vitae. Donec at porta tellus. In hac habitasse platea dictumst. Vestibulum mollis mollis nibh, sit amet maximus sem suscipit eu. Etiam elementum sed nulla quis tincidunt.'
+          },
+          {
+            code: '122WAF938',
+            key: 4563106,
+            description: 'River Wiske and tributaries',
+            quickdialnumber: '135104',
+            region: 'Midlands',
+            area: 'Central',
+            floodtype: 'f',
+            severity: 3,
+            severitydescription: 'Flood Alert',
+            warningkey: 1,
+            raised: '2020-01-22T15:22:28.240Z',
+            severitychanged: '2020-01-22T15:22:28.240Z',
+            messagechanged: '2020-01-22T15:22:28.240Z',
+            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ex sapien, luctus quis neque sit amet, rutrum semper odio. Mauris metus elit, semper in libero sed, vulputate placerat ante. In bibendum in libero in placerat. Aenean et ante nulla. Nullam tempus leo vitae mattis aliquam. Etiam tempus dignissim efficitur. Nam luctus tempus risus sit amet porttitor. Integer quis dapibus arcu, eu eleifend arcu. Vestibulum non nunc elit. Donec facilisis lorem tristique ultricies dapibus. Sed eleifend sit amet nibh ut tincidunt.\n' +
+            '\n' +
+            'Quisque nec ultrices risus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque viverra, tortor sit amet condimentum laoreet, lorem ante dictum ante, nec hendrerit nisl lacus sit amet diam. Praesent ut ornare lorem. Quisque placerat sollicitudin enim, sit amet laoreet enim consectetur in. Praesent nec nunc a ligula cursus cursus.\n' +
+            '\n' +
+            'Proin a dictum mauris, eget pulvinar augue. Pellentesque non lectus nibh. Pellentesque convallis ultricies enim, vel lacinia metus rhoncus vitae. Donec at porta tellus. In hac habitasse platea dictumst. Vestibulum mollis mollis nibh, sit amet maximus sem suscipit eu. Etiam elementum sed nulla quis tincidunt.'
+          }
+        ]
+      }
     }
 
     const fakeStationsData = () => []
@@ -60,18 +103,18 @@ lab.experiment('Routes test - location - 1 alert 1 nlif', () => {
             resources: [
               {
                 __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [53.494669295962524, -0.9971808372910244, 53.55261006194763, -0.8673192084853428],
-                name: 'Wroot, North Lincolnshire',
+                bbox: [54.18498992919922, -1.1886399984359741, 54.1898307800293, -1.1779199838638306],
+                name: 'Coxwold, North Yorkshire',
                 point: {
                   type: 'Point',
-                  coordinates: [53.52363967895508, -0.9322500228881836]
+                  coordinates: [54.187835693359375, -1.182824969291687]
                 },
                 address: {
                   adminDistrict: 'England',
-                  adminDistrict2: 'North Lincolnshire',
+                  adminDistrict2: 'North Yorkshire',
                   countryRegion: 'United Kingdom',
-                  formattedAddress: 'Wroot, North Lincolnshire',
-                  locality: 'Wroot',
+                  formattedAddress: 'Coxwold, North Yorkshire',
+                  locality: 'Coxwold',
                   countryRegionIso2: 'GB'
                 },
                 confidence: 'High',
@@ -79,7 +122,7 @@ lab.experiment('Routes test - location - 1 alert 1 nlif', () => {
                 geocodePoints: [
                   {
                     type: 'Point',
-                    coordinates: [53.52363967895508, -0.9322500228881836],
+                    coordinates: [54.187835693359375, -1.182824969291687],
                     calculationMethod: 'Rooftop',
                     usageTypes: ['Display']
                   }
@@ -114,13 +157,12 @@ lab.experiment('Routes test - location - 1 alert 1 nlif', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location?q=coxwold'
     }
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
-    // no flood alerts or warnings but sea levels are high and location is not pickingup and stations to check this, needs content off Elenor
-    Code.expect(response.payload).to.contain('No flood warnings or alerts currently in place in this area.')
-    // Code.expect(response.payload).to.contain('New content and link from Elenor')
+    Code.expect(response.payload).to.contain('View river and sea levels in the wider area')
+    Code.expect(response.payload).to.not.contain('View river and sea levels in this area')
   })
 })
