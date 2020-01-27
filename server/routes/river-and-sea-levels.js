@@ -11,10 +11,10 @@ module.exports = [{
     var model, place, stations
     place = await locationService.find(location)
     if (typeof place === 'undefined' || place === '') {
-      stations = floodService.stations
+      stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
       model = new ViewModel({ location, place, stations })
       model.referer = request.headers.referer
-      return h.view('levels', { model })
+      return h.view('river-and-sea-levels', { model })
     }
     if (!place.isEngland.is_england) {
       return h.view('location-not-england')
