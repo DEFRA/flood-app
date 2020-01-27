@@ -53,6 +53,14 @@
     var overlayInnerElement = document.createElement('div')
     overlayInnerElement.classList.add('ol-overlay-inner')
 
+    // Close overlay button
+    var closeOverlayButton = document.createElement('button')
+    closeOverlayButton.appendChild(document.createTextNode('Close'))
+    closeOverlayButton.className = 'ol-close-overlay'
+    closeOverlayButton.addEventListener('click', function (e) {
+      this.hideOverlay()
+    }.bind(this))
+
     // Create zoom buttons
     var zoomButton = document.createElement('button')
     zoomButton.appendChild(document.createTextNode('Zoom'))
@@ -65,7 +73,6 @@
     var hideMapButton = document.createElement('button')
     hideMapButton.className = 'defra-map__exit-map-btn'
     hideMapButton.appendChild(document.createTextNode('Exit map'))
-
     hideMapButton.addEventListener('click', function (e) {
       hideMap()
     })
@@ -163,6 +170,7 @@
 
       this.overlay.element.style.display = 'block'
       map.addOverlay(this.overlay)
+      overlayInnerElement.parentNode.insertBefore(closeOverlayButton, overlayInnerElement)
     }
 
     // Hide overlay

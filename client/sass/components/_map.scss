@@ -392,7 +392,7 @@
 }
 */
 .ol-overlay-inner {
-  padding:15px;
+  padding:15px 45px 15px 15px;
   position:relative;
   @include govuk-font($size: 16);
   p {
@@ -437,7 +437,27 @@
   }
 }
 */
-
+.ol-close-overlay {
+  position:absolute;
+  right:0px;
+  top:0px;
+  width:40px;
+  height:40px;
+  border:0px;
+  background:yellow;
+  text-indent: -5000px;
+  cursor: pointer;
+  z-index: 2;
+  background-image: url('#{$govuk-images-path}icon-map-controls-2x.png');
+  background-size:90px;
+  background-repeat: no-repeat;
+  background-color:white;
+  color:$govuk-link-colour;
+  background-position:5px -175px;
+} 
+.ol-close-overlay:hover {
+  opacity: 0.75;
+}
 .ol-overlay__symbol {
   position:absolute;
   right:10px;
@@ -766,7 +786,7 @@ input[type="search"].map-search-input::-webkit-search-results-decoration {
     left: auto;
     background-color:white;
     color:$govuk-link-colour;
-    background-position:5px -175px;
+    background-position:-54px -175px;
   }
 }
 .defra-map-key__toggle-key-btn:hover {
