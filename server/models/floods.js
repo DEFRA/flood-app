@@ -1,18 +1,38 @@
 const severity = require('../models/severity')
-const { groupBy } = require('../util')
+const { groupBy, formatDate } = require('../util')
 
 class Floods {
   constructor (data, national = true) {
     this._floods = data
     const grouped = groupBy(data.floods, 'severity')
     this._groups = severity.map(item => {
-      const group = grouped[item.id]
-      const count = group ? group.length : 0
+      let floods = grouped[item.id]
+      const count = floods ? floods.length : 0
+      // For each flood we want to build an HTML header view of it for the /alerts-and-warnings route (this is off the back of performance tuning)
+      floods = !floods ? floods : floods.map(flood => {
+        flood.html = `<li class="defra-flood-list__item defra-flood-list__item--${item.hash}">
+                        <span class="defra-flood-list__item-title">
+                            <a href="/target-area/${flood.code}">${flood.description}</a>
+                        </span>
+                        <dl class="defra-flood-list__item-meta">
+                            <div>
+                          <dt>
+                              ${item.severity === 4 ? 'Removed' : 'Updated'}
+                          </dt>
+                          <dd>
+                              <time datetime="${flood.messagechanged}">${formatDate(flood.messagechanged)}</time>
+                          </dd>
+                            </div>
+                        </dl>
+                      </li>`
+        return flood
+      })
       return {
         name: item.id,
+        count: count,
         severity: item,
         title: `${count} ${count === 1 ? item.title : item.pluralisedTitle}`,
-        floods: group,
+        floods: floods,
         description: item.subTitle
       }
     })
@@ -37,7 +57,22 @@ class Floods {
       }
     })
 
-    this._count = data.floods.length
+    if (this._groups[0].count > 0) {
+      this._hasActiveFloods = true
+      this._highestSeverityId = this._groups[0].severity.id
+    } else if (this._groups[1].count > 0) {
+      this._hasActiveFloods = true
+      this._highestSeverityId = this._groups[1].severity.id
+    } else if (this._groups[2].count > 0) {
+      this._hasActiveFloods = true
+      this._highestSeverityId = this._groups[2].severity.id
+    } else if (this._groups[3].count > 0) {
+      this._hasActiveFloods = false
+      this._highestSeverityId = this._groups[3].severity.id
+    } else {
+      this._hasActiveFloods = false
+      this._highestSeverityId = 5
+    }
   }
 
   get floods () {
@@ -54,6 +89,14 @@ class Floods {
 
   get geojson () {
     return this._geojson
+  }
+
+  get hasActiveFloods () {
+    return this._hasActiveFloods
+  }
+
+  get highestSeverityId () {
+    return this._highestSeverityId
   }
 }
 module.exports = Floods

@@ -11,10 +11,10 @@ module.exports = {
           name: 'Squeeze',
           args: [
             {
-              log: '*',
-              error: '*',
-              response: '*',
-              request: '*'
+              log: 'error',
+              error: 'error',
+              response: 'error',
+              request: 'error'
             }
           ]
         },

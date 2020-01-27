@@ -13,6 +13,7 @@ const routes = [].concat(
   require('../routes/api/ows'),
   require('../routes/api/rainfall'),
   require('../routes/api/impacts'),
+  require('../routes/api/outlook'),
   require('../routes/start-page'),
   require('../routes/sms-auto-opt-in-info'),
   require('../routes/what-to-do-in-a-flood'),

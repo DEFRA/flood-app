@@ -29,7 +29,7 @@
       </div>
       {% endif %}
       {% for group in model.floods %}
-      {% if group.floods %}
+      {% if group.count > 0 %}
       {% if group.severity.id < 4 %}
       <div class="defra-flood-status-item defra-flood-status-item--{{ group.severity.hash }}">
         <span class="defra-flood-status-item__icon"></span>

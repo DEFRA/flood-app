@@ -35,11 +35,18 @@ lab.experiment('Routes test - national view', () => {
       }
     }
 
+    const fakeOutlookData = () => {
+      const outlook = require('../data/outlook.json')
+      return outlook.statements[0]
+    }
+
     const floodService = require('../../server/services/flood')
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
     // Fake the cached flood data
     floodService.floods = await floodService.getFloods()
+    floodService.outlook = await floodService.getOutlook()
 
     const locationPlugin = {
       plugin: {

@@ -1,19 +1,34 @@
 class ViewModel {
-  constructor (options) {
-    const { floods, outlook } = options
+  constructor (floods, outlook) {
     Object.assign(this, {
       pageTitle: 'Flood risk for England',
       metaDescription: 'Check the latest flood risk situation for england and the 5-day flood forecast.',
       metaKeywords: 'flooding, flood risk, flood map, flood warnings, flood alerts, river and sea levels, 5-day flood forecast, gov.uk, england',
-      metaCanonical: '/national'
-
+      metaCanonical: '/national',
+      hasActiveFloods: floods.hasActiveFloods,
+      highestSeverityId: floods.highestSeverityId,
+      timestamp: Date.now()
     })
-    const activeFloods = floods.floods.filter(flood => flood.severity < 4)
-    this.hasActiveFloods = !!activeFloods.length
-    this.highestSeverityId = Math.min(...floods.floods.map(flood => flood.severity))
-    this.floods = floods._groups
-    this.outlook = outlook
-    this.timestamp = Date.now()
+
+    // Strip out flood array as it is superflous to the view
+    this.floods = floods.groups.map(item => {
+      return {
+        count: item.count,
+        description: item.description,
+        name: item.name,
+        severity: item.severity,
+        title: item.title
+      }
+    })
+    // Strip out superflous outlook data
+    this.outlook = [outlook].map(item => {
+      return {
+        timestampOutlook: item.timestampOutlook,
+        full: item.full,
+        hasOutlookConcern: item.hasOutlookConcern,
+        days: item.days
+      }
+    })[0]
   }
 }
 

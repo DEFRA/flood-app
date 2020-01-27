@@ -17,26 +17,25 @@ module.exports = [{
       model = new ViewModel({ location, place, floods })
       model.referer = request.headers.referer
       return h.view('alerts-and-warnings', { model })
+    } else {
+      place = await locationService.find(util.cleanseLocation(location))
+      if (typeof place === 'undefined' || place === '') {
+        // If no place return empty floods
+        model = new ViewModel({ location, place, floods })
+        model.referer = request.headers.referer
+        return h.view('alerts-and-warnings', { model })
+      } else if (!place.isEngland.is_england) {
+        // Place ok but not in England
+        return h.view('location-not-england')
+      } else {
+        // Data passed to floods model so the schema is the same as cached floods
+        const data = await floodService.getFloodsWithin(place.bbox)
+        floods = new Floods(data)
+        model = new ViewModel({ location, place, floods })
+        model.referer = request.headers.referer
+        return h.view('alerts-and-warnings', { model })
+      }
     }
-    place = await locationService.find(util.cleanseLocation(location))
-
-    if (typeof place === 'undefined' || place === '') {
-      // If no place return empty floods
-      model = new ViewModel({ location, place, floods })
-      model.referer = request.headers.referer
-      return h.view('alerts-and-warnings', { model })
-    }
-    if (!place.isEngland.is_england) {
-      // Place ok but not in England
-      return h.view('location-not-england')
-    }
-
-    // Data passed to floods model so the schema is the same as cached floods
-    const data = await floodService.getFloodsWithin(place.bbox)
-    floods = new Floods(data)
-    model = new ViewModel({ location, place, floods })
-    model.referer = request.headers.referer
-    return h.view('alerts-and-warnings', { model })
   },
   options: {
     validate: {

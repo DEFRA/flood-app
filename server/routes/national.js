@@ -11,7 +11,7 @@ module.exports = {
     // get the cached outlook
     const outlook = floodService.outlook
 
-    const model = new ViewModel({ floods, outlook })
+    const model = new ViewModel(floods, outlook)
 
     return h.view('national', { model })
   }

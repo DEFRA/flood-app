@@ -37,7 +37,7 @@ module.exports = {
       'node_modules/govuk-frontend/govuk',
       'node_modules/govuk-frontend/govuk/components/'
     ],
-    isCached: !config.isDev,
+    isCached: true,
     context: {
       env: config.env,
       appVersion: pkg.version,

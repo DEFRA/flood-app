@@ -32,14 +32,6 @@
       ], 'EPSG:4326', 'EPSG:3857')
     })
 
-    var geoJson = new window.ol.format.GeoJSON()
-    var outlookGeoJson = flood.model.outlook._geoJson
-
-    var areasOfConcernFeatures = geoJson.readFeatures(outlookGeoJson, {
-      dataProjection: 'EPSG:4326',
-      featureProjection: 'EPSG:3857'
-    })
-
     var pattern = function () {
       var canvas = document.createElement('canvas')
       var dpr = window.devicePixelRatio || 1
@@ -99,9 +91,10 @@
     var areasOfConcern = new window.ol.layer.Vector({
       zIndex: 200,
       renderMode: 'hybrid',
-      source: new window.ol.source.Vector({
-        format: geoJson,
-        features: areasOfConcernFeatures
+      source: new ol.source.Vector({
+        format: new ol.format.GeoJSON(),
+        projection: 'EPSG:3857',
+        url: '/api/outlook.geojson'
       }),
       style: styleFeature,
       opacity: 0.9
@@ -125,7 +118,7 @@
     var outlookControl = document.createElement('div')
     outlookControl.className = 'map__outlook-control'
     outlookControl.innerHTML = '<div class="map__outlook-control__inner"></div>'
-    flood.model.outlook._days.forEach(function (day) {
+    flood.model.outlook.days.forEach(function (day) {
       var div = document.createElement('div')
       div.className = 'map__outlook-control__day'
       div.setAttribute('data-risk-level', day.level)
