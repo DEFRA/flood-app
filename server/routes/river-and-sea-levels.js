@@ -1,5 +1,5 @@
 const joi = require('@hapi/joi')
-const ViewModel = require('../models/views/levels')
+const ViewModel = require('../models/views/river-and-sea-levels')
 const RiverViewModel = require('../models/views/river-stations')
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
