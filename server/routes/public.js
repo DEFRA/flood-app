@@ -3,7 +3,7 @@ module.exports = [{
   path: '/robots.txt',
   options: {
     handler: {
-      file: 'server/public/static/robots.txt'
+      file: 'server/dist/robots.txt'
     }
   }
 }, {
@@ -21,8 +21,7 @@ module.exports = [{
     handler: {
       directory: {
         path: [
-          'server/public/static',
-          'server/public/build',
+          'server/dist',
           'node_modules/govuk-frontend/govuk/assets',
           'node_modules/accessible-autocomplete/dist',
           'node_modules/nunjucks/browser'

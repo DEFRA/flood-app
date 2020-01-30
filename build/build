@@ -1,0 +1,3 @@
+#!/bin/bash
+
+npm run build:clean && npm run build:js && npm run build:css && npm run build:cp-assets 

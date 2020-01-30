@@ -3,7 +3,7 @@
 node_modules
 npm-debug.log
 logs
-server/public/build
+server/dist
 rivers/output.json
 rivers/rivers.json
 rivers/stations.json

@@ -70,17 +70,17 @@
 
 {% block bodyEnd %}
 {{ super() }}
-  <script src="{{assetPath}}/javascripts/ol.js"></script>
-  <script src="{{assetPath}}/javascripts/components/maps.js"></script>
-  <script src="{{assetPath}}/javascripts/components/maps-styles.js"></script>
-  <script src="{{assetPath}}/javascripts/components/maps-layers.js"></script>
-  <script src="{{assetPath}}/javascripts/components/map-container.js"></script>
-  <script src="{{assetPath}}/javascripts/components/maps/live.js"></script>
-  <script src="{{assetPath}}/javascripts/templates.js"></script>
+  <script src="{{assetPath}}/js/ol.js"></script>
+  <script src="{{assetPath}}/js/components/maps.js"></script>
+  <script src="{{assetPath}}/js/components/maps-styles.js"></script>
+  <script src="{{assetPath}}/js/components/maps-layers.js"></script>
+  <script src="{{assetPath}}/js/components/map-container.js"></script>
+  <script src="{{assetPath}}/js/components/maps/live.js"></script>
+  <script src="{{assetPath}}/js/templates.js"></script>
   <script src="{{ assetPath }}/nunjucks-slim.min.js"></script>
   <script>nunjucks.configure()</script>
 <script>
   window.flood.model = {{ model.expose | dump(2) | safe }}
 </script>
-<script src="{{assetPath}}/javascripts/pages/alerts-and-warnings.js"></script>
+<script src="{{assetPath}}/js/pages/alerts-and-warnings.js"></script>
 {% endblock %}
