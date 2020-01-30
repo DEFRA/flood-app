@@ -231,12 +231,10 @@
 
 {% block bodyEnd %}
 {{ super() }}
-<script src="{{ assetPath }}/nunjucks-slim.min.js"></script>
-<script>nunjucks.configure()</script>
-<script src="/assets/js/d3.v5.min.js"></script>
-<script src="/assets/js/components/charts.js"></script>
+<!--<script src="/assets/js/d3.v5.min.js"></script>-->
+<!-- <script src="/assets/js/charts.js"></script> -->
 <script>
   window.flood.model = {{ model | dump(2) | safe }}
 </script>
-<script src="{{assetPath}}/js/pages/station.js"></script>
+<script src="{{assetPath}}/js/station.js"></script>
 {% endblock %}

@@ -2,3 +2,4 @@
 
 mkdir -p server/dist/js
 nunjucks-precompile server/src/templates > server/dist/js/templates.js
+webpack

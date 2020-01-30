@@ -1,507 +1,506 @@
+'use strict'
 // Chart component
-(function (window, flood) {
-  var d3 = window.d3
-  var charts = {}
+// TODO: this needs heavy refactor
+import * as d3 from 'd3'
 
-  function LineChart (containerId, data) {
-    // Settings
-    var windowBreakPoint = 640
-    var svgBreakPoint = 576
-    var xAxisType = 'daily'
+function LineChart (containerId, data) {
+  // Settings
+  const windowBreakPoint = 640
+  const svgBreakPoint = 576
+  const xAxisType = 'daily'
 
-    //
-    // Progressive enhancement
-    //
+  //
+  // Progressive enhancement
+  //
 
-    var chart = document.getElementById(containerId)
+  const chart = document.getElementById(containerId)
 
-    // Setup array to combine observed and forecast points
-    // and identify startPoint for locator
-    var lines = []
-    var dataPoint, dataPointLatest, dataPointLocator
-    var hasObserved = false
-    var hasForecast = false
-    if (data.observed.length) {
-      lines = data.observed.reverse()
-      // First chronolgical point
-      dataPoint = JSON.parse(JSON.stringify(data.observed[data.observed.length - 1]))
-      hasObserved = true
-    }
-    if (data.forecast.length) {
-      lines = lines.concat(data.forecast)
-      hasForecast = true
-    }
+  // Setup array to combine observed and forecast points
+  // and identify startPoint for locator
+  let lines = []
+  let dataPoint
+  let hasObserved = false
+  let hasForecast = false
+  if (data.observed.length) {
+    lines = data.observed.reverse()
+    // First chronolgical point
+    dataPoint = JSON.parse(JSON.stringify(data.observed[data.observed.length - 1]))
+    hasObserved = true
+  }
+  if (data.forecast.length) {
+    lines = lines.concat(data.forecast)
+    hasForecast = true
+  }
 
-    // Set dataPointLatest
-    dataPointLatest = JSON.parse(JSON.stringify(dataPoint))
-    dataPointLocator = dataPointLatest
+  // Set dataPointLatest
+  const dataPointLatest = JSON.parse(JSON.stringify(dataPoint))
+  let dataPointLocator = dataPointLatest
 
-    // Area generator
-    var area = d3.area().curve(d3.curveCardinal)
-      .x(function (d) { return x(new Date(d.ts)) })
-      .y0(function (d) { return height })
-      .y1(function (d) { return y(d._) })
+  // Area generator
+  const area = d3.area().curve(d3.curveCardinal)
+    .x(function (d) { return x(new Date(d.ts)) })
+    .y0(function (d) { return height })
+    .y1(function (d) { return y(d._) })
 
-    // Line generator
-    var line = d3.line().curve(d3.curveCardinal)
-      .x(function (d) { return x(new Date(d.ts)) })
-      .y(function (d) { return y(d._) })
+  // Line generator
+  const line = d3.line().curve(d3.curveCardinal)
+    .x(function (d) { return x(new Date(d.ts)) })
+    .y(function (d) { return y(d._) })
 
-    // Initialize svg
-    var svg = d3.select('#' + containerId).append('svg').style('pointer-events', 'none')
-    // chartWrapper.on('mouseover', function(d) { d3.select(this).style('cursor', 'pointer') })
+  // Initialize svg
+  const svg = d3.select('#' + containerId).append('svg').style('pointer-events', 'none')
+  // chartWrapper.on('mouseover', function(d) { d3.select(this).style('cursor', 'pointer') })
 
-    var chartWrapper = svg.append('g').style('pointer-events', 'all')
-    chartWrapper.append('g').classed('y grid', true)
-    chartWrapper.append('g').classed('x grid', true)
-    chartWrapper.append('g').classed('x axis', true)
-    chartWrapper.append('g').classed('y axis', true)
-    chartWrapper.on('click', function () { showTooltip.call(this, null) })
-    chartWrapper.on('mousemove', function () { showTooltip.call(this, null) })
-    chartWrapper.on('mouseout', function () { hideTooltip.call(this, null) })
+  const chartWrapper = svg.append('g').style('pointer-events', 'all')
+  chartWrapper.append('g').classed('y grid', true)
+  chartWrapper.append('g').classed('x grid', true)
+  chartWrapper.append('g').classed('x axis', true)
+  chartWrapper.append('g').classed('y axis', true)
+  chartWrapper.on('click', function () { showTooltip.call(this, null) })
+  chartWrapper.on('mousemove', function () { showTooltip.call(this, null) })
+  chartWrapper.on('mouseout', function () { hideTooltip.call(this, null) })
 
-    // Add observed and forecast elements
-    if (hasObserved) {
-      chartWrapper.append('g').classed('observed observed-focus', true)
-      var observedArea = svg.select('.observed').append('path').datum(data.observed).classed('observed-area', true)
-      var observed = svg.select('.observed').append('path').datum(data.observed).classed('observed-line', true)
-    }
-    if (hasForecast) {
-      chartWrapper.append('g').classed('forecast', true)
-      var forecastArea = svg.select('.forecast').append('path').datum(data.forecast).classed('forecast-area', true)
-      var forecast = svg.select('.forecast').append('path').datum(data.forecast).classed('forecast-line', true)
-    }
+  // Add observed and forecast elements
+  let observedArea, observed, forecastArea, forecast
+  if (hasObserved) {
+    chartWrapper.append('g').classed('observed observed-focus', true)
+    observedArea = svg.select('.observed').append('path').datum(data.observed).classed('observed-area', true)
+    observed = svg.select('.observed').append('path').datum(data.observed).classed('observed-line', true)
+  }
+  if (hasForecast) {
+    chartWrapper.append('g').classed('forecast', true)
+    forecastArea = svg.select('.forecast').append('path').datum(data.forecast).classed('forecast-area', true)
+    forecast = svg.select('.forecast').append('path').datum(data.forecast).classed('forecast-line', true)
+  }
 
-    // Add timeline
-    var nowContainer = chartWrapper.append('g').classed('time', true)
-    var dateNow = new Date()
-    var time = (dateNow.getHours() % 12 || 12) + ':' + (dateNow.getMinutes() < 10 ? '0' : '') + dateNow.getMinutes() + (dateNow.getHours() >= 12 ? 'pm' : 'am')
-    nowContainer.append('line').classed('time-line', true)
-    nowContainer.append('text').attr('class', 'time-now-text').attr('x', -30).text(time)
-    var now = svg.select('.time')
+  // Add timeline
+  const nowContainer = chartWrapper.append('g').classed('time', true)
+  const dateNow = new Date()
+  const time = (dateNow.getHours() % 12 || 12) + ':' + (dateNow.getMinutes() < 10 ? '0' : '') + dateNow.getMinutes() + (dateNow.getHours() >= 12 ? 'pm' : 'am')
+  nowContainer.append('line').classed('time-line', true)
+  nowContainer.append('text').attr('class', 'time-now-text').attr('x', -30).text(time)
+  const now = svg.select('.time')
 
-    // Add locator
-    var locator = chartWrapper.append('g').classed('locator', true)
-    locator.append('line').classed('locator-line', true)
-    locator.append('circle').attr('r', 4.5).classed('locator-point', true)
+  // Add locator
+  const locator = chartWrapper.append('g').classed('locator', true)
+  locator.append('line').classed('locator-line', true)
+  locator.append('circle').attr('r', 4.5).classed('locator-point', true)
 
-    // Add thresholds group
-    var thresholdsContainer = chartWrapper.append('g').classed('thresholds', true)
+  // Add thresholds group
+  const thresholdsContainer = chartWrapper.append('g').classed('thresholds', true)
 
-    // Add tooltip container
-    var toolTip = chartWrapper.append('g').attr('class', 'tool-tip')
-    toolTip.append('rect').attr('class', 'tool-tip-bg').attr('width', 147)
-    toolTip.append('text').attr('class', 'tool-tip-text').attr('x', 12).attr('y', 20)
+  // Add tooltip container
+  const toolTip = chartWrapper.append('g').attr('class', 'tool-tip')
+  toolTip.append('rect').attr('class', 'tool-tip-bg').attr('width', 147)
+  toolTip.append('text').attr('class', 'tool-tip-text').attr('x', 12).attr('y', 20)
 
-    // Set level and date formats
-    var parseTime = d3.timeFormat('%-I:%M%p')
-    // var parseDate = d3.timeFormat('%e %b %Y')
-    var parseDateShort = d3.timeFormat('%e %b')
+  // Set level and date formats
+  const parseTime = d3.timeFormat('%-I:%M%p')
+  // const parseDate = d3.timeFormat('%e %b %Y')
+  const parseDateShort = d3.timeFormat('%e %b')
 
-    // Variables defined for subsequent methods
-    var margin = {}
-    var locatorX, locatorY
-    var toolTipX = -1
-    var toolTipY = -1
-    var timeX
-    var width, height
-    var xExtent, yExtent
-    var x, y, xAxis, yAxis
+  // Variables defined for subsequent methods
+  const margin = {}
+  let locatorX, locatorY
+  let toolTipX = -1
+  let toolTipY = -1
+  let timeX
+  let width, height
+  let xExtent, yExtent
+  let x, y, xAxis, yAxis
 
-    // Empty thresholds array
-    var thresholds = []
+  // Empty thresholds array
+  let thresholds = []
 
-    // Modify axis with thresholds and define scales
-    modifyAxis()
+  // Modify axis with thresholds and define scales
+  modifyAxis()
 
-    // Render the chart
-    render()
+  // Render the chart
+  render()
 
-    function render () {
-      // Update dimensions
-      updateDimensions()
+  function render () {
+    // Update dimensions
+    updateDimensions()
 
-      // Update svg elements to new dimensions
-      chartWrapper.attr('transform', 'translate(' + (margin.left + margin.right) + ',' + 0 + ')')
+    // Update svg elements to new dimensions
+    chartWrapper.attr('transform', 'translate(' + (margin.left + margin.right) + ',' + 0 + ')')
 
-      // Update the axis and line
-      xAxis.scale(x).ticks(xAxisType === 'daily' ? d3.timeDay : d3.timeMonth, 1)
-      yAxis.scale(y)
-      svg.select('.x.axis').attr('transform', 'translate(0,' + height + ')').call(xAxis)
-      svg.selectAll('.x.axis text').attr('y', 12)
-      svg.select('.y.axis').call(yAxis)
+    // Update the axis and line
+    xAxis.scale(x).ticks(xAxisType === 'daily' ? d3.timeDay : d3.timeMonth, 1)
+    yAxis.scale(y)
+    svg.select('.x.axis').attr('transform', 'translate(0,' + height + ')').call(xAxis)
+    svg.selectAll('.x.axis text').attr('y', 12)
+    svg.select('.y.axis').call(yAxis)
 
-      // Update grid lines
-      svg.select('.x.grid')
-        .attr('transform', 'translate(0,' + height + ')')
-        .call(d3.axisBottom(x)
-          .ticks(xAxisType === 'daily' ? d3.timeDay : d3.timeMonth, 1)
-          .tickSize(-height, 0, 0)
-          .tickFormat('')
-        )
-      svg.select('.y.grid')
-        .attr('transform', 'translate(0,' + 0 + ')')
-        .call(d3.axisLeft(y)
-          .ticks(5)
-          .tickSize(-width, 0, 0)
-          .tickFormat('')
-        )
+    // Update grid lines
+    svg.select('.x.grid')
+      .attr('transform', 'translate(0,' + height + ')')
+      .call(d3.axisBottom(x)
+        .ticks(xAxisType === 'daily' ? d3.timeDay : d3.timeMonth, 1)
+        .tickSize(-height, 0, 0)
+        .tickFormat('')
+      )
+    svg.select('.y.grid')
+      .attr('transform', 'translate(0,' + 0 + ')')
+      .call(d3.axisLeft(y)
+        .ticks(5)
+        .tickSize(-width, 0, 0)
+        .tickFormat('')
+      )
 
-      // Empty thresholds container
-      thresholdsContainer.selectAll('*').remove()
-      // Add thresholds
-      thresholds.forEach(threshold => {
-        var thresholdContainer = thresholdsContainer.append('g').attr('class', 'threshold  threshold--' + threshold.id)
-        thresholdContainer.classed('threshold--selected', !!threshold.isSelected)
-        var bg = thresholdContainer.append('rect').attr('class', 'threshold__bg').attr('x', 0).attr('y', -4).attr('height', 8)
-        var line = thresholdContainer.append('line').attr('class', 'threshold__line')
-        var label = thresholdContainer.append('g').attr('class', 'threshold-label')
-        // var labelBg = label.append('rect').attr('class', 'threshold-label__bg')
-        var labelBgPath = label.append('path').attr('class', 'threshold-label__bg')
-        var text = label.append('text').attr('class', 'threshold-label__text').html(threshold.name)
-        var remove = label.append('g').attr('class', 'threshold__remove')
-        remove.append('rect').attr('x', -6).attr('y', -6).attr('width', 20).attr('height', 20)
-        remove.append('line').attr('x1', -0.5).attr('y1', -0.5).attr('x2', 7.5).attr('y2', 7.5)
-        remove.append('line').attr('x1', 7.5).attr('y1', -0.5).attr('x2', -0.5).attr('y2', 7.5)
-        /*
-        remove.append('line').attr('x1', 0).attr('y1', 0).attr('x2', 8).attr('y2', 8)
-        remove.append('line').attr('x1', 8).attr('y1', 0).attr('x2', 0).attr('y2', 8)
-        */
-        // Set individual elements size and position
-        var textWidth = text.node().getBBox().width
-        // var textHeight = text.node().getBBox().height
-        // labelBg.attr('width', textWidth + 24 + 18 ).attr('height', textHeight + 18)
-        // labelBgHeight = labelBg.node().getBBox().height
-        labelBgPath.attr('d', 'm-0.5,-0.5 l' + Math.round(textWidth + 40) + ',0 l0,36 l-' + (Math.round(textWidth + 40) - 50) + ',0 l-7.5,7.5 l-7.5,-7.5 l-35,0 l0,-36 l0,0')
-        text.attr('x', 10).attr('y', 9.5)
-        remove.attr('transform', 'translate(' + Math.round(textWidth + 20) + ',' + 14 + ')')
-        var labelX = Math.round(x(xExtent[1]) / 8)
-        // var labelY = -(labelBg.node().getBBox().height / 2)
-        label.attr('transform', 'translate(' + labelX + ',' + -46 + ')')
-        thresholdContainer.attr('transform', 'translate(0,' + Math.round(y(threshold.level)) + ')')
-        bg.attr('width', x(xExtent[1]))
-        line.attr('x2', x(xExtent[1])).attr('y2', 0)
-        // Remove button
-        remove.on('click', function () {
-          d3.event.stopPropagation()
-          // console.log(thresholds)
-          thresholds = thresholds.filter(function (x) {
-            return x.id !== threshold.id
-          })
-          // console.log(thresholds)
-          // Show tooltip
-          modifyAxis()
-          updateDimensions()
-          render()
-        })
-        /*
-        thresholdContainer.append('line').attr('class', 'threshold-cross').attr('x1', 17).attr('y1', -3).attr('x2', 23).attr('y2', 3)
-        thresholdContainer.append('line').attr('class', 'threshold-cross').attr('x1', 23).attr('y1', -3).attr('x2', 17).attr('y2', 3)
-        */
-        // thresholdContainer.append('circle').attr('r', 4.5).attr('class', 'threshold-point')
-        thresholdContainer.on('click', function () {
-          d3.event.stopPropagation()
-          thresholds.forEach(x => { x.isSelected = false })
-          threshold.isSelected = true
-          // Bring to front
-          thresholds = thresholds.filter(function (x) {
-            return x.id !== threshold.id
-          })
-          thresholds.push(threshold)
-          // Re render
-          render()
-        })
-        thresholdContainer.on('mousemove', function (d) {
-          d3.event.stopPropagation()
-        })
-        thresholdContainer.on('mouseover', function (d) {
-          d3.select(this).classed('threshold--mouseover', true)
-        })
-        thresholdContainer.on('mouseout', function (d) {
-          d3.select(this).classed('threshold--mouseover', false)
-        })
-      })
-
-      // Update time line
-      timeX = Math.floor(x(new Date(data.now)))
-      svg.select('.time-line').attr('y1', 0).attr('y2', height)
-      now.attr('y1', 0).attr('y2', height).attr('transform', 'translate(' + timeX + ',0)')
-      now.select('.time-now-text').attr('y', height + 11)
-      // Add 'today' class to x axis tick
+    // Empty thresholds container
+    thresholdsContainer.selectAll('*').remove()
+    // Add thresholds
+    thresholds.forEach(threshold => {
+      const thresholdContainer = thresholdsContainer.append('g').attr('class', 'threshold  threshold--' + threshold.id)
+      thresholdContainer.classed('threshold--selected', !!threshold.isSelected)
+      const bg = thresholdContainer.append('rect').attr('class', 'threshold__bg').attr('x', 0).attr('y', -4).attr('height', 8)
+      const line = thresholdContainer.append('line').attr('class', 'threshold__line')
+      const label = thresholdContainer.append('g').attr('class', 'threshold-label')
+      // const labelBg = label.append('rect').attr('class', 'threshold-label__bg')
+      const labelBgPath = label.append('path').attr('class', 'threshold-label__bg')
+      const text = label.append('text').attr('class', 'threshold-label__text').html(threshold.name)
+      const remove = label.append('g').attr('class', 'threshold__remove')
+      remove.append('rect').attr('x', -6).attr('y', -6).attr('width', 20).attr('height', 20)
+      remove.append('line').attr('x1', -0.5).attr('y1', -0.5).attr('x2', 7.5).attr('y2', 7.5)
+      remove.append('line').attr('x1', 7.5).attr('y1', -0.5).attr('x2', -0.5).attr('y2', 7.5)
       /*
-      svg.selectAll('.x .tick')
-        .filter(function (d) {
-          return new Date(d).getDay() === new Date(data.now).getDay() && new Date(d).getUTCHours() === 12
-        })
-        .attr('class', 'tick tick-today')
+      remove.append('line').attr('x1', 0).attr('y1', 0).attr('x2', 8).attr('y2', 8)
+      remove.append('line').attr('x1', 8).attr('y1', 0).attr('x2', 0).attr('y2', 8)
       */
-
-      // Add height to locator line
-      svg.select('.locator-line').attr('y1', 0).attr('y2', height)
-
-      // Draw lines and areas
-      if (hasObserved) {
-        observed.attr('d', line)
-        observedArea.attr('d', area)
-      }
-      if (hasForecast) {
-        forecast.attr('d', line)
-        forecastArea.attr('d', area)
-      }
-
-      // Update locator position
-      locator.attr('transform', 'translate(' + locatorX + ',' + 0 + ')')
-      locator.select('.locator-point').attr('transform', 'translate(' + 0 + ',' + locatorY + ')')
-    }
-
-    function modifyAxis () {
-      // Initialize scales
-      xExtent = d3.extent(lines, function (d, i) { return new Date(d.ts) })
-      yExtent = d3.extent(lines, function (d, i) { return d._ })
-
-      // Increase X range by 5% from now value
-      var date = new Date(data.now)
-      var percentile = Math.round(Math.abs(xExtent[0] - date) * 0.05)
-      date = new Date(Number(data.now) + Number(percentile))
-      var xRange = [xExtent[0], xExtent[1]]
-      xRange.push(date)
-      xExtent[0] = Math.min.apply(Math, xRange)
-      xExtent[1] = Math.max.apply(Math, xRange)
-
-      // Initialise Y range to highest and lowest values from the data
-      var yRange = [yExtent[0], yExtent[1]]
-      yExtent[0] = Math.min.apply(Math, yRange)
-      yExtent[1] = Math.max.apply(Math, yRange)
-
-      // Add Y Axis buffers
-      yExtent[0] = yExtent[0] >= 0 ? 0 : yExtent[0]
-      yExtent[1] = yExtent[1] * 2
-      yExtent[1] = yExtent[1] <= 1 ? 1 : yExtent[1]
-
-      // Extend to max threshold
-      if (thresholds.length) {
-        var maxThreshold = Math.max.apply(Math, thresholds.map(function (x) { return x.level }))
-        var maxThresholdBuffered = maxThreshold + (maxThreshold / 100 * 20)
-        yExtent[1] = yExtent[1] <= maxThresholdBuffered ? maxThresholdBuffered : yExtent[1]
-      }
-
-      // Setup scales
-      x = d3.scaleTime().domain(xExtent)
-      y = d3.scaleLinear().domain(yExtent)
-      y.nice()
-
-      // Initialize axis
-      xAxis = d3.axisBottom().tickSizeOuter(0)
-      yAxis = d3.axisLeft().ticks(5).tickFormat(function (d) {
-        return parseFloat(d).toFixed(2) + 'm'
-      }).tickSizeOuter(0)
-    }
-
-    function updateDimensions () {
-      var parentWidth, parentHeight
-      margin.top = 25
-      margin.bottom = 25
-      margin.left = 28
-      margin.right = 28
-
-      var xCutOffLeft, xCutOffRight
-
-      // Get dimensions based on parent size
-      parentWidth = Math.floor(d3.select('#' + containerId).node().getBoundingClientRect().width)
-      parentHeight = Math.floor(d3.select('#' + containerId).node().getBoundingClientRect().height)
-
-      // Number of days in x range
-      var daysInRange = Math.round(Math.abs(xExtent[1] - xExtent[0]) / 1000 / 60 / 60 / 24)
-
-      // X Axis labels
-      if (window.innerWidth > windowBreakPoint && parentWidth > svgBreakPoint) {
-        // Tablet
-        xCutOffLeft = x.invert(20)
-        xCutOffRight = x.invert(timeX - 75) // After which labels need to be hidden
-        if (daysInRange < 7) {
-          // Tablet daily
-          xAxis.ticks(d3.timeHour, 12).tickFormat(function (d) {
-            if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
-              var formatter = d3.timeFormat('%a, %e %b')
-              return formatter(d)
-            } else {
-              return null
-            }
-          })
-        } else {
-          // Tablet monthly
-          xAxis.ticks(d3.timeMonth, 1).tickFormat(function (d) {
-            if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
-              var formatter = d3.timeFormat('%e %b')
-              return formatter(d)
-            } else {
-              return null
-            }
-          })
-        }
-        margin.left = 34
-        margin.right = 34
-      } else {
-        // Mobile
-        xCutOffLeft = x.invert(10)
-        xCutOffRight = x.invert(timeX - 50) // After which labels need to be hidden
-        if (daysInRange < 7) {
-          // Mobile daily
-          xAxis.ticks(d3.timeHour, 12).tickFormat(function (d) {
-            if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
-              var formatter = d3.timeFormat('%-e/%-m')
-              return formatter(d)
-            } else {
-              return null
-            }
-          })
-        } else {
-          // Mobile monthly
-          xAxis.ticks(d3.timeMonth, 1).tickFormat(function (d) {
-            if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
-              var formatter = d3.timeFormat('%-e/%-m')
-              return formatter(d)
-            } else {
-              return null
-            }
-          })
-        }
-      }
-      width = parentWidth - margin.left - margin.right
-      height = parentHeight - margin.top - margin.bottom
-
-      // Update x and y scales to new dimensions
-      x.range([0, width])
-      y.range([height, 0])
-      y.nice()
-
-      // Update locator position
-      locatorX = Math.floor(x(new Date(dataPointLocator.ts)))
-      locatorY = Math.floor(y(dataPointLocator._))
-    }
-
-    function updateToolTipBackground () {
-      // Set Background size
-      var bg = toolTip.select('rect')
-      var text = toolTip.select('text')
-      // var textWidth = text.node().getBBox().width
-      var textHeight = Math.round(text.node().getBBox().height)
-      bg.attr('height', textHeight + 18)
-      var toolTipWidth = bg.node().getBBox().width
-      var toolTipHeight = bg.node().getBBox().height
-      // Set background left or right position
-      var containerWidth = x(xExtent[1])
-      if (toolTipX === -1) {
-        // Centered in chart
-        toolTipX = containerWidth / 2 - (toolTipWidth / 2)
-      } else if (toolTipX >= containerWidth - (toolTipWidth + 10)) {
-        // On the left
-        toolTipX -= (toolTipWidth + 10)
-      } else {
-        // On the right
-        toolTipX += 10
-      }
-      // Set background above or below position
-      if (toolTipY >= toolTipHeight + 10) {
-        toolTipY -= toolTipHeight + 10
-      } else {
-        toolTipY += 10
-      }
-      toolTipX = toolTipX.toFixed(0)
-      toolTipY = toolTipY.toFixed(0)
-    }
-
-    function showTooltip (threshold) {
-      if (threshold) {
-        // Get X and Y pos from threshold
-        toolTipX = -1
-        toolTipY = y(threshold.level)
-        toolTip.select('text').html(threshold.name)
-        dataPointLocator = dataPointLatest
-      } else {
-        // Get X and Y pos from mouse click
-        var x0 = x.invert(d3.mouse(this)[0])
-        var bisectDate = d3.bisector(function (d) { return new Date(d.ts) }).left
-        var i = bisectDate(lines, x0, 1)
-        var d0 = lines[i - 1]
-        var d1 = lines[i]
-        var d = d0
-        if (d1) {
-          d = x0 - new Date(d0.ts) > x0 - new Date(d1.ts) ? d1 : d0
-        }
-        dataPoint.ts = d.ts
-        dataPoint._ = d._
-        toolTipX = x(new Date(dataPoint.ts))
-        toolTipY = (d3.mouse(this)[1])
-        toolTip.select('text').html(
-          '<tspan class="tool-tip-text__strong" dominant-baseline="middle">' + Number(dataPoint._).toFixed(2) + 'm</tspan>' +
-          '<tspan x="12" dy="1.4em" dominant-baseline="middle">' + parseTime(new Date(dataPoint.ts)).toLowerCase() + ', ' + parseDateShort(new Date(dataPoint.ts)) + '</tspan>')
-        // Set locator position
-        dataPointLocator = dataPoint
-      }
-
-      // Update locator location
-      locatorX = Math.floor(x(new Date(dataPointLocator.ts)))
-      locatorY = Math.floor(y(dataPointLocator._))
-      var latestX = Math.floor(x(new Date(dataPointLatest.ts)))
-      locator.classed('locator--offset', true)
-      locator.classed('locator--forecast', locatorX > latestX)
-      locator.attr('transform', 'translate(' + locatorX + ',' + 0 + ')')
-      locator.select('.locator-point').attr('transform', 'translate(' + 0 + ',' + locatorY + ')')
-
-      // Update tooltip left/right background
-      updateToolTipBackground()
-
-      // Update tooltip location
-      toolTip.attr('transform', 'translate(' + toolTipX + ',' + toolTipY + ')')
-      toolTip.classed('tool-tip--visible', true)
-    }
-
-    function hideTooltip () {
-      toolTip.classed('tool-tip--visible', false)
-      // Update locator location
-      locatorX = Math.floor(x(new Date(dataPointLatest.ts)))
-      locatorY = Math.floor(y(dataPointLatest._))
-      locator.classed('locator--offset', false)
-      locator.classed('locator--forecast', false)
-      locator.attr('transform', 'translate(' + locatorX + ',' + 0 + ')')
-      locator.select('.locator-point').attr('transform', 'translate(' + 0 + ',' + locatorY + ')')
-    }
-
-    this.removeThreshold = function (id) {
-      thresholds = thresholds.filter(function (x) { return x.id !== id })
-      svg.select('.threshold--' + id).remove()
-      modifyAxis()
-      render()
-    }
-
-    this.addThreshold = function (threshold) {
-      threshold.isSelected = true
-      thresholds.forEach(x => { x.isSelected = false })
-      var foundThreshold = thresholds.find(function (x) {
-        return x.id === threshold.id
-      })
-      if (foundThreshold) {
+      // Set individual elements size and position
+      const textWidth = text.node().getBBox().width
+      // const textHeight = text.node().getBBox().height
+      // labelBg.attr('width', textWidth + 24 + 18 ).attr('height', textHeight + 18)
+      // labelBgHeight = labelBg.node().getBBox().height
+      labelBgPath.attr('d', 'm-0.5,-0.5 l' + Math.round(textWidth + 40) + ',0 l0,36 l-' + (Math.round(textWidth + 40) - 50) + ',0 l-7.5,7.5 l-7.5,-7.5 l-35,0 l0,-36 l0,0')
+      text.attr('x', 10).attr('y', 9.5)
+      remove.attr('transform', 'translate(' + Math.round(textWidth + 20) + ',' + 14 + ')')
+      const labelX = Math.round(x(xExtent[1]) / 8)
+      // const labelY = -(labelBg.node().getBBox().height / 2)
+      label.attr('transform', 'translate(' + labelX + ',' + -46 + ')')
+      thresholdContainer.attr('transform', 'translate(0,' + Math.round(y(threshold.level)) + ')')
+      bg.attr('width', x(xExtent[1]))
+      line.attr('x2', x(xExtent[1])).attr('y2', 0)
+      // Remove button
+      remove.on('click', function () {
+        d3.event.stopPropagation()
+        // console.log(thresholds)
         thresholds = thresholds.filter(function (x) {
           return x.id !== threshold.id
         })
-      }
-      thresholds.push(threshold)
-      // Show tooltip
-      modifyAxis()
-      updateDimensions()
-      render()
+        // console.log(thresholds)
+        // Show tooltip
+        modifyAxis()
+        updateDimensions()
+        render()
+      })
+      /*
+      thresholdContainer.append('line').attr('class', 'threshold-cross').attr('x1', 17).attr('y1', -3).attr('x2', 23).attr('y2', 3)
+      thresholdContainer.append('line').attr('class', 'threshold-cross').attr('x1', 23).attr('y1', -3).attr('x2', 17).attr('y2', 3)
+      */
+      // thresholdContainer.append('circle').attr('r', 4.5).attr('class', 'threshold-point')
+      thresholdContainer.on('click', function () {
+        d3.event.stopPropagation()
+        thresholds.forEach(x => { x.isSelected = false })
+        threshold.isSelected = true
+        // Bring to front
+        thresholds = thresholds.filter(function (x) {
+          return x.id !== threshold.id
+        })
+        thresholds.push(threshold)
+        // Re render
+        render()
+      })
+      thresholdContainer.on('mousemove', function (d) {
+        d3.event.stopPropagation()
+      })
+      thresholdContainer.on('mouseover', function (d) {
+        d3.select(this).classed('threshold--mouseover', true)
+      })
+      thresholdContainer.on('mouseout', function (d) {
+        d3.select(this).classed('threshold--mouseover', false)
+      })
+    })
+
+    // Update time line
+    timeX = Math.floor(x(new Date(data.now)))
+    svg.select('.time-line').attr('y1', 0).attr('y2', height)
+    now.attr('y1', 0).attr('y2', height).attr('transform', 'translate(' + timeX + ',0)')
+    now.select('.time-now-text').attr('y', height + 11)
+    // Add 'today' class to x axis tick
+    /*
+    svg.selectAll('.x .tick')
+      .filter(function (d) {
+        return new Date(d).getDay() === new Date(data.now).getDay() && new Date(d).getUTCHours() === 12
+      })
+      .attr('class', 'tick tick-today')
+    */
+
+    // Add height to locator line
+    svg.select('.locator-line').attr('y1', 0).attr('y2', height)
+
+    // Draw lines and areas
+    if (hasObserved) {
+      observed.attr('d', line)
+      observedArea.attr('d', area)
+    }
+    if (hasForecast) {
+      forecast.attr('d', line)
+      forecastArea.attr('d', area)
     }
 
-    // Events
-    window.addEventListener('resize', render)
-
-    this.chart = chart
+    // Update locator position
+    locator.attr('transform', 'translate(' + locatorX + ',' + 0 + ')')
+    locator.select('.locator-point').attr('transform', 'translate(' + 0 + ',' + locatorY + ')')
   }
 
-  charts.createLineChart = function (containerId, data) {
+  function modifyAxis () {
+    // Initialize scales
+    xExtent = d3.extent(lines, function (d, i) { return new Date(d.ts) })
+    yExtent = d3.extent(lines, function (d, i) { return d._ })
+
+    // Increase X range by 5% from now value
+    let date = new Date(data.now)
+    const percentile = Math.round(Math.abs(xExtent[0] - date) * 0.05)
+    date = new Date(Number(data.now) + Number(percentile))
+    const xRange = [xExtent[0], xExtent[1]]
+    xRange.push(date)
+    xExtent[0] = Math.min.apply(Math, xRange)
+    xExtent[1] = Math.max.apply(Math, xRange)
+
+    // Initialise Y range to highest and lowest values from the data
+    const yRange = [yExtent[0], yExtent[1]]
+    yExtent[0] = Math.min.apply(Math, yRange)
+    yExtent[1] = Math.max.apply(Math, yRange)
+
+    // Add Y Axis buffers
+    yExtent[0] = yExtent[0] >= 0 ? 0 : yExtent[0]
+    yExtent[1] = yExtent[1] * 2
+    yExtent[1] = yExtent[1] <= 1 ? 1 : yExtent[1]
+
+    // Extend to max threshold
+    if (thresholds.length) {
+      const maxThreshold = Math.max.apply(Math, thresholds.map(function (x) { return x.level }))
+      const maxThresholdBuffered = maxThreshold + (maxThreshold / 100 * 20)
+      yExtent[1] = yExtent[1] <= maxThresholdBuffered ? maxThresholdBuffered : yExtent[1]
+    }
+
+    // Setup scales
+    x = d3.scaleTime().domain(xExtent)
+    y = d3.scaleLinear().domain(yExtent)
+    y.nice()
+
+    // Initialize axis
+    xAxis = d3.axisBottom().tickSizeOuter(0)
+    yAxis = d3.axisLeft().ticks(5).tickFormat(function (d) {
+      return parseFloat(d).toFixed(2) + 'm'
+    }).tickSizeOuter(0)
+  }
+
+  function updateDimensions () {
+    margin.top = 25
+    margin.bottom = 25
+    margin.left = 28
+    margin.right = 28
+
+    let xCutOffLeft, xCutOffRight
+
+    // Get dimensions based on parent size
+    const parentWidth = Math.floor(d3.select('#' + containerId).node().getBoundingClientRect().width)
+    const parentHeight = Math.floor(d3.select('#' + containerId).node().getBoundingClientRect().height)
+
+    // Number of days in x range
+    const daysInRange = Math.round(Math.abs(xExtent[1] - xExtent[0]) / 1000 / 60 / 60 / 24)
+
+    // X Axis labels
+    if (window.innerWidth > windowBreakPoint && parentWidth > svgBreakPoint) {
+      // Tablet
+      xCutOffLeft = x.invert(20)
+      xCutOffRight = x.invert(timeX - 75) // After which labels need to be hidden
+      if (daysInRange < 7) {
+        // Tablet daily
+        xAxis.ticks(d3.timeHour, 12).tickFormat(function (d) {
+          if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
+            const formatter = d3.timeFormat('%a, %e %b')
+            return formatter(d)
+          } else {
+            return null
+          }
+        })
+      } else {
+        // Tablet monthly
+        xAxis.ticks(d3.timeMonth, 1).tickFormat(function (d) {
+          if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
+            const formatter = d3.timeFormat('%e %b')
+            return formatter(d)
+          } else {
+            return null
+          }
+        })
+      }
+      margin.left = 34
+      margin.right = 34
+    } else {
+      // Mobile
+      xCutOffLeft = x.invert(10)
+      xCutOffRight = x.invert(timeX - 50) // After which labels need to be hidden
+      if (daysInRange < 7) {
+        // Mobile daily
+        xAxis.ticks(d3.timeHour, 12).tickFormat(function (d) {
+          if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
+            const formatter = d3.timeFormat('%-e/%-m')
+            return formatter(d)
+          } else {
+            return null
+          }
+        })
+      } else {
+        // Mobile monthly
+        xAxis.ticks(d3.timeMonth, 1).tickFormat(function (d) {
+          if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
+            const formatter = d3.timeFormat('%-e/%-m')
+            return formatter(d)
+          } else {
+            return null
+          }
+        })
+      }
+    }
+    width = parentWidth - margin.left - margin.right
+    height = parentHeight - margin.top - margin.bottom
+
+    // Update x and y scales to new dimensions
+    x.range([0, width])
+    y.range([height, 0])
+    y.nice()
+
+    // Update locator position
+    locatorX = Math.floor(x(new Date(dataPointLocator.ts)))
+    locatorY = Math.floor(y(dataPointLocator._))
+  }
+
+  function updateToolTipBackground () {
+    // Set Background size
+    const bg = toolTip.select('rect')
+    const text = toolTip.select('text')
+    // const textWidth = text.node().getBBox().width
+    const textHeight = Math.round(text.node().getBBox().height)
+    bg.attr('height', textHeight + 18)
+    const toolTipWidth = bg.node().getBBox().width
+    const toolTipHeight = bg.node().getBBox().height
+    // Set background left or right position
+    const containerWidth = x(xExtent[1])
+    if (toolTipX === -1) {
+      // Centered in chart
+      toolTipX = containerWidth / 2 - (toolTipWidth / 2)
+    } else if (toolTipX >= containerWidth - (toolTipWidth + 10)) {
+      // On the left
+      toolTipX -= (toolTipWidth + 10)
+    } else {
+      // On the right
+      toolTipX += 10
+    }
+    // Set background above or below position
+    if (toolTipY >= toolTipHeight + 10) {
+      toolTipY -= toolTipHeight + 10
+    } else {
+      toolTipY += 10
+    }
+    toolTipX = toolTipX.toFixed(0)
+    toolTipY = toolTipY.toFixed(0)
+  }
+
+  function showTooltip (threshold) {
+    if (threshold) {
+      // Get X and Y pos from threshold
+      toolTipX = -1
+      toolTipY = y(threshold.level)
+      toolTip.select('text').html(threshold.name)
+      dataPointLocator = dataPointLatest
+    } else {
+      // Get X and Y pos from mouse click
+      const x0 = x.invert(d3.mouse(this)[0])
+      const bisectDate = d3.bisector(function (d) { return new Date(d.ts) }).left
+      const i = bisectDate(lines, x0, 1)
+      const d0 = lines[i - 1]
+      const d1 = lines[i]
+      let d = d0
+      if (d1) {
+        d = x0 - new Date(d0.ts) > x0 - new Date(d1.ts) ? d1 : d0
+      }
+      dataPoint.ts = d.ts
+      dataPoint._ = d._
+      toolTipX = x(new Date(dataPoint.ts))
+      toolTipY = (d3.mouse(this)[1])
+      toolTip.select('text').html(
+        '<tspan class="tool-tip-text__strong" dominant-baseline="middle">' + Number(dataPoint._).toFixed(2) + 'm</tspan>' +
+        '<tspan x="12" dy="1.4em" dominant-baseline="middle">' + parseTime(new Date(dataPoint.ts)).toLowerCase() + ', ' + parseDateShort(new Date(dataPoint.ts)) + '</tspan>')
+      // Set locator position
+      dataPointLocator = dataPoint
+    }
+
+    // Update locator location
+    locatorX = Math.floor(x(new Date(dataPointLocator.ts)))
+    locatorY = Math.floor(y(dataPointLocator._))
+    const latestX = Math.floor(x(new Date(dataPointLatest.ts)))
+    locator.classed('locator--offset', true)
+    locator.classed('locator--forecast', locatorX > latestX)
+    locator.attr('transform', 'translate(' + locatorX + ',' + 0 + ')')
+    locator.select('.locator-point').attr('transform', 'translate(' + 0 + ',' + locatorY + ')')
+
+    // Update tooltip left/right background
+    updateToolTipBackground()
+
+    // Update tooltip location
+    toolTip.attr('transform', 'translate(' + toolTipX + ',' + toolTipY + ')')
+    toolTip.classed('tool-tip--visible', true)
+  }
+
+  function hideTooltip () {
+    toolTip.classed('tool-tip--visible', false)
+    // Update locator location
+    locatorX = Math.floor(x(new Date(dataPointLatest.ts)))
+    locatorY = Math.floor(y(dataPointLatest._))
+    locator.classed('locator--offset', false)
+    locator.classed('locator--forecast', false)
+    locator.attr('transform', 'translate(' + locatorX + ',' + 0 + ')')
+    locator.select('.locator-point').attr('transform', 'translate(' + 0 + ',' + locatorY + ')')
+  }
+
+  this.removeThreshold = function (id) {
+    thresholds = thresholds.filter(function (x) { return x.id !== id })
+    svg.select('.threshold--' + id).remove()
+    modifyAxis()
+    render()
+  }
+
+  this.addThreshold = function (threshold) {
+    threshold.isSelected = true
+    thresholds.forEach(x => { x.isSelected = false })
+    const foundThreshold = thresholds.find(function (x) {
+      return x.id === threshold.id
+    })
+    if (foundThreshold) {
+      thresholds = thresholds.filter(function (x) {
+        return x.id !== threshold.id
+      })
+    }
+    thresholds.push(threshold)
+    // Show tooltip
+    modifyAxis()
+    updateDimensions()
+    render()
+  }
+
+  // Events
+  window.addEventListener('resize', render)
+
+  this.chart = chart
+}
+
+window.flood.charts = {
+  createLineChart: function (containerId, data) {
     return new LineChart(containerId, data)
   }
-
-  flood.charts = charts
-})(window, window.flood)
+}
