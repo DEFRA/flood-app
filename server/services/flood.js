@@ -8,6 +8,7 @@ const Outlook = require('../models/outlook')
 let floods = null
 let outlook = null
 let stationsGeojson = null
+let rivers = null
 
 module.exports = {
   // ############ Internals ################
@@ -33,7 +34,14 @@ module.exports = {
   },
 
   set stationsGeojson (data) {
+    const distincts = [...new Set(data.features.map(feature => feature.properties.river))]
+    distincts.sort()
+    rivers = distincts
     stationsGeojson = data
+  },
+
+  get rivers () {
+    return rivers
   },
 
   // ############### Externals ################

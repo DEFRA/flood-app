@@ -3,41 +3,52 @@ const ViewModel = require('../models/views/river-and-sea-levels')
 const RiverViewModel = require('../models/views/river-stations')
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
+const util = require('../util')
 
 module.exports = [{
   method: 'GET',
   path: '/river-and-sea-levels',
   handler: async (request, h) => {
-    const { q: location } = request.query
     const { type } = request.query
-    var model, place, stations
-    if (type === 'location') {
-      place = await locationService.find(location)
+    let { q: location } = request.query
 
+    let model, place, stations
+
+    if (type === 'location') {
+      place = await locationService.find(util.cleanseLocation(location))
+      if (typeof place === 'undefined' || place === '') {
+        model = new ViewModel({ location, place, stations })
+        model.referer = request.headers.referer
+        return h.view('river-and-sea-levels', { model })
+      }
       if (!place.isEngland.is_england) {
         return h.view('location-not-england')
       }
+      stations = await floodService.getStationsWithin(place.bbox)
+      model = new ViewModel({ location, place, stations })
+      model.referer = request.headers.referer
+      return h.view('river-and-sea-levels', { model })
+    } else if (type === 'river') {
+      location = util.cleanseLocation(location)
+      const rivers = floodService.rivers
+      const isRiver = rivers.some(obj => obj === location)
+
+      if (isRiver === false || location === '') {
+        model = new ViewModel({ location, place, stations })
+        model.referer = request.headers.referer
+        return h.view('river-and-sea-levels', { model })
+      }
+      stations = await floodService.getStationsByRiver(util.cleanseLocation(location))
+      model = new RiverViewModel({ location, stations })
+      model.referer = request.headers.referer
+      return h.view('river-and-sea-levels', { model })
     } else {
-      place = type
-    }
-    if (typeof place === 'undefined' || place === '') {
+      // getStationsWithin needs changing
       stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
       model = new ViewModel({ location, place, stations })
       model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
     }
-    if (type === 'location') {
-      stations = await floodService.getStationsWithin(place.bbox)
-      console.log(stations)
-      model = new ViewModel({ location, place, stations })
-      model.referer = request.headers.referer
-      return h.view('levels', { model })
-    }
-    stations = await floodService.getStationsByRiver(location)
-    console.log(stations)
-    model = new RiverViewModel({ location, stations })
-    model.referer = request.headers.referer
-    return h.view('river-and-sea-levels', { model })
   },
   options: {
     validate: {
@@ -48,7 +59,7 @@ module.exports = [{
         fid: joi.string(),
         lyr: joi.string(),
         v: joi.string(),
-        type: joi.string()
+        type: joi.string().valid('location', 'river')
       }),
       failAction: (request, h, err) => {
         return h.view('404').code(404).takeover()
@@ -59,13 +70,32 @@ module.exports = [{
   method: 'POST',
   path: '/river-and-sea-levels',
   handler: async (request, h) => {
-    const { location } = request.payload
-    const { river } = request.payload
-    if (river === '') {
+    const { location, river } = request.payload
+    const searchType = request.payload['search-type']
+
+    if (searchType === 'location') {
       if (typeof location === 'undefined' || location === '') {
         return h.redirect('/river-and-sea-levels')
       }
       return h.redirect(`/river-and-sea-levels?q=${location}&type=location`)
-    } return h.redirect(`/river-and-sea-levels?q=${river}&type=river`)
+    } else if (searchType === 'river') {
+      if (typeof river === 'undefined' || river === '') {
+        return h.redirect('/river-and-sea-levels')
+      }
+      return h.redirect(`/river-and-sea-levels?q=${river}&type=river`)
+    } else {
+      return h.redirect('/river-and-sea-levels')
+    }
+  },
+  options: {
+    validate: {
+      query: joi.object({
+        q: joi.string(),
+        type: joi.string().valid('location', 'river')
+      }),
+      failAction: (request, h, err) => {
+        return h.view('404').code(404).takeover()
+      }
+    }
   }
 }]

@@ -58,7 +58,6 @@ class RiverViewModel {
 
     // Levels
     this.countLevels = stations ? stations.length : 0
-    console.log(stations)
     this.levels = stations ? groupBy(stations, 'wiski_river_name') : []
   }
 }
