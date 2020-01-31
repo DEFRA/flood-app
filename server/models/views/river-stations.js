@@ -2,12 +2,13 @@ const { groupBy } = require('../../util')
 const moment = require('moment-timezone')
 
 class RiverViewModel {
-  constructor ({ location, stations }) {
+  constructor ({ location, stations, type }) {
     const placeName = stations ? stations[0].wiski_river_name : ''
     const pageTitle = `${placeName ? placeName + ' latest r' : 'Latest r'}iver and sea levels`
 
     Object.assign(this, {
       q: location,
+      type: type,
       pageTitle: pageTitle,
       metaNoIndex: true
     })

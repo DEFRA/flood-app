@@ -40,8 +40,7 @@
                     </span>
                     <div class="govuk-radios govuk-radios--conditional govuk-radios--small" data-module="govuk-radios">
                         <div class="govuk-radios__item">
-                            <!-- Set add aria-expanded="true" and checked attributes to appropriate input based on presence of querystring -->
-                            <input class="govuk-radios__input" id="search-type-conditional" name="search-type" type="radio" value="location" data-aria-controls="conditional-search-type-conditional" aria-expanded="true" checked>
+                            <input class="govuk-radios__input" {% if model.type == 'location' %}checked{% endif %} id="search-type-conditional" name="search-type" type="radio" value="location" data-aria-controls="conditional-search-type-conditional" aria-expanded="true" checked>
                             <label class="govuk-label govuk-radios__label" for="search-type-conditional">
                                 Location
                             </label>
@@ -52,7 +51,7 @@
                                     Postcode, town or county
                                 </label>
                                 <div class="defra-search">
-                                    <input class="defra-search__input" id="location" name="location" type="text" spellcheck="false" value="{% if model.placeName %}{{ model.placeName }}{% else %}{{ model.q }}{% endif %}">
+                                    <input class="defra-search__input" id="location" name="location" type="text" spellcheck="false" value="{% if model.type == 'location' %}{% if model.placeName %}{{ model.placeName }}{% else %}{{ model.q }}{% endif %}{% endif %}">
                                     <div class="defra-search__submit-container">
                                         <button class="defra-search__button">Search</button>
                                     </div>
@@ -60,8 +59,7 @@
                             </div>
                         </div>
                         <div class="govuk-radios__item">
-                            <!-- Set add aria-expanded="true" and checked attributes to appropriate input based on presence of querystring -->
-                            <input class="govuk-radios__input" id="search-type-conditional-2" name="search-type" type="radio" value="river" data-aria-controls="conditional-search-type-conditional-2">
+                            <input class="govuk-radios__input" {% if model.type == 'river' %}checked{% endif %} id="search-type-conditional-2" name="search-type" type="radio" value="river" data-aria-controls="conditional-search-type-conditional-2">
                             <label class="govuk-label govuk-radios__label" for="search-type-conditional-2">
                                 River
                             </label>
@@ -72,7 +70,7 @@
                                     River name
                                 </label>
                                 <div class="defra-search">
-                                    <input class="defra-search__input" id="river" name="river" type="text" spellcheck="false">
+                                    <input class="defra-search__input" id="river" name="river" type="text" value="{% if model.type == 'river' %}{{ model.q }}{% endif %}" spellcheck="false">
                                     <div class="defra-search__submit-container">
                                         <button class="defra-search__button">Search</button>
                                     </div>

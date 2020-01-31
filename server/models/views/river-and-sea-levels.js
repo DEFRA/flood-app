@@ -2,7 +2,7 @@ const { groupBy } = require('../../util')
 const moment = require('moment-timezone')
 
 class ViewModel {
-  constructor ({ location, place, stations }) {
+  constructor ({ location, place, stations, type }) {
     const placeName = place ? place.name : ''
     const placeBbox = place ? place.bbox : []
     const placeCentre = place ? place.center : []
@@ -10,6 +10,7 @@ class ViewModel {
 
     Object.assign(this, {
       q: location,
+      type: type,
       pageTitle: pageTitle,
       metaNoIndex: true,
       placeName: placeName,
