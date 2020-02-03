@@ -5,7 +5,7 @@
 ## Getting started
 
 ### Prerequisites
-Install Node.js v8.x.x
+Install Node.js v12.x.x
 
 ### Clone and build
 

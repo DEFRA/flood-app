@@ -1,47 +1,55 @@
-(function (window, maps) {
-  var ol = window.ol
-  var layers = {}
+'use strict'
+/*
+Initialises the window.flood.maps layers
+*/
+import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer'
+import { BingMaps, Vector as VectorSource } from 'ol/source'
+import { GeoJSON } from 'ol/format'
+import { transform, transformExtent } from 'ol/proj'
+import { Feature } from 'ol'
+import * as loadingstrategy from 'ol/loadingstrategy'
+import { Point } from 'ol/geom'
+import { Style } from 'ol/style'
 
-  function road () {
-    return new ol.layer.Tile({
+window.flood.maps.layers = {
+  road: () => {
+    return new TileLayer({
       ref: 'road',
-      source: new ol.source.BingMaps({
+      source: new BingMaps({
         key: 'Ajou-3bB1TMVLPyXyNvMawg4iBPqYYhAN4QMXvOoZvs47Qmrq7L5zio0VsOOAHUr',
         imagerySet: 'RoadOnDemand'
       }),
       visible: true,
       zIndex: 0
     })
-  }
-
-  function satellite () {
-    return new ol.layer.Tile({
+  },
+  satellite: () => {
+    return new TileLayer({
       ref: 'satellite',
-      source: new ol.source.BingMaps({
+      source: new BingMaps({
         key: 'Ajou-3bB1TMVLPyXyNvMawg4iBPqYYhAN4QMXvOoZvs47Qmrq7L5zio0VsOOAHUr',
         imagerySet: 'AerialWithLabelsOnDemand'
       }),
       visible: false
     })
-  }
-
-  function polygons () {
-    return new ol.layer.Vector({
+  },
+  polygons: () => {
+    return new VectorLayer({
       ref: 'polygons',
       maxResolution: 200,
-      source: new ol.source.Vector({
-        format: new ol.format.GeoJSON(),
+      source: new VectorSource({
+        format: new GeoJSON(),
         projection: 'EPSG:3857',
         loader: function (extent, resolution, projection) {
-          extent = ol.proj.transformExtent(extent, 'EPSG:3857', 'EPSG:4326')
+          extent = transformExtent(extent, 'EPSG:3857', 'EPSG:4326')
           extent = [extent[1], extent[0], extent[3], extent[2]]
-          var source = this
-          var url = '/api/ows?service=wfs&' +
-              'version=2.0.0&request=GetFeature&typename=flood:flood_warning_alert&' +
-              'outputFormat=application/json&bbox=' + extent.join(',')
-          var xhr = new XMLHttpRequest()
+          const source = this
+          const url = '/api/ows?service=wfs&' +
+            'version=2.0.0&request=GetFeature&typename=flood:flood_warning_alert&' +
+            'outputFormat=application/json&bbox=' + extent.join(',')
+          const xhr = new window.XMLHttpRequest()
           xhr.open('GET', url)
-          var onError = function () {
+          const onError = function () {
             source.removeLoadedExtent(extent)
           }
           xhr.onerror = onError
@@ -49,7 +57,7 @@
             if (xhr.status === 200) {
               // source.addFeatures(source.getFormat().readFeatures(xhr.responseText))
               // Temporary fix to create usable id as per other features
-              var features = source.getFormat().readFeatures(xhr.responseText)
+              const features = source.getFormat().readFeatures(xhr.responseText)
               features.forEach((feature) => {
                 feature.getGeometry().transform('EPSG:4326', 'EPSG:3857')
                 feature.setId('flood.' + feature.get('fwa_code').toLowerCase())
@@ -61,37 +69,35 @@
           }
           xhr.send()
         },
-        strategy: ol.loadingstrategy.bbox
+        strategy: loadingstrategy.bbox
       }),
-      style: maps.styles.floods
+      style: window.flood.maps.styles.floods
     })
-  }
-
-  function floods () {
-    return new ol.layer.Vector({
+  },
+  floods: () => {
+    return new VectorLayer({
       ref: 'floods',
       minResolution: 200,
-      source: new ol.source.Vector({
-        format: new ol.format.GeoJSON(),
+      source: new VectorSource({
+        format: new GeoJSON(),
         projection: 'EPSG:3857',
         url: '/api/warnings.geojson'
       }),
-      style: maps.styles.floods
+      style: window.flood.maps.styles.floods
     })
-  }
-
-  function stations () {
-    return new ol.layer.Vector({
+  },
+  stations: () => {
+    return new VectorLayer({
       ref: 'stations',
-      source: new ol.source.Vector({
-        format: new ol.format.GeoJSON(),
+      source: new VectorSource({
+        format: new GeoJSON(),
         projection: 'EPSG:3857',
         loader: function (extent) {
-          var source = this
-          var url = '/api/stations.geojson'
-          var xhr = new XMLHttpRequest()
+          const source = this
+          const url = '/api/stations.geojson'
+          const xhr = new window.XMLHttpRequest()
           xhr.open('GET', url)
-          var onError = function () {
+          const onError = function () {
             source.removeLoadedExtent(extent)
           }
           xhr.onerror = onError
@@ -99,10 +105,10 @@
             if (xhr.status === 200) {
               // source.addFeatures(source.getFormat().readFeatures(xhr.responseText))
               // Temporary fix to minimal feature properties. Gets geometry from bounding box
-              var features = source.getFormat().readFeatures(xhr.responseText)
+              const features = source.getFormat().readFeatures(xhr.responseText)
               features.forEach((feature) => {
-                var coordinates = ol.proj.transform([feature.get('bbox')[1], feature.get('bbox')[0]], 'EPSG:4326', 'EPSG:3857')
-                feature.setGeometry(new ol.geom.Point(coordinates))
+                const coordinates = transform([feature.get('bbox')[1], feature.get('bbox')[0]], 'EPSG:4326', 'EPSG:3857')
+                feature.setGeometry(new Point(coordinates))
                 feature.unset('bbox')
               })
               source.addFeatures(features)
@@ -112,75 +118,59 @@
           }
           xhr.send()
         },
-        strategy: ol.loadingstrategy.all
+        strategy: loadingstrategy.all
       }),
-      style: new ol.style.Style({})
+      style: new Style({})
     })
-  }
-
-  function rain () {
-    return new ol.layer.Vector({
+  },
+  rain: () => {
+    return new VectorLayer({
       ref: 'rain',
-      source: new ol.source.Vector({
-        format: new ol.format.GeoJSON(),
+      source: new VectorSource({
+        format: new GeoJSON(),
         projection: 'EPSG:3857',
         url: '/api/rainfall'
       }),
-      style: new ol.style.Style({})
+      style: new Style({})
     })
-  }
-
-  function impacts () {
-    return new ol.layer.Vector({
+  },
+  impacts: () => {
+    return new VectorLayer({
       ref: 'impacts',
-      source: new ol.source.Vector({
-        format: new ol.format.GeoJSON(),
+      source: new VectorSource({
+        format: new GeoJSON(),
         projection: 'EPSG:3857',
         url: '/api/impacts'
       }),
-      style: new ol.style.Style({})
+      style: new Style({})
     })
-  }
-
-  function location (name, center) {
-    var feature = new window.ol.Feature({
-      geometry: new window.ol.geom.Point(window.ol.proj.transform(center, 'EPSG:4326', 'EPSG:3857')),
+  },
+  location: (name, center) => {
+    const feature = new Feature({
+      geometry: new Point(transform(center, 'EPSG:4326', 'EPSG:3857')),
       type: 'location',
       html: name
     })
     feature.setId('location')
-    var locationPoint = new window.ol.source.Vector({
+    const locationPoint = new VectorSource({
       features: [feature]
     })
-    return new window.ol.layer.Vector({
+    return new VectorLayer({
       ref: 'location',
       renderMode: 'hybrid',
       source: locationPoint,
-      style: maps.styles.location,
+      style: window.flood.maps.styles.location,
       zIndex: 2
     })
-  }
-
-  function top () {
-    return new ol.layer.Vector({
+  },
+  top: () => {
+    return new VectorLayer({
       ref: 'top',
       renderMode: 'hybrid',
       zIndex: 10,
-      source: new ol.source.Vector({
-        format: new ol.format.GeoJSON()
+      source: new VectorSource({
+        format: new GeoJSON()
       })
     })
   }
-
-  layers.road = road
-  layers.satellite = satellite
-  layers.polygons = polygons
-  layers.floods = floods
-  layers.stations = stations
-  layers.impacts = impacts
-  layers.rain = rain
-  layers.location = location
-  layers.top = top
-
-  maps.layers = layers
-})(window, window.flood.maps)
+}

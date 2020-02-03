@@ -1,3 +1,2 @@
 cp -r server/src/images server/dist/images
 cp server/src/robots.txt server/dist/robots.txt
-cp -r server/src/js server/dist

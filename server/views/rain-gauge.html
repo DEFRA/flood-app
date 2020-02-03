@@ -249,10 +249,4 @@
 
 {% block bodyEnd %}
 {{ super() }}
-<script src="{{ assetPath }}/nunjucks-slim.min.js"></script>
-<script>nunjucks.configure()</script>
-<script>
-  window.flood.model = {{ model | dump(2) | safe }}
-</script>
-<script src="{{assetPath}}/js/pages/rain-gauge.js"></script>
 {% endblock %}
