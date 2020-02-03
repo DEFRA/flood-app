@@ -340,21 +340,11 @@ function LiveMap (containerId, display) {
   map.addEventListener('moveend', function (e) {
     // Update layer opacity setting for different map resolutions
     const resolution = map.getView().getResolution()
-    // let layerOpacity
-    // if (resolution > 20) {
-    //   layerOpacity = 1
-    // } else if (resolution > 10) {
-    //   layerOpacity = 0.8
-    // } else if (resolution > 5) {
-    //   layerOpacity = 0.6
-    // } else {
-    //   layerOpacity = 0.4
-    // }
     // Key icons
     forEach(key.querySelectorAll('[data-style]'), function (symbol) {
       const style = symbol.getAttribute('data-style')
       const offsetStyle = symbol.getAttribute('data-style-offset')
-      symbol.style = resolution <= options.minIconResolution ? offsetStyle : style
+      symbol.style['background-position'] = resolution <= options.minIconResolution ? offsetStyle : style
     })
     // Update history state (url) to reflect new extent
     extent.new = map.getView().calculateExtent(map.getSize())
