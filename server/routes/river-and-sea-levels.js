@@ -16,6 +16,7 @@ module.exports = [{
 
     if (type === 'location') {
       place = await locationService.find(util.cleanseLocation(location))
+
       if (typeof place === 'undefined' || place === '') {
         model = new ViewModel({ location, place, stations, type })
         model.referer = request.headers.referer
@@ -24,12 +25,16 @@ module.exports = [{
       if (!place.isEngland.is_england) {
         return h.view('location-not-england')
       }
+
       stations = await floodService.getStationsWithin(place.bbox)
+
       model = new ViewModel({ location, place, stations, type })
       model.referer = request.headers.referer
+
       return h.view('river-and-sea-levels', { model })
     } else if (type === 'river') {
       location = util.cleanseLocation(location)
+
       const rivers = floodService.rivers
       const isRiver = rivers.some(obj => obj === location)
 
@@ -39,14 +44,18 @@ module.exports = [{
         return h.view('river-and-sea-levels', { model })
       }
       stations = await floodService.getStationsByRiver(util.cleanseLocation(location))
+
       model = new RiverViewModel({ location, place, stations, type })
       model.referer = request.headers.referer
+
       return h.view('river-and-sea-levels', { model })
     } else {
       // getStationsWithin needs changing
       stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
+
       model = new ViewModel({ location, place, stations, type })
       model.referer = request.headers.referer
+
       return h.view('river-and-sea-levels', { model })
     }
   },

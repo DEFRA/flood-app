@@ -10,7 +10,9 @@ class RiverViewModel {
       q: location,
       type: type,
       pageTitle: pageTitle,
-      metaNoIndex: true
+      metaNoIndex: true,
+      // needs Bbox for river locations
+      placeBbox: [-6.73, 49.36, 2.85, 55.8]
     })
 
     const today = moment.tz().endOf('day')
