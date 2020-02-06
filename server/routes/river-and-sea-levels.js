@@ -95,16 +95,5 @@ module.exports = [{
     } else {
       return h.redirect('/river-and-sea-levels')
     }
-  },
-  options: {
-    validate: {
-      query: joi.object({
-        q: joi.string(),
-        type: joi.string().valid('location', 'river')
-      }),
-      failAction: (request, h, err) => {
-        return h.view('404').code(404).takeover()
-      }
-    }
   }
 }]
