@@ -28,7 +28,7 @@ lab.experiment('Routes test - /river-and-sea-levels', () => {
     await sandbox.restore()
   })
 
-  lab.test('GET /river-and-sea-levels for No river or sea levels found', async () => {
+  lab.test('GET /river-and-sea-levels for No river or sea levels found for location search', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -106,6 +106,64 @@ lab.experiment('Routes test - /river-and-sea-levels', () => {
     const options = {
       method: 'GET',
       url: '/river-and-sea-levels?q=rtgartgregqwre&type=location'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('0 levels')
+    Code.expect(response.payload).to.contain('No river, sea or groundwater levels found.')
+    Code.expect(response.payload).to.contain('Improve your search results by:')
+  })
+  lab.test('GET /river-and-sea-levels for No river or sea levels found for river search', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationsData = () => []
+
+    sandbox.stub(floodService, 'getStationsByRiver').callsFake(fakeStationsData)
+    floodService.stationsGeojson = {
+      features: [
+        {
+          properties: {
+            river: 'River Granta'
+          }
+        },
+        {
+          properties: {
+            river: 'River Mersey'
+          }
+        },
+        {
+          properties: {
+            river: 'River Severn'
+          }
+        },
+        {
+          properties: {
+            river: 'River Trent'
+          }
+        }
+      ]
+    }
+
+    Code.expect(floodService.rivers).to.equal(['River Granta', 'River Mersey', 'River Severn', 'River Trent'])
+
+    const locationPlugin = {
+      plugin: {
+        name: 'river-and-sea-levels',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=rtgartgregqwre&type=river'
     }
 
     const response = await server.inject(options)
