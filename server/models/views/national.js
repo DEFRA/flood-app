@@ -1,3 +1,5 @@
+const moment = require('moment')
+
 class ViewModel {
   constructor (floods, outlook) {
     Object.assign(this, {
@@ -7,7 +9,7 @@ class ViewModel {
       metaCanonical: '/national',
       hasActiveFloods: floods.hasActiveFloods,
       highestSeverityId: floods.highestSeverityId,
-      timestamp: Date.now()
+      timestamp: moment().format('h:mm a dddd Do MMMM YYYY')
     })
 
     // Strip out flood array as it is superflous to the view
@@ -23,7 +25,7 @@ class ViewModel {
     // Strip out superflous outlook data
     this.outlook = [outlook].map(item => {
       return {
-        timestampOutlook: item.timestampOutlook,
+        timestampOutlook: moment(item.timestampOutlook).format('h:mm a dddd Do MMMM YYYY'),
         full: item.full,
         hasOutlookConcern: item.hasOutlookConcern,
         days: item.days

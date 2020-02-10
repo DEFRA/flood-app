@@ -13,7 +13,7 @@
       Flood risk for England
     </h1>
     <p class="defra-updated govuk-!-margin-bottom-7">
-      Updated at <time class="form-hint" datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time>
+      Updated: <time class="form-hint" datetime="{{model.timestamp}}">{{ model.timestamp }}</time>
     </p>
   </div>
 </div>
@@ -53,7 +53,7 @@
 
     <h2 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-margin-bottom-1" id="outlook">Flood forecast for the next 5 days</h2>
     <p class="defra-updated govuk-!-margin-bottom-4">
-      <time title="{{model.outlook.timestampOutlook | formatDate}}" datetime="{{ model.outlook.timestampOutlook }}">Updated at {{ model.outlook.timestampOutlook | formatDate }}</time>
+      <time title="{{model.outlook.timestampOutlook }}" datetime="{{ model.outlook.timestampOutlook }}">Updated: {{ model.outlook.timestampOutlook }}</time>
     </p>
     <p class="govuk-body govuk-!-margin-bottom-0 govuk-!-padding-bottom-4">
       {{ model.outlook.full | safe }}
@@ -106,5 +106,5 @@
   window.flood.model = {{ model | dump(2) | safe }}
 </script>
 <script src="{{assetPath}}/js/templates.js"></script>
-<script src="{{assetPath}}/js/national.js"></script>
+<script src="{{assetPath}}/js/pages/national.js"></script>
 {% endblock %}

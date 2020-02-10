@@ -4,6 +4,7 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
+const moment = require('moment')
 
 lab.experiment('Routes test - national view', () => {
   let sandbox
@@ -48,6 +49,8 @@ lab.experiment('Routes test - national view', () => {
     floodService.floods = await floodService.getFloods()
     floodService.outlook = await floodService.getOutlook()
 
+    const time = moment().format('h:mm a dddd Do MMMM YYYY')
+
     const locationPlugin = {
       plugin: {
         name: 'national',
@@ -72,5 +75,6 @@ lab.experiment('Routes test - national view', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('There are currently no flood warnings or alerts in force.')
     Code.expect(response.payload).to.contain('If you live near a river or the coast you may be able to')
+    Code.expect(response.payload).to.contain(time)
   })
 })

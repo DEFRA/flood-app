@@ -41,6 +41,7 @@
     "govuk-frontend": "^3.4.0",
     "http-proxy-agent": "^2.1.0",
     "https-proxy-agent": "^3.0.1",
+    "moment": "^2.24.0",
     "moment-timezone": "^0.5.27",
     "node-hapi-airbrake": "0.1.3",
     "node-sass": "^4.13.1",
