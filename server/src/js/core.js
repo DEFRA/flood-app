@@ -1,55 +1,56 @@
-(function (window) {
-  var utils = {
-    xhr: function (url, callback) {
-      var xmlhttp = new window.XMLHttpRequest()
+'use strict'
+// "flood" represents the global namespace for
+// client-side javascript across all our pages
+window.flood = {
+  utils: {
+    xhr: (url, callback) => {
+      const xmlhttp = new window.XMLHttpRequest()
 
-      xmlhttp.onreadystatechange = function () {
+      xmlhttp.onreadystatechange = () => {
         if (this.readyState === 4 && this.status === 200) {
           try {
-            var json = JSON.parse(this.responseText)
+            const json = JSON.parse(this.responseText)
             callback(null, json)
           } catch (err) {
             callback(err)
           }
-        } else {
-
         }
       }
 
       xmlhttp.open('GET', url, true)
       xmlhttp.send()
     },
-    forEach: function (items, callback) {
-      for (var i = 0; i < items.length; i++) {
+    forEach: (items, callback) => {
+      for (let i = 0; i < items.length; i++) {
         callback.call(items, items[i], i)
       }
     },
-    addOrUpdateParameter: function (uri, paramKey, paramVal) {
-      var re = new RegExp('([?&])' + paramKey + '=[^&#]*', 'i')
+    addOrUpdateParameter: (uri, paramKey, paramVal) => {
+      const re = new RegExp('([?&])' + paramKey + '=[^&#]*', 'i')
       // Delete parameter and value
       if (paramVal === '') {
         uri = uri.replace(re, '')
       } else if (re.test(uri)) {
-      // Replace parameter value
+        // Replace parameter value
         uri = uri.replace(re, '$1' + paramKey + '=' + paramVal)
-      // Add parameter and value
+        // Add parameter and value
       } else {
-        var separator = /\?/.test(uri) ? '&' : '?'
+        const separator = /\?/.test(uri) ? '&' : '?'
         uri = uri + separator + paramKey + '=' + paramVal
       }
       return uri
     },
-    getParameterByName: function (name) {
-      var v = window.location.search.match(new RegExp('(?:[\?\&]' + name + '=)([^&]+)'))
+    getParameterByName: (name) => {
+      const v = window.location.search.match(new RegExp('(?:[?&]' + name + '=)([^&]+)'))
       return v ? v[1] : null
     },
-    addBrowserBackButton: function() {
+    addBrowserBackButton: () => {
       const container = document.getElementById('browserBackContainer')
       if (container) {
-        var nav
+        let nav
         if (container.nodeName.toLowerCase() !== 'nav') {
           nav = document.createElement('nav')
-          container.append(nav)
+          container.appendChild(nav)
         } else {
           nav = container
         }
@@ -62,14 +63,10 @@
           e.preventDefault()
           window.history.back()
         })
-        nav.prepend(hyperlink)
+        // ie 11 prepend hack
+        // nav.prepend(hyperlink)
+        nav.insertBefore(hyperlink, nav.childNodes[0])
       }
     }
   }
-
-  // "flood" represents the global namespace for
-  // client-side javascript across all our pages
-  window.flood = {
-    utils: utils
-  }
-})(window)
+}

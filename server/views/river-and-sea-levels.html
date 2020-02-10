@@ -162,17 +162,9 @@
 
 {% block bodyEnd %}
 {{ super() }}
-<script src="{{assetPath}}/js/ol.js"></script>
-  <script src="{{assetPath}}/js/components/maps.js"></script>
-  <script src="{{assetPath}}/js/components/maps-styles.js"></script>
-  <script src="{{assetPath}}/js/components/maps-layers.js"></script>
-  <script src="{{assetPath}}/js/components/map-container.js"></script>
-  <script src="{{assetPath}}/js/components/maps/live.js"></script>
-  <script src="{{assetPath}}/js/templates.js"></script>
-  <script src="{{ assetPath }}/nunjucks-slim.min.js"></script>
-  <script>nunjucks.configure()</script>
 <script>
   window.flood.model = {{ model | dump(2) | safe }}
 </script>
-<script src="{{assetPath}}/js/pages/river-and-sea-levels.js"></script>
+<script src="{{assetPath}}/js/templates.js"></script>
+<script src="{{assetPath}}/js/river-and-sea-levels.js"></script>
 {% endblock %}
