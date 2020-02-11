@@ -316,7 +316,7 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getOutlook endpoint', async () => {
-    const fakeFloodData = () => { return { statements: ['TEST'] } }
+    const fakeFloodData = () => { return {} }
 
     const util = require('../../server/util')
 
@@ -326,8 +326,7 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getOutlook()
 
-    Code.expect(result).to.be.a.string()
-    Code.expect(result).to.equal('TEST')
+    Code.expect(result).to.equal({})
   })
 
   lab.test('Test getStationById endpoint', async () => {
