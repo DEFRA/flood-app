@@ -57,7 +57,7 @@ module.exports = {
   },
 
   getOutlook () {
-    return util.getJson(`${serviceUrl}/flood-guidance-statement`, true)
+    return util.getJson(`${serviceUrl}/flood-guidance-statement`)
   },
 
   getStationById (id, direction) {
