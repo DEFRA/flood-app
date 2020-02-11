@@ -38,85 +38,72 @@ module.exports = {
 
   // ############### Externals ################
   // get floods from service (should only be used by serverside scheduled job)
-  async getFloods () {
-    const url = `${serviceUrl}/floods`
-    return util.getJson(url)
+  getFloods () {
+    return util.getJson(`${serviceUrl}/floods`)
   },
 
-  async getFloodsWithin (bbox) {
-    const url = `${serviceUrl}/floods-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`
-    return util.getJson(url)
+  getFloodsWithin (bbox) {
+    return util.getJson(`${serviceUrl}/floods-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`)
   },
 
-  async getFloodArea (code) {
+  getFloodArea (code) {
     // 5th character of code states "w" or "a"
     // for warning or alert flood area types
     const type = code.charAt(4).toLowerCase() === 'w'
       ? 'warning'
       : 'alert'
 
-    const url = `${serviceUrl}/flood-area/${type}/${code}`
-    return util.getJson(url)
+    return util.getJson(`${serviceUrl}/flood-area/${type}/${code}`)
   },
 
-  async getOutlook () {
-    const result = await util.getJson(`${serviceUrl}/flood-guidance-statement`, true)
-    return result
+  getOutlook () {
+    return util.getJson(`${serviceUrl}/flood-guidance-statement`, true)
   },
 
-  async getStationById (id, direction) {
-    const url = `${serviceUrl}/station/${id}/${direction}`
-    return util.getJson(url)
+  getStationById (id, direction) {
+    return util.getJson(`${serviceUrl}/station/${id}/${direction}`)
   },
 
-  async getStationsWithin (bbox) {
-    const url = `${serviceUrl}/stations-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`
-    return util.getJson(url)
+  getStationsWithin (bbox) {
+    return util.getJson(`${serviceUrl}/stations-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`)
   },
 
-  async getStationsUpstreamDownstream (id, direction) {
-    const url = `${serviceUrl}/stations-upstream-downstream/${id}/${direction}`
-    const result = await util.getJson(url)
-    return result
+  getStationsUpstreamDownstream (id, direction) {
+    return util.getJson(`${serviceUrl}/stations-upstream-downstream/${id}/${direction}`)
   },
 
-  async getStationsWithinRadius (lng, lat, radiusM = 10000) {
-    const url = `${serviceUrl}/stations-within/${lng}/${lat}/${radiusM}`
-    return util.getJson(url)
+  getStationsWithinRadius (lng, lat, radiusM = 10000) {
+    return util.getJson(`${serviceUrl}/stations-within/${lng}/${lat}/${radiusM}`)
   },
 
-  async getStationTelemetry (id, direction) {
-    const url = `${serviceUrl}/station/${id}/${direction}/telemetry`
-    return util.getJson(url)
+  getStationTelemetry (id, direction) {
+    return util.getJson(`${serviceUrl}/station/${id}/${direction}/telemetry`)
   },
 
-  async getStationForecastThresholds (id) {
-    const url = `${serviceUrl}/station/${id}/forecast/thresholds`
-    return util.getJson(url)
+  getStationForecastThresholds (id) {
+    return util.getJson(`${serviceUrl}/station/${id}/forecast/thresholds`)
   },
 
-  async getStationForecastData (id) {
-    const url = `${serviceUrl}/station/${id}/forecast/data`
-    return util.getJson(url)
+  getStationForecastData (id) {
+    return util.getJson(`${serviceUrl}/station/${id}/forecast/data`)
   },
 
-  async getStationsGeoJson () {
+  getStationsGeoJson () {
     const url = config.geoserverUrl + '/geoserver/flood/ows?service=wfs&' +
               'version=2.0.0&request=GetFeature&typeNames=flood:stations&propertyName=name,river,status,atrisk,type,is_ffoi,is_ffoi_at_risk,ffoi_max,ffoi_date,value,value_date,percentile_95,percentile_5&' +
               'outputFormat=application/json'
     return util.getJson(url)
   },
 
-  async getIsEngland (lng, lat) {
-    const url = `${serviceUrl}/is-england/${lng}/${lat}`
-    return util.getJson(url)
+  getIsEngland (lng, lat) {
+    return util.getJson(`${serviceUrl}/is-england/${lng}/${lat}`)
   },
-  async getImpactData (id) {
-    const url = `${serviceUrl}/impacts/${id}`
-    return util.getJson(url)
+
+  getImpactData (id) {
+    return util.getJson(`${serviceUrl}/impacts/${id}`)
   },
-  async getImpactsWithin (bbox) {
-    const url = `${serviceUrl}/impacts-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`
-    return util.getJson(url)
+
+  getImpactsWithin (bbox) {
+    return util.getJson(`${serviceUrl}/impacts-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`)
   }
 }
