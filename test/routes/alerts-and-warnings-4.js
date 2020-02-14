@@ -36,7 +36,7 @@ lab.experiment('Test - alerts - warnings', () => {
     const fakeIsEngland = () => {
       return { is_england: true }
     }
-    // const fakePlaceData = () => {}
+
     const fakeFloodsData = () => data.floodsByCounty
 
     const fakeStationsData = () => []

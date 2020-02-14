@@ -121,4 +121,80 @@ lab.experiment('Test - alerts - warnings', () => {
     Code.expect(response.payload).to.contain('0 results')
     Code.expect(response.statusCode).to.equal(200)
   })
+  lab.test('GET /alerts-and-warnings TYPO or non location "afdv vdaf adfv  fda" ', async () => {
+    const fakeGetJson = () => {
+      return {
+        authenticationResultCode: 'ValidCredentials',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright',
+        resourceSets: [
+          {
+            estimatedTotal: 2,
+            resources: [
+              {
+                __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+                bbox: [-20.939201,
+                  167.21288,
+                  -20.88126,
+                  167.29555],
+                name: 'Wé, New Caledonia',
+                point: {
+                  type: 'Point',
+                  coordinates: [-20.91023, 167.25421]
+                },
+                address: {
+                  countryRegion: 'New Caledonia',
+                  formattedAddress: 'Wé, New Caledonia',
+                  locality: 'Wé',
+                  countryRegionIso2: 'NC'
+                },
+                confidence: 'Low',
+                entityType: 'PopulatedPlace',
+                geocodePoints: [
+                  {
+                    type: 'Point',
+                    coordinates: [-20.91023, 167.25421],
+                    calculationMethod: 'Rooftop',
+                    usageTypes: ['Display']
+                  }
+                ],
+                matchCodes: ['Good']
+              }
+            ]
+          }
+        ],
+        statusCode: 200,
+        tatusDescription: 'OK',
+        traceId: 'trace-id'
+      }
+    }
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const warningsPlugin = {
+      plugin: {
+        name: 'warnings',
+        register: (server, options) => {
+          server.route(require('../../server/routes/alerts-and-warnings'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(warningsPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings?q=wefwe%20we%20fwef%20str'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('No flood alerts or warnings near this location.')
+    Code.expect(response.payload).to.contain('0 results')
+    Code.expect(response.statusCode).to.equal(200)
+  })
 })
