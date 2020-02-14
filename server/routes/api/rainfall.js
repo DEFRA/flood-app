@@ -57,7 +57,7 @@ module.exports = {
       return geojsonObject
     } catch (err) {
       request.yar.set('displayError', { errorMessage: 'Unable to process your request. Please try again later.' })
-      return h.redirect('/')
+      return h.redirect('/find-location')
     }
   },
   options: {

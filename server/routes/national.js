@@ -3,7 +3,7 @@ const ViewModel = require('../models/views/national')
 
 module.exports = {
   method: 'GET',
-  path: '/national',
+  path: '/',
   handler: async (request, h) => {
     // get the cached floods
     const floods = floodService.floods
