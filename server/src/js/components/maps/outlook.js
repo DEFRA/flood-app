@@ -14,7 +14,7 @@ const maps = window.flood.maps
 const { getParameterByName, forEach } = window.flood.utils
 const MapContainer = maps.MapContainer
 
-function OutlookMap () {
+function OutlookMap (display) {
   // Container element
   const elementId = 'map-outlook'
   const containerEl = document.getElementById(elementId)
@@ -85,14 +85,16 @@ function OutlookMap () {
     })
   }
 
+  const areasOfConcernSource = new VectorSource({
+    format: new GeoJSON(),
+    projection: 'EPSG:3857',
+    url: '/api/outlook.geojson'
+  })
+
   const areasOfConcern = new VectorLayer({
     zIndex: 200,
     renderMode: 'hybrid',
-    source: new VectorSource({
-      format: new GeoJSON(),
-      projection: 'EPSG:3857',
-      url: '/api/outlook.geojson'
-    }),
+    source: areasOfConcernSource,
     style: styleFeature,
     opacity: 0.9
   })
@@ -101,6 +103,7 @@ function OutlookMap () {
   const mapOptions = {
     keyTemplate: 'map-key-outlook.html',
     view: view,
+    display: display,
     layers: [
       road,
       areasOfConcern
@@ -115,7 +118,7 @@ function OutlookMap () {
   const outlookControl = document.createElement('div')
   outlookControl.className = 'map__outlook-control'
   outlookControl.innerHTML = '<div class="map__outlook-control__inner"></div>'
-  window.flood.model.days.forEach(function (day) {
+  window.flood.model.outlook.days.forEach(function (day) {
     const div = document.createElement('div')
     div.className = 'map__outlook-control__day'
     div.setAttribute('data-risk-level', day.level)
@@ -149,26 +152,29 @@ function OutlookMap () {
     })
   }
 
-  // Set day to first day with heightened risk
-  const days = outlookControl.querySelectorAll('.map__outlook-control__day')
-  for (let i = 0; i < days.length; i++) {
-    const riskLevel = Number(days[i].getAttribute('data-risk-level'))
-    if (riskLevel >= 1) {
-      setDay(i + 1)
-      break
-    }
-    setDay(1)
-  }
-
   //
   // Events
   //
 
   // Precompose - setup view and features first
-  map.once('precompose', function (e) {
+  map.once('precompose', (e) => {
     // Set map extent to intial extent
     const extent = getParameterByName('e') ? getParameterByName('e').split(',').map(Number) : maps.extent
     map.getView().fit(extent, { constrainResolution: false, padding: [0, 0, 0, 0] })
+  })
+
+  areasOfConcernSource.once('change', (e) => {
+    if (areasOfConcernSource.getState() === 'ready') {
+      let risk = 0
+      for (let i = 0; i < window.flood.model.outlook.days.length; i++) {
+        if (window.flood.model.outlook.days[i].level >= 1) {
+          risk = window.flood.model.outlook.days[i].level
+          setDay(i + 1)
+          break
+        }
+      }
+      if (risk === 0) { setDay(1) }
+    }
   })
 
   // Toggle fullscreen view on browser history change
@@ -191,6 +197,6 @@ function OutlookMap () {
 // onto the `maps` object.
 // (This is done mainly to avoid the rule
 // "do not use 'new' for side effects. (no-new)")
-maps.createOutlookMap = function () {
-  return new OutlookMap()
+maps.createOutlookMap = function (display) {
+  return new OutlookMap(display)
 }
