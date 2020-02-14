@@ -64,7 +64,7 @@ lab.experiment('Routes test - national view', () => {
 
     const options = {
       method: 'GET',
-      url: '/national'
+      url: '/'
     }
 
     const response = await server.inject(options)

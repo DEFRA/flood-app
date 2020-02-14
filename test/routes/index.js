@@ -175,12 +175,12 @@ lab.experiment('Get Routes test', () => {
     Code.expect(response.payload).to.include('How to recover after a flood')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
-  lab.test('GET /', async () => {
+  lab.test('GET /find-location', async () => {
     const plugin = {
       plugin: {
-        name: 'home',
+        name: 'find-location',
         register: (server, options) => {
-          server.route(require('../../server/routes/home'))
+          server.route(require('../../server/routes/find-location'))
         }
       }
     }
@@ -191,7 +191,7 @@ lab.experiment('Get Routes test', () => {
 
     const options = {
       method: 'GET',
-      url: '/'
+      url: '/find-location'
     }
 
     const response = await server.inject(options)

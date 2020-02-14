@@ -16,15 +16,15 @@ module.exports = {
     } catch (err) {
       console.error(err)
       request.yar.set('displayError', displayErrors['location-services-error'])
-      return h.redirect('/')
+      return h.redirect('/find-location')
     }
     if (!place) {
       request.yar.set('displayError', displayErrors['invalid-location'])
-      return h.redirect('/')
+      return h.redirect('/find-location')
     }
     if (!place.isEngland.is_england) {
       request.yar.set('displayError', displayErrors['location-not-england'])
-      return h.redirect('/')
+      return h.redirect('/find-location')
     }
     const [
       impacts,
