@@ -41,40 +41,40 @@ lab.experiment('Routes test - location - 1 alert 1 nlif', () => {
       return {
         floods: [
           {
-            code: '122WAF948',
-            key: 4563104,
-            description: 'River Rye catchment',
-            quickdialnumber: '134603',
+            ta_code: '122WAF948',
+            ta_id: 4563104,
+            ta_name: 'River Rye catchment',
+            quick_dial: '134603',
             region: 'Midlands',
             area: 'Central',
             floodtype: 'f',
-            severity: 3,
+            severity_value: 1,
             severitydescription: 'Flood Alert',
             warningkey: 1,
-            raised: '2020-01-22T15:22:28.240Z',
-            severitychanged: '2020-01-22T15:22:28.240Z',
-            messagechanged: '2020-01-22T15:22:28.240Z',
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ex sapien, luctus quis neque sit amet, rutrum semper odio. Mauris metus elit, semper in libero sed, vulputate placerat ante. In bibendum in libero in placerat. Aenean et ante nulla. Nullam tempus leo vitae mattis aliquam. Etiam tempus dignissim efficitur. Nam luctus tempus risus sit amet porttitor. Integer quis dapibus arcu, eu eleifend arcu. Vestibulum non nunc elit. Donec facilisis lorem tristique ultricies dapibus. Sed eleifend sit amet nibh ut tincidunt.\n' +
+            message_received: '2020-01-22T15:22:28.240Z',
+            severity_changed: '2020-01-22T15:22:28.240Z',
+            situation_changed: '2020-01-22T15:22:28.240Z',
+            situation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ex sapien, luctus quis neque sit amet, rutrum semper odio. Mauris metus elit, semper in libero sed, vulputate placerat ante. In bibendum in libero in placerat. Aenean et ante nulla. Nullam tempus leo vitae mattis aliquam. Etiam tempus dignissim efficitur. Nam luctus tempus risus sit amet porttitor. Integer quis dapibus arcu, eu eleifend arcu. Vestibulum non nunc elit. Donec facilisis lorem tristique ultricies dapibus. Sed eleifend sit amet nibh ut tincidunt.\n' +
             '\n' +
             'Quisque nec ultrices risus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque viverra, tortor sit amet condimentum laoreet, lorem ante dictum ante, nec hendrerit nisl lacus sit amet diam. Praesent ut ornare lorem. Quisque placerat sollicitudin enim, sit amet laoreet enim consectetur in. Praesent nec nunc a ligula cursus cursus.\n' +
             '\n' +
             'Proin a dictum mauris, eget pulvinar augue. Pellentesque non lectus nibh. Pellentesque convallis ultricies enim, vel lacinia metus rhoncus vitae. Donec at porta tellus. In hac habitasse platea dictumst. Vestibulum mollis mollis nibh, sit amet maximus sem suscipit eu. Etiam elementum sed nulla quis tincidunt.'
           },
           {
-            code: '122WAF938',
-            key: 4563106,
-            description: 'River Wiske and tributaries',
-            quickdialnumber: '135104',
+            ta_code: '122WAF938',
+            ta_id: 4563106,
+            ta_name: 'River Wiske and tributaries',
+            quick_dial: '135104',
             region: 'Midlands',
             area: 'Central',
             floodtype: 'f',
-            severity: 3,
+            severity_value: 1,
             severitydescription: 'Flood Alert',
             warningkey: 1,
-            raised: '2020-01-22T15:22:28.240Z',
-            severitychanged: '2020-01-22T15:22:28.240Z',
-            messagechanged: '2020-01-22T15:22:28.240Z',
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ex sapien, luctus quis neque sit amet, rutrum semper odio. Mauris metus elit, semper in libero sed, vulputate placerat ante. In bibendum in libero in placerat. Aenean et ante nulla. Nullam tempus leo vitae mattis aliquam. Etiam tempus dignissim efficitur. Nam luctus tempus risus sit amet porttitor. Integer quis dapibus arcu, eu eleifend arcu. Vestibulum non nunc elit. Donec facilisis lorem tristique ultricies dapibus. Sed eleifend sit amet nibh ut tincidunt.\n' +
+            message_received: '2020-01-22T15:22:28.240Z',
+            severity_changed: '2020-01-22T15:22:28.240Z',
+            situation_changed: '2020-01-22T15:22:28.240Z',
+            situation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ex sapien, luctus quis neque sit amet, rutrum semper odio. Mauris metus elit, semper in libero sed, vulputate placerat ante. In bibendum in libero in placerat. Aenean et ante nulla. Nullam tempus leo vitae mattis aliquam. Etiam tempus dignissim efficitur. Nam luctus tempus risus sit amet porttitor. Integer quis dapibus arcu, eu eleifend arcu. Vestibulum non nunc elit. Donec facilisis lorem tristique ultricies dapibus. Sed eleifend sit amet nibh ut tincidunt.\n' +
             '\n' +
             'Quisque nec ultrices risus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque viverra, tortor sit amet condimentum laoreet, lorem ante dictum ante, nec hendrerit nisl lacus sit amet diam. Praesent ut ornare lorem. Quisque placerat sollicitudin enim, sit amet laoreet enim consectetur in. Praesent nec nunc a ligula cursus cursus.\n' +
             '\n' +

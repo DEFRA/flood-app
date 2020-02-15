@@ -1,5 +1,5 @@
 const severity = [{
-  id: 1,
+  id: 3,
   title: 'Severe flood warning',
   pluralisedTitle: 'Severe flood warnings',
   hash: 'severe',
@@ -17,7 +17,7 @@ const severity = [{
   tagline: 'Take action',
   isActive: true
 }, {
-  id: 3,
+  id: 1,
   title: 'Flood alert',
   pluralisedTitle: 'Flood alerts',
   hash: 'alert',

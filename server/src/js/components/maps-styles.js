@@ -15,22 +15,22 @@ window.flood.maps.styles = {
     let offset = [0, 0] // Icon sprite offset
     const isSelected = feature.get('isSelected')
 
-    if (feature.get('severity') === 1) {
+    if (feature.get('severity_value') === 3) {
       strokeColour = isSelected ? '#b6000c' : '#e3000f'
-      fillColour = pattern(1, isSelected)
+      fillColour = pattern(3, isSelected)
       zIndex = 5
       offset = [0, 900]
-    } else if (feature.get('severity') === 2) {
+    } else if (feature.get('severity_value') === 2) {
       strokeColour = isSelected ? '#b6000c' : '#e3000f'
       fillColour = pattern(2, isSelected)
       zIndex = 4
       offset = [0, 1000]
-    } else if (feature.get('severity') === 3) {
+    } else if (feature.get('severity_value') === 1) {
       strokeColour = isSelected ? '#d87900' : '#f18700'
-      fillColour = pattern(3, isSelected)
+      fillColour = pattern(1, isSelected)
       zIndex = 3
       offset = [0, 1100]
-    } else if (feature.get('severity') === 4) {
+    } else if (feature.get('severity_value') === 4) {
       strokeColour = isSelected ? '#595f62' : '#6f777b'
       fillColour = pattern(4, isSelected)
       zIndex = 2
@@ -38,7 +38,7 @@ window.flood.maps.styles = {
     }
 
     // Remove fills from points
-    if (resolution > 200) {
+    if (resolution > window.flood.maps.minResolution) {
       strokeColour = 'transparent'
       fillColour = 'transparent'
       image = new Icon({
@@ -51,7 +51,7 @@ window.flood.maps.styles = {
     }
 
     // Selected feature
-    if (feature.get('isSelected') && resolution > 200) {
+    if (feature.get('isSelected') && resolution > window.flood.maps.minResolution) {
       zIndex = 6
       offset[0] += 100
     }
@@ -106,7 +106,7 @@ window.flood.maps.styles = {
         break
     }
 
-    if (resolution > 200) {
+    if (resolution > window.flood.maps.minResolution) {
       offset[0] += 200
       anchor = [0.5, 0.5]
     }
@@ -140,7 +140,7 @@ window.flood.maps.styles = {
     let anchor = [0.5, 0.75]
     const offset = [0, 1500]
 
-    if (resolution > 200) {
+    if (resolution > window.flood.maps.minResolution) {
       offset[0] += 200
       anchor = [0.5, 0.5]
     }
@@ -174,7 +174,7 @@ window.flood.maps.styles = {
     let anchor = [0.5, 0.75]
     const offset = [0, 500]
 
-    if (resolution > 200) {
+    if (resolution > window.flood.maps.minResolution) {
       offset[0] += 200
       anchor = [0.5, 0.5]
     }
@@ -224,7 +224,7 @@ const pattern = (severity, isSelected) => {
   // const pixelRatio = window.devicePixelRatio
   const canvas = document.createElement('canvas')
   const context = canvas.getContext('2d')
-  if (severity === 1) {
+  if (severity === 3) {
     canvas.width = 10
     canvas.height = 10
     isSelected ? context.fillStyle = '#B6000C' : context.fillStyle = '#E3000F'
@@ -251,7 +251,7 @@ const pattern = (severity, isSelected) => {
     context.moveTo(3, 0)
     context.lineTo(3, 10)
     context.stroke()
-  } else if (severity === 3) {
+  } else if (severity === 1) {
     canvas.width = 10
     canvas.height = 10
     isSelected ? context.fillStyle = '#DEAF72' : context.fillStyle = '#F8C37F'

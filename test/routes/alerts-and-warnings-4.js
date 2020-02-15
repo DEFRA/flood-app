@@ -117,6 +117,7 @@ lab.experiment('Test - alerts - warnings', () => {
     const response = await server.inject(options)
 
     Code.expect(response.payload).to.contain('33 results')
+    Code.expect(response.payload).to.contain('3 severe flood warnings')
     Code.expect(response.payload).to.contain('18 flood alerts')
     Code.expect(response.payload).to.contain('<a href="/target-area/013WATDEE">Dee Estuary from Parkgate to Chester</a>')
     Code.expect(response.statusCode).to.equal(200)

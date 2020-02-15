@@ -29,7 +29,7 @@
         </span>
         <div class="defra-flood-status-item__text">
           <strong>
-              {% if model.highestSeverity.id == 1 %}
+              {% if model.highestSeverity.id === 3 %}
               {{model.highestSeverity.subTitle}}
               {% else %}
               Some {{model.highestSeverity.subTitle | lower}}

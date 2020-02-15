@@ -16,5 +16,6 @@ window.flood.maps = {
   center: [
     -1.4758,
     52.9219
-  ]
+  ],
+  minResolution: 100
 }

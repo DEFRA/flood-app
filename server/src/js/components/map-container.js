@@ -16,7 +16,7 @@ const { addOrUpdateParameter, getParameterByName } = window.flood.utils
 
 window.flood.maps.MapContainer = function MapContainer (containerElement, options) {
   const defaults = {
-    minIconResolution: 200,
+    minIconResolution: window.flood.maps.minResolution,
     keyTemplate: ''
   }
 

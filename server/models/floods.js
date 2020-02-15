@@ -4,7 +4,7 @@ const { groupBy, formatDate } = require('../util')
 class Floods {
   constructor (data, national = true) {
     this._floods = data
-    const grouped = groupBy(data.floods, 'severity')
+    const grouped = groupBy(data.floods, 'severity_value')
     this._groups = severity.map(item => {
       let floods = grouped[item.id]
       const count = floods ? floods.length : 0
@@ -12,15 +12,15 @@ class Floods {
       floods = !floods ? floods : floods.map(flood => {
         flood.html = `<li class="defra-flood-list__item defra-flood-list__item--${item.hash}">
                         <span class="defra-flood-list__item-title">
-                            <a href="/target-area/${flood.code}">${flood.description}</a>
+                            <a href="/target-area/${flood.ta_code}">${flood.ta_name}</a>
                         </span>
                         <dl class="defra-flood-list__item-meta">
                             <div>
                           <dt>
-                              ${item.severity === 4 ? 'Removed' : 'Updated'}
+                              ${item.id === 4 ? 'Removed' : 'Updated'}
                           </dt>
                           <dd>
-                              <time datetime="${flood.messagechanged}">${formatDate(flood.messagechanged)}</time>
+                              <time datetime="${flood.situation_changed}">${formatDate(flood.situation_changed)}</time>
                           </dd>
                             </div>
                         </dl>
@@ -45,14 +45,13 @@ class Floods {
     this._geojson.features = this._floods.floods.map(item => {
       return {
         type: 'Feature',
-        id: 'flood_warning_alert.' + item.key,
+        id: 'flood.' + item.ta_code,
         geometry: item.geometry ? JSON.parse(item.geometry) : null,
         properties: {
-          fwa_key: item.key,
-          fwa_code: item.code,
-          description: item.description,
-          severity: item.severity,
-          severity_description: item.severitydescription
+          ta_code: item.ta_code,
+          ta_name: item.ta_name,
+          severity_value: item.severity_value,
+          severity: item.severity
         }
       }
     })

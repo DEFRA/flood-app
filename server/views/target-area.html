@@ -25,7 +25,7 @@
       Target area: {{ model.area.name }}
     </h1>
     <p class="defra-updated govuk-!-margin-bottom-7">
-      Updated at <time datetime="{{model.flood.severityChanged}}">{{model.flood.messageChanged | formatDate}}</time>
+      Updated at <time datetime="{{model.flood.situation_changed}}">{{model.flood.situation_changed | formatDate}}</time>
     </p>
   </div>
 </div>
@@ -49,10 +49,8 @@
 
     
     <p>
-    {% if model.flood and model.flood.message %}
-    {{model.flood.message}}
-    {% else %}
-    <span style="color:#d4351c">We need to explain what a flood target/alert/warning area is; detail the risk from future flooding and direct citizens who live in this area to how to plan ahead for flooding... </span>
+    {% if model.flood and model.flood.situation %}
+     {{model.flood.situation}}
     {% endif %}
     </p>
     
@@ -62,7 +60,7 @@
     
     {% if model.flood and model.severity.isActive %}
     <div class="govuk-inset-text govuk-!-margin-top-2">
-      {% if model.severity.id == 1 %}
+      {% if model.severity.id === 3 %}
       A severe flood warning means there is a danger to life. <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-severe-flood-warning">Find out what to do in you get a severe flood warning</a>.
       {% elif model.severity.id == 2 %}
       A flood warning means flooding is expected and you need to act now. <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-warning">Find out what to do in you get a flood warning</a>.
@@ -73,14 +71,8 @@
     {% endif %}
     
     <p class="govuk-body">
-      <a href="/river-and-sea-levels?river=river-name">View the latest river and sea levels in this area</a>.
+      <a href="/river-and-sea-levels">View the latest river and sea levels in this area</a>.
     </p>
-
-    <!--
-    {% if model.flood %}
-    <p class="govuk-body">Could this information be better? <a href="/target-area/{{model.area.code}}/feedback">Tell us how to improve it</a>.</p>
-    {% endif %}
-    -->
 
     {% include "partials/other-flood-risk-check.html" %}
     
@@ -130,15 +122,6 @@
 
 {% block bodyEnd %}
 {{ super() }}
-<!--<script src="{{assetPath}}/js/ol.js"></script>
-  <script src="{{assetPath}}/js/components/maps.js"></script>
-  <script src="{{assetPath}}/js/components/maps-styles.js"></script>
-  <script src="{{assetPath}}/js/components/maps-layers.js"></script>
-  <script src="{{assetPath}}/js/components/map-container.js"></script>
-  <script src="{{assetPath}}/js/components/maps/live.js"></script>
-  <script src="{{assetPath}}/js/templates.js"></script>
-  <script src="{{ assetPath }}/nunjucks-slim.min.js"></script>
-  <script>nunjucks.configure()</script>-->
 <script>
   window.flood.model = {{ model | dump(2) | safe }}
 </script>

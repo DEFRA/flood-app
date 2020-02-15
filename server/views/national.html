@@ -35,7 +35,7 @@
         <span class="defra-flood-status-item__icon"></span>
         <div class="defra-flood-status-item__text">
           <strong>
-            <a href="/alerts-and-warnings{% if group.severity.id > model.highestSeverityId %}#{{ group.severity.pluralisedHash }}{% endif %}">
+            <a href="/alerts-and-warnings{% if group.severity.id === model.highestSeverityId %}{% else %}#{{ group.severity.pluralisedHash }}{% endif %}">
               {{ group.title | lower }}
             </a>
           </strong>
