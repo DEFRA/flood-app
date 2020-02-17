@@ -1,0 +1,58 @@
+{
+    "authenticationResultCode": "ValidCredentials",
+    "brandLogoUri": "http://dev.virtualearth.net/Branding/logo_powered_by.png",
+    "copyright": "Copyright",
+    "resourceSets": [
+      {
+        "estimatedTotal": 1,
+        "resources": [
+          {
+            "__type": "Location:http://schemas.microsoft.com/search/local/ws/rest/v1",
+            "bbox": [
+              56.06185,
+              -3.18491,
+              56.07693,
+              -3.1676
+            ],
+            "name": "Kinghorn, Fife",
+            "point": {
+              "type": "Point",
+              "coordinates": [
+                56.069336,
+                -3.175797
+              ]
+            },
+            "address": {
+              "adminDistrict": "Scotland",
+              "adminDistrict2": "Fife",
+              "countryRegion": "United Kingdom",
+              "formattedAddress": "Kinghorn, Fife",
+              "locality": "Kinghorn",
+              "countryRegionIso2": "GB"
+            },
+            "confidence": "High",
+            "entityType": "PopulatedPlace",
+            "geocodePoints": [
+              {
+                "type": "Point",
+                "coordinates": [
+                  56.069336,
+                  -3.175797
+                ],
+                "calculationMethod": "Rooftop",
+                "usageTypes": [
+                  "Display"
+                ]
+              }
+            ],
+            "matchCodes": [
+              "Good"
+            ]
+          }
+        ]
+      }
+    ],
+    "statusCode": 200,
+    "tatusDescription": "OK",
+    "traceId": "trace-id"
+  }
