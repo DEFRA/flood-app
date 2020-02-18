@@ -248,4 +248,43 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.payload).to.contain('<a href="/target-area/013WAFLM">Lower River Mersey including Warrington, Runcorn and Lymm areas</a>')
     Code.expect(response.statusCode).to.equal(200)
   })
+  lab.test('GET /alerts-and-warnings Bing returns error', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeFloodsData = () => data.floodsByPostCode
+
+    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+
+    const fakeGetJson = () => {
+      throw new Error('Bing error')
+    }
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const warningsPlugin = {
+      plugin: {
+        name: 'warnings',
+        register: (server, options) => {
+          server.route(require('../../server/routes/alerts-and-warnings'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(warningsPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings?q=WA4%201HT'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location - GOV.UK')
+    Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location')
+    Code.expect(response.statusCode).to.equal(200)
+  })
 })

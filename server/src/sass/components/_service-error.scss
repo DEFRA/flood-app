@@ -1,0 +1,10 @@
+.defra-service-error {
+    @extend .govuk-error-summary;
+    border-color: $govuk-border-colour;
+    &__title {
+        @extend .govuk-error-summary__title;
+    }
+    p:last-child {
+        margin-bottom:5px;
+    }
+}
