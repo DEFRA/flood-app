@@ -1,10 +1,10 @@
 
 {% if type == 'warnings' %}
   <p>
-    <span class="govuk-body-m govuk-!-font-weight-bold">{{props.severity_description}}</span><br/>
-    <a class="govuk-body-s" href="/target-area/{{props.fwa_code}}">{{props.description}}</a>
+    <span class="govuk-body-m govuk-!-font-weight-bold">{{props.severity}}</span><br/>
+    <a class="govuk-body-s" href="/target-area/{{props.ta_code}}">{{props.ta_name}}</a>
   </p>
-  <span class="ol-overlay__symbol ol-overlay__symbol--{{props.severity}}"></span>
+  <span class="ol-overlay__symbol ol-overlay__symbol--{{props.severity_value}}"></span>
 {% elif type == 'impact' %}
   <p class="govuk-body-s">
     Historic flood impact {{ props.obsDate }}<br/>

@@ -41,35 +41,28 @@ lab.experiment('Routes test - location - 1 alert 1 nlif', () => {
       return {
         floods: [
           {
-            code: '053WAF117BED',
-            key: 180379,
-            description: 'Barlings Eau and Duckpool Catchwater',
-            quickdialnumber: '207012',
-            region: 'Anglian',
-            area: 'Northern',
-            floodtype: 'f',
-            severity: 3,
+            ta_code: '053WAF117BED',
+            ta_id: 180379,
+            ta_name: 'Barlings Eau and Duckpool Catchwater',
+            quick_dial: '207012',
+            severity_value: 1,
             severitydescription: 'Flood Alert',
-            warningkey: 108229,
-            raised: '2020-01-06T11:58:00.000Z',
-            severitychanged: '2019-11-07T15:43:00.000Z',
-            messagechanged: '2020-01-06T11:58:00.000Z',
-            message: 'River levels remain high.  Heavy rain is forecast for Wednesay 8th and Thursday 9th January and we continue to monitor the situation. Environment Agency contractors have repaired the breached banks at Short Ferry. However, Short Ferry road will remain closed for several weeks until the water has been pumped back into the river.  The pumps are operating again now that river levels have fallen sufficiently.  Do not walk on flood banks and please avoid using low lying footpaths near local watercourses, which may be flooded. We are monitoring river levels and will update this message on Tuesday 7th January, or as the situation changes.'
+            message_received: '2020-01-06T11:58:00.000Z',
+            severity_changed: '2019-11-07T15:43:00.000Z',
+            situation_changed: '2020-01-06T11:58:00.000Z',
+            situation: 'River levels remain high.  Heavy rain is forecast for Wednesay 8th and Thursday 9th January and we continue to monitor the situation. Environment Agency contractors have repaired the breached banks at Short Ferry. However, Short Ferry road will remain closed for several weeks until the water has been pumped back into the river.  The pumps are operating again now that river levels have fallen sufficiently.  Do not walk on flood banks and please avoid using low lying footpaths near local watercourses, which may be flooded. We are monitoring river levels and will update this message on Tuesday 7th January, or as the situation changes.'
           }, {
-            code: '053WAF117BED',
-            key: 180379,
-            description: 'Barlings Eau and Duckpool Catchwater',
-            quickdialnumber: '207012',
-            region: 'Anglian',
-            area: 'Northern',
-            floodtype: 'f',
-            severity: 4,
+            ta_code: '053WAF117BED',
+            ta_id: 180379,
+            ta_name: 'Barlings Eau and Duckpool Catchwater',
+            quick_dial: '207012',
+            severity_value: 4,
             severitydescription: 'No longer in force',
             warningkey: 108229,
-            raised: '2020-01-06T11:58:00.000Z',
-            severitychanged: '2019-11-07T15:43:00.000Z',
-            messagechanged: '2020-01-06T11:58:00.000Z',
-            message: 'River levels remain high.  Heavy rain is forecast for Wednesay 8th and Thursday 9th January and we continue to monitor the situation. Environment Agency contractors have repaired the breached banks at Short Ferry. However, Short Ferry road will remain closed for several weeks until the water has been pumped back into the river.  The pumps are operating again now that river levels have fallen sufficiently.  Do not walk on flood banks and please avoid using low lying footpaths near local watercourses, which may be flooded. We are monitoring river levels and will update this message on Tuesday 7th January, or as the situation changes.'
+            message_received: '2020-01-06T11:58:00.000Z',
+            severity_changed: '2019-11-07T15:43:00.000Z',
+            situation_changed: '2020-01-06T11:58:00.000Z',
+            situation: 'River levels remain high.  Heavy rain is forecast for Wednesay 8th and Thursday 9th January and we continue to monitor the situation. Environment Agency contractors have repaired the breached banks at Short Ferry. However, Short Ferry road will remain closed for several weeks until the water has been pumped back into the river.  The pumps are operating again now that river levels have fallen sufficiently.  Do not walk on flood banks and please avoid using low lying footpaths near local watercourses, which may be flooded. We are monitoring river levels and will update this message on Tuesday 7th January, or as the situation changes.'
           }
         ]
       }

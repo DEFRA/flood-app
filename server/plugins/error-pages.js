@@ -30,7 +30,7 @@ module.exports = {
           request.log('error', {
             statusCode: statusCode,
             data: response.data,
-            message: response.message
+            situation: response.message
           })
 
           // Normally a joi request query param validation error

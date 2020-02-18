@@ -15,12 +15,12 @@ if (outlookMapContainer) {
   button.addEventListener('click', function (e) {
     e.preventDefault()
     // Instantiate and show map
-    window.flood.maps.createOutlookMap()
+    window.flood.maps.createOutlookMap({})
   })
   outlookMapContainer.parentNode.insertBefore(button, outlookMapContainer)
   // Instantiate and show map if querystring parameter
   if (window.flood.utils.getParameterByName('v') === 'map-outlook') {
-    window.flood.maps.createOutlookMap()
+    window.flood.maps.createOutlookMap({ 'no-back': true })
   }
 }
 

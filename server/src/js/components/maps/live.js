@@ -54,7 +54,7 @@ function LiveMap (containerId, display) {
 
   // MapContainer options
   const options = {
-    minIconResolution: 200,
+    minIconResolution: window.flood.maps.minResolution,
     view: view,
     keyTemplate: 'map-key-live.html',
     display: display,
@@ -185,21 +185,21 @@ function LiveMap (containerId, display) {
     // Feature groups that are within the current viewport
     // Update state for polygons
     polygons.getSource().forEachFeatureInExtent(extent.new, function (feature) {
-      if (feature.get('severity') === 1) {
+      if (feature.get('severity_value') === 3) {
         layers.ts.vpt = true
-      } else if (feature.get('severity') === 2) {
+      } else if (feature.get('severity_value') === 2) {
         layers.tw.vpt = true
-      } else if (feature.get('severity') === 3) {
+      } else if (feature.get('severity_value') === 1) {
         layers.ta.vpt = true
       }
     })
     // Set booleans for flood centroids
     floods.getSource().forEachFeatureInExtent(extent.new, function (feature) {
-      if (feature.get('severity') === 1) {
+      if (feature.get('severity_value') === 3) {
         layers.ts.vpt = true
-      } else if (feature.get('severity') === 2) {
+      } else if (feature.get('severity_value') === 2) {
         layers.tw.vpt = true
-      } else if (feature.get('severity') === 3) {
+      } else if (feature.get('severity_value') === 1) {
         layers.ta.vpt = true
       }
     })
@@ -258,10 +258,10 @@ function LiveMap (containerId, display) {
         satellite.setVisible(document.getElementById('sv').checked)
       } else if (layer.get('ref') === 'floods' || layer.get('ref') === 'polygons') {
         layer.getSource().forEachFeature(function (feature) {
-          const severity = feature.get('severity')
-          feature.set('isVisible', (severity === 3 && layers.ta.inp) || (severity === 2 && layers.tw.inp) || (severity === 1 && layers.ts.inp))
+          const severity = feature.get('severity_value')
+          feature.set('isVisible', (severity === 1 && layers.ta.inp) || (severity === 2 && layers.tw.inp) || (severity === 3 && layers.ts.inp))
           // Set isSelected paired polygon and flood feature
-          feature.set('isSelected', selected && selected.get('fwa_code') === feature.get('fwa_code'))
+          feature.set('isSelected', selected && selected.get('ta_code') === feature.get('ta_code'))
         })
       } else if (layer.get('ref') === 'stations') {
         layers.st.inp ? stations.setStyle(maps.styles.stations) : stations.setStyle(new Style({}))
@@ -366,6 +366,7 @@ function LiveMap (containerId, display) {
 
   // Close key or select feature if map is clicked
   map.addEventListener('click', async function (e) {
+    console.log(view.getResolution())
     // Remove any previous selected feature
     if (selected) {
       selected.set('isSelected', false)
@@ -455,6 +456,10 @@ function LiveMap (containerId, display) {
   // External properties
   this.container = container
   this.map = map
+
+  view.on('change:resolution', (e) => {
+    console.log('resolution change')
+  })
 }
 
 // Export a helper factory to create this map

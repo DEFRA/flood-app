@@ -13,7 +13,7 @@
       Flood risk for England
     </h1>
     <p class="defra-updated govuk-!-margin-bottom-7">
-      Updated at <time class="form-hint" datetime="{{model.timestamp}}">{{ model.timestamp | formatDate }}</time>
+      Updated at <time class="form-hint" datetime="{{model.timestamp}}">{{ model.timestamp | formatDate("h:mm a dddd Do MMMM YYYY") }}</time>
     </p>
   </div>
 </div>
@@ -35,7 +35,7 @@
         <span class="defra-flood-status-item__icon"></span>
         <div class="defra-flood-status-item__text">
           <strong>
-            <a href="/alerts-and-warnings{% if group.severity.id > model.highestSeverityId %}#{{ group.severity.pluralisedHash }}{% endif %}">
+            <a href="/alerts-and-warnings{% if group.severity.id === model.highestSeverityId %}{% else %}#{{ group.severity.pluralisedHash }}{% endif %}">
               {{ group.title | lower }}
             </a>
           </strong>

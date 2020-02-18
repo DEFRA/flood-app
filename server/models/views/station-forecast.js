@@ -70,6 +70,8 @@ function Forecast (data, isCoastal, latestObserved) {
     FWThreshold: []
   }
 
+  // TODO THIS NEEDS A REFACTOR BADLY
+
   // Sort the thresholds and get their severity object
   function sortThresholds (threshold) {
     if (threshold.fwa_severity > -1) {
@@ -92,24 +94,24 @@ function Forecast (data, isCoastal, latestObserved) {
   this.hasWarnings = this.warnings[1] > 0 || this.warnings[2] > 0 || this.warnings[3] > 0
 
   if (this.hasWarnings) {
-    if (this.warnings[1] === 1) {
+    if (this.warnings[3] === 1) {
       this.warningMessage = 'A severe flood warning is in place nearby.'
-      this.warningSeverity = severity.getById(1)
-    } else if (this.warnings[1] > 1) {
+      this.warningSeverity = severity.filter(item => { return item.id === 3 })[0]
+    } else if (this.warnings[3] > 1) {
       this.warningMessage = 'Severe flood warnings are in place nearby.'
-      this.warningSeverity = severity[0]
+      this.warningSeverity = severity.filter(item => { return item.id === 3 })[0]
     } else if (this.warnings[2] === 1) {
       this.warningMessage = 'A flood warning is in place nearby.'
-      this.warningSeverity = severity[1]
+      this.warningSeverity = severity.filter(item => { return item.id === 2 })[0]
     } else if (this.warnings[2] > 1) {
       this.warningMessage = 'Flood warnings are in place nearby.'
-      this.warningSeverity = severity[1]
-    } else if (this.warnings[3] === 1) {
+      this.warningSeverity = severity.filter(item => { return item.id === 2 })[0]
+    } else if (this.warnings[1] === 1) {
       this.warningMessage = 'A flood alert is in place nearby.'
-      this.warningSeverity = severity[2]
-    } else if (this.warnings[3] > 1) {
+      this.warningSeverity = severity.filter(item => { return item.id === 1 })[0]
+    } else if (this.warnings[1] > 1) {
       this.warningMessage = 'Flood alerts are in place nearby.'
-      this.warningSeverity = severity[2]
+      this.warningSeverity = severity.filter(item => { return item.id === 1 })[0]
     }
   }
 

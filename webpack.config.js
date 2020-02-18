@@ -1,7 +1,7 @@
 const path = require('path')
 module.exports = (env, argv) => ({
-  mode: 'production', // 'development',
-  devtool: 'none', // 'source-map',
+  mode: 'production', // 'development' or 'production',
+  devtool: 'none', // 'source-map' or 'none',
   entry: {
     core: './server/src/js/core',
     'alerts-and-warnings': './server/src/js/pages/alerts-and-warnings',

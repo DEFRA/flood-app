@@ -18,20 +18,20 @@
   },
   "floods": [
     {
-      "code": "011FWFNC6KC",
-      "key": 174150,
-      "description": "Keswick Campsite",
-      "quickdialnumber": "302056",
+      "ta_code": "011FWFNC6KC",
+      "id": 174150,
+      "ta_name": "Keswick Campsite",
+      "quick_dial": "302056",
       "region": "North West",
       "area": "North",
       "floodtype": "f",
-      "severity": 3,
+      "severity_value": 1,
       "severitydescription": "Flood Alert",
       "warningkey": 106599,
-      "raised": "2019-08-22T14:43:00.000Z",
-      "severitychanged": "2019-08-22T08:26:00.000Z",
-      "messagechanged": "2019-08-22T14:43:00.000Z",
-      "message": "The Lake level remains high following heavy rainfall in the area. The gauge at Lodore is forecast to peak around 1.9m this evening, this warning will remain in force overnight and levels are expected to fall in the early hours of tomorrow morning.  We continue to monitor the situation closely and will update this message if the situation changes."
+      "message_received": "2019-08-22T14:43:00.000Z",
+      "severity_changed": "2019-08-22T08:26:00.000Z",
+      "situation_changed": "2019-08-22T14:43:00.000Z",
+      "situation": "The Lake level remains high following heavy rainfall in the area. The gauge at Lodore is forecast to peak around 1.9m this evening, this warning will remain in force overnight and levels are expected to fall in the early hours of tomorrow morning.  We continue to monitor the situation closely and will update this message if the situation changes."
     }
   ],
   "stations": [
@@ -89,7 +89,7 @@
       },
       "comment": "Crosthwaite Road, High Hill and Southey Hill defences overtop",
       "shortname": "Defence at Crossthwaite Road",
-      "description": "Flood defences at Crossthwaite Road overtop",
+      "ta_name": "Flood defences at Crossthwaite Road overtop",
       "type": "Defence Impact",
       "obsfloodyear": null,
       "obsfloodmonth": null,
@@ -115,7 +115,7 @@
       },
       "comment": "Crosthwaite Road, High Hill and Southey Hill defences overtop",
       "shortname": "Defence at High Hill",
-      "description": "Flood defences at High Hill overtop",
+      "ta_name": "Flood defences at High Hill overtop",
       "type": "Defence Impact",
       "obsfloodyear": null,
       "obsfloodmonth": null,
