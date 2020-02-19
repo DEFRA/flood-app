@@ -330,11 +330,6 @@ function LiveMap (containerId, display) {
     }
   })
 
-  // Fix window.onresize and bbox strategy
-  map.on('change', function (e) {
-    console.log('Map change')
-  })
-
   // Reactions based on pan/zoom change on map
   let timer = null
   map.addEventListener('moveend', function (e) {
@@ -366,7 +361,6 @@ function LiveMap (containerId, display) {
 
   // Close key or select feature if map is clicked
   map.addEventListener('click', async function (e) {
-    console.log(view.getResolution())
     // Remove any previous selected feature
     if (selected) {
       selected.set('isSelected', false)
@@ -456,10 +450,6 @@ function LiveMap (containerId, display) {
   // External properties
   this.container = container
   this.map = map
-
-  view.on('change:resolution', (e) => {
-    console.log('resolution change')
-  })
 }
 
 // Export a helper factory to create this map

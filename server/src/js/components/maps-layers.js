@@ -19,8 +19,7 @@ window.flood.maps.layers = {
         key: 'Ajou-3bB1TMVLPyXyNvMawg4iBPqYYhAN4QMXvOoZvs47Qmrq7L5zio0VsOOAHUr',
         imagerySet: 'RoadOnDemand'
       }),
-      visible: true,
-      zIndex: 0
+      visible: true
     })
   },
   satellite: () => {
