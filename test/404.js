@@ -40,7 +40,7 @@ lab.experiment('Missing resource test', () => {
     // await server.register(require('../server/plugins/router'))
     await server.register(routerPlugin)
     await server.register(require('../server/plugins/error-pages'))
-    await server.register(require('../server/plugins/full-url'))
+    await server.register(require('../server/plugins/on-post-handler'))
     // await server.register(require('../server/plugins/session'))
     await server.initialize()
   })

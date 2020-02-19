@@ -7,7 +7,7 @@ const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
 // const config = require('../../server/config')
 
-lab.experiment('router full-url test', () => {
+lab.experiment('router on-post-handler test', () => {
   let sandbox
   let server
 
@@ -22,7 +22,7 @@ lab.experiment('router full-url test', () => {
     await server.register(require('@hapi/h2o2'))
     // await server.register(require('../../server/plugins/views'))
     // await server.register(require('../../server/plugins/router'))
-    await server.register(require('../../server/plugins/full-url'))
+    await server.register(require('../../server/plugins/on-post-handler'))
     await server.initialize()
   })
 
@@ -31,6 +31,6 @@ lab.experiment('router full-url test', () => {
     await sandbox.restore()
   })
 
-  lab.test('Plugin full-url successfully loads', async () => {
+  lab.test('Plugin on-post-handler successfully loads', async () => {
   })
 })

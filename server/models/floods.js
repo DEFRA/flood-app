@@ -82,6 +82,14 @@ class Floods {
     return this._floods.timestamp
   }
 
+  get date () {
+    return new Date(parseInt(this._floods.timestamp) * 1000)
+  }
+
+  get isDummyData () {
+    return this.date > new Date('01 Jan 2200')
+  }
+
   get groups () {
     return this._groups
   }
