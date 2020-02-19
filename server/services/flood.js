@@ -5,9 +5,11 @@ const serviceUrl = config.serviceUrl
 // cached flood data
 const Floods = require('../models/floods')
 const Outlook = require('../models/outlook')
+const Rivers = require('../models/rivers')
 let floods = null
 let outlook = null
 let stationsGeojson = null
+let rivers
 
 module.exports = {
   // ############ Internals ################
@@ -34,8 +36,18 @@ module.exports = {
 
   set stationsGeojson (data) {
     stationsGeojson = data
+    if (rivers) {
+      rivers.stationsGeojson = data
+    }
   },
 
+  get rivers () {
+    return rivers
+  },
+
+  set rivers (data) {
+    rivers = data && new Rivers(data, this.stationsGeojson)
+  },
   // ############### Externals ################
   // get floods from service (should only be used by serverside scheduled job)
   getFloods () {
@@ -68,10 +80,6 @@ module.exports = {
     return util.getJson(`${serviceUrl}/stations-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`)
   },
 
-  getStationsUpstreamDownstream (id, direction) {
-    return util.getJson(`${serviceUrl}/stations-upstream-downstream/${id}/${direction}`)
-  },
-
   getStationsWithinRadius (lng, lat, radiusM = 10000) {
     return util.getJson(`${serviceUrl}/stations-within/${lng}/${lat}/${radiusM}`)
   },
@@ -102,5 +110,9 @@ module.exports = {
 
   getImpactsWithin (bbox) {
     return util.getJson(`${serviceUrl}/impacts-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`)
+  },
+
+  getRivers () {
+    return util.getJson(`${serviceUrl}/rivers`)
   }
 }
