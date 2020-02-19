@@ -6,7 +6,7 @@ const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 
-lab.experiment('Routes test - roadmap', () => {
+lab.experiment('Routes test - alerts-and-warnings', () => {
   let sandbox
   let server
 
@@ -18,7 +18,7 @@ lab.experiment('Routes test - roadmap', () => {
       host: 'localhost'
     })
 
-    const roadmapPlugin = {
+    const alertsPlugin = {
       plugin: {
         name: 'alerts-and-warnings',
         register: (server, options) => {
@@ -30,7 +30,7 @@ lab.experiment('Routes test - roadmap', () => {
     await server.register(require('@hapi/inert'))
     await server.register(require('@hapi/h2o2'))
     await server.register(require('../../server/plugins/views'))
-    await server.register(roadmapPlugin)
+    await server.register(alertsPlugin)
     await server.initialize()
   })
 
@@ -56,6 +56,19 @@ lab.experiment('Routes test - roadmap', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.headers['content-type']).to.include('text/html')
+  })
+  lab.test('POST /alerts and warnings payload fails joi validation', async () => {
+    const options = {
+      method: 'POST',
+      url: '/alerts-and-warnings',
+      payload: {
+        river: 'Test'
+      }
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
 })

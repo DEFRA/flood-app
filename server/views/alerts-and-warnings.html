@@ -19,15 +19,36 @@
     </div>
 </div>
 
+{% if model.error %}
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
-        <div class="govuk-form-group defra-search">
-            <form method="post">
-                <label class="govuk-label govuk-!-padding-bottom-1" for="location">Filter by postcode or town</label>
-                <input class="defra-input defra-input--search" id="location" name="location" type="text" value="{% if model.placeName %}{{ model.placeName }}{% else %}{{ model.q }}{% endif %}">
-            </form>
-        </div>
+  <div class="govuk-grid-column-full">
+    <div class="defra-service-error">
+      <h2 class="defra-service-error__title" id="error-summary-title">
+        Sorry, there is currently a problem searching a location
+      </h2>
+      <p>Try again later, or use the list to find a warning or alert.</p>
     </div>
+  </div>
+</div>
+{% endif %}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+        <div class="govuk-form-group defra-search">
+        <form method="post" autocomplete="off">
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="location">Search a location</label>
+              <div class="defra-search">
+                <input class="defra-search__input" id="location" name="location" type="search" spellcheck="false" value="{% if model.placeName %}{{ model.placeName }}{% else %}{{ model.q }}{% endif %}">
+                <div class="defra-search__submit-container">
+                  <button class="defra-search__button">Search</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    
     <div class="govuk-grid-column-two-thirds">
         <div class="defra-search-summary" id="searchSummary">
             <h2 class="defra-search-summary__count">{{ model.countFloods }} result{% if model.countFloods != 1 %}s{% endif %}</h2>
