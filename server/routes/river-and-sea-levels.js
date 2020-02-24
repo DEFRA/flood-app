@@ -11,7 +11,7 @@ module.exports = [{
     var model, place, stations
     place = await locationService.find(location)
     if (typeof place === 'undefined' || place === '') {
-      stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
+      stations = floodService.stations.stations
       model = new ViewModel({ location, place, stations })
       model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })

@@ -5,11 +5,11 @@ const serviceUrl = config.serviceUrl
 // cached flood data
 const Floods = require('../models/floods')
 const Outlook = require('../models/outlook')
-const Rivers = require('../models/rivers')
+const Stations = require('../models/stations')
 let floods = null
 let outlook = null
 let stationsGeojson = null
-let rivers
+let stations = null
 
 module.exports = {
   // ############ Internals ################
@@ -36,19 +36,26 @@ module.exports = {
 
   set stationsGeojson (data) {
     stationsGeojson = data
-    if (rivers) {
-      rivers.stationsGeojson = data
+  },
+
+  get stations () {
+    return stations
+  },
+
+  // Set on start when we have stations and rivers list
+  setStationsAndRivers (data) {
+    stations = data && new Stations(data)
+  },
+
+  // Set after start on schedule when we only update the stations data, not rivers
+  setStations (data) {
+    if (stations) {
+      stations.stations = data
     }
   },
 
-  get rivers () {
-    return rivers
-  },
-
-  set rivers (data) {
-    rivers = data && new Rivers(data, this.stationsGeojson)
-  },
   // ############### Externals ################
+
   // get floods from service (should only be used by serverside scheduled job)
   getFloods () {
     return util.getJson(`${serviceUrl}/floods`)

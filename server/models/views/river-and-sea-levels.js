@@ -1,4 +1,3 @@
-const { groupBy } = require('../../util')
 const moment = require('moment-timezone')
 
 class ViewModel {
@@ -14,56 +13,62 @@ class ViewModel {
       metaNoIndex: true,
       placeName: placeName,
       placeBbox: placeBbox,
-      placeCentre: placeCentre
+      placeCentre: placeCentre,
+      stations: stations,
+      countLevels: 0
     })
 
     const today = moment.tz().endOf('day')
-
-    if (stations) {
-      for (var s in stations) {
-        // Create display date property from UTC
-        const tempDate = stations[s].value_timestamp
-        const dateDiffDays = today.diff(tempDate, 'days')
-        // If dateDiffDays is zero then timestamp is today so just show time. If dateDiffDays is 1 then timestamp is 'Yesterday' plus time. Any other value
-        // show the full date/time.
-        if (dateDiffDays === 0) {
-          stations[s].value_time = 'at ' + moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mma')
-        } else if (dateDiffDays === 1) {
-          stations[s].value_time = 'at ' + moment.tz(stations[s].value_timestamp, 'Europe/London').format('h:mma') + ' yesterday'
+    const forEachFunc = (station) => {
+      this.countLevels++
+      // Create display date property from UTC
+      const tempDate = station.value_timestamp
+      const dateDiffDays = today.diff(tempDate, 'days')
+      // If dateDiffDays is zero then timestamp is today so just show time. If dateDiffDays is 1 then timestamp is 'Yesterday' plus time. Any other value
+      // show the full date/time.
+      if (dateDiffDays === 0) {
+        station.value_time = 'at ' + moment.tz(station.value_timestamp, 'Europe/London').format('h:mma')
+      } else if (dateDiffDays === 1) {
+        station.value_time = 'at ' + moment.tz(station.value_timestamp, 'Europe/London').format('h:mma') + ' yesterday'
+      } else {
+        station.value_time = 'on ' + moment.tz(station.value_timestamp, 'Europe/London').format('DD/MM/YYYY h:mma')
+      }
+      // Create state property
+      if (station.station_type !== 'C' && station.station_type !== 'G' && station.value) {
+        if (station.value > station.percentile_5) {
+          station.state = 'high'
+        } else if (station.value < station.percentile_95) {
+          station.state = 'low'
         } else {
-          stations[s].value_time = 'on ' + moment.tz(stations[s].value_timestamp, 'Europe/London').format('DD/MM/YYYY h:mma')
+          station.state = 'normal'
         }
-        // Create state property
-        if (stations[s].station_type !== 'C' && stations[s].station_type !== 'G' && stations[s].value) {
-          if (stations[s].value > stations[s].percentile_5) {
-            stations[s].state = 'high'
-          } else if (stations[s].value < stations[s].percentile_95) {
-            stations[s].state = 'low'
-          } else {
-            stations[s].state = 'normal'
-          }
-        }
+      }
 
-        // Create data display property
-        if (moment(stations[s].value_timestamp) && !isNaN(parseFloat(stations[s].value))) {
-          // Valid data
-          stations[s].value = parseFloat(Math.round(stations[s].value * 100) / 100).toFixed(2) + 'm'
-          if (stations[s].station_type === 'S' || stations[s].station_type === 'M') {
-            stations[s].valueHtml = stations[s].state === 'high' ? '<strong>High</strong>' : stations[s].state.charAt(0).toUpperCase() + stations[s].state.slice(1)
-            stations[s].valueHtml += ' (' + stations[s].value + ' <time datetime="' + stations[s].value_timestamp + '">' + stations[s].value_time + '</time>)'
-          } else {
-            stations[s].valueHtml = stations[s].value + ' ' + ' <time datetime="' + stations[s].value_timestamp + '">' + stations[s].value_time + '</time>'
-          }
+      // Create data display property
+      if (moment(station.value_timestamp) && !isNaN(parseFloat(station.value))) {
+        // Valid data
+        station.value = parseFloat(Math.round(station.value * 100) / 100).toFixed(2) + 'm'
+        if (station.station_type === 'S' || station.station_type === 'M') {
+          station.valueHtml = station.state === 'high' ? '<strong>High</strong>' : station.state.charAt(0).toUpperCase() + station.state.slice(1)
+          station.valueHtml += ' (' + station.value + ' <time datetime="' + station.value_timestamp + '">' + station.value_time + '</time>)'
         } else {
-          // Error in data
-          stations[s].valueHtml = 'Data not available'
+          station.valueHtml = station.value + ' ' + ' <time datetime="' + station.value_timestamp + '">' + station.value_time + '</time>'
         }
+      } else {
+        // Error in data
+        station.valueHtml = 'Data not available'
       }
     }
 
-    // Levels
-    this.countLevels = stations ? stations.length : 0
-    this.levels = stations ? groupBy(stations, 'wiski_river_name') : []
+    Object.keys(stations).forEach(key => {
+      if (key !== 'rivers') {
+        stations[key].forEach(forEachFunc)
+      } else {
+        stations[key].forEach(river => {
+          river.stations.forEach(forEachFunc)
+        })
+      }
+    })
   }
 }
 
