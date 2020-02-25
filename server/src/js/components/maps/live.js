@@ -135,7 +135,7 @@ function LiveMap (containerId, display) {
       } else if (id.startsWith('stations')) {
         // Get upstream - downstream data
         const upDownData = async () => {
-          const upDownUrl = '/api/stations-upstream-downstream/' + trimId + '/' + props.direction
+          const upDownUrl = '/api/station-navigation/' + trimId
           try {
             const response = await window.fetch(upDownUrl)
             const upDownJson = await response.json()

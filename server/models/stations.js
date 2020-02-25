@@ -109,11 +109,35 @@ class Stations {
   }
 
   getStationByIdWithRelations (id) {
-    throw new Error('not implemented')
-  }
+    const data = {
+      upDown: {
+        id: `stations.${id}`,
+        upstream: [],
+        downstream: []
+      }
+    }
+    Object.keys(this._groupedStations).forEach(key => {
+      this._groupedStations[key].stations.forEach((station, i) => {
+        if (station.rloi_id === parseInt(id)) {
+          // get upstream if exists
+          if (this._groupedStations[key].stations[i - 1]) {
+            data.upDown.upstream.push({
+              id: `stations.${this._groupedStations[key].stations[i - 1].rloi_id}`,
+              river: this._groupedStations[key].name
+            })
+          }
 
-  getStationRelations (id) {
-    throw new Error('not implemented')
+          // get downstream if exists
+          if (this._groupedStations[key].stations[i + 1]) {
+            data.upDown.downstream.push({
+              id: `stations.${this._groupedStations[key].stations[i + 1].rloi_id}`,
+              river: this._groupedStations[key].name
+            })
+          }
+        }
+      })
+    })
+    return data
   }
 }
 

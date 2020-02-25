@@ -9,7 +9,7 @@ const routes = [].concat(
   require('../routes/public'),
   require('../routes/api/stations.geojson'),
   require('../routes/api/warnings.geojson'),
-  require('../routes/api/stations-upstream-downstream'),
+  require('../routes/api/station-navigation'),
   require('../routes/api/ows'),
   require('../routes/api/rainfall'),
   require('../routes/api/impacts'),
