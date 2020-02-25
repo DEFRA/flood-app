@@ -12,7 +12,7 @@ module.exports = [{
     place = await locationService.find(location)
     if (typeof place === 'undefined' || place === '') {
       // TODO: Deep clone the stations object, as we don't want to update the cache object in the model
-      stations = JSON.parse(JSON.stringify(floodService.stations.stations))
+      stations = floodService.stations.stationsClone
       model = new ViewModel({ location, place, stations })
       model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
@@ -20,7 +20,7 @@ module.exports = [{
     if (!place.isEngland.is_england) {
       return h.view('location-not-england')
     }
-    stations = await floodService.getStationsWithin(place.bbox)
+    stations = floodService.stations.processStations(await floodService.getStationsWithin(place.bbox))
     model = new ViewModel({ location, place, stations })
     model.referer = request.headers.referer
     return h.view('river-and-sea-levels', { model })

@@ -33,6 +33,7 @@
         {% if model.countLevels %}
         <ul class="defra-flood-list">
             {% for id, group in model.stations %}
+            {% if group.stations.length > 0 %}
             <li class="defra-flood-list__group">
                 <span class="defra-flood-list__group-title">
                     {{ group.name }} {% if group['non-navigable'] %}(No navigation){% endif %} <span class="govuk-visually-hidden">at:</span>
@@ -55,6 +56,7 @@
                     {% endfor %}
                 </dl>
             </li>
+            {% endif %}
             {% endfor %}
         </ul>
         <!--

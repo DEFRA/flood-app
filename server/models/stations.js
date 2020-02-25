@@ -2,7 +2,7 @@ class Stations {
   constructor (data) {
     this._stations = data[0]
     this._rivers = data[1]
-    this._processStations()
+    this._groupedStations = this.processStations(this._stations)
   }
 
   // getters & setters
@@ -12,15 +12,19 @@ class Stations {
 
   set stations (data) {
     this._stations = data
-    this._processStations()
+    this._groupedStations = this.processStations(this._stations)
   }
 
   get stations () {
     return this._groupedStations
   }
 
+  get stationsClone () {
+    return JSON.parse(JSON.stringify(this._groupedStations))
+  }
+
   // Methods
-  _processStations () {
+  processStations (rawStations) {
     const groundwater = {
       id: 'groundwater',
       name: 'Groundwater Levels',
@@ -41,17 +45,24 @@ class Stations {
           id: river.id,
           name: river.name,
           stations: river.levelIds.flatMap(station => { // flatMap to take into account arrays returned from getStationsById (to accomodate multi stations)
-            const stations = this.getStationsById(station.replace('stations.', ''))
-            stations.forEach(station => {
-              station.processed = true
-            })
+            const stations = rawStations.filter(s => { return s.rloi_id === parseInt(station.replace('stations.', '')) })
+            // const stations = this.getStationsById(station.replace('stations.', ''))
+
+            for (station in stations) {
+              if (!rawStations.some(s => s.rloi_id === stations[station].rloi_id)) {
+                delete stations[station]
+              } else {
+                stations[station].processed = true
+              }
+            }
+
             return stations
           })
         }
       })
 
     // Extract the groundwater && coastal stations && orphaned stations
-    this._stations.forEach(station => {
+    rawStations.forEach(station => {
       if (!station.processed) {
         station.processed = true
         switch (station.station_type.toLowerCase()) {
@@ -81,7 +92,7 @@ class Stations {
     coastal.stations.sort((a, b) => a.external_name.localeCompare(b.external_name))
     groundwater.stations.sort((a, b) => a.external_name.localeCompare(b.external_name))
 
-    this._groupedStations = {
+    return {
       'Sea Levels': coastal,
       'Groundwater Levels': groundwater,
       ...rivers
@@ -104,10 +115,11 @@ class Stations {
     throw new Error('not implemented')
   }
 
-  getStationsWithin (bbox) {
-    // Get the stations from within bounding box in code (using turf), see if more performant than database work.
-    throw new Error('not implemented')
-  }
+  // getStationsWithin (bbox) {
+  //   const filteredStations = this._stations.filter(station => {
+  //     const geom = JSON.parse(station.geometry)
+  //   })
+  // }
 }
 
 module.exports = Stations
