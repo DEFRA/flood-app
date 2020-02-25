@@ -2,11 +2,11 @@ const { groupBy } = require('../../util')
 const moment = require('moment-timezone')
 
 class ViewModel {
-  constructor ({ location, place, stations }) {
+  constructor ({ location, place, stations, error }) {
     const placeName = place ? place.name : ''
     const placeBbox = place ? place.bbox : []
     const placeCentre = place ? place.center : []
-    const pageTitle = `${placeName ? placeName + ' latest r' : 'Latest r'}iver and sea levels`
+    const pageTitle = ''
 
     Object.assign(this, {
       q: location,
@@ -14,8 +14,15 @@ class ViewModel {
       metaNoIndex: true,
       placeName: placeName,
       placeBbox: placeBbox,
-      placeCentre: placeCentre
+      placeCentre: placeCentre,
+      error: error ? true : null
     })
+
+    if (error) {
+      this.pageTitle = 'Sorry, there is currently a problem searching a location'
+    } else {
+      this.pageTitle = `${placeName ? placeName + ' latest r' : 'Latest r'}iver and sea levels`
+    }
 
     const today = moment.tz().endOf('day')
 
@@ -44,19 +51,24 @@ class ViewModel {
           }
         }
 
-        // Create data display property
-        if (moment(stations[s].value_timestamp) && !isNaN(parseFloat(stations[s].value))) {
-          // Valid data
-          stations[s].value = parseFloat(Math.round(stations[s].value * 100) / 100).toFixed(2) + 'm'
-          if (stations[s].station_type === 'S' || stations[s].station_type === 'M') {
-            stations[s].valueHtml = stations[s].state === 'high' ? '<strong>High</strong>' : stations[s].state.charAt(0).toUpperCase() + stations[s].state.slice(1)
-            stations[s].valueHtml += ' (' + stations[s].value + ' <time datetime="' + stations[s].value_timestamp + '">' + stations[s].value_time + '</time>)'
-          } else {
-            stations[s].valueHtml = stations[s].value + ' ' + ' <time datetime="' + stations[s].value_timestamp + '">' + stations[s].value_time + '</time>'
-          }
-        } else {
-          // Error in data
+        if (stations[s].status === 'Suspended' || stations[s].status === 'Closed') {
           stations[s].valueHtml = 'Data not available'
+        } else {
+          if (moment(stations[s].value_timestamp) && !isNaN(parseFloat(stations[s].value))) {
+            // Valid data
+            stations[s].value = parseFloat(Math.round(stations[s].value * 100) / 100).toFixed(2) + 'm'
+            if (stations[s].station_type === 'S' || stations[s].station_type === 'M') {
+              stations[s].valueHtml = stations[s].value + ' <time datetime="' + stations[s].value_timestamp + '">' + stations[s].value_time + '</time>'
+              stations[s].valueHtml += stations[s].state === 'high'
+                ? ' (<strong>High</strong>) '
+                : ' (' + stations[s].state.charAt(0).toUpperCase() + stations[s].state.slice(1) + ')'
+            } else {
+              stations[s].valueHtml = stations[s].value + ' ' + ' <time datetime="' + stations[s].value_timestamp + '">' + stations[s].value_time + '</time>'
+            }
+          } else {
+            // Error in data
+            stations[s].valueHtml = 'Data error'
+          }
         }
       }
     }

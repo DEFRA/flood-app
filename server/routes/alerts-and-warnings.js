@@ -12,7 +12,7 @@ module.exports = [{
     const { q: location } = request.query
     var model, place, floods
 
-    if (location === 'undefined' || location === '') {
+    if (typeof location === 'undefined' || location === '') {
       const floods = floodService.floods
       model = new ViewModel({ location, place, floods })
       model.referer = request.headers.referer
@@ -69,7 +69,7 @@ module.exports = [{
   options: {
     validate: {
       payload: joi.object({
-        location: joi.string().allow('')
+        location: joi.string().allow('').trim().max(200).required()
       }),
       failAction: (request, h, err) => {
         return h.view('alerts-and-warnings').takeover()
