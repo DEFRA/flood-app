@@ -108,7 +108,7 @@ class Stations {
     }
   }
 
-  getStationByIdWithRelations (id) {
+  getStationByIdWithRelations (id, direction) {
     const data = {
       upDown: {
         id: `stations.${id}`,
@@ -118,21 +118,45 @@ class Stations {
     }
     Object.keys(this._groupedStations).forEach(key => {
       this._groupedStations[key].stations.forEach((station, i) => {
-        if (station.rloi_id === parseInt(id)) {
-          // get upstream if exists
-          if (this._groupedStations[key].stations[i - 1]) {
-            data.upDown.upstream.push({
-              id: `stations.${this._groupedStations[key].stations[i - 1].rloi_id}`,
-              river: this._groupedStations[key].name
-            })
-          }
+        // Find matching upstream station, as only upstream on the map
+        if (station.rloi_id === parseInt(id) && station.qualifier === 'u') {
+          // only returned data if the object is navigable
+          if (!this._groupedStations[key]['non-navigable']) {
+            // get upstream if exists
+            if (this._groupedStations[key].stations[i - 1]) {
+              // if upstream station is same rloi_id (multi stations) then move to next gauge
+              if (this._groupedStations[key].stations[i - 1].rloi_id === parseInt(id)) {
+                if (this._groupedStations[key].stations[i - 2]) {
+                  data.upDown.upstream.push({
+                    id: `stations.${this._groupedStations[key].stations[i - 2].rloi_id}`,
+                    river: this._groupedStations[key].name
+                  })
+                }
+              } else {
+                data.upDown.upstream.push({
+                  id: `stations.${this._groupedStations[key].stations[i - 1].rloi_id}`,
+                  river: this._groupedStations[key].name
+                })
+              }
+            }
 
-          // get downstream if exists
-          if (this._groupedStations[key].stations[i + 1]) {
-            data.upDown.downstream.push({
-              id: `stations.${this._groupedStations[key].stations[i + 1].rloi_id}`,
-              river: this._groupedStations[key].name
-            })
+            // get downstream if exists
+            if (this._groupedStations[key].stations[i + 1]) {
+              // if downstream station is same rloi_id (multi stations) then move to next gauge
+              if (this._groupedStations[key].stations[i + 1].rloi_id === parseInt(id)) {
+                if (this._groupedStations[key].stations[i + 2]) {
+                  data.upDown.downstream.push({
+                    id: `stations.${this._groupedStations[key].stations[i + 2].rloi_id}`,
+                    river: this._groupedStations[key].name
+                  })
+                }
+              } else {
+                data.upDown.downstream.push({
+                  id: `stations.${this._groupedStations[key].stations[i + 1].rloi_id}`,
+                  river: this._groupedStations[key].name
+                })
+              }
+            }
           }
         }
       })
