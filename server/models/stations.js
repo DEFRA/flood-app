@@ -102,9 +102,9 @@ class Stations {
     return this._stations.filter(station => { return station.rloi_id === parseInt(id) })
   }
 
-  getStationsByRiver (riverName) {
+  getStationsByRiverClone (riverName) {
     return {
-      [riverName]: this._groupedStations[riverName]
+      [riverName]: JSON.parse(JSON.stringify(this._groupedStations[riverName]))
     }
   }
 

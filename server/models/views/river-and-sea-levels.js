@@ -3,7 +3,6 @@ const moment = require('moment-timezone')
 class ViewModel {
   constructor ({ location, place, stations }) {
     const placeName = place ? place.name : ''
-    const placeBbox = place ? place.bbox : []
     const placeCentre = place ? place.center : []
     const pageTitle = `${placeName ? placeName + ' latest r' : 'Latest r'}iver and sea levels`
 
@@ -12,16 +11,30 @@ class ViewModel {
       pageTitle: pageTitle,
       metaNoIndex: true,
       placeName: placeName,
-      placeBbox: placeBbox,
       placeCentre: placeCentre,
       stations: stations,
       countLevels: 0
     })
 
     const today = moment.tz().endOf('day')
+    const stationsBbox = []
 
     Object.keys(stations).forEach(key => {
       stations[key].stations.forEach((station) => {
+        // Get a bounding box covering the stations on view
+        const geometry = JSON.parse(station.geometry)
+        if (stationsBbox.length === 0) {
+          stationsBbox[0] = geometry.coordinates[0]
+          stationsBbox[1] = geometry.coordinates[1]
+          stationsBbox[2] = geometry.coordinates[0]
+          stationsBbox[3] = geometry.coordinates[1]
+        } else {
+          stationsBbox[0] = geometry.coordinates[0] < stationsBbox[0] ? geometry.coordinates[0] : stationsBbox[0]
+          stationsBbox[1] = geometry.coordinates[1] < stationsBbox[1] ? geometry.coordinates[1] : stationsBbox[1]
+          stationsBbox[2] = geometry.coordinates[0] > stationsBbox[2] ? geometry.coordinates[0] : stationsBbox[2]
+          stationsBbox[3] = geometry.coordinates[1] > stationsBbox[3] ? geometry.coordinates[1] : stationsBbox[3]
+        }
+
         this.countLevels++
         // Create display date property from UTC
         const tempDate = station.value_timestamp
@@ -63,9 +76,15 @@ class ViewModel {
       })
     })
 
+    // add on 444m (0.004 deg) to the stations bounding box to stop stations clipping edge of viewport
+    stationsBbox[0] = stationsBbox[0] - 0.004
+    stationsBbox[1] = stationsBbox[1] - 0.004
+    stationsBbox[2] = stationsBbox[2] + 0.004
+    stationsBbox[3] = stationsBbox[3] + 0.004
+
     this.export = {
       countLevels: this.countLevels,
-      placeBbox: this.placeBbox
+      placeBbox: place ? place.bbox : stationsBbox
     }
   }
 }

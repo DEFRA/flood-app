@@ -13,7 +13,7 @@ module.exports = [{
 
     // This is to allow the opening of the page via the river-id taken from rivers.json
     if (request.query['river-id']) {
-      const stations = floodService.stations.getStationsByRiver(request.query['river-id'])
+      const stations = floodService.stations.getStationsByRiverClone(request.query['river-id'])
       model = new ViewModel({ location, place, stations })
       model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
