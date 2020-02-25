@@ -62,6 +62,11 @@ class ViewModel {
         }
       })
     })
+
+    this.export = {
+      countLevels: this.countLevels,
+      placeBbox: this.placeBbox
+    }
   }
 }
 

@@ -10,6 +10,15 @@ module.exports = [{
     const { q: location } = request.query
     var model, place, stations
     place = await locationService.find(location)
+
+    // This is to allow the opening of the page via the river-id taken from rivers.json
+    if (request.query['river-id']) {
+      const stations = floodService.stations.getStationsByRiver(request.query['river-id'])
+      model = new ViewModel({ location, place, stations })
+      model.referer = request.headers.referer
+      return h.view('river-and-sea-levels', { model })
+    }
+
     if (typeof place === 'undefined' || place === '') {
       // TODO: Deep clone the stations object, as we don't want to update the cache object in the model
       stations = floodService.stations.stationsClone
@@ -29,6 +38,7 @@ module.exports = [{
     validate: {
       query: joi.object({
         q: joi.string(),
+        'river-id': joi.string(),
         btn: joi.string(),
         ext: joi.string(),
         fid: joi.string(),

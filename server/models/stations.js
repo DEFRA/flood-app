@@ -28,11 +28,13 @@ class Stations {
     const groundwater = {
       id: 'groundwater',
       name: 'Groundwater Levels',
+      'non-navigable': true,
       stations: []
     }
     const coastal = {
       id: 'coastal',
       name: 'Sea Levels',
+      'non-navigable': true,
       stations: []
     }
 
@@ -46,8 +48,6 @@ class Stations {
           name: river.name,
           stations: river.levelIds.flatMap(station => { // flatMap to take into account arrays returned from getStationsById (to accomodate multi stations)
             const stations = rawStations.filter(s => { return s.rloi_id === parseInt(station.replace('stations.', '')) })
-            // const stations = this.getStationsById(station.replace('stations.', ''))
-
             for (station in stations) {
               if (!rawStations.some(s => s.rloi_id === stations[station].rloi_id)) {
                 delete stations[station]
@@ -55,7 +55,6 @@ class Stations {
                 stations[station].processed = true
               }
             }
-
             return stations
           })
         }
@@ -104,7 +103,9 @@ class Stations {
   }
 
   getStationsByRiver (riverName) {
-    return this._groupedStations.rivers.filter(river => river.name === riverName)
+    return {
+      [riverName]: this._groupedStations[riverName]
+    }
   }
 
   getStationByIdWithRelations (id) {
@@ -114,12 +115,6 @@ class Stations {
   getStationRelations (id) {
     throw new Error('not implemented')
   }
-
-  // getStationsWithin (bbox) {
-  //   const filteredStations = this._stations.filter(station => {
-  //     const geom = JSON.parse(station.geometry)
-  //   })
-  // }
 }
 
 module.exports = Stations
