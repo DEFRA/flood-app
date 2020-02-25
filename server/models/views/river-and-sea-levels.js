@@ -1,10 +1,10 @@
 const moment = require('moment-timezone')
 
 class ViewModel {
-  constructor ({ location, place, stations }) {
+  constructor ({ location, place, stations, error }) {
     const placeName = place ? place.name : ''
     const placeCentre = place ? place.center : []
-    const pageTitle = `${placeName ? placeName + ' latest r' : 'Latest r'}iver and sea levels`
+    const pageTitle = ''
 
     Object.assign(this, {
       q: location,
@@ -13,8 +13,15 @@ class ViewModel {
       placeName: placeName,
       placeCentre: placeCentre,
       stations: stations,
-      countLevels: 0
+      countLevels: 0,
+      error: error ? true : null
     })
+
+    if (error) {
+      this.pageTitle = 'Sorry, there is currently a problem searching a location'
+    } else {
+      this.pageTitle = `${placeName ? placeName + ' latest r' : 'Latest r'}iver and sea levels`
+    }
 
     const today = moment.tz().endOf('day')
     const stationsBbox = []
@@ -59,19 +66,24 @@ class ViewModel {
           }
         }
 
-        // Create data display property
-        if (moment(station.value_timestamp) && !isNaN(parseFloat(station.value))) {
-          // Valid data
-          station.value = parseFloat(Math.round(station.value * 100) / 100).toFixed(2) + 'm'
-          if (station.station_type === 'S' || station.station_type === 'M') {
-            station.valueHtml = station.state === 'high' ? '<strong>High</strong>' : station.state.charAt(0).toUpperCase() + station.state.slice(1)
-            station.valueHtml += ' (' + station.value + ' <time datetime="' + station.value_timestamp + '">' + station.value_time + '</time>)'
-          } else {
-            station.valueHtml = station.value + ' ' + ' <time datetime="' + station.value_timestamp + '">' + station.value_time + '</time>'
-          }
-        } else {
-          // Error in data
+        if (station.status === 'Suspended' || station.status === 'Closed') {
           station.valueHtml = 'Data not available'
+        } else {
+          if (moment(station.value_timestamp) && !isNaN(parseFloat(station.value))) {
+            // Valid data
+            station.value = parseFloat(Math.round(station.value * 100) / 100).toFixed(2) + 'm'
+            if (station.station_type === 'S' || station.station_type === 'M') {
+              station.valueHtml = station.value + ' <time datetime="' + station.value_timestamp + '">' + station.value_time + '</time>'
+              station.valueHtml += station.state === 'high'
+                ? ' (<strong>High</strong>) '
+                : ' (' + station.state.charAt(0).toUpperCase() + station.state.slice(1) + ')'
+            } else {
+              station.valueHtml = station.value + ' ' + ' <time datetime="' + station.value_timestamp + '">' + station.value_time + '</time>'
+            }
+          } else {
+            // Error in data
+            station.valueHtml = 'Data error'
+          }
         }
       })
     })
