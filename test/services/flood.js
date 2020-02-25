@@ -359,21 +359,6 @@ lab.experiment('Flood service test', () => {
     Code.expect(result.getStationsWithin).to.equal('TEST')
   })
 
-  lab.test('Test getStationsUpstreamDownstream endpoint', async () => {
-    const fakeFloodData = () => { return { getStationsUpstreamDownstream: 'TEST' } }
-
-    const util = require('../../server/util')
-
-    sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
-
-    const floodService = require('../../server/services/flood')
-
-    const result = await floodService.getStationsUpstreamDownstream(1, 'u')
-
-    Code.expect(result).to.be.an.object()
-    Code.expect(result.getStationsUpstreamDownstream).to.equal('TEST')
-  })
-
   lab.test('Test getStationsWithinRadius endpoint', async () => {
     const fakeFloodData = () => { return { getStationsWithinRadius: 'TEST' } }
 
