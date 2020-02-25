@@ -21,50 +21,70 @@ class Stations {
 
   // Methods
   _processStations () {
-    const orphaned = []
-    const groundwater = []
-    const coastal = []
-    const rivers = this._rivers
+    const groundwater = {
+      id: 'groundwater',
+      name: 'Groundwater Levels',
+      stations: []
+    }
+    const coastal = {
+      id: 'coastal',
+      name: 'Sea Levels',
+      stations: []
+    }
+
+    const rivers = {}
+    // Organise rivers into id keyed objects
+    this._rivers
       .sort((a, b) => a.name.localeCompare(b.name))
-      .map(river => {
-        return {
+      .forEach(river => {
+        rivers[river.id] = {
           id: river.id,
           name: river.name,
           stations: river.levelIds.flatMap(station => { // flatMap to take into account arrays returned from getStationsById (to accomodate multi stations)
-            return this.getStationsById(station.replace('stations.', ''))
+            const stations = this.getStationsById(station.replace('stations.', ''))
+            stations.forEach(station => {
+              station.processed = true
+            })
+            return stations
           })
         }
       })
-    // set stations to processed that had a matching river relationship
-    rivers.forEach(river => {
-      river.stations.forEach(station => {
-        station.processed = true
-      })
-    })
 
     // Extract the groundwater && coastal stations && orphaned stations
     this._stations.forEach(station => {
       if (!station.processed) {
+        station.processed = true
         switch (station.station_type.toLowerCase()) {
           case 'c':
-            coastal.push(station)
+            coastal.stations.push(station)
             break
           case 'g':
-            groundwater.push(station)
+            groundwater.stations.push(station)
             break
           default:
-            orphaned.push(station)
+            // What to do with orphans?
+            if (rivers[`orphaned-${station.wiski_river_name}`]) {
+              rivers[`orphaned-${station.wiski_river_name}`].stations.push(station)
+            } else {
+              rivers[`orphaned-${station.wiski_river_name}`] = {
+                id: `orphaned-${station.wiski_river_name}`,
+                name: station.wiski_river_name,
+                'non-navigable': true,
+                stations: [station]
+              }
+            }
         }
       }
     })
 
-    orphaned.sort((a, b) => a.external_name.localeCompare(b.external_name))
+    // sort the arrays
+    coastal.stations.sort((a, b) => a.external_name.localeCompare(b.external_name))
+    groundwater.stations.sort((a, b) => a.external_name.localeCompare(b.external_name))
 
     this._groupedStations = {
-      Orphaned: orphaned.sort((a, b) => a.external_name.localeCompare(b.external_name)),
-      Coastal: coastal.sort((a, b) => a.external_name.localeCompare(b.external_name)),
-      Groundwater: groundwater.sort((a, b) => a.external_name.localeCompare(b.external_name)),
-      rivers
+      'Sea Levels': coastal,
+      'Groundwater Levels': groundwater,
+      ...rivers
     }
   }
 

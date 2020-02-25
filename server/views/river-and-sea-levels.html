@@ -32,14 +32,13 @@
         </div>
         {% if model.countLevels %}
         <ul class="defra-flood-list">
-            {% for group, stations in model.stations %}
+            {% for id, group in model.stations %}
             <li class="defra-flood-list__group">
-                {% if group !== 'rivers'%}
                 <span class="defra-flood-list__group-title">
-                    {{ group }} <span class="govuk-visually-hidden">at:</span>
+                    {{ group.name }} {% if group['non-navigable'] %}(No navigation){% endif %} <span class="govuk-visually-hidden">at:</span>
                 </span>
-                <dl class="defra-flood-list__items defra-flood-list__items--levels defra-flood-list__items--has-relation">
-                    {% for station in stations %}
+                <dl class="defra-flood-list__items defra-flood-list__items--levels defra-flood-list__items--has-relation"><!-- Optional modifier 'defra-flood-list__items--has-relation' -->
+                    {% for station in group.stations %}
                     <div class="defra-flood-list__item{% if station.state %} defra-flood-list__item--{{ station.state }}{% endif %}">
                         <dt class="defra-flood-list__item-title">
                             <a href="/station/{{station.rloi_id}}{% if station.qualifier == 'd' %}/downstream{% endif %}">
@@ -55,30 +54,6 @@
                     </div>
                     {% endfor %}
                 </dl>
-                {% else %}
-                    {% for river in model.stations.rivers %}
-                        <span class="defra-flood-list__group-title">
-                            {{ river.name }} <span class="govuk-visually-hidden">at:</span>
-                        </span>
-                        <dl class="defra-flood-list__items defra-flood-list__items--levels defra-flood-list__items--has-relation">
-                            {% for station in river.stations %}
-                            <div class="defra-flood-list__item{% if station.state %} defra-flood-list__item--{{ station.state }}{% endif %}">
-                                <dt class="defra-flood-list__item-title">
-                                    <a href="/station/{{station.rloi_id}}{% if station.qualifier == 'd' %}/downstream{% endif %}">
-                                        {{ station.external_name }}
-                                        {% if station.qualifier == 'd' %}
-                                        (downstream)
-                                        {% endif %}
-                                    </a>
-                                </dt>
-                                <dd class="defra-flood-list__item-desc">
-                                    {{ station.valueHtml | safe }}
-                                </dd>
-                            </div>
-                            {% endfor %}
-                        </dl>
-                    {% endfor %}
-                {% endif %}
             </li>
             {% endfor %}
         </ul>

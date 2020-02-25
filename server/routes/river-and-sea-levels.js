@@ -11,7 +11,8 @@ module.exports = [{
     var model, place, stations
     place = await locationService.find(location)
     if (typeof place === 'undefined' || place === '') {
-      stations = floodService.stations.stations
+      // TODO: Deep clone the stations object, as we don't want to update the cache object in the model
+      stations = JSON.parse(JSON.stringify(floodService.stations.stations))
       model = new ViewModel({ location, place, stations })
       model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
