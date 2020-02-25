@@ -12,8 +12,8 @@
       <a href="/station/{{ model.station.id }}/downstream" class="defra-river-nav-link">Downstream</a>
       {% endif %}
       {% endif %}
-      {% if model.station.isRiver %}
-      <a href="/river-and-sea-levels?r={river-name}" class="defra-river-nav-link">{{ model.station.river }}</a>
+      {% if model.station.riverNavigation and not model.station.riverNavigation['non-navigable'] %}
+      <a href="/river-and-sea-levels?river-id={{model.station.riverNavigation.id}}" class="defra-river-nav-link">{{ model.station.riverNavigation.name }}</a>
       {% endif %}
       <!--
       <a href="" class="defra-river-nav-link">

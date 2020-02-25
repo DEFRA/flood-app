@@ -23,6 +23,8 @@ module.exports = {
     try {
       const station = await floodService.getStationById(id, direction)
 
+      const river = floodService.stations.getRiverByStationId(id)
+
       // If upstream param is specified redirect route of station
       if (request.params.direction === 'upstream') {
         return h.redirect(`/station/${id}`)
@@ -52,12 +54,12 @@ module.exports = {
         // Forecast station
         const values = await floodService.getStationForecastData(station.wiski_id)
         const forecast = { thresholds, values }
-        const model = new ViewModel({ station, telemetry, forecast, impacts })
+        const model = new ViewModel({ station, telemetry, forecast, impacts, river })
         model.referer = request.headers.referer
         return h.view('station', { model })
       } else {
         // Non-forecast Station
-        const model = new ViewModel({ station, telemetry, impacts })
+        const model = new ViewModel({ station, telemetry, impacts, river })
         model.referer = request.headers.referer
         return h.view('station', { model })
       }

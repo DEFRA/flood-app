@@ -26,13 +26,13 @@ class Stations {
   // Methods
   processStations (rawStations) {
     const groundwater = {
-      id: 'groundwater',
+      id: 'Groundwater Levels',
       name: 'Groundwater Levels',
       'non-navigable': true,
       stations: []
     }
     const coastal = {
-      id: 'coastal',
+      id: 'Sea Levels',
       name: 'Sea Levels',
       'non-navigable': true,
       stations: []
@@ -138,6 +138,19 @@ class Stations {
       })
     })
     return data
+  }
+
+  getRiverByStationId (id) {
+    let river = {}
+    Object.keys(this._groupedStations).forEach(key => {
+      this._groupedStations[key].stations.forEach(station => {
+        if (station.rloi_id === parseInt(id)) {
+          river = this._groupedStations[key]
+        }
+      })
+    })
+
+    return river
   }
 }
 

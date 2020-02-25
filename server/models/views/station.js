@@ -10,9 +10,10 @@ function dateDiff (date1, date2) {
 
 class ViewModel {
   constructor (options) {
-    const { station, telemetry, forecast, impacts } = options
+    const { station, telemetry, forecast, impacts, river } = options
 
     this.station = new Station(station)
+    this.station.riverNavigation = river
 
     /*
     var levelType = this.station.isGroundwater ? 'Groundwater' : (this.station.isCoastal ? 'Sea' : 'River')
