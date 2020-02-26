@@ -46,7 +46,7 @@ class Stations {
         rivers[river.id] = {
           id: river.id,
           name: river.name,
-          stations: river.levelIds.flatMap(station => { // flatMap to take into account arrays returned from getStationsById (to accomodate multi stations)
+          stations: river.stations.flatMap(station => { // flatMap to take into account arrays returned from getStationsById (to accomodate multi stations)
             const stations = rawStations.filter(s => { return s.rloi_id === parseInt(station.replace('stations.', '')) })
             for (station in stations) {
               if (!rawStations.some(s => s.rloi_id === stations[station].rloi_id)) {
