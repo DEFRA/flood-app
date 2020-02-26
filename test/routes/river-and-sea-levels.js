@@ -249,11 +249,11 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('1.11m <time datetime="2020-02-25T04:30:00.000Z">at 4:30am</time> (Low)')
+    Code.expect(response.payload).to.contain('</time> (Low)')
     Code.expect(response.payload).to.contain('<div class="defra-flood-list__item defra-flood-list__item--low">')
-    Code.expect(response.payload).to.contain('3.17m <time datetime=\\"2020-02-25T04:30:00.000Z\\">at 4:30am</time> (Normal)')
+    Code.expect(response.payload).to.contain('</time> (Normal)')
     Code.expect(response.payload).to.contain('<div class="defra-flood-list__item defra-flood-list__item--normal">')
-    Code.expect(response.payload).to.contain('5.04m <time datetime="2020-02-25T10:30:00.000Z">at 10:30am</time> (<strong>High</strong>)')
+    Code.expect(response.payload).to.contain('</time> (<strong>High</strong>)')
     Code.expect(response.payload).to.contain('<div class="defra-flood-list__item defra-flood-list__item--high">')
     Code.expect(response.payload).to.contain('3 levels')
     Code.expect(response.payload).to.contain('River Mersey')

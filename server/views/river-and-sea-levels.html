@@ -72,6 +72,9 @@
                         <dt class="defra-flood-list__item-title">
                             <a href="/station/{{station.rloi_id}}{% if station.qualifier == 'd' %}/downstream{% endif %}">
                                 {{ station.external_name }}
+                                {% if station.iswales === true %}
+                                (Natural Resources Wales)
+                                {% endif %}
                                 {% if station.qualifier == 'd' %}
                                 (downstream)
                                 {% endif %}
