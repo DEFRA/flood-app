@@ -12,7 +12,7 @@ module.exports = [{
     const { q: location } = request.query
     var model, place, floods
 
-    if (location === 'undefined' || location === '') {
+    if (!location || location === '') {
       const floods = floodService.floods
       model = new ViewModel({ location, place, floods })
       model.referer = request.headers.referer
