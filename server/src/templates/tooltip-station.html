@@ -12,24 +12,24 @@
 
 {% if closedOrSuspended %}
 <p class="govuk-body-s govuk-!-margin-bottom-1">
-    <a href="/station/{{stationId}}" data-id="stations.3246">{{props.name}} ({{props.river}})</a>
+    <a href="/station/{{ stationId }}" data-id="stations.{{ stationId }}">{{props.name}} ({{props.river}})</a>
 </p>
 <strong>
     <span class="govuk-!-font-weight-bold">Closed or temporarily out of service</span>
 </strong>
 {% else %}
-{% for up in upDown.upDown.upstream %}
-<button class="overlay-navigation-button overlay-navigation-button--up{% if up.isTrib %}-trib{% endif %}" data-id="{{up.id}}">
+{% if props.up %}
+<button class="overlay-navigation-button overlay-navigation-button--up{% if up.isTrib %}-trib{% endif %}" data-id="stations.{{ props.up }}">
   <svg role="presentation" focusable="false" class="overlay-navigation-button__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14">
     <path fill="currentColor" d="M6.5 0L0 6.5 1.4 8l4-4v9.7h2V4l4.3 4L13 6.4z"></path>
   </svg>
-  {{up.river}}
+  {{ props.river_name }}
 </button>
-{% endfor %}
+{% endif %}
 
 <p class="govuk-body-s govuk-!-margin-bottom-1" role="text">
   <span class="govuk-visually-hidden">See measurements at</span>
-  <a href="/station/{{stationId}}" data-id="{{stationId}}">{{props.name}} ({{props.river}})</a>
+  <a href="/station/{{ stationId }}{% if props.direction === 'd' %}/downstream{% endif %}" data-id="{{ stationId }}">{{props.name}}{% if props.direction === 'd' %}, downstream{% endif %} ({{props.river}})</a>
 </p>
 {% if props.value %}
 <strong>
@@ -51,13 +51,13 @@
 </p>
 {% endif %}
 
-{% for down in upDown.upDown.downstream %}
-<button class="overlay-navigation-button overlay-navigation-button--down" data-id="{{down.id}}">
+{% if props.down %}
+<button class="overlay-navigation-button overlay-navigation-button--down" data-id="stations.{{ props.down }}">
   <svg role="presentation" focusable="false" class="overlay-navigation-button__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14">
     <path fill="currentColor" d="M6.5 0L0 6.5 1.4 8l4-4v9.7h2V4l4.3 4L13 6.4z"></path>
   </svg>
-  {{down.river}}
+  {{ props.river_name }}
 </button>
-{% endfor%}
+{% endif %}
 {% endif %}
 

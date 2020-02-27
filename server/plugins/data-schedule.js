@@ -21,11 +21,6 @@ module.exports = {
         console.log('Outlook cached')
       }
 
-      const getStations = async () => {
-        floodService.setStations(await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8]))
-        console.log('Stations cached')
-      }
-
       // Schedules
       schedule.scheduleJob('* * * * *', async () => {
         await getFloods()
@@ -39,10 +34,6 @@ module.exports = {
         await getOutlook()
       })
 
-      schedule.scheduleJob('1,16,31,46 * * * *', async () => {
-        await getStations()
-      })
-
       // Start up
       console.log('Caching data please wait...')
       await Promise.all([
@@ -50,11 +41,6 @@ module.exports = {
         getOutlook(),
         getStationsGeojson()
       ])
-
-      floodService.setStationsAndRivers(await Promise.all([
-        floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8]),
-        floodService.getRivers()
-      ]))
 
       console.log('Data cache complete.')
     }
