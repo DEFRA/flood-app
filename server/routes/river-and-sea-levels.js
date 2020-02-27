@@ -14,15 +14,15 @@ module.exports = [{
 
     // This is to allow the opening of the page via the river-id taken from rivers.json
     if (request.query['river-id']) {
-      const stations = floodService.stations.getStationsByRiverClone(request.query['river-id'])
+      const stations = await floodService.getRiverById(request.query['river-id'])
       model = new ViewModel({ location, place, stations })
+      // TODO move the referer stuff to the on post plugin!!!!
       model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
     }
 
     if (typeof location === 'undefined' || location === '') {
-      // stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
-      stations = floodService.stations.stationsClone
+      stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
       model = new ViewModel({ location, place, stations })
       model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
@@ -30,8 +30,7 @@ module.exports = [{
       try {
         place = await locationService.find(util.cleanseLocation(location))
       } catch (error) {
-        // stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
-        stations = floodService.stations.stationsClone
+        stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
         model = new ViewModel({ location, place, stations, error })
         model.referer = request.headers.referer
         return h.view('river-and-sea-levels', { model })
@@ -47,15 +46,10 @@ module.exports = [{
       // Place ok but not in England
       return h.view('location-not-england')
     } else {
-      stations = floodService.stations.processStations(await floodService.getStationsWithin(place.bbox))
+      stations = await floodService.getStationsWithin(place.bbox)
       model = new ViewModel({ location, place, stations })
       model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
-
-      // stations = await floodService.getStationsWithin(place.bbox)
-      // model = new ViewModel({ location, place, stations })
-      // model.referer = request.headers.referer
-      // return h.view('river-and-sea-levels', { model })
     }
   },
   options: {

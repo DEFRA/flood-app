@@ -5,11 +5,9 @@ const serviceUrl = config.serviceUrl
 // cached flood data
 const Floods = require('../models/floods')
 const Outlook = require('../models/outlook')
-const Stations = require('../models/stations')
 let floods = null
 let outlook = null
 let stationsGeojson = null
-let stations = null
 
 module.exports = {
   // ############ Internals ################
@@ -36,22 +34,6 @@ module.exports = {
 
   set stationsGeojson (data) {
     stationsGeojson = data
-  },
-
-  get stations () {
-    return stations
-  },
-
-  // Set on start when we have stations and rivers list
-  setStationsAndRivers (data) {
-    stations = data && new Stations(data)
-  },
-
-  // Set after start on schedule when we only update the stations data, not rivers
-  setStations (data) {
-    if (stations) {
-      stations.stations = data
-    }
   },
 
   // ############### Externals ################
@@ -87,8 +69,12 @@ module.exports = {
     return util.getJson(`${serviceUrl}/stations-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`)
   },
 
-  getStationsWithinRadius (lng, lat, radiusM = 10000) {
-    return util.getJson(`${serviceUrl}/stations-within/${lng}/${lat}/${radiusM}`)
+  getRiverById (id) {
+    return util.getJson(`${serviceUrl}/river/${id}`)
+  },
+
+  getRiverStationByStationId (id) {
+    return util.getJson(`${serviceUrl}/river-station-by-station-id/${id}`)
   },
 
   getStationTelemetry (id, direction) {

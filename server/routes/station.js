@@ -23,7 +23,7 @@ module.exports = {
     try {
       const station = await floodService.getStationById(id, direction)
 
-      const river = floodService.stations.getRiverByStationId(id)
+      const river = await floodService.getRiverStationByStationId(id)
 
       // If upstream param is specified redirect route of station
       if (request.params.direction === 'upstream') {

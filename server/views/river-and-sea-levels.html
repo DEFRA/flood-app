@@ -55,13 +55,13 @@
         {% if model.countLevels %}
         <ul class="defra-flood-list">
             {% for id, group in model.stations %}
-            {% if group.stations.length > 0 %}
+            {% if group.length > 0 %}
             <li class="defra-flood-list__group">
                 <span class="defra-flood-list__group-title">
-                    <a href="/river-and-sea-levels?river-id={{id}}">{{ group.name }}</a> {% if group['non-navigable'] %}(No navigation){% endif %} <span class="govuk-visually-hidden">at:</span>
+                    <a href="/river-and-sea-levels?river-id={{id}}">{{ group[0].river_name }}</a> {% if not group[0].navigable %}(No navigation){% endif %} <span class="govuk-visually-hidden">at:</span>
                 </span>
                 <dl class="defra-flood-list__items defra-flood-list__items--levels defra-flood-list__items--has-relation"><!-- Optional modifier 'defra-flood-list__items--has-relation' -->
-                    {% for station in group.stations %}
+                    {% for station in group %}
 
                     {% if (station.status === 'Suspended') or (station.status === 'Closed' ) %}
                     <div class="defra-flood-list__item">
