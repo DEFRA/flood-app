@@ -10,7 +10,7 @@ module.exports = [{
   handler: async (request, h) => {
     const { q: location } = request.query
     var model, place, stations
-    place = await locationService.find(location)
+    // place = await locationService.find(location)
 
     // This is to allow the opening of the page via the river-id taken from rivers.json
     if (request.query['river-id']) {
@@ -30,7 +30,8 @@ module.exports = [{
       try {
         place = await locationService.find(util.cleanseLocation(location))
       } catch (error) {
-        stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
+        // stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
+        stations = floodService.stations.stationsClone
         model = new ViewModel({ location, place, stations, error })
         model.referer = request.headers.referer
         return h.view('river-and-sea-levels', { model })
@@ -38,6 +39,7 @@ module.exports = [{
     }
     if (typeof place === 'undefined') {
       // If no place return empty stations
+      stations = []
       model = new ViewModel({ location, place, stations })
       model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
@@ -50,7 +52,6 @@ module.exports = [{
       model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
 
-
       // stations = await floodService.getStationsWithin(place.bbox)
       // model = new ViewModel({ location, place, stations })
       // model.referer = request.headers.referer
@@ -60,7 +61,7 @@ module.exports = [{
   options: {
     validate: {
       query: joi.object({
-        q: joi.string(),
+        q: joi.string().allow('').trim().max(200),
         'river-id': joi.string(),
         btn: joi.string(),
         ext: joi.string(),
