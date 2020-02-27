@@ -133,22 +133,10 @@ function LiveMap (containerId, display) {
           props: props
         })
       } else if (id.startsWith('stations')) {
-        // Get upstream - downstream data
-        const upDownData = async () => {
-          const upDownUrl = '/api/station-navigation/' + trimId
-          try {
-            const response = await window.fetch(upDownUrl)
-            const upDownJson = await response.json()
-            return upDownJson
-          } catch (err) {
-            return { error: 'Unable to display latest upstream / downstream readings' }
-          }
-        }
         html = window.nunjucks.render('tooltip-station.html', {
           type: 'station',
           props: props,
-          upDown: await upDownData(),
-          stationId: id.substr(9)
+          stationId: trimId
         })
       } else if (id.startsWith('flood')) {
         html = window.nunjucks.render('tooltip.html', {

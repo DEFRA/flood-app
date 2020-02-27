@@ -7,7 +7,7 @@ module.exports = {
     description: 'Get stations data in geojson format from service cache',
     handler: async (request, h) => {
       const { stationId } = request.params
-      return floodService.stations.getStationByIdWithRelations(stationId)
+      return floodService.stationsGeojson
     },
     app: {
       useErrorPages: false
