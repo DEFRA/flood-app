@@ -15,7 +15,6 @@ module.exports = [{
     if (typeof location === 'undefined' || location === '') {
       const floods = floodService.floods
       model = new ViewModel({ location, place, floods })
-      model.referer = request.headers.referer
       return h.view('alerts-and-warnings', { model })
     } else {
       try {
@@ -23,21 +22,18 @@ module.exports = [{
       } catch (error) {
         const floods = floodService.floods
         model = new ViewModel({ location, place, floods, error })
-        model.referer = request.headers.referer
         return h.view('alerts-and-warnings', { model })
       }
 
       if (typeof place === 'undefined' || !place.isEngland.is_england) {
         // If no place return empty floods
         model = new ViewModel({ location, place, floods })
-        model.referer = request.headers.referer
         return h.view('alerts-and-warnings', { model })
       } else {
         // Data passed to floods model so the schema is the same as cached floods
         const data = await floodService.getFloodsWithin(place.bbox)
         floods = new Floods(data)
         model = new ViewModel({ location, place, floods })
-        model.referer = request.headers.referer
         return h.view('alerts-and-warnings', { model })
       }
     }

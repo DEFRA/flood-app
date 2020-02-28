@@ -14,14 +14,11 @@ module.exports = [{
     if (request.query['river-id']) {
       const stations = await floodService.getRiverById(request.query['river-id'])
       model = new ViewModel({ location, place, stations })
-      // TODO move the referer stuff to the on post plugin!!!!
-      model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
       // Else no location
     } else if (typeof location === 'undefined' || location === '') {
       stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
       model = new ViewModel({ location, place, stations })
-      model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
     } else {
       // Else get place from location
@@ -31,7 +28,6 @@ module.exports = [{
         // If location search error show national list with error
         stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
         model = new ViewModel({ location, place, stations, error })
-        model.referer = request.headers.referer
         return h.view('river-and-sea-levels', { model })
       }
       // If no place found or not england
