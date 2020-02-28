@@ -13,7 +13,6 @@ module.exports = [{
     if (typeof place === 'undefined' || place === '') {
       impacts = []
       model = new ViewModel({ location, place, impacts })
-      model.referer = request.headers.referer
       return h.view('impacts', { model })
     }
     if (!place.isEngland.is_england) {
@@ -21,7 +20,6 @@ module.exports = [{
     }
     impacts = await floodService.getImpactsWithin(place.bbox)
     model = new ViewModel({ location, place, impacts })
-    model.referer = request.headers.referer
     return h.view('impacts', { model })
   },
   options: {

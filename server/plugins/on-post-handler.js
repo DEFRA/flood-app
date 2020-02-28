@@ -18,10 +18,20 @@ module.exports = {
           if (request.response.source.context) {
             request.response.source.context.fullUrl = encodeURI(fullUrl)
             request.response.source.context.isDummyData = floodService.floods.isDummyData
+            if (request.response.source.context.model) {
+              request.response.source.context.model.referer = request.headers.referer
+            } else {
+              request.response.source.context.model = {
+                referer: request.headers.referer
+              }
+            }
           } else {
             request.response.source.context = {
               fullUrl: encodeURI(fullUrl),
-              isDummyData: floodService.floods.isDummyData
+              isDummyData: floodService.floods.isDummyData,
+              model: {
+                referer: request.headers.referer
+              }
             }
           }
         }

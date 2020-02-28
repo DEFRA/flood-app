@@ -13,7 +13,6 @@ module.exports = {
       const area = await floodService.getFloodArea(code)
       const flood = floods.find(n => n.ta_code === code)
       const model = new ViewModel({ area, flood })
-      model.referer = request.headers.referer
       return h.view('target-area', { model })
     } catch (err) {
       console.log(err)

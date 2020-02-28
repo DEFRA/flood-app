@@ -15,7 +15,6 @@ module.exports = [{
     if (typeof location === 'undefined' || location === '') {
       const floods = floodService.floods
       model = new ViewModel({ location, place, floods })
-      model.referer = request.headers.referer
       return h.view('alerts-and-warnings', { model })
     } else {
       try {
@@ -23,13 +22,11 @@ module.exports = [{
       } catch (error) {
         const floods = floodService.floods
         model = new ViewModel({ location, place, floods, error })
-        model.referer = request.headers.referer
         return h.view('alerts-and-warnings', { model })
       }
       if (typeof place === 'undefined') {
         // If no place return empty floods
         model = new ViewModel({ location, place, floods })
-        model.referer = request.headers.referer
         return h.view('alerts-and-warnings', { model })
       } else if (!place.isEngland.is_england) {
         // Place ok but not in England
@@ -39,7 +36,6 @@ module.exports = [{
         const data = await floodService.getFloodsWithin(place.bbox)
         floods = new Floods(data)
         model = new ViewModel({ location, place, floods })
-        model.referer = request.headers.referer
         return h.view('alerts-and-warnings', { model })
       }
     }

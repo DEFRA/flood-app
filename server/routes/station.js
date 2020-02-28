@@ -55,12 +55,10 @@ module.exports = {
         const values = await floodService.getStationForecastData(station.wiski_id)
         const forecast = { thresholds, values }
         const model = new ViewModel({ station, telemetry, forecast, impacts, river })
-        model.referer = request.headers.referer
         return h.view('station', { model })
       } else {
         // Non-forecast Station
         const model = new ViewModel({ station, telemetry, impacts, river })
-        model.referer = request.headers.referer
         return h.view('station', { model })
       }
     } catch (err) {

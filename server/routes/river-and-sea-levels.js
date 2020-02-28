@@ -16,15 +16,12 @@ module.exports = [{
     if (request.query['river-id']) {
       const stations = await floodService.getRiverById(request.query['river-id'])
       model = new ViewModel({ location, place, stations })
-      // TODO move the referer stuff to the on post plugin!!!!
-      model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
     }
 
     if (typeof location === 'undefined' || location === '') {
       stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
       model = new ViewModel({ location, place, stations })
-      model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
     } else {
       try {
@@ -32,7 +29,6 @@ module.exports = [{
       } catch (error) {
         stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
         model = new ViewModel({ location, place, stations, error })
-        model.referer = request.headers.referer
         return h.view('river-and-sea-levels', { model })
       }
     }
@@ -40,7 +36,6 @@ module.exports = [{
       // If no place return empty stations
       stations = []
       model = new ViewModel({ location, place, stations })
-      model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
     } else if (!place.isEngland.is_england) {
       // Place ok but not in England
@@ -48,7 +43,6 @@ module.exports = [{
     } else {
       stations = await floodService.getStationsWithin(place.bbox)
       model = new ViewModel({ location, place, stations })
-      model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
     }
   },
