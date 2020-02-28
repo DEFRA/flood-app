@@ -144,7 +144,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('<h1 class="govuk-heading-xl">This service provides flood warning information for England only</h1>')
+    Code.expect(response.payload).to.contain('<strong>This service provides flood risk information for England only.</strong>')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /alerts-and-warnings with query parameters, show alert, warnings and severe', async () => {

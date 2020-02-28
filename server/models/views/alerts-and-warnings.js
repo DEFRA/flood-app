@@ -7,7 +7,8 @@ class ViewModel {
       placeBbox: place ? place.bbox : [],
       placeCentre: place ? place.center : [],
       timestamp: Date.now(),
-      error: error ? true : null
+      error: error ? true : null,
+      isEngland: place ? place.isEngland.is_england : null
     })
 
     if (error) {
