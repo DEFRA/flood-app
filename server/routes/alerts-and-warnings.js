@@ -47,7 +47,7 @@ module.exports = [{
   options: {
     validate: {
       query: joi.object({
-        q: joi.string().allow(''),
+        q: joi.string().allow('').trim().max(200),
         btn: joi.string(),
         ext: joi.string(),
         fid: joi.string(),

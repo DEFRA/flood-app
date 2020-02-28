@@ -10,7 +10,6 @@ module.exports = [{
   handler: async (request, h) => {
     const { q: location } = request.query
     var model, place, stations
-    // place = await locationService.find(location)
 
     // This is to allow the opening of the page via the river-id taken from rivers.json
     if (request.query['river-id']) {
@@ -36,15 +35,12 @@ module.exports = [{
         return h.view('river-and-sea-levels', { model })
       }
     }
-    if (typeof place === 'undefined') {
-      // If no place return empty stations
+
+    if (typeof place === 'undefined' || !place.isEngland.is_england) {
       stations = []
       model = new ViewModel({ location, place, stations })
       model.referer = request.headers.referer
       return h.view('river-and-sea-levels', { model })
-    } else if (!place.isEngland.is_england) {
-      // Place ok but not in England
-      return h.view('location-not-england')
     } else {
       stations = await floodService.getStationsWithin(place.bbox)
       model = new ViewModel({ location, place, stations })
