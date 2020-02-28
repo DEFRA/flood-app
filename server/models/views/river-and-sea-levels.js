@@ -6,6 +6,7 @@ class ViewModel {
     const placeName = place ? place.name : ''
     const placeCentre = place ? place.center : []
     const pageTitle = ''
+    const isEngland = place ? place.isEngland.is_england : null
 
     Object.assign(this, {
       q: location,
@@ -14,7 +15,8 @@ class ViewModel {
       placeName: placeName,
       placeCentre: placeCentre,
       countLevels: stations.length,
-      error: error ? true : null
+      error: error ? true : null,
+      isEngland
     })
 
     if (error) {

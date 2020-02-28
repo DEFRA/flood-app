@@ -95,361 +95,540 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('<h1 class="govuk-heading-xl">This service provides flood warning information for England only</h1>')
+    Code.expect(response.payload).to.contain('<strong>This service provides flood risk information for England only.</strong>')
     Code.expect(response.statusCode).to.equal(200)
   })
-  // lab.test('GET /rivers-and-sea-levels Bing returns error', async () => {
-  //   const floodService = require('../../server/services/flood')
+  lab.test('GET /rivers-and-sea-levels Bing returns error', async () => {
+    const floodService = require('../../server/services/flood')
 
-  //   const fakeStationsData = () => [
-  //     {
-  //       rloi_id: 5203,
-  //       telemetry_id: '694460',
-  //       region: 'North West',
-  //       catchment: 'Lower Mersey',
-  //       wiski_river_name: 'Netherley Brook',
-  //       agency_name: 'Winster Drive',
-  //       external_name: 'Winster Drive',
-  //       station_type: 'S',
-  //       status: 'Active',
-  //       qualifier: 'u',
-  //       iswales: false,
-  //       value: '0.502',
-  //       value_timestamp: '2020-02-21T04:30:00.000Z',
-  //       value_erred: false,
-  //       percentile_5: '2.7',
-  //       percentile_95: '0.219'
-  //     }
-  //   ]
+    const fakeStationsData = () => [
+      {
+        rloi_id: 5203,
+        telemetry_id: '694460',
+        region: 'North West',
+        catchment: 'Lower Mersey',
+        wiski_river_name: 'Netherley Brook',
+        agency_name: 'Winster Drive',
+        external_name: 'Winster Drive',
+        station_type: 'S',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '0.502',
+        value_timestamp: '2020-02-21T04:30:00.000Z',
+        value_erred: false,
+        percentile_5: '2.7',
+        percentile_95: '0.219'
+      }
+    ]
 
-  //   sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
 
-  //   const fakeGetJson = () => {
-  //     throw new Error('Bing error')
-  //   }
+    const fakeGetJson = () => {
+      throw new Error('Bing error')
+    }
 
-  //   const util = require('../../server/util')
-  //   sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
 
-  //   const riversPlugin = {
-  //     plugin: {
-  //       name: 'rivers',
-  //       register: (server, options) => {
-  //         server.route(require('../../server/routes/river-and-sea-levels'))
-  //       }
-  //     }
-  //   }
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
 
-  //   await server.register(require('../../server/plugins/views'))
-  //   await server.register(require('../../server/plugins/session'))
-  //   await server.register(riversPlugin)
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
 
-  //   await server.initialize()
-  //   const options = {
-  //     method: 'GET',
-  //     url: '/river-and-sea-levels?q=WA4%201HT'
-  //   }
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=WA4%201HT'
+    }
 
-  //   const response = await server.inject(options)
+    const response = await server.inject(options)
 
-  //   Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location - GOV.UK')
-  //   Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location')
-  //   Code.expect(response.statusCode).to.equal(200)
-  // })
-  // lab.test('GET /river-and-sea-levels with levels Low, Normal, High', async () => {
-  //   const floodService = require('../../server/services/flood')
+    Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location - GOV.UK')
+    Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location')
+    Code.expect(response.statusCode).to.equal(200)
+  })
+  lab.test('GET /river-and-sea-levels with levels Low, Normal, High', async () => {
+    const floodService = require('../../server/services/flood')
 
-  //   const fakeIsEngland = () => {
-  //     return { is_england: true }
-  //   }
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
 
-  //   const fakeStationsData = () => [
-  //     {
-  //       rloi_id: 5050,
-  //       telemetry_id: '694063',
-  //       region: 'North West',
-  //       catchment: 'Lower Mersey',
-  //       wiski_river_name: 'River Mersey',
-  //       agency_name: 'Fiddlers Ferry',
-  //       external_name: 'Fiddlers Ferry',
-  //       station_type: 'S',
-  //       status: 'Active',
-  //       qualifier: 'u',
-  //       iswales: false,
-  //       value: '3.17',
-  //       value_timestamp: '2020-02-25T04:30:00.000Z',
-  //       value_erred: false,
-  //       percentile_5: '6.2',
-  //       percentile_95: '2.611'
-  //     },
-  //     {
-  //       rloi_id: 5149,
-  //       telemetry_id: '693976',
-  //       region: 'North West',
-  //       catchment: 'Lower Mersey',
-  //       wiski_river_name: 'River Mersey',
-  //       agency_name: 'Westy',
-  //       external_name: 'Westy',
-  //       station_type: 'S',
-  //       status: 'Active',
-  //       qualifier: 'u',
-  //       iswales: false,
-  //       value: '5.038',
-  //       value_timestamp: '2020-02-25T10:30:00.000Z',
-  //       value_erred: false,
-  //       percentile_5: '4.14',
-  //       percentile_95: '3.548'
-  //     },
-  //     {
-  //       rloi_id: 5085,
-  //       telemetry_id: '694041',
-  //       region: 'North West',
-  //       catchment: 'Lower Mersey',
-  //       wiski_river_name: 'Sankey Brook',
-  //       agency_name: 'Liverpool Road',
-  //       external_name: 'Liverpool Road',
-  //       station_type: 'S',
-  //       status: 'Active',
-  //       qualifier: 'u',
-  //       iswales: false,
-  //       value: '1.111',
-  //       value_timestamp: '2020-02-25T04:30:00.000Z',
-  //       value_erred: false,
-  //       percentile_5: '3.8',
-  //       percentile_95: '1.209'
-  //     }
-  //   ]
+    const fakeStationsData = () => [
+      {
+        river_id: 'river-mersey',
+        river_name: 'River Mersey',
+        navigable: true,
+        view_rank: 3,
+        rank: 5,
+        rloi_id: 5149,
+        up: 5052,
+        down: 5050,
+        telemetry_id: '693976',
+        region: 'North West',
+        catchment: 'Lower Mersey',
+        wiski_river_name: 'River Mersey',
+        agency_name: 'Westy',
+        external_name: 'Westy',
+        station_type: 'S',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '6.122',
+        value_timestamp: '2020-02-27T14:30:00.000Z',
+        value_erred: false,
+        percentile_5: '4.14',
+        percentile_95: '3.548',
+        centroid: '0101000020E6100000DF632687A47B04C09BC5867601B24A40',
+        lon: -2.56037240587146,
+        lat: 53.3906696470323
+      },
+      {
+        river_id: 'river-mersey',
+        river_name: 'River Mersey',
+        navigable: true,
+        view_rank: 3,
+        rank: 6,
+        rloi_id: 5050,
+        up: 5149,
+        down: 5084,
+        telemetry_id: '694063',
+        region: 'North West',
+        catchment: 'Lower Mersey',
+        wiski_river_name: 'River Mersey',
+        agency_name: 'Fiddlers Ferry',
+        external_name: 'Fiddlers Ferry',
+        station_type: 'S',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '3.458',
+        value_timestamp: '2020-02-27T04:30:00.000Z',
+        value_erred: false,
+        percentile_5: '6.2',
+        percentile_95: '2.611',
+        centroid: '0101000020E61000001248AD04653A05C01F4188A7E5AF4A40',
+        lon: -2.65351298955739,
+        lat: 53.3741959967904
+      },
+      {
+        river_id: 'sankey-brook',
+        river_name: 'Sankey Brook',
+        navigable: true,
+        view_rank: 3,
+        rank: 1,
+        rloi_id: 5031,
+        up: null,
+        down: 5069,
+        telemetry_id: '694039',
+        region: 'North West',
+        catchment: 'Lower Mersey',
+        wiski_river_name: 'Sankey Brook',
+        agency_name: 'Causey Bridge',
+        external_name: 'Causey Bridge',
+        station_type: 'S',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '0.111',
+        value_timestamp: '2020-02-27T14:30:00.000Z',
+        value_erred: false,
+        percentile_5: '2.5',
+        percentile_95: '0.209',
+        centroid: '0101000020E610000095683DBA03FA04C089E4A73671B64A40',
+        lon: -2.62207742214111,
+        lat: 53.4253300018109
+      }
+    ]
 
-  //   sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-  //   sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
 
-  //   const fakeGetJson = () => data.warringtonGetJson
+    const fakeGetJson = () => data.warringtonGetJson
 
-  //   const util = require('../../server/util')
-  //   sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
 
-  //   const riversPlugin = {
-  //     plugin: {
-  //       name: 'rivers',
-  //       register: (server, options) => {
-  //         server.route(require('../../server/routes/river-and-sea-levels'))
-  //       }
-  //     }
-  //   }
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
 
-  //   await server.register(require('../../server/plugins/views'))
-  //   await server.register(require('../../server/plugins/session'))
-  //   await server.register(riversPlugin)
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
 
-  //   await server.initialize()
-  //   const options = {
-  //     method: 'GET',
-  //     url: '/river-and-sea-levels?q=Warrington'
-  //   }
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=Warrington'
+    }
 
-  //   const response = await server.inject(options)
+    const response = await server.inject(options)
 
-  //   Code.expect(response.payload).to.contain('</time> (Low)')
-  //   Code.expect(response.payload).to.contain('<div class="defra-flood-list__item defra-flood-list__item--low">')
-  //   Code.expect(response.payload).to.contain('</time> (Normal)')
-  //   Code.expect(response.payload).to.contain('<div class="defra-flood-list__item defra-flood-list__item--normal">')
-  //   Code.expect(response.payload).to.contain('</time> (<strong>High</strong>)')
-  //   Code.expect(response.payload).to.contain('<div class="defra-flood-list__item defra-flood-list__item--high">')
-  //   Code.expect(response.payload).to.contain('3 levels')
-  //   Code.expect(response.payload).to.contain('River Mersey')
-  //   Code.expect(response.payload).to.contain('Sankey Brook')
-  //   Code.expect(response.statusCode).to.equal(200)
-  // })
-  // lab.test('GET /river-and-sea-levels station status Closed', async () => {
-  //   const floodService = require('../../server/services/flood')
+    Code.expect(response.payload).to.contain('</time> (Low)')
+    Code.expect(response.payload).to.contain('<div class="defra-flood-list__item defra-flood-list__item--low">')
+    Code.expect(response.payload).to.contain('</time> (Normal)')
+    Code.expect(response.payload).to.contain('<div class="defra-flood-list__item defra-flood-list__item--normal">')
+    Code.expect(response.payload).to.contain('</time> (<strong>High</strong>)')
+    Code.expect(response.payload).to.contain('<div class="defra-flood-list__item defra-flood-list__item--high">')
+    Code.expect(response.payload).to.contain('3 levels')
+    Code.expect(response.payload).to.contain('River Mersey')
+    Code.expect(response.payload).to.contain('Sankey Brook')
+    Code.expect(response.statusCode).to.equal(200)
+  })
+  lab.test('GET /river-and-sea-levels station status Closed', async () => {
+    const floodService = require('../../server/services/flood')
 
-  //   const fakeIsEngland = () => {
-  //     return { is_england: true }
-  //   }
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
 
-  //   const fakeStationsData = () => [
-  //     {
-  //       rloi_id: 5050,
-  //       telemetry_id: '694063',
-  //       region: 'North West',
-  //       catchment: 'Lower Mersey',
-  //       wiski_river_name: 'River Mersey',
-  //       agency_name: 'Fiddlers Ferry',
-  //       external_name: 'Fiddlers Ferry',
-  //       station_type: 'S',
-  //       status: 'Closed',
-  //       qualifier: 'u',
-  //       iswales: false,
-  //       value: '3.17',
-  //       value_timestamp: '2020-02-25T04:30:00.000Z',
-  //       value_erred: false,
-  //       percentile_5: '6.2',
-  //       percentile_95: '2.611'
-  //     }
-  //   ]
+    const fakeStationsData = () => [
+      {
+        river_id: 'sankey-brook',
+        river_name: 'Sankey Brook',
+        navigable: true,
+        view_rank: 3,
+        rank: 1,
+        rloi_id: 5031,
+        up: null,
+        down: 5069,
+        telemetry_id: '694039',
+        region: 'North West',
+        catchment: 'Lower Mersey',
+        wiski_river_name: 'Sankey Brook',
+        agency_name: 'Causey Bridge',
+        external_name: 'Causey Bridge',
+        station_type: 'S',
+        status: 'Closed',
+        qualifier: 'u',
+        iswales: false,
+        value: '0.111',
+        value_timestamp: '2020-02-27T14:30:00.000Z',
+        value_erred: false,
+        percentile_5: '2.5',
+        percentile_95: '0.209',
+        centroid: '0101000020E610000095683DBA03FA04C089E4A73671B64A40',
+        lon: -2.62207742214111,
+        lat: 53.4253300018109
+      }
+    ]
 
-  //   sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-  //   sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
 
-  //   const fakeGetJson = () => data.warringtonGetJson
+    const fakeGetJson = () => data.warringtonGetJson
 
-  //   const util = require('../../server/util')
-  //   sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
 
-  //   const riversPlugin = {
-  //     plugin: {
-  //       name: 'rivers',
-  //       register: (server, options) => {
-  //         server.route(require('../../server/routes/river-and-sea-levels'))
-  //       }
-  //     }
-  //   }
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
 
-  //   await server.register(require('../../server/plugins/views'))
-  //   await server.register(require('../../server/plugins/session'))
-  //   await server.register(riversPlugin)
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
 
-  //   await server.initialize()
-  //   const options = {
-  //     method: 'GET',
-  //     url: '/river-and-sea-levels?q=Warrington'
-  //   }
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=Warrington'
+    }
 
-  //   const response = await server.inject(options)
+    const response = await server.inject(options)
 
-  //   Code.expect(response.payload).to.contain('Data not available')
-  //   Code.expect(response.payload).to.contain('1 level')
-  //   Code.expect(response.payload).to.contain('River Mersey')
-  //   Code.expect(response.payload).to.contain('Fiddlers Ferry')
-  //   Code.expect(response.payload).to.contain('<div class="defra-flood-list__item">')
-  //   Code.expect(response.statusCode).to.equal(200)
-  // })
-  // lab.test('GET /river-and-sea-levels station status Suspended', async () => {
-  //   const floodService = require('../../server/services/flood')
+    Code.expect(response.payload).to.contain('Data not available')
+    Code.expect(response.payload).to.contain('1 level')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=sankey-brook">Sankey Brook</a>')
+    Code.expect(response.payload).to.contain('<div class="defra-flood-list__item">')
+    Code.expect(response.statusCode).to.equal(200)
+  })
+  lab.test('GET /river-and-sea-levels station status Suspended', async () => {
+    const floodService = require('../../server/services/flood')
 
-  //   const fakeIsEngland = () => {
-  //     return { is_england: true }
-  //   }
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
 
-  //   const fakeStationsData = () => [
-  //     {
-  //       rloi_id: 5050,
-  //       telemetry_id: '694063',
-  //       region: 'North West',
-  //       catchment: 'Lower Mersey',
-  //       wiski_river_name: 'River Mersey',
-  //       agency_name: 'Fiddlers Ferry',
-  //       external_name: 'Fiddlers Ferry',
-  //       station_type: 'S',
-  //       status: 'Suspended',
-  //       qualifier: 'u',
-  //       iswales: false,
-  //       value: '3.17',
-  //       value_timestamp: '2020-02-25T04:30:00.000Z',
-  //       value_erred: false,
-  //       percentile_5: '6.2',
-  //       percentile_95: '2.611'
-  //     }
-  //   ]
+    const fakeStationsData = () => [
+      {
+        river_id: 'sankey-brook',
+        river_name: 'Sankey Brook',
+        navigable: true,
+        view_rank: 3,
+        rank: 1,
+        rloi_id: 5031,
+        up: null,
+        down: 5069,
+        telemetry_id: '694039',
+        region: 'North West',
+        catchment: 'Lower Mersey',
+        wiski_river_name: 'Sankey Brook',
+        agency_name: 'Causey Bridge',
+        external_name: 'Causey Bridge',
+        station_type: 'S',
+        status: 'Suspended',
+        qualifier: 'u',
+        iswales: false,
+        value: '0.111',
+        value_timestamp: '2020-02-27T14:30:00.000Z',
+        value_erred: false,
+        percentile_5: '2.5',
+        percentile_95: '0.209',
+        centroid: '0101000020E610000095683DBA03FA04C089E4A73671B64A40',
+        lon: -2.62207742214111,
+        lat: 53.4253300018109
+      }
+    ]
 
-  //   sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-  //   sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
 
-  //   const fakeGetJson = () => data.warringtonGetJson
+    const fakeGetJson = () => data.warringtonGetJson
 
-  //   const util = require('../../server/util')
-  //   sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
 
-  //   const riversPlugin = {
-  //     plugin: {
-  //       name: 'rivers',
-  //       register: (server, options) => {
-  //         server.route(require('../../server/routes/river-and-sea-levels'))
-  //       }
-  //     }
-  //   }
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
 
-  //   await server.register(require('../../server/plugins/views'))
-  //   await server.register(require('../../server/plugins/session'))
-  //   await server.register(riversPlugin)
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
 
-  //   await server.initialize()
-  //   const options = {
-  //     method: 'GET',
-  //     url: '/river-and-sea-levels?q=Warrington'
-  //   }
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=Warrington'
+    }
 
-  //   const response = await server.inject(options)
+    const response = await server.inject(options)
 
-  //   Code.expect(response.payload).to.contain('Data not available')
-  //   Code.expect(response.payload).to.contain('1 level')
-  //   Code.expect(response.payload).to.contain('River Mersey')
-  //   Code.expect(response.payload).to.contain('Fiddlers Ferry')
-  //   Code.expect(response.payload).to.contain('<div class="defra-flood-list__item">')
-  //   Code.expect(response.statusCode).to.equal(200)
-  // })
-  // lab.test('GET /river-and-sea-levels station status Active but no value', async () => {
-  //   const floodService = require('../../server/services/flood')
+    Code.expect(response.payload).to.contain('Data not available')
+    Code.expect(response.payload).to.contain('1 level')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=sankey-brook">Sankey Brook</a>')
+    Code.expect(response.payload).to.contain('<div class="defra-flood-list__item">')
+    Code.expect(response.statusCode).to.equal(200)
+  })
+  lab.test('GET /river-and-sea-levels station status Active but no value', async () => {
+    const floodService = require('../../server/services/flood')
 
-  //   const fakeIsEngland = () => {
-  //     return { is_england: true }
-  //   }
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
 
-  //   const fakeStationsData = () => [
-  //     {
-  //       rloi_id: 5050,
-  //       telemetry_id: '694063',
-  //       region: 'North West',
-  //       catchment: 'Lower Mersey',
-  //       wiski_river_name: 'River Mersey',
-  //       agency_name: 'Fiddlers Ferry',
-  //       external_name: 'Fiddlers Ferry',
-  //       station_type: 'S',
-  //       status: 'Active',
-  //       qualifier: 'u',
-  //       iswales: false,
-  //       value: null,
-  //       value_timestamp: '2020-02-25T04:30:00.000Z',
-  //       value_erred: false,
-  //       percentile_5: '6.2',
-  //       percentile_95: '2.611'
-  //     }
-  //   ]
+    const fakeStationsData = () => [
+      {
+        river_id: 'sankey-brook',
+        river_name: 'Sankey Brook',
+        navigable: true,
+        view_rank: 3,
+        rank: 1,
+        rloi_id: 5031,
+        up: null,
+        down: 5069,
+        telemetry_id: '694039',
+        region: 'North West',
+        catchment: 'Lower Mersey',
+        wiski_river_name: 'Sankey Brook',
+        agency_name: 'Causey Bridge',
+        external_name: 'Causey Bridge',
+        station_type: 'S',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: null,
+        value_timestamp: '2020-02-27T14:30:00.000Z',
+        value_erred: false,
+        percentile_5: '2.5',
+        percentile_95: '0.209',
+        centroid: '0101000020E610000095683DBA03FA04C089E4A73671B64A40',
+        lon: -2.62207742214111,
+        lat: 53.4253300018109
+      }
+    ]
 
-  //   sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-  //   sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
 
-  //   const fakeGetJson = () => data.warringtonGetJson
+    const fakeGetJson = () => data.warringtonGetJson
 
-  //   const util = require('../../server/util')
-  //   sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
 
-  //   const riversPlugin = {
-  //     plugin: {
-  //       name: 'rivers',
-  //       register: (server, options) => {
-  //         server.route(require('../../server/routes/river-and-sea-levels'))
-  //       }
-  //     }
-  //   }
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
 
-  //   await server.register(require('../../server/plugins/views'))
-  //   await server.register(require('../../server/plugins/session'))
-  //   await server.register(riversPlugin)
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
 
-  //   await server.initialize()
-  //   const options = {
-  //     method: 'GET',
-  //     url: '/river-and-sea-levels?q=Warrington'
-  //   }
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=Warrington'
+    }
 
-  //   const response = await server.inject(options)
+    const response = await server.inject(options)
 
-  //   Code.expect(response.payload).to.contain('Data error')
-  //   Code.expect(response.payload).to.contain('1 level')
-  //   Code.expect(response.payload).to.contain('River Mersey')
-  //   Code.expect(response.payload).to.contain('Fiddlers Ferry')
-  //   Code.expect(response.payload).to.contain('<div class="defra-flood-list__item">')
-  //   Code.expect(response.statusCode).to.equal(200)
-  // })
+    Code.expect(response.payload).to.contain('Data error')
+    Code.expect(response.payload).to.contain('1 level')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=sankey-brook">Sankey Brook</a>')
+    Code.expect(response.payload).to.contain('<div class="defra-flood-list__item">')
+    Code.expect(response.statusCode).to.equal(200)
+  })
+  lab.test('GET /river-and-sea-levels?river-id=sankey-brook ', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationsData = () => [
+      {
+        river_id: 'sankey-brook',
+        river_name: 'Sankey Brook',
+        navigable: true,
+        view_rank: 3,
+        rank: 1,
+        rloi_id: 5031,
+        up: null,
+        down: 5069,
+        telemetry_id: '694039',
+        region: 'North West',
+        catchment: 'Lower Mersey',
+        wiski_river_name: 'Sankey Brook',
+        agency_name: 'Causey Bridge',
+        external_name: 'Causey Bridge',
+        station_type: 'S',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '0.688',
+        value_timestamp: '2020-02-28T10:00:00.000Z',
+        value_erred: false,
+        percentile_5: '2.5',
+        percentile_95: '0.209',
+        centroid: '0101000020E610000095683DBA03FA04C089E4A73671B64A40',
+        lon: -2.62207742214111,
+        lat: 53.4253300018109
+      },
+      {
+        river_id: 'sankey-brook',
+        river_name: 'Sankey Brook',
+        navigable: true,
+        view_rank: 3,
+        rank: 2,
+        rloi_id: 5069,
+        up: 5031,
+        down: 5085,
+        telemetry_id: '694042',
+        region: 'North West',
+        catchment: 'Lower Mersey',
+        wiski_river_name: 'Sankey Brook',
+        agency_name: 'Higham Avenue',
+        external_name: 'Higham Avenue',
+        station_type: 'S',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '1.073',
+        value_timestamp: '2020-02-28T04:30:00.000Z',
+        value_erred: false,
+        percentile_5: '2.8',
+        percentile_95: '0.24',
+        centroid: '0101000020E610000087D469EE19DF04C0CE5E7EB11EB44A40',
+        lon: -2.60893617878407,
+        lat: 53.4071866862338
+      },
+      {
+        river_id: 'sankey-brook',
+        river_name: 'Sankey Brook',
+        navigable: true,
+        view_rank: 3,
+        rank: 3,
+        rloi_id: 5085,
+        up: 5069,
+        down: null,
+        telemetry_id: '694041',
+        region: 'North West',
+        catchment: 'Lower Mersey',
+        wiski_river_name: 'Sankey Brook',
+        agency_name: 'Liverpool Road',
+        external_name: 'Liverpool Road',
+        station_type: 'S',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '2.058',
+        value_timestamp: '2020-02-28T04:30:00.000Z',
+        value_erred: false,
+        percentile_5: '3.8',
+        percentile_95: '1.209',
+        centroid: '0101000020E6100000B06488BD97FE04C0ACE6D4C01FB14A40',
+        lon: -2.62431285927286,
+        lat: 53.3837815322453
+      }
+    ]
+
+    sandbox.stub(floodService, 'getRiverById').callsFake(fakeStationsData)
+
+    const fakeGetJson = () => data.warringtonGetJson
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?river-id=sankey-brook'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('3 level')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=sankey-brook">Sankey Brook</a>')
+    Code.expect(response.statusCode).to.equal(200)
+  })
 })

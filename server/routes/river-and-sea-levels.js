@@ -9,41 +9,40 @@ module.exports = [{
   path: '/river-and-sea-levels',
   handler: async (request, h) => {
     const { q: location } = request.query
-    var model, place, stations
-    // place = await locationService.find(location)
-
-    // This is to allow the opening of the page via the river-id taken from rivers.json
+    let model, place, stations
+    // If river-id provided show the river
     if (request.query['river-id']) {
       const stations = await floodService.getRiverById(request.query['river-id'])
       model = new ViewModel({ location, place, stations })
       return h.view('river-and-sea-levels', { model })
-    }
-
-    if (typeof location === 'undefined' || location === '') {
+      // Else no location
+    } else if (typeof location === 'undefined' || location === '') {
       stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
       model = new ViewModel({ location, place, stations })
       return h.view('river-and-sea-levels', { model })
     } else {
+      // Else get place from location
       try {
         place = await locationService.find(util.cleanseLocation(location))
       } catch (error) {
+        // If location search error show national list with error
         stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
         model = new ViewModel({ location, place, stations, error })
         return h.view('river-and-sea-levels', { model })
       }
-    }
-    if (typeof place === 'undefined') {
-      // If no place return empty stations
-      stations = []
-      model = new ViewModel({ location, place, stations })
-      return h.view('river-and-sea-levels', { model })
-    } else if (!place.isEngland.is_england) {
-      // Place ok but not in England
-      return h.view('location-not-england')
-    } else {
-      stations = await floodService.getStationsWithin(place.bbox)
-      model = new ViewModel({ location, place, stations })
-      return h.view('river-and-sea-levels', { model })
+      // If no place found or not england
+      if (typeof place === 'undefined' || !place.isEngland.is_england) {
+        stations = []
+        model = new ViewModel({ location, place, stations })
+        model.referer = request.headers.referer
+        return h.view('river-and-sea-levels', { model })
+      } else {
+        // Finally show place filtered station list
+        stations = await floodService.getStationsWithin(place.bbox)
+        model = new ViewModel({ location, place, stations })
+        model.referer = request.headers.referer
+        return h.view('river-and-sea-levels', { model })
+      }
     }
   },
   options: {

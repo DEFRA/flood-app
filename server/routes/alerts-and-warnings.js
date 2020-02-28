@@ -24,13 +24,11 @@ module.exports = [{
         model = new ViewModel({ location, place, floods, error })
         return h.view('alerts-and-warnings', { model })
       }
-      if (typeof place === 'undefined') {
+
+      if (typeof place === 'undefined' || !place.isEngland.is_england) {
         // If no place return empty floods
         model = new ViewModel({ location, place, floods })
         return h.view('alerts-and-warnings', { model })
-      } else if (!place.isEngland.is_england) {
-        // Place ok but not in England
-        return h.view('location-not-england')
       } else {
         // Data passed to floods model so the schema is the same as cached floods
         const data = await floodService.getFloodsWithin(place.bbox)
@@ -43,7 +41,7 @@ module.exports = [{
   options: {
     validate: {
       query: joi.object({
-        q: joi.string().allow(''),
+        q: joi.string().allow('').trim().max(200),
         btn: joi.string(),
         ext: joi.string(),
         fid: joi.string(),

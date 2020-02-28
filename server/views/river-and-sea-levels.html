@@ -116,6 +116,18 @@
         </nav>
         -->
         {% else %}
+
+        {% if model.isEngland === false %}
+
+          <p class="govuk-body govuk-!-margin-top-4">
+            <strong>This service provides flood risk information for England only.</strong>    
+          </p>
+          <p>Flood risk information for Northern Ireland is available from <a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">Northern Ireland Direct</a>.</p>
+          <p>Flood risk information for Scotland is available from <a href="https://www.sepa.org.uk/environment/water/flooding/">the Scottish Environment Protection Agency</a>.</p>
+          <p>Flood risk information for Wales is available from <a href="https://naturalresources.wales/flooding?lang=en">Natural Resources Wales</a>.</p>
+
+        {% else %}
+
         <p class="govuk-body govuk-!-margin-top-4">
             <strong>No river, sea or groundwater levels found.</strong>    
         </p>
@@ -125,6 +137,7 @@
             <li>searching a broader location</li>
             <li>double-checking your spelling</li>
         </ul>
+        {% endif %}
         {% endif %}
     </div>
 </div>
