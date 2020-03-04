@@ -30,8 +30,8 @@ module.exports = [{
         model = new ViewModel({ location, place, stations, error })
         return h.view('river-and-sea-levels', { model })
       }
-      // If no place found or not england
-      if (typeof place === 'undefined' || !place.isEngland.is_england) {
+      // If no place found or not UK or Scotland and Northern Ireland
+      if ((typeof place === 'undefined') || (!place.isUK || place.isScotlandOrNorthernIreland)) {
         stations = []
         model = new ViewModel({ location, place, stations })
         model.referer = request.headers.referer

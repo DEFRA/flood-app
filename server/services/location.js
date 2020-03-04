@@ -57,6 +57,10 @@ async function find (location) {
     }
   }
 
+  const isUK = data.address.countryRegionIso2 === 'GB'
+  const isScotlandOrNorthernIreland = isUK &&
+  (data.address.adminDistrict === 'Northern Ireland' || data.address.adminDistrict === 'Scotland')
+
   // Strip out addressLine to make address name returned more ambiguous as we're not giving property specific information
   if (data.address.addressLine && name.indexOf(data.address.addressLine) > -1) {
     name = name.replace(data.address.addressLine, '')
@@ -75,7 +79,9 @@ async function find (location) {
     center,
     bbox,
     address,
-    isEngland
+    isEngland,
+    isUK,
+    isScotlandOrNorthernIreland
   }
 }
 
