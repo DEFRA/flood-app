@@ -279,11 +279,11 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('</time> (Low)')
+    Code.expect(response.payload).to.contain('</time> (low)')
     Code.expect(response.payload).to.contain('<div class="defra-flood-list__item defra-flood-list__item--low">')
-    Code.expect(response.payload).to.contain('</time> (Normal)')
+    Code.expect(response.payload).to.contain('</time> (normal)')
     Code.expect(response.payload).to.contain('<div class="defra-flood-list__item defra-flood-list__item--normal">')
-    Code.expect(response.payload).to.contain('</time> (<strong>High</strong>)')
+    Code.expect(response.payload).to.contain('</time> (<strong>high</strong>)')
     Code.expect(response.payload).to.contain('<div class="defra-flood-list__item defra-flood-list__item--high">')
     Code.expect(response.payload).to.contain('3 levels')
     Code.expect(response.payload).to.contain('River Mersey')
@@ -727,6 +727,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const response = await server.inject(options)
 
     Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=lledan-brook">Lledan Brook</a>')
+    Code.expect(response.payload).to.contain('(Natural Resources Wales)\n')
     Code.expect(response.payload).to.contain('<a href="/station/2089">\n')
     Code.expect(response.statusCode).to.equal(200)
   })

@@ -58,12 +58,18 @@
             {% if group.length > 0 %}
             <li class="defra-flood-list__group">
                 <span class="defra-flood-list__group-title">
-                    <a href="/river-and-sea-levels?river-id={{id}}">{{ group[0].river_name }}</a> {% if not group[0].navigable %}(No navigation){% endif %} <span class="govuk-visually-hidden">at:</span>
+                    <a href="/river-and-sea-levels?river-id={{id}}">{{ group[0].river_name }}</a> <span class="govuk-visually-hidden">at:</span>
                 </span>
-                <dl class="defra-flood-list__items defra-flood-list__items--levels defra-flood-list__items--has-relation"><!-- Optional modifier 'defra-flood-list__items--has-relation' -->
+                {# if river has more than one staion and river navigation graphic #}
+                {% if (group.length === 1) or (id === "Sea Levels") or (id === "Groundwater Levels") %}
+                <dl class="defra-flood-list__items defra-flood-list__items--levels">
+                {% else %}
+                <dl class="defra-flood-list__items defra-flood-list__items--levels defra-flood-list__items--has-relation">
+                {% endif %}
+
                     {% for station in group %}
 
-                    {% if (station.status === 'Suspended') or (station.status === 'Closed' ) %}
+                    {% if (station.status === 'Suspended') or (station.status === 'Closed' ) or (station.region === 'Wales') %}
                     <div class="defra-flood-list__item">
                     {% else %}
                     <div class="defra-flood-list__item{% if station.state %} defra-flood-list__item--{{ station.state }}{% endif %}">
