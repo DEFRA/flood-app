@@ -65,8 +65,12 @@ class ViewModel {
         }
       }
 
-      if (station.status === 'Suspended' || station.status === 'Closed') {
+      if (station.iswales === true) {
+        station.valueHtml = ''
+      } else if (station.status === 'Suspended' || station.status === 'Closed') {
         station.valueHtml = 'Data not available'
+      } else if (station.value_erred === true || station.value_erred === null) {
+        station.valueHtml = 'Data error'
       } else {
         if (moment(station.value_timestamp) && !isNaN(parseFloat(station.value))) {
           // Valid data
@@ -74,8 +78,8 @@ class ViewModel {
           if (station.station_type === 'S' || station.station_type === 'M') {
             station.valueHtml = station.value + ' <time datetime="' + station.value_timestamp + '">' + station.value_time + '</time>'
             station.valueHtml += station.state === 'high'
-              ? ' (<strong>High</strong>) '
-              : ' (' + station.state.charAt(0).toUpperCase() + station.state.slice(1) + ')'
+              ? ' (<strong>high</strong>) '
+              : ' (' + station.state.charAt(0) + station.state.slice(1) + ')'
           } else {
             station.valueHtml = station.value + ' ' + ' <time datetime="' + station.value_timestamp + '">' + station.value_time + '</time>'
           }

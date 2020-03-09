@@ -279,11 +279,11 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('</time> (Low)')
+    Code.expect(response.payload).to.contain('</time> (low)')
     Code.expect(response.payload).to.contain('<div class="defra-flood-list__item defra-flood-list__item--low">')
-    Code.expect(response.payload).to.contain('</time> (Normal)')
+    Code.expect(response.payload).to.contain('</time> (normal)')
     Code.expect(response.payload).to.contain('<div class="defra-flood-list__item defra-flood-list__item--normal">')
-    Code.expect(response.payload).to.contain('</time> (<strong>High</strong>)')
+    Code.expect(response.payload).to.contain('</time> (<strong>high</strong>)')
     Code.expect(response.payload).to.contain('<div class="defra-flood-list__item defra-flood-list__item--high">')
     Code.expect(response.payload).to.contain('3 levels')
     Code.expect(response.payload).to.contain('River Mersey')
@@ -629,6 +629,106 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     Code.expect(response.payload).to.contain('3 level')
     Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=sankey-brook">Sankey Brook</a>')
+    Code.expect(response.statusCode).to.equal(200)
+  })
+  lab.test('GET /river-and-sea-levels stations in Wales', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeIsEngland = () => {
+      return { is_england: false }
+    }
+
+    const fakeStationsData = () => [
+      {
+        river_id: 'lledan-brook',
+        river_name: 'Lledan Brook',
+        navigable: true,
+        view_rank: 3,
+        rank: 1,
+        rloi_id: 2089,
+        up: null,
+        down: null,
+        telemetry_id: '2638',
+        region: 'Wales',
+        catchment: 'Severn Uplands',
+        wiski_river_name: 'Lledan Brook',
+        agency_name: 'Welshpool',
+        external_name: 'Welshpool',
+        station_type: 'S',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: true,
+        value: '0.297',
+        value_timestamp: '2020-03-04T09:00:00.000Z',
+        value_erred: false,
+        percentile_5: '0.36',
+        percentile_95: '0.065',
+        centroid: '0101000020E610000011F39E34DD3E09C0EDCA71828A544A40',
+        lon: -3.15569535360408,
+        lat: 52.6604769759777
+      },
+      {
+        river_id: 'river-severn',
+        river_name: 'River Severn',
+        navigable: true,
+        view_rank: 3,
+        rank: 7,
+        rloi_id: 2068,
+        up: 2072,
+        down: 2061,
+        telemetry_id: '2176',
+        region: 'Wales',
+        catchment: 'Severn Uplands',
+        wiski_river_name: 'River Severn',
+        agency_name: 'Buttington',
+        external_name: 'Buttington',
+        station_type: 'S',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: true,
+        value: '3.192',
+        value_timestamp: '2020-03-04T09:00:00.000Z',
+        value_erred: false,
+        percentile_5: '3.509',
+        percentile_95: '0.756',
+        centroid: '0101000020E6100000188D8E3E20ED08C0AB99B41013564A40',
+        lon: -3.11578415749103,
+        lat: 52.6724568254316
+      }
+    ]
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+
+    const fakeGetJson = () => data.welshpoolGetJson
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=welshpool'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=lledan-brook">Lledan Brook</a>')
+    Code.expect(response.payload).to.contain('(Natural Resources Wales)\n')
+    Code.expect(response.payload).to.contain('<a href="/station/2089">\n')
     Code.expect(response.statusCode).to.equal(200)
   })
 })
