@@ -149,7 +149,131 @@ lab.experiment('Test - /station/{id}', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('River level at Walton-Le-Dale (River Ribble) - GOV.UK')
+    Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
     Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=river-ribble" class="defra-river-nav-link">River Ribble</a>')
+  })
+  lab.test('GET station/2042/downstream ', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationData = () => {
+      return {
+        rloi_id: 2042,
+        station_type: 'M',
+        qualifier: 'd',
+        telemetry_context_id: '1145946',
+        telemetry_id: '2088',
+        wiski_id: '2088',
+        post_process: false,
+        subtract: null,
+        region: 'Midlands',
+        area: 'Staffordshire Warwickshire and West Midlands',
+        catchment: 'Warwickshire Avon',
+        display_region: 'Midlands',
+        display_area: '',
+        display_catchment: '',
+        agency_name: 'Lilbourne',
+        external_name: 'Lilbourne',
+        location_info: 'Lilbourne',
+        x_coord_actual: 456360,
+        y_coord_actual: 277780,
+        actual_ngr: '',
+        x_coord_display: 456360,
+        y_coord_display: 277780,
+        site_max: '3',
+        wiski_river_name: 'River Avon',
+        date_open: '1972-04-26T23:00:00.000Z',
+        stage_datum: '92.6',
+        period_of_record: 'to date',
+        por_max_value: '1.774',
+        date_por_max: '2007-03-03T08:30:00.000Z',
+        highest_level: '1.77',
+        date_highest_level: '2012-11-25T10:45:00.000Z',
+        por_min_value: '-0.346',
+        date_por_min: '2015-07-07T18:15:00.000Z',
+        percentile_5: '0.666',
+        percentile_95: '-0.255',
+        comments: '',
+        status: 'Active',
+        status_reason: '',
+        status_date: null,
+        coordinates: '{"type":"Point","coordinates":[-1.17316039381184,52.3951465511329]}',
+        geography: '0101000020E61000003F2646D543C5F2BF161F852994324A40',
+        centroid: '0101000020E61000003F2646D543C5F2BF161F852994324A40'
+      }
+    }
+
+    const fakeRiverData = () => {
+      return {
+        river_id: 'river-avon-warwickshire',
+        river_name: 'River Avon',
+        navigable: true,
+        view_rank: 3,
+        rank: 1,
+        rloi_id: 2042,
+        up: null,
+        down: 2043,
+        telemetry_id: '2088',
+        region: 'Midlands',
+        catchment: 'Warwickshire Avon',
+        wiski_river_name: 'River Avon',
+        agency_name: 'Lilbourne',
+        external_name: 'Lilbourne',
+        station_type: 'M',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '0.341',
+        value_timestamp: '2020-03-18T08:00:00.000Z',
+        value_erred: false,
+        percentile_5: '0.659',
+        percentile_95: '0.098',
+        centroid: '0101000020E61000003F2646D543C5F2BF161F852994324A40',
+        lon: -1.17316039381184,
+        lat: 52.3951465511329
+      }
+    }
+
+    const fakeTelemetryData = () => [
+      {
+        ts: '2020-03-13T01:30Z',
+        _: 1.354,
+        err: false
+      }
+    ]
+
+    const fakeImpactsData = () => []
+    const fakeThresholdsData = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+
+    const stationPlugin = {
+      plugin: {
+        name: 'station',
+        register: (server, options) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(stationPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/station/2042/downstream'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('River Avon level downstream at Lilbourne - GOV.UK')
+    Code.expect(response.payload).to.contain('<a href="/station/2042" class="defra-river-nav-link">Upstream</a>')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=river-avon-warwickshire" class="defra-river-nav-link">River Avon</a>')
   })
 })
