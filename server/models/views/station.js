@@ -141,7 +141,9 @@ class ViewModel {
     }
 
     if (this.station.type === 'g') {
-      this.pageTitle = `${this.station.river} ${this.station.isMulti ? this.station.direction + ' ' : ''}at ${stationLocation}`
+      this.pageTitle = `Groundwater level at ${stationLocation}`
+    } else if (this.station.type === 'c') {
+      this.pageTitle = `Sea level at ${stationLocation}`
     } else {
       this.pageTitle = `${this.station.river} level ${this.station.isMulti ? this.station.direction + ' ' : ''}at ${stationLocation}`
     }
