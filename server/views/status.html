@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Status</h1>
+    <p class="defra-updated">
+      As of <time datetime="{{ now }}">{{ now | formatDate }}</time>
+    </p>
+
+    <table class="govuk-table">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">State</th>
+          <th scope="col" class="govuk-table__header">Value</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Environment</th>
+          <td class="govuk-table__cell">{{ env }}</td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Version</th>
+          <td class="govuk-table__cell">{{ appVersion }}</td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">FWIS timestamp</th>
+          <td class="govuk-table__cell">{{ fwisDate | formatDate }}</td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">FWIS age minutes</th>
+          <td class="govuk-table__cell">{{ fwisAgeMinutes }}</td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">FWIS message count</th>
+          <td class="govuk-table__cell">{{ fwisCount }}</td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Flood outlook timestamp</th>
+          <td class="govuk-table__cell">{{ outlookTimestamp | formatDate }}</td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">Flood outlook age hours</th>
+          <td class="govuk-table__cell">{{ outlookAgeHours }}</td>
+        </tr>
+       </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
