@@ -8,15 +8,8 @@ module.exports = {
     register: (server, options) => {
       server.ext('onPreResponse', (request, h) => {
         const response = request.response
-        // These paths need specific validation for posts requests
-        const excludePaths = [
-          // '/',
-          // '/alerts-and-warnings',
-          // '/river-and-sea-levels',
-          // '/historic-impacts'
-        ]
 
-        if (response.isBoom && !excludePaths.includes(request.route.path)) {
+        if (response.isBoom) {
           // An error was raised during
           // processing the request
           const statusCode = response.output.statusCode

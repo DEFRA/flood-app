@@ -58,7 +58,12 @@
     <p role="text" class="govuk-!-margin-bottom-6">
       <span class="govuk-caption-m">Latest</span>
       <strong class="defra-flood-heading-l govuk-!-margin-bottom-1">
-        {{ (model.station.recentValue._).toFixed(2) }}m
+        <!--TODO NIKI, this If statement was only put in to stop nunjucks error when no value received
+        but this code shouldn't be reachable if have no latest value anyway-->
+        {% if model.station.recentValue %}
+          {{ (model.station.recentValue._).toFixed(2) }}m
+        {% endif %}
+
       </strong>
       <span class="govuk-body">
         at <time datetime="">{{ model.station.recentValue.formattedTime }}</time> {{ model.station.recentValue.dateWhen }}
