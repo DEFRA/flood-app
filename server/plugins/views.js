@@ -16,10 +16,7 @@ module.exports = {
           const template = nunjucks.compile(src, options.environment)
 
           return (context) => {
-            const html = template.render(context /* , function (err, value) {
-              console.error(err)
-            } */)
-            return html
+            return template.render(context)
           }
         },
         prepare: (options, next) => {
