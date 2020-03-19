@@ -107,5 +107,17 @@ module.exports = {
 
   getRivers () {
     return util.getJson(`${serviceUrl}/rivers`)
+  },
+
+  getServiceHealth () {
+    return util.getJson(serviceUrl)
+  },
+
+  getGeoserverHealth () {
+    return util.getJson(`${config.geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert&maxFeatures=1&outputFormat=application%2Fjson`)
+  },
+
+  getStationsHealth () {
+    return util.getJson(`${serviceUrl}/stations-health`)
   }
 }
