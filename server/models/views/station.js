@@ -136,10 +136,17 @@ class ViewModel {
       stationLocation = `${this.station.name} borehole`
       stationType = 'Groundwater'
     } else {
-      stationLocation = `${this.station.name + (this.station.isMulti ? ', ' + this.station.direction : '')} (${this.station.river})`
+      stationLocation = `${this.station.name}`
       stationType = 'River'
     }
-    this.pageTitle = `${stationType} level at ${stationLocation}`
+
+    if (this.station.type === 'g') {
+      this.pageTitle = `Groundwater level at ${stationLocation}`
+    } else if (this.station.type === 'c') {
+      this.pageTitle = `Sea level at ${stationLocation}`
+    } else {
+      this.pageTitle = `${this.station.river} level ${this.station.isMulti ? this.station.direction + ' ' : ''}at ${stationLocation}`
+    }
     this.metaDescription = `Check the latest recorded ${stationType.toLowerCase()} level${forecast ? ',' : ' and'} recent 5-day trend ${forecast ? ' and 36 hour forecast' : ''} at ${stationLocation}`
     this.metaKeywords = `${stationType} level, ${this.station.name}${this.station.isRiver ? ', ' + this.station.river : ''}${forecast ? ', forecast level' : ''}, flood risk, flood map, gov.uk`
 
