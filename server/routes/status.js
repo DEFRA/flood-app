@@ -45,7 +45,10 @@ module.exports = {
       stations = await floodService.getStationsHealth()
       stationsEnd = new Date()
     } catch (err) {
-      stations = null
+      stations = {
+        count: 0,
+        timestamp: null
+      }
       stationsEnd = new Date()
     }
 
