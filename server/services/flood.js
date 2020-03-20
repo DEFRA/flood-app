@@ -119,5 +119,13 @@ module.exports = {
 
   getStationsHealth () {
     return util.getJson(`${serviceUrl}/stations-health`)
+  },
+
+  getTelemetryHealth () {
+    return util.getJson(`${serviceUrl}/telemetry-health`)
+  },
+
+  getFfoiHealth () {
+    return util.getJson(`${serviceUrl}/ffoi-health`)
   }
 }

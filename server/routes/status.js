@@ -49,6 +49,22 @@ module.exports = {
       stationsEnd = new Date()
     }
 
+    // telemetry health
+    let telemetry
+    try {
+      telemetry = await floodService.getTelemetryHealth()
+    } catch (err) {
+      telemetry = null
+    }
+
+    // FFOI health
+    let ffoi
+    try {
+      ffoi = await floodService.getFfoiHealth()
+    } catch (err) {
+      ffoi = null
+    }
+
     const model = {
       now: new Date(),
       pageTitle: 'Status',
@@ -67,7 +83,9 @@ module.exports = {
       databasems: stationsEnd - stationsStart,
       stationsTimestamp: new Date(parseInt(stations.timestamp) * 1000),
       stationsAgeDays: parseInt((new Date() - new Date(parseInt(stations.timestamp) * 1000)) / (1000 * 60 * 60 * 24)),
-      stationsCount: stations.count || 0
+      stationsCount: stations.count || 0,
+      telemetry: telemetry,
+      ffoi: ffoi
     }
     return h.view('status', model)
   }
