@@ -1,5 +1,6 @@
 .defra-service-error {
     @extend .govuk-error-summary;
+    margin-bottom:0;
     border-color: $govuk-border-colour;
     &__title {
         @extend .govuk-error-summary__title;
@@ -8,3 +9,4 @@
         margin-bottom:5px;
     }
 }
+

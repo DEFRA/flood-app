@@ -41,9 +41,9 @@ if (chart.length) {
     })
   }
   // Add threshold buttons
-  document.querySelectorAll('.defra-table-impact tbody tr').forEach(impact => {
+  document.querySelectorAll('.defra-flood-impact-list__action').forEach(impact => {
     const button = document.createElement('button')
-    button.innerHTML = '<span>Show on </span>chart'
+    button.innerHTML = 'Show on chart'
     button.className = 'defra-table-impact__button'
     button.addEventListener('click', function (e) {
       lineChart.addThreshold({

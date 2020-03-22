@@ -26,6 +26,9 @@ $govuk-global-styles: true;
 // Components
 @import "components/cookie-banner";
 @import "components/flood-status";
+@import "components/flood-impact-list";
+@import "components/flood-nav";
+@import "components/flood-statistics";
 @import "components/contents";
 @import "components/related-items";
 @import "components/map";
@@ -39,3 +42,4 @@ $govuk-global-styles: true;
 
 // Utilities
 @import "utilities/details";
+@import "utilities/summary-list";

@@ -109,10 +109,13 @@ class ViewModel {
         } else {
           if (parseFloat(this.station.recentValue._) > parseFloat(this.station.percentile5)) {
             this.station.state = 'High'
+            this.station.stateInformation = 'above ' + this.station.percentile5 + 'm'
           } else if (parseFloat(this.station.recentValue._) < parseFloat(this.station.percentile95)) {
             this.station.state = 'Low'
+            this.station.stateInformation = 'below ' + this.station.percentile5 + 'm'
           } else {
             this.station.state = 'Normal'
+            this.station.stateInformation = this.station.percentile95 + 'm to ' + this.station.percentile5 + 'm typical'
           }
         }
       }
