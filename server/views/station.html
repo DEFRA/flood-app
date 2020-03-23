@@ -62,6 +62,7 @@
 
 {% else %}
 
+{# Latest Status #}
 {% if model.telemetry.length > 0 %}
 {% if model.station.isActive and not model.recentValue.err %}
 <div class="govuk-grid-row">
@@ -95,37 +96,6 @@
     </div>
   </div>
 </div>
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <figure class="defra-line-chart" aria-hidden="true" hidden>
-      <figcaption class="govuk-heading-m govuk-!-margin-bottom-7">Height over the last 5 days <!-- if ffoi add 'and 36 hour forecast' --></figcaption>
-      <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
-    </figure>
-  </div>
-</div>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <figure class="defra-line-chart" aria-hidden="true" hidden>
-      <figcaption class="defra-line-chart__caption">Water level measured over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
-      <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
-    </figure>
-  </div>
-</div>
-
-{% if model.isFfoi %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <div class="defra-line-chart-data">
-      <p>This measuring station has a computer generated forecast.</p>
-      <p>The highest level forecast here in the next 36 hours is <strong>{{ model.ffoi.maxValue._ | round(2) }}m at {{ model.ffoi.maxValue.formattedTimestamp }}</strong>.</p>
-    </div>
-    <div class="govuk-inset-text govuk-!-margin-top-0">
-      <p>Forecasts contain uncertainty and can change frequently. <a href="/how-river-sea-groundwater-levels-are-measured#forecasts">Find out how forecasts are produced</a>.</p>
-    </div>
-  </div>
-</div>
-{% endif %}
 
 {% else %}
 
@@ -154,9 +124,44 @@
 {% endif %}
 {% endif %}
 
-{% if model.station.isActive and not model.recentValue.err %}
-<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-6">
+{# Graph and Thresholds #}
+{% if model.station.isActive and model.telemetry.length > 0 %}
 
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <figure class="defra-line-chart" aria-hidden="true" hidden>
+      <figcaption class="govuk-heading-m govuk-!-margin-bottom-7">Height over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
+      <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
+    </figure>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <figure class="defra-line-chart" aria-hidden="true" hidden>
+      <figcaption class="defra-line-chart__caption">Water level measured over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
+      <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
+    </figure>
+  </div>
+</div>
+
+
+{% if model.isFfoi %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <div class="defra-line-chart-data">
+      <p>This measuring station has a computer generated forecast.</p>
+      <p>The highest level forecast here in the next 36 hours is <strong>{{ model.ffoi.maxValue._ | round(2) }}m at {{ model.ffoi.maxValue.formattedTimestamp }}</strong>.</p>
+    </div>
+    <div class="govuk-inset-text govuk-!-margin-top-0">
+      <p>Forecasts contain uncertainty and can change frequently. <a href="/how-river-sea-groundwater-levels-are-measured#forecasts">Find out how forecasts are produced</a>.</p>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-6">
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <h2 class="govuk-heading-m">What effect could the level here have on nearby areas?</h2>
@@ -187,48 +192,60 @@
 </div>
 {% endif %}
 
+{# Station Details #}
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">   
-    <h2 class="govuk-heading-m">Technical details about this gauging station</h2>
-    <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-font-size-16">
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Location
-        </dt>
-        <dd class="govuk-summary-list__value" id="location">
-          Grid ref NY 12345 12345
-        </dd>
+  <div class="govuk-grid-column-full">
+    <details class="govuk-details govuk-!-margin-top-6" data-module="govuk-details">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">
+          View technical information for this measuring station
+        </span>
+      </summary>
+      <div class="govuk-details__text">
+        <dl class="govuk-summary-list govuk-summary-list--no-border govuk-summary-list--defra-flood-station govuk-!-font-size-16">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Grid reference
+            </dt>
+            <dd class="govuk-summary-list__value">NY 12345 12345</dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Site datum
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ model.station.stageDatum }}<abbr title="metres above ordnance datum">mAOD</abbr>
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Station name
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ model.station.name }}
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Normal range
+            </dt>
+            <dd class="govuk-summary-list__value">
+          {% if model.station.hasPercentiles %}
+              {{ model.station.percentile95 }}m to {{ model.station.percentile5 }}m
+          {% endif %}
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Station ID
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ model.station.id }}
+            </dd>
+          </div>
+        </dl>
       </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Site datum
-        </dt>
-        <dd class="govuk-summary-list__value">
-          {{ model.station.stageDatum }}<a href="/how-river-sea-groundwater-levels-are-measured#site-datum" class="defra-link-meta" title="What this means">mAOD</a>
-        </dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Station name
-        </dt>
-        <dd class="govuk-summary-list__value">
-          {{ model.station.name }}
-        </dd>
-      </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Station ID
-        </dt>
-        <dd class="govuk-summary-list__value">
-          {{ model.station.id }}
-        </dd>
-      </div>
-    </dl>
-    <p class="govuk-text govuk-!-margin-bottom-6">
-      <a href="/how-river-sea-groundwater-levels-are-measured">Find out how river, sea and groundwater levels are measured</a>.    
-    </p>  
-  </div>
-</div>
+    </details>
 {% endblock %}
 
 {% block bodyEnd %}
