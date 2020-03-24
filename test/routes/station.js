@@ -744,7 +744,7 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('Sea level at Bude - GOV.UK')
     Code.expect(response.payload).not.to.contain('defra-flood-statistics__impact defra-flood-statistics__impact')
-    Code.expect(response.payload).to.contain('at <time datetime="">6:00am</time> today')
+    Code.expect(response.payload).to.contain('at <time datetime="">6:00am</time>')
     Code.expect(response.payload).to.contain('3.59m')
   })
 })
