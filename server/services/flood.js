@@ -109,6 +109,10 @@ module.exports = {
     return util.getJson(`${serviceUrl}/rivers`)
   },
 
+  getStationsOverview () {
+    return util.getJson(`${serviceUrl}/stations-overview`)
+  },
+
   getServiceHealth () {
     return util.getJson(serviceUrl)
   },

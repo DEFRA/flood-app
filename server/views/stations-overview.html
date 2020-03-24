@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<style>
+  .govuk-width-container {
+    margin-left: 30px;
+  }
+  .off-screen {
+    position: absolute;
+    left: -9999px;
+  }
+</style>
+<h1 class="govuk-heading-xl">Stations overview</h1>
+<h2 class="govuk-heading-m" id="loading">Loading data, one moment please...</h2>
+<table class="govuk-table off-screen" id="stations-overview">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        {% for name, value in stations[0] %}
+          <th scope="col" class="govuk-table__header">{{ name }}</th>
+        {% endfor %}
+        </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      {% for station in stations %}
+        <tr class="govuk-table__row">
+          {% for name, value in station %}
+          <td class="govuk-table__cell">
+            {% if name === 'rloi_id' %}
+            <a href="/station/{{ value }}{% if station.direction === 'd' %}/downstream{% endif%}" target="_blank">{{ value }}</a>
+            {% else %}
+              {{ value }}
+            {% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+   </tbody>
+</table>
+{% endblock %}
+
+{% block bodyEnd %}
+{{ super() }}
+<script src="{{assetPath}}/js/stations-overview.js"></script>
+{% endblock %}
