@@ -133,7 +133,7 @@ class ViewModel {
       stationLocation = this.station.name
       stationType = 'Sea'
     } else if (this.station.type === 'g') {
-      stationLocation = `${this.station.name} borehole`
+      stationLocation = `${this.station.name}`
       stationType = 'Groundwater'
     } else {
       stationLocation = `${this.station.name}`
