@@ -32,6 +32,7 @@ class ViewModel {
     this.porMaxValueIsProvisional = false
     this.station.floodingIsPossible = false
     this.station.hasPercentiles = true
+    this.station.hasImpacts = false
     const now = moment(Date.now())
     const numberOfProvisionalDays = config.provisionalPorMaxValueDays
 
@@ -155,12 +156,24 @@ class ViewModel {
 
     // Thresholds
     var thresholds = []
+    if (this.station.recentValue && !this.station.recentValue.err) {
+      thresholds.push({
+        id: 'latest',
+        value: this.station.recentValue._.toFixed(2),
+        description: 'Latest level',
+        shortname: '',
+        type: 'latest',
+        isExceeded: false
+      })
+    }
     if (this.station.porMaxValue) {
       thresholds.push({
         id: 'highest',
         value: this.station.porMaxValue,
         description: 'Highest level on record',
-        shortname: 'Highest level on record'
+        shortname: 'Highest level on record',
+        type: '',
+        isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= this.station.porMaxValue : false
       })
     }
     if (this.station.percentile5) { // Only push typical range if it has a percentil5
@@ -168,7 +181,9 @@ class ViewModel {
         id: 'alert',
         value: this.station.percentile5,
         description: 'Top of typical range. Above this flooding to low-laying land is possible',
-        shortname: 'Top of typical range'
+        shortname: 'Top of typical range',
+        type: '',
+        isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= this.station.percentile5 : false
       })
     }
     if (this.warningThreshold) {
@@ -176,11 +191,17 @@ class ViewModel {
         id: 'warning',
         value: this.warningThreshold,
         description: 'Flood warning may be issued',
-        shortname: 'Flood warning possible'
+        shortname: 'Flood warning possible',
+        type: '',
+        isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= this.station.warningThreshold : false
       })
     }
 
     // Add impacts
+    if (impacts.length > 0) {
+      this.station.hasImpacts = true
+    }
+
     if (impacts) {
       impacts.forEach(function (impact) {
         thresholds.push({

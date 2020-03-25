@@ -91,7 +91,7 @@
     &__row--current .defra-flood-impact-list__action {
         display: none;
     }
-    &__row--exceded {
+    &__row--exceeded {
         &:before {
             background-color: govuk-colour('blue');
         }

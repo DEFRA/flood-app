@@ -145,52 +145,40 @@
   </div>
 </div>
 
-
-{% if model.isFfoi %}
+{# Impacts and thresholds #}
+{% if model.thresholds.length > 0 %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <div class="defra-line-chart-data">
-      <p>This measuring station has a computer generated forecast.</p>
-      <p>The highest level forecast here in the next 36 hours is <strong>{{ model.ffoi.maxValue._ | round(2) }}m at {{ model.ffoi.maxValue.formattedTimestamp }}</strong>.</p>
-    </div>
-    <div class="govuk-inset-text govuk-!-margin-top-0">
-      <p>Forecasts contain uncertainty and can change frequently. <a href="/how-river-sea-groundwater-levels-are-measured#forecasts">Find out how forecasts are produced</a>.</p>
-    </div>
+    <h2 class="govuk-heading-m govuk-!-margin-top-6">How levels here could affect nearby areas</h2>
+    <dl class="defra-flood-impact-list govuk-!-margin-bottom-0">
+      {% for band in model.thresholds %}
+      {% for threshold in band.values %} 
+      <div class="defra-flood-impact-list__row {% if threshold.type == 'latest' %} defra-flood-impact-list__row--current {% elif threshold.isExceeded === true %} defra-flood-impact-list__row--exceeded{% endif %}">
+        <dt class="defra-flood-impact-list__key">
+          {{ threshold.value }}m
+        </dt>
+        <dd class="defra-flood-impact-list__value" data-id="{{ threshold.id }}" data-level="{{ threshold.value }}" data-name="{{ threshold.shortname }}">
+          <div class="defra-flood-impact-list__container">
+            {{ threshold.description }}
+            <span class="defra-flood-impact-list__action"></span>
+          </div>
+          {# {% if station is ffoi and warning is active %}
+          <span class="defra-flood-impact-list__( can change )warning" title="(can change)Flood warning has been issued">!</span>
+          {% endif %} #}
+        </dd>
+      </div>
+      {% endfor %}
+      {% endfor %}
+    </dl> 
   </div>
 </div>
+  {% if model.station.hasImpacts %}
+    <p class="govuk-body-s govuk-!-margin-top-3 govuk-!-margin-bottom-0">Past impacts might not happen at the same level if flood defences have been put in place since then.</p>
+  {% endif %}
+{% endif %}
 {% endif %}
 
 
-<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-6">
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <h2 class="govuk-heading-m">What effect could the level here have on nearby areas?</h2>
-    <table class="govuk-table defra-table-impact govuk-!-margin-bottom-6 govuk-!-font-size-16">
-      <caption class="govuk-table__caption govuk-visually-hidden">Months and rates</caption>
-      <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-          <th class="govuk-table__header" scope="col">Level</th>
-          <th class="govuk-table__header" scope="col">Description</th>
-          <th class="govuk-table__header" scope="col"></th>
-        </tr>
-      </thead>
-      <tbody class="govuk-table__body">
-        {% for band in model.thresholds %}
-        {% for threshold in band.values %}
-        <tr class="govuk-table__row" data-id="{{ threshold.id }}" data-level="{{ threshold.value }}" data-name="{{ threshold.shortname }}">
-          {% if loop.index == 1 %}
-          <th class="govuk-table__header defra-table-impact__cell--numeric" scope="row" {% if band.values.length > 1 %}rowspan="{{ band.values.length }}"{% endif %}>{{ threshold.value }}m</th>
-          {% endif %}
-          <td class="govuk-table__cell">{{ threshold.description }}</td>
-          <td class="govuk-table__cell"></td>
-        </tr>   
-        {% endfor %}
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
-{% endif %}
 
 {# Station Details #}
 <div class="govuk-grid-row">
