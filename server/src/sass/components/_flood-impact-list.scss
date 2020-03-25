@@ -1,0 +1,150 @@
+.defra-flood-impact-list {
+    @include govuk-font($size: 19);
+    border-bottom:1px solid $govuk-border-colour;
+    &__row {
+        position:relative;
+        margin-left:3.65em;
+        overflow:visible;
+    }
+    &__row:before {
+        position:absolute;
+        content:'';
+        width:3px;
+        top:11px;
+        bottom:-20px;
+        background-color: govuk-colour('mid-grey');
+        margin-left:-1.5px;
+        left:8%;
+        @include mq ($from: tablet) {
+            left:4%;
+        }
+    }
+    &__key {
+        @include govuk-font($size: false, $tabular: true, $weight: bold);
+        position:absolute;
+        left:-3.65em;
+        width:3.65em;
+        top:0px;
+        text-align:right;
+    }
+    &__value {
+        position:relative;
+        margin:0;
+        padding-left: 16%;
+        padding-bottom:10px;
+        @include mq ($from: tablet) {
+            padding-left:8%;
+            padding-bottom:15px;
+        }
+    }
+    &__value:nth-child(2):before {
+        position: absolute;
+        content:'';
+        width:14px;
+        height:3px;
+        border-top:1px solid white;
+        border-bottom:1px solid white;
+        background-color:govuk-colour('mid-grey');
+        margin-left:-6.5px;
+        top:8px;
+        left:8%;
+        @include mq ($from: tablet) {
+            top:11px;
+            left:4%;
+        }
+    }
+    &__row:last-child {
+        &:before {
+            bottom:0px;
+        }
+        .defra-flood-impact-list__value:last-child {
+            padding-bottom:0;
+        }
+        .defra-flood-impact-list__value:last-child {
+            padding-bottom:0;
+            .defra-flood-impact-list__container {
+                border-bottom:0px;
+            }
+        }
+    }
+    &__container {
+        padding-bottom:10px;
+        border-bottom:1px solid $govuk-border-colour;
+        @include mq ($from: tablet) {
+            padding-right:28%;
+            padding-bottom:15px;
+        }
+    }
+    &__action {
+        display:block;
+        margin-top:5px;
+        @include mq ($from: tablet) {
+            position:absolute;
+            right:0;
+            top:0px;
+            margin-top:0px;
+        }
+    }
+    .defra-button-text-s {
+        display:block;
+    }
+    &__row--current .defra-flood-impact-list__action {
+        display: none;
+    }
+    &__row--exceeded {
+        &:before {
+            background-color: govuk-colour('blue');
+        }
+        .defra-flood-impact-list__value:nth-child(2):before {
+            background-color: govuk-colour('blue');
+            border:0px;
+        }
+    }
+    &__row--current {
+        &:before {
+            background-color: govuk-colour('blue');
+        }
+        .defra-flood-impact-list__value {
+            font-weight: bold;
+        }
+        .defra-flood-impact-list__value:before {
+            background-color: govuk-colour('blue');
+            border:0px;
+        }
+    }
+    &__alert {
+        z-index:1;
+        text-indent: -5000px;
+        position:absolute;
+        background-image: svg-url('<svg width="24" height="24" viewBox="0 0 24 24"><path d="M1.5,24c-0.828,0 -1.5,-0.672 -1.5,-1.5c0,-0.241 0.057,-0.469 0.158,-0.671l10.5,-21c0.247,-0.491 0.755,-0.829 1.342,-0.829c0.587,0 1.095,0.338 1.342,0.829l10.5,21c0.101,0.202 0.158,0.43 0.158,0.671c0,0.828 -0.672,1.5 -1.5,1.5l-21,0" style="fill:#f18700;"/><path d="M2.309,22l19.382,0l-9.691,-19.382l-9.691,19.382Z" style="fill:#fff;"/><path d="M15.376,14.996l1.045,0l-4.433,-5.069l-1.708,1.964l0,-0.794l-1.015,0l0,1.96l-1.686,1.939l1.026,0l0,3.504l6.771,0l0,-3.504Z" style="fill:#181c1b;"/><path d="M19.323,19.5l-14.646,0l-0.75,1.5l16.146,0l-0.75,-1.5Z" style="fill:#00a4cd;"/></svg>');
+        // background-image: svg-url('<svg width="24" height="24" viewBox="0 0 24 24"><path d="M1.5,24c-0.828,0 -1.5,-0.672 -1.5,-1.5c0,-0.241 0.057,-0.469 0.158,-0.671l10.5,-21c0.247,-0.491 0.755,-0.829 1.342,-0.829c0.587,0 1.095,0.338 1.342,0.829l10.5,21c0.101,0.202 0.158,0.43 0.158,0.671c0,0.828 -0.672,1.5 -1.5,1.5l-21,0" style="fill:#f18700;fill-rule:nonzero;"/><circle cx="12" cy="18.105" r="1.65" style="fill:#fff;"/><path d="M13.32,7.539l-2.64,0l0.33,7.754l1.98,0l0.33,-7.754Z" style="fill:#fff;"/></svg>');
+        background-repeat: no-repeat;
+        background-position: top left;
+        background-color:white;
+        border-top:1px solid white;
+        border-bottom:1px solid white;
+        top:-1px;
+        width:20px;
+        height:20px;
+        background-size: 20px 20px;
+        margin-left:-10px;
+        left:8%;
+        @include mq ($from: tablet) {
+            width:24px;
+            height:24px;
+            background-size: 24px 24px;
+            margin-left:-12px;
+            left:4%;
+        }
+    }
+    &__warning {
+        @extend .defra-flood-impact-list__alert;
+        background-image: svg-url('<svg width="24" height="24" viewBox="0 0 24 24"><path d="M1.5,24c-0.828,0 -1.5,-0.672 -1.5,-1.5c0,-0.241 0.057,-0.469 0.158,-0.671l10.5,-21c0.247,-0.491 0.755,-0.829 1.342,-0.829c0.587,0 1.095,0.338 1.342,0.829l10.5,21c0.101,0.202 0.158,0.43 0.158,0.671c0,0.828 -0.672,1.5 -1.5,1.5l-21,0" style="fill:#e3000f;"/><path d="M2.309,22l19.382,0l-9.691,-19.382l-9.691,19.382Z" style="fill:#fff;"/><path d="M15.376,14.996l1.045,0l-4.433,-5.069l-1.708,1.964l0,-0.794l-1.015,0l0,1.96l-1.686,1.939l1.026,0l0,2.025l6.771,0l0,-2.025Z" style="fill:#181c1b;"/><path d="M18.573,18l-13.146,0l-1.5,3l16.146,0l-1.5,-3Z" style="fill:#00a4cd;"/></svg>');
+        // background-image: svg-url('<svg width="24" height="24" viewBox="0 0 24 24"><path d="M1.5,24c-0.828,0 -1.5,-0.672 -1.5,-1.5c0,-0.241 0.057,-0.469 0.158,-0.671l10.5,-21c0.247,-0.491 0.755,-0.829 1.342,-0.829c0.587,0 1.095,0.338 1.342,0.829l10.5,21c0.101,0.202 0.158,0.43 0.158,0.671c0,0.828 -0.672,1.5 -1.5,1.5l-21,0" style="fill:#e3000f;fill-rule:nonzero;"/><circle cx="12" cy="18.105" r="1.65" style="fill:#fff;"/><path d="M13.32,7.539l-2.64,0l0.33,7.754l1.98,0l0.33,-7.754Z" style="fill:#fff;"/></svg>');
+    }
+    &__severe {
+        @extend .defra-flood-impact-list__alert;
+        background-image: svg-url('<svg width="24" height="24" viewBox="0 0 24 24"><path d="M1.5,24c-0.828,0 -1.5,-0.672 -1.5,-1.5c0,-0.241 0.057,-0.469 0.158,-0.671l10.5,-21c0.247,-0.491 0.755,-0.829 1.342,-0.829c0.587,0 1.095,0.338 1.342,0.829l10.5,21c0.101,0.202 0.158,0.43 0.158,0.671c0,0.828 -0.672,1.5 -1.5,1.5l-21,0" style="fill:#e3000f;"/><path d="M2.309,22l19.382,0l-9.691,-19.382l-9.691,19.382Z" style="fill:#fff;"/><path d="M15.415,14.864l1.046,0l-4.433,-5.07l-1.708,1.964l0,-0.794l-1.015,0l0,1.96l-1.686,1.94l1.026,0l0,0.636l6.77,0l0,-0.636Z" style="fill:#e3000f;"/><path d="M17.823,16.5l-11.646,0l-2.25,4.5l16.146,0l-2.25,-4.5Z" style="fill:#00a4cd;"/></svg>');
+        // background-image: svg-url('<svg width="24" height="24" viewBox="0 0 24 24"><path d="M1.5,24c-0.828,0 -1.5,-0.672 -1.5,-1.5c0,-0.241 0.057,-0.469 0.158,-0.671l10.5,-21c0.247,-0.491 0.755,-0.829 1.342,-0.829c0.587,0 1.095,0.338 1.342,0.829l10.5,21c0.101,0.202 0.158,0.43 0.158,0.671c0,0.828 -0.672,1.5 -1.5,1.5l-21,0" style="fill:#e3000f;fill-rule:nonzero;"/><circle cx="12" cy="18.105" r="1.65" style="fill:#fff;"/><path d="M13.32,7.539l-2.64,0l0.33,7.754l1.98,0l0.33,-7.754Z" style="fill:#fff;"/></svg>');
+    }
+}

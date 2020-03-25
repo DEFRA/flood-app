@@ -56,7 +56,7 @@ class ViewModel {
       }
       // Create state property
       if (station.station_type !== 'C' && station.station_type !== 'G' && station.value) {
-        if (station.value > station.percentile_5) {
+        if (station.value >= station.percentile_5) {
           station.state = 'high'
         } else if (station.value < station.percentile_95) {
           station.state = 'low'

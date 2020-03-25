@@ -1,0 +1,12 @@
+.govuk-summary-list--defra-flood-station .govuk-summary-list {
+    &__key {
+        @include mq ($from: tablet) {
+            width:20%;
+        }
+    }    
+    &__value {
+        @include mq ($from: tablet) {
+            width:80%;
+        }
+    }
+}

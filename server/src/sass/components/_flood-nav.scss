@@ -1,0 +1,28 @@
+.defra-flood-nav {
+    &__link {
+        @extend .govuk-back-link;
+        position:relative;
+        padding-left:0px;
+        margin-right:10px;
+        @include govuk-responsive-margin(7, 'bottom');
+        background:none;
+        border-left:0px;
+        border-right:0px;
+        border-top:0px;
+        padding:0px;
+        cursor: pointer;
+    }
+    &__link:before {
+        content:none;
+    }
+    &__icon {
+        position: relative;
+        left:0px;
+        top:2px;
+        margin-right:2px;
+    }
+    .defra-button-map-s {
+        float:right;
+        margin-top:15px;
+    }
+}

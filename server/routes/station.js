@@ -22,8 +22,6 @@ module.exports = {
 
     const station = await floodService.getStationById(id, direction)
 
-    const river = await floodService.getRiverStationByStationId(id)
-
     // If upstream param is specified redirect route of station
     if (request.params.direction === 'upstream') {
       return h.redirect(`/station/${id}`)
@@ -47,6 +45,14 @@ module.exports = {
 
     // Get impacts for the station
     const impacts = await floodService.getImpactData(station.rloi_id)
+
+    if (station.status === 'Closed') {
+      const river = []
+      const model = new ViewModel({ station, telemetry, impacts, river })
+      return h.view('station', { model })
+    }
+
+    const river = await floodService.getRiverStationByStationId(id)
 
     // Check if it's a forecast station
     if (Object.keys(thresholds).length) { // DL: getStationForecastThresholds can return an empty object??
