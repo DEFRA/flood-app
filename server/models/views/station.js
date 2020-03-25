@@ -133,14 +133,12 @@ class ViewModel {
 
     // Set pageTitle, metaDescription and metaKeywords
     var stationType, stationLocation
+    stationLocation = this.station.name
     if (this.station.type === 'c') {
-      stationLocation = this.station.name
       stationType = 'Sea'
     } else if (this.station.type === 'g') {
-      stationLocation = `${this.station.name}`
       stationType = 'Groundwater'
     } else {
-      stationLocation = `${this.station.name}`
       stationType = 'River'
     }
 
