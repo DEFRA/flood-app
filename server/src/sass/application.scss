@@ -43,3 +43,6 @@ $govuk-global-styles: true;
 // Utilities
 @import "utilities/details";
 @import "utilities/summary-list";
+
+// Datatables
+@import "node_modules/datatables.net-dt/css/jquery.dataTables"

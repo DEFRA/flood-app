@@ -1,7 +1,7 @@
 const path = require('path')
 module.exports = (env, argv) => ({
-  mode: 'production', // 'development' or 'production',
-  devtool: 'none', // 'source-map' or 'none',
+  mode: 'development', // 'development' or 'production',
+  devtool: 'source-map', // 'source-map' or 'none',
   entry: {
     core: './server/src/js/core',
     'alerts-and-warnings': './server/src/js/pages/alerts-and-warnings',
@@ -9,6 +9,7 @@ module.exports = (env, argv) => ({
     national: './server/src/js/pages/national',
     'river-and-sea-levels': './server/src/js/pages/river-and-sea-levels',
     station: './server/src/js/pages/station',
+    'stations-overview': './server/src/js/pages/stations-overview',
     'target-area': './server/src/js/pages/target-area'
   },
   output: {
