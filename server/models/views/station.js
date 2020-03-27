@@ -116,7 +116,7 @@ class ViewModel {
             this.station.stateInformation = 'below ' + this.station.percentile5 + 'm'
           } else {
             this.station.state = 'Normal'
-            this.station.stateInformation = this.station.percentile95 + 'm to ' + this.station.percentile5 + 'm typical'
+            this.station.stateInformation = this.station.percentile95 + 'm to ' + this.station.percentile5 + 'm'
           }
         }
       }
