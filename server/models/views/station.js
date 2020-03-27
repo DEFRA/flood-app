@@ -117,7 +117,7 @@ class ViewModel {
             this.station.stateInformation = 'below ' + this.station.percentile5 + 'm'
           } else {
             this.station.state = 'Normal'
-            this.station.stateInformation = this.station.percentile95 + 'm to ' + this.station.percentile5 + 'm typical'
+            this.station.stateInformation = this.station.percentile95 + 'm to ' + this.station.percentile5 + 'm'
           }
         }
       }
@@ -185,7 +185,7 @@ class ViewModel {
         id: 'alert',
         value: this.station.percentile5,
         description: 'This is the top of the normal range, above this flooding to low lying land is possible',
-        shortname: 'Top of typical range',
+        shortname: 'Top of normal range',
         type: '',
         isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= this.station.percentile5 : false
       })

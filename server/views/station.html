@@ -5,15 +5,8 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <nav {% if model.referer %}id="browserBackContainer"{% endif %}>
-      {% if model.station.isMulti %}
-      {% if model.station.isDownstream %}
-      <a href="/station/{{ model.station.id }}" class="defra-river-nav-link">Upstream</a>
-      {% else %}
-      <a href="/station/{{ model.station.id }}/downstream" class="defra-river-nav-link">Downstream</a>
-      {% endif %}
-      {% endif %}
       {% if model.station.riverNavigation and model.station.riverNavigation.navigable %}
-      <a href="/river-and-sea-levels?river-id={{model.station.riverNavigation.river_id}}" class="defra-river-nav-link">{{ model.station.riverNavigation.river_name }}</a>
+        <a href="/river-and-sea-levels?river-id={{model.station.riverNavigation.river_id}}" class="defra-river-nav-link">{{ model.station.riverNavigation.river_name }}</a>
       {% endif %}
     </nav>
   </div>
@@ -23,10 +16,23 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">
       {% if model.station.isGroundwater %}Groundwater{% elif model.station.isCoastal %}Sea{% else %} {{ model.station.river }} {% endif %}
-      level {% if model.station.isMulti %} {% if model.station.isDownstream %}Downstream{% else %}Upstream{% endif %}{% endif %} at {{ model.station.name }}
+      level {% if model.station.isMulti %} {% if model.station.isDownstream %}downstream{% else %}upstream{% endif %}{% endif %} at {{ model.station.name }}
     </h1>
   </div>
 </div>
+
+{# For multi station #}
+{% if model.station.isMulti %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+      {% if model.station.isDownstream %}
+      <p class="govuk-!-margin-bottom-8">This measuring station takes 2 measurements. You're viewing the downstream level. <a href="/station/{{ model.station.id }}">View the upstream level.</a></p>
+      {% else %}
+      <p class="govuk-!-margin-bottom-8">This measuring station takes 2 measurements. You're viewing the upstream level. <a href="/station/{{ model.station.id }}/downstream">View the downstream level.</a></p>
+      {% endif %}
+    </div>
+</div>
+{% endif %}
 
 {# if station is suspended #}
 {% if model.status === 'suspended' %}
