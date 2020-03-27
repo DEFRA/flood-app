@@ -160,7 +160,9 @@
         <dd class="defra-flood-impact-list__value" data-id="{{ threshold.id }}" data-level="{{ threshold.value }}" data-name="{{ threshold.shortname }}">
           <div class="defra-flood-impact-list__container">
             {{ threshold.description }}
+            {% if threshold.type != 'latest' %}
             <span class="defra-flood-impact-list__action"></span>
+            {% endif %}
           </div>
           {# {% if station is ffoi and warning is active %}
           <span class="defra-flood-impact-list__( can change )warning" title="(can change)Flood warning has been issued">!</span>
