@@ -152,7 +152,7 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
     Code.expect(response.payload).to.contain('defra-flood-statistics__impact defra-flood-statistics__impact--normal')
     Code.expect(response.payload).to.contain('Normal')
-    Code.expect(response.payload).to.contain('0.15m to 3.50m typical')
+    Code.expect(response.payload).to.contain('0.15m to 3.50m')
     Code.expect(response.payload).to.contain('<time datetime="">1:30am</time>')
     Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=river-ribble" class="defra-river-nav-link">River Ribble</a>')
   })
@@ -277,7 +277,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Avon level downstream at Lilbourne - GOV.UK')
-    Code.expect(response.payload).to.contain('<a href="/station/2042" class="defra-river-nav-link">Upstream</a>')
+    Code.expect(response.payload).to.contain('This measuring station takes 2 measurements.')
     Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=river-avon-warwickshire" class="defra-river-nav-link">River Avon</a>')
   })
   lab.test('GET station/5146 with High river level ', async () => {
