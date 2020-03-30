@@ -44,6 +44,7 @@ class ViewModel {
           this.station.porMaxValueIsProvisional = true
         }
         this.station.formattedPorMaxDate = moment(this.station.porMaxDate).format('DD/MM/YY')
+        this.station.thresholdPorMaxDate = moment(this.station.porMaxDate).format('DD MMMM YYYY')
       }
     }
 
@@ -154,6 +155,7 @@ class ViewModel {
 
     // Thresholds
     var thresholds = []
+
     if (this.station.recentValue && !this.station.recentValue.err) {
       thresholds.push({
         id: 'latest',
@@ -168,18 +170,22 @@ class ViewModel {
       thresholds.push({
         id: 'highest',
         value: this.station.porMaxValue,
-        description: 'Highest level on record',
+        description: this.station.thresholdPorMaxDate
+          ? 'Water reaches the highest level recorded at this measuring station (recorded on ' + this.station.thresholdPorMaxDate + ')'
+          : 'Water reaches the highest level recorded at this measuring station',
         shortname: 'Highest level on record',
         type: '',
-        isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= this.station.porMaxValue : false
+        isExceeded: this.station.recentValue && !this.station.recentValue.err
+          ? this.station.recentValue._ >= this.station.porMaxValue
+          : false
       })
     }
     if (this.station.percentile5) { // Only push typical range if it has a percentil5
       thresholds.push({
         id: 'alert',
         value: this.station.percentile5,
-        description: 'Top of typical range. Above this flooding to low-laying land is possible',
-        shortname: 'Top of typical range',
+        description: 'This is the top of the normal range, above this flooding to low lying land is possible',
+        shortname: 'Top of normal range',
         type: '',
         isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= this.station.percentile5 : false
       })

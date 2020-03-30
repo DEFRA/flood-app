@@ -208,10 +208,14 @@ table.table-levels {
         height:450px;
     }
     .axis.y { 
-        @include govuk-font($size: 16, $tabular: true); 
+        @include govuk-font($size: 16, $tabular: true);
     }
     .axis.x { 
         @include govuk-font($size: 16); 
+    }
+    .axis.y text,
+    .axis.x text {
+        fill: $govuk-secondary-text-colour;
     }
     .axis path,
     .axis line {

@@ -115,7 +115,10 @@ function LineChart (containerId, data) {
   // Modify axis with thresholds and define scales
   modifyAxis()
 
-  // Render the chart
+  // Render process triggers dimensins to be adjusted
+  render()
+
+  // Second render with revised dimentsions draws x axis labels
   render()
 
   function render () {
