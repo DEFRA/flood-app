@@ -25,7 +25,7 @@ if (window.flood.model.countLevels) {
     const button = document.createElement('button')
     button.innerText = 'View on map'
     button.id = 'map-btn'
-    button.className = 'defra-search-summary__button-map'
+    button.className = 'defra-button-map-s'
     button.addEventListener('click', function (e) {
       e.preventDefault()
       window.flood.maps.createLiveMap('map-live', { btn: 'map-btn', lyr: 'st', ext: extent.join(',') })

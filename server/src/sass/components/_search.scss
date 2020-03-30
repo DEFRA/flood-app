@@ -70,12 +70,14 @@
     margin-bottom:10px;
     &__count {
         @extend .govuk-body;
-        @include govuk-responsive-margin(2, 'bottom');
+        @include govuk-responsive-margin(1, 'bottom');
     }
-    &__button-map {
-        @extend .defra-button-map;
+    .defra-button-map-s {
         position:absolute;
         right:0px;
-        top:0px;
+        top:2px;
+        @include mq ($from: tablet) {
+            top:3px;
+        }
     }
 }

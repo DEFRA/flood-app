@@ -4,7 +4,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <nav {% if model.referer %}id="browserBackContainer"{% endif %}>
+    <nav class="defra-flood-nav" {% if model.referer %}id="browserBackContainer"{% endif %}>
       {% if model.station.riverNavigation and model.station.riverNavigation.navigable %}
         <a href="/river-and-sea-levels?river-id={{model.station.riverNavigation.river_id}}" class="defra-river-nav-link">{{ model.station.riverNavigation.river_name }}</a>
       {% endif %}
@@ -242,6 +242,12 @@
         </dl>
       </div>
     </details>
+  </div>  
+</div>  
+
+<div class="defra-map" id="map-live"></div>
+
+
 {% endblock %}
 
 {% block bodyEnd %}
@@ -249,5 +255,6 @@
 <script>
   window.flood.model = {{ model | dump(2) | safe }}
 </script>
+<script src="{{assetPath}}/js/templates.js"></script>
 <script src="{{assetPath}}/js/station.js"></script>
 {% endblock %}
