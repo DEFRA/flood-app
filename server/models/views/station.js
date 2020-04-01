@@ -180,7 +180,23 @@ class ViewModel {
           : false
       })
     }
-    if (this.station.percentile5) { // Only push typical range if it has a percentil5
+    // if ffoi and has alerts use them
+    if (this.ffoi && this.ffoi.warnings.FALThreshold.length) {
+      this.ffoi.warnings.FALThreshold.forEach(threshold => {
+        thresholds.push({
+          id: threshold.fwis_code,
+          value: threshold.value.toFixed(2),
+          description: `This is the top of the normal range, above this a flood alert may be issued for <a href="/target-area/${threshold.fwis_code}">${threshold.fwa_name}</a>`,
+          shortname: 'Top of normal range',
+          type: threshold.fwa_severity === 3
+            ? 'alert'
+            : 'target-area',
+          isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= threshold.value : false
+        })
+      })
+    // otherwise check if it has a percentile5
+    } else if (this.station.percentile5) {
+      // Only push typical range if it has a percentil5
       thresholds.push({
         id: 'alert',
         value: this.station.percentile5,
@@ -190,12 +206,38 @@ class ViewModel {
         isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= this.station.percentile5 : false
       })
     }
-    if (this.warningThreshold) {
+    // if ffoi and has warnings use them
+    if (this.ffoi && this.ffoi.warnings.FWThreshold.length) {
+      this.ffoi.warnings.FWThreshold.forEach(threshold => {
+        let type = 'target-area'
+        switch (threshold.fwa_severity) {
+          case 1:
+            type = 'severe'
+            break
+          case 2:
+            type = 'warning'
+            break
+          case 4:
+            type = 'removed'
+            break
+        }
+        thresholds.push({
+          id: threshold.fwis_code,
+          value: threshold.value.toFixed(2),
+          description: `A flood warning may be issued for <a href="/target-area/${threshold.fwis_code}">${threshold.fwa_name}</a>`,
+          shortname: 'Flood warning may be issued',
+          type: type,
+          isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= threshold.value : false
+        })
+      })
+      // otherwise check if it has a warningThreshold
+    } else if (this.warningThreshold) {
+      // Only push if it has warningThreshold
       thresholds.push({
         id: 'warning',
         value: this.warningThreshold,
-        description: 'Flood warning may be issued',
-        shortname: 'Flood warning possible',
+        description: 'A flood warning may be issued',
+        shortname: 'Flood warning may be issued',
         type: '',
         isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= this.station.warningThreshold : false
       })
