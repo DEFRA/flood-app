@@ -952,62 +952,33 @@ lab.experiment('Test - /station/{id}', () => {
 
     const fakeStationForecastData = () => {
       return {
-        thresholds: [
+        $: {
+          stationReference: '4690TH',
+          stationName: 'Waterhall',
+          key: 'fwfidata/ENT_7024/THFSTHTS20200402072600051.XML',
+          date: '2020-04-02',
+          time: '07:26:00'
+        },
+        SetofValues: [
           {
-            ffoi_station_id: 80,
-            ffoi_station_threshold_id: 490,
-            fwa_name: 'River Lee at Hertford',
-            fwa_severity: -1,
-            fwa_type: 'a',
-            fwis_code: '062WAF46MidLee',
-            value: 0.6
-          }, {
-            ffoi_station_id: 80,
-            ffoi_station_threshold_id: 492,
-            fwa_name: 'River Lee at Hertford and Ware',
-            fwa_severity: -1,
-            fwa_type: 'w',
-            fwis_code: '062FWF46Hertford',
-            value: 0.85
-          }, {
-            ffoi_station_id: 80,
-            ffoi_station_threshold_id: 492,
-            fwa_name: 'River Lee from Lemsford to Hertford',
-            fwa_severity: -1,
-            fwa_type: 'w',
-            fwis_code: '062FWF46Hertford',
-            value: 0.85
+            $: {
+              parameter: 'Water Level',
+              qualifier: 'Stage',
+              dataType: 'Instantaneous',
+              period: '15 min',
+              characteristic: 'Forecast',
+              units: 'm',
+              startDate: '2020-03-30',
+              startTime: '06:45:00',
+              endDate: '2020-04-09',
+              endTime: '06:45:00'
+            },
+            Value: [{
+              _: 'NaN',
+              $: { date: '2020-03-30', time: '06:45:00', flag1: '5' }
+            }]
           }
-        ],
-        values: {
-          $: {
-            stationReference: '4690TH',
-            stationName: 'Waterhall',
-            key: 'fwfidata/ENT_7024/THFSTHTS20200402072600051.XML',
-            date: '2020-04-02',
-            time: '07:26:00'
-          },
-          SetofValues: [
-            {
-              $: {
-                parameter: 'Water Level',
-                qualifier: 'Stage',
-                dataType: 'Instantaneous',
-                period: '15 min',
-                characteristic: 'Forecast',
-                units: 'm',
-                startDate: '2020-03-30',
-                startTime: '06:45:00',
-                endDate: '2020-04-09',
-                endTime: '06:45:00'
-              },
-              Value: [{
-                _: 'NaN',
-                $: { date: '2020-03-30', time: '06:45:00', flag1: '5' }
-              }]
-            }
-          ]
-        }
+        ]
       }
     }
 
