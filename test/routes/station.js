@@ -797,6 +797,16 @@ lab.experiment('Test - /station/{id}', () => {
       }
     }
 
+    const fakeTelemetryData = () => [
+      {
+        ts: '2020-03-23T06:00Z',
+        _: 3.589,
+        err: false,
+        formattedTime: '6:00am',
+        dateWhen: 'today'
+      }
+    ]
+
     const fakeRiverData = () => {
       return {
         agency_name: 'Waterhall',
@@ -828,49 +838,185 @@ lab.experiment('Test - /station/{id}', () => {
       }
     }
 
-    const fakeTelemetryData = () => [
+    const fakeImpactsData = () => [
       {
-        ts: '2020-03-23T06:00Z',
-        _: 3.589,
-        err: false,
-        formattedTime: '6:00am',
-        dateWhen: 'today'
+        impactid: 3765,
+        gauge: 'River Lee at Waterhall',
+        rloiid: 7333,
+        value: '0.502',
+        units: 'mALD',
+        geom: '0101000020E6100000DA1D520C9068BABFF12BD67091E34940',
+        coordinates: '{"type":"Point","coordinates":[-0.103158,51.777876]}',
+        comment: 'Road flooding in Bayfordbury Rd',
+        shortname: 'Flooding to Bayfordbury Road',
+        description: 'Flooding to Bayfordbury Road',
+        type: 'Road Impact',
+        obsfloodyear: null,
+        obsfloodmonth: null,
+        source: 'Flood Resiliance',
+        telemetrylatest: '0.236',
+        telemetryactive: false,
+        forecastmax: '0.269',
+        forecastactive: false
+      },
+      {
+        impactid: 3766,
+        gauge: 'River Lee at Waterhall',
+        rloiid: 7333,
+        value: '0.728',
+        units: 'mALD',
+        geom: '0101000020E6100000F22554707841B4BFF3E49A0299E34940',
+        coordinates: '{"type":"Point","coordinates":[-0.079124,51.778107]}',
+        comment: 'Blockage on Brickendon Brook. Road closed to Pub',
+        shortname: 'Flooding at Brickendon Brook',
+        description: 'Flooding at Brickendon Brook, road close to pub',
+        type: 'Road Impact',
+        obsfloodyear: null,
+        obsfloodmonth: null,
+        source: 'Flood Resiliance',
+        telemetrylatest: '0.236',
+        telemetryactive: false,
+        forecastmax: '0.269',
+        forecastactive: false
+      },
+      {
+        impactid: 3767,
+        gauge: 'River Lee at Waterhall',
+        rloiid: 7333,
+        value: '0.745',
+        units: 'mALD',
+        geom: '0101000020E61000004F04711E4E60B6BFCA6B257497E44940',
+        coordinates: '{"type":"Point","coordinates":[-0.087407,51.785872]}',
+        comment: 'Property Flooding - Harts Horns Pub',
+        shortname: 'Floodining at pub',
+        description: 'Flooding at pub on Hornsmill Road',
+        type: 'Property Impact',
+        obsfloodyear: null,
+        obsfloodmonth: null,
+        source: 'Flood Resiliance',
+        telemetrylatest: '0.236',
+        telemetryactive: false,
+        forecastmax: '0.269',
+        forecastactive: false
+      },
+      {
+        impactid: 3768,
+        gauge: 'River Lee at Waterhall',
+        rloiid: 7333,
+        value: '0.954',
+        units: 'mALD',
+        geom: '0101000020E6100000F99FFCDD3B6AB8BF42D13C8045E44940',
+        coordinates: '{"type":"Point","coordinates":[-0.095371,51.783371]}',
+        comment: 'Property Flooding - Riverside Garden Centre, Hornsmill, Warehams Lanes',
+        shortname: 'Flooding to property',
+        description: 'Flooding to property',
+        type: 'Property Impact',
+        obsfloodyear: null,
+        obsfloodmonth: null,
+        source: 'Flood Resiliance',
+        telemetrylatest: '0.236',
+        telemetryactive: false,
+        forecastmax: '0.269',
+        forecastactive: false
+      }
+    ]
+    const fakeForecastThresholds = () => [
+      {
+        ffoi_station_threshold_id: 490,
+        ffoi_station_id: 80,
+        fwis_code: '062WAF46MidLee',
+        value: 0.6,
+        fwa_name: 'River Lee at Hertford',
+        fwa_type: 'a',
+        fwa_severity: -1
+      },
+      {
+        ffoi_station_threshold_id: 492,
+        ffoi_station_id: 80,
+        fwis_code: '062FWF46Hertford',
+        value: 0.85,
+        fwa_name: 'River Lee at Hertford and Ware',
+        fwa_type: 'w',
+        fwa_severity: -1
+      },
+      {
+        ffoi_station_threshold_id: 491,
+        ffoi_station_id: 80,
+        fwis_code: '062FWF46Lemsford',
+        value: 0.85,
+        fwa_name: 'River Lee from Lemsford to Hertford',
+        fwa_type: 'w',
+        fwa_severity: -1
       }
     ]
 
-    const fakeImpactsData = () => []
-    const fakeThresholdsData = () => [
-      {
-        ffoi_station_id: 80,
-        ffoi_station_threshold_id: 490,
-        fwa_name: 'River Lee at Hertford',
-        fwa_severity: -1,
-        fwa_type: 'a',
-        fwis_code: '062WAF46MidLee',
-        value: 0.6
-      }, {
-        ffoi_station_id: 80,
-        ffoi_station_threshold_id: 492,
-        fwa_name: 'River Lee at Hertford and Ware',
-        fwa_severity: -1,
-        fwa_type: 'w',
-        fwis_code: '062FWF46Hertford',
-        value: 0.85
-      }, {
-        ffoi_station_id: 80,
-        ffoi_station_threshold_id: 492,
-        fwa_name: 'River Lee from Lemsford to Hertford',
-        fwa_severity: -1,
-        fwa_type: 'w',
-        fwis_code: '062FWF46Hertford',
-        value: 0.85
-      }]
+    const fakeStationForecastData = () => {
+      return {
+        thresholds: [
+          {
+            ffoi_station_id: 80,
+            ffoi_station_threshold_id: 490,
+            fwa_name: 'River Lee at Hertford',
+            fwa_severity: -1,
+            fwa_type: 'a',
+            fwis_code: '062WAF46MidLee',
+            value: 0.6
+          }, {
+            ffoi_station_id: 80,
+            ffoi_station_threshold_id: 492,
+            fwa_name: 'River Lee at Hertford and Ware',
+            fwa_severity: -1,
+            fwa_type: 'w',
+            fwis_code: '062FWF46Hertford',
+            value: 0.85
+          }, {
+            ffoi_station_id: 80,
+            ffoi_station_threshold_id: 492,
+            fwa_name: 'River Lee from Lemsford to Hertford',
+            fwa_severity: -1,
+            fwa_type: 'w',
+            fwis_code: '062FWF46Hertford',
+            value: 0.85
+          }
+        ],
+        values: {
+          $: {
+            stationReference: '4690TH',
+            stationName: 'Waterhall',
+            key: 'fwfidata/ENT_7024/THFSTHTS20200402072600051.XML',
+            date: '2020-04-02',
+            time: '07:26:00'
+          },
+          SetofValues: [
+            {
+              $: {
+                parameter: 'Water Level',
+                qualifier: 'Stage',
+                dataType: 'Instantaneous',
+                period: '15 min',
+                characteristic: 'Forecast',
+                units: 'm',
+                startDate: '2020-03-30',
+                startTime: '06:45:00',
+                endDate: '2020-04-09',
+                endTime: '06:45:00'
+              },
+              Value: [{
+                _: 'NaN',
+                $: { date: '2020-03-30', time: '06:45:00', flag1: '5' }
+              }]
+            }
+          ]
+        }
+      }
+    }
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeForecastThresholds)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
+    sandbox.stub(floodService, 'getStationForecastData').callsFake(fakeStationForecastData)
 
     const stationPlugin = {
       plugin: {
