@@ -55,7 +55,7 @@ module.exports = {
     const river = await floodService.getRiverStationByStationId(id)
 
     // Check if it's a forecast station
-    if (Object.keys(thresholds).length) { // DL: getStationForecastThresholds can return an empty object??
+    if (thresholds.length) { // DL: getStationForecastThresholds can return an empty object??
       // Forecast station
       const values = await floodService.getStationForecastData(station.wiski_id)
       const forecast = { thresholds, values }

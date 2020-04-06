@@ -39,7 +39,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <div class="defra-service-error govuk-!-margin-bottom-7">
+    <div class="defra-service-error govuk-!-margin-bottom-2">
       <h2 class="defra-service-error__title" id="error-summary-title">
         This measuring station is currently offline
       </h2>
@@ -55,7 +55,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <div class="defra-service-error govuk-!-margin-bottom-7">
+    <div class="defra-service-error govuk-!-margin-bottom-2">
       <h2 class="defra-service-error__title" id="error-summary-title">
         This measuring station is closed
       </h2>
@@ -165,14 +165,18 @@
         </dt>
         <dd class="defra-flood-impact-list__value" data-id="{{ threshold.id }}" data-level="{{ threshold.value }}" data-name="{{ threshold.shortname }}">
           <div class="defra-flood-impact-list__container">
-            {{ threshold.description }}
+            {{ threshold.description | safe }}
             {% if threshold.type != 'latest' %}
             <span class="defra-flood-impact-list__action"></span>
             {% endif %}
           </div>
-          {# {% if station is ffoi and warning is active %}
-          <span class="defra-flood-impact-list__( can change )warning" title="(can change)Flood warning has been issued">!</span>
-          {% endif %} #}
+          {% if threshold.type === 'alert' %}
+          <span class="defra-flood-impact-list__alert" title="Flood alert has been issued">!</span>
+          {% elif threshold.type === 'warning' %}
+          <span class="defra-flood-impact-list__warning" title="Flood warning has been issued">!</span>
+          {% elif threshold.type === 'severe' %}
+          <span class="defra-flood-impact-list__severe" title="Severe flood warning has been issued">!</span>
+          {% endif %}
         </dd>
       </div>
       {% endfor %}

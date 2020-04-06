@@ -747,4 +747,270 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.payload).to.contain('at <time datetime="">6:00am</time>')
     Code.expect(response.payload).to.contain('3.59m')
   })
+  lab.test('GET station/7333 ffoi ', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationData = () => {
+      return {
+        actual_ngr: 'TL2998009950',
+        agency_name: 'Waterhall',
+        area: 'Hertfordshre and North London',
+        catchment: 'Upper Lee',
+        centroid: '0101000020E6100000AB283E556416BEBF7AE12D36F6E24940',
+        comments: '',
+        coordinates: '{"type":"Point","coordinates":[-0.11752917367099,51.7731387828853]}',
+        date_highest_level: '2014-02-07T08:15:00.000Z',
+        date_open: '1985-01-01T00:00:00.000Z',
+        date_por_max: '2014-02-07T08:15:00.000Z',
+        date_por_min: '1990-07-09T20:15:00.000Z',
+        display_area: 'North East Thames',
+        display_catchment: 'Upper Lee',
+        display_region: 'South East',
+        external_name: 'Waterhall',
+        geography: '0101000020E6100000AB283E556416BEBF7AE12D36F6E24940',
+        highest_level: '1.155',
+        location_info: 'Birch Green',
+        percentile_5: '0.6',
+        percentile_95: '0.12',
+        period_of_record: 'to date',
+        por_max_value: '1.155',
+        por_min_value: '0.045',
+        post_process: false,
+        qualifier: 'u',
+        region: 'Thames',
+        rloi_id: 7333,
+        site_max: '2',
+        stage_datum: '43.594',
+        station_type: 'S',
+        status: 'Active',
+        status_date: null,
+        status_reason: '',
+        subtract: null,
+        telemetry_context_id: '1186383',
+        telemetry_id: '4690TH',
+        wiski_id: '4690TH',
+        wiski_river_name: 'River Lee',
+        x_coord_actual: 529980,
+        x_coord_display: 529980,
+        y_coord_actual: 209950,
+        y_coord_display: 209950
+      }
+    }
+
+    const fakeTelemetryData = () => [
+      {
+        ts: '2020-03-23T06:00Z',
+        _: 3.589,
+        err: false,
+        formattedTime: '6:00am',
+        dateWhen: 'today'
+      }
+    ]
+
+    const fakeRiverData = () => {
+      return {
+        agency_name: 'Waterhall',
+        catchment: 'Upper Lee',
+        centroid: '0101000020E6100000AB283E556416BEBF7AE12D36F6E24940',
+        down: 7357,
+        external_name: 'Waterhall',
+        iswales: false,
+        lat: 51.7731387828853,
+        lon: -0.11752917367099,
+        navigable: true,
+        percentile_5: '0.6',
+        percentile_95: '0.12',
+        qualifier: 'u',
+        rank: 5,
+        region: 'Thames',
+        river_id: 'river-lee',
+        river_name: 'River Lee',
+        rloi_id: 7333,
+        station_type: 'S',
+        status: 'Active',
+        telemetry_id: '4690TH',
+        up: 7332,
+        value: '0.247',
+        value_erred: false,
+        value_timestamp: '2020-04-01T12:00:00.000Z',
+        view_rank: 3,
+        wiski_river_name: 'River Lee'
+      }
+    }
+
+    const fakeImpactsData = () => [
+      {
+        impactid: 3765,
+        gauge: 'River Lee at Waterhall',
+        rloiid: 7333,
+        value: '0.502',
+        units: 'mALD',
+        geom: '0101000020E6100000DA1D520C9068BABFF12BD67091E34940',
+        coordinates: '{"type":"Point","coordinates":[-0.103158,51.777876]}',
+        comment: 'Road flooding in Bayfordbury Rd',
+        shortname: 'Flooding to Bayfordbury Road',
+        description: 'Flooding to Bayfordbury Road',
+        type: 'Road Impact',
+        obsfloodyear: null,
+        obsfloodmonth: null,
+        source: 'Flood Resiliance',
+        telemetrylatest: '0.236',
+        telemetryactive: false,
+        forecastmax: '0.269',
+        forecastactive: false
+      },
+      {
+        impactid: 3766,
+        gauge: 'River Lee at Waterhall',
+        rloiid: 7333,
+        value: '0.728',
+        units: 'mALD',
+        geom: '0101000020E6100000F22554707841B4BFF3E49A0299E34940',
+        coordinates: '{"type":"Point","coordinates":[-0.079124,51.778107]}',
+        comment: 'Blockage on Brickendon Brook. Road closed to Pub',
+        shortname: 'Flooding at Brickendon Brook',
+        description: 'Flooding at Brickendon Brook, road close to pub',
+        type: 'Road Impact',
+        obsfloodyear: null,
+        obsfloodmonth: null,
+        source: 'Flood Resiliance',
+        telemetrylatest: '0.236',
+        telemetryactive: false,
+        forecastmax: '0.269',
+        forecastactive: false
+      },
+      {
+        impactid: 3767,
+        gauge: 'River Lee at Waterhall',
+        rloiid: 7333,
+        value: '0.745',
+        units: 'mALD',
+        geom: '0101000020E61000004F04711E4E60B6BFCA6B257497E44940',
+        coordinates: '{"type":"Point","coordinates":[-0.087407,51.785872]}',
+        comment: 'Property Flooding - Harts Horns Pub',
+        shortname: 'Floodining at pub',
+        description: 'Flooding at pub on Hornsmill Road',
+        type: 'Property Impact',
+        obsfloodyear: null,
+        obsfloodmonth: null,
+        source: 'Flood Resiliance',
+        telemetrylatest: '0.236',
+        telemetryactive: false,
+        forecastmax: '0.269',
+        forecastactive: false
+      },
+      {
+        impactid: 3768,
+        gauge: 'River Lee at Waterhall',
+        rloiid: 7333,
+        value: '0.954',
+        units: 'mALD',
+        geom: '0101000020E6100000F99FFCDD3B6AB8BF42D13C8045E44940',
+        coordinates: '{"type":"Point","coordinates":[-0.095371,51.783371]}',
+        comment: 'Property Flooding - Riverside Garden Centre, Hornsmill, Warehams Lanes',
+        shortname: 'Flooding to property',
+        description: 'Flooding to property',
+        type: 'Property Impact',
+        obsfloodyear: null,
+        obsfloodmonth: null,
+        source: 'Flood Resiliance',
+        telemetrylatest: '0.236',
+        telemetryactive: false,
+        forecastmax: '0.269',
+        forecastactive: false
+      }
+    ]
+    const fakeForecastThresholds = () => [
+      {
+        ffoi_station_threshold_id: 490,
+        ffoi_station_id: 80,
+        fwis_code: '062WAF46MidLee',
+        value: 0.6,
+        fwa_name: 'River Lee at Hertford',
+        fwa_type: 'a',
+        fwa_severity: -1
+      },
+      {
+        ffoi_station_threshold_id: 492,
+        ffoi_station_id: 80,
+        fwis_code: '062FWF46Hertford',
+        value: 0.85,
+        fwa_name: 'River Lee at Hertford and Ware',
+        fwa_type: 'w',
+        fwa_severity: -1
+      },
+      {
+        ffoi_station_threshold_id: 491,
+        ffoi_station_id: 80,
+        fwis_code: '062FWF46Lemsford',
+        value: 0.85,
+        fwa_name: 'River Lee from Lemsford to Hertford',
+        fwa_type: 'w',
+        fwa_severity: -1
+      }
+    ]
+
+    const fakeStationForecastData = () => {
+      return {
+        $: {
+          stationReference: '4690TH',
+          stationName: 'Waterhall',
+          key: 'fwfidata/ENT_7024/THFSTHTS20200402072600051.XML',
+          date: '2020-04-02',
+          time: '07:26:00'
+        },
+        SetofValues: [
+          {
+            $: {
+              parameter: 'Water Level',
+              qualifier: 'Stage',
+              dataType: 'Instantaneous',
+              period: '15 min',
+              characteristic: 'Forecast',
+              units: 'm',
+              startDate: '2020-03-30',
+              startTime: '06:45:00',
+              endDate: '2020-04-09',
+              endTime: '06:45:00'
+            },
+            Value: [{
+              _: 'NaN',
+              $: { date: '2020-03-30', time: '06:45:00', flag1: '5' }
+            }]
+          }
+        ]
+      }
+    }
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeForecastThresholds)
+    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
+    sandbox.stub(floodService, 'getStationForecastData').callsFake(fakeStationForecastData)
+
+    const stationPlugin = {
+      plugin: {
+        name: 'station',
+        register: (server, options) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(stationPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/station/7333'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('<a href="/target-area/062FWF46Hertford">River Lee at Hertford and Ware</a>')
+  })
 })
