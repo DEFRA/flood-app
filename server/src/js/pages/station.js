@@ -68,7 +68,7 @@ if (chart.length) {
       name: threshold.shortname
     })
   } else {
-    const typical = document.querySelector('.defra-flood-impact-list__value[data-id="alert"], .defra-flood-impact-list__value[data-id="pc95"]')
+    const typical = document.querySelector('.defra-flood-impact-list__value[data-normal="true"]:last-child')
     if (typical) {
       lineChart.addThreshold({
         id: typical.getAttribute('data-id'),
