@@ -224,6 +224,10 @@ table.table-levels {
         stroke-width: 1;
         shape-rendering: crispEdges;
     }
+    .axis.x .tick--hidden {
+        visibility: hidden;
+        pointer-events: none;
+    }
     .axis.x .tick line {
         visibility:hidden;
     }

@@ -167,15 +167,8 @@ function LineChart (containerId, data) {
       remove.append('rect').attr('x', -6).attr('y', -6).attr('width', 20).attr('height', 20)
       remove.append('line').attr('x1', -0.5).attr('y1', -0.5).attr('x2', 7.5).attr('y2', 7.5)
       remove.append('line').attr('x1', 7.5).attr('y1', -0.5).attr('x2', -0.5).attr('y2', 7.5)
-      /*
-      remove.append('line').attr('x1', 0).attr('y1', 0).attr('x2', 8).attr('y2', 8)
-      remove.append('line').attr('x1', 8).attr('y1', 0).attr('x2', 0).attr('y2', 8)
-      */
       // Set individual elements size and position
       const textWidth = text.node().getBBox().width
-      // const textHeight = text.node().getBBox().height
-      // labelBg.attr('width', textWidth + 24 + 18 ).attr('height', textHeight + 18)
-      // labelBgHeight = labelBg.node().getBBox().height
       labelBgPath.attr('d', 'm-0.5,-0.5 l' + Math.round(textWidth + 40) + ',0 l0,36 l-' + (Math.round(textWidth + 40) - 50) + ',0 l-7.5,7.5 l-7.5,-7.5 l-35,0 l0,-36 l0,0')
       text.attr('x', 10).attr('y', 22)
       remove.attr('transform', 'translate(' + Math.round(textWidth + 20) + ',' + 14 + ')')
@@ -196,10 +189,6 @@ function LineChart (containerId, data) {
         updateDimensions()
         render()
       })
-      /*
-      thresholdContainer.append('line').attr('class', 'threshold-cross').attr('x1', 17).attr('y1', -3).attr('x2', 23).attr('y2', 3)
-      thresholdContainer.append('line').attr('class', 'threshold-cross').attr('x1', 23).attr('y1', -3).attr('x2', 17).attr('y2', 3)
-      */
       // thresholdContainer.append('circle').attr('r', 4.5).attr('class', 'threshold-point')
       thresholdContainer.on('click', function () {
         d3.event.stopPropagation()
@@ -229,16 +218,7 @@ function LineChart (containerId, data) {
     timeX = Math.floor(x(new Date(data.now)))
     svg.select('.time-line').attr('y1', 0).attr('y2', height)
     now.attr('y1', 0).attr('y2', height).attr('transform', 'translate(' + timeX + ',0)')
-    // const textHeight = now.select('.time-now-text').node().getBBox().height
     now.select('.time-now-text').attr('y', height + 12).attr('dy', '0.71em')
-    // Add 'today' class to x axis tick
-    /*
-    svg.selectAll('.x .tick')
-      .filter(function (d) {
-        return new Date(d).getDay() === new Date(data.now).getDay() && new Date(d).getUTCHours() === 12
-      })
-      .attr('class', 'tick tick-today')
-    */
 
     // Add height to locator line
     svg.select('.locator-line').attr('y1', 0).attr('y2', height)
@@ -256,6 +236,17 @@ function LineChart (containerId, data) {
     // Update locator position
     locator.attr('transform', 'translate(' + locatorX + ',' + 0 + ')')
     locator.select('.locator-point').attr('transform', 'translate(' + 0 + ',' + locatorY + ')')
+
+    // Hide x axis labels that overlap with time now label
+    const timeNowX = now.select('.time-now-text').node().getBoundingClientRect().left
+    const timeNowWidth = now.select('.time-now-text').node().getBoundingClientRect().width
+    d3.selectAll('.x .tick').each(function (d) {
+      console.log('Tick')
+      console.log(this.getBoundingClientRect())
+      const tickX = this.getBoundingClientRect().left
+      const tickWidth = this.getBoundingClientRect().width
+      d3.select(this).classed('tick--hidden', (tickX + tickWidth) > timeNowX && tickX <= (timeNowX + timeNowWidth))
+    })
   }
 
   function modifyAxis () {
@@ -307,7 +298,7 @@ function LineChart (containerId, data) {
     margin.left = 28
     margin.right = 28
 
-    let xCutOffLeft, xCutOffRight
+    // let xCutOffLeft, xCutOffRight
 
     // Get dimensions based on parent size
     const parentWidth = Math.floor(d3.select('#' + containerId).node().getBoundingClientRect().width)
@@ -319,57 +310,38 @@ function LineChart (containerId, data) {
     // X Axis labels
     if (window.innerWidth > windowBreakPoint && parentWidth > svgBreakPoint) {
       // Tablet
-      xCutOffLeft = x.invert(20)
-      xCutOffRight = x.invert(timeX - 75) // After which labels need to be hidden
       if (daysInRange < 7) {
         // Tablet daily
         xAxis.ticks(d3.timeHour, 12).tickFormat(function (d) {
-          if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
-            const formatter = d3.timeFormat('%a, %e %b')
-            return formatter(d)
-          } else {
-            return null
-          }
+          const formatter = d3.timeFormat('%a, %e %b')
+          return formatter(d)
         })
       } else {
         // Tablet monthly
         xAxis.ticks(d3.timeMonth, 1).tickFormat(function (d) {
-          if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
-            const formatter = d3.timeFormat('%e %b')
-            return formatter(d)
-          } else {
-            return null
-          }
+          const formatter = d3.timeFormat('%e %b')
+          return formatter(d)
         })
       }
       margin.left = 34
       margin.right = 34
     } else {
       // Mobile
-      xCutOffLeft = x.invert(10)
-      xCutOffRight = x.invert(timeX - 50) // After which labels need to be hidden
       if (daysInRange < 7) {
         // Mobile daily
         xAxis.ticks(d3.timeHour, 12).tickFormat(function (d) {
-          if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
-            const formatter = d3.timeFormat('%-e/%-m')
-            return formatter(d)
-          } else {
-            return null
-          }
+          const formatter = d3.timeFormat('%-e/%-m')
+          return formatter(d)
         })
       } else {
         // Mobile monthly
         xAxis.ticks(d3.timeMonth, 1).tickFormat(function (d) {
-          if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
-            const formatter = d3.timeFormat('%-e/%-m')
-            return formatter(d)
-          } else {
-            return null
-          }
+          const formatter = d3.timeFormat('%-e/%-m')
+          return formatter(d)
         })
       }
     }
+
     width = parentWidth - margin.left - margin.right
     height = parentHeight - margin.top - margin.bottom
 
