@@ -374,7 +374,6 @@ table.table-levels {
     .threshold-label__text {
         @include govuk-font($size: 16);
         fill: $govuk-text-colour;
-        dominant-baseline:baseline;
     }
     /*
     .threshold-cross {
