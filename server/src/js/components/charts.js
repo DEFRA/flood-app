@@ -245,7 +245,7 @@ function LineChart (containerId, data) {
       console.log(this.getBoundingClientRect())
       const tickX = this.getBoundingClientRect().left
       const tickWidth = this.getBoundingClientRect().width
-      d3.select(this).classed('tick--hidden', (tickX + tickWidth) > timeNowX && tickX <= (timeNowX + timeNowWidth))
+      d3.select(this).classed('tick--hidden', (tickX + tickWidth + 3) > timeNowX && tickX <= (timeNowX + timeNowWidth + 3))
     })
   }
 
