@@ -203,7 +203,7 @@ class ViewModel {
     } else if (this.station.percentile5) {
       // Only push typical range if it has a percentil5
       thresholds.push({
-        id: 'pc95',
+        id: 'pc5',
         value: this.station.percentile5,
         description: 'This is the top of the normal range, above this flooding to low lying land is possible',
         shortname: 'Top of normal range',
