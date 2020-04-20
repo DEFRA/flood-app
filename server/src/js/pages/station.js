@@ -68,7 +68,7 @@ if (chart.length) {
       name: threshold.shortname
     })
   } else {
-    const typical = document.querySelector('.defra-flood-impact-list__value[data-id="alert"], .defra-flood-impact-list__value[data-id="pc95"]')
+    const typical = document.querySelector('.defra-flood-impact-list__value[data-normal="true"]:last-child')
     if (typical) {
       lineChart.addThreshold({
         id: typical.getAttribute('data-id'),
@@ -79,7 +79,7 @@ if (chart.length) {
   }
 
   // Add threshold buttons
-  document.querySelectorAll('.defra-flood-impact-list__value').forEach(value => {
+  Array.from(document.querySelectorAll('.defra-flood-impact-list__value')).forEach(value => {
     const button = document.createElement('button')
     button.innerHTML = 'Show on chart'
     button.className = 'defra-button-text-s'

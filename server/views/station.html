@@ -23,133 +23,147 @@
 
 {# For multi station #}
 {% if model.station.isMulti %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-      {% if model.station.isDownstream %}
-      <p class="govuk-!-margin-bottom-8">This measuring station takes 2 measurements. You're viewing the downstream level. <a href="/station/{{ model.station.id }}">View the upstream level.</a></p>
-      {% else %}
-      <p class="govuk-!-margin-bottom-8">This measuring station takes 2 measurements. You're viewing the upstream level. <a href="/station/{{ model.station.id }}/downstream">View the downstream level.</a></p>
-      {% endif %}
-    </div>
-</div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        {% if model.station.isDownstream %}
+        <p class="govuk-!-margin-bottom-8">This measuring station takes 2 measurements. You're viewing the downstream level. <a href="/station/{{ model.station.id }}">View the upstream level.</a></p>
+        {% else %}
+        <p class="govuk-!-margin-bottom-8">This measuring station takes 2 measurements. You're viewing the upstream level. <a href="/station/{{ model.station.id }}/downstream">View the downstream level.</a></p>
+        {% endif %}
+      </div>
+  </div>
 {% endif %}
 
 {# if station is suspended #}
 {% if model.status === 'suspended' %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <div class="defra-service-error govuk-!-margin-bottom-2">
-      <h2 class="defra-service-error__title" id="error-summary-title">
-        This measuring station is currently offline
-      </h2>
-      <p class="govuk-body govuk-!-margin-bottom-0">
-        We are working to get it back online. You can <a href="/river-and-sea-levels">check another river or sea level</a>.
-      </p>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <div class="defra-service-error govuk-!-margin-bottom-2">
+        <h2 class="defra-service-error__title" id="error-summary-title">
+          This measuring station is currently offline
+        </h2>
+        <p class="govuk-body govuk-!-margin-bottom-0">
+          {% if model.station.statusReason %}
+            {{ model.station.statusReason}}
+          {% else %}
+            We are working to get it back online.
+          {% endif %} 
+          You can <a href="/river-and-sea-levels">check another river or sea level</a>.
+        </p>
+      </div>
     </div>
   </div>
-</div>
 
 {# if station is closed #}
 {% elif model.status === 'closed' %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <div class="defra-service-error govuk-!-margin-bottom-2">
-      <h2 class="defra-service-error__title" id="error-summary-title">
-        This measuring station is closed
-      </h2>
-      <p class="govuk-body govuk-!-margin-bottom-0">
-        No data is available. You can <a href="/river-and-sea-levels">check another river or sea level</a>.
-      </p>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <div class="defra-service-error govuk-!-margin-bottom-2">
+        <h2 class="defra-service-error__title" id="error-summary-title">
+          This measuring station is closed
+        </h2>
+        <p class="govuk-body govuk-!-margin-bottom-0">
+          No data is available. You can <a href="/river-and-sea-levels">check another river or sea level</a>.
+        </p>
+      </div>
     </div>
   </div>
-</div>
 
 {% else %}
 
-{# Latest Status #}
-{% if model.telemetry.length > 0 %}
-{% if model.station.isActive and not model.recentValue.err %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <h2 class="govuk-visually-hidden">Station summary</h2>
-    <div class="defra-flood-statistics">
-      <dl class="defra-flood-statistics__list">
-      {# if station has hasPercentiles, this should exclude Coastal #}
-        {% if model.station.hasPercentiles %}
-        <div class="defra-flood-statistics__row"> 
-          <dt class="defra-flood-statistics__key">Status</dt>
-          <dd class="defra-flood-statistics__value">
-            <strong class="defra-flood-statistics__impact defra-flood-statistics__impact{% if model.station.state === 'Normal' %}--normal{% elif model.station.state === 'High' %}--high{% endif %}">
-              {{ model.station.state }}
-            </strong>
-              {{ model.station.stateInformation}} <span class="govuk-visually-hidden">level here</span>
-          </dd>
+  {# Latest Status #}
+  {% if model.readings %}
+    {% if model.station.isActive and not model.recentValue.err %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {% if model.outOfDate === true %}
+            <div class="defra-service-error govuk-!-margin-bottom-8">
+              <h2 class="defra-service-error__title" id="error-summary-title">Sorry, this data feed was interrupted</h2>
+              <p class="govuk-body govuk-!-margin-bottom-0">
+                Normal service resumed at {{ model.station.formattedStatusTime }} on {{ model.station.formattedStatusDate }}.
+              </p>
+            </div>
+          {% endif %}
+          <h2 class="govuk-visually-hidden">Station summary</h2>
+          <div class="defra-flood-statistics">
+            <dl class="defra-flood-statistics__list">
+            {# if station has hasPercentiles, this should exclude Coastal #}
+              {% if model.station.hasPercentiles %}
+              <div class="defra-flood-statistics__row"> 
+                <dt class="defra-flood-statistics__key">Status</dt>
+                <dd class="defra-flood-statistics__value">
+                  <strong class="defra-flood-statistics__impact defra-flood-statistics__impact{% if model.station.state === 'Normal' %}--normal{% elif model.station.state === 'High' %}--high{% endif %}">
+                    {{ model.station.state }}
+                  </strong>
+                    {{ model.station.stateInformation}} <span class="govuk-visually-hidden">level here</span>
+                </dd>
+              </div>
+              {% endif %}
+              <div class="defra-flood-statistics__row">
+                <dt class="defra-flood-statistics__key">Height</dt>
+                <dd class="defra-flood-statistics__value">
+                  <strong class="defra-flood-statistics__impact">
+                  {{ (model.station.recentValue._).toFixed(2) }}m
+                  </strong>
+                    at <time datetime="">{{ model.station.recentValue.formattedTime }}</time> {{ model.station.recentValue.dateWhen }}
+                </dd>
+              </div>
+            </dl>
+          </div>
         </div>
-        {% endif %}
+      </div>
 
-        <div class="defra-flood-statistics__row">
-          <dt class="defra-flood-statistics__key">Height</dt>
-          <dd class="defra-flood-statistics__value">
-            <strong class="defra-flood-statistics__impact">
-            {{ (model.station.recentValue._).toFixed(2) }}m
-            </strong>
-              at <time datetime="">{{ model.station.recentValue.formattedTime }}</time> {{ model.station.recentValue.dateWhen }}
-          </dd>
+    {% else %}
+
+      {# if latest mesurement is in error #}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <div class="defra-service-error govuk-!-margin-bottom-3">
+            <h2 class="defra-service-error__title" id="error-summary-title">
+              Sorry, there is a problem with the latest measurement
+            </h2>
+            <p class="govuk-body govuk-!-margin-bottom-0">
+              The latest measurement is unreliable. This could be due to something like very low river levels, or a fault with the measuring equipment.
+            </p>
+          </div>
         </div>
-      </dl>
+      </div>
+    {% endif %}
+
+  {% else %}
+    
+      <div class="defra-service-error govuk-!-margin-bottom-3">
+        <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>
+        <p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>
+      </div>
+    
+  {% endif %}
+{% endif %}
+
+{# Graph #}
+{% if model.station.isActive and model.readings %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <figure class="defra-line-chart" aria-hidden="true" hidden>
+        <figcaption class="govuk-heading-m govuk-!-margin-bottom-7">Height over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
+        <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
+      </figure>
     </div>
   </div>
-</div>
 
-{% else %}
-
-{# if latest mesurement is in error #}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <div class="defra-service-error govuk-!-margin-bottom-3">
-      <h2 class="defra-service-error__title" id="error-summary-title">
-        Sorry, there is a problem with the latest measurement
-      </h2>
-      <p class="govuk-body govuk-!-margin-bottom-0">
-        The latest measurement is unreliable. This could be due to something like very low river levels, or a fault with the measuring equipment.
-      </p>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <figure class="defra-line-chart" aria-hidden="true" hidden>
+        <figcaption class="defra-line-chart__caption">Water level measured over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
+        <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
+      </figure>
     </div>
   </div>
-</div>
-{% endif %}
-
-{% else %}
-
-<div class="defra-service-error govuk-!-margin-bottom-3">
-  <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>
-  <p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>
-</div>
 
 {% endif %}
-{% endif %}
-
-{# Graph and Thresholds #}
-{% if model.station.isActive and model.telemetry.length > 0 %}
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <figure class="defra-line-chart" aria-hidden="true" hidden>
-      <figcaption class="govuk-heading-m govuk-!-margin-bottom-7">Height over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
-      <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
-    </figure>
-  </div>
-</div>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <figure class="defra-line-chart" aria-hidden="true" hidden>
-      <figcaption class="defra-line-chart__caption">Water level measured over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
-      <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
-    </figure>
-  </div>
-</div>
 
 {# Impacts and thresholds #}
 {% if model.thresholds.length > 0 %}
@@ -163,7 +177,7 @@
         <dt class="defra-flood-impact-list__key">
           {{ threshold.value }}m
         </dt>
-        <dd class="defra-flood-impact-list__value" data-id="{{ threshold.id }}" data-level="{{ threshold.value }}" data-name="{{ threshold.shortname }}">
+        <dd class="defra-flood-impact-list__value" data-id="{{ threshold.id }}" data-level="{{ threshold.value }}" data-name="{{ threshold.shortname }}" data-normal="{% if threshold.isNormal %}true{% else %}false{% endif %}">
           <div class="defra-flood-impact-list__container">
             {{ threshold.description | safe }}
             {% if threshold.type != 'latest' %}
@@ -188,9 +202,6 @@
     <p class="govuk-body-s govuk-!-margin-top-3 govuk-!-margin-bottom-0">Past impacts might not happen at the same level if flood defences have been put in place since then.</p>
   {% endif %}
 {% endif %}
-{% endif %}
-
-
 
 {# Station Details #}
 <div class="govuk-grid-row">
@@ -250,7 +261,6 @@
 </div>  
 
 <div class="defra-map" id="map-live"></div>
-
 
 {% endblock %}
 

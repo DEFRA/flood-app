@@ -44,9 +44,13 @@ class ViewModel {
           this.station.porMaxValueIsProvisional = true
         }
         this.station.formattedPorMaxDate = moment(this.station.porMaxDate).format('DD/MM/YY')
-        this.station.thresholdPorMaxDate = moment(this.station.porMaxDate).format('DD MMMM YYYY')
+        this.station.thresholdPorMaxDate = moment(this.station.porMaxDate).format('D MMMM YYYY')
       }
     }
+
+    // formatted Status Date and time
+    this.station.formattedStatusDate = moment(this.station.porMaxDate).format('dddd D MMMM YYYY')
+    this.station.formattedStatusTime = moment(this.station.porMaxDate).format('h:ma')
 
     // Gets the latest value object
     if (this.telemetry.length) {
@@ -191,6 +195,7 @@ class ViewModel {
           type: threshold.fwa_severity === 3
             ? 'alert'
             : 'target-area',
+          isNormal: true,
           isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= threshold.value : false
         })
       })
@@ -198,11 +203,12 @@ class ViewModel {
     } else if (this.station.percentile5) {
       // Only push typical range if it has a percentil5
       thresholds.push({
-        id: 'alert',
+        id: 'pc5',
         value: this.station.percentile5,
         description: 'This is the top of the normal range, above this flooding to low lying land is possible',
         shortname: 'Top of normal range',
         type: '',
+        isNormal: true,
         isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= this.station.percentile5 : false
       })
     }

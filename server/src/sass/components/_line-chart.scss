@@ -224,6 +224,10 @@ table.table-levels {
         stroke-width: 1;
         shape-rendering: crispEdges;
     }
+    .axis.x .tick--hidden {
+        visibility: hidden;
+        pointer-events: none;
+    }
     .axis.x .tick line {
         visibility:hidden;
     }
@@ -298,10 +302,12 @@ table.table-levels {
     }
     // Tooltip
     .tool-tip {
-        display:none;
+        // display:none;
+        visibility: hidden;
     }
     .tool-tip--visible {
-        display:block;
+        // display:block;
+        visibility: visible;
     }
     .tool-tip-bg {
         fill:white;
@@ -311,10 +317,11 @@ table.table-levels {
     }
     .tool-tip-text {
         @include govuk-font($size: 16);
-        dominant-baseline:hanging;
+        // dominant-baseline:middle;
     }
     .tool-tip-text__strong {
         @include govuk-font($size: 19, $weight:bold);
+        // dominant-baseline:middle;
     }
     // Now
     .time-line {
@@ -324,7 +331,6 @@ table.table-levels {
     }
     .time-now-text {
         @include govuk-font($size: 16, $weight: bold);
-        dominant-baseline:hanging;
     }
     // Thresholds
     .threshold__line {
@@ -354,7 +360,9 @@ table.table-levels {
         cursor: pointer;
     }
     .threshold-label {
-        display: none;
+        // display: none;
+        visibility: hidden;
+        pointer-events: none;
     }
     .threshold-label__bg {
         fill:white;
@@ -366,7 +374,6 @@ table.table-levels {
     .threshold-label__text {
         @include govuk-font($size: 16);
         fill: $govuk-text-colour;
-        dominant-baseline:hanging;
     }
     /*
     .threshold-cross {
@@ -377,7 +384,10 @@ table.table-levels {
     }
     */
     .threshold.threshold--selected {
-        .threshold-label,
+        .threshold-label {
+            visibility: visible;
+            pointer-events: auto;
+        }
         .threshold__remove {
             display: block;
         }
