@@ -58,7 +58,7 @@ function LineChart (containerId, data) {
   chartWrapper.append('g').classed('y axis', true)
   chartWrapper.on('click', function () { showTooltip.call(this, null) })
   chartWrapper.on('mousemove', function () { showTooltip.call(this, null) })
-  chartWrapper.on('mouseout', function () { hideTooltip.call(this, null) })
+  chartWrapper.on('mouseleave', function () { hideTooltip.call(this, null) })
 
   // Add observed and forecast elements
   let observedArea, observed, forecastArea, forecast
@@ -162,22 +162,15 @@ function LineChart (containerId, data) {
       const label = thresholdContainer.append('g').attr('class', 'threshold-label')
       // const labelBg = label.append('rect').attr('class', 'threshold-label__bg')
       const labelBgPath = label.append('path').attr('class', 'threshold-label__bg')
-      const text = label.append('text').attr('class', 'threshold-label__text').html(threshold.name)
+      const text = label.append('text').attr('class', 'threshold-label__text').text(threshold.name)
       const remove = label.append('g').attr('class', 'threshold__remove')
       remove.append('rect').attr('x', -6).attr('y', -6).attr('width', 20).attr('height', 20)
       remove.append('line').attr('x1', -0.5).attr('y1', -0.5).attr('x2', 7.5).attr('y2', 7.5)
       remove.append('line').attr('x1', 7.5).attr('y1', -0.5).attr('x2', -0.5).attr('y2', 7.5)
-      /*
-      remove.append('line').attr('x1', 0).attr('y1', 0).attr('x2', 8).attr('y2', 8)
-      remove.append('line').attr('x1', 8).attr('y1', 0).attr('x2', 0).attr('y2', 8)
-      */
       // Set individual elements size and position
       const textWidth = text.node().getBBox().width
-      // const textHeight = text.node().getBBox().height
-      // labelBg.attr('width', textWidth + 24 + 18 ).attr('height', textHeight + 18)
-      // labelBgHeight = labelBg.node().getBBox().height
       labelBgPath.attr('d', 'm-0.5,-0.5 l' + Math.round(textWidth + 40) + ',0 l0,36 l-' + (Math.round(textWidth + 40) - 50) + ',0 l-7.5,7.5 l-7.5,-7.5 l-35,0 l0,-36 l0,0')
-      text.attr('x', 10).attr('y', 9.5)
+      text.attr('x', 10).attr('y', 22)
       remove.attr('transform', 'translate(' + Math.round(textWidth + 20) + ',' + 14 + ')')
       const labelX = Math.round(x(xExtent[1]) / 8)
       // const labelY = -(labelBg.node().getBBox().height / 2)
@@ -196,10 +189,6 @@ function LineChart (containerId, data) {
         updateDimensions()
         render()
       })
-      /*
-      thresholdContainer.append('line').attr('class', 'threshold-cross').attr('x1', 17).attr('y1', -3).attr('x2', 23).attr('y2', 3)
-      thresholdContainer.append('line').attr('class', 'threshold-cross').attr('x1', 23).attr('y1', -3).attr('x2', 17).attr('y2', 3)
-      */
       // thresholdContainer.append('circle').attr('r', 4.5).attr('class', 'threshold-point')
       thresholdContainer.on('click', function () {
         d3.event.stopPropagation()
@@ -217,6 +206,7 @@ function LineChart (containerId, data) {
         d3.event.stopPropagation()
       })
       thresholdContainer.on('mouseover', function (d) {
+        hideTooltip()
         d3.select(this).classed('threshold--mouseover', true)
       })
       thresholdContainer.on('mouseout', function (d) {
@@ -228,15 +218,7 @@ function LineChart (containerId, data) {
     timeX = Math.floor(x(new Date(data.now)))
     svg.select('.time-line').attr('y1', 0).attr('y2', height)
     now.attr('y1', 0).attr('y2', height).attr('transform', 'translate(' + timeX + ',0)')
-    now.select('.time-now-text').attr('y', height + 11)
-    // Add 'today' class to x axis tick
-    /*
-    svg.selectAll('.x .tick')
-      .filter(function (d) {
-        return new Date(d).getDay() === new Date(data.now).getDay() && new Date(d).getUTCHours() === 12
-      })
-      .attr('class', 'tick tick-today')
-    */
+    now.select('.time-now-text').attr('y', height + 12).attr('dy', '0.71em')
 
     // Add height to locator line
     svg.select('.locator-line').attr('y1', 0).attr('y2', height)
@@ -254,6 +236,15 @@ function LineChart (containerId, data) {
     // Update locator position
     locator.attr('transform', 'translate(' + locatorX + ',' + 0 + ')')
     locator.select('.locator-point').attr('transform', 'translate(' + 0 + ',' + locatorY + ')')
+
+    // Hide x axis labels that overlap with time now label
+    const timeNowX = now.select('.time-now-text').node().getBoundingClientRect().left
+    const timeNowWidth = now.select('.time-now-text').node().getBoundingClientRect().width
+    d3.selectAll('.x .tick').each(function (d) {
+      const tickX = this.getBoundingClientRect().left
+      const tickWidth = this.getBoundingClientRect().width
+      d3.select(this).classed('tick--hidden', (tickX + tickWidth + 3) > timeNowX && tickX <= (timeNowX + timeNowWidth + 3))
+    })
   }
 
   function modifyAxis () {
@@ -305,7 +296,7 @@ function LineChart (containerId, data) {
     margin.left = 28
     margin.right = 28
 
-    let xCutOffLeft, xCutOffRight
+    // let xCutOffLeft, xCutOffRight
 
     // Get dimensions based on parent size
     const parentWidth = Math.floor(d3.select('#' + containerId).node().getBoundingClientRect().width)
@@ -317,57 +308,38 @@ function LineChart (containerId, data) {
     // X Axis labels
     if (window.innerWidth > windowBreakPoint && parentWidth > svgBreakPoint) {
       // Tablet
-      xCutOffLeft = x.invert(20)
-      xCutOffRight = x.invert(timeX - 75) // After which labels need to be hidden
       if (daysInRange < 7) {
         // Tablet daily
         xAxis.ticks(d3.timeHour, 12).tickFormat(function (d) {
-          if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
-            const formatter = d3.timeFormat('%a, %e %b')
-            return formatter(d)
-          } else {
-            return null
-          }
+          const formatter = d3.timeFormat('%a, %e %b')
+          return formatter(d)
         })
       } else {
         // Tablet monthly
         xAxis.ticks(d3.timeMonth, 1).tickFormat(function (d) {
-          if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
-            const formatter = d3.timeFormat('%e %b')
-            return formatter(d)
-          } else {
-            return null
-          }
+          const formatter = d3.timeFormat('%e %b')
+          return formatter(d)
         })
       }
       margin.left = 34
       margin.right = 34
     } else {
       // Mobile
-      xCutOffLeft = x.invert(10)
-      xCutOffRight = x.invert(timeX - 50) // After which labels need to be hidden
       if (daysInRange < 7) {
         // Mobile daily
         xAxis.ticks(d3.timeHour, 12).tickFormat(function (d) {
-          if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
-            const formatter = d3.timeFormat('%-e/%-m')
-            return formatter(d)
-          } else {
-            return null
-          }
+          const formatter = d3.timeFormat('%-e/%-m')
+          return formatter(d)
         })
       } else {
         // Mobile monthly
         xAxis.ticks(d3.timeMonth, 1).tickFormat(function (d) {
-          if (d.getTime() >= xCutOffLeft & d.getTime() <= xCutOffRight) {
-            const formatter = d3.timeFormat('%-e/%-m')
-            return formatter(d)
-          } else {
-            return null
-          }
+          const formatter = d3.timeFormat('%-e/%-m')
+          return formatter(d)
         })
       }
     }
+
     width = parentWidth - margin.left - margin.right
     height = parentHeight - margin.top - margin.bottom
 
@@ -387,7 +359,7 @@ function LineChart (containerId, data) {
     const text = toolTip.select('text')
     // const textWidth = text.node().getBBox().width
     const textHeight = Math.round(text.node().getBBox().height)
-    bg.attr('height', textHeight + 18)
+    bg.attr('height', textHeight + 23)
     const toolTipWidth = bg.node().getBBox().width
     const toolTipHeight = bg.node().getBBox().height
     // Set background left or right position
@@ -413,11 +385,13 @@ function LineChart (containerId, data) {
   }
 
   function showTooltip (threshold) {
+    // Remove existing content
+    toolTip.select('text').selectAll('*').remove()
     if (threshold) {
       // Get X and Y pos from threshold
       toolTipX = -1
       toolTipY = y(threshold.level)
-      toolTip.select('text').html(threshold.name)
+      toolTip.select('text').text(threshold.name)
       dataPointLocator = dataPointLatest
     } else {
       // Get X and Y pos from mouse click
@@ -434,9 +408,8 @@ function LineChart (containerId, data) {
       dataPoint._ = d._
       toolTipX = x(new Date(dataPoint.ts))
       toolTipY = (d3.mouse(this)[1])
-      toolTip.select('text').html(
-        '<tspan class="tool-tip-text__strong" dominant-baseline="middle">' + Number(dataPoint._).toFixed(2) + 'm</tspan>' +
-        '<tspan x="12" dy="1.4em" dominant-baseline="middle">' + parseTime(new Date(dataPoint.ts)).toLowerCase() + ', ' + parseDateShort(new Date(dataPoint.ts)) + '</tspan>')
+      toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(Number(dataPoint._).toFixed(2) + 'm')
+      toolTip.select('text').append('tspan').attr('x', 12).attr('dy', '1.4em').text(parseTime(new Date(dataPoint.ts)).toLowerCase() + ', ' + parseDateShort(new Date(dataPoint.ts)))
       // Set locator position
       dataPointLocator = dataPoint
     }
@@ -467,6 +440,8 @@ function LineChart (containerId, data) {
     locator.classed('locator--forecast', false)
     locator.attr('transform', 'translate(' + locatorX + ',' + 0 + ')')
     locator.select('.locator-point').attr('transform', 'translate(' + 0 + ',' + locatorY + ')')
+    // Reset locator marker to latest
+    dataPointLocator = dataPointLatest
   }
 
   this.removeThreshold = function (id) {

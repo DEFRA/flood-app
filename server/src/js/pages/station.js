@@ -79,7 +79,7 @@ if (chart.length) {
   }
 
   // Add threshold buttons
-  document.querySelectorAll('.defra-flood-impact-list__value').forEach(value => {
+  Array.from(document.querySelectorAll('.defra-flood-impact-list__value')).forEach(value => {
     const button = document.createElement('button')
     button.innerHTML = 'Show on chart'
     button.className = 'defra-button-text-s'
