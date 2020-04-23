@@ -105,7 +105,11 @@
                 <dt class="defra-flood-statistics__key">Height</dt>
                 <dd class="defra-flood-statistics__value">
                   <strong class="defra-flood-statistics__impact">
-                  {{ (model.station.recentValue._).toFixed(2) }}m
+                  {% if model.station.isRiver and model.recentValueBelowZero %}
+                    <abbr title="Less than or equal to">&le;</abbr> 0m
+                  {% else %}
+                    {{ (model.station.recentValue._).toFixed(2) }}m
+                  {% endif %}
                   </strong>
                     at <time datetime="">{{ model.station.recentValue.formattedTime }}</time> {{ model.station.recentValue.dateWhen }}
                 </dd>
@@ -150,6 +154,12 @@
       <figure class="defra-line-chart" aria-hidden="true" hidden>
         <figcaption class="govuk-heading-m govuk-!-margin-bottom-7">Height over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
         <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
+        {% if model.dataOverHourOld %}
+          <p class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0">We take measurements more often as the risk of flooding increases.</p>
+        {% endif %}
+        {% if model.station.isRiver and model.hasNegativeValues %}
+          <p class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0">Levels that are very low or below zero are normal for some stations.</p>
+        {% endif %}
       </figure>
     </div>
   </div>
