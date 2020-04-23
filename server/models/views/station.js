@@ -56,14 +56,24 @@ class ViewModel {
     if (this.telemetry.length) {
       this.readings = this.telemetry.length
       this.recentValue = this.telemetry[0]
+      this.recentValueBelowZero = this.recentValue._ <= 0
       this.station.recentValue = this.recentValue
+      this.hasNegativeValues = this.telemetry.some(t => t._ <= 0)
     }
 
     if (this.recentValue) {
       // Get most recent value time
       this.recentValue.formattedTime = moment(this.recentValue.ts).format('h:mma')
-      var today = moment().startOf('day')
-      var yesterday = moment().subtract(1, 'days').startOf('day')
+      const today = moment().startOf('day')
+      const yesterday = moment().subtract(1, 'days').startOf('day')
+
+      const oneHourAgo = new Date()
+
+      oneHourAgo.setHours(oneHourAgo.getHours() - 1)
+
+      // check if recent value is over one hour old
+      this.dataOverHourOld = new Date(this.recentValue.ts) < oneHourAgo
+
       this.recentValue.dateWhen = 'on ' + moment(this.recentValue.ts).format('D/MM/YY')
       if (moment(this.recentValue.ts).isSame(today, 'd')) {
         this.recentValue.dateWhen = 'today'
