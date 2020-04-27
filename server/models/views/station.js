@@ -84,6 +84,32 @@ class ViewModel {
       // FFOI processing
       if (forecast) {
         const { thresholds } = forecast
+        const forecastDate = forecast.values.$.date
+        const forecastValues = forecast.values.SetofValues[0].Value
+
+        const forecastRange = new Date(this.recentValue.ts)
+
+        forecastRange.setHours(forecastRange.getHours() + 36)
+
+        this.forecastOutOfDate = dateDiff(forecastDate, Date.now()) >= 1
+
+        // filter out highest point in forecast
+        const highestPoint = forecastValues
+          .flat()
+          .filter(({ _ }) => isFinite(_))
+          .filter(val => {
+            return (new Date(val.$.date + 'T' + val.$.time + 'Z') < forecastRange)
+          })
+          .reduce((a, b) => +a._ > +b._ ? a : b)
+
+        console.log(highestPoint)
+
+        const forecastHighestPoint = Number(highestPoint._).toFixed(2)
+        const forecastHighestPointDate = moment(new Date(highestPoint.$.date)).format('D MMMM')
+        const forecastHighestPointTime = moment(highestPoint.$.time, 'HH:mm:ss').format('h:mma')
+
+        this.forecastDetails = `The highest level in our forecast is ${forecastHighestPoint}m at ${forecastHighestPointTime} on ${forecastHighestPointDate}. Forecasts come from a computer model and changes regularly.`
+
         this.isFfoi = thresholds.length > 0
         if (this.isFfoi) {
           this.ffoi = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
