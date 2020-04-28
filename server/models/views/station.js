@@ -96,7 +96,9 @@ class ViewModel {
 
           const highestPoint = processedValues.reduce((a, b) => +a._ > +b._ ? a : b)
 
-          const forecastHighestPoint = highestPoint._.slice(0, -1)
+          console.log(highestPoint)
+
+          const forecastHighestPoint = parseFloat(highestPoint._).toFixed(2)
           const forecastHighestPointDate = moment(new Date(highestPoint.$.date)).format('D MMMM')
           const forecastHighestPointTime = moment(highestPoint.$.time, 'HH:mm:ss').format('h:mma')
 
