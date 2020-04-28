@@ -52,7 +52,6 @@ if (chart.length) {
     observed: window.flood.model.telemetry,
     forecast: window.flood.model.ffoi && !window.flood.model.forecastOutOfDate ? window.flood.model.ffoi.processedValues : []
   })
-  console.log(window.flood.model.ffoi.processedValues)
   if (window.flood.utils.getParameterByName('t')) {
     // Find threshold in model
     const thresholdId = window.flood.utils.getParameterByName('t')

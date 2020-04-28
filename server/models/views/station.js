@@ -92,17 +92,11 @@ class ViewModel {
           this.alertThreshold = this.ffoi.alertThreshold || this.station.percentile5
           this.warningThreshold = this.ffoi.warningThreshold || null
 
-          const processedValues = this.ffoi.processedValues
-
-          const highestPoint = processedValues.reduce((a, b) => +a._ > +b._ ? a : b)
-
-          console.log(highestPoint)
-
+          const highestPoint = this.ffoi.maxValue
           const forecastHighestPoint = parseFloat(highestPoint._).toFixed(2)
-          const forecastHighestPointDate = moment(new Date(highestPoint.$.date)).format('D MMMM')
-          const forecastHighestPointTime = moment(highestPoint.$.time, 'HH:mm:ss').format('h:mma')
+          const forecastHighestPointTime = highestPoint.formattedTimestamp
 
-          this.forecastDetails = `The highest level in our forecast is ${forecastHighestPoint}m at ${forecastHighestPointTime} on ${forecastHighestPointDate}. Forecasts come from a computer model and changes regularly.`
+          this.forecastDetails = `The highest level in the forecast is ${forecastHighestPoint}m at ${forecastHighestPointTime}. Forecasts come from a computer model and changes regularly.`
         }
 
         this.phase = this.isFfoi ? 'beta' : false
