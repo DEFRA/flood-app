@@ -6,6 +6,7 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
+const data = require('../data')
 
 lab.experiment('Test - /station/{id}', () => {
   let sandbox
@@ -797,9 +798,11 @@ lab.experiment('Test - /station/{id}', () => {
       }
     }
 
+    const today = new Date()
+
     const fakeTelemetryData = () => [
       {
-        ts: '2020-03-23T06:00Z',
+        ts: today,
         _: 3.589,
         err: false,
         formattedTime: '6:00am',
@@ -950,37 +953,7 @@ lab.experiment('Test - /station/{id}', () => {
       }
     ]
 
-    const fakeStationForecastData = () => {
-      return {
-        $: {
-          stationReference: '4690TH',
-          stationName: 'Waterhall',
-          key: 'fwfidata/ENT_7024/THFSTHTS20200402072600051.XML',
-          date: '2020-04-02',
-          time: '07:26:00'
-        },
-        SetofValues: [
-          {
-            $: {
-              parameter: 'Water Level',
-              qualifier: 'Stage',
-              dataType: 'Instantaneous',
-              period: '15 min',
-              characteristic: 'Forecast',
-              units: 'm',
-              startDate: '2020-03-30',
-              startTime: '06:45:00',
-              endDate: '2020-04-09',
-              endTime: '06:45:00'
-            },
-            Value: [{
-              _: 'NaN',
-              $: { date: '2020-03-30', time: '06:45:00', flag1: '5' }
-            }]
-          }
-        ]
-      }
-    }
+    const fakeStationForecastData = () => data.fakeStationForecastData
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
@@ -1012,5 +985,6 @@ lab.experiment('Test - /station/{id}', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('<a href="/target-area/062FWF46Hertford">River Lee at Hertford and Ware</a>')
+    Code.expect(response.payload).to.contain('The highest level in the forecast is')
   })
 })
