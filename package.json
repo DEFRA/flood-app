@@ -60,7 +60,7 @@
     "core-js": "^2.6.11",
     "d3": "^5.15.0",
     "datatables.net-dt": "^1.10.20",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "ol": "6.1.1",
     "regenerator-runtime": "^0.13.5",
     "standard": "^14.3.3",
