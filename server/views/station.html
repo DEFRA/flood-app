@@ -73,6 +73,15 @@
 
 {% else %}
 
+{% if model.isFfoi and model.forecastOutOfDate %}
+  <div class="defra-service-error govuk-!-margin-bottom-8">
+    <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is a problem with the forecast data</h2>
+    <p class="govuk-body govuk-!-margin-bottom-0">
+      The forecast data is missing or more than 24 hours old.
+    </p>
+  </div>
+{% endif %}
+
   {# Latest Status #}
   {% if model.readings %}
     {% if model.station.isActive and not model.recentValue.err %}
@@ -153,7 +162,10 @@
     <div class="govuk-grid-column-full">
       <figure class="defra-line-chart" aria-hidden="true" hidden>
         <figcaption class="govuk-heading-m govuk-!-margin-bottom-7">Height over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
-        <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
+         <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
+        {% if model.isFfoi and not model.forecastOutOfDate %}
+          <p class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0"> {{ model.forecastDetails }}</p>
+        {% endif %}
         {% if model.dataOverHourOld %}
           <p class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0">We take measurements more often as the risk of flooding increases.</p>
         {% endif %}

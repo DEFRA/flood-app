@@ -84,13 +84,21 @@ class ViewModel {
       // FFOI processing
       if (forecast) {
         const { thresholds } = forecast
+
         this.isFfoi = thresholds.length > 0
         if (this.isFfoi) {
           this.ffoi = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
           this.hasForecast = this.ffoi.hasForecastData
           this.alertThreshold = this.ffoi.alertThreshold || this.station.percentile5
           this.warningThreshold = this.ffoi.warningThreshold || null
+
+          const highestPoint = this.ffoi.maxValue
+          const forecastHighestPoint = parseFloat(highestPoint._).toFixed(2)
+          const forecastHighestPointTime = highestPoint.formattedTimestamp
+
+          this.forecastDetails = `The highest level in the forecast is ${forecastHighestPoint}m at ${forecastHighestPointTime}. Forecasts come from a computer model and changes regularly.`
         }
+
         this.phase = this.isFfoi ? 'beta' : false
       }
 
