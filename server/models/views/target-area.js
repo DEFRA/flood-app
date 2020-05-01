@@ -6,7 +6,7 @@ class ViewModel {
     const severityLevel = flood && severity.filter(item => {
       return item.id === flood.severity_value
     })[0]
-    const pageTitle = severityLevel ? severityLevel.title + ': ' + area.name : 'Flood risk target area: ' + area.name
+    const pageTitle = severityLevel ? severityLevel.title + ' for ' + area.name : 'Flood risk target area: ' + area.name
     const metaDescription = `Advice and guidance for residents living in the flood risk area: ${area.description}.`
     const metaCanonical = `/target-area/${area.code}`
 
