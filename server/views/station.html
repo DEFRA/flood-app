@@ -99,7 +99,7 @@
           <div class="defra-flood-statistics">
             <dl class="defra-flood-statistics__list">
             {# if station has hasPercentiles, this should exclude Coastal #}
-              {% if model.station.hasPercentiles %}
+              {% if model.station.hasPercentiles and not model.station.isCoastal  %}
               <div class="defra-flood-statistics__row"> 
                 <dt class="defra-flood-statistics__key">Status</dt>
                 <dd class="defra-flood-statistics__value">
