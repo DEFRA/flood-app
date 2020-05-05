@@ -43,14 +43,14 @@ class ViewModel {
         if (diff.asDays() < numberOfProvisionalDays) {
           this.station.porMaxValueIsProvisional = true
         }
-        this.station.formattedPorMaxDate = moment(this.station.porMaxDate).format('DD/MM/YY')
-        this.station.thresholdPorMaxDate = moment(this.station.porMaxDate).format('D MMMM YYYY')
+        this.station.formattedPorMaxDate = moment.tz(this.station.porMaxDate, 'Europe/London').format('DD/MM/YY')
+        this.station.thresholdPorMaxDate = moment.tz(this.station.porMaxDate, 'Europe/London').format('D MMMM YYYY')
       }
     }
 
     // formatted Status Date and time
-    this.station.formattedStatusDate = moment(this.station.porMaxDate).format('dddd D MMMM YYYY')
-    this.station.formattedStatusTime = moment(this.station.porMaxDate).format('h:ma')
+    this.station.formattedStatusDate = moment.tz(this.station.porMaxDate, 'Europe/London').format('dddd D MMMM YYYY')
+    this.station.formattedStatusTime = moment.tz(this.station.porMaxDate, 'Europe/London').format('h:ma')
 
     // Gets the latest value object
     if (this.telemetry.length) {
@@ -63,7 +63,7 @@ class ViewModel {
 
     if (this.recentValue) {
       // Get most recent value time
-      this.recentValue.formattedTime = moment(this.recentValue.ts).format('h:mma')
+      this.recentValue.formattedTime = moment.tz(this.recentValue.ts, 'Europe/London').format('h:mma')
       const today = moment().startOf('day')
       const yesterday = moment().subtract(1, 'days').startOf('day')
 
@@ -74,10 +74,10 @@ class ViewModel {
       // check if recent value is over one hour old
       this.dataOverHourOld = new Date(this.recentValue.ts) < oneHourAgo
 
-      this.recentValue.dateWhen = 'on ' + moment(this.recentValue.ts).format('D/MM/YY')
-      if (moment(this.recentValue.ts).isSame(today, 'd')) {
+      this.recentValue.dateWhen = 'on ' + moment.tz(this.recentValue.ts, 'Europe/London').format('D/MM/YY')
+      if (moment.tz(this.recentValue.ts, 'Europe/London').isSame(today, 'd')) {
         this.recentValue.dateWhen = 'today'
-      } else if (moment(this.recentValue.ts).isSame(yesterday, 'd')) {
+      } else if (moment.tz(this.recentValue.ts, 'Europe/London').isSame(yesterday, 'd')) {
         this.recentValue.dateWhen = 'yesterday'
       }
 
