@@ -49,8 +49,8 @@ class ViewModel {
     }
 
     // formatted Status Date and time
-    this.station.formattedStatusDate = moment.tz(this.station.porMaxDate, 'Europe/London').format('dddd D MMMM YYYY')
-    this.station.formattedStatusTime = moment.tz(this.station.porMaxDate, 'Europe/London').format('h:ma')
+    this.station.formattedStatusDate = moment.tz(this.station.statusDate, 'Europe/London').format('dddd D MMMM YYYY')
+    this.station.formattedStatusTime = moment.tz(this.station.statusDate, 'Europe/London').format('h:ma')
 
     // Gets the latest value object
     if (this.telemetry.length) {
