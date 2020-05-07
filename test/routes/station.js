@@ -7,6 +7,7 @@ const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const data = require('../data')
+const moment = require('moment-timezone')
 
 lab.experiment('Test - /station/{id}', () => {
   let sandbox
@@ -798,11 +799,11 @@ lab.experiment('Test - /station/{id}', () => {
       }
     }
 
-    const today = new Date()
+    const yesterday = moment().subtract(1, 'days').startOf('day')
 
     const fakeTelemetryData = () => [
       {
-        ts: today,
+        ts: yesterday,
         _: 3.589,
         err: false,
         formattedTime: '6:00am',
