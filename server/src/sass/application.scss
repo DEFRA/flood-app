@@ -38,7 +38,8 @@ $govuk-global-styles: true;
 @import "components/flood-details";
 @import "components/search";
 @import "components/service-error";
-@import "components/updated";
+@import "components/flood-meta";
+@import "components/flood-tabs";
 @import "components/context-footer";
 
 // Utilities

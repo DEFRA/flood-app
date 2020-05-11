@@ -1,0 +1,49 @@
+.defra-flood-tabs {
+    margin-bottom:0px;
+    .govuk-tabs__list {
+        display: none; 
+    }
+    .govuk-tabs__panel {
+        margin-bottom:0px;
+    }
+    > h3:first-child {
+        display: none;
+    }
+    .govuk-tabs__title {
+        @include defra-visually-hidden();
+    }
+    border-bottom:1px solid $govuk-border-colour;
+    margin-bottom:10px;
+    @include mq ($from: tablet) {
+        border-bottom:0px;
+        margin-bottom:0px;
+    }
+}
+.js-enabled .defra-flood-tabs {
+    > h3:first-child {
+        @include mq ($from: tablet) {
+            display: block;
+        }
+    }
+    .govuk-tabs__list {
+        @include mq ($from: tablet) {
+            display: block;
+        }  
+    }
+    .govuk-tabs__tab time {
+        white-space: nowrap;
+        span {
+            @include defra-visually-hidden();
+        }
+    }
+    .govuk-tabs__panel {
+        @include mq ($from: tablet) {
+            @include govuk-responsive-margin(2, 'bottom')
+        }
+    }   
+    .govuk-tabs__panel *:first-child {
+        @include mq ($from: tablet) {
+            @include defra-visually-hidden();
+        }
+    }
+}
