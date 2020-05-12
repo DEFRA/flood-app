@@ -60,7 +60,7 @@
     </p>
     
 
-    <p>Area {% if model.flood and model.severity.id < 4 %}affected{% else %}description{% endif %}: {{ model.area.description }}</p>
+    <p>Flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warning{% else %}alert{% endif %} area: {{ model.area.description }}</p>
     <div class="defra-map" id="map-live"></div>
     
     {% if model.flood and model.severity.isActive %}
