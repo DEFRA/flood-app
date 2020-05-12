@@ -21,13 +21,7 @@
     </div>
     {% endif %}
 
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
-      {{ model.area.name }}
-      {% if not model.severity.isActive %}
-        {% if model.severity.hash == 'alert' %}flood alert area
-        {% elif model.severity.hash == 'warning' %}flood warning area
-        {% endif %}
-      {% endif %}
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">{{ model.pageTitle }}
     </h1>
     <p class="defra-updated govuk-!-margin-bottom-7">
       Updated at <time datetime="{{model.flood.situation_changed}}">{{model.flood.situation_changed | formatDate}}</time>
