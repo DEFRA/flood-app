@@ -1,4 +1,5 @@
 const severity = require('../severity')
+const moment = require('moment-timezone')
 
 class ViewModel {
   constructor (options) {
@@ -10,6 +11,11 @@ class ViewModel {
     const type = area.code.charAt(4).toLowerCase() === 'w'
       ? 'warning'
       : 'alert'
+
+    const dateSituationChanged = moment.tz(flood.situation_changed, 'Europe/London').format('D MMMM YYYY')
+    const timeSituationChanged = moment.tz(flood.situation_changed, 'Europe/London').format('h:ma')
+
+    const situationChanged = `Updated ${timeSituationChanged} on ${dateSituationChanged}`
 
     let pageTitle
 
@@ -33,7 +39,8 @@ class ViewModel {
       placeName: area.name,
       placeCentre: JSON.parse(area.centroid).coordinates,
       featureId: area.id,
-      severity: severityLevel
+      severity: severityLevel,
+      situationChanged
     }, options)
   }
 }
