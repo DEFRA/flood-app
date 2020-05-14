@@ -12,10 +12,16 @@ class ViewModel {
       ? 'warning'
       : 'alert'
 
-    const dateSituationChanged = moment.tz(flood.situation_changed, 'Europe/London').format('D MMMM YYYY')
-    const timeSituationChanged = moment.tz(flood.situation_changed, 'Europe/London').format('h:ma')
+    const mapTitle = `View map of the flood ${type} area`
 
-    const situationChanged = `Updated ${timeSituationChanged} on ${dateSituationChanged}`
+    let situationChanged
+
+    if (flood) {
+      const dateSituationChanged = moment.tz(flood.situation_changed, 'Europe/London').format('D MMMM YYYY')
+      const timeSituationChanged = moment.tz(flood.situation_changed, 'Europe/London').format('h:ma')
+
+      situationChanged = `Updated ${timeSituationChanged} on ${dateSituationChanged}`
+    }
 
     let pageTitle
 
@@ -40,7 +46,8 @@ class ViewModel {
       placeCentre: JSON.parse(area.centroid).coordinates,
       featureId: area.id,
       severity: severityLevel,
-      situationChanged
+      situationChanged,
+      mapTitle
     }, options)
   }
 }

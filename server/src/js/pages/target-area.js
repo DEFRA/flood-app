@@ -28,7 +28,7 @@ if (mapContainer) {
   const button = document.createElement('button')
   button.id = 'map-btn'
   button.className = 'defra-button-map govuk-!-margin-bottom-4'
-  button.innerText = `View map of the ${window.flood.model.severity && window.flood.model.severity.id < 4 ? 'area affected' : 'target area'}`
+  button.innerText = `${window.flood.model.mapTitle}`
   button.addEventListener('click', function (e) {
     e.preventDefault()
     window.flood.maps.createLiveMap('map-live', { btn: 'map-btn', lyr: 'ts,tw,ta', fid: 'flood.' + window.flood.model.area.code.toLowerCase(), ext: extent.join(',') })
