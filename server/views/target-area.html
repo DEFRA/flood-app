@@ -42,14 +42,11 @@
     </div>
     {% endif %}
 
-    
     <p>
-    {% if model.flood and model.flood.situation %}
-     {{model.flood.situation}}
-    {% endif %}
+     {{model.situation}}
     </p>
 
-    {% if model.situationChanged %}    
+    {% if model.situationChanged %}
     <p class="defra-flood-meta defra-flood-meta--border govuk-!-margin-top-6 govuk-!-margin-bottom-6">
       <time datetime="{{model.situationChanged}}">{{model.situationChanged}}</time>
     </p>
