@@ -1,17 +1,28 @@
 'use strict'
 import '../components/nunjucks'
-import '../components/maps'
-import '../components/maps-styles'
-import '../components/maps-layers'
-import '../components/map-container'
-import '../components/maps/live'
-import { fromLonLat } from 'ol/proj'
-import { Feature } from 'ol'
-import { MultiPolygon } from 'ol/geom'
+import '../components/map/maps'
+import '../components/map/styles'
+import '../components/map/layers'
+import '../components/map/container'
+import '../components/map/live'
 
 // Add browser back button
 window.flood.utils.addBrowserBackButton()
 
+// Create LiveMap
+window.flood.maps.createLiveMap('map', {
+  btnText: `View map of flood ${window.flood.model.area.code.slice(4, 5).toLowerCase() === 'w' ? 'warning' : 'alert'} area`,
+  btnClasses: 'defra-button-map govuk-!-margin-bottom-4',
+  layers: 'mv,ts,tw,ta,ti',
+  targetArea: {
+    id: 'flood.' + window.flood.model.area.code,
+    name: window.flood.model.area.name,
+    polygon: JSON.parse(window.flood.model.area.geom).coordinates // MultiPolygon coordinates array for boundary
+  },
+  selectedId: 'flood.' + window.flood.model.area.code
+})
+
+/*
 // Create LiveMap if querystring is present
 if (window.flood.utils.getParameterByName('v') === 'map-live') {
   window.flood.maps.createLiveMap('map-live')
@@ -44,3 +55,4 @@ window.addEventListener('popstate', function (e) {
     window.flood.maps.createLiveMap('map-live')
   }
 })
+*/

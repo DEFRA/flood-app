@@ -8,6 +8,7 @@
       {% if model.station.riverNavigation and model.station.riverNavigation.navigable %}
         <a href="/river-and-sea-levels?river-id={{model.station.riverNavigation.river_id}}" class="defra-river-nav-link">{{ model.station.riverNavigation.river_name }}</a>
       {% endif %}
+      <span id="map"></span>
     </nav>
   </div>
 </div>
@@ -147,10 +148,10 @@
 
   {% else %}
     
-      <div class="defra-service-error govuk-!-margin-bottom-3">
-        <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>
-        <p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>
-      </div>
+  <div class="defra-service-error govuk-!-margin-bottom-3">
+    <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>
+    <p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>
+  </div>
     
   {% endif %}
 {% endif %}
@@ -158,32 +159,23 @@
 {# Graph #}
 {% if model.station.isActive and model.readings %}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <figure class="defra-line-chart" aria-hidden="true" hidden>
-        <figcaption class="govuk-heading-m govuk-!-margin-bottom-7">Height over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
-         <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <figure class="defra-line-chart" aria-hidden="true" hidden>
+      <figcaption class="govuk-heading-m govuk-!-margin-bottom-7">Height over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
+        <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
         {% if model.isFfoi and not model.forecastOutOfDate %}
-          <p class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0"> {{ model.forecastDetails }}</p>
+        <p class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0"> {{ model.forecastDetails }}</p>
         {% endif %}
         {% if model.dataOverHourOld %}
-          <p class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0">We take measurements more often as the risk of flooding increases.</p>
+        <p class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0">We take measurements more often as the risk of flooding increases.</p>
         {% endif %}
         {% if model.station.isRiver and model.hasNegativeValues %}
-          <p class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0">Levels that are very low or below zero are normal for some stations.</p>
+        <p class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0">Levels that are very low or below zero are normal for some stations.</p>
         {% endif %}
-      </figure>
-    </div>
+    </figure>
   </div>
-
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <figure class="defra-line-chart" aria-hidden="true" hidden>
-        <figcaption class="defra-line-chart__caption">Water level measured over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
-        <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
-      </figure>
-    </div>
-  </div>
+</div>
 
 {% endif %}
 
@@ -281,8 +273,6 @@
     </details>
   </div>  
 </div>  
-
-<div class="defra-map" id="map-live"></div>
 
 {% endblock %}
 

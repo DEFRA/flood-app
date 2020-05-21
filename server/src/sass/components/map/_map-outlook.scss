@@ -1,0 +1,89 @@
+//
+  // Outlook control
+  //
+  
+  .map__outlook-control {
+    display:block;
+    position: absolute;
+    bottom:10px;
+    left:10px;
+    right: 10px;
+    z-index: 2;
+    @include mq ($from: tablet) {
+      right:auto;
+    }
+  }
+  .map__outlook-control__inner {
+    width:100%;
+    font-size:0;
+  }
+  .map__outlook-control__day {
+    padding:1px;
+    display:inline-block;
+    width:20%;
+    box-sizing: border-box;
+    @include mq ($from: tablet) {
+      width:80px;
+    }
+  }
+  .map__outlook-control__button {
+    border:0px;
+    position: relative;
+    vertical-align: top;
+    text-align:center;
+    height:66px;
+    @include mq ($from: tablet) {
+      height:74px;
+    }
+    width:100%;
+    @include govuk-font($size: 16);
+    color:$govuk-text-colour;
+    line-height:1em;
+    padding:0;
+    border-radius: 0;
+    cursor:pointer;
+    background-color: #f8f8f8;
+  }
+  .map__outlook-control__button:focus {
+    z-index:2;
+    outline: 3px solid $govuk-focus-colour;
+    outline-offset: 0;
+    //border-color:transparent !important;
+  }
+  .map__outlook-control__button[aria-selected=true] {
+    border-top: 4px solid $govuk-link-colour;
+    font-weight:bold;
+    background-color:white;
+    height:70px;
+    @include mq ($from: tablet) {
+      height:78px;
+    }
+    margin-top:-4px;
+  }
+  .map__outlook-control__icon {
+    display:block;
+    width:26px;
+    height:32px;
+    margin:4px auto auto auto;
+    background-color: transparent;
+    background-image: url('#{$govuk-images-path}icon-map-features-2x.png');
+    background-color:transparent;
+    background-position: -5000px;
+    background-size: 350px;
+    background-repeat: no-repeat;
+  }
+  .map__outlook-control__icon--risk-level-0 {
+    background-position: -202px -801px;
+  }
+  .map__outlook-control__icon--risk-level-1 {
+    background-position: -302px -801px;
+  }
+  .map__outlook-control__icon--risk-level-2 {
+    background-position: -302px -301px;
+  }
+  .map__outlook-control__icon--risk-level-3 {
+    background-position: -302px -351px;
+  }
+  .map__outlook-control__icon--risk-level-4 {
+    background-position: -302px -401px;
+  }

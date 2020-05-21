@@ -59,7 +59,7 @@
       {{ model.outlook.full | safe }}
     </p>
     {% if model.outlook.hasOutlookConcern %}
-    <div class="defra-map" id="map-outlook"></div>
+    <span id="map-outlook"></span>
     {% endif %}
 
     {% include "partials/other-flood-risk-check.html" %}
