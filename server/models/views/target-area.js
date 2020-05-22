@@ -14,7 +14,7 @@ class ViewModel {
 
     const mapTitle = `View map of the flood ${type} area`
 
-    let situation
+    let situation = flood ? flood.situation : ''
 
     const dateSituationChanged = flood ? moment.tz(flood.situation_changed, 'Europe/London').format('D MMMM YYYY') : moment.tz('Europe/London').format('D MMMM YYYY')
     const timeSituationChanged = flood ? moment.tz(flood.situation_changed, 'Europe/London').format('h:ma') : moment.tz('Europe/London').format('h:ma')
