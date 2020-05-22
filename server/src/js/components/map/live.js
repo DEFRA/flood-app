@@ -298,6 +298,7 @@ function LiveMap (mapId, options) {
         geometry: new Point(transform(options.targetArea.centre, 'EPSG:4326', 'EPSG:3857')),
         name: options.targetArea.name
       })
+      targetArea.pointFeature.setId(options.targetArea.id)
     }
   }
 
@@ -329,11 +330,11 @@ function LiveMap (mapId, options) {
     const lyrs = getParameterByName('lyr') ? getParameterByName('lyr').split(',') : []
     setLayerVisibility(lyrs)
     const checkboxes = document.querySelectorAll('.defra-map-key input[type=checkbox]')
-    checkboxes.forEach((checkbox) => {
+    forEach(checkboxes, (checkbox) => {
       checkbox.checked = lyrs.includes(checkbox.id)
     })
     const radios = document.querySelectorAll('.defra-map-key input[type=radio]')
-    radios.forEach((radio) => {
+    forEach(radios, (radio) => {
       radio.checked = lyrs.includes(radio.id)
     })
   }
@@ -341,7 +342,7 @@ function LiveMap (mapId, options) {
   // Set smart key visibility. To follow...
   if (options.hasSmartKey) {
     const keyItems = document.querySelectorAll('.defra-map-key__section--layers .defra-map-key__item')
-    keyItems.forEach((keyItem) => {
+    forEach(keyItems, (keyItem) => {
       keyItem.style.display = 'none'
     })
   }

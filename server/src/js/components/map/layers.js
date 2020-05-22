@@ -47,6 +47,7 @@ window.flood.maps.layers = {
       renderMode: 'hybrid',
       extent: window.flood.maps.extent,
       style: window.flood.maps.styles.targetAreaPolygons,
+      visible: false,
       zIndex: 1
     })
   },

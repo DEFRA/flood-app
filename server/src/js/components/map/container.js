@@ -11,7 +11,7 @@
 import { defaults as defaultControls, Zoom, Control } from 'ol/control'
 import { Map } from 'ol'
 
-const { addOrUpdateParameter } = window.flood.utils
+const { addOrUpdateParameter, forEach } = window.flood.utils
 const maps = window.flood.maps
 
 window.flood.maps.MapContainer = function MapContainer (mapId, options) {
@@ -38,7 +38,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   document.body.style.position = 'fixed'
   document.body.style.top = `-${scrollY}`
   const bodyElements = document.querySelectorAll('body > :not(.defra-map):not(script)')
-  bodyElements.forEach((element) => {
+  forEach(bodyElements, (element) => {
     element.classList.add('defra-map-hidden')
   })
 
@@ -202,7 +202,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
       document.body.style.position = ''
       document.body.style.top = ''
       window.scrollTo(0, parseInt(scrollY || '0') * -1)
-      bodyElements.forEach((element) => {
+      forEach(bodyElements, (element) => {
         element.classList.remove('defra-map-hidden')
       })
       // Remove map and return focus
@@ -291,7 +291,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   const zoomButtons = document.querySelectorAll('.defra-map-zoom button')
   const mobileListener = (mobileMediaQuery) => {
     state.isMobile = mobileMediaQuery.matches
-    zoomButtons.forEach((button) => {
+    forEach(zoomButtons, (button) => {
       button.hidden = state.isMobile
     })
   }
