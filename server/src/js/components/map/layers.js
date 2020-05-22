@@ -72,7 +72,7 @@ window.flood.maps.layers = {
   warnings: () => {
     return new VectorLayer({
       ref: 'warnings',
-      featureCodes: 'ts, tw, ta, tr, ti',
+      featureCodes: 'ts, tw, ta, tr',
       source: new VectorSource({
         format: new GeoJSON(),
         projection: 'EPSG:3857',

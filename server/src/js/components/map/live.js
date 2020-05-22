@@ -118,6 +118,10 @@ function LiveMap (mapId, options) {
     })
     road.setVisible(lyrCodes.includes('mv'))
     satellite.setVisible(lyrCodes.includes('sv'))
+    // Force wanrings to show if target area provided
+    if (targetArea.pointFeature) {
+      warnings.setVisible(true)
+    }
   }
 
   // Show or hide features within layers
@@ -131,14 +135,15 @@ function LiveMap (mapId, options) {
         (props.severity_value && props.severity_value === 2 && lyrCodes.includes('tw')) ||
         (props.severity_value && props.severity_value === 1 && lyrCodes.includes('ta')) ||
         (props.severity_value && props.severity_value === 4 && lyrCodes.includes('tr')) ||
-        (props.severity_value && props.severity_value === 5 && lyrCodes.includes('ti')) ||
         // Stations
         (ref === 'stations' && props.atrisk && lyrCodes.includes('sh')) ||
         (ref === 'stations' && !props.atrisk && lyrCodes.includes('st')) ||
         // Rainfall
         (ref === 'rainfall' && lyrCodes.includes('rf')) ||
         // Impacts
-        (ref === 'impacts' && lyrCodes.includes('hi'))
+        (ref === 'impacts' && lyrCodes.includes('hi')) ||
+        // Target area provided
+        (targetArea.pointFeature && targetArea.pointFeature.getId() === feature.getId())
       )
       feature.set('isVisible', isVisible)
     })
@@ -278,8 +283,7 @@ function LiveMap (mapId, options) {
       // Create point feature
       targetArea.pointFeature = new Feature({
         geometry: new Point(getCenter(targetArea.polygonFeature.getGeometry().getExtent())),
-        name: options.targetArea.name,
-        severity_value: 5 // Inactive
+        name: options.targetArea.name
       })
       let featureId = options.targetArea.id
       targetArea.pointFeature.setId(options.targetArea.id)
@@ -292,8 +296,7 @@ function LiveMap (mapId, options) {
       // Create point feature
       targetArea.pointFeature = new Feature({
         geometry: new Point(transform(options.targetArea.centre, 'EPSG:4326', 'EPSG:3857')),
-        name: options.targetArea.name,
-        severity_value: 5 // Inactive
+        name: options.targetArea.name
       })
     }
   }
