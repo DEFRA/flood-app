@@ -1,7 +1,4 @@
-//
-  // Outlook control
-  //
-  
+  // Day control  
   .map__outlook-control {
     display:block;
     position: absolute;
@@ -66,7 +63,7 @@
     height:32px;
     margin:4px auto auto auto;
     background-color: transparent;
-    background-image: url('#{$govuk-images-path}icon-map-features-2x.png');
+    // background-image: url('#{$govuk-images-path}icon-map-features-2x.png');
     background-color:transparent;
     background-position: -5000px;
     background-size: 350px;

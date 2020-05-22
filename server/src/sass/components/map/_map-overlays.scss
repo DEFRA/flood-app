@@ -1,0 +1,30 @@
+// Map keyboard access overlays
+.defra-map-overlay {
+    position:relative;
+    z-index:2;
+    @include govuk-font($size: 19, $weight: bold);
+    text-align:center;
+    width:20px;
+    height:20px;
+    text-shadow:
+     -1px -1px 0 #fff,  
+      1px -1px 0 #fff,
+      -1px 1px 0 #fff,
+       1px 1px 0 #fff;
+  }
+  .defra-map-overlay--stations {
+    margin-left:-9px;
+    margin-top:-32px;
+    &-bigZoom {
+      margin-left:-10px;
+      margin-top:-40px;
+    }
+  }
+  .defra-map-overlay--warnings {
+    margin-left:-10px;
+    margin-top:-44px;
+    &-bigZoom {
+      margin-left:-10px;
+      margin-top:-12px;
+    }
+  }

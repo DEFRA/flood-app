@@ -18,7 +18,8 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   // Setup defaults
   const defaults = {
     minIconResolution: window.flood.maps.minResolution,
-    keyTemplate: ''
+    keyTemplate: '',
+    controls: []
   }
   options = Object.assign({}, defaults, options)
 
@@ -107,6 +108,11 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   tooltipElement.hidden = true
   tooltipElement.innerHTML = 'Keyboard access guidelines'
   viewport.appendChild(tooltipElement)
+
+  // Add any custom controls bewteen open key and reset buttons
+  options.controls.forEach(control => {
+    map.addControl(control)
+  })
 
   // Create reset control
   const resetButtonElement = document.createElement('button')

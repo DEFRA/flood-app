@@ -122,13 +122,15 @@ class Outlook {
     */
 
     const issueDate = new Date(outlook.issued_at)
-    const date = issueDate.getDate()
+    // const date = issueDate.getDate() // DL: incorrect dates in model
 
     this._days = [0, 1, 2, 3, 4].map(i => {
+      const date = new Date(issueDate)
       return {
         idx: i + 1,
         level: this._riskLevels[i],
-        date: new Date(issueDate.setDate(date + i))
+        // date: new Date(issueDate.setDate(issueDate.getDate() + i)) // DL: incorrect dates in model
+        date: new Date(date.setDate(date.getDate() + i))
       }
     })
   }

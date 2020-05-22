@@ -3,42 +3,32 @@
 // It uses the MapContainer
 // TODO: needs refactoring into layers and styles
 // ALSO need to fix the functionality, I don't think the tickets have been developed as of 31/01/2020
-import { transform, transformExtent } from 'ol/proj'
 import { View } from 'ol'
-import { Style, Fill } from 'ol/style'
 import { Vector as VectorLayer } from 'ol/layer'
 import { Vector as VectorSource } from 'ol/source'
+import { defaults as defaultInteractions } from 'ol/interaction'
 import { GeoJSON } from 'ol/format'
+import { Style, Fill } from 'ol/style'
+import { unByKey } from 'ol/Observable'
+import { Control } from 'ol/control'
 
+const { addOrUpdateParameter, getParameterByName, forEach } = window.flood.utils
 const maps = window.flood.maps
-const { getParameterByName, forEach } = window.flood.utils
+const { setExtentFromLonLat, getLonLatFromExtent } = window.flood.maps
 const MapContainer = maps.MapContainer
 
-function OutlookMap (display) {
-  // Container element
-  const elementId = 'map-outlook'
-  const containerEl = document.getElementById(elementId)
-
-  const center = transform(maps.center, 'EPSG:4326', 'EPSG:3857')
-
-  // options = options || {}
-
-  const road = maps.layers.road()
-
+function OutlookMap (mapId, options) {
+  // View
   const view = new View({
     zoom: 6,
     minZoom: 6,
     maxZoom: 7,
-    center: center,
-    extent: transformExtent([
-      -13.930664,
-      47.428087,
-      8.920898,
-      59.040555
-    ], 'EPSG:4326', 'EPSG:3857')
+    center: maps.center,
+    extent: maps.extentLarge
   })
 
-  const pattern = function () {
+  // Fill patterns
+  const pattern = () => {
     const canvas = document.createElement('canvas')
     const dpr = window.devicePixelRatio || 1
     canvas.width = 8 * dpr
@@ -64,7 +54,11 @@ function OutlookMap (display) {
     return ctx.createPattern(canvas, 'repeat')
   }
 
-  function styleFeature (feature) {
+  // Styles
+  const style = (feature) => {
+    if (!feature.get('isVisible')) {
+      return
+    }
     // const strokeColour = '#6f777b'
     // const strokeWidth = 2
     const zIndex = feature.get('z-index')
@@ -77,7 +71,6 @@ function OutlookMap (display) {
     } else if (feature.get('risk-level') === 4) {
       fillColour = '#df3034'
     }
-
     return new Style({
       fill: new Fill({ color: fillColour }),
       lineDash: lineDash,
@@ -85,118 +78,208 @@ function OutlookMap (display) {
     })
   }
 
-  const areasOfConcernSource = new VectorSource({
-    format: new GeoJSON(),
-    projection: 'EPSG:3857',
-    url: '/api/outlook.geojson'
-  })
-
+  // Layers
+  const road = maps.layers.road()
   const areasOfConcern = new VectorLayer({
-    zIndex: 200,
+    ref: 'areasOfConcern',
+    source: new VectorSource({
+      format: new GeoJSON(),
+      projection: 'EPSG:3857',
+      url: '/api/outlook.geojson'
+    }),
     renderMode: 'hybrid',
-    source: areasOfConcernSource,
-    style: styleFeature,
-    opacity: 0.9
+    style: style,
+    opacity: 0.9,
+    zIndex: 200
   })
 
-  // MapContainer options
-  const mapOptions = {
-    keyTemplate: 'map-key-outlook.html',
+  // Configure default interactions
+  const interactions = defaultInteractions({
+    pinchRotate: false
+  })
+
+  // Format date Today, Yesterday, Tomorrow or 'Mon 1'
+  const formatDate = (date) => {
+    date.setDate(date.getDate() + 233)
+    let format = days[date.getDay()] + ' ' + date.getDate()
+    date.setHours(0)
+    date.setMinutes(0)
+    date.setSeconds(0, 0)
+    const now = new Date()
+    now.setHours(0)
+    now.setMinutes(0)
+    now.setSeconds(0, 0)
+    if (date.getTime() === now.getTime()) {
+      format = 'Today'
+    } else if (date.getTime() + 86400000 === now.getTime()) {
+      format = 'Yesterday'
+    } else if (date.getTime() - 86400000 === now.getTime()) {
+      format = 'Tomorrow'
+    }
+    return format
+  }
+
+  // Create day control
+  const dayControlsElement = document.createElement('div')
+  dayControlsElement.className = 'defra-map-days'
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  options.days.forEach(function (day) {
+    const dayButtonElement = document.createElement('button')
+    dayButtonElement.className = 'defra-map-days__button'
+    dayButtonElement.setAttribute('data-risk-level', day.level)
+    dayButtonElement.setAttribute('data-day', day.idx)
+    dayButtonElement.setAttribute('aria-selected', false)
+    const date = formatDate(new Date(day.date))
+    dayButtonElement.innerHTML = `${date}<span class="defra-map-days__icon defra-map-days__icon--risk-level-${day.level}"></span>`
+    dayControlsElement.appendChild(dayButtonElement)
+  })
+  const dayControl = new Control({
+    element: dayControlsElement
+  })
+
+  // Options to pass to the MapContainer constructor
+  const containerOptions = {
     view: view,
-    display: display,
-    layers: [
-      road,
-      areasOfConcern
-    ]
+    layers: [road, areasOfConcern],
+    controls: [dayControl],
+    queryParamKeys: ['v'],
+    interactions: interactions,
+    headingText: options.headingText,
+    keyTemplate: 'key-outlook.html',
+    isBack: options.isBack
   }
 
   // Create MapContainer
-  const container = new MapContainer(containerEl, mapOptions)
+  const container = new MapContainer(mapId, containerOptions)
   const map = container.map
 
-  // Add outlook day controls
-  const outlookControl = document.createElement('div')
-  outlookControl.className = 'map__outlook-control'
-  outlookControl.innerHTML = '<div class="map__outlook-control__inner"></div>'
-  window.flood.model.outlook.days.forEach(function (day) {
-    const div = document.createElement('div')
-    div.className = 'map__outlook-control__day'
-    div.setAttribute('data-risk-level', day.level)
-    const button = document.createElement('button')
-    button.className = 'map__outlook-control__button'
-    button.setAttribute('aria-selected', !!day.idx)
-    button.setAttribute('data-day', day.idx)
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-    const d = new Date(day.date)
-    button.innerHTML = `
-        ${days[d.getDay()] + ' ' + d.getDate()}
-        <span class="map__outlook-control__icon map__outlook-control__icon--risk-level-${day.level}"></span>`
-    button.addEventListener('click', function (e) {
-      const day = +button.getAttribute('data-day')
-      setDay(day)
-    })
-    div.appendChild(button)
-    outlookControl.childNodes[0].appendChild(div)
-  })
-  container.mapElement.appendChild(outlookControl)
+  //
+  // Private methods
+  //
 
   // Outlook set day function
-  function setDay (day) {
-    areasOfConcern.getSource().forEachFeature(function (feature) {
-      const featureDay = feature.get('day')
-      const visible = featureDay === day
-      feature.setStyle(visible ? null : new Style({}))
+  const setDay = (day) => {
+    // Set feature visibility
+    areasOfConcern.getSource().forEachFeature((feature) => {
+      const isVisible = parseInt(feature.get('day')) === parseInt(day)
+      feature.set('isVisible', isVisible)
     })
-    forEach(outlookControl.querySelectorAll('button'), function (btn, i) {
-      btn.setAttribute('aria-selected', i + 1 === day ? 'true' : 'false')
+    // Set button properties
+    forEach(document.querySelectorAll('.defra-map-days__button'), (button, i) => {
+      button.setAttribute('aria-selected', i + 1 === parseInt(day))
     })
   }
+
+  //
+  // Setup
+  //
+
+  // Define map extent
+  let extent
+  if (getParameterByName('ext')) {
+    extent = getParameterByName('ext').split(',').map(Number)
+  } else {
+    extent = getLonLatFromExtent(maps.extent)
+  }
+
+  // Set map viewport
+  setExtentFromLonLat(map, extent)
+
+  // Show layers
+  road.setVisible(true)
 
   //
   // Events
   //
 
-  // Precompose - setup view and features first
-  map.once('precompose', (e) => {
-    // Set map extent to intial extent
-    const extent = getParameterByName('e') ? getParameterByName('e').split(',').map(Number) : maps.extent
-    map.getView().fit(extent, { constrainResolution: false, padding: [0, 0, 0, 0] })
-  })
-
-  areasOfConcernSource.once('change', (e) => {
-    if (areasOfConcernSource.getState() === 'ready') {
-      let risk = 0
-      for (let i = 0; i < window.flood.model.outlook.days.length; i++) {
-        if (window.flood.model.outlook.days[i].level >= 1) {
-          risk = window.flood.model.outlook.days[i].level
-          setDay(i + 1)
-          break
-        }
-      }
-      if (risk === 0) { setDay(1) }
+  // Set first day when features have loaded
+  const change = areasOfConcern.getSource().on('change', (e) => {
+    if (e.target.getState() === 'ready') {
+      unByKey(change) // Remove ready event when layer is ready
+      setDay(1)
     }
   })
 
-  // Toggle fullscreen view on browser history change
-  function popStateListener (e) {
-    if (e && e.state && getParameterByName('v') === elementId) {
-      window.removeEventListener('popstate', popStateListener)
-      maps.createOutlookMap()
-      window.flood.historyAdvanced = true
-    } else {
-      const el = document.getElementById(elementId)
-      if (el.firstChild) {
-        el.removeChild(el.firstChild)
-      }
-    }
-  }
-  window.addEventListener('popstate', popStateListener)
+  // Day control button
+  forEach(document.querySelectorAll('.defra-map-days__button'), (button) => {
+    button.addEventListener('click', (e) => {
+      setDay(e.target.getAttribute('data-day'))
+    })
+  })
 }
 
 // Export a helper factory to create this map
 // onto the `maps` object.
 // (This is done mainly to avoid the rule
 // "do not use 'new' for side effects. (no-new)")
-maps.createOutlookMap = function (display) {
-  return new OutlookMap(display)
+maps.createOutlookMap = (mapId, options = {}) => {
+  // Set initial history state
+  if (!window.history.state) {
+    const data = {}
+    const title = document.title
+    const uri = window.location.href
+    window.history.replaceState(data, title, uri)
+  }
+
+  // Create map button
+  const btnContainer = document.getElementById(mapId)
+  const button = document.createElement('button')
+  button.id = mapId + '-btn'
+  button.innerHTML = options.btnText || 'View map'
+  button.className = options.btnClasses || 'defra-button-map'
+  btnContainer.parentNode.replaceChild(button, btnContainer)
+
+  // Detect keyboard interaction
+  if (maps.isKeyboard !== false && maps.isKeyboard !== true) {
+    window.addEventListener('keydown', (e) => {
+      maps.isKeyboard = true
+    })
+    window.addEventListener('pointerdown', (e) => {
+      maps.isKeyboard = false
+    })
+    window.addEventListener('focusin', (e) => {
+      if (maps.isKeyboard) {
+        e.target.setAttribute('keyboard-focus', '')
+      }
+    })
+    window.addEventListener('focusout', (e) => {
+      forEach(document.querySelectorAll('[keyboard-focus]'), (element) => {
+        element.removeAttribute('keyboard-focus')
+      })
+    })
+  }
+
+  // Manage scroll position
+  if (!maps.hasScrollListener) {
+    window.addEventListener('scroll', () => {
+      document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`)
+    })
+    maps.hasScrollListener = true
+  }
+
+  // Create map on button press
+  button.addEventListener('click', (e) => {
+    // Advance history
+    const data = { v: mapId, isBack: true }
+    const title = document.title
+    let uri = window.location.href
+    uri = addOrUpdateParameter(uri, 'v', mapId)
+    window.history.pushState(data, title, uri)
+    options.isBack = true
+    return new OutlookMap(mapId, options)
+  })
+
+  // Recreate map on browser history change
+  window.addEventListener('popstate', (e) => {
+    if (e.state && e.state.v === mapId) {
+      options.isBack = window.history.state.isBack
+      return new OutlookMap(e.state.v, options)
+    }
+  })
+
+  // Recreate map on page refresh
+  if (window.flood.utils.getParameterByName('v') === mapId) {
+    options.isBack = window.history.state.isBack
+    return new OutlookMap(mapId, options)
+  }
 }

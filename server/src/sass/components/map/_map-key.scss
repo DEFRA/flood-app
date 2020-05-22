@@ -21,6 +21,12 @@
     @include govuk-font($size: 16);
   }
 }
+.defra-map-key__item-label {
+  padding: 11px 15px 10px 0px;
+  margin-top: -2px;
+  position: relative;
+  @include govuk-font($size: 16);
+}
 .defra-map-key__item:first-child {
   padding-top:10px;
 }
@@ -104,95 +110,5 @@
   .govuk-checkboxes__label:after,
   .govuk-radios__label:after {
     top:14px;
-  }
-}
-
-// Map keyboard access overlays
-.defra-map-overlay {
-  position:relative;
-  z-index:2;
-  @include govuk-font($size: 19, $weight: bold);
-  text-align:center;
-  width:20px;
-  height:20px;
-  text-shadow:
-   -1px -1px 0 #fff,  
-    1px -1px 0 #fff,
-    -1px 1px 0 #fff,
-     1px 1px 0 #fff;
-}
-.defra-map-overlay--stations {
-  margin-left:-9px;
-  margin-top:-32px;
-  &-bigZoom {
-    margin-left:-10px;
-    margin-top:-40px;
-  }
-}
-.defra-map-overlay--warnings {
-  margin-left:-10px;
-  margin-top:-44px;
-  &-bigZoom {
-    margin-left:-10px;
-    margin-top:-12px;
-  }
-}
-
-// Info panel
-.defra-map-info {
-  padding:15px;
-  &__link {
-    text-decoration: none;
-  }
-  &__secondary {
-    color: $govuk-secondary-text-colour;
-  }
-  &__button {
-    @extend .defra-button-text-s;
-    position: relative;
-    color:$govuk-text-colour;
-  }
-  &__button--up,
-  &__button--down {
-    padding-left:16px;
-  }
-  &__button--up:before {
-    content: '';
-    position: absolute;
-    top:2px;
-    left:0px;
-    background-image: svg-url('<svg width="13" height="15" viewBox="0 0 13 15" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M6.5,0L0,6.5L1.4,8L5.4,4L5.4,15L7.4,15L7.4,4L11.7,8L13,6.4L6.5,0Z" style="fill:#0b0c0c;fill-rule:nonzero;"/></svg>');
-    background-color:transparent;
-    background-size:13px 15px;
-    background-repeat: no-repeat;
-    background-position: top left;
-    width:13px;
-    height:13px;
-    @include mq ($from: tablet) {
-      height:15px;
-    }
-  }
-  &__button--up:hover:before {
-    background-image: svg-url('<svg width="13" height="15" viewBox="0 0 13 15" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M6.5,0L0,6.5L1.4,8L5.4,4L5.4,15L7.4,15L7.4,4L11.7,8L13,6.4L6.5,0Z" style="fill:#003078;fill-rule:nonzero;"/></svg>');
-  }
-  &__button--down:before {
-    content: '';
-    position: absolute;
-    top:2px;
-    left:0px;
-    background-image: svg-url('<svg width="13" height="15" viewBox="0 0 13 15" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M0,8.5L6.5,15L13,8.6L11.7,7L7.4,11L7.4,0L5.4,0L5.4,11L1.4,7L0,8.5Z" style="fill:#0b0c0c;"/></svg>');
-    background-color:transparent;
-    background-size:13px 15px;
-    background-repeat: no-repeat;
-    background-position: bottom left;
-    width:13px;
-    height:13px;
-    @include mq ($from: tablet) {
-      top:3px;
-      height:15px;
-    }
-  }
-  &__button--down:hover:before {
-    background-image: svg-url('<svg width="13" height="15" viewBox="0 0 13 15" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M0,8.5L6.5,15L13,8.6L11.7,7L7.4,11L7.4,0L5.4,0L5.4,11L1.4,7L0,8.5Z" style="fill:#003078;"/></svg>');
   }
 }

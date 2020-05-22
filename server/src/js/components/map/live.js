@@ -348,15 +348,14 @@ function LiveMap (mapId, options) {
   }
 
   //
-  // Event listeners
+  // Events
   //
 
   // Set selected feature and polygon states when features have loaded
   dataLayers.forEach((layer) => {
     const change = layer.getSource().on('change', (e) => {
       if (e.target.getState() === 'ready') {
-        // Remove ready event when layer is ready
-        unByKey(change)
+        unByKey(change) // Remove ready event when layer is ready
         if (layer.get('ref') === 'warnings') {
           // Add optional target area
           if (targetArea.pointFeature) {
