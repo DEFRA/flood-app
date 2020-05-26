@@ -61,41 +61,11 @@
     {% if model.outlook.hasOutlookConcern %}
     <div class="defra-map" id="map-outlook"></div>
     {% endif %}
-
     {% include "partials/other-flood-risk-check.html" %}
+  </div>
 
-  </div>
-  <div class="govuk-grid-column-one-third">
-    <aside class="defra-related-items" role="complementary">
-      <h2 class="govuk-heading-s" id="subsection-title">
-        Related content
-      </h2>
-      <nav role="navigation" aria-labelledby="subsection-title">
-        <ul class="govuk-list govuk-!-font-size-16">
-          <li>
-            <a class="govuk-link" href="/plan-ahead-for-flooding">
-              How to plan ahead for flooding
-            </a>
-          </li>
-          <li>
-            <a class="govuk-link" href="/what-to-do-in-a-flood">
-              What to do in a flood
-            </a>
-          </li>
-          <li>
-            <a class="govuk-link" href="/recovering-after-a-flood">
-              How to recover after a flood
-            </a>
-          </li>
-          <li>
-            <a class="govuk-link" href="#">
-              View long term flood risk information
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </aside>
-  </div>
+  {% include "partials/related-content.html" %}
+
 </div>
 
 {% endblock %}
