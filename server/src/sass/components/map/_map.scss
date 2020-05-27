@@ -1,5 +1,5 @@
 .defra-map {
-  position:fixed !important;
+  position:absolute !important;
   z-index: 999;
   top:0;
   bottom:0;
@@ -32,6 +32,14 @@
     @include defra-visually-hidden;
   }
 }
+.defra-map-body {
+  position: fixed;
+  overflow: hidden;
+  top:0px;
+  right:0px;
+  bottom:0px;
+  left:0px;
+}
 .defra-map-hidden {
   visibility: hidden;
 }
@@ -47,6 +55,7 @@
   display:none;
   background-color:white;
   position:absolute;
+  touch-action: none;
   @include mq ($from: desktop) {
     display: block;
     left:100%;
@@ -206,6 +215,7 @@
   bottom:0px;
   width:100%;
   overflow:auto;
+  -webkit-overflow-scrolling: touch;
 }
 .defra-map-key__title {
   display: block;

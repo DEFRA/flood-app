@@ -404,6 +404,8 @@ function LiveMap (mapId, options) {
       if (isNewExtent(ext)) {
         resetButton.removeAttribute('disabled')
       }
+      // Fix margin issue
+      map.updateSize()
     }, 350)
   })
 
@@ -541,14 +543,6 @@ maps.createLiveMap = (mapId, options = {}) => {
         element.removeAttribute('keyboard-focus')
       })
     })
-  }
-
-  // Manage scroll position
-  if (!maps.hasScrollListener) {
-    window.addEventListener('scroll', () => {
-      document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`)
-    })
-    maps.hasScrollListener = true
   }
 
   // Create map on button press
