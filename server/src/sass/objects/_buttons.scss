@@ -1,3 +1,25 @@
+// Secondary start button
+.defra-button-start {
+    @extend .govuk-button;
+    @extend .govuk-button--secondary;
+    &:after {
+        content: '';
+        display: inline-block;
+        position:relative;
+        margin-left:5px;
+        vertical-align: middle;
+        top:-1px;
+        width:13px;
+        height:15px;
+        background: transparent;
+        background-image: svg-url('<svg width="13" height="15" viewBox="0 0 13 15" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M0.325,0l4.875,0l7.5,7.5l-7.5,7.5l-4.875,0l7.5,-7.5l-7.5,-7.5Z" style="fill-rule:nonzero;"/></svg>');
+        background-color:transparent;
+        background-size:13px 15px;
+        background-repeat: no-repeat;
+        background-position: top left;
+    }
+}
+
 // Text button
 .defra-button-text {
     @extend .govuk-body;
@@ -10,13 +32,15 @@
     padding:0;
     border-radius: 0;
     cursor:pointer;
-    &:focus,
-    &:active {
+    &:focus {
         outline:3px solid transparent;
         background-color: $govuk-focus-colour;
         color: $govuk-text-colour !important;
         box-shadow: 0 -2px #ffdd00, 0 4px #0b0c0c;
         text-decoration: none;
+    }
+    &:active {
+        color: $govuk-text-colour !important;
     }
     &:hover {
         color:$govuk-link-hover-colour;
@@ -83,10 +107,10 @@
     &:focus span {
         border:0px;
     }
-    &:active span {
-        border:0px;
-    }
     &:hover span {
         border-color:$govuk-link-hover-colour;
+    }
+    &:active span {
+        border-color: $govuk-text-colour;
     }
 }
