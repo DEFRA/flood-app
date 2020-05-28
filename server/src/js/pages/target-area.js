@@ -15,7 +15,7 @@ window.flood.maps.createLiveMap('map', {
   btnClasses: 'defra-button-map govuk-!-margin-bottom-4',
   layers: 'mv,ts,tw,ta',
   targetArea: {
-    id: 'flood.' + window.flood.model.area.code,
+    id: window.flood.model.area.code,
     name: window.flood.model.area.name,
     polygon: JSON.parse(window.flood.model.area.geom).coordinates
   },

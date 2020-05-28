@@ -152,7 +152,7 @@ function LiveMap (mapId, options) {
   // Set selected feature
   const setSelectedFeature = (newFeatureId) => {
     selected.getSource().clear()
-    dataLayers.forEach(async (layer) => {
+    dataLayers.forEach((layer) => {
       const originalFeature = layer.getSource().getFeatureById(state.selectedFeatureId)
       const newFeature = layer.getSource().getFeatureById(newFeatureId)
       if (originalFeature) {
@@ -160,7 +160,7 @@ function LiveMap (mapId, options) {
       }
       if (newFeature) {
         newFeature.set('isSelected', true)
-        await setFeatureHtml(newFeature)
+        setFeatureHtml(newFeature)
         selected.getSource().addFeature(newFeature)
         selected.setStyle(layer.getStyle())
         container.showInfo(newFeature)
@@ -199,6 +199,9 @@ function LiveMap (mapId, options) {
     const extent = map.getView().calculateExtent(map.getSize())
     const isBigZoom = resolution <= containerOptions.maxBigZoom
     const layers = dataLayers.filter(layer => lyrs.some(lyr => layer.get('featureCodes').includes(lyr)))
+    if (!layers.includes(warnings) && targetArea.pointFeature) {
+      layers.push(warnings)
+    }
     layers.forEach((layer) => {
       if (features.length > 9) return true
       layer.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
@@ -256,11 +259,52 @@ function LiveMap (mapId, options) {
     }
   }
 
+  // Time format function
+  const formatTime = (dateTime) => {
+    const hours = dateTime.getHours() > 12 ? dateTime.getHours() - 12 : dateTime.getHours()
+    const minutes = (dateTime.getMinutes() < 10 ? '0' : '') + dateTime.getMinutes()
+    const amPm = (dateTime.getHours() > 12) ? 'pm' : 'am'
+    return hours + ':' + minutes + amPm
+  }
+
+  // Day format function
+  const formatDay = (dateTime) => {
+    const day = dateTime.getDate()
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    const nth = (day) => {
+      if (day > 3 && day < 21) return 'th'
+      switch (day % 10) { case 1: return 'st'; case 2: return 'nd'; case 3: return 'rd'; default: return 'th' }
+    }
+    const shortDay = days[dateTime.getDay()]
+    const today = new Date()
+    const yesterday = new Date()
+    const tomorrow = new Date()
+    today.setHours(0, 0, 0, 0)
+    yesterday.setDate(yesterday.getDate() - 1)
+    yesterday.setHours(0, 0, 0, 0)
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    tomorrow.setHours(0, 0, 0, 0)
+    dateTime.setHours(0, 0, 0, 0)
+    if (dateTime.getTime() === today.getTime()) {
+      return 'today'
+    } else if (dateTime.getTime() === yesterday.getTime()) {
+      return 'yesterday'
+    } else if (dateTime.getTime() === tomorrow.getTime()) {
+      return 'tomorrow'
+    } else {
+      return ' on ' + shortDay + ' ' + dateTime.getDate() + nth(day)
+    }
+  }
+
   // Set feature overlay html
   const setFeatureHtml = async (feature) => {
-    const html = window.nunjucks.render('info-live.html', {
-      name: feature.getId()
-    })
+    const model = feature.getProperties()
+    model.id = feature.getId().substring(feature.getId().indexOf('.') + 1)
+    // Format dates for river levels
+    if (feature.getId().startsWith('stations')) {
+      model.date = formatTime(new Date(model.value_date)) + ' ' + formatDay(new Date(model.value_date))
+    }
+    const html = window.nunjucks.render('info-live.html', { model: model })
     feature.set('html', html)
   }
 
@@ -283,14 +327,12 @@ function LiveMap (mapId, options) {
       // Create point feature
       targetArea.pointFeature = new Feature({
         geometry: new Point(getCenter(targetArea.polygonFeature.getGeometry().getExtent())),
-        name: options.targetArea.name
+        ta_code: options.targetArea.id,
+        ta_name: options.targetArea.name
       })
-      let featureId = options.targetArea.id
-      targetArea.pointFeature.setId(options.targetArea.id)
+      targetArea.pointFeature.setId('flood.' + options.targetArea.id)
       // Transform id
-      if (featureId.includes('flood.')) {
-        featureId = 'flood_warning_alert' + featureId.substring(featureId.indexOf('.'))
-      }
+      const featureId = 'flood_warning_alert.' + options.targetArea.id
       targetArea.polygonFeature.setId(featureId)
     } else if (options.targetArea.centre) { // Vector tile source
       // Create point feature
@@ -501,6 +543,26 @@ function LiveMap (mapId, options) {
     setExtentFromLonLat(map, state.initialExt)
     resetButton.setAttribute('disabled', '')
     containerElement.focus()
+  })
+
+  // River level navigation
+  containerElement.addEventListener('click', (e) => {
+    if (e.target.classList.contains('defra-map-info__button')) {
+      const direction = e.target.classList.contains('defra-map-info__button--up') ? 'up' : 'down'
+      const newFeatureId = e.target.getAttribute('data-id')
+      const feature = stations.getSource().getFeatureById(newFeatureId)
+      setSelectedFeature(newFeatureId)
+      panToFeature(feature)
+      // Set focus back to up or down button
+      console.log(document.querySelector('.defra-map-info__link'))
+      const upstream = document.querySelector('.defra-map-info__button--up')
+      const downstream = document.querySelector('.defra-map-info__button--down')
+      if ((direction === 'up' && upstream) || (direction === 'down' && !downstream)) {
+        upstream.focus()
+      } else {
+        downstream.focus()
+      }
+    }
   })
 }
 

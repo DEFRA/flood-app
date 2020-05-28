@@ -8,6 +8,8 @@
 // ***To include a key, include an element with `.map-key__container` in the main inner element.
 // To include a key pass its template name as an option
 
+// DL: Includes body-scroll-lock package.
+
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
 import { defaults as defaultControls, Zoom, Control } from 'ol/control'
 import { Map } from 'ol'
@@ -37,15 +39,6 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   // Disable body scrolling and hide non-map elements
   document.title = `Map view: ${document.title}`
   document.body.classList.add('defra-map-body')
-  // const scrollY = document.documentElement.style.getPropertyValue('--scroll-y')
-  // document.body.style.top = `-${scrollY}`
-  /*
-  document.body.classList.add('defra-map-body')
-  const bodyElements = document.querySelectorAll('body > :not(.defra-map):not(script)')
-  forEach(bodyElements, (element) => {
-    element.classList.add('defra-map-hidden')
-  })
-  */
 
   // Create the map container element
   const containerElement = document.createElement('div')
@@ -211,15 +204,6 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
       // Unlock body scroll
       document.body.classList.remove('defra-map-body')
       clearAllBodyScrollLocks()
-      /*
-      const scrollY = document.body.style.top
-      document.body.style.top = ''
-      window.scrollTo(0, parseInt(scrollY || '0') * -1)
-      document.body.classList.remove('defra-map-body')
-      forEach(bodyElements, (element) => {
-        element.classList.remove('defra-map-hidden')
-      })
-      */
       // Remove map and return focus
       containerElement.parentNode.removeChild(containerElement)
       const button = document.getElementById(mapId + '-btn')
@@ -377,7 +361,6 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
     keyElement.blur()
     containerElement.removeAttribute('tabindex') // Performance issue in Safari
     containerElement.removeAttribute('keyboard-focus')
-    console.log(document.activeElement)
   })
 
   // Disable pinch and double tap zoom

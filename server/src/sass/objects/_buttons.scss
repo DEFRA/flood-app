@@ -33,6 +33,9 @@
     position:relative;
     display:inline-block;
     padding-left:20px;
+    &::-moz-focus-inner {
+        border: 0;
+    }
     &:focus[keyboard-focus] {
         outline:3px solid transparent;
         background-color: $govuk-focus-colour;

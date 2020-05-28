@@ -1,18 +1,61 @@
-<!--
-<h2 class="govuk-body govuk-!-margin-bottom-1">Flood warning</h2>
+{% if model.ta_name %}
+<h2 class="govuk-body govuk-!-margin-bottom-1">
+    {% if model.severity_value  %}
+        {% if model.severity_value === 3 %}
+        Severe flood warning
+        {% elif model.severity_value === 2 %}
+        Flood warning
+        {% elif model.severity_value === 1 %}
+        Flood alert
+        {% else %}
+            {% if model.ta_code.charAt(4).toLowerCase() === 'w' %}
+            Flood warning removed
+            {% else %}
+            Flood alert removed
+            {% endif %}
+        {% endif %}
+    {% elif model.ta_code.charAt(4).toLowerCase() === 'w' %}
+    Flood warning area
+    {% else %}
+    Flood alert area
+    {% endif %}
+</h2>
 <p class="govuk-body-s govuk-!-margin-bottom-1">
-    <strong><a class="defra-map-info__link" href="/target-area/{{name}}">Areas near the Wootton Brook in the Collingtree, Merefield and Shelfleys parts of Northampton</a></strong>
+    <strong><a class="defra-map-info__link" href="/target-area/{{ model.id }}">{{ model.ta_name }}</a></strong>
 </p>
--->
-
-<h2 class="govuk-body govuk-!-margin-bottom-1">River level</h2>
+{% elif model.river %}
+<h2 class="govuk-body govuk-!-margin-bottom-1">
+    {% if model.type === 'C' %}
+    Sea level
+    {% elif model.type === 'G' %}
+    Groundwater level
+    {% else %}
+    River level {% if model.atrisk %}(high){% endif %}
+    {% endif %}
+</h2>
 <p class="govuk-body-s govuk-!-margin-bottom-2">
-    <strong><a class="defra-map-info__link" href="">Linstock, River Eden</a></strong></br>
-    0.14m at 5:30 today
+    <strong>
+        <a class="defra-map-info__link" href="/station/{{ model.id }}">
+            {{ model.name }}{% if model.type === 'S' or model.type === 'M' %}, {{ model.river }}{% endif %}
+        </a>
+    </strong></br>
+    {% if model.status === 'Closed' or model.status === 'Suspended' %}
+    Closed or temporarily out of service
+    {% elif model.value %}
+    {{ model.value | round(2) }}m at {{ model.date }}
+    {% else %}
+    Latest measurement unreliable
+    {% endif %}
 </p>
-<p class="govuk-body-s govuk-!-margin-bottom-1">
-    <button class="defra-map-info__button defra-map-info__button--up govuk-!-margin-right-2">Upstream</button><button class="defra-map-info__button defra-map-info__button--down">Downstream</button>
-</p>
+{% if model.up %}
+<button class="defra-map-info__button defra-map-info__button--up govuk-!-margin-bottom-1 govuk-!-margin-right-2" data-id="stations.{{ model.up }}">Upstream</button>
+{% endif %}
+{% if model.down %}
+<button class="defra-map-info__button defra-map-info__button--down govuk-!-margin-bottom-1" data-id="stations.{{ model.down }}">Downstream</button>
+{% endif %}
+{% else %}
+<p>To follow...</p>
+{% endif %}
 
 <!--
 <h2 class="govuk-body govuk-!-margin-bottom-1">Past flooding</h2>
