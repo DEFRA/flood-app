@@ -10,16 +10,49 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    {% if model.flood and model.severity.id < 4 %}
+<!--    FIRST BANNER-->
     <div class="defra-flood-status govuk-!-margin-bottom-3">
+      {% if model.flood and model.severity.id < 4 %}
       <div class="defra-flood-status-item defra-flood-status-item--{{model.severity.hash}}">
         <span class="defra-flood-status-item__icon"></span>
         <div class="defra-flood-status-item__text">
-          <strong>{{model.severity.subTitle}}</strong>
+          <strong>{{model.severity.subTitle}} - <a class="govuk-link" href="{{model.severity.actionLink}}">{{model.severity.tagline}}</a></strong>
+        </div>
+      </div>
+      {% endif %}
+
+<!--      Inactive or Removed-->
+      {% if (model.flood and model.severity.id == 4) or not model.flood %}
+        <div class="defra-flood-status-item">
+          {% if not model.flood %}
+          <div class="defra-flood-status-item__text">
+            The flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warning{% else %}alert{% endif %} was removed
+          </div>
+          {% else %}
+          <div class="defra-flood-status-item__text">
+            There are no flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warnings{% else %}alerts{% endif %} in this area
+          </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+<!--    SECOND BANNER THAT APPEARS IN CASE OF WARNING INACTIVE, REMOVED-->
+    {% if model.secondBanner %}
+    <div class="defra-flood-status govuk-!-margin-bottom-3">
+      <div class="defra-flood-status-item defra-flood-status-item--alert">
+        <span class="defra-flood-status-item__icon"></span>
+        <div class="defra-flood-status-item__text">
+          {% if not model.flood %}
+          The flood warning was removed, but there's still <a href="/target-area/{{model.area.parent}}">a flood alert in the wider area</a>
+          {% else %}
+          There are no flood warnings in this area, but there is <a href="/target-area/{{model.area.parent}}">a flood alert in the wider area</a>
+          {% endif %}
         </div>
       </div>
     </div>
     {% endif %}
+
     <h1 class="govuk-heading-xl">{{ model.pageTitle }}
     </h1>
   </div>
@@ -27,21 +60,6 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-
-    {% if (model.flood and model.severity.id == 4) or not model.flood %}
-    <div class="defra-flood-status govuk-!-margin-bottom-1">
-      <div class="defra-flood-status-item">
-        <div class="defra-flood-status-item__text">
-          {% if not model.flood %}
-          No flood alert or warning currently in place
-          {% else %}
-          Flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warning{% else %}alert{% endif %} no longer in place
-          {% endif %}
-        </div>
-      </div>
-    </div>
-    {% endif %}
-
     <p>
      {{model.situation}}
     </p>
@@ -50,7 +68,7 @@
       <time datetime="{{model.situationChanged}}">{{model.situationChanged}}</time>
     </p>
 
-    <p>Flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warning{% else %}alert{% endif %} area: {{ model.area.description }}</p>
+    <p>{{model.areaDescription}}</p>
     <div class="defra-map" id="map-live"></div>
     
     {% if model.flood and model.severity.isActive %}
