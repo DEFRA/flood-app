@@ -71,6 +71,6 @@ lab.experiment('Routes test - national view', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('There are currently no flood warnings or alerts in force.')
-    Code.expect(response.payload).to.contain('If you live near a river or the coast you may be able to')
+    Code.expect(response.payload).to.contain('Call Floodline for advice about flooding from rivers, the sea and groundwater')
   })
 })
