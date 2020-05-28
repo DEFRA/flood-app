@@ -19,7 +19,7 @@ class ViewModel {
     const dateSituationChanged = flood ? moment.tz(flood.situation_changed, 'Europe/London').format('D MMMM YYYY') : moment.tz('Europe/London').format('D MMMM YYYY')
     const timeSituationChanged = flood ? moment.tz(flood.situation_changed, 'Europe/London').format('h:ma') : moment.tz('Europe/London').format('h:ma')
 
-    const situationChanged = flood.situation_changed
+    const situationChanged = flood
       ? `Updated ${timeSituationChanged} on ${dateSituationChanged}`
       : `Up to date as of ${timeSituationChanged} on ${dateSituationChanged}`
 
