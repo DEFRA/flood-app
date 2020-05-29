@@ -50,6 +50,7 @@ module.exports = [{
       query: joi.object({
         q: joi.string().allow('').trim().max(200),
         'river-id': joi.string(),
+        'target-area': joi.string(),
         btn: joi.string(),
         ext: joi.string(),
         fid: joi.string(),
