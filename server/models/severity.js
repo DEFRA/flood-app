@@ -34,7 +34,7 @@ const severity = [{
   pluralisedTitle: 'Flood warnings removed',
   hash: 'removed',
   pluralisedHash: 'removed',
-  subTitle: 'within the last 24 hours',
+  subTitle: 'in the last 24 hours',
   tagline: '',
   isActive: false,
   actionLink: '/what-to-do-in-a-flood'
