@@ -1,13 +1,15 @@
+const moment = require('moment-timezone')
+
 class ViewModel {
   constructor (floods, outlook) {
     Object.assign(this, {
-      pageTitle: 'Flood risk for England',
+      pageTitle: 'Flood warnings in England',
       metaDescription: 'Check the latest flood risk situation for england and the 5-day flood forecast.',
       metaKeywords: 'flooding, flood risk, flood map, flood warnings, flood alerts, river and sea levels, 5-day flood forecast, gov.uk, england',
       metaCanonical: '/national',
       hasActiveFloods: floods.hasActiveFloods,
       highestSeverityId: floods.highestSeverityId,
-      timestamp: Date.now()
+      dateFormatted: 'Up to date as of ' + moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY')
     })
 
     // Strip out flood array as it is superflous to the view

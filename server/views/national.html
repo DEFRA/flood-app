@@ -4,17 +4,9 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <nav class="govuk-!-margin-bottom-7">
-      <p class="govuk-body">
-        <a href="/find-location">Check flood risk near you</a>
-      </p>
-    </nav>
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">
-      Flood risk for England
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-7">
+      Flood warnings in England
     </h1>
-    <p class="defra-updated govuk-!-margin-bottom-7">
-      Updated at <time class="form-hint" datetime="{{model.timestamp}}">{{ model.timestamp | formatDate("h:mm a dddd Do MMMM YYYY") }}</time>
-    </p>
   </div>
 </div>
 
@@ -24,7 +16,7 @@
       {% if not model.hasActiveFloods %}
       <div class="defra-flood-status-item">
         <div class="defra-flood-status-item__text">
-          There are currently no flood warnings or alerts in force.
+          No flood alerts or warnings.
         </div>
       </div>
       {% endif %}
@@ -51,6 +43,14 @@
       {% endfor %}
     </div>
 
+    <p class="defra-flood-meta defra-flood-meta--border govuk-!-margin-top-6 govuk-!-margin-bottom-6">
+      <time datetime="{{model.dateFormatted}}">{{model.dateFormatted}}</time>
+    </p>
+
+    <h2 class="govuk-heading-m">Check river, sea and groundwater levels</h2>
+    <p>There are around 2,500 measuring stations, most along main rivers and the coast. These levels can give you a better understanding of your flood risk.</p>
+    <p><a href="/river-and-sea-levels">Find a river, sea or groundwater level</a>.</p>
+
     <h2 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-margin-bottom-1" id="outlook">Flood forecast for the next 5 days</h2>
     <p class="defra-updated govuk-!-margin-bottom-4">
       <time title="{{model.outlook.timestampOutlook | formatDate}}" datetime="{{ model.outlook.timestampOutlook }}">Updated at {{ model.outlook.timestampOutlook | formatDate }}</time>
@@ -61,41 +61,11 @@
     {% if model.outlook.hasOutlookConcern %}
     <span id="map-outlook"></span>
     {% endif %}
-
-    {% include "partials/other-flood-risk-check.html" %}
-
+    {% include "partials/context-footer.html" %}
   </div>
-  <div class="govuk-grid-column-one-third">
-    <aside class="defra-related-items" role="complementary">
-      <h2 class="govuk-heading-s" id="subsection-title">
-        Related content
-      </h2>
-      <nav role="navigation" aria-labelledby="subsection-title">
-        <ul class="govuk-list govuk-!-font-size-16">
-          <li>
-            <a class="govuk-link" href="/plan-ahead-for-flooding">
-              How to plan ahead for flooding
-            </a>
-          </li>
-          <li>
-            <a class="govuk-link" href="/what-to-do-in-a-flood">
-              What to do in a flood
-            </a>
-          </li>
-          <li>
-            <a class="govuk-link" href="/recovering-after-a-flood">
-              How to recover after a flood
-            </a>
-          </li>
-          <li>
-            <a class="govuk-link" href="#">
-              View long term flood risk information
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </aside>
-  </div>
+
+  {% include "partials/related-content.html" %}
+
 </div>
 
 {% endblock %}

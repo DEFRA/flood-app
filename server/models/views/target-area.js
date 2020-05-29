@@ -14,12 +14,17 @@ class ViewModel {
 
     const mapTitle = `View map of the flood ${type} area`
 
-    let situation
+    let situation = flood ? flood.situation : ''
 
     const dateSituationChanged = flood ? moment.tz(flood.situation_changed, 'Europe/London').format('D MMMM YYYY') : moment.tz('Europe/London').format('D MMMM YYYY')
-    const timeSituationChanged = flood ? moment.tz(flood.situation_changed, 'Europe/London').format('h:ma') : moment.tz('Europe/London').format('h:ma')
+    const timeSituationChanged = flood ? moment.tz(flood.situation_changed, 'Europe/London').format('h:mma') : moment.tz('Europe/London').format('h:mma')
 
-    const situationChanged = `Up to date as of ${timeSituationChanged} on ${dateSituationChanged}`
+    const areaDescription = `Flood ${type}: ${area.description}`
+    const secondBanner = !!(((flood && severityLevel.id === 4) && (type === 'warning')) || !flood)
+
+    const situationChanged = flood
+      ? `Updated ${timeSituationChanged} on ${dateSituationChanged}`
+      : `Up to date as of ${timeSituationChanged} on ${dateSituationChanged}`
 
     const pageTitle = (severityLevel && severityLevel.isActive ? severityLevel.title + ' for ' + area.name : `${area.name} flood ${type} area`)
     if (severityLevel && !severityLevel.isActive) {
@@ -43,6 +48,8 @@ class ViewModel {
       severity: severityLevel,
       situationChanged,
       situation: situation,
+      secondBanner: secondBanner,
+      areaDescription: areaDescription,
       mapTitle
     }, options)
   }

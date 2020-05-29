@@ -5,8 +5,9 @@ const severity = [{
   hash: 'severe',
   pluralisedHash: 'severe',
   subTitle: 'There is a danger to life',
-  tagline: 'Must act now',
-  isActive: true
+  tagline: 'act now',
+  isActive: true,
+  actionLink: '/what-to-do-in-a-flood#what-to-do-if-you-get-a-severe-flood-warning'
 }, {
   id: 2,
   title: 'Flood warning',
@@ -14,8 +15,9 @@ const severity = [{
   hash: 'warning',
   pluralisedHash: 'warnings',
   subTitle: 'Flooding is expected',
-  tagline: 'Take action',
-  isActive: true
+  tagline: 'act now',
+  isActive: true,
+  actionLink: '/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-warning'
 }, {
   id: 1,
   title: 'Flood alert',
@@ -23,17 +25,19 @@ const severity = [{
   hash: 'alert',
   pluralisedHash: 'alerts',
   subTitle: 'Flooding is possible',
-  tagline: 'Be prepared',
-  isActive: true
+  tagline: 'be prepared',
+  isActive: true,
+  actionLink: '/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-alert'
 }, {
   id: 4,
   title: 'Flood warning removed',
   pluralisedTitle: 'Flood warnings removed',
   hash: 'removed',
   pluralisedHash: 'removed',
-  subTitle: 'within the last 24 hours',
+  subTitle: 'in the last 24 hours',
   tagline: '',
-  isActive: false
+  isActive: false,
+  actionLink: '/what-to-do-in-a-flood'
 }]
 
 module.exports = severity
