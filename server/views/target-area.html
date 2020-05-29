@@ -82,13 +82,10 @@
       {% endif %}
     </div>
     {% endif %}
-    
-    <p class="govuk-body">
-      <a href="/river-and-sea-levels">View the latest river and sea levels in this area</a>.
-    </p>
-
-    {% include "partials/other-flood-risk-check.html" %}
-    
+    <p><a href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email.</a></p>
+    <h2 class="govuk-heading-m">Check river, sea or groundwater levels</h2>
+    <p>They can give you a better understanding of your flood risk.</p>
+    <p><a href="/river-and-sea-levels?target-area={{ model.targetArea }}">Find a river, sea or groundwater level in this area.</a></p>
   </div>
 
   <div class="govuk-grid-column-one-third">

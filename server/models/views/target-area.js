@@ -50,6 +50,7 @@ class ViewModel {
       situation: situation,
       secondBanner: secondBanner,
       areaDescription: areaDescription,
+      targetArea: area.code,
       mapTitle
     }, options)
   }
