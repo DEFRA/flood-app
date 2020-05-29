@@ -4,7 +4,7 @@ const severity = [{
   pluralisedTitle: 'Severe flood warnings',
   hash: 'severe',
   pluralisedHash: 'severe',
-  subTitle: 'Severe flooding is expected',
+  subTitle: 'There is a danger to life',
   tagline: 'act now',
   isActive: true,
   actionLink: '/what-to-do-in-a-flood#what-to-do-if-you-get-a-severe-flood-warning'
@@ -34,7 +34,7 @@ const severity = [{
   pluralisedTitle: 'Flood warnings removed',
   hash: 'removed',
   pluralisedHash: 'removed',
-  subTitle: 'within the last 24 hours',
+  subTitle: 'in the last 24 hours',
   tagline: '',
   isActive: false,
   actionLink: '/what-to-do-in-a-flood'
