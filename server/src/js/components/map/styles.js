@@ -34,24 +34,24 @@ window.flood.maps.styles = {
       case 3: // Severe warning
         strokeColour = '#D4351C'
         fillColour = pattern('severe')
-        zIndex = 50
+        zIndex = 11
         break
       case 2: // Warning
         strokeColour = '#D4351C'
         fillColour = pattern('warning')
-        zIndex = 40
+        zIndex = 10
         break
       case 1: // Alert
         strokeColour = '#F47738'
         fillColour = pattern('alert')
-        zIndex = isGroundwater ? 20 : 30
+        zIndex = isGroundwater ? 4 : 7
         break
       default: // Removed or inactive
         strokeColour = '#626A6E'
         fillColour = pattern('removed')
-        zIndex = 10
+        zIndex = 1
     }
-    zIndex = isSelected ? zIndex + 1 : zIndex
+    zIndex = isSelected ? zIndex + 2 : zIndex
 
     const selectedStroke = new Style({ stroke: new Stroke({ color: '#FFDD00', width: 16 }), zIndex: zIndex })
     const stroke = new Style({ stroke: new Stroke({ color: strokeColour, width: 2 }), zIndex: zIndex })
@@ -101,9 +101,9 @@ window.flood.maps.styles = {
     const isSelected = feature.get('isSelected')
     const isBigSymbol = resolution <= maxBigZoom
     let style
-    if (props.status === 'Suspended' || props.status === 'Closed') { // Any station that is closed or suspended
+    if (props.status === 'Suspended' || props.status === 'Closed' || (!props.value && !props.iswales)) { // Any station that is closed or suspended
       style = isSelected ? (isBigSymbol ? styleCache.levelErrorBigSelected : styleCache.levelErrorSelected) : (isBigSymbol ? styleCache.levelErrorBig : styleCache.levelError)
-    } else if (props.atrisk && props.value && props.type !== 'C') { // Any station (excluding sea levels) that is at risk
+    } else if (props.value && props.atrisk && props.type !== 'C') { // Any station (excluding sea levels) that is at risk
       style = isSelected ? (isBigSymbol ? styleCache.levelHighBigSelected : styleCache.levelHighSelected) : (isBigSymbol ? styleCache.levelHighBig : styleCache.levelHigh)
     } else { // All other states
       style = isSelected ? (isBigSymbol ? styleCache.levelBigSelected : styleCache.levelSelected) : (isBigSymbol ? styleCache.levelBig : styleCache.level)
@@ -128,13 +128,6 @@ window.flood.maps.styles = {
     const isSelected = feature.get('isSelected')
     const isBigSymbol = resolution <= maxBigZoom
     return isSelected ? (isBigSymbol ? styleCache.rainfallBigSelected : styleCache.rainfallSelected) : (isBigSymbol ? styleCache.rainfallBig : styleCache.rainfall)
-  },
-
-  stationsJSON: {
-    symbolType: 'image',
-    src: '/assets/images/map-symbols-2x.png',
-    size: [100, 100],
-    offset: [0, 600]
   }
 }
 

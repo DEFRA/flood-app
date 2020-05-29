@@ -26,7 +26,7 @@
 {% elif model.river %}
 <h2 class="govuk-body govuk-!-margin-bottom-1">
     {% if model.type === 'C' %}Sea level{% elif model.type === 'G' %}Groundwater level{% else %}River level{% endif %}
-    {% if model.value and model.type !== 'C' and model.status !== 'Closed' or model.status !== 'Suspended' %}
+    {% if model.value and model.type !== 'C' and model.status !== 'Closed' and model.status !== 'Suspended' and not model.iswales %}
     {% if model.atrisk %}(high){% elif model.value < model.percentile_95 %}(low){% else %}(normal){% endif %}
     {% endif %}
 </h2>
@@ -34,14 +34,17 @@
     <strong>
         <a class="defra-map-info__link" href="/station/{{ model.id }}">
             {{ model.name }}{% if model.type === 'S' or model.type === 'M' %}, {{ model.river }}{% endif %}
+            {% if model.iswales %}(Natural Resources Wales){% endif %}
         </a>
     </strong></br>
+    {% if not model.iswales %}
     {% if model.status === 'Closed' or model.status === 'Suspended' %}
     Closed or temporarily out of service
     {% elif model.value %}
     {{ model.value | round(2) }}m at {{ model.date }}
     {% else %}
-    Latest measurement unreliable
+    There is a problem with the latest measurement
+    {% endif %}
     {% endif %}
 </p>
 {% if model.up %}
