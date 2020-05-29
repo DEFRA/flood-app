@@ -165,7 +165,6 @@ function LiveMap (mapId, options) {
         selected.getSource().addFeature(newFeature)
         selected.setStyle(layer.getStyle())
         container.showInfo(newFeature)
-        console.log(newFeature.getProperties())
       }
       // Refresh target area polygons
       if (layer.get('ref') === 'warnings') {
@@ -556,7 +555,6 @@ function LiveMap (mapId, options) {
       setSelectedFeature(newFeatureId)
       panToFeature(feature)
       // Set focus back to up or down button
-      console.log(document.querySelector('.defra-map-info__link'))
       const upstream = document.querySelector('.defra-map-info__button--up')
       const downstream = document.querySelector('.defra-map-info__button--down')
       if ((direction === 'up' && upstream) || (direction === 'down' && !downstream)) {
