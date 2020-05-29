@@ -118,7 +118,7 @@ window.flood.maps.layers = {
   rainfall: () => {
     return new VectorLayer({
       ref: 'rainfall',
-      featureCodes: 'rw, rd',
+      featureCodes: 'rf',
       source: new VectorSource({
         format: new GeoJSON(),
         projection: 'EPSG:3857',
