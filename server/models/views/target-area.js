@@ -17,7 +17,7 @@ class ViewModel {
     let situation = flood ? flood.situation : ''
 
     const dateSituationChanged = flood ? moment.tz(flood.situation_changed, 'Europe/London').format('D MMMM YYYY') : moment.tz('Europe/London').format('D MMMM YYYY')
-    const timeSituationChanged = flood ? moment.tz(flood.situation_changed, 'Europe/London').format('h:ma') : moment.tz('Europe/London').format('h:ma')
+    const timeSituationChanged = flood ? moment.tz(flood.situation_changed, 'Europe/London').format('h:mma') : moment.tz('Europe/London').format('h:ma')
 
     const areaDescription = `Flood ${type}: ${area.description}`
     const secondBanner = !!(((flood && severityLevel.id === 4) && (type === 'warning')) || !flood)

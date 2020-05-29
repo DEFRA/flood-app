@@ -9,8 +9,7 @@ class ViewModel {
       metaCanonical: '/national',
       hasActiveFloods: floods.hasActiveFloods,
       highestSeverityId: floods.highestSeverityId,
-      dateFormatted: moment.tz('Europe/London').format('D MMMM YYYY'),
-      timeFormatted: moment.tz('Europe/London').format('h:mma')
+      dateFormatted: 'Up to date as of ' + moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY')
     })
 
     // Strip out flood array as it is superflous to the view
