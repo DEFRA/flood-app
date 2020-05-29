@@ -101,10 +101,10 @@ window.flood.maps.styles = {
     const isSelected = feature.get('isSelected')
     const isBigSymbol = resolution <= maxBigZoom
     let style
-    if (props.atrisk) { // Any station that is at risk
-      style = isSelected ? (isBigSymbol ? styleCache.levelHighBigSelected : styleCache.levelHighSelected) : (isBigSymbol ? styleCache.levelHighBig : styleCache.levelHigh)
-    } else if (props.status === 'Suspended' || props.status === 'Closed') { // Any station that is closed or suspended
+    if (props.status === 'Suspended' || props.status === 'Closed') { // Any station that is closed or suspended
       style = isSelected ? (isBigSymbol ? styleCache.levelErrorBigSelected : styleCache.levelErrorSelected) : (isBigSymbol ? styleCache.levelErrorBig : styleCache.levelError)
+    } else if (props.atrisk && props.value && props.type !== 'C') { // Any station (excluding sea levels) that is at risk
+      style = isSelected ? (isBigSymbol ? styleCache.levelHighBigSelected : styleCache.levelHighSelected) : (isBigSymbol ? styleCache.levelHighBig : styleCache.levelHigh)
     } else { // All other states
       style = isSelected ? (isBigSymbol ? styleCache.levelBigSelected : styleCache.levelSelected) : (isBigSymbol ? styleCache.levelBig : styleCache.level)
     }

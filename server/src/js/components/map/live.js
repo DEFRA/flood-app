@@ -129,6 +129,7 @@ function LiveMap (mapId, options) {
     layer.getSource().forEachFeature((feature) => {
       const ref = layer.get('ref')
       const props = feature.getProperties()
+      const highRiverLevel = props.atrisk && props.status !== 'Suspended' && props.status !== 'Closed' && props.value && props.type !== 'C'
       const isVisible = (
         // Warnings
         (props.severity_value && props.severity_value === 3 && lyrCodes.includes('ts')) ||
@@ -136,8 +137,8 @@ function LiveMap (mapId, options) {
         (props.severity_value && props.severity_value === 1 && lyrCodes.includes('ta')) ||
         (props.severity_value && props.severity_value === 4 && lyrCodes.includes('tr')) ||
         // Stations
-        (ref === 'stations' && props.atrisk && lyrCodes.includes('sh')) ||
-        (ref === 'stations' && !props.atrisk && lyrCodes.includes('st')) ||
+        (ref === 'stations' && highRiverLevel && lyrCodes.includes('sh')) ||
+        (ref === 'stations' && !highRiverLevel && lyrCodes.includes('st')) ||
         // Rainfall
         (ref === 'rainfall' && lyrCodes.includes('rf')) ||
         // Impacts
@@ -164,6 +165,7 @@ function LiveMap (mapId, options) {
         selected.getSource().addFeature(newFeature)
         selected.setStyle(layer.getStyle())
         container.showInfo(newFeature)
+        console.log(newFeature.getProperties())
       }
       // Refresh target area polygons
       if (layer.get('ref') === 'warnings') {
