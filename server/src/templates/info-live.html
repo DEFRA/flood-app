@@ -25,12 +25,9 @@
 </p>
 {% elif model.river %}
 <h2 class="govuk-body govuk-!-margin-bottom-1">
-    {% if model.type === 'C' %}
-    Sea level
-    {% elif model.type === 'G' %}
-    Groundwater level
-    {% else %}
-    River level {% if model.atrisk %}(high){% endif %}
+    {% if model.type === 'C' %}Sea level{% elif model.type === 'G' %}Groundwater level{% else %}River level{% endif %}
+    {% if model.value and model.type !== 'C' and model.status !== 'Closed' or model.status !== 'Suspended' %}
+    {% if model.atrisk %}(high){% elif model.value < model.percentile_95 %}(low){% else %}(normal){% endif %}
     {% endif %}
 </h2>
 <p class="govuk-body-s govuk-!-margin-bottom-2">

@@ -128,6 +128,13 @@ window.flood.maps.styles = {
     const isSelected = feature.get('isSelected')
     const isBigSymbol = resolution <= maxBigZoom
     return isSelected ? (isBigSymbol ? styleCache.rainfallBigSelected : styleCache.rainfallSelected) : (isBigSymbol ? styleCache.rainfallBig : styleCache.rainfall)
+  },
+
+  stationsJSON: {
+    symbolType: 'image',
+    src: '/assets/images/map-symbols-2x.png',
+    size: [100, 100],
+    offset: [0, 600]
   }
 }
 

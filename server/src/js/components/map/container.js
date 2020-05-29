@@ -225,6 +225,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
     if (!maps.isKeyboard) {
       containerElement.removeAttribute('tabindex')
     }
+    console.log('openKey')
     // Lock body scroll
     disableBodyScroll(document.querySelector('.defra-map-key__container'))
   }
