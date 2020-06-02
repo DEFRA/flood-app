@@ -12,6 +12,7 @@ import { defaults as defaultInteractions } from 'ol/interaction'
 import { Point, MultiPolygon } from 'ol/geom'
 import { buffer, containsExtent, getCenter } from 'ol/extent'
 import { Vector as VectorSource } from 'ol/source'
+// import WebGLPointsLayer from 'ol/layer/WebGLPoints'
 
 const { addOrUpdateParameter, getParameterByName, forEach } = window.flood.utils
 const maps = window.flood.maps
@@ -118,18 +119,34 @@ function LiveMap (mapId, options) {
     })
     road.setVisible(lyrCodes.includes('mv'))
     satellite.setVisible(lyrCodes.includes('sv'))
-    // Force wanrings to show if target area provided
+    // Overide wanrings visibility if target area provided
     if (targetArea.pointFeature) {
       warnings.setVisible(true)
     }
   }
+
+  // WebGL: Should probably be done upstream
+  /*
+  const setFeatueDisplayState = (layer) => {
+    layer.getSource().forEachFeature((feature) => {
+      const props = feature.getProperties()
+      let state = 'normal'
+      if (props.status === 'Suspended' || props.status === 'Closed' || (!props.value && !props.iswales)) { // Any station that is closed or suspended
+        state = 'error'
+      } else if (props.value && props.atrisk && props.type !== 'C') { // Any station (excluding sea levels) that is at risk
+        state = 'high'
+      }
+      feature.set('state', state)
+    })
+  }
+  */
 
   // Show or hide features within layers
   const setFeatureVisibility = (lyrCodes, layer) => {
     layer.getSource().forEachFeature((feature) => {
       const ref = layer.get('ref')
       const props = feature.getProperties()
-      const highRiverLevel = props.atrisk && props.status !== 'Suspended' && props.status !== 'Closed' && props.value && props.type !== 'C'
+      const isHighLevel = props.atrisk && props.status === 'Active' && props.value && props.type !== 'C' && !props.iswales
       const isVisible = (
         // Warnings
         (props.severity_value && props.severity_value === 3 && lyrCodes.includes('ts')) ||
@@ -137,8 +154,8 @@ function LiveMap (mapId, options) {
         (props.severity_value && props.severity_value === 1 && lyrCodes.includes('ta')) ||
         (props.severity_value && props.severity_value === 4 && lyrCodes.includes('tr')) ||
         // Stations
-        (ref === 'stations' && highRiverLevel && lyrCodes.includes('sh')) ||
-        (ref === 'stations' && !highRiverLevel && lyrCodes.includes('st')) ||
+        (ref === 'stations' && isHighLevel && lyrCodes.includes('sh')) ||
+        (ref === 'stations' && !isHighLevel && lyrCodes.includes('st')) ||
         // Rainfall
         (ref === 'rainfall' && lyrCodes.includes('rf')) ||
         // Impacts
@@ -147,6 +164,12 @@ function LiveMap (mapId, options) {
         (targetArea.pointFeature && targetArea.pointFeature.getId() === feature.getId())
       )
       feature.set('isVisible', isVisible)
+      // WebGl: layers must have string properties???
+      /*
+      if (layer instanceof WebGLPointsLayer) {
+        feature.set('isVisibleString', Boolean(isVisible).toString())
+      }
+      */
     })
   }
 
@@ -163,7 +186,7 @@ function LiveMap (mapId, options) {
         newFeature.set('isSelected', true)
         setFeatureHtml(newFeature)
         selected.getSource().addFeature(newFeature)
-        selected.setStyle(layer.getStyle())
+        selected.setStyle(maps.styles[layer.get('ref')]) // WebGL: layers don't use a style function
         container.showInfo(newFeature)
       }
       // Refresh target area polygons
@@ -405,13 +428,19 @@ function LiveMap (mapId, options) {
             if (!warnings.getSource().getFeatureById(targetArea.pointFeature.getId())) {
               // Add point feature
               warnings.getSource().addFeature(targetArea.pointFeature)
-              // Add polygon if destination VectorSource (not required if VectorTileSource)
+              // VectorSource: Add polygon not required if VectorTileSource
               if (targetArea.polygonFeature && targetAreaPolygons.getSource() instanceof VectorSource) {
                 targetAreaPolygons.getSource().addFeature(targetArea.polygonFeature)
               }
             }
           }
         }
+        // WebGL: Should be done upstream
+        /*
+        if (layer instanceof WebGLPointsLayer) {
+          setFeatueDisplayState(layer)
+        }
+        */
         // Set feature visibility after all features have loaded
         const lyrs = getParameterByName('lyr') ? getParameterByName('lyr').split(',') : []
         setFeatureVisibility(lyrs, layer)
