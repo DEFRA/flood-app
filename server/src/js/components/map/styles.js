@@ -4,9 +4,8 @@ Sets up the window.flood.maps styles objects
 */
 import { Style, Icon, Fill, Stroke } from 'ol/style'
 
-const maxBigZoom = 100
-
 window.flood.maps.styles = {
+
   // Primarily vector tiles
   targetAreaPolygons: (feature) => {
     // Use corresposnding warning feature propeties for styling
@@ -70,7 +69,7 @@ window.flood.maps.styles = {
       return
     }
     // Hide warning symbols when polygon is shown
-    if (resolution < maxBigZoom) {
+    if (resolution < window.flood.maps.liveMaxBigZoom) {
       return
     }
     const severity = feature.get('severity_value')
@@ -99,7 +98,7 @@ window.flood.maps.styles = {
     }
     const props = feature.getProperties()
     const isSelected = feature.get('isSelected')
-    const isBigSymbol = resolution <= maxBigZoom
+    const isBigSymbol = resolution <= window.flood.maps.liveMaxBigZoom
     let style
     if (props.status === 'Suspended' || props.status === 'Closed' || (!props.value && !props.iswales)) { // Any station that is closed or suspended
       style = isSelected ? (isBigSymbol ? styleCache.levelErrorBigSelected : styleCache.levelErrorSelected) : (isBigSymbol ? styleCache.levelErrorBig : styleCache.levelError)
@@ -126,7 +125,7 @@ window.flood.maps.styles = {
       return
     }
     const isSelected = feature.get('isSelected')
-    const isBigSymbol = resolution <= maxBigZoom
+    const isBigSymbol = resolution <= window.flood.maps.liveMaxBigZoom
     return isSelected ? (isBigSymbol ? styleCache.rainfallBigSelected : styleCache.rainfallSelected) : (isBigSymbol ? styleCache.rainfallBig : styleCache.rainfall)
   },
 
@@ -282,4 +281,9 @@ const styleCache = {
   levelErrorSelected: createStyle({ offset: [100, 1100], zIndex: 10 }),
   rainfall: createStyle({ offset: [0, 1200], zIndex: 1 }),
   rainfallSelected: createStyle({ offset: [100, 1200], zIndex: 10 })
+}
+
+// WebGL styles uses Math.log2() ie11 doesnt support this
+Math.log2 = (number) => {
+  return Math.log(number) / Math.log(2)
 }

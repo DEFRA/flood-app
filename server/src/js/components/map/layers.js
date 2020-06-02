@@ -3,7 +3,7 @@
 Initialises the window.flood.maps layers
 */
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer' // VectorTile as VectorTileLayer for vector tiles
-// import WebGLPointsLayer from 'ol/layer/WebGLPoints'
+import WebGLPointsLayer from 'ol/layer/WebGLPoints'
 import { BingMaps, Vector as VectorSource } from 'ol/source' // VectorTile as VectorTileSource for vector tiles
 import { bbox } from 'ol/loadingstrategy'
 import { GeoJSON } from 'ol/format' // MVT for vector tiles
@@ -87,6 +87,7 @@ window.flood.maps.layers = {
     })
   },
 
+  /*
   stations: () => {
     return new VectorLayer({
       ref: 'stations',
@@ -101,9 +102,9 @@ window.flood.maps.layers = {
       zIndex: 3
     })
   },
+  */
 
   // WebGL: Stations layer
-  /*
   stations: () => {
     return new WebGLPointsLayer({
       ref: 'stations',
@@ -118,7 +119,6 @@ window.flood.maps.layers = {
       zIndex: 3
     })
   },
-  */
 
   impacts: () => {
     return new VectorLayer({

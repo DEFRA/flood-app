@@ -12,7 +12,7 @@ import { defaults as defaultInteractions } from 'ol/interaction'
 import { Point, MultiPolygon } from 'ol/geom'
 import { buffer, containsExtent, getCenter } from 'ol/extent'
 import { Vector as VectorSource } from 'ol/source'
-// import WebGLPointsLayer from 'ol/layer/WebGLPoints'
+import WebGLPointsLayer from 'ol/layer/WebGLPoints'
 
 const { addOrUpdateParameter, getParameterByName, forEach } = window.flood.utils
 const maps = window.flood.maps
@@ -20,6 +20,9 @@ const { setExtentFromLonLat, getLonLatFromExtent } = window.flood.maps
 const MapContainer = maps.MapContainer
 
 function LiveMap (mapId, options) {
+  // Set maxBigZoom value
+  maps.liveMaxBigZoom = 100
+
   // Optional target area features
   const targetArea = {}
 
@@ -72,7 +75,7 @@ function LiveMap (mapId, options) {
 
   // Options to pass to the MapContainer constructor
   const containerOptions = {
-    maxBigZoom: 100,
+    maxBigZoom: maps.liveMaxBigZoom,
     view: view,
     layers: layers,
     queryParamKeys: ['v', 'lyr', 'ext', 'fid'],
@@ -126,7 +129,6 @@ function LiveMap (mapId, options) {
   }
 
   // WebGL: Should probably be done upstream
-  /*
   const setFeatueDisplayState = (layer) => {
     layer.getSource().forEachFeature((feature) => {
       const props = feature.getProperties()
@@ -139,7 +141,6 @@ function LiveMap (mapId, options) {
       feature.set('state', state)
     })
   }
-  */
 
   // Show or hide features within layers
   const setFeatureVisibility = (lyrCodes, layer) => {
@@ -165,11 +166,9 @@ function LiveMap (mapId, options) {
       )
       feature.set('isVisible', isVisible)
       // WebGl: layers must have string properties???
-      /*
       if (layer instanceof WebGLPointsLayer) {
         feature.set('isVisibleString', Boolean(isVisible).toString())
       }
-      */
     })
   }
 
@@ -202,7 +201,7 @@ function LiveMap (mapId, options) {
   // Toggle key symbols based on resolution
   const toggleKeySymbol = () => {
     forEach(containerElement.querySelectorAll('.defra-map-key__symbol'), (symbol) => {
-      const isBigZoom = map.getView().getResolution() <= containerOptions.maxBigZoom
+      const isBigZoom = map.getView().getResolution() <= maps.liveMaxBigZoom
       isBigZoom ? symbol.classList.add('defra-map-key__symbol--big') : symbol.classList.remove('defra-map-key__symbol--big')
     })
   }
@@ -221,7 +220,7 @@ function LiveMap (mapId, options) {
     const lyrs = getParameterByName('lyr') ? getParameterByName('lyr').split(',') : []
     const resolution = map.getView().getResolution()
     const extent = map.getView().calculateExtent(map.getSize())
-    const isBigZoom = resolution <= containerOptions.maxBigZoom
+    const isBigZoom = resolution <= maps.liveMaxBigZoom
     const layers = dataLayers.filter(layer => lyrs.some(lyr => layer.get('featureCodes').includes(lyr)))
     if (!layers.includes(warnings) && targetArea.pointFeature) {
       layers.push(warnings)
@@ -269,7 +268,7 @@ function LiveMap (mapId, options) {
   // Set target area polygon opacity
   const setOpacityTargetAreaPolygons = () => {
     const resolution = Math.floor(map.getView().getResolution())
-    targetAreaPolygons.setVisible(resolution < containerOptions.maxBigZoom)
+    targetAreaPolygons.setVisible(resolution < maps.liveMaxBigZoom)
     // Opacity graduates with resolution
     targetAreaPolygons.setOpacity((-Math.abs(map.getView().getZoom()) + 20) / 10)
   }
@@ -436,11 +435,9 @@ function LiveMap (mapId, options) {
           }
         }
         // WebGL: Should be done upstream
-        /*
         if (layer instanceof WebGLPointsLayer) {
           setFeatueDisplayState(layer)
         }
-        */
         // Set feature visibility after all features have loaded
         const lyrs = getParameterByName('lyr') ? getParameterByName('lyr').split(',') : []
         setFeatureVisibility(lyrs, layer)
