@@ -63,21 +63,10 @@
     0mm or no recent measurements
     {% endif %}
 </p>
-{% else %}
-<p>To follow...</p>
+{% elif model.stationReference %}
+<h2 class="govuk-body govuk-!-margin-bottom-1">Historic flooding</h2>
+<p class="govuk-body-s govuk-!-margin-bottom-1">
+    <strong>{{ props.description }}</strong><br/>
+    <a href="/station/{{ props.stationId }}?t={{ props.impactId }}">River level at {{ props.stationName }}</a>
+</p>
 {% endif %}
-
-<!--
-<h2 class="govuk-body govuk-!-margin-bottom-1">Past flooding</h2>
-<p class="govuk-body-s govuk-!-margin-bottom-1">
-    <strong>Flooding to A595 at Bothel</a>
-</p>
--->
-
-<!--
-<h2 class="govuk-body govuk-!-margin-bottom-1">Rainfall</h2>
-<p class="govuk-body-s govuk-!-margin-bottom-1">
-    <strong><a class="defra-map-info__link" href="">View measurments at grid ref SD653529</a></strong>
-</p>
--->
-
