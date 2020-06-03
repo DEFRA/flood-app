@@ -69,6 +69,10 @@ module.exports = {
     return util.getJson(`${serviceUrl}/stations-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`)
   },
 
+  getStationsWithinTargetArea (taCode) {
+    return util.getJson(`${serviceUrl}/stations-within-target-area/${taCode}`)
+  },
+
   getRiverById (id) {
     return util.getJson(`${serviceUrl}/river/${id}`)
   },
