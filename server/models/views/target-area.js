@@ -48,7 +48,7 @@ class ViewModel {
       severity: severityLevel,
       situationChanged,
       situation: situation,
-      secondBanner: secondBanner,
+      parentAreaAlert: parentAreaAlert,
       areaDescription: areaDescription,
       targetArea: area.code,
       mapTitle
