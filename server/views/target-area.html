@@ -12,7 +12,7 @@
 
 <!--    FIRST BANNER-->
     <div class="defra-flood-status govuk-!-margin-bottom-3">
-      {% if model.flood and model.severity.id < 4 %}
+      {% if model.flood and model.severity.id < 4%}
       <div class="defra-flood-status-item defra-flood-status-item--{{model.severity.hash}}">
         <span class="defra-flood-status-item__icon"></span>
         <div class="defra-flood-status-item__text">
@@ -21,8 +21,8 @@
       </div>
       {% endif %}
 
-<!--      Inactive or Removed-->
-      {% if (model.flood and model.severity.id == 4) or not model.flood %}
+<!--      Inactive or Removed and there is no active alert in parent area-->
+      {% if ((model.flood and model.severity.id == 4) or not model.flood) and not model.parentAreaAlert%}
         <div class="defra-flood-status-item">
           {% if not model.flood %}
           <div class="defra-flood-status-item__text">
@@ -37,8 +37,8 @@
       {% endif %}
     </div>
 
-<!--    SECOND BANNER THAT APPEARS IN CASE OF WARNING INACTIVE, REMOVED-->
-    {% if model.secondBanner %}
+<!--    Second banner appearing in case of active alert in parent area-->
+    {% if model.parentAreaAlert %}
     <div class="defra-flood-status govuk-!-margin-bottom-3">
       <div class="defra-flood-status-item defra-flood-status-item--alert">
         <span class="defra-flood-status-item__icon"></span>

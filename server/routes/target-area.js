@@ -10,7 +10,8 @@ module.exports = {
     const { floods } = await floodService.getFloods()
     const area = await floodService.getFloodArea(code)
     const flood = floods.find(n => n.ta_code === code)
-    const model = new ViewModel({ area, flood })
+    const parentFlood = floods.find(n => n.ta_code === area.parent)
+    const model = new ViewModel({ area, flood, parentFlood })
     return h.view('target-area', { model })
   },
   options: {
