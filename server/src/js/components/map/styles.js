@@ -16,7 +16,7 @@ window.flood.maps.styles = {
       warningId = 'flood' + feature.getId().substring(feature.getId().indexOf('.'))
     }
     const warning = warningsSource.getFeatureById(warningId)
-    if (!warning || !warning.get('isVisible')) {
+    if (!warning || warning.get('isVisible') !== 'true') {
       return new Style()
     }
 
