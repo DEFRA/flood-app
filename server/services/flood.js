@@ -89,8 +89,9 @@ module.exports = {
     return util.getJson(`${serviceUrl}/station/${id}/forecast/data`)
   },
 
+  // DL: WebGL layers don't support z-index so source data needs to be in desired order, sortBy=atrisk added
   getStationsGeoJson () {
-    return util.getJson(`${config.geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&outputFormat=application%2Fjson`)
+    return util.getJson(`${config.geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&sortBy=atrisk&outputFormat=application%2Fjson`)
   },
 
   getIsEngland (lng, lat) {

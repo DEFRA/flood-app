@@ -65,54 +65,45 @@ window.flood.maps.styles = {
 
   // Warning centroids
   warnings: (feature, resolution) => {
-    if (!feature.get('isVisible')) {
-      return
-    }
-    // Hide warning symbols when polygon is shown
-    if (resolution < window.flood.maps.liveMaxBigZoom) {
+    // Hide warning symbols or hide when polygon is shown
+    if (feature.get('isVisible') !== 'true' || resolution < window.flood.maps.liveMaxBigZoom) {
       return
     }
     const severity = feature.get('severity_value')
     const isSelected = feature.get('isSelected')
-    let style
     switch (severity) {
       case 3: // Severe warning
-        style = isSelected ? styleCache.severeSelected : styleCache.severe
-        break
+        return isSelected ? styleCache.severeSelected : styleCache.severe
       case 2: // Warning
-        style = isSelected ? styleCache.warningSelected : styleCache.warning
-        break
+        return isSelected ? styleCache.warningSelected : styleCache.warning
       case 1: // Alert
-        style = isSelected ? styleCache.alertSelected : styleCache.alert
-        break
+        return isSelected ? styleCache.alertSelected : styleCache.alert
       default: // Removed or inactive
-        style = isSelected ? styleCache.targetAreaSelected : styleCache.targetArea
+        return isSelected ? styleCache.targetAreaSelected : styleCache.targetArea
     }
-    return style
   },
 
   // Station centroids
   stations: (feature, resolution) => {
-    if (!feature.get('isVisible')) {
+    if (feature.get('isVisible') !== 'true') {
       return
     }
-    const props = feature.getProperties()
+    const state = feature.get('state')
     const isSelected = feature.get('isSelected')
     const isBigSymbol = resolution <= window.flood.maps.liveMaxBigZoom
-    let style
-    if (props.status === 'Suspended' || props.status === 'Closed' || (!props.value && !props.iswales)) { // Any station that is closed or suspended
-      style = isSelected ? (isBigSymbol ? styleCache.levelErrorBigSelected : styleCache.levelErrorSelected) : (isBigSymbol ? styleCache.levelErrorBig : styleCache.levelError)
-    } else if (props.value && props.atrisk && props.type !== 'C') { // Any station (excluding sea levels) that is at risk
-      style = isSelected ? (isBigSymbol ? styleCache.levelHighBigSelected : styleCache.levelHighSelected) : (isBigSymbol ? styleCache.levelHighBig : styleCache.levelHigh)
-    } else { // All other states
-      style = isSelected ? (isBigSymbol ? styleCache.levelBigSelected : styleCache.levelSelected) : (isBigSymbol ? styleCache.levelBig : styleCache.level)
+    switch (state) {
+      case 'high':
+        return isSelected ? (isBigSymbol ? styleCache.levelHighBigSelected : styleCache.levelHighSelected) : (isBigSymbol ? styleCache.levelHighBig : styleCache.levelHigh)
+      case 'error':
+        return isSelected ? (isBigSymbol ? styleCache.levelErrorBigSelected : styleCache.levelErrorSelected) : (isBigSymbol ? styleCache.levelErrorBig : styleCache.levelError)
+      default:
+        return isSelected ? (isBigSymbol ? styleCache.levelBigSelected : styleCache.levelSelected) : (isBigSymbol ? styleCache.levelBig : styleCache.level)
     }
-    return style
   },
 
   // Impact centroids
   impacts: (feature, resolution) => {
-    if (!feature.get('isVisible')) {
+    if (feature.get('isVisible') !== 'true') {
       return
     }
     const isSelected = feature.get('isSelected')
@@ -121,7 +112,7 @@ window.flood.maps.styles = {
 
   // Rainfall centroids
   rainfall: (feature, resolution) => {
-    if (!feature.get('isVisible')) {
+    if (feature.get('isVisible') !== 'true') {
       return
     }
     const isSelected = feature.get('isSelected')
@@ -129,14 +120,38 @@ window.flood.maps.styles = {
     return isSelected ? (isBigSymbol ? styleCache.rainfallBigSelected : styleCache.rainfallSelected) : (isBigSymbol ? styleCache.rainfallBig : styleCache.rainfall)
   },
 
-  // Stations JSON style for WebGL points layer
-  stationsJSON: {
-    filter: ['==', ['get', 'isVisibleString'], 'true'],
+  // WebGL: json styles
+  warningsJSON: {
+    filter: ['case',
+      ['<', ['resolution'], 100],
+      false,
+      ['case',
+        ['==', ['get', 'isVisible'], 'true'],
+        true,
+        false
+      ]
+    ],
     symbol: {
       symbolType: 'image',
       src: '/assets/images/map-symbols-2x.png',
       size: 50,
-      // anchor: [0.5, 0.5],
+      rotateWithView: false,
+      offset: [0, 0],
+      textureCoord: ['match', ['get', 'severity_value'],
+        3, [0, 0, 0.5, 0.0769],
+        2, [0, 0.0769, 0.5, 0.1538],
+        1, [0, 0.1538, 0.5, 0.2307],
+        [0, 0.2307, 0.5, 0.3077]
+      ]
+    }
+  },
+
+  stationsJSON: {
+    filter: ['==', ['get', 'isVisible'], 'true'],
+    symbol: {
+      symbolType: 'image',
+      src: '/assets/images/map-symbols-2x.png',
+      size: 50,
       rotateWithView: false,
       offset: [0, 0],
       textureCoord: ['match', ['get', 'state'],
@@ -144,6 +159,30 @@ window.flood.maps.styles = {
         'error', ['case', ['<=', ['resolution'], 100], [0, 0.5385, 0.5, 0.6158], [0, 0.8462, 0.5, 0.9231]],
         ['case', ['<=', ['resolution'], 100], [0, 0.4615, 0.5, 0.5385], [0, 0.7692, 0.5, 0.8462]]
       ]
+    }
+  },
+
+  rainfallJSON: {
+    filter: ['==', ['get', 'isVisible'], 'true'],
+    symbol: {
+      symbolType: 'image',
+      src: '/assets/images/map-symbols-2x.png',
+      size: 50,
+      rotateWithView: false,
+      offset: [0, 0],
+      textureCoord: ['case', ['<=', ['resolution'], 100], [0, 0.6154, 0.5, 0.6923], [0, 0.9231, 0.5, 1]]
+    }
+  },
+
+  impactsJSON: {
+    filter: ['==', ['get', 'isVisible'], 'true'],
+    symbol: {
+      symbolType: 'image',
+      src: '/assets/images/map-symbols-2x.png',
+      size: 50,
+      rotateWithView: false,
+      offset: [0, 0],
+      textureCoord: [0, 0.3077, 0.5, 0.3846]
     }
   }
 }

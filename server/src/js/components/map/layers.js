@@ -72,6 +72,7 @@ window.flood.maps.layers = {
     })
   },
 
+  /*
   warnings: () => {
     return new VectorLayer({
       ref: 'warnings',
@@ -82,6 +83,23 @@ window.flood.maps.layers = {
         url: '/api/warnings.geojson'
       }),
       style: window.flood.maps.styles.warnings,
+      visible: false,
+      zIndex: 4
+    })
+  },
+  */
+
+  // WebGL: Warnings layer
+  warnings: () => {
+    return new WebGLPointsLayer({
+      ref: 'warnings',
+      featureCodes: 'ts, tw, ta, tr',
+      source: new VectorSource({
+        format: new GeoJSON(),
+        projection: 'EPSG:3857',
+        url: '/api/warnings.geojson'
+      }),
+      style: window.flood.maps.styles.warningsJSON,
       visible: false,
       zIndex: 4
     })
@@ -120,6 +138,7 @@ window.flood.maps.layers = {
     })
   },
 
+  /*
   impacts: () => {
     return new VectorLayer({
       ref: 'impacts',
@@ -134,7 +153,25 @@ window.flood.maps.layers = {
       zIndex: 5
     })
   },
+  */
 
+  // WebGL: Impacts layer
+  impacts: () => {
+    return new WebGLPointsLayer({
+      ref: 'impacts',
+      featureCodes: 'hi',
+      source: new VectorSource({
+        format: new GeoJSON(),
+        projection: 'EPSG:3857',
+        url: '/api/impacts'
+      }),
+      style: window.flood.maps.styles.impactsJSON,
+      visible: false,
+      zIndex: 5
+    })
+  },
+
+  /*
   rainfall: () => {
     return new VectorLayer({
       ref: 'rainfall',
@@ -145,6 +182,23 @@ window.flood.maps.layers = {
         url: '/api/rainfall'
       }),
       style: window.flood.maps.styles.rainfall,
+      visible: false,
+      zIndex: 2
+    })
+  },
+  */
+
+  // WebGL: Rainfall layer
+  rainfall: () => {
+    return new WebGLPointsLayer({
+      ref: 'rainfall',
+      featureCodes: 'rf',
+      source: new VectorSource({
+        format: new GeoJSON(),
+        projection: 'EPSG:3857',
+        url: '/api/rainfall'
+      }),
+      style: window.flood.maps.styles.rainfallJSON,
       visible: false,
       zIndex: 2
     })
