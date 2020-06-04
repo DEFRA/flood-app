@@ -379,7 +379,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
 
   // Firt tab key and tabrings
   const keydown = (e) => {
-    if (e.key !== 'Tab') { return }
+    if (e.key !== 'Tab' && e.key !== 'F6') { return }
     // Set appropriate tabindex on container
     containerElement.tabIndex = 0
     tabletListener(tabletMediaQuery)
@@ -389,36 +389,50 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
       containerElement.focus()
       containerElement.setAttribute('keyboard-focus', '')
     }
-    // Constrain tab focus within dialog
-    const tabring = document.activeElement.closest('[role="dialog"]') || containerElement
-    const specificity = tabring.classList.contains('defra-map') ? '[role="region"] ' : ''
-    const selectors = [
-      'a[href]:not([disabled]):not([hidden])',
-      'button:not([disabled]):not([hidden])',
-      'textarea:not([disabled]):not([hidden])',
-      'input[type="text"]:not([disabled]):not([hidden])',
-      'input[type="radio"]:not([disabled]):not([hidden])',
-      'input[type="checkbox"]:not([disabled]):not([hidden])',
-      'select:not([disabled]):not([hidden])'
-    ]
-    const focusableEls = document.querySelectorAll(`#${tabring.id}, ` + selectors.map(i => `#${tabring.id} ${specificity}` + i).join(','))
-    const firstFocusableEl = focusableEls[0]
-    const lastFocusableEl = focusableEls[focusableEls.length - 1]
-    if (e.shiftKey) {
-      if (document.activeElement === firstFocusableEl) {
-        lastFocusableEl.focus()
-        e.preventDefault()
+    // Constrain tab keypress to current dialog
+    if (e.key === 'Tab') {
+      const tabring = document.activeElement.closest('[role="dialog"]') || containerElement
+      const specificity = tabring.classList.contains('defra-map') ? '[role="region"] ' : ''
+      const selectors = [
+        'a[href]:not([disabled]):not([hidden])',
+        'button:not([disabled]):not([hidden])',
+        'textarea:not([disabled]):not([hidden])',
+        'input[type="text"]:not([disabled]):not([hidden])',
+        'input[type="radio"]:not([disabled]):not([hidden])',
+        'input[type="checkbox"]:not([disabled]):not([hidden])',
+        'select:not([disabled]):not([hidden])'
+      ]
+      const focusableEls = document.querySelectorAll(`#${tabring.id}, ` + selectors.map(i => `#${tabring.id} ${specificity}` + i).join(','))
+      const firstFocusableEl = focusableEls[0]
+      const lastFocusableEl = focusableEls[focusableEls.length - 1]
+      // Tab and shift tab
+      if (e.shiftKey) {
+        if (document.activeElement === firstFocusableEl) {
+          lastFocusableEl.focus()
+          e.preventDefault()
+        }
+      } else {
+        if (document.activeElement === lastFocusableEl) {
+          firstFocusableEl.focus()
+          e.preventDefault()
+        }
       }
-    } else {
-      if (document.activeElement === lastFocusableEl) {
-        firstFocusableEl.focus()
-        e.preventDefault()
+    }
+    // Move focus between regions
+    if (e.key === 'F6') {
+      const regions = Array.from(document.querySelectorAll('.defra-map, [role="dialog"][open="true"][tabindex="0"], [role="region"][tabindex="0"]'))
+      const activeRegion = document.activeElement.closest('[role="dialog"], [role="region"]')
+      const activeIndex = regions.indexOf(activeRegion)
+      if (e.shiftKey) {
+        activeIndex === 0 ? regions[regions.length - 1].focus() : regions[activeIndex - 1].focus()
+      } else {
+        activeIndex === regions.length - 1 ? regions[0].focus() : regions[activeIndex + 1].focus()
       }
     }
   }
   window.addEventListener('keydown', keydown)
 
-  // All keypress (keyup) events
+  // Escape (keyup) to close dialogs
   const keyup = (e) => {
     // Escape key behavior
     if (e.key === 'Escape' || e.key === 'Esc') {
@@ -430,14 +444,6 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
         closeKeyButton.click()
       } else {
         exitMapButtonElement.click()
-      }
-    }
-    // Move tab ring between regions
-    if (e.key === 'F6') {
-      if (e.shiftKey) /* shift + F6 */ {
-        console.log('Previous region')
-      } else /* F6 */ {
-        console.log('Next region')
       }
     }
   }

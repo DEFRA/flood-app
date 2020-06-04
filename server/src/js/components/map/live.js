@@ -127,7 +127,7 @@ function LiveMap (mapId, options) {
     }
   }
 
-  // WebGL: Limityed dynamic styling could be done server side for client performance
+  // WebGL: Limited dynamic styling could be done server side
   const setFeatueState = (layer) => {
     layer.getSource().forEachFeature((feature) => {
       const props = feature.getProperties()
@@ -338,7 +338,7 @@ function LiveMap (mapId, options) {
     state.selectedFeatureId = getParameterByName('fid')
   }
 
-  // Create optional target area features
+  // Create optional target area feature
   if (options.targetArea) {
     if (options.targetArea.polygon) { // Vector source
       // Create polygon feature
