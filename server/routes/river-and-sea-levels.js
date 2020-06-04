@@ -20,7 +20,11 @@ module.exports = [{
       const bbox = await floodService.getStationsWithinTargetArea(request.query['target-area'])
       const bboxExtended = util.addBufferToBbox([bbox[0].x1, bbox[0].y1, bbox[0].x2, bbox[0].y2], 8000)
       stations = await floodService.getStationsWithin(bboxExtended)
-      model = new ViewModel({ location, place, stations })
+      const targetArea = {
+        name: bbox[0].ta_name,
+        description: bbox[0].ta_name
+      }
+      model = new ViewModel({ location, place, stations, targetArea })
       return h.view('river-and-sea-levels', { model })
       // Else no location
     } else if (typeof location === 'undefined' || location === '') {

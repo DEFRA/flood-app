@@ -152,7 +152,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location - GOV.UK')
+    Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location - River and sea levels in England - GOV.UK')
     Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location')
     Code.expect(response.statusCode).to.equal(200)
   })

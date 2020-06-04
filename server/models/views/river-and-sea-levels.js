@@ -2,17 +2,19 @@ const moment = require('moment-timezone')
 const { groupBy } = require('../../util')
 
 class ViewModel {
-  constructor ({ location, place, stations, error }) {
-    const placeName = place ? place.name : ''
+  constructor ({ location, place, stations, targetArea, error }) {
+    const placeName = place ? place.name : (targetArea && targetArea.name ? targetArea.name : '')
     const placeCentre = place ? place.center : []
     const pageTitle = ''
     const isEngland = place ? place.isEngland.is_england : null
+    const placeDescription = targetArea && targetArea.name ? targetArea.name : ''
 
     Object.assign(this, {
       q: location,
       pageTitle: pageTitle,
       metaNoIndex: true,
       placeName: placeName,
+      placeDescription: placeDescription,
       placeCentre: placeCentre,
       countLevels: stations.length,
       error: error ? true : null,
@@ -20,9 +22,9 @@ class ViewModel {
     })
 
     if (error) {
-      this.pageTitle = 'Sorry, there is currently a problem searching a location'
+      this.pageTitle = 'Sorry, there is currently a problem searching a location - River and sea levels in England'
     } else {
-      this.pageTitle = `${placeName ? placeName + ' latest r' : 'Latest r'}iver and sea levels`
+      this.pageTitle = `${placeName ? placeName + ' - ' : ''}River and sea levels in England`
     }
 
     const today = moment.tz().endOf('day')
