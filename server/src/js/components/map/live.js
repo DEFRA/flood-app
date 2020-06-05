@@ -171,7 +171,7 @@ function LiveMap (mapId, options) {
   }
 
   // Set selected feature
-  const setSelectedFeature = (newFeatureId) => {
+  const setSelectedFeature = (newFeatureId = '') => {
     selected.getSource().clear()
     dataLayers.forEach((layer) => {
       const originalFeature = layer.getSource().getFeatureById(state.selectedFeatureId)
@@ -488,14 +488,16 @@ function LiveMap (mapId, options) {
   // Set selected feature if map is clicked
   map.addEventListener('click', (e) => {
     // Get mouse coordinates and check for feature
-    const feature = map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
-      if (!defaultLayers.includes(layer)) { return feature }
+    const featureId = map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
+      if (!defaultLayers.includes(layer)) {
+        let id = feature.getId()
+        // Transform id for target area polygons
+        if (layer.get('ref') === 'targetAreaPolygons') {
+          id = id.includes('flood_warning_alert') ? 'flood' + id.substring(id.indexOf('.')) : 'flood.' + id
+        }
+        return id
+      }
     })
-    let featureId = feature ? feature.getId() : ''
-    // Transform id if vector source
-    if (featureId.includes('flood_warning_alert')) {
-      featureId = 'flood' + featureId.substring(featureId.indexOf('.'))
-    }
     setSelectedFeature(featureId)
   })
 
@@ -507,7 +509,7 @@ function LiveMap (mapId, options) {
     }
     // Clear selected feature when pressing escape
     if (e.key === 'Escape' && state.selectedFeatureId !== '') {
-      setSelectedFeature('')
+      setSelectedFeature()
     }
     // Set selected feature on [1-9] key presss
     if (!isNaN(e.key) && e.key >= 1 && e.key <= state.visibleFeatures.length && state.visibleFeatures.length <= 9) {
@@ -555,12 +557,12 @@ function LiveMap (mapId, options) {
 
   // Clear selectedfeature when info is closed
   closeInfoButton.addEventListener('click', (e) => {
-    setSelectedFeature('')
+    setSelectedFeature()
   })
 
   // Clear selectedfeature when key is opened
   openKeyButton.addEventListener('click', (e) => {
-    setSelectedFeature('')
+    setSelectedFeature()
   })
 
   // Reset map extent on reset button click

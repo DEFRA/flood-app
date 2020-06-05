@@ -6,14 +6,20 @@ import { Style, Icon, Fill, Stroke } from 'ol/style'
 
 window.flood.maps.styles = {
 
-  // Primarily vector tiles
+  //
+  // Vector styles
+  //
+
   targetAreaPolygons: (feature) => {
     // Use corresposnding warning feature propeties for styling
     const warningsSource = window.flood.maps.warningsSource
     let warningId = feature.getId()
-    // Transform id if vector source
     if (warningId.includes('flood_warning_alert')) {
+      // Transform id if vector source
       warningId = 'flood' + feature.getId().substring(feature.getId().indexOf('.'))
+    } else {
+      // Transform id if vector tile source
+      warningId = 'flood.' + feature.getId()
     }
     const warning = warningsSource.getFeatureById(warningId)
     if (!warning || warning.get('isVisible') !== 'true') {
@@ -63,7 +69,6 @@ window.flood.maps.styles = {
     }
   },
 
-  // Warning centroids
   warnings: (feature, resolution) => {
     // Hide warning symbols or hide when polygon is shown
     if (feature.get('isVisible') !== 'true' || resolution < window.flood.maps.liveMaxBigZoom) {
@@ -83,7 +88,6 @@ window.flood.maps.styles = {
     }
   },
 
-  // Station centroids
   stations: (feature, resolution) => {
     if (feature.get('isVisible') !== 'true') {
       return
@@ -101,7 +105,6 @@ window.flood.maps.styles = {
     }
   },
 
-  // Impact centroids
   impacts: (feature, resolution) => {
     if (feature.get('isVisible') !== 'true') {
       return
@@ -110,7 +113,6 @@ window.flood.maps.styles = {
     return isSelected ? styleCache.impactSelected : styleCache.impact
   },
 
-  // Rainfall centroids
   rainfall: (feature, resolution) => {
     if (feature.get('isVisible') !== 'true') {
       return
@@ -120,7 +122,10 @@ window.flood.maps.styles = {
     return isSelected ? (isBigSymbol ? styleCache.rainfallBigSelected : styleCache.rainfallSelected) : (isBigSymbol ? styleCache.rainfallBig : styleCache.rainfall)
   },
 
-  // WebGL: json styles
+  //
+  // WebGL styles
+  //
+
   warningsJSON: {
     filter: ['case',
       ['<', ['resolution'], 100],
@@ -270,8 +275,10 @@ const pattern = (style) => {
   return ctx.createPattern(canvas, 'repeat')
 }
 
-// More effecient to creat styles once
-// Create unique styles
+//
+// Style caching
+//
+
 const createStyle = (options) => {
   const defaults = {
     size: [100, 100],
@@ -292,7 +299,7 @@ const createStyle = (options) => {
     zIndex: options.zIndex
   })
 }
-// Style cache
+
 const styleCache = {
   severe: createStyle({ offset: [0, 0], zIndex: 5 }),
   severeSelected: createStyle({ offset: [100, 0], zIndex: 10 }),
@@ -322,7 +329,7 @@ const styleCache = {
   rainfallSelected: createStyle({ offset: [100, 1200], zIndex: 10 })
 }
 
-// WebGL styles uses Math.log2() ie11 doesnt support this
+// WebGL styles uses Math.log2() polyfill for ie11
 Math.log2 = (number) => {
   return Math.log(number) / Math.log(2)
 }
