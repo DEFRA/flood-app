@@ -31,7 +31,11 @@
               {{ group.title | lower }}
             </a>
           </strong>
+          {% if group.severity.id == 3 %}
+          <span>There is a danger to life</span>
+          {% else %}
           <span>{{ group.severity.subTitle }}</span>
+          {% endif %}
         </div>
       </div>
       {% else %}
