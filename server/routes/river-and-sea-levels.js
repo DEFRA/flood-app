@@ -17,12 +17,10 @@ module.exports = [{
       return h.view('river-and-sea-levels', { model })
       // Else target-area
     } else if (request.query['target-area']) {
-      const bbox = await floodService.getStationsWithinTargetArea(request.query['target-area'])
-      const bboxExtended = util.addBufferToBbox([bbox[0].x1, bbox[0].y1, bbox[0].x2, bbox[0].y2], 8000)
-      stations = await floodService.getStationsWithin(bboxExtended)
+      const area = await floodService.getFloodArea(request.query['target-area'])
+      stations = await floodService.getStationsWithinTargetArea(request.query['target-area'])
       const targetArea = {
-        name: bbox[0].ta_name,
-        description: bbox[0].ta_name
+        name: area.name || ''
       }
       model = new ViewModel({ location, place, stations, targetArea })
       return h.view('river-and-sea-levels', { model })
