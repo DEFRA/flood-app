@@ -1,22 +1,12 @@
 const turf = require('@turf/turf')
 const moment = require('moment-timezone')
-const HttpsProxyAgent = require('https-proxy-agent')
 const config = require('./config')
 const wreck = require('@hapi/wreck').defaults({
   timeout: config.httpTimeoutMs
 })
 
-let wreckExt
-if (config.httpsProxy) {
-  wreckExt = require('@hapi/wreck').defaults({
-    timeout: config.httpTimeoutMs,
-    agent: new HttpsProxyAgent(config.httpsProxy)
-  })
-}
-
 function request (method, url, options, ext = false) {
-  const thisWreck = (ext && wreckExt) ? wreckExt : wreck
-  return thisWreck[method](url, options)
+  return wreck[method](url, options)
     .then(response => {
       const res = response.res
       const payload = response.payload
