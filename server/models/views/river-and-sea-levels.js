@@ -3,11 +3,11 @@ const { groupBy } = require('../../util')
 
 class ViewModel {
   constructor ({ location, place, stations, targetArea, error }) {
-    const placeName = place ? place.name : (targetArea && targetArea.name ? targetArea.name : '')
+    const placeName = place ? place.name : (targetArea && targetArea.ta_name ? targetArea.ta_name : '')
     const placeCentre = place ? place.center : []
     const pageTitle = ''
     const isEngland = place ? place.isEngland.is_england : null
-    const placeDescription = targetArea && targetArea.name ? targetArea.name : ''
+    const placeDescription = targetArea && targetArea.ta_name ? targetArea.ta_name : ''
 
     Object.assign(this, {
       q: location,

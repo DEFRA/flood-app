@@ -17,11 +17,7 @@ module.exports = [{
       return h.view('river-and-sea-levels', { model })
       // Else target-area
     } else if (request.query['target-area']) {
-      const area = await floodService.getFloodArea(request.query['target-area'])
-      stations = await floodService.getStationsWithinTargetArea(request.query['target-area'])
-      const targetArea = {
-        name: area.name || ''
-      }
+      const { stations, targetArea } = await floodService.getStationsWithinTargetArea(request.query['target-area'])
       model = new ViewModel({ location, place, stations, targetArea })
       return h.view('river-and-sea-levels', { model })
       // Else no location
