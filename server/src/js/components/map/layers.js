@@ -2,11 +2,11 @@
 /*
 Initialises the window.flood.maps layers
 */
-import { Tile as TileLayer, Vector as VectorLayer, VectorTile as VectorTileLayer } from 'ol/layer' // VectorTile as VectorTileLayer for vector tiles
-import WebGLPointsLayer from 'ol/layer/WebGLPoints'
-import { BingMaps, Vector as VectorSource, VectorTile as VectorTileSource } from 'ol/source' // VectorTile as VectorTileSource for vector tiles
+import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer' // Vector tiles: VectorTile as VectorTileLayer
+// import WebGLPointsLayer from 'ol/layer/WebGLPoints' WebGL: Points layer
+import { BingMaps, Vector as VectorSource } from 'ol/source' // Vector tiles: VectorTile as VectorTileSource
 import { bbox } from 'ol/loadingstrategy'
-import { GeoJSON, MVT } from 'ol/format' // MVT for vector tiles
+import { GeoJSON } from 'ol/format' // Vector tiles: MVT
 
 window.flood.maps.layers = {
 
