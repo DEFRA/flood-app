@@ -463,4 +463,22 @@ lab.experiment('Flood service test', () => {
     Code.expect(result).to.be.an.object()
     Code.expect(result.getImpactsWithin).to.equal('TEST')
   })
+
+  lab.test('Test getStationsWithinTargetArea endpoint', async () => {
+    const fakeFloodData = () => {
+      return {
+        getStationsWithinTargetArea: 'TEST'
+      }
+    }
+
+    const util = require('../../server/util')
+
+    sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getStationsWithinTargetArea('053FWFPUWI09')
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.getStationsWithinTargetArea).to.equal('TEST')
+  })
 })

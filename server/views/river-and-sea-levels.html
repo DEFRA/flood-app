@@ -30,8 +30,12 @@
 </div>
 {% endif %}
 
-
-
+{% if model.placeDescription %}<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+      <p>Showing levels within 5 miles of {{ model.placeDescription }}. <a href="/river-and-sea-levels">Show all levels</a></p>
+  </div>
+</div>
+{% endif %}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-third">
         <div class="govuk-form-group defra-search">
@@ -39,7 +43,7 @@
           <div class="govuk-form-group">
             <label class="govuk-label" for="location">Search a location</label>
               <div class="defra-search">
-                <input class="defra-search__input" id="location" name="location" type="search" spellcheck="false" value="{% if model.placeName %}{{ model.placeName }}{% else %}{{ model.q }}{% endif %}">
+                <input class="defra-search__input" id="location" name="location" type="search" spellcheck="false" value="{{ model.q }}">
                 <div class="defra-search__submit-container">
                   <button class="defra-search__button">Search</button>
               </div>
