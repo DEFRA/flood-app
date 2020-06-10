@@ -32,7 +32,6 @@ class ViewModel {
     const numSevereWarnings = targetAreaGroups.sev3 ? targetAreaGroups.sev3.length : 0
 
     // Single warning or alert
-
     if (numAlerts === 0 && numWarnings === 0 && numSevereWarnings === 0) {
       // No warnings or alerts
     } else if (numAlerts === 1 && numWarnings === 0 && numSevereWarnings === 0) {
@@ -55,44 +54,45 @@ class ViewModel {
       if (numAlerts && numWarnings === 0 && numSevereWarnings === 0) {
         this.banner = `There are ${numAlerts} flood alerts in this area`
         this.severityLevel = 'alert'
-        this.targetAreaLink = '/'
+        this.targetAreaLink = '/alerts-and-warnings#alerts'
       } else if (numAlerts === 0 && numWarnings && numSevereWarnings === 0) {
         this.banner = `There are ${numWarnings} flood warnings in this area`
         this.severityLevel = 'warning'
-        this.targetAreaLink = '/'
+        this.targetAreaLink = '/alerts-and-warnings#warnings'
       } else if (numAlerts === 0 && numWarnings === 0 && numSevereWarnings) {
         this.banner = `There are ${numWarnings} severe flood warnings in this area`
         this.severityLevel = 'warning'
-        this.targetAreaLink = '/'
+        this.targetAreaLink = '/alerts-and-warnings#severe'
       } else {
+        this.banner = true
         if (numSevereWarnings) {
-          this.banner = `${numSevereWarnings} severe flood warning`
+          this.severeBanner = `${numSevereWarnings} severe flood warning`
           if (numSevereWarnings > 1) {
-            this.banner += 's'
+            this.severeBanner += 's'
           }
         }
         if (numWarnings) {
-          if (numSevereWarnings) {
-            if (numAlerts) {
-              this.banner += ', '
-            } else {
-              this.banner += ' and '
-            }
-          }
-          this.banner += `${numWarnings} flood warning`
+          this.warningsBanner = `${numWarnings} flood warning`
           if (numWarnings > 1) {
-            this.banner += 's'
+            this.warningsBanner += 's'
           }
         }
         if (numAlerts) {
-          this.banner += ` and ${numWarnings} flood alert`
+          this.alertsBanner = `${numAlerts} flood alert`
           if (numAlerts > 1) {
-            this.banner += 's'
+            this.alertsBanner += 's'
           }
         }
-        // this.banner = `There are ${totalWarnings} flood warnings in this area`
         this.severityLevel = 'warning'
-        this.targetAreaLink = '/'
+        this.multipleSeverityLevels = true
+        if (numAlerts && numWarnings && numSevereWarnings) {
+          this.severeAnd = ', '
+          this.warningsAnd = ' and '
+        } else if (numSevereWarnings) {
+          this.severeAnd = ' and '
+        } else {
+          this.warningsAnd = ' and '
+        }
       }
     }
 
