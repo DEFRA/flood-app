@@ -22,7 +22,7 @@ class ViewModel {
     const dateSituationChanged = flood ? moment.tz(flood.situation_changed, 'Europe/London').format('D MMMM YYYY') : moment.tz('Europe/London').format('D MMMM YYYY')
     const timeSituationChanged = flood ? moment.tz(flood.situation_changed, 'Europe/London').format('h:mma') : moment.tz('Europe/London').format('h:mma')
 
-    const areaDescription = `Flood ${type}: ${area.description}`
+    const areaDescription = `Flood ${type} area: ${area.description}`
     const parentAreaAlert = (!!(((flood && severityLevel.id === 4) && (type === 'warning')) || !flood) && (parentSeverityLevel && parentSeverityLevel.isActive))
 
     const situationChanged = flood
