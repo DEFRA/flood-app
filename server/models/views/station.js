@@ -3,6 +3,7 @@ const moment = require('moment-timezone')
 const config = require('../../config')
 const Station = require('./station-data')
 const Forecast = require('./station-forecast')
+const groupBy = require('lodash.groupby')
 
 function dateDiff (date1, date2) {
   return moment(date1).diff(moment(date2), 'days')
@@ -10,7 +11,7 @@ function dateDiff (date1, date2) {
 
 class ViewModel {
   constructor (options) {
-    const { station, telemetry, forecast, impacts, river } = options
+    const { station, telemetry, forecast, impacts, river, targetAreas } = options
 
     this.station = new Station(station)
     this.station.riverNavigation = river
@@ -23,6 +24,78 @@ class ViewModel {
     })
     */
 
+    // Group target areas by severity level
+
+    const targetAreaGroups = groupBy(targetAreas, (targetArea) => 'sev' + targetArea.severity_value)
+    const numAlerts = targetAreaGroups.sev1 ? targetAreaGroups.sev1.length : 0
+    const numWarnings = targetAreaGroups.sev2 ? targetAreaGroups.sev2.length : 0
+    const numSevereWarnings = targetAreaGroups.sev3 ? targetAreaGroups.sev3.length : 0
+
+    // Single warning or alert
+
+    if (numAlerts === 0 && numWarnings === 0 && numSevereWarnings === 0) {
+      // No warnings or alerts
+    } else if (numAlerts === 1 && numWarnings === 0 && numSevereWarnings === 0) {
+      // alert
+      this.banner = 'There is a flood alert in this area'
+      this.severityLevel = 'alert'
+      this.targetAreaLink = `/target-area/${targetAreas[0].ta_code}`
+    } else if (numAlerts === 0 && numWarnings === 1 && numSevereWarnings === 0) {
+      // warning
+      this.banner = `Flood warning for ${targetAreas[0].ta_name}`
+      this.severityLevel = 'warning'
+      this.targetAreaLink = `/target-area/${targetAreas[0].ta_code}`
+    } else if (numAlerts === 0 && numWarnings === 0 && numSevereWarnings === 1) {
+      // severe warning
+      this.banner = `Severe flood warning for ${targetAreas[0].ta_name}`
+      this.severityLevel = 'warning'
+      this.targetAreaLink = `/target-area/${targetAreas[0].ta_code}`
+    } else {
+      // multiple warnings
+      if (numAlerts && numWarnings === 0 && numSevereWarnings === 0) {
+        this.banner = `There are ${numAlerts} flood alerts in this area`
+        this.severityLevel = 'alert'
+        this.targetAreaLink = '/'
+      } else if (numAlerts === 0 && numWarnings && numSevereWarnings === 0) {
+        this.banner = `There are ${numWarnings} flood warnings in this area`
+        this.severityLevel = 'warning'
+        this.targetAreaLink = '/'
+      } else if (numAlerts === 0 && numWarnings === 0 && numSevereWarnings) {
+        this.banner = `There are ${numWarnings} severe flood warnings in this area`
+        this.severityLevel = 'warning'
+        this.targetAreaLink = '/'
+      } else {
+        if (numSevereWarnings) {
+          this.banner = `${numSevereWarnings} severe flood warning`
+          if (numSevereWarnings > 1) {
+            this.banner += 's'
+          }
+        }
+        if (numWarnings) {
+          if (numSevereWarnings) {
+            if (numAlerts) {
+              this.banner += ', '
+            } else {
+              this.banner += ' and '
+            }
+          }
+          this.banner += `${numWarnings} flood warning`
+          if (numWarnings > 1) {
+            this.banner += 's'
+          }
+        }
+        if (numAlerts) {
+          this.banner += ` and ${numWarnings} flood alert`
+          if (numAlerts > 1) {
+            this.banner += 's'
+          }
+        }
+        // this.banner = `There are ${totalWarnings} flood warnings in this area`
+        this.severityLevel = 'warning'
+        this.targetAreaLink = '/'
+      }
+    }
+
     this.id = this.station.id
     this.telemetry = telemetry || []
     this.catchments = []
@@ -33,6 +106,7 @@ class ViewModel {
     this.station.floodingIsPossible = false
     this.station.hasPercentiles = true
     this.station.hasImpacts = false
+    this.targetAreas = targetAreas
     const now = moment(Date.now())
     const numberOfProvisionalDays = config.provisionalPorMaxValueDays
 

@@ -1,7 +1,6 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <nav class="defra-flood-nav" {% if model.referer %}id="browserBackContainer"{% endif %}>
@@ -11,6 +10,17 @@
     </nav>
   </div>
 </div>
+
+{% if model.banner %}
+<div class="defra-flood-status govuk-!-margin-bottom-3">
+  <div class="defra-flood-status-item defra-flood-status-item--{{ model.severityLevel }}">
+    <span class="defra-flood-status-item__icon"></span>
+    <div class="defra-flood-status-item__text">
+      <strong><a class="govuk-link" href="{{ model.targetAreaLink }}">{{ model.banner }}</a></strong>
+    </div>
+  </div>
+</div>
+{% endif %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
