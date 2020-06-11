@@ -3,7 +3,7 @@ const moment = require('moment-timezone')
 const config = require('../../config')
 const Station = require('./station-data')
 const Forecast = require('./station-forecast')
-const groupBy = require('lodash.groupby')
+const { groupBy } = require('../../util')
 
 function dateDiff (date1, date2) {
   return moment(date1).diff(moment(date2), 'days')
@@ -11,7 +11,7 @@ function dateDiff (date1, date2) {
 
 class ViewModel {
   constructor (options) {
-    const { station, telemetry, forecast, impacts, river, targetAreas } = options
+    const { station, telemetry, forecast, impacts, river, warningsAlerts } = options
 
     this.station = new Station(station)
     this.station.riverNavigation = river
@@ -24,33 +24,35 @@ class ViewModel {
     })
     */
 
-    // Group target areas by severity level
+    // Group warnings/alerts by severity level
 
-    const targetAreaGroups = groupBy(targetAreas, (targetArea) => 'sev' + targetArea.severity_value)
-    const numAlerts = targetAreaGroups.sev1 ? targetAreaGroups.sev1.length : 0
-    const numWarnings = targetAreaGroups.sev2 ? targetAreaGroups.sev2.length : 0
-    const numSevereWarnings = targetAreaGroups.sev3 ? targetAreaGroups.sev3.length : 0
+    const warningsAlertsGroups = groupBy(warningsAlerts, 'severity_value')
+    const numAlerts = warningsAlertsGroups['1'] ? warningsAlertsGroups['1'].length : 0
+    const numWarnings = warningsAlertsGroups['2'] ? warningsAlertsGroups['2'].length : 0
+    const numSevereWarnings = warningsAlertsGroups['3'] ? warningsAlertsGroups['3'].length : 0
 
-    // Single warning or alert
+    // Determine appropriate warning/alert text for banner
+
+    // Single warning/alert
     if (numAlerts === 0 && numWarnings === 0 && numSevereWarnings === 0) {
       // No warnings or alerts
     } else if (numAlerts === 1 && numWarnings === 0 && numSevereWarnings === 0) {
       // alert
       this.banner = 'There is a flood alert in this area'
       this.severityLevel = 'alert'
-      this.targetAreaLink = `/target-area/${targetAreas[0].ta_code}`
+      this.targetAreaLink = `/target-area/${warningsAlerts[0].ta_code}`
     } else if (numAlerts === 0 && numWarnings === 1 && numSevereWarnings === 0) {
       // warning
-      this.banner = `Flood warning for ${targetAreas[0].ta_name}`
+      this.banner = `Flood warning for ${warningsAlerts[0].ta_name}`
       this.severityLevel = 'warning'
-      this.targetAreaLink = `/target-area/${targetAreas[0].ta_code}`
+      this.targetAreaLink = `/target-area/${warningsAlerts[0].ta_code}`
     } else if (numAlerts === 0 && numWarnings === 0 && numSevereWarnings === 1) {
       // severe warning
-      this.banner = `Severe flood warning for ${targetAreas[0].ta_name}`
+      this.banner = `Severe flood warning for ${warningsAlerts[0].ta_name}`
       this.severityLevel = 'warning'
-      this.targetAreaLink = `/target-area/${targetAreas[0].ta_code}`
+      this.targetAreaLink = `/target-area/${warningsAlerts[0].ta_code}`
     } else {
-      // multiple warnings
+      // Multiple warnings/alerts
       if (numAlerts && numWarnings === 0 && numSevereWarnings === 0) {
         this.banner = `There are ${numAlerts} flood alerts in this area`
         this.severityLevel = 'alert'
@@ -106,7 +108,7 @@ class ViewModel {
     this.station.floodingIsPossible = false
     this.station.hasPercentiles = true
     this.station.hasImpacts = false
-    this.targetAreas = targetAreas
+    this.warningsAlerts = warningsAlerts
     const now = moment(Date.now())
     const numberOfProvisionalDays = config.provisionalPorMaxValueDays
 
