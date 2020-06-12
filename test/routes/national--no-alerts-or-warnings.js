@@ -70,7 +70,7 @@ lab.experiment('Routes test - national view', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('No flood alerts or warnings.')
+    Code.expect(response.payload).to.contain('No flood alerts or warnings')
     Code.expect(response.payload).to.contain('Call Floodline for advice about flooding from rivers, the sea and groundwater')
   })
 })
