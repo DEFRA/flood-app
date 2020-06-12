@@ -1,6 +1,7 @@
 // Info panel
 .defra-map-info {
-    padding:15px;
+    z-index: 4;
+    padding:  15px 15px 12px;
     &__link {
       text-decoration: none;
     }

@@ -8,7 +8,7 @@ import { Vector as VectorLayer } from 'ol/layer'
 import { Vector as VectorSource } from 'ol/source'
 import { defaults as defaultInteractions } from 'ol/interaction'
 import { GeoJSON } from 'ol/format'
-import { Style, Fill } from 'ol/style'
+import { Style, Fill, Stroke } from 'ol/style'
 import { unByKey } from 'ol/Observable'
 import { Control } from 'ol/control'
 
@@ -28,28 +28,85 @@ function OutlookMap (mapId, options) {
   })
 
   // Fill patterns
-  const pattern = () => {
+  const pattern = (style) => {
     const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
     const dpr = window.devicePixelRatio || 1
     canvas.width = 8 * dpr
     canvas.height = 8 * dpr
-    const ctx = canvas.getContext('2d')
     ctx.scale(dpr, dpr)
-    ctx.fillStyle = 'transparent'
-    ctx.fillRect(0, 0, 8, 8)
-    ctx.beginPath()
-    ctx.lineCap = 'square'
-    ctx.strokeStyle = '#ffbf47'
-    ctx.lineWidth = 2
-    ctx.moveTo(-2, 2)
-    ctx.lineTo(2, -2)
-    ctx.stroke()
-    ctx.moveTo(-2, 10)
-    ctx.lineTo(10, -2)
-    ctx.stroke()
-    ctx.moveTo(6, 10)
-    ctx.lineTo(10, 6)
-    ctx.stroke()
+    switch (style) {
+      case 'high':
+        ctx.fillStyle = '#D4351C'
+        ctx.fillRect(0, 0, 8, 8)
+        ctx.beginPath()
+        ctx.fillStyle = 'rgba(255, 255, 255, 1)'
+        ctx.moveTo(0, 3.3)
+        ctx.lineTo(4.7, 8)
+        ctx.lineTo(3.3, 8)
+        ctx.lineTo(0, 4.7)
+        ctx.closePath()
+        ctx.moveTo(3.3, 0)
+        ctx.lineTo(4.7, 0)
+        ctx.lineTo(8, 3.3)
+        ctx.lineTo(8, 4.7)
+        ctx.closePath()
+        ctx.fill()
+        break
+      case 'medium':
+        ctx.fillStyle = '#F47738'
+        ctx.fillRect(0, 0, 8, 8)
+        ctx.beginPath()
+        ctx.fillStyle = 'rgba(255, 255, 255, 1)'
+        ctx.moveTo(3.3, 0)
+        ctx.lineTo(4.7, 0)
+        ctx.lineTo(0, 4.7)
+        ctx.lineTo(0, 3.3)
+        ctx.closePath()
+        ctx.moveTo(3.3, 8)
+        ctx.lineTo(4.7, 8)
+        ctx.lineTo(8, 4.7)
+        ctx.lineTo(8, 3.3)
+        ctx.closePath()
+        ctx.moveTo(4.7, 0)
+        ctx.lineTo(8, 3.3)
+        ctx.lineTo(7.3, 4)
+        ctx.lineTo(4, 0.7)
+        ctx.closePath()
+        ctx.moveTo(0, 4.7)
+        ctx.lineTo(3.3, 8)
+        ctx.lineTo(4, 7.3)
+        ctx.lineTo(0.7, 4)
+        ctx.closePath()
+        ctx.fill()
+        break
+      case 'low':
+        ctx.fillStyle = 'rgba(255, 255, 255, 1)'
+        ctx.fillRect(0, 0, 8, 8)
+        ctx.beginPath()
+        ctx.fillStyle = '#F47738'
+        ctx.moveTo(0, 3.3)
+        ctx.lineTo(0, 4.7)
+        ctx.lineTo(4.7, 0)
+        ctx.lineTo(3.3, 0)
+        ctx.closePath()
+        ctx.moveTo(3.3, 8)
+        ctx.lineTo(4.7, 8)
+        ctx.lineTo(8, 4.7)
+        ctx.lineTo(8, 3.3)
+        ctx.closePath()
+        ctx.fill()
+        break
+      case 'veryLow':
+        ctx.fillStyle = 'rgba(255, 255, 255, 1)'
+        ctx.fillRect(0, 0, 8, 8)
+        ctx.beginPath()
+        ctx.fillStyle = '#626A6E'
+        ctx.arc(4, 4, 1, 0, 2 * Math.PI)
+        ctx.closePath()
+        ctx.fill()
+        break
+    }
     ctx.restore()
     return ctx.createPattern(canvas, 'repeat')
   }
@@ -59,19 +116,22 @@ function OutlookMap (mapId, options) {
     if (!feature.get('isVisible')) {
       return
     }
-    // const strokeColour = '#6f777b'
-    // const strokeWidth = 2
     const zIndex = feature.get('z-index')
     const lineDash = [2, 3]
-    let fillColour = pattern()
+    let strokeColour = '#626A6E'
+    let fillColour = pattern('veryLow')
     if (feature.get('risk-level') === 2) {
-      fillColour = '#ffbf47'
+      strokeColour = '#F47738'
+      fillColour = pattern('low')
     } else if (feature.get('risk-level') === 3) {
-      fillColour = '#F47738'
+      strokeColour = '#F47738'
+      fillColour = pattern('medium')
     } else if (feature.get('risk-level') === 4) {
-      fillColour = '#df3034'
+      strokeColour = '#D4351C'
+      fillColour = pattern('high')
     }
     return new Style({
+      stroke: new Stroke({ color: strokeColour, width: 1 }),
       fill: new Fill({ color: fillColour }),
       lineDash: lineDash,
       zIndex: zIndex
@@ -89,7 +149,7 @@ function OutlookMap (mapId, options) {
     }),
     renderMode: 'hybrid',
     style: style,
-    opacity: 0.9,
+    opacity: 0.6,
     zIndex: 200
   })
 
@@ -98,10 +158,9 @@ function OutlookMap (mapId, options) {
     pinchRotate: false
   })
 
-  // Format date Today, Yesterday, Tomorrow or 'Mon 1'
-  const formatDate = (date) => {
-    date.setDate(date.getDate() + 233)
-    let format = days[date.getDay()] + ' ' + date.getDate()
+  // Format date Today, Yesterday, Tomorrow or 'Monday/Tuesday etc'
+  const formatDay = (date) => {
+    // date.setDate(date.getDate() + 256)
     date.setHours(0)
     date.setMinutes(0)
     date.setSeconds(0, 0)
@@ -110,29 +169,40 @@ function OutlookMap (mapId, options) {
     now.setMinutes(0)
     now.setSeconds(0, 0)
     if (date.getTime() === now.getTime()) {
-      format = 'Today'
+      return 'Today'
     } else if (date.getTime() + 86400000 === now.getTime()) {
-      format = 'Yesterday'
+      return 'Yesterday'
     } else if (date.getTime() - 86400000 === now.getTime()) {
-      format = 'Tomorrow'
+      return 'Tomorrow'
+    } else {
+      return date.toLocaleString('default', { weekday: 'long' })
     }
-    return format
+  }
+
+  const formatDate = (date) => {
+    // date.setDate(date.getDate() + 256)
+    const number = date.getDate()
+    const month = date.toLocaleString('default', { month: 'short' })
+    return month + ' ' + number
   }
 
   // Create day control
   const dayControlsElement = document.createElement('div')
+  const dayControlsContainer = document.createElement('div')
   dayControlsElement.className = 'defra-map-days'
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  dayControlsContainer.className = 'defra-map-days__container'
   options.days.forEach(function (day) {
     const dayButtonElement = document.createElement('button')
     dayButtonElement.className = 'defra-map-days__button'
     dayButtonElement.setAttribute('data-risk-level', day.level)
     dayButtonElement.setAttribute('data-day', day.idx)
     dayButtonElement.setAttribute('aria-selected', false)
+    const dayName = formatDay(new Date(day.date))
     const date = formatDate(new Date(day.date))
-    dayButtonElement.innerHTML = `${date}<span class="defra-map-days__icon defra-map-days__icon--risk-level-${day.level}"></span>`
-    dayControlsElement.appendChild(dayButtonElement)
+    dayButtonElement.innerHTML = `<strong>${dayName}</strong>${date}<span class="defra-map-days__icon defra-map-days__icon--risk-level-${day.level}"></span>`
+    dayControlsContainer.appendChild(dayButtonElement)
   })
+  dayControlsElement.appendChild(dayControlsContainer)
   const dayControl = new Control({
     element: dayControlsElement
   })
@@ -203,7 +273,7 @@ function OutlookMap (mapId, options) {
   // Day control button
   forEach(document.querySelectorAll('.defra-map-days__button'), (button) => {
     button.addEventListener('click', (e) => {
-      setDay(e.target.getAttribute('data-day'))
+      setDay(e.currentTarget.getAttribute('data-day'))
     })
   })
 }

@@ -106,10 +106,11 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   tooltipElement.innerHTML = 'Keyboard access guidelines'
   viewport.appendChild(tooltipElement)
 
-  // Add any custom controls bewteen open key and reset buttons
-  options.controls.forEach(control => {
-    map.addControl(control)
-  })
+  // Create controls container
+  const stopEventContainer = containerElement.getElementsByClassName('ol-overlaycontainer-stopevent')[0]
+  const controlsContainerElement = document.createElement('div')
+  controlsContainerElement.className = 'defra-map-controls'
+  stopEventContainer.appendChild(controlsContainerElement)
 
   // Create reset control
   const resetButtonElement = document.createElement('button')
@@ -118,13 +119,15 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   resetButtonElement.title = 'Reset location'
   resetButtonElement.setAttribute('disabled', '')
   const resetButton = new Control({
-    element: resetButtonElement
+    element: resetButtonElement,
+    target: controlsContainerElement
   })
   map.addControl(resetButton)
 
   // Create zoom controls
   const zoom = new Zoom({
-    className: 'defra-map-zoom'
+    className: 'defra-map-zoom',
+    target: controlsContainerElement
   })
   map.addControl(zoom)
 
@@ -144,7 +147,13 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   infoContainer.className = 'defra-map-info__container'
   infoElement.appendChild(closeInfoButton)
   infoElement.appendChild(infoContainer)
-  containerElement.appendChild(infoElement)
+  controlsContainerElement.appendChild(infoElement)
+
+  // Add any custom controls into the controls container after the info panel
+  options.controls.forEach(control => {
+    control.setTarget(controlsContainerElement)
+    map.addControl(control)
+  })
 
   // Create key
   const keyElement = document.createElement('div')

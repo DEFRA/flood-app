@@ -291,12 +291,11 @@ function LiveMap (mapId, options) {
   // Day format function
   const formatDay = (dateTime) => {
     const day = dateTime.getDate()
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     const nth = (day) => {
       if (day > 3 && day < 21) return 'th'
       switch (day % 10) { case 1: return 'st'; case 2: return 'nd'; case 3: return 'rd'; default: return 'th' }
     }
-    const shortDay = days[dateTime.getDay()]
+    const shortDay = dateTime.toLocaleString('default', { weekday: 'short' })
     const today = new Date()
     const yesterday = new Date()
     const tomorrow = new Date()
