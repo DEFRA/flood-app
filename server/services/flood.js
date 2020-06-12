@@ -73,6 +73,12 @@ module.exports = {
     return util.getJson(`${serviceUrl}/stations-within-target-area/${taCode}`)
   },
 
+  getWarningsAlertsWithinStationBuffer (longLat) {
+    const long = longLat[0]
+    const lat = longLat[1]
+    return util.getJson(`${serviceUrl}/warnings-alerts-within-station-buffer/${long}/${lat}`)
+  },
+
   getRiverById (id) {
     return util.getJson(`${serviceUrl}/river/${id}`)
   },
