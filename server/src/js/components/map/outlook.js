@@ -199,7 +199,10 @@ function OutlookMap (mapId, options) {
     dayButtonElement.setAttribute('aria-selected', false)
     const dayName = formatDay(new Date(day.date))
     const date = formatDate(new Date(day.date))
-    dayButtonElement.innerHTML = `<strong>${dayName}</strong>${date}<span class="defra-map-days__icon defra-map-days__icon--risk-level-${day.level}"></span>`
+    const dayButtonContainer = document.createElement('div')
+    dayButtonContainer.className = 'defra-map-days__button-container'
+    dayButtonContainer.innerHTML = `<strong>${dayName}</strong>${date}<span class="defra-map-days__icon defra-map-days__icon--risk-level-${day.level}"></span>`
+    dayButtonElement.appendChild(dayButtonContainer)
     dayControlsContainer.appendChild(dayButtonElement)
   })
   dayControlsElement.appendChild(dayControlsContainer)
