@@ -4,11 +4,14 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <nav class="govuk-!-margin-bottom-7">
-      <p>
-        <a href="/find-location">Change location</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/">National view</a>
-      </p>
+    <nav class="defra-flood-nav">
+      <a href="/find-location" class="defra-flood-nav__link">Check another location</a>
     </nav>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-7">
       Flood risk: {{ model.location }}
     </h1>
@@ -56,18 +59,11 @@
       <time datetime="{{model.dateFormatted}}">{{model.dateFormatted}}</time>
     </p>
 
+    <p><a href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
+
     {% if model.hasActiveImpacts %}
     <p class="govuk-body">
       Historic records show <a href="/historic-impacts?q={{ model.q }}">{{ model.activeImpacts.length }} flood impact{% if model.activeImpacts.length > 1 %}s{% endif %}</a> in this area at current river levels.
-    </p>
-    {% endif %}
-
-    {% if model.hasLevels and not(not model.hasActiveFloods and model.hasHighLevels) %}
-    <p class="govuk-body">
-      {% if not model.hasFloods and not model.hasHighLevels %}
-      River and sea levels are regularly checked by a network of monitoring stations. These levels can help you understand flood risk now and in the next few days.
-      {% endif %}
-      <a href="/river-and-sea-levels?q={{ model.q }}">View river and sea levels in this area</a>.
     </p>
     {% endif %}
 
@@ -84,36 +80,7 @@
     
   </div>
   <div class="govuk-grid-column-one-third">
-    <!-- The Related items component is not part of GOV.UK Frontend but will be styled if used in the Prototype Kit -->
-    <aside class="defra-related-items" role="complementary">
-      <h2 class="govuk-heading-s" id="subsection-title">
-        Related content
-      </h2>
-      <nav role="navigation" aria-labelledby="subsection-title">
-        <ul class="govuk-list govuk-!-font-size-16">
-          <li>
-            <a class="govuk-link" href="/plan-ahead-for-flooding">
-              How to plan ahead for flooding
-            </a>
-          </li>
-          <li>
-            <a class="govuk-link" href="/what-to-do-in-a-flood">
-              What to do in a flood
-            </a>
-          </li>
-          <li>
-            <a class="govuk-link" href="/recovering-after-a-flood">
-              How to recover after a flood
-            </a>
-          </li>
-          <li>
-            <a class="govuk-link" href="{{model.floodRiskUrl}}/long-term-flood-risk">
-              View long term flood risk information
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </aside>
+    {% include "partials/related-content.html" %}
   </div>
 </div>
 
