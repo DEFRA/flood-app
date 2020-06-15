@@ -295,7 +295,7 @@ function LiveMap (mapId, options) {
       if (day > 3 && day < 21) return 'th'
       switch (day % 10) { case 1: return 'st'; case 2: return 'nd'; case 3: return 'rd'; default: return 'th' }
     }
-    const shortDay = date.toLocaleString('default', { weekday: 'short' })
+    const shortDay = date.toLocaleString('en-GB', { weekday: 'short' })
     const today = new Date()
     const yesterday = new Date()
     const tomorrow = new Date()

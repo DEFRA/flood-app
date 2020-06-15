@@ -4,7 +4,6 @@
   bottom:10px;
   left:10px;
   right:10px;
-  box-sizing: border-box;
   @include mq ($from: tablet) {
     position:static;
     float:left;
@@ -17,7 +16,8 @@
     max-width:650px;
   }
   padding-top:10px;
-  overflow-x: scroll;
+  overflow-x: auto;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 .defra-map-days__container {
   width:100%;
@@ -38,6 +38,7 @@
   margin:0px;
   padding:0px;
   border-right:1px solid $govuk-border-colour;
+  box-sizing: border-box;
   &:last-child {
     border-right:0px;
   }

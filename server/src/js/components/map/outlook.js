@@ -175,7 +175,7 @@ function OutlookMap (mapId, options) {
     } else if (date.getTime() - 86400000 === now.getTime()) {
       return 'Tomorrow'
     } else {
-      return date.toLocaleString('default', { weekday: 'long' })
+      return date.toLocaleString('en-GB', { weekday: 'long' })
     }
   }
 
@@ -186,7 +186,7 @@ function OutlookMap (mapId, options) {
       if (number > 3 && number < 21) return 'th'
       switch (number % 10) { case 1: return 'st'; case 2: return 'nd'; case 3: return 'rd'; default: return 'th' }
     }
-    const month = date.toLocaleString('default', { month: 'short' })
+    const month = date.toLocaleString('en-GB', { month: 'short' })
     return month + ' ' + number + nth(number)
   }
 
