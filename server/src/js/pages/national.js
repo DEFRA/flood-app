@@ -10,7 +10,7 @@ import '../components/maps/live'
 const outlookMapContainer = document.getElementById('map-outlook')
 if (outlookMapContainer) {
   const button = document.createElement('button')
-  button.innerText = 'View map showing areas of concern 123'
+  button.innerText = 'View map showing areas of concern'
   button.className = 'defra-button-map govuk-!-margin-bottom-4'
   button.addEventListener('click', function (e) {
     e.preventDefault()
