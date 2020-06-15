@@ -281,21 +281,21 @@ function LiveMap (mapId, options) {
   }
 
   // Time format function
-  const formatTime = (dateTime) => {
-    const hours = dateTime.getHours() > 12 ? dateTime.getHours() - 12 : dateTime.getHours()
-    const minutes = (dateTime.getMinutes() < 10 ? '0' : '') + dateTime.getMinutes()
-    const amPm = (dateTime.getHours() > 12) ? 'pm' : 'am'
+  const formatTime = (date) => {
+    const hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours()
+    const minutes = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes()
+    const amPm = (date.getHours() > 12) ? 'pm' : 'am'
     return hours + ':' + minutes + amPm
   }
 
   // Day format function
-  const formatDay = (dateTime) => {
-    const day = dateTime.getDate()
+  const formatDay = (date) => {
+    const day = date.getDate()
     const nth = (day) => {
       if (day > 3 && day < 21) return 'th'
       switch (day % 10) { case 1: return 'st'; case 2: return 'nd'; case 3: return 'rd'; default: return 'th' }
     }
-    const shortDay = dateTime.toLocaleString('default', { weekday: 'short' })
+    const shortDay = date.toLocaleString('default', { weekday: 'short' })
     const today = new Date()
     const yesterday = new Date()
     const tomorrow = new Date()
@@ -304,15 +304,15 @@ function LiveMap (mapId, options) {
     yesterday.setHours(0, 0, 0, 0)
     tomorrow.setDate(tomorrow.getDate() + 1)
     tomorrow.setHours(0, 0, 0, 0)
-    dateTime.setHours(0, 0, 0, 0)
-    if (dateTime.getTime() === today.getTime()) {
+    date.setHours(0, 0, 0, 0)
+    if (date.getTime() === today.getTime()) {
       return 'today'
-    } else if (dateTime.getTime() === yesterday.getTime()) {
+    } else if (date.getTime() === yesterday.getTime()) {
       return 'yesterday'
-    } else if (dateTime.getTime() === tomorrow.getTime()) {
+    } else if (date.getTime() === tomorrow.getTime()) {
       return 'tomorrow'
     } else {
-      return ' on ' + shortDay + ' ' + dateTime.getDate() + nth(day)
+      return ' on ' + shortDay + ' ' + date.getDate() + nth(day)
     }
   }
 

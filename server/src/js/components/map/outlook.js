@@ -182,8 +182,12 @@ function OutlookMap (mapId, options) {
   const formatDate = (date) => {
     // date.setDate(date.getDate() + 256)
     const number = date.getDate()
+    const nth = (number) => {
+      if (number > 3 && number < 21) return 'th'
+      switch (number % 10) { case 1: return 'st'; case 2: return 'nd'; case 3: return 'rd'; default: return 'th' }
+    }
     const month = date.toLocaleString('default', { month: 'short' })
-    return month + ' ' + number
+    return month + ' ' + number + nth(number)
   }
 
   // Create day control
@@ -201,7 +205,7 @@ function OutlookMap (mapId, options) {
     const date = formatDate(new Date(day.date))
     const dayButtonContainer = document.createElement('div')
     dayButtonContainer.className = 'defra-map-days__button-container'
-    dayButtonContainer.innerHTML = `<strong>${dayName}</strong>${date}<span class="defra-map-days__icon defra-map-days__icon--risk-level-${day.level}"></span>`
+    dayButtonContainer.innerHTML = `<strong>${dayName}</strong><br/>${date}<span class="defra-map-days__icon defra-map-days__icon--risk-level-${day.level}"></span>`
     dayButtonElement.appendChild(dayButtonContainer)
     dayControlsContainer.appendChild(dayButtonElement)
   })

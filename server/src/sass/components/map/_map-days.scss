@@ -9,7 +9,6 @@
     position:static;
     float:left;
     width:100%;
-    margin-top:10px;
   }
   @include mq ($from: 1011px) {
     position:absolute;
@@ -37,24 +36,26 @@
   width:20%;
   border:0;
   margin:0px;
+  padding:0px;
+  border-right:1px solid $govuk-border-colour;
+  &:last-child {
+    border-right:0px;
+  }
   cursor:pointer;
   background-color:govuk-colour('light-grey');
   box-sizing: border-box;
-  padding:15px 15px 17px;
   &::-moz-focus-inner {
     border: 0;
   }
   text-align:left;
   strong {
-    display: block;
+    display: inline-block;
     margin-bottom:5px;
     @include govuk-font($size: 19, $weight: normal);
     text-decoration:underline;
     // color: $govuk-link-colour;
   }
   &[aria-selected=true] {
-    padding-bottom:12px;
-    border-bottom:5px solid $govuk-link-colour;
     background-color: white;
     text-decoration:none;
     strong {
@@ -64,8 +65,30 @@
   &:active {
     color: $govuk-text-colour;
   }
+  &-container {
+    padding:15px 15px 17px;
+  }
+  &:focus {
+    border-top:0px;
+    border-left:0px;
+    border-bottom:0px;
+    outline:0px;
+  }
+  &[aria-selected=true] .defra-map-days__button-container {
+    padding-bottom:12px;
+    border-bottom:5px solid $govuk-link-colour;
+  }
+  &:focus strong {
+    outline: 3px solid transparent;
+    color: $govuk-focus-text-colour;
+    background-color: $govuk-focus-colour;
+    -webkit-box-shadow: 0 -2px $govuk-focus-colour,0 4px $govuk-focus-text-colour;
+    box-shadow: 0 -2px $govuk-focus-colour,0 4px $govuk-focus-text-colour;
+    text-decoration: none;
+  }
 }
 .defra-map-days__icon {
+  /*
   position:absolute;
   width:18px;
   height:18px;
@@ -75,4 +98,5 @@
   @include mq ($from: tablet) {
     bottom:19px;
   }
+  */
 }
