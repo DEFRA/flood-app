@@ -1,6 +1,7 @@
 const severity = require('../severity')
 const { groupBy } = require('../../util')
 const { floodRiskUrl } = require('../../config')
+const moment = require('moment-timezone')
 
 class ViewModel {
   constructor ({ location, place, floods, stations, impacts }) {
@@ -14,7 +15,8 @@ class ViewModel {
       location: title,
       pageTitle: `${title} flood risk`,
       metaDescription: `Nearby flood alerts and warnings; latest river and sea levels and flood risk advice for residents living in the ${title} area.`,
-      floodRiskUrl
+      floodRiskUrl,
+      dateFormatted: 'Up to date as of ' + moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY')
     })
 
     const hasFloods = !!floods.length
