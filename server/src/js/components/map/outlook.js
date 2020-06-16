@@ -40,7 +40,7 @@ function OutlookMap (mapId, options) {
         ctx.fillStyle = '#D4351C'
         ctx.fillRect(0, 0, 8, 8)
         ctx.beginPath()
-        ctx.fillStyle = 'rgba(255, 255, 255, 1)'
+        ctx.fillStyle = '#ffffff'
         ctx.moveTo(0, 3.3)
         ctx.lineTo(4.7, 8)
         ctx.lineTo(3.3, 8)
@@ -57,7 +57,7 @@ function OutlookMap (mapId, options) {
         ctx.fillStyle = '#F47738'
         ctx.fillRect(0, 0, 8, 8)
         ctx.beginPath()
-        ctx.fillStyle = 'rgba(255, 255, 255, 1)'
+        ctx.fillStyle = '#ffffff'
         ctx.moveTo(3.3, 0)
         ctx.lineTo(4.7, 0)
         ctx.lineTo(0, 4.7)
@@ -81,10 +81,10 @@ function OutlookMap (mapId, options) {
         ctx.fill()
         break
       case 'low':
-        ctx.fillStyle = 'rgba(255, 255, 255, 1)'
+        ctx.fillStyle = '#ffdd00'
         ctx.fillRect(0, 0, 8, 8)
         ctx.beginPath()
-        ctx.fillStyle = '#F47738'
+        ctx.fillStyle = '#ffffff'
         ctx.moveTo(0, 3.3)
         ctx.lineTo(0, 4.7)
         ctx.lineTo(4.7, 0)
@@ -98,10 +98,10 @@ function OutlookMap (mapId, options) {
         ctx.fill()
         break
       case 'veryLow':
-        ctx.fillStyle = 'rgba(255, 255, 255, 1)'
+        ctx.fillStyle = '#85994b'
         ctx.fillRect(0, 0, 8, 8)
         ctx.beginPath()
-        ctx.fillStyle = '#626A6E'
+        ctx.fillStyle = '#ffffff'
         ctx.arc(4, 4, 1, 0, 2 * Math.PI)
         ctx.closePath()
         ctx.fill()
@@ -118,10 +118,10 @@ function OutlookMap (mapId, options) {
     }
     const zIndex = feature.get('z-index')
     const lineDash = [2, 3]
-    let strokeColour = '#626A6E'
+    let strokeColour = '#85994b'
     let fillColour = pattern('veryLow')
     if (feature.get('risk-level') === 2) {
-      strokeColour = '#F47738'
+      strokeColour = '#ffdd00'
       fillColour = pattern('low')
     } else if (feature.get('risk-level') === 3) {
       strokeColour = '#F47738'
