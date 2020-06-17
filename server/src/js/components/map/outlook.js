@@ -280,6 +280,7 @@ function OutlookMap (mapId, options) {
   // Day control button
   forEach(document.querySelectorAll('.defra-map-days__button'), (button) => {
     button.addEventListener('click', (e) => {
+      e.currentTarget.focus()
       setDay(e.currentTarget.getAttribute('data-day'))
     })
   })

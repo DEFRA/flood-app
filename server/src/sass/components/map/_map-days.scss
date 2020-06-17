@@ -76,7 +76,7 @@
   }
   &[aria-selected=true] .defra-map-days__button-container {
     padding-bottom:10px;
-    border-bottom:7px solid govuk-colour('blue');
+    border-bottom:7px solid $govuk-border-colour;
   }
   &:focus strong {
     outline: 3px solid transparent;
