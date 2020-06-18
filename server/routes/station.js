@@ -46,9 +46,15 @@ module.exports = {
     // Get impacts for the station
     const impacts = await floodService.getImpactData(station.rloi_id)
 
+    // Get warnings and alerts within station buffer
+
+    const coords = JSON.parse(station.coordinates)
+
+    const warningsAlerts = await floodService.getWarningsAlertsWithinStationBuffer(coords.coordinates)
+
     if (station.status === 'Closed') {
       const river = []
-      const model = new ViewModel({ station, telemetry, impacts, river })
+      const model = new ViewModel({ station, telemetry, impacts, river, warningsAlerts })
       return h.view('station', { model })
     }
 
@@ -59,11 +65,11 @@ module.exports = {
       // Forecast station
       const values = await floodService.getStationForecastData(station.wiski_id)
       const forecast = { thresholds, values }
-      const model = new ViewModel({ station, telemetry, forecast, impacts, river })
+      const model = new ViewModel({ station, telemetry, forecast, impacts, river, warningsAlerts })
       return h.view('station', { model })
     } else {
       // Non-forecast Station
-      const model = new ViewModel({ station, telemetry, impacts, river })
+      const model = new ViewModel({ station, telemetry, impacts, river, warningsAlerts })
       return h.view('station', { model })
     }
   },
