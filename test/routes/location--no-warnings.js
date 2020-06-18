@@ -118,6 +118,6 @@ lab.experiment('Routes test - location - no warnings', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('No flood warnings or alerts currently in place in this area')
+    Code.expect(response.payload).to.contain('There are no flood warnings or alerts in this area.')
   })
 })

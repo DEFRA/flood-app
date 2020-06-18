@@ -47,7 +47,6 @@ class ViewModel {
       // const mostSevere = groups[0].severity.id
       this.highestSeverity = groups[0].severity
 
-      const floodSummary = []
       groups.forEach((group, i) => {
         switch (group.severity.hash) {
           case 'severe':
@@ -71,7 +70,7 @@ class ViewModel {
               this.bannerMainLink = `/target-area/${group.floods[0].ta_code}`
               this.bannerMainText = `Flood warning for ${group.floods[0].ta_name}`
             } else {
-              this.bannerMainLink = `/alerts-and-warnings?q=${location}#severe`
+              this.bannerMainLink = `/alerts-and-warnings?q=${location}#warnings`
               this.bannerMainText = `${group.floods.length} flood warnings in this area`
             }
             break
@@ -85,8 +84,8 @@ class ViewModel {
                 this.bannerMainLink = `/target-area/${group.floods[0].ta_code}`
                 this.bannerMainText = 'There is a flood alert in this area'
               } else {
-                this.bannerMainLink = `${group.floods.length} flood alerts in this area`
-                this.bannerMainText = `/alerts-and-warnings?q=${location}#alerts`
+                this.bannerMainLink = `/alerts-and-warnings?q=${location}#alerts`
+                this.bannerMainText = `${group.floods.length} flood alerts in this area`
               }
             } else {
               this.alerts = group.floods.length
@@ -111,18 +110,17 @@ class ViewModel {
               this.removedText2 = 'was removed'
             } else {
               this.removedLink = `/alerts-and-warnings?q=${location}#removed`
-              this.removedLinkText = `${group.floods.length} flood warnings`
-              this.removedText2 = 'were removed in the last 24 hours'
+              this.removedLinkText = 'Some flood alerts and warnings were removed'
+              this.removedText2 = 'in the last 24 hours'
             }
             break
         }
       })
-      this.floodSummary = floodSummary.join(' ')
     }
 
     // Count stations that are 'high'
-    var hasHighLevels = false
-    for (var s in stations) {
+    let hasHighLevels = false
+    for (const s in stations) {
       if (stations[s].station_type !== 'C' && stations[s].station_type !== 'G' && stations[s].value) {
         if (stations[s].value > stations[s].percentile_5) {
           hasHighLevels = true
