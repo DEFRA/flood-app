@@ -20,6 +20,7 @@ module.exports = {
     }
     if (!place) {
       request.yar.set('displayError', displayErrors['invalid-location'])
+      request.yar.set('locationError', { input: location })
       return h.redirect('/find-location')
     }
     if (!place.isEngland.is_england) {

@@ -2,6 +2,7 @@
 
 const joi = require('@hapi/joi')
 const util = require('../util')
+const ViewModel = require('../models/views/find-location')
 
 module.exports = [{
   method: 'GET',
@@ -19,7 +20,9 @@ module.exports = [{
       } else {
         const err = request.yar.get('displayError')
         request.yar.set('displayError', {})
-        return h.view('find-location', err)
+        const location = request.yar.get('locationError').input
+        const model = new ViewModel({ location, err })
+        return h.view('find-location', { model })
       }
     }
   }
@@ -36,7 +39,7 @@ module.exports = [{
         location: joi.string().required()
       }),
       failAction: (request, h, err) => {
-        return h.view('find-location', { errorMessage: 'Enter a valid location' }).takeover()
+        return h.view('find-location', { errorMessage: 'Enter a real town, city or postcode', pageTitle: 'Error: Find location - Check for flooding near you - GOV.UK' }).takeover()
       }
     }
   }

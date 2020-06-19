@@ -6,9 +6,18 @@
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-xl">Enter a location in England</h1>
-    {% if errorMessage %}
+    {% if model.err.errorMessage %}
     {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: [
+        {
+          text: model.err.errorMessage,
+          href: "#location"
+        }
+      ]
+    }) }}
+    {% elif errorMessage %}
+        {{ govukErrorSummary({
       titleText: "There is a problem",
       errorList: [
         {
@@ -18,18 +27,37 @@
       ]
     }) }}
     {% endif %}
+    <h1 class="govuk-heading-xl">Where do you want to check?</h1>
     <form method="post">
-      {% if errorMessage %}
+      {% if model.err.errorMessage %}
       {{ govukInput({
         label: {
-          text: "Enter postcode, town or county"
+          text: "Town, city or postcode"
+        },
+        errorMessage: {
+          "text": model.err.errorMessage
+        },
+        id: "location",
+        name: "location",
+        value: model.location,
+        attributes: {
+          autocomplete: "off",
+          autocorrect: "off",
+          autocapitalize: "off",
+          spellcheck: "false"
+        },
+        classes: "govuk-!-width-one-half"
+      }) }}
+      {% elif errorMessage %}
+            {{ govukInput({
+        label: {
+          text: "Town, city or postcode"
         },
         errorMessage: {
           "text": errorMessage
         },
         id: "location",
         name: "location",
-        value: value,
         attributes: {
           autocomplete: "off",
           autocorrect: "off",
@@ -45,6 +73,7 @@
         },
         id: "location",
         name: "location",
+        value: test,
         attributes: {
           autocomplete: "off",
           autocorrect: "off",
@@ -57,6 +86,7 @@
       {% endif %}
       <button type="submit" class="govuk-button">Continue</button>
     </form>
+    <p><a href="/">Or check for flooding in all of England</a></p>
   </div>
 </div>
 {% endblock %}
