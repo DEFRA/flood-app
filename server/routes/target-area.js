@@ -19,11 +19,12 @@ module.exports = {
         code: joi.string().required()
       }),
       query: joi.object({
-        v: joi.string().optional(),
-        btn: joi.string().optional(),
-        lyr: joi.string().optional(),
-        fid: joi.string().optional(),
-        ext: joi.string().optional()
+        btn: joi.string(),
+        ext: joi.string(),
+        fid: joi.string(),
+        lyr: joi.string(),
+        v: joi.string(),
+        b: joi.string() // Remove in prod
       })
     }
   }

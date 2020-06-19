@@ -53,7 +53,7 @@ window.flood.maps.layers = {
       extent: window.flood.maps.extent,
       style: window.flood.maps.styles.targetAreaPolygons,
       visible: false,
-      zIndex: 1
+      zIndex: 2
     })
   },
   */
@@ -75,7 +75,7 @@ window.flood.maps.layers = {
       }),
       style: window.flood.maps.styles.targetAreaPolygons,
       visible: false,
-      zIndex: 1
+      zIndex: 2
     })
   },
 
@@ -90,7 +90,7 @@ window.flood.maps.layers = {
       }),
       style: window.flood.maps.styles.warnings,
       visible: false,
-      zIndex: 4
+      zIndex: 5
     })
   },
 
@@ -105,7 +105,7 @@ window.flood.maps.layers = {
       }),
       style: window.flood.maps.styles.stations,
       visible: false,
-      zIndex: 3
+      zIndex: 4
     })
   },
 
@@ -120,7 +120,7 @@ window.flood.maps.layers = {
       }),
       style: window.flood.maps.styles.impacts,
       visible: false,
-      zIndex: 5
+      zIndex: 6
     })
   },
 
@@ -135,7 +135,7 @@ window.flood.maps.layers = {
       }),
       style: window.flood.maps.styles.rainfall,
       visible: false,
-      zIndex: 2
+      zIndex: 3
     })
   },
 
@@ -147,6 +147,18 @@ window.flood.maps.layers = {
         projection: 'EPSG:3857'
       }),
       zIndex: 10
+    })
+  },
+
+  // Remove in prod
+  shape: () => {
+    return new VectorLayer({
+      ref: 'shape',
+      source: new VectorSource({
+        format: new GeoJSON(),
+        projection: 'EPSG:3857'
+      }),
+      zIndex: 1
     })
   }
 
