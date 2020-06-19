@@ -192,11 +192,13 @@ function LiveMap (mapId, options) {
         // Remove in prod - display a box or circle
         if (getParameterByName('b')) {
           const b = getParameterByName('b') * 1000
-          if (layer.get('ref') === 'warnings' || layer.get('ref') === 'targetAreaPolygons') {
-            const extent = buffer(newFeature.getGeometry().getExtent(), b)
-            const feature = new Feature(fromExtent(extent))
-            shape.getSource().addFeature(feature)
-            console.log(shape.getSource().getFeatures())
+          if (layer.get('ref') === 'warnings') {
+            const targetAreaPolygonId = 'flood_warning_alert.' + newFeature.getId().substring(newFeature.getId().indexOf('.') + 1)
+            if (targetArea.polygonFeature && targetArea.polygonFeature.getId() === targetAreaPolygonId) {
+              const extent = buffer(targetArea.polygonFeature.getGeometry().getExtent(), b)
+              const feature = new Feature(fromExtent(extent))
+              shape.getSource().addFeature(feature)
+            }
           } else if (layer.get('ref') === 'stations') {
             const feature = new Feature(new Circle(newFeature.getGeometry().getCoordinates(), b))
             shape.getSource().addFeature(feature)
