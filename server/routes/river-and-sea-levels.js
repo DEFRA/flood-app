@@ -15,6 +15,11 @@ module.exports = [{
       const stations = await floodService.getRiverById(request.query['river-id'])
       model = new ViewModel({ location, place, stations })
       return h.view('river-and-sea-levels', { model })
+      // Else target-area
+    } else if (request.query['target-area']) {
+      const { stations, targetArea } = await floodService.getStationsWithinTargetArea(request.query['target-area'])
+      model = new ViewModel({ location, place, stations, targetArea })
+      return h.view('river-and-sea-levels', { model })
       // Else no location
     } else if (typeof location === 'undefined' || location === '') {
       stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])

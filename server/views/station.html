@@ -1,7 +1,6 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <nav class="defra-flood-nav" {% if model.referer %}id="browserBackContainer"{% endif %}>
@@ -12,6 +11,34 @@
     </nav>
   </div>
 </div>
+
+{% if model.banner %}
+<div class="defra-flood-status govuk-!-margin-bottom-3">
+  <div class="defra-flood-status-item defra-flood-status-item--{{ model.severityLevel }}">
+    <span class="defra-flood-status-item__icon"></span>
+    <div class="defra-flood-status-item__text">
+      {% if model.multipleSeverityLevels%}
+      <strong>
+        {% if model.severeBanner %}
+        <a class="govuk-link" href="/alerts-and-warnings#severe">{{ model.severeBanner }}</a>
+        {% endif %}
+        {{ model.severeAnd }}
+        {% if model.warningsBanner %}
+        <a class="govuk-link" href="/alerts-and-warnings#warnings">{{ model.warningsBanner }}</a>
+        {% endif %}
+        {{ model.warningAnd }}
+        {% if model.alertsBanner %}
+        <a class="govuk-link" href="/alerts-and-warnings#alerts">{{ model.alertsBanner }}</a>
+        {% endif %}
+        in this area
+      </strong>
+      {% else %}
+      <strong><a class="govuk-link" href="{{ model.targetAreaLink }}">{{ model.banner }}</a></strong>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endif %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

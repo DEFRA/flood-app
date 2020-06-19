@@ -3,6 +3,7 @@ const moment = require('moment-timezone')
 const config = require('../../config')
 const Station = require('./station-data')
 const Forecast = require('./station-forecast')
+const { groupBy } = require('../../util')
 
 function dateDiff (date1, date2) {
   return moment(date1).diff(moment(date2), 'days')
@@ -10,7 +11,7 @@ function dateDiff (date1, date2) {
 
 class ViewModel {
   constructor (options) {
-    const { station, telemetry, forecast, impacts, river } = options
+    const { station, telemetry, forecast, impacts, river, warningsAlerts } = options
 
     this.station = new Station(station)
     this.station.riverNavigation = river
@@ -23,6 +24,80 @@ class ViewModel {
     })
     */
 
+    // Group warnings/alerts by severity level
+
+    const warningsAlertsGroups = groupBy(warningsAlerts, 'severity_value')
+    const numAlerts = warningsAlertsGroups['1'] ? warningsAlertsGroups['1'].length : 0
+    const numWarnings = warningsAlertsGroups['2'] ? warningsAlertsGroups['2'].length : 0
+    const numSevereWarnings = warningsAlertsGroups['3'] ? warningsAlertsGroups['3'].length : 0
+
+    // Determine appropriate warning/alert text for banner
+
+    // Single warning/alert
+    if (numAlerts === 0 && numWarnings === 0 && numSevereWarnings === 0) {
+      // No warnings or alerts
+    } else if (numAlerts === 1 && numWarnings === 0 && numSevereWarnings === 0) {
+      // alert
+      this.banner = 'There is a flood alert in this area'
+      this.severityLevel = 'alert'
+      this.targetAreaLink = `/target-area/${warningsAlerts[0].ta_code}`
+    } else if (numAlerts === 0 && numWarnings === 1 && numSevereWarnings === 0) {
+      // warning
+      this.banner = `Flood warning for ${warningsAlerts[0].ta_name}`
+      this.severityLevel = 'warning'
+      this.targetAreaLink = `/target-area/${warningsAlerts[0].ta_code}`
+    } else if (numAlerts === 0 && numWarnings === 0 && numSevereWarnings === 1) {
+      // severe warning
+      this.banner = `Severe flood warning for ${warningsAlerts[0].ta_name}`
+      this.severityLevel = 'warning'
+      this.targetAreaLink = `/target-area/${warningsAlerts[0].ta_code}`
+    } else {
+      // Multiple warnings/alerts
+      if (numAlerts && numWarnings === 0 && numSevereWarnings === 0) {
+        this.banner = `There are ${numAlerts} flood alerts in this area`
+        this.severityLevel = 'alert'
+        this.targetAreaLink = '/alerts-and-warnings#alerts'
+      } else if (numAlerts === 0 && numWarnings && numSevereWarnings === 0) {
+        this.banner = `There are ${numWarnings} flood warnings in this area`
+        this.severityLevel = 'warning'
+        this.targetAreaLink = '/alerts-and-warnings#warnings'
+      } else if (numAlerts === 0 && numWarnings === 0 && numSevereWarnings) {
+        this.banner = `There are ${numWarnings} severe flood warnings in this area`
+        this.severityLevel = 'warning'
+        this.targetAreaLink = '/alerts-and-warnings#severe'
+      } else {
+        this.banner = true
+        if (numSevereWarnings) {
+          this.severeBanner = `${numSevereWarnings} severe flood warning`
+          if (numSevereWarnings > 1) {
+            this.severeBanner += 's'
+          }
+        }
+        if (numWarnings) {
+          this.warningsBanner = `${numWarnings} flood warning`
+          if (numWarnings > 1) {
+            this.warningsBanner += 's'
+          }
+        }
+        if (numAlerts) {
+          this.alertsBanner = `${numAlerts} flood alert`
+          if (numAlerts > 1) {
+            this.alertsBanner += 's'
+          }
+        }
+        this.severityLevel = 'warning'
+        this.multipleSeverityLevels = true
+        if (numAlerts && numWarnings && numSevereWarnings) {
+          this.severeAnd = ', '
+          this.warningsAnd = ' and '
+        } else if (numSevereWarnings) {
+          this.severeAnd = ' and '
+        } else {
+          this.warningsAnd = ' and '
+        }
+      }
+    }
+
     this.id = this.station.id
     this.telemetry = telemetry || []
     this.catchments = []
@@ -33,6 +108,7 @@ class ViewModel {
     this.station.floodingIsPossible = false
     this.station.hasPercentiles = true
     this.station.hasImpacts = false
+    this.warningsAlerts = warningsAlerts
     const now = moment(Date.now())
     const numberOfProvisionalDays = config.provisionalPorMaxValueDays
 

@@ -16,7 +16,9 @@
       {% if not model.hasActiveFloods %}
       <div class="defra-flood-status-item">
         <div class="defra-flood-status-item__text">
-          No flood alerts or warnings.
+          <strong>
+            No flood alerts or warnings
+          </strong>
         </div>
       </div>
       {% endif %}
@@ -31,7 +33,11 @@
               {{ group.title | lower }}
             </a>
           </strong>
+          {% if group.severity.id == 3 %}
+          <span>There is a danger to life</span>
+          {% else %}
           <span>{{ group.severity.subTitle }}</span>
+          {% endif %}
         </div>
       </div>
       {% else %}
@@ -42,6 +48,11 @@
       {% endif %}
       {% endfor %}
     </div>
+
+    <!-- Map component -->
+    {% if model.hasActiveFloods %}
+    <div class="defra-map" id="map-live"></div>
+    {% endif %}
 
     <p class="defra-flood-meta defra-flood-meta--border govuk-!-margin-top-6 govuk-!-margin-bottom-6">
       <time datetime="{{model.dateFormatted}}">{{model.dateFormatted}}</time>
@@ -68,7 +79,7 @@
     {% include "partials/context-footer.html" %}
   </div>
 
-  {% include "partials/related-content.html" %}
+  {% include "partials/related-content-national.html" %}
 
 </div>
 

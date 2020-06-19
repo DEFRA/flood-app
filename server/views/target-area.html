@@ -10,9 +10,9 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-<!--    FIRST BANNER-->
+<!--    FIRST BANNER FOR ACTIVE ALERTS/WARNING -->
     <div class="defra-flood-status govuk-!-margin-bottom-3">
-      {% if model.flood and model.severity.id < 4 %}
+      {% if model.flood and model.severity.id < 4%}
       <div class="defra-flood-status-item defra-flood-status-item--{{model.severity.hash}}">
         <span class="defra-flood-status-item__icon"></span>
         <div class="defra-flood-status-item__text">
@@ -21,40 +21,40 @@
       </div>
       {% endif %}
 
-<!--      Inactive or Removed-->
-      {% if (model.flood and model.severity.id == 4) or not model.flood %}
+<!--      SECOND 'GREY' BANNER FOR Inactive or Removed and there is no active alert in parent area-->
+      {% if ((model.flood and model.severity.id == 4) or not model.flood) and not model.parentAreaAlert%}
         <div class="defra-flood-status-item">
           {% if not model.flood %}
           <div class="defra-flood-status-item__text">
-            The flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warning{% else %}alert{% endif %} was removed
+            There are no flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warnings{% else %}alerts{% endif %} in this area
           </div>
           {% else %}
           <div class="defra-flood-status-item__text">
-            There are no flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warnings{% else %}alerts{% endif %} in this area
+            The flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warning{% else %}alert{% endif %} was removed
           </div>
           {% endif %}
         </div>
       {% endif %}
     </div>
 
-<!--    SECOND BANNER THAT APPEARS IN CASE OF WARNING INACTIVE, REMOVED-->
-    {% if model.secondBanner %}
+<!--    THIRD 'ORANGE' BANNER in case of active alert in parent area-->
+    {% if model.parentAreaAlert %}
     <div class="defra-flood-status govuk-!-margin-bottom-3">
       <div class="defra-flood-status-item defra-flood-status-item--alert">
         <span class="defra-flood-status-item__icon"></span>
         <div class="defra-flood-status-item__text">
           {% if not model.flood %}
-          The flood warning was removed, but there's still <a href="/target-area/{{model.area.parent}}">a flood alert in the wider area</a>
+            There are no flood warnings in this area, but there is <a href="/target-area/{{model.area.parent}}">a flood alert in the wider area</a>
           {% else %}
-          There are no flood warnings in this area, but there is <a href="/target-area/{{model.area.parent}}">a flood alert in the wider area</a>
+            The flood warning was removed, but there's still <a href="/target-area/{{model.area.parent}}">a flood alert in the wider area</a>
           {% endif %}
         </div>
       </div>
     </div>
     {% endif %}
 
-    <h1 class="govuk-heading-xl">{{ model.pageTitle }}
-    </h1>
+    <h1 class="govuk-heading-xl">{{ model.pageTitle }}</h1>
+
   </div>
 </div>
 
@@ -87,45 +87,13 @@
     <h2 class="govuk-heading-m">Check river, sea or groundwater levels</h2>
     <p>They can give you a better understanding of your flood risk.</p>
     <p><a href="/river-and-sea-levels?target-area={{ model.targetArea }}">Find a river, sea or groundwater level in this area.</a></p>
+  
+  {% include "partials/context-footer.html" %}
+
   </div>
 
   <div class="govuk-grid-column-one-third">
-    <!-- The Related items component is not part of GOV.UK Frontend but will be styled if used in the Prototype Kit -->
-    <aside class="defra-related-items" role="complementary" style="border-width:2px">
-      <h2 class="govuk-heading-s" id="subsection-title">
-        Related content
-      </h2>
-      <nav role="navigation" aria-labelledby="subsection-title">
-        <ul class="govuk-list govuk-!-font-size-16">
-          <li>
-            <a class="govuk-link" href="/plan-ahead-for-flooding">
-              How to plan ahead for flooding
-            </a>
-          </li>
-          <li>
-            <a class="govuk-link" href="/what-to-do-in-a-flood">
-              What to do in a flood
-            </a>
-          </li>
-          <li>
-            <a class="govuk-link" href="/recovering-after-a-flood">
-              How to recover after a flood
-            </a>
-          </li>
-          <li>
-            <a class="govuk-link" href="https://flood-warning-information.service.gov.uk/long-term-flood-risk">
-              View long term flood risk information
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </aside>
-  </div>
-</div>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    {% include "partials/context-footer.html" %}
+   {% include "partials/related-content.html" %}
   </div>
 </div>
 

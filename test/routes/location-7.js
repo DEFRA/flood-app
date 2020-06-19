@@ -162,7 +162,5 @@ lab.experiment('Routes test - location - 1 alert 1 nlif', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('View river and sea levels in the wider area')
-    Code.expect(response.payload).to.not.contain('View river and sea levels in this area')
   })
 })
