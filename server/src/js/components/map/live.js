@@ -6,7 +6,7 @@
 // It uses the MapContainer
 
 import { View, Overlay, Feature } from 'ol'
-import { transform, transformExtent } from 'ol/proj'
+import { transform, transformExtent, getPointResolution } from 'ol/proj'
 import { unByKey } from 'ol/Observable'
 import { defaults as defaultInteractions } from 'ol/interaction'
 import { Point, Circle, MultiPolygon } from 'ol/geom'
@@ -191,7 +191,7 @@ function LiveMap (mapId, options) {
         container.showInfo(newFeature)
         // Remove in prod - display a box or circle
         if (getParameterByName('b')) {
-          const b = getParameterByName('b') * 1000
+          const b = (getParameterByName('b') * 1000) / getPointResolution('EPSG:3857', 1, newFeature.getGeometry().getCoordinates())
           if (layer.get('ref') === 'warnings') {
             const targetAreaPolygonId = 'flood_warning_alert.' + newFeature.getId().substring(newFeature.getId().indexOf('.') + 1)
             if (targetArea.polygonFeature && targetArea.polygonFeature.getId() === targetAreaPolygonId) {
@@ -200,7 +200,8 @@ function LiveMap (mapId, options) {
               shape.getSource().addFeature(feature)
             }
           } else if (layer.get('ref') === 'stations') {
-            const feature = new Feature(new Circle(newFeature.getGeometry().getCoordinates(), b))
+            const circle = new Circle(newFeature.getGeometry().getCoordinates(), b)
+            const feature = new Feature(circle)
             shape.getSource().addFeature(feature)
           }
         }
