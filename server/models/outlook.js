@@ -93,6 +93,8 @@ class Outlook {
       })
     })
 
+    console.log(this._geoJson)
+
     // Smooth outlook polygons
     this._geoJson.features.forEach((feature) => {
       // Turf library used to create extra coordinates for Polygons
