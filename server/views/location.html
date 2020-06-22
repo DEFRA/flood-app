@@ -66,7 +66,7 @@
         {{ model.removedText1 }}<a href="{{ model.removedLink }}">{{ model.removedLinkText }}</a> {{ model.removedText2 }}
       </p>
       {% endif %}
-    {% elseif model.hasHighLevels %}
+    {% else %}
     <p class="govuk-body">
       Not what you expected? This service tells you your risk of flooding from rivers, the sea and groundwater. If there's surface water flooding (also known as flash flooding) in your area, <a href="https://www.gov.uk/find-local-council">contact your local council</a>.
     </p>

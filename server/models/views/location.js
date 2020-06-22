@@ -44,16 +44,11 @@ class ViewModel {
         return !!item.floods // filters out any without a floods array
       })
 
-      // Get the most severe severity (not highest since FWIS api change) as the groups are order by most severe
-      // const mostSevere = groups[0].severity.id
-      this.highestSeverity = groups[0].severity
-
       groups.forEach((group, i) => {
         switch (group.severity.hash) {
           case 'severe':
             this.bannerSevereSub = 'There is a danger to life'
             this.severitySevereTitle = group.severity.title
-            // if (i === 0 && group.floods.length === 1) {
             if (group.floods.length === 1) {
               this.bannerSevereMainLink = `/target-area/${group.floods[0].ta_code}`
               this.bannerSevereMainText = `Severe flood warning for ${group.floods[0].ta_name}`
@@ -66,7 +61,6 @@ class ViewModel {
             this.bannerSub = 'Flooding is expected'
             this.severity = group.severity.hash
             this.severityTitle = group.severity.title
-            // if (i === 0 && group.floods.length === 1) {
             if (group.floods.length === 1) {
               this.bannerMainLink = `/target-area/${group.floods[0].ta_code}`
               this.bannerMainText = `Flood warning for ${group.floods[0].ta_name}`
@@ -80,7 +74,6 @@ class ViewModel {
               this.bannerSub = 'Some flooding is possible'
               this.severity = group.severity.hash
               this.severityTitle = group.severity.title
-              // if (i === 0 && group.floods.length === 1) {
               if (group.floods.length === 1) {
                 this.bannerMainLink = `/target-area/${group.floods[0].ta_code}`
                 this.bannerMainText = 'There is a flood alert in this area'
@@ -103,7 +96,6 @@ class ViewModel {
             break
           case 'removed':
             this.removed = group.floods.length
-            // if (i === 0 && group.floods.length === 1) {
             if (group.floods.length === 1) {
               this.removedLink = `/target-area/${group.floods[0].ta_code}`
               this.removedLinkText = group.floods[0].ta_name
@@ -129,14 +121,6 @@ class ViewModel {
       }
     }
     this.hasHighLevels = hasHighLevels
-
-    // // TO DO re introduce if invalid dates are to be removed
-    // var filteredStations = stations.filter(function (value) {
-    //   console.log(value)
-    //   return value.value_timestamp !== 'Invalid date'
-    // })
-
-    // stations = filteredStations
 
     // River and sea levels
     this.hasLevels = !!stations.length
