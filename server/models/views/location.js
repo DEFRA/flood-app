@@ -10,6 +10,7 @@ class ViewModel {
     Object.assign(this, {
       q: location,
       place,
+      placeBbox: place ? place.bbox : [],
       floods,
       impacts,
       location: title,
@@ -147,6 +148,9 @@ class ViewModel {
     // create an array of all active impacts
     this.activeImpacts = impacts.filter(active => active.telemetryactive === true)
     this.hasActiveImpacts = !!this.activeImpacts.length
+    this.expose = {
+      placeBbox: this.placeBbox
+    }
   }
 }
 
