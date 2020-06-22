@@ -277,7 +277,7 @@ lab.experiment('Outlook model test', () => {
           properties:
           {
             'risk-level': 1,
-            'z-index': 98,
+            'z-index': 10,
             day: 5,
             html: '<p class="govuk-body-s">Details of source, likelyhood and impact</p>',
             isSmooth: true,
