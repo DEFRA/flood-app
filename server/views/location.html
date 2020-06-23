@@ -61,6 +61,12 @@
 
     <p><a href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
 
+    <!-- River and sea levels -->
+    <h2 class="govuk-heading-m">Latest river, sea and groundwater levels</h2>
+    <p>Most measuring stations are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
+    <p><a href="/river-and-sea-levels?q={{ model.location }}">Find a river, sea or groundwater level in this area</a></p>
+    <!-- end river and sea levels -->
+
     {% if model.hasActiveImpacts %}
     <p class="govuk-body">
       Historic records show <a href="/historic-impacts?q={{ model.q }}">{{ model.activeImpacts.length }} flood impact{% if model.activeImpacts.length > 1 %}s{% endif %}</a> in this area at current river levels.
