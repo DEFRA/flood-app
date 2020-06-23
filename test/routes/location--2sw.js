@@ -153,6 +153,7 @@ lab.experiment('Routes test - location - 2 severe warnings', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('2 severe flood warnings')
     Code.expect(response.payload).to.contain('There is a danger to life')
   })
 })
