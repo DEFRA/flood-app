@@ -39,7 +39,8 @@ module.exports = [{
         location: joi.string().required()
       }),
       failAction: (request, h, err) => {
-        return h.view('find-location', { errorMessage: 'Enter a real town, city or postcode', pageTitle: 'Error: Find location - Check for flooding near you - GOV.UK' }).takeover()
+        const model = new ViewModel({ err })
+        return h.view('find-location', { model }).takeover()
       }
     }
   }
