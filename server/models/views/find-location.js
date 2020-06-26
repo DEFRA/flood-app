@@ -33,6 +33,10 @@ class ViewModel {
       classes: 'govuk-!-width-one-half'
     }
 
+    if (location) {
+      this.locationInput.value = location
+    }
+
     if (err.errorMessage || err.message) {
       this.locationInput.errorMessage = { text: 'Enter a real town, city or postcode' }
       this.locationInput.value = location

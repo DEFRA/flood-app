@@ -11,7 +11,10 @@ module.exports = [{
     if (typeof request.yar === 'undefined' ||
     request.yar.get('displayError') === null ||
     request.yar.get('displayError') === {}) {
-      return h.view('find-location')
+      const err = {}
+      const location = ''
+      const model = new ViewModel({ location, err })
+      return h.view('find-location', { model })
     } else {
       if (request.yar.get('displayError').view) {
         const view = request.yar.get('displayError').view
