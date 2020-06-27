@@ -44,18 +44,6 @@ lab.experiment('Routes test - find-location', () => {
       }
     })
   })
-
-  lab.test('GET /find-location', async () => {
-    const options = {
-      method: 'GET',
-      url: '/find-location'
-    }
-
-    const response = await server.inject(options)
-
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.headers['content-type']).to.include('text/html')
-  })
   lab.test('GET /find-location', async () => {
     const options = {
       method: 'GET',

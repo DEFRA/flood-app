@@ -16,17 +16,12 @@ module.exports = [{
       const model = new ViewModel({ location, err })
       return h.view('find-location', { model })
     } else {
-      if (request.yar.get('displayError').view) {
-        const view = request.yar.get('displayError').view
-        request.yar.set('displayError', {})
-        return h.view(view)
-      } else {
-        const err = request.yar.get('displayError')
-        request.yar.set('displayError', {})
-        const location = request.yar.get('locationError').input
-        const model = new ViewModel({ location, err })
-        return h.view('find-location', { model })
-      }
+      const err = request.yar.get('displayError')
+      request.yar.set('displayError', {})
+      const location = request.yar.get('locationError').input
+      request.yar.set('locationError', {})
+      const model = new ViewModel({ location, err })
+      return h.view('find-location', { model })
     }
   }
 }, {
@@ -39,7 +34,7 @@ module.exports = [{
   options: {
     validate: {
       payload: joi.object({
-        location: joi.string().required()
+        location: joi.string().required().regex(/^[a-zA-Z -&]*$/)
       }),
       failAction: (request, h, err) => {
         const model = new ViewModel({ err })
