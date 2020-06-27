@@ -80,4 +80,17 @@ lab.experiment('Routes test - find-location', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.include('Enter a real town, city or postcode')
   })
+  lab.test('POST- payload fails joi regex validation, error message displayed /find-location', async () => {
+    const options = {
+      method: 'POST',
+      url: '/find-location',
+      payload: {
+        location: '£$%^£$^%%$£'
+      }
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('Enter a real town, city or postcode')
+  })
 })
