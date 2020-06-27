@@ -34,7 +34,7 @@ module.exports = [{
   options: {
     validate: {
       payload: joi.object({
-        location: joi.string().required().regex(/^[a-zA-Z -&]*$/)
+        location: joi.string().required().regex(/^[a-zA-Z-& ]*$/)
       }),
       failAction: (request, h, err) => {
         const model = new ViewModel({ err })
