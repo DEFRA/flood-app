@@ -10,10 +10,11 @@ class ViewModel {
     Object.assign(this, {
       q: location,
       place,
+      placeBbox: place ? place.bbox : [],
       floods,
       impacts,
       location: title,
-      pageTitle: `${title} flood risk`,
+      pageTitle: `Check for flooding in ${title}`,
       metaDescription: `Nearby flood alerts and warnings; latest river and sea levels and flood risk advice for residents living in the ${title} area.`,
       floodRiskUrl,
       dateFormatted: 'Up to date as of ' + moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY')
@@ -43,49 +44,76 @@ class ViewModel {
         return !!item.floods // filters out any without a floods array
       })
 
-      // Get the most severe severity (not highest since FWIS api change) as the groups are order by most severe
-      const mostSevere = groups[0].severity.id
-      this.highestSeverity = groups[0].severity
-
-      const floodSummary = []
       groups.forEach((group, i) => {
         switch (group.severity.hash) {
           case 'severe':
-            if (i === 0 && group.floods.length === 1) {
-              floodSummary.push(`A severe flood warning is in force for <a href="/target-area/${group.floods[0].ta_code}">${group.floods[0].ta_name}</a>. There is a danger to life in this area.`)
+            this.bannerSevereSub = 'There is a danger to life'
+            this.severitySevereTitle = group.severity.title
+            if (group.floods.length === 1) {
+              this.bannerSevereMainLink = `/target-area/${group.floods[0].ta_code}`
+              this.bannerSevereMainText = `Severe flood warning for ${group.floods[0].ta_name}`
             } else {
-              floodSummary.push(`<a href="/alerts-and-warnings?q=${location}${group.severity.id !== mostSevere ? '#' + group.severity.pluralisedHash : ''}">${group.floods.length}&nbsp;severe flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'} in force nearby. There is a danger to life in these areas.`)
+              this.bannerSevereMainLink = `/alerts-and-warnings?q=${location}#severe`
+              this.bannerSevereMainText = `${group.floods.length} severe flood warnings in this area`
             }
             break
           case 'warning':
-            if (i === 0 && group.floods.length === 1) {
-              floodSummary.push(`A flood warning is in place for <a href="/target-area/${group.floods[0].ta_code}">${group.floods[0].ta_name}</a>. Some flooding is expected in this area.`)
+            this.bannerSub = 'Flooding is expected'
+            this.severity = group.severity.hash
+            this.severityTitle = group.severity.title
+            if (group.floods.length === 1) {
+              this.bannerMainLink = `/target-area/${group.floods[0].ta_code}`
+              this.bannerMainText = `Flood warning for ${group.floods[0].ta_name}`
             } else {
-              floodSummary.push(`<a href="/alerts-and-warnings?q=${location}${group.severity.id !== mostSevere ? '#' + group.severity.pluralisedHash : ''}">${group.floods.length}&nbsp;flood warning${group.floods.length > 1 ? 's</a> are' : '</a> is'}${severeWarnings.length >= 1 ? ' also ' : ' '}in place nearby. Some flooding is expected in ${group.floods.length > 1 ? 'these areas' : 'this area'}.`)
+              this.bannerMainLink = `/alerts-and-warnings?q=${location}#warnings`
+              this.bannerMainText = `${group.floods.length} flood warnings in this area`
             }
             break
           case 'alert':
-            if (i === 0 && group.floods.length === 1) {
-              floodSummary.push(`A flood alert is in place for the <a href="/target-area/${group.floods[0].ta_code}">${group.floods[0].ta_name}</a>. Some flooding is possible in this area.`)
+            if (!warnings.length && !severeWarnings.length) {
+              this.bannerSub = 'Some flooding is possible'
+              this.severity = group.severity.hash
+              this.severityTitle = group.severity.title
+              if (group.floods.length === 1) {
+                this.bannerMainLink = `/target-area/${group.floods[0].ta_code}`
+                this.bannerMainText = 'There is a flood alert in this area'
+              } else {
+                this.bannerMainLink = `/alerts-and-warnings?q=${location}#alerts`
+                this.bannerMainText = `${group.floods.length} flood alerts in this area`
+              }
             } else {
-              floodSummary.push(`<a href="/alerts-and-warnings?q=${location}${group.severity.id !== mostSevere ? '#' + group.severity.pluralisedHash : ''}">${group.floods.length}&nbsp;flood alert${group.floods.length > 1 ? 's</a> are' : '</a> is'} ${group.severity.id !== mostSevere && !(severeWarnings.length && warnings.length) ? 'also' : ''} in place in the wider area where some flooding is possible.`)
+              this.alerts = group.floods.length
+              if (group.floods.length) {
+                this.alertsSummaryLink = `/target-area/${group.floods[0].ta_code}`
+                this.alertsSummaryLinkText = 'A flood alert'
+                this.alertsSummaryText = 'is'
+              } else {
+                this.alertsSummaryLink = `/alerts-and-warnings?q=${location}#alerts`
+                this.alertsSummaryLinkText = `${group.floods.length}flood alerts`
+                this.alertsSummaryText = 'are'
+              }
             }
             break
           case 'removed':
-            if (i === 0 && group.floods.length === 1) {
-              floodSummary.push(`The flood warning for <a href="/target-area/${group.floods[0].ta_code}">${group.floods[0].ta_name}</a> has been removed.`)
+            this.removed = group.floods.length
+            if (group.floods.length === 1) {
+              this.removedLink = `/target-area/${group.floods[0].ta_code}`
+              this.removedLinkText = group.floods[0].ta_name
+              this.removedText1 = 'The flood warning for '
+              this.removedText2 = 'was removed'
             } else {
-              floodSummary.push(`${groups.length > 3 ? '</p><p>' : ''}${group.floods.length}&nbsp;flood warning${group.floods.length > 1 ? 's have' : ' has'} been <a href="/alerts-and-warnings?q=${location}${group.severity.id !== mostSevere ? '#' + group.severity.pluralisedHash : ''}">removed</a> within the last 24 hours.`)
+              this.removedLink = `/alerts-and-warnings?q=${location}#removed`
+              this.removedLinkText = 'Some flood alerts and warnings were removed'
+              this.removedText2 = 'in the last 24 hours'
             }
             break
         }
       })
-      this.floodSummary = floodSummary.join(' ')
     }
 
     // Count stations that are 'high'
-    var hasHighLevels = false
-    for (var s in stations) {
+    let hasHighLevels = false
+    for (const s in stations) {
       if (stations[s].station_type !== 'C' && stations[s].station_type !== 'G' && stations[s].value) {
         if (stations[s].value > stations[s].percentile_5) {
           hasHighLevels = true
@@ -93,14 +121,6 @@ class ViewModel {
       }
     }
     this.hasHighLevels = hasHighLevels
-
-    // // TO DO re introduce if invalid dates are to be removed
-    // var filteredStations = stations.filter(function (value) {
-    //   console.log(value)
-    //   return value.value_timestamp !== 'Invalid date'
-    // })
-
-    // stations = filteredStations
 
     // River and sea levels
     this.hasLevels = !!stations.length
@@ -112,6 +132,9 @@ class ViewModel {
     // create an array of all active impacts
     this.activeImpacts = impacts.filter(active => active.telemetryactive === true)
     this.hasActiveImpacts = !!this.activeImpacts.length
+    this.expose = {
+      placeBbox: this.placeBbox
+    }
   }
 }
 
