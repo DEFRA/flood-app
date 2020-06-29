@@ -20,7 +20,7 @@ lab.experiment('Routes test - find-location', () => {
 
     const findLocationPlugin = {
       plugin: {
-        name: 'fine-location',
+        name: 'find-location',
         register: (server, options) => {
           server.route(require('../../server/routes/find-location'))
         }
