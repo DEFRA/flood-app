@@ -55,12 +55,12 @@ lab.experiment('Routes test - find-location', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
-  lab.test('POST- payload of Clacton-on-Sea to pass regex validation', async () => {
+  lab.test('POST- payload of warrington', async () => {
     const options = {
       method: 'POST',
       url: '/find-location',
       payload: {
-        location: 'Clacton-on-Sea'
+        location: 'warrington'
       }
     }
 
@@ -73,19 +73,6 @@ lab.experiment('Routes test - find-location', () => {
       url: '/find-location',
       payload: {
         location: ''
-      }
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.include('Enter a real town, city or postcode')
-  })
-  lab.test('POST- payload fails joi regex, error message displayed /find-location', async () => {
-    const options = {
-      method: 'POST',
-      url: '/find-location',
-      payload: {
-        location: '£$%^£$^%%$£'
       }
     }
 

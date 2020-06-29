@@ -1,7 +1,6 @@
 'use strict'
 
 const joi = require('@hapi/joi')
-const util = require('../util')
 const ViewModel = require('../models/views/find-location')
 
 module.exports = [{
@@ -29,12 +28,12 @@ module.exports = [{
   path: '/find-location',
   handler: async (request, h) => {
     const { location } = request.payload
-    return h.redirect(`/location?q=${encodeURIComponent(util.cleanseLocation(location))}`)
+    return h.redirect(`/location?q=${encodeURIComponent(location)}`)
   },
   options: {
     validate: {
       payload: joi.object({
-        location: joi.string().required().regex(/^[a-zA-Z-& ]*$/)
+        location: joi.string().required()
       }),
       failAction: (request, h, err) => {
         const model = new ViewModel({ err })
