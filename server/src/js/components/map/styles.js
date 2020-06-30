@@ -120,75 +120,6 @@ window.flood.maps.styles = {
     const isSelected = feature.get('isSelected')
     const isBigSymbol = resolution <= window.flood.maps.liveMaxBigZoom
     return isSelected ? (isBigSymbol ? styleCache.rainfallBigSelected : styleCache.rainfallSelected) : (isBigSymbol ? styleCache.rainfallBig : styleCache.rainfall)
-  },
-
-  //
-  // WebGL styles
-  //
-
-  warningsJSON: {
-    filter: ['case',
-      ['<', ['resolution'], 100],
-      false,
-      ['case',
-        ['==', ['get', 'isVisible'], 'true'],
-        true,
-        false
-      ]
-    ],
-    symbol: {
-      symbolType: 'image',
-      src: '/assets/images/map-symbols-2x.png',
-      size: 50,
-      rotateWithView: false,
-      offset: [0, 0],
-      textureCoord: ['match', ['get', 'severity_value'],
-        3, [0, 0, 0.5, 0.0769],
-        2, [0, 0.0769, 0.5, 0.1538],
-        1, [0, 0.1538, 0.5, 0.2307],
-        [0, 0.2307, 0.5, 0.3077]
-      ]
-    }
-  },
-
-  stationsJSON: {
-    filter: ['==', ['get', 'isVisible'], 'true'],
-    symbol: {
-      symbolType: 'image',
-      src: '/assets/images/map-symbols-2x.png',
-      size: 50,
-      rotateWithView: false,
-      offset: [0, 0],
-      textureCoord: ['match', ['get', 'state'],
-        'high', ['case', ['<=', ['resolution'], 100], [0, 0.3846, 0.5, 0.4615], [0, 0.6923, 0.5, 0.7692]],
-        'error', ['case', ['<=', ['resolution'], 100], [0, 0.5385, 0.5, 0.6158], [0, 0.8462, 0.5, 0.9231]],
-        ['case', ['<=', ['resolution'], 100], [0, 0.4615, 0.5, 0.5385], [0, 0.7692, 0.5, 0.8462]]
-      ]
-    }
-  },
-
-  rainfallJSON: {
-    filter: ['==', ['get', 'isVisible'], 'true'],
-    symbol: {
-      symbolType: 'image',
-      src: '/assets/images/map-symbols-2x.png',
-      size: 50,
-      rotateWithView: false,
-      offset: [0, 0],
-      textureCoord: ['case', ['<=', ['resolution'], 100], [0, 0.6154, 0.5, 0.6923], [0, 0.9231, 0.5, 1]]
-    }
-  },
-
-  impactsJSON: {
-    filter: ['==', ['get', 'isVisible'], 'true'],
-    symbol: {
-      symbolType: 'image',
-      src: '/assets/images/map-symbols-2x.png',
-      size: 50,
-      rotateWithView: false,
-      offset: [0, 0],
-      textureCoord: [0, 0.3077, 0.5, 0.3846]
-    }
   }
 }
 
@@ -327,9 +258,4 @@ const styleCache = {
   levelErrorSelected: createStyle({ offset: [100, 1100], zIndex: 10 }),
   rainfall: createStyle({ offset: [0, 1200], zIndex: 1 }),
   rainfallSelected: createStyle({ offset: [100, 1200], zIndex: 10 })
-}
-
-// WebGL styles uses Math.log2() polyfill for ie11
-Math.log2 = (number) => {
-  return Math.log(number) / Math.log(2)
 }
