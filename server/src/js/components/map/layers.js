@@ -148,18 +148,6 @@ window.flood.maps.layers = {
       }),
       zIndex: 10
     })
-  },
-
-  // Remove in prod
-  shape: () => {
-    return new VectorLayer({
-      ref: 'shape',
-      source: new VectorSource({
-        format: new GeoJSON(),
-        projection: 'EPSG:3857'
-      }),
-      zIndex: 1
-    })
   }
 
   //

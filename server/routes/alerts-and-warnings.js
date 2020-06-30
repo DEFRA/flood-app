@@ -46,8 +46,7 @@ module.exports = [{
         ext: joi.string(),
         fid: joi.string(),
         lyr: joi.string(),
-        v: joi.string(),
-        b: joi.string() // Remove in prod
+        v: joi.string()
       })
     }
   }

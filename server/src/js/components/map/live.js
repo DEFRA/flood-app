@@ -6,13 +6,12 @@
 // It uses the MapContainer
 
 import { View, Overlay, Feature } from 'ol'
-import { transform, transformExtent, getPointResolution } from 'ol/proj'
+import { transform, transformExtent } from 'ol/proj'
 import { unByKey } from 'ol/Observable'
 import { defaults as defaultInteractions } from 'ol/interaction'
-import { Point, Circle, MultiPolygon } from 'ol/geom'
+import { Point, MultiPolygon } from 'ol/geom'
 import { buffer, containsExtent, getCenter } from 'ol/extent'
 import { Vector as VectorSource } from 'ol/source'
-import { fromExtent } from 'ol/geom/Polygon'
 
 const { addOrUpdateParameter, getParameterByName, forEach } = window.flood.utils
 const maps = window.flood.maps
@@ -50,14 +49,12 @@ function LiveMap (mapId, options) {
   const stations = maps.layers.stations()
   const rainfall = maps.layers.rainfall()
   const impacts = maps.layers.impacts()
-  const shape = maps.layers.shape() // Remove in prod
   const selected = maps.layers.selected()
 
   // These layers are static
   const defaultLayers = [
     road,
     satellite,
-    shape, // Remove in prod
     selected
   ]
 
@@ -80,7 +77,7 @@ function LiveMap (mapId, options) {
     maxBigZoom: maps.liveMaxBigZoom,
     view: view,
     layers: layers,
-    queryParamKeys: ['v', 'lyr', 'ext', 'fid', 'b', 'r'], // Remove in prod: 'b' & 'r'
+    queryParamKeys: ['v', 'lyr', 'ext', 'fid'],
     interactions: interactions,
     headingText: options.headingText,
     keyTemplate: 'key-live.html',
@@ -176,7 +173,6 @@ function LiveMap (mapId, options) {
   // Set selected feature
   const setSelectedFeature = (newFeatureId = '') => {
     selected.getSource().clear()
-    shape.getSource().clear() // Remove in prod
     dataLayers.forEach((layer) => {
       const originalFeature = layer.getSource().getFeatureById(state.selectedFeatureId)
       const newFeature = layer.getSource().getFeatureById(newFeatureId)
@@ -189,22 +185,6 @@ function LiveMap (mapId, options) {
         selected.getSource().addFeature(newFeature)
         selected.setStyle(maps.styles[layer.get('ref')]) // WebGL: layers don't use a style function
         container.showInfo(newFeature)
-        // Remove in prod - display a box or circle
-        if (getParameterByName('b')) {
-          const b = (getParameterByName('b') * 1000) / getPointResolution('EPSG:3857', 1, newFeature.getGeometry().getCoordinates())
-          if (layer.get('ref') === 'warnings') {
-            const targetAreaPolygonId = 'flood_warning_alert.' + newFeature.getId().substring(newFeature.getId().indexOf('.') + 1)
-            if (targetArea.polygonFeature && targetArea.polygonFeature.getId() === targetAreaPolygonId) {
-              const extent = buffer(targetArea.polygonFeature.getGeometry().getExtent(), b)
-              const feature = new Feature(fromExtent(extent))
-              shape.getSource().addFeature(feature)
-            }
-          } else if (layer.get('ref') === 'stations') {
-            const circle = new Circle(newFeature.getGeometry().getCoordinates(), b)
-            const feature = new Feature(circle)
-            shape.getSource().addFeature(feature)
-          }
-        }
       }
       // Refresh target area polygons
       if (layer.get('ref') === 'warnings') {
