@@ -6,57 +6,17 @@
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-xl">Enter a location in England</h1>
-    {% if errorMessage %}
-    {{ govukErrorSummary({
-      titleText: "There is a problem",
-      errorList: [
-        {
-          text: errorMessage,
-          href: "#location"
-        }
-      ]
-    }) }}
+
+    {% if model.locationInput.errorMessage %}
+    {{ govukErrorSummary(model.errorSummary) }}
     {% endif %}
+
+    <h1 class="govuk-heading-xl">Where do you want to check?</h1>
     <form method="post">
-      {% if errorMessage %}
-      {{ govukInput({
-        label: {
-          text: "Enter postcode, town or county"
-        },
-        errorMessage: {
-          "text": errorMessage
-        },
-        id: "location",
-        name: "location",
-        value: value,
-        attributes: {
-          autocomplete: "off",
-          autocorrect: "off",
-          autocapitalize: "off",
-          spellcheck: "false"
-        },
-        classes: "govuk-!-width-one-half"
-      }) }}
-      {% else %}
-      {{ govukInput({
-        label: {
-          text: "Enter postcode, town or county"
-        },
-        id: "location",
-        name: "location",
-        attributes: {
-          autocomplete: "off",
-          autocorrect: "off",
-          autocapitalize: "off",
-          maxlength: 200,
-          spellcheck: "false"
-        },
-        classes: "govuk-!-width-one-half"
-      }) }}
-      {% endif %}
+      {{ govukInput(model.locationInput) }}
       <button type="submit" class="govuk-button">Continue</button>
     </form>
+    <p><a href="/">Or check for flooding in all of England</a></p>
   </div>
 </div>
 {% endblock %}
