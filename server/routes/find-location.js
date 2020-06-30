@@ -1,7 +1,7 @@
 'use strict'
 
 const joi = require('@hapi/joi')
-const util = require('../util')
+const ViewModel = require('../models/views/find-location')
 
 module.exports = [{
   method: 'GET',
@@ -10,17 +10,17 @@ module.exports = [{
     if (typeof request.yar === 'undefined' ||
     request.yar.get('displayError') === null ||
     request.yar.get('displayError') === {}) {
-      return h.view('find-location')
+      const err = {}
+      const location = ''
+      const model = new ViewModel({ location, err })
+      return h.view('find-location', { model })
     } else {
-      if (request.yar.get('displayError').view) {
-        const view = request.yar.get('displayError').view
-        request.yar.set('displayError', {})
-        return h.view(view)
-      } else {
-        const err = request.yar.get('displayError')
-        request.yar.set('displayError', {})
-        return h.view('find-location', err)
-      }
+      const err = request.yar.get('displayError')
+      request.yar.set('displayError', {})
+      const location = request.yar.get('locationError').input
+      request.yar.set('locationError', {})
+      const model = new ViewModel({ location, err })
+      return h.view('find-location', { model })
     }
   }
 }, {
@@ -28,7 +28,7 @@ module.exports = [{
   path: '/find-location',
   handler: async (request, h) => {
     const { location } = request.payload
-    return h.redirect(`/location?q=${encodeURIComponent(util.cleanseLocation(location))}`)
+    return h.redirect(`/location?q=${encodeURIComponent(location)}`)
   },
   options: {
     validate: {
@@ -36,7 +36,8 @@ module.exports = [{
         location: joi.string().required()
       }),
       failAction: (request, h, err) => {
-        return h.view('find-location', { errorMessage: 'Enter a valid location' }).takeover()
+        const model = new ViewModel({ err })
+        return h.view('find-location', { model }).takeover()
       }
     }
   }

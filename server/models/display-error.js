@@ -1,7 +1,7 @@
 module.exports = {
   'invalid-location': {
     errorCode: 'invalid-location',
-    errorMessage: 'Enter a valid location'
+    errorMessage: 'Enter a real town, city or postcode'
   },
   'location-not-england': {
     errorCode: 'location-not-england',
