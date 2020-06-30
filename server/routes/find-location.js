@@ -15,12 +15,18 @@ module.exports = [{
       const model = new ViewModel({ location, err })
       return h.view('find-location', { model })
     } else {
-      const err = request.yar.get('displayError')
-      request.yar.set('displayError', {})
-      const location = request.yar.get('locationError').input
-      request.yar.set('locationError', {})
-      const model = new ViewModel({ location, err })
-      return h.view('find-location', { model })
+      if (request.yar.get('displayError').view) {
+        const view = request.yar.get('displayError').view
+        request.yar.set('displayError', {})
+        return h.view(view)
+      } else {
+        const err = request.yar.get('displayError')
+        request.yar.set('displayError', {})
+        const location = request.yar.get('locationError').input
+        request.yar.set('locationError', {})
+        const model = new ViewModel({ location, err })
+        return h.view('find-location', { model })
+      }
     }
   }
 }, {
