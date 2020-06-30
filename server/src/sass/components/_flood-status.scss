@@ -14,22 +14,27 @@
     padding:0px;
     margin-top:0px;
     margin-bottom:10px;
-    .defra-flood-status-item__text {
+    &:last-of-type {
+        margin-bottom:5px;
+    }
+    &__text {
         display: table-cell;
         vertical-align: middle;
         width:100%;
-        padding:15px 0px;
+        padding:15px 15px 15px 0px;
         @include govuk-font($size: 19);
         strong {
             @include govuk-font($size: 19, $weight: bold);
-            display: block;
         }
         @include mq ($from: tablet) {
-            padding:20px 0px;
+            padding:20px 20px 20px 0px;
         }
     }
+    &__text-secondary {
+        display: block;
+    }
     .defra-flood-status-item__text:first-child {
-        padding:15px;
+        padding:15px 20px 15px 20px;
     }
     .defra-flood-status-item__icon {
         display: table-cell;
@@ -50,13 +55,6 @@
             background-size: 100px 250px;
             width: 50px;
             height: 50px;
-        }
-    }
-    &--hover {
-        // opacity:0.85;
-        cursor: pointer;
-        a {
-            @extend a:hover;
         }
     }
 }

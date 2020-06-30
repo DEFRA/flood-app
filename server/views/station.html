@@ -11,30 +11,23 @@
     </nav>
   </div>
 </div>
-
 {% if model.banner %}
 <div class="defra-flood-status govuk-!-margin-bottom-3">
   <div class="defra-flood-status-item defra-flood-status-item--{{ model.severityLevel }}">
     <span class="defra-flood-status-item__icon"></span>
     <div class="defra-flood-status-item__text">
-      {% if model.multipleSeverityLevels%}
-      <strong>
         {% if model.severeBanner %}
-        <a class="govuk-link" href="/alerts-and-warnings#severe">{{ model.severeBanner }}</a>
+        <strong><a class="govuk-link" href="{{ model.severeLink }}">{{ model.severeBanner }}</a></strong>
         {% endif %}
         {{ model.severeAnd }}
         {% if model.warningsBanner %}
-        <a class="govuk-link" href="/alerts-and-warnings#warnings">{{ model.warningsBanner }}</a>
+        <strong><a class="govuk-link" href="{{ model.warningsLink }}">{{ model.warningsBanner }}</a></strong>
         {% endif %}
         {{ model.warningAnd }}
         {% if model.alertsBanner %}
-        <a class="govuk-link" href="/alerts-and-warnings#alerts">{{ model.alertsBanner }}</a>
+        <strong><a class="govuk-link" href="{{ model.alertsLink }}">{{ model.alertsBanner }}</a></strong>
         {% endif %}
         in this area
-      </strong>
-      {% else %}
-      <strong><a class="govuk-link" href="{{ model.targetAreaLink }}">{{ model.banner }}</a></strong>
-      {% endif %}
     </div>
   </div>
 </div>
