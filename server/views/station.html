@@ -27,7 +27,7 @@
         {% if model.alertsBanner %}
         <strong><a class="govuk-link" href="{{ model.alertsLink }}">{{ model.alertsBanner }}</a></strong>
         {% endif %}
-        in this area
+        {{ " in this area" if model.warningAnd or model.severeAnd }}
     </div>
   </div>
 </div>
