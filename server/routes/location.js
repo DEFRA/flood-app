@@ -45,6 +45,10 @@ module.exports = {
         q: joi.string().trim().max(200).required(),
         cz: joi.string(),
         l: joi.string(),
+        btn: joi.string(),
+        ext: joi.string(),
+        fid: joi.string(),
+        lyr: joi.string(),
         v: joi.string()
       })
     }
