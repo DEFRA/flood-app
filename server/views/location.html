@@ -29,8 +29,10 @@
             <span class="govuk-visually-hidden">{{model.severitySevereTitle}}</span>
           </span>
           <div class="defra-flood-status-item__text">
-            <strong><a href="{{ model.bannerSevereMainLink }}">{{ model.bannerSevereMainText }}</a></strong>
-            {{ model.bannerSevereSub }}
+            <strong>
+              <a href="{{ model.bannerSevereMainLink }}">{{ model.bannerSevereMainText }}</a>
+            </strong>
+            <span class="defra-flood-status-item__text-secondary">{{ model.bannerSevereSub }}</span>
           </div>
         </div>
         {% endif %}
@@ -39,10 +41,11 @@
           <span class="defra-flood-status-item__icon">
             <span class="govuk-visually-hidden">{{model.severityTitle}}</span>
           </span>
-
           <div class="defra-flood-status-item__text">
-            <strong><a href="{{ model.bannerMainLink }}">{{ model.bannerMainText }}</a></strong>
-            {{ model.bannerSub }}
+            <strong>
+              <a href="{{ model.bannerMainLink }}">{{ model.bannerMainText }}</a>
+            </strong>
+            <span class="defra-flood-status-item__text-secondary">{{ model.bannerSub }}</span>
           </div>
         </div>
         {% endif %}
@@ -67,12 +70,14 @@
       </p>
       {% endif %}
     {% else %}
-    <p class="govuk-body">
-      Not what you expected? This service tells you your risk of flooding from rivers, the sea and groundwater. If there's surface water flooding (also known as flash flooding) in your area, <a href="https://www.gov.uk/find-local-council">contact your local council</a>.
-    </p>
+      <p class="govuk-body">
+        Not what you expected? This service tells you your risk of flooding from rivers, the sea and groundwater. If there's surface water flooding (also known as flash flooding) in your area, <a href="https://www.gov.uk/find-local-council">contact your local council</a>.
+      </p>
     {% endif %}
 
-    <div class="defra-map" id="map-live"></div>
+    {% if model.hasActiveFloods %}
+      <span id="map"></span>
+    {% endif %}
 
     <p class="defra-flood-meta defra-flood-meta--border govuk-!-margin-top-6 govuk-!-margin-bottom-6">
       <time datetime="{{model.dateFormatted}}">{{model.dateFormatted}}</time>
@@ -91,15 +96,6 @@
       Historic records show <a href="/historic-impacts?q={{ model.q }}">{{ model.activeImpacts.length }} flood impact{% if model.activeImpacts.length > 1 %}s{% endif %}</a> in this area at current river levels.
     </p>
     {% endif %}
-
-    {% if not model.hasLevels %}
-      <p class="govuk-body">
-        <a href="/river-and-sea-levels">View river and sea levels in the wider area</a>.
-      </p>
-    {% endif %}
-
-    <h2 class="govuk-heading-m">Report a flood</h2>
-    <p class="govuk-body">Flooding can also be caused by surface water, burst water mains or overflowing drains. You can <a href="https://www.gov.uk/report-flood-cause">report a flood or possible cause of flooding</a>.</p>
 
     {% include "partials/context-footer.html" %}
     

@@ -54,9 +54,6 @@ class Outlook {
           this._hasOutlookConcern = true
         }
 
-        // Calculate feature z index
-        const zIndex = 100 - riskArea.ordering
-
         riskAreaBlock.days.forEach(day => {
           riskAreaBlock.polys.forEach(poly => {
             const feature = {
@@ -65,7 +62,7 @@ class Outlook {
                 type: 'concernArea',
                 day: day,
                 'risk-level': riskLevel,
-                'z-index': zIndex,
+                'z-index': (riskLevel * 10),
                 html: '<p class="govuk-body-s">Details of source, likelyhood and impact</p>'
               }
             }
@@ -83,7 +80,7 @@ class Outlook {
               }
               feature.properties.polyType = 'coastal'
               // Put coastal areas on top of inland areas
-              feature.properties['z-index'] = zIndex + 200
+              feature.properties['z-index'] += 1
             }
             this._geoJson.features.push(feature)
 
@@ -116,19 +113,15 @@ class Outlook {
     })
 
     this._full = outlook.public_forecast.english_forecast
-    /*
-    this._full = this._full.replace(/\r\n\r\n/g, '</p><p class="govuk-body">').replace(/\n\n/g, '</p><p class="govuk-body">')
-    this._full = this._full.replace(/\r\n/g, '<br />').replace(/\n/g, '<br />')
-    */
 
     const issueDate = new Date(outlook.issued_at)
-    const date = issueDate.getDate()
 
     this._days = [0, 1, 2, 3, 4].map(i => {
+      const date = new Date(issueDate)
       return {
         idx: i + 1,
         level: this._riskLevels[i],
-        date: new Date(issueDate.setDate(date + i))
+        date: new Date(date.setDate(date.getDate() + i))
       }
     })
   }

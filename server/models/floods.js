@@ -55,6 +55,8 @@ class Floods {
         }
       }
     })
+    // DL: WebGL layers don't support z-index so source data needs to be in desired order
+    this._geojson.features.reverse()
 
     if (this._groups[0].count > 0) {
       this._hasActiveFloods = true
