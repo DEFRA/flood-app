@@ -69,6 +69,9 @@ class ViewModel {
           this.warningsLink = `/target-area/${warningsAlertsGroups['2'][0].ta_code}`
         } else {
           this.warningsBanner += 's'
+          if (!numAlerts && !numSevereWarnings) {
+            this.warningsBanner += ' in this area'
+          }
         }
       }
     }
@@ -88,6 +91,9 @@ class ViewModel {
           this.severeLink = `/target-area/${warningsAlertsGroups['3'][0].ta_code}`
         } else {
           this.severeBanner += 's'
+          if (!numAlerts && !numWarnings) {
+            this.warningsBanner += ' in this area'
+          }
         }
       }
     }
