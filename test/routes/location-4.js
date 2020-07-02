@@ -30,7 +30,7 @@ lab.experiment('Routes test - location - 3', () => {
 
   lab.test('GET /location with query parameters with no flood service data', async () => {
     // Tests known location
-
+    const floodService = require('../../server/services/flood')
     const fakeGetJson = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
@@ -77,6 +77,21 @@ lab.experiment('Routes test - location - 3', () => {
       }
     }
 
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    const fakeFloodsData = () => {
+      return { floods: [] }
+    }
+    const fakeStationsData = () => []
+    const fakeImpactsData = () => []
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+
     const util = require('../../server/util')
     sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
 
@@ -96,11 +111,12 @@ lab.experiment('Routes test - location - 3', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=xxxxxx'
+      url: '/location?q=Warrington'
     }
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.payload).to.contain('There are no flood warnings or alerts in this area.')
+    Code.expect(response.statusCode).to.equal(200)
   })
 })

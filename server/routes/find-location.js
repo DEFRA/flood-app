@@ -7,15 +7,16 @@ module.exports = [{
   method: 'GET',
   path: '/find-location',
   handler: async (request, h) => {
-    const err = request.yar
-      ? request.yar.get('displayError')
-      : null
+    // const err = !!(request.yar && request.yar.get('displayError'))
+    const err = !!request.yar.get('displayError')
     if (!err) {
+      // No error
       const err = {}
       const location = ''
       const model = new ViewModel({ location, err })
       return h.view('find-location', { model })
     } else {
+      // Error
       const err = request.yar.get('displayError')
       request.yar.set('displayError', {})
       const location = request.yar.get('locationError').input

@@ -30,6 +30,7 @@ lab.experiment('Routes test - find-location', () => {
     await server.register(require('@hapi/inert'))
     await server.register(require('@hapi/h2o2'))
     await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
     await server.register(findLocationPlugin)
     await server.initialize()
   })
