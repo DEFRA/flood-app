@@ -7,7 +7,6 @@ module.exports = [{
   method: 'GET',
   path: '/find-location',
   handler: async (request, h) => {
-    // const err = !!(request.yar && request.yar.get('displayError'))
     const err = !!request.yar.get('displayError')
     if (!err) {
       // No error
