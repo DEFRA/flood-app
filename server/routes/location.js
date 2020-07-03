@@ -24,7 +24,6 @@ module.exports = {
       return h.redirect('/find-location')
     }
     if (!place.isEngland.is_england) {
-      request.yar.set('displayError', displayErrors['location-not-england'])
       return h.view('location-not-england')
     }
     const [
