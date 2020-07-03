@@ -3,18 +3,9 @@ const config = require('../config')
 const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/rain-gauge')
-const HttpsProxyAgent = require('https-proxy-agent')
 const wreck = require('@hapi/wreck').defaults({
   timeout: config.restClientTimeoutMillis
 })
-
-let wreckExt
-if (config.httpsProxy) {
-  wreckExt = require('@hapi/wreck').defaults({
-    timeout: config.httpTimeoutMs,
-    agent: new HttpsProxyAgent(config.httpsProxy)
-  })
-}
 
 // const rainfallApiUri = config.rainfallApiUrl
 
@@ -54,9 +45,7 @@ module.exports = [{
       readingsUrl += '&_limit=' + 25
     }
     try {
-      const thisWreck = wreckExt || wreck
-      // const { res, payload } = await wreck.get(readingsUrl, { json: true })
-      const { res, payload } = await thisWreck.get(readingsUrl, { json: true })
+      const { res, payload } = await wreck.get(readingsUrl, { json: true })
       payload.label = label
 
       if (res.statusCode !== 200 || payload.items.length === 0 || payload.items === undefined) {
