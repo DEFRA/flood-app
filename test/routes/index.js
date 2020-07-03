@@ -186,6 +186,7 @@ lab.experiment('Get Routes test', () => {
     }
 
     await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
     await server.register(plugin)
     await server.initialize()
 

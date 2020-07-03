@@ -137,6 +137,7 @@ lab.experiment('Outlook model test', () => {
     const Result = await outlook.geoJson
 
     const geoOutput = {
+      type: 'FeatureCollection',
       features:
         [{
           geometry:
@@ -275,17 +276,16 @@ lab.experiment('Outlook model test', () => {
           },
           properties:
           {
+            'risk-level': 1,
+            'z-index': 10,
             day: 5,
             html: '<p class="govuk-body-s">Details of source, likelyhood and impact</p>',
             isSmooth: true,
             polyType: 'inland',
-            'risk-level': 1,
-            type: 'concernArea',
-            'z-index': 98
+            type: 'concernArea'
           },
           type: 'Feature'
-        }],
-      type: 'FeatureCollection'
+        }]
     }
 
     Code.expect(Result).to.be.equal(geoOutput)

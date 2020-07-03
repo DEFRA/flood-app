@@ -20,11 +20,12 @@ module.exports = {
     }
     if (!place) {
       request.yar.set('displayError', displayErrors['invalid-location'])
+      request.yar.set('locationError', { input: location })
       return h.redirect('/find-location')
     }
     if (!place.isEngland.is_england) {
       request.yar.set('displayError', displayErrors['location-not-england'])
-      return h.redirect('/find-location')
+      return h.view('location-not-england')
     }
     const [
       impacts,
@@ -44,6 +45,10 @@ module.exports = {
         q: joi.string().trim().max(200).required(),
         cz: joi.string(),
         l: joi.string(),
+        btn: joi.string(),
+        ext: joi.string(),
+        fid: joi.string(),
+        lyr: joi.string(),
         v: joi.string()
       })
     }

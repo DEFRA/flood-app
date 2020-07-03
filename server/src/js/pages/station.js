@@ -1,42 +1,23 @@
 'use strict'
 import '../components/charts'
 import '../components/nunjucks'
-import '../components/maps'
-import '../components/maps-styles'
-import '../components/maps-layers'
-import '../components/map-container'
-import '../components/maps/live'
+import '../components/map/maps'
+import '../components/map/styles'
+import '../components/map/layers'
+import '../components/map/container'
+import '../components/map/live'
 
 // Add browser back button
 window.flood.utils.addBrowserBackButton()
 
-// Create LiveMap if querystring is present
-if (window.flood.utils.getParameterByName('v') === 'map-live') {
-  window.flood.maps.createLiveMap('map-live')
-}
-// Create LiveMap if show map button pressed
-const buttonContainer = document.querySelector('.defra-flood-nav')
-if (buttonContainer) {
-  // Create map button with parameters
-  const button = document.createElement('button')
-  button.innerHTML = '<span>View on map</span>'
-  button.id = 'map-btn'
-  button.className = 'defra-button-map-s'
-  button.addEventListener('click', function (e) {
-    e.preventDefault()
-    window.flood.maps.createLiveMap('map-live', { btn: 'map-btn', lyr: 'st' })
-  })
-  buttonContainer.appendChild(button)
-}
-// Create LiveMap if history changes
-const mapContainer = document.querySelector('.defra-flood-nav')
-window.addEventListener('popstate', function (e) {
-  if (mapContainer.firstChild) {
-    mapContainer.removeChild(mapContainer.firstChild)
-  }
-  if (e && e.state) {
-    window.flood.maps.createLiveMap('map-live')
-  }
+// Create LiveMap
+window.flood.maps.createLiveMap('map', {
+  btnText: '<span>View on map</span>',
+  btnClasses: 'defra-button-map-s',
+  layers: 'mv,sh,st',
+  centre: JSON.parse(window.flood.model.station.coordinates).coordinates,
+  selectedId: 'stations.' + window.flood.model.station.id,
+  zoom: 14
 })
 
 const chart = document.getElementsByClassName('defra-line-chart')

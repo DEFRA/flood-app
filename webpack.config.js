@@ -10,7 +10,8 @@ module.exports = (env, argv) => ({
     'river-and-sea-levels': './server/src/js/pages/river-and-sea-levels',
     station: './server/src/js/pages/station',
     'stations-overview': './server/src/js/pages/stations-overview',
-    'target-area': './server/src/js/pages/target-area'
+    'target-area': './server/src/js/pages/target-area',
+    location: './server/src/js/pages/location'
   },
   output: {
     path: path.resolve(__dirname, 'server/dist/js')

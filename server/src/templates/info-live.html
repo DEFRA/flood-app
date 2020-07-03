@@ -1,0 +1,72 @@
+{% if model.ta_name %}
+<h2 class="govuk-body govuk-!-margin-bottom-1">
+    {% if model.severity_value  %}
+        {% if model.severity_value === 3 %}
+        Severe flood warning
+        {% elif model.severity_value === 2 %}
+        Flood warning
+        {% elif model.severity_value === 1 %}
+        Flood alert
+        {% else %}
+            {% if model.ta_code.charAt(4).toLowerCase() === 'w' %}
+            Flood warning removed
+            {% else %}
+            Flood alert removed
+            {% endif %}
+        {% endif %}
+    {% elif model.ta_code.charAt(4).toLowerCase() === 'w' %}
+    Flood warning (inactive)
+    {% else %}
+    Flood alert (inactive)
+    {% endif %}
+</h2>
+<p class="govuk-body-s govuk-!-margin-bottom-1">
+    <strong><a class="defra-map-info__link" href="/target-area/{{ model.id }}">{{ model.ta_name }}</a></strong>
+</p>
+{% elif model.river %}
+<h2 class="govuk-body govuk-!-margin-bottom-1">
+    {% if model.type === 'C' %}Sea level{% elif model.type === 'G' %}Groundwater level{% else %}River level{% endif %}
+    {% if model.value and model.type !== 'C' and model.status !== 'Closed' and model.status !== 'Suspended' and not model.iswales %}
+    {% if model.atrisk %}(high){% elif model.value < model.percentile_95 %}(low){% else %}(normal){% endif %}
+    {% endif %}
+</h2>
+<p class="govuk-body-s govuk-!-margin-bottom-2">
+    <strong>
+        <a class="defra-map-info__link" href="/station/{{ model.id }}">
+            {{ model.name }}{% if model.type === 'S' or model.type === 'M' %}, {{ model.river }}{% endif %}
+            {% if model.iswales %}(Natural Resources Wales){% endif %}
+        </a>
+    </strong></br>
+    {% if not model.iswales %}
+    {% if model.status === 'Closed' or model.status === 'Suspended' %}
+    Closed or temporarily out of service
+    {% elif model.value %}
+    {{ model.value | round(2) }}m at {{ model.date }}
+    {% else %}
+    There is a problem with the latest measurement
+    {% endif %}
+    {% endif %}
+</p>
+{% if model.up %}
+<button class="defra-map-info__button defra-map-info__button--up govuk-!-margin-bottom-1 govuk-!-margin-right-2" data-id="stations.{{ model.up }}">Upstream</button>
+{% endif %}
+{% if model.down %}
+<button class="defra-map-info__button defra-map-info__button--down govuk-!-margin-bottom-1" data-id="stations.{{ model.down }}">Downstream</button>
+{% endif %}
+{% elif model.stationReference %}
+<h2 class="govuk-body govuk-!-margin-bottom-1">Rainfall</h2>
+<p class="govuk-body-s govuk-!-margin-bottom-1">
+    <strong><a class="defra-map-info__link" href="/rain-guage/{{ model.id }}">Measurment at grid ref {{ model.gridRef }}</a></strong></br>
+    {% if model.value > 0 %}
+    {{ model.value }}mm in the last 24 hour period
+    {% else %}
+    0mm or no recent measurements
+    {% endif %}
+</p>
+{% elif model.stationReference %}
+<h2 class="govuk-body govuk-!-margin-bottom-1">Historic flooding</h2>
+<p class="govuk-body-s govuk-!-margin-bottom-1">
+    <strong>{{ props.description }}</strong><br/>
+    <a href="/station/{{ props.stationId }}?t={{ props.impactId }}">River level at {{ props.stationName }}</a>
+</p>
+{% endif %}

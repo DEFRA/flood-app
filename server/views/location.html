@@ -13,7 +13,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-7">
-      Flood risk: {{ model.location }}
+      Check for flooding in {{ model.location }}
     </h1>
   </div>
 </div>
@@ -23,36 +23,60 @@
    
     <div class="defra-flood-status govuk-!-margin-bottom-1">
       {% if model.hasActiveFloods %}
-      <div class="defra-flood-status-item defra-flood-status-item--{{model.highestSeverity.hash}}">
-        <span class="defra-flood-status-item__icon">
-          <span class="govuk-visually-hidden">{{model.highestSeverity.title}}</span>
-        </span>
-        <div class="defra-flood-status-item__text">
-          <strong>
-              {% if model.highestSeverity.id === 3 %}
-              {{model.highestSeverity.subTitle}}
-              {% else %}
-              Some {{model.highestSeverity.subTitle | lower}}
-              {% endif %}
-          </strong>
+        {% if model.bannerSevereMainLink %}
+        <div class="defra-flood-status-item defra-flood-status-item--severe">
+          <span class="defra-flood-status-item__icon">
+            <span class="govuk-visually-hidden">{{model.severitySevereTitle}}</span>
+          </span>
+          <div class="defra-flood-status-item__text">
+            <strong>
+              <a href="{{ model.bannerSevereMainLink }}">{{ model.bannerSevereMainText }}</a>
+            </strong>
+            <span class="defra-flood-status-item__text-secondary">{{ model.bannerSevereSub }}</span>
+          </div>
         </div>
-      </div>
+        {% endif %}
+        {% if model.bannerMainLink%}
+        <div class="defra-flood-status-item defra-flood-status-item--{{model.severity}}">
+          <span class="defra-flood-status-item__icon">
+            <span class="govuk-visually-hidden">{{model.severityTitle}}</span>
+          </span>
+          <div class="defra-flood-status-item__text">
+            <strong>
+              <a href="{{ model.bannerMainLink }}">{{ model.bannerMainText }}</a>
+            </strong>
+            <span class="defra-flood-status-item__text-secondary">{{ model.bannerSub }}</span>
+          </div>
+        </div>
+        {% endif %}
       {% else %}
       <div class="defra-flood-status-item">
         <div class="defra-flood-status-item__text">
-          No flood warnings or alerts currently in place in this area. 
-          {% if model.hasHighLevels %}
-          However some <a href="/river-and-sea-levels?q={{ model.q }}">river and sea levels</a> are currently high.
-          {% endif %}
+          There are no flood warnings or alerts in this area{% if model.hasHighLevels %} but some <a href="/river-and-sea-levels?q={{ model.q }}">river and sea levels</a> are high{% endif %}.
         </div>
       </div>
       {% endif %}
     </div>
     
     {% if model.hasFloods %}
-    <p class="govuk-body">
-      {{ model.floodSummary | safe }}
-    </p>
+      {% if model.alerts  %}
+      <p class="govuk-body">
+        <a href="{{ model.alertsSummaryLink }}">{{ model.alertsSummaryLinkText }}</a> {{ model.alertsSummaryText }} in this area - flooding is possible. 
+      </p>
+      {% endif %}
+      {% if model.removed  %}
+      <p class="govuk-body">
+        {{ model.removedText1 }}<a href="{{ model.removedLink }}">{{ model.removedLinkText }}</a> {{ model.removedText2 }}
+      </p>
+      {% endif %}
+    {% else %}
+      <p class="govuk-body">
+        Not what you expected? This service tells you your risk of flooding from rivers, the sea and groundwater. If there's surface water flooding (also known as flash flooding) in your area, <a href="https://www.gov.uk/find-local-council">contact your local council</a>.
+      </p>
+    {% endif %}
+
+    {% if model.hasActiveFloods %}
+      <span id="map"></span>
     {% endif %}
 
     <p class="defra-flood-meta defra-flood-meta--border govuk-!-margin-top-6 govuk-!-margin-bottom-6">
@@ -61,20 +85,17 @@
 
     <p><a href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
 
+    <!-- River and sea levels -->
+    <h2 class="govuk-heading-m">Latest river, sea and groundwater levels</h2>
+    <p>Most measuring stations are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
+    <p><a href="/river-and-sea-levels?q={{ model.location }}">Find a river, sea or groundwater level in this area</a></p>
+    <!-- end river and sea levels -->
+
     {% if model.hasActiveImpacts %}
     <p class="govuk-body">
       Historic records show <a href="/historic-impacts?q={{ model.q }}">{{ model.activeImpacts.length }} flood impact{% if model.activeImpacts.length > 1 %}s{% endif %}</a> in this area at current river levels.
     </p>
     {% endif %}
-
-    {% if not model.hasLevels %}
-      <p class="govuk-body">
-        <a href="/river-and-sea-levels">View river and sea levels in the wider area</a>.
-      </p>
-    {% endif %}
-
-    <h2 class="govuk-heading-m">Report a flood</h2>
-    <p class="govuk-body">Flooding can also be caused by surface water, burst water mains or overflowing drains. You can <a href="https://www.gov.uk/report-flood-cause">report a flood or possible cause of flooding</a>.</p>
 
     {% include "partials/context-footer.html" %}
     
@@ -88,4 +109,9 @@
 
 {% block bodyEnd %}
   {{ super() }}
+  <script>
+    window.flood.model = {{ model.expose | dump(2) | safe }}
+  </script>
+  <script src="{{assetPath}}/js/templates.js"></script>
+  <script src="{{assetPath}}/js/location.js"></script>
 {% endblock %}

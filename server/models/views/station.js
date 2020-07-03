@@ -33,69 +33,80 @@ class ViewModel {
 
     // Determine appropriate warning/alert text for banner
 
-    // Single warning/alert
-    if (numAlerts === 0 && numWarnings === 0 && numSevereWarnings === 0) {
-      // No warnings or alerts
-    } else if (numAlerts === 1 && numWarnings === 0 && numSevereWarnings === 0) {
-      // alert
-      this.banner = 'There is a flood alert in this area'
-      this.severityLevel = 'alert'
-      this.targetAreaLink = `/target-area/${warningsAlerts[0].ta_code}`
-    } else if (numAlerts === 0 && numWarnings === 1 && numSevereWarnings === 0) {
-      // warning
-      this.banner = `Flood warning for ${warningsAlerts[0].ta_name}`
-      this.severityLevel = 'warning'
-      this.targetAreaLink = `/target-area/${warningsAlerts[0].ta_code}`
-    } else if (numAlerts === 0 && numWarnings === 0 && numSevereWarnings === 1) {
-      // severe warning
-      this.banner = `Severe flood warning for ${warningsAlerts[0].ta_name}`
-      this.severityLevel = 'warning'
-      this.targetAreaLink = `/target-area/${warningsAlerts[0].ta_code}`
-    } else {
-      // Multiple warnings/alerts
-      if (numAlerts && numWarnings === 0 && numSevereWarnings === 0) {
-        this.banner = `There are ${numAlerts} flood alerts in this area`
+    this.banner = numAlerts || numWarnings || numSevereWarnings
+
+    switch (numAlerts) {
+      case 0:
+        break
+      default: {
         this.severityLevel = 'alert'
-        this.targetAreaLink = '/alerts-and-warnings#alerts'
-      } else if (numAlerts === 0 && numWarnings && numSevereWarnings === 0) {
-        this.banner = `There are ${numWarnings} flood warnings in this area`
-        this.severityLevel = 'warning'
-        this.targetAreaLink = '/alerts-and-warnings#warnings'
-      } else if (numAlerts === 0 && numWarnings === 0 && numSevereWarnings) {
-        this.banner = `There are ${numWarnings} severe flood warnings in this area`
-        this.severityLevel = 'warning'
-        this.targetAreaLink = '/alerts-and-warnings#severe'
-      } else {
-        this.banner = true
-        if (numSevereWarnings) {
-          this.severeBanner = `${numSevereWarnings} severe flood warning`
-          if (numSevereWarnings > 1) {
-            this.severeBanner += 's'
+        this.alertsLink = '/alerts-and-warnings#alerts'
+        this.alertsBanner = `${numAlerts} flood alert`
+
+        if (numAlerts === 1) {
+          if (!numWarnings && !numSevereWarnings) {
+            this.alertsBanner = 'There is a flood alert in this area'
           }
-        }
-        if (numWarnings) {
-          this.warningsBanner = `${numWarnings} flood warning`
-          if (numWarnings > 1) {
-            this.warningsBanner += 's'
-          }
-        }
-        if (numAlerts) {
-          this.alertsBanner = `${numAlerts} flood alert`
-          if (numAlerts > 1) {
-            this.alertsBanner += 's'
-          }
-        }
-        this.severityLevel = 'warning'
-        this.multipleSeverityLevels = true
-        if (numAlerts && numWarnings && numSevereWarnings) {
-          this.severeAnd = ', '
-          this.warningsAnd = ' and '
-        } else if (numSevereWarnings) {
-          this.severeAnd = ' and '
+          this.alertsLink = `/target-area/${warningsAlertsGroups['1'][0].ta_code}`
         } else {
-          this.warningsAnd = ' and '
+          this.alertsBanner += 's'
         }
       }
+    }
+
+    switch (numWarnings) {
+      case 0:
+        break
+      default: {
+        this.severityLevel = 'warning'
+        this.warningsLink = '/alerts-and-warnings#warnings'
+        this.warningsBanner = `${numWarnings} flood warning`
+
+        if (numWarnings === 1) {
+          if (!numAlerts && !numSevereWarnings) {
+            this.warningsBanner = `Flood warning for ${warningsAlertsGroups['2'][0].ta_name}`
+          }
+          this.warningsLink = `/target-area/${warningsAlertsGroups['2'][0].ta_code}`
+        } else {
+          this.warningsBanner += 's'
+          if (!numAlerts && !numSevereWarnings) {
+            this.warningsBanner += ' in this area'
+          }
+        }
+      }
+    }
+
+    switch (numSevereWarnings) {
+      case 0:
+        break
+      default: {
+        this.severityLevel = 'warning'
+        this.severeLink = '/alerts-and-warnings#severe'
+        this.severeBanner = `${numSevereWarnings} severe flood warning`
+
+        if (numSevereWarnings === 1) {
+          if (!numAlerts && !numWarnings) {
+            this.severeBanner = `Severe flood warning for ${warningsAlertsGroups['3'][0].ta_name}`
+          }
+          this.severeLink = `/target-area/${warningsAlertsGroups['3'][0].ta_code}`
+        } else {
+          this.severeBanner += 's'
+          if (!numAlerts && !numWarnings) {
+            this.warningsBanner += ' in this area'
+          }
+        }
+      }
+    }
+
+    if (numSevereWarnings) {
+      if (numAlerts && numWarnings) {
+        this.severeAnd = ', '
+        this.warningAnd = ' and '
+      } else if (numAlerts || numWarnings) {
+        this.severeAnd = ' and '
+      }
+    } else if (numAlerts && numWarnings) {
+      this.warningAnd = ' and '
     }
 
     this.id = this.station.id
@@ -108,7 +119,7 @@ class ViewModel {
     this.station.floodingIsPossible = false
     this.station.hasPercentiles = true
     this.station.hasImpacts = false
-    this.warningsAlerts = warningsAlerts
+    this.warningsAlerts = warningsAlertsGroups
     const now = moment(Date.now())
     const numberOfProvisionalDays = config.provisionalPorMaxValueDays
 
@@ -183,11 +194,11 @@ class ViewModel {
       // River level and forecast message
       this.atRiskFAL = this.alertThreshold &&
         ((this.recentValue && parseFloat(this.recentValue._)) >= parseFloat(this.alertThreshold) ||
-        (this.hasForecast && this.ffoi.maxValue && parseFloat(this.ffoi.maxValue._) >= parseFloat(this.alertThreshold)))
+          (this.hasForecast && this.ffoi.maxValue && parseFloat(this.ffoi.maxValue._) >= parseFloat(this.alertThreshold)))
 
       this.atRiskFW = this.warningThreshold &&
         ((this.recentValue && parseFloat(this.recentValue._)) >= parseFloat(this.warningThreshold) ||
-        (this.hasForecast && this.ffoi.maxValue && parseFloat(this.ffoi.maxValue._) >= parseFloat(this.warningThreshold)))
+          (this.hasForecast && this.ffoi.maxValue && parseFloat(this.ffoi.maxValue._) >= parseFloat(this.warningThreshold)))
 
       // Alerts and percentiles
       this.station.floodingIsPossible = this.atRiskFAL || this.atRiskFW
@@ -295,7 +306,7 @@ class ViewModel {
           isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= threshold.value : false
         })
       })
-    // otherwise check if it has a percentile5
+      // otherwise check if it has a percentile5
     } else if (this.station.percentile5) {
       // Only push typical range if it has a percentil5
       thresholds.push({
