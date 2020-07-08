@@ -35,12 +35,13 @@ class ViewModel {
 
     this.banner = numAlerts || numWarnings || numSevereWarnings
 
+    const coords = JSON.parse(this.station.coordinates)
     switch (numAlerts) {
       case 0:
         break
       default: {
         this.severityLevel = 'alert'
-        this.alertsLink = '/alerts-and-warnings#alerts'
+        this.alertsLink = `/alerts-and-warnings?station=${this.station.id}&coords=${coords.coordinates}#alerts`
         this.alertsBanner = `${numAlerts} flood alert`
 
         if (numAlerts === 1) {
@@ -59,7 +60,7 @@ class ViewModel {
         break
       default: {
         this.severityLevel = 'warning'
-        this.warningsLink = '/alerts-and-warnings#warnings'
+        this.warningsLink = `/alerts-and-warnings?station=${this.station.id}&coords=${coords.coordinates}#warnings`
         this.warningsBanner = `${numWarnings} flood warning`
 
         if (numWarnings === 1) {
@@ -81,7 +82,7 @@ class ViewModel {
         break
       default: {
         this.severityLevel = 'warning'
-        this.severeLink = '/alerts-and-warnings#severe'
+        this.severeLink = `/alerts-and-warnings?station=${this.station.id}&coords=${coords.coordinates}#severe`
         this.severeBanner = `${numSevereWarnings} severe flood warning`
 
         if (numSevereWarnings === 1) {

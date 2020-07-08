@@ -12,7 +12,18 @@ module.exports = [{
     const { q: location } = request.query
     var model, place, floods
 
-    if (typeof location === 'undefined' || location === '') {
+    if (request.query.station && request.query.coords) {
+      const station = {
+        id: request.query.station,
+        coords: request.query.coords
+      }
+      // Get warnings and alerts within station buffer
+      const coords = station.coords.split(',')
+      const warningsAlerts = await floodService.getWarningsAlertsWithinStationBuffer(coords)
+      floods = new Floods({ floods: warningsAlerts })
+      model = new ViewModel({ location, place, floods })
+      return h.view('alerts-and-warnings', { model })
+    } else if (typeof location === 'undefined' || location === '') {
       const floods = floodService.floods
       model = new ViewModel({ location, place, floods })
       return h.view('alerts-and-warnings', { model })
@@ -42,6 +53,8 @@ module.exports = [{
     validate: {
       query: joi.object({
         q: joi.string().allow('').trim().max(200),
+        station: joi.string(),
+        coords: joi.string(),
         btn: joi.string(),
         ext: joi.string(),
         fid: joi.string(),

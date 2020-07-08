@@ -2,6 +2,7 @@ class ViewModel {
   constructor ({ location, place, floods, error }) {
     Object.assign(this, {
       q: location,
+      // station: station,
       metaNoIndex: true,
       placeName: place ? place.name : '',
       placeBbox: place ? place.bbox : [],
