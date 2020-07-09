@@ -52,7 +52,7 @@
     <div class="govuk-grid-column-two-thirds">
         <div class="defra-search-summary" id="searchSummary">
             <h2 class="defra-search-summary__count">{{ model.countFloods }} result{% if model.countFloods != 1 %}s{% endif %}</h2>
-            <span id="map"></span>
+            <span id="{{ model.map }}"></span>
         </div>
         {% if model.countFloods %}
         <ul class="defra-flood-list">
