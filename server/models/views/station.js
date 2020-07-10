@@ -40,7 +40,7 @@ class ViewModel {
         break
       default: {
         this.severityLevel = 'alert'
-        this.alertsLink = '/alerts-and-warnings#alerts'
+        this.alertsLink = `/alerts-and-warnings?station=${this.station.id}#alerts`
         this.alertsBanner = `${numAlerts} flood alert`
 
         if (numAlerts === 1) {
@@ -59,7 +59,7 @@ class ViewModel {
         break
       default: {
         this.severityLevel = 'warning'
-        this.warningsLink = '/alerts-and-warnings#warnings'
+        this.warningsLink = `/alerts-and-warnings?station=${this.station.id}#warnings`
         this.warningsBanner = `${numWarnings} flood warning`
 
         if (numWarnings === 1) {
@@ -81,7 +81,7 @@ class ViewModel {
         break
       default: {
         this.severityLevel = 'warning'
-        this.severeLink = '/alerts-and-warnings#severe'
+        this.severeLink = `/alerts-and-warnings?station=${this.station.id}#severe`
         this.severeBanner = `${numSevereWarnings} severe flood warning`
 
         if (numSevereWarnings === 1) {

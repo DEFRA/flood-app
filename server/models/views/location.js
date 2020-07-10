@@ -83,13 +83,13 @@ class ViewModel {
               }
             } else {
               this.alerts = group.floods.length
-              if (group.floods.length) {
+              if (group.floods.length === 1) {
                 this.alertsSummaryLink = `/target-area/${group.floods[0].ta_code}`
                 this.alertsSummaryLinkText = 'A flood alert'
                 this.alertsSummaryText = 'is'
               } else {
                 this.alertsSummaryLink = `/alerts-and-warnings?q=${location}#alerts`
-                this.alertsSummaryLinkText = `${group.floods.length}flood alerts`
+                this.alertsSummaryLinkText = `${group.floods.length} flood alerts`
                 this.alertsSummaryText = 'are'
               }
             }
