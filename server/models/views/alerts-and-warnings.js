@@ -17,7 +17,7 @@ class ViewModel {
       this.pageTitle = 'Sorry, there is currently a problem searching a location'
     } else {
       if (this.station && this.station.agency_name) {
-        this.pageTitle = `${this.station.agency_name} flood alerts and warnings`
+        this.pageTitle = `${this.station.agency_name} - flood alerts and warnings`
       } else {
         this.pageTitle = `${this.placeName ? this.placeName + ' f' : 'F'}lood alerts and warnings`
       }

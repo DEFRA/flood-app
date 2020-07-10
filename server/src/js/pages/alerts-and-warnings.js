@@ -22,11 +22,11 @@ if (document.getElementById('map')) {
 if (document.getElementById('map-station')) {
   // Create LiveMap for station
   window.flood.maps.createLiveMap('map-station', {
-    btnText: '<span>View on map</span>',
+    btnText: 'View on map',
     btnClasses: 'defra-button-map-s',
-    layers: 'mv,sh,st',
+    layers: 'mv,ts,tw,ta',
     centre: JSON.parse(window.flood.model.station.coordinates).coordinates,
     selectedId: 'stations.' + window.flood.model.station.id,
-    zoom: 14
+    zoom: 13
   })
 }
