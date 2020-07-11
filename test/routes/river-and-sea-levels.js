@@ -506,7 +506,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('Data error')
     Code.expect(response.payload).to.contain('1 level')
     Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=sankey-brook">Sankey Brook</a>')
-    Code.expect(response.payload).to.contain('<div class="defra-flood-list__item">')
+    Code.expect(response.payload).to.contain('<div class="defra-flood-list__item defra-flood-list__item--error">')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /river-and-sea-levels?river-id=sankey-brook ', async () => {

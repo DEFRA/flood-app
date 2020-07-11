@@ -628,7 +628,7 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
     Code.expect(response.payload).to.contain('defra-flood-statistics__impact defra-flood-statistics__impact')
     Code.expect(response.payload).to.contain('Low\n')
-    Code.expect(response.payload).to.contain('below 3.50m <span class="govuk-visually-hidden">level here</span>\n')
+    Code.expect(response.payload).to.contain('below 0.15m <span class="govuk-visually-hidden">level here</span>\n')
     Code.expect(response.payload).to.contain('<time datetime="">1:30am</time>')
     Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=river-ribble" class="defra-river-nav-link">River Ribble</a>')
   })

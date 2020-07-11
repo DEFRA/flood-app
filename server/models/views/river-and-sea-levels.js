@@ -66,6 +66,9 @@ class ViewModel {
           station.state = 'normal'
         }
       }
+      if (station.status === 'Suspended' || station.status === 'Closed' || (!station.value && !station.isWales)) {
+        station.state = 'error'
+      }
 
       if (station.iswales === true) {
         station.valueHtml = ''
