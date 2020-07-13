@@ -731,4 +731,77 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('<a href="/station/2089">\n')
     Code.expect(response.statusCode).to.equal(200)
   })
+  lab.test('GET /river-and-sea-levels Station is coastal', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    const fakeStationsData = () => [
+      {
+        river_id: 'river-mersey',
+        river_name: 'River Mersey',
+        navigable: true,
+        view_rank: 3,
+        rank: 5,
+        rloi_id: 5149,
+        up: 5052,
+        down: 5050,
+        telemetry_id: '693976',
+        region: 'North West',
+        catchment: 'Lower Mersey',
+        wiski_river_name: 'River Mersey',
+        agency_name: 'Westy',
+        external_name: 'Westy',
+        station_type: 'C',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '6.122',
+        value_timestamp: '2020-02-27T14:30:00.000Z',
+        value_erred: false,
+        percentile_5: '4.14',
+        percentile_95: '3.548',
+        centroid: '0101000020E6100000DF632687A47B04C09BC5867601B24A40',
+        lon: -2.56037240587146,
+        lat: 53.3906696470323
+      }
+    ]
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+
+    const fakeGetJson = () => data.warringtonGetJson
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=Warrington'
+    }
+
+    const response = await server.inject(options)
+
+    console.log(response.payload)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('<div class="defra-flood-list__item">')
+    Code.expect(response.payload).to.contain('<time datetime="2020-02-27T14:30:00.000Z">on 27/02/2020 2:30pm</time>')
+  })
 })
