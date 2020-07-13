@@ -201,9 +201,9 @@ lab.experiment('Routes test - location - 1 warning 2 alerts 2 nlif', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('Some flooding is expected')
-    Code.expect(response.payload).to.contain('A flood warning is in place for <')
-    Code.expect(response.payload).to.contain('2&nbsp;flood alerts<')
-    Code.expect(response.payload).to.contain('>removed</a> within the last 24 hours.')
+    Code.expect(response.payload).to.contain(' - flooding is possible')
+    Code.expect(response.payload).to.contain('Flood warning for')
+    Code.expect(response.payload).to.contain('Some flood alerts and warnings were removed')
+    Code.expect(response.payload).to.contain('in the last 24 hours')
   })
 })

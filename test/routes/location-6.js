@@ -156,6 +156,6 @@ lab.experiment('Routes test - location - 1 alert 1 nlif', () => {
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
 
-    Code.expect(response.payload).to.contain('Some flooding is expected')
+    Code.expect(response.payload).to.contain('Flooding is expected')
   })
 })
