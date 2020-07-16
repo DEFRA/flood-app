@@ -173,6 +173,67 @@ function LiveMap (mapId, options) {
     })
   }
 
+  // Test
+  const _drawBuffer = (layer, newFeature) => {
+    if (getParameterByName('b')) {
+      const b = (getParameterByName('b') * 1000) / getPointResolution('EPSG:3857', 1, newFeature.getGeometry().getCoordinates())
+      if (layer.get('ref') === 'warnings') {
+        const targetAreaPolygonId = 'flood_warning_alert.' + newFeature.getId().substring(newFeature.getId().indexOf('.') + 1)
+        if (targetArea.polygonFeature && targetArea.polygonFeature.getId() === targetAreaPolygonId) {
+          const extent = buffer(targetArea.polygonFeature.getGeometry().getExtent(), b)
+          const feature = new Feature(fromExtent(extent))
+          shape.getSource().addFeature(feature)
+          _LogFeaturesInExtent(extent)
+        }
+      } else if (layer.get('ref') === 'stations') {
+        const circle = new Circle(newFeature.getGeometry().getCoordinates(), b)
+        const feature = new Feature(circle)
+        shape.getSource().addFeature(feature)
+      }
+    }
+  }
+  const _groupBy = (collection, property) => {
+    let i = 0
+    let val
+    let index
+    const values = []
+    const result = []
+    for (; i < collection.length; i++) {
+      val = collection[i][property]
+      index = values.indexOf(val)
+      if (index > -1) {
+        result[index].push(collection[i])
+      } else {
+        values.push(val)
+        result.push([collection[i]])
+      }
+    }
+    return result
+  }
+  const _LogFeaturesInExtent = (extent) => {
+    let features = []
+    console.log('Count: ' + JSON.stringify(stations.getSource().getFeaturesInExtent(extent).length))
+    stations.getSource().getFeaturesInExtent(extent).forEach((feature) => {
+      features.push({
+        id: feature.getId(),
+        river: feature.get('river'),
+        name: feature.get('name')
+      })
+    })
+    features.sort((a, b) => {
+      var x = a.river.toLowerCase()
+      var y = b.river.toLowerCase()
+      return x < y ? -1 : x > y ? 1 : 0
+    })
+    features = _groupBy(features, 'river')
+    features.forEach((river) => {
+      console.log('=== ' + river[0].river + ' ===')
+      river.forEach((station) => {
+        console.log(station.id + ' - ' + station.name)
+      })
+    })
+  }
+
   // Set selected feature
   const setSelectedFeature = (newFeatureId = '') => {
     selected.getSource().clear()
@@ -190,21 +251,7 @@ function LiveMap (mapId, options) {
         selected.setStyle(maps.styles[layer.get('ref')]) // WebGL: layers don't use a style function
         container.showInfo(newFeature)
         // Remove in prod - display a box or circle
-        if (getParameterByName('b')) {
-          const b = (getParameterByName('b') * 1000) / getPointResolution('EPSG:3857', 1, newFeature.getGeometry().getCoordinates())
-          if (layer.get('ref') === 'warnings') {
-            const targetAreaPolygonId = 'flood_warning_alert.' + newFeature.getId().substring(newFeature.getId().indexOf('.') + 1)
-            if (targetArea.polygonFeature && targetArea.polygonFeature.getId() === targetAreaPolygonId) {
-              const extent = buffer(targetArea.polygonFeature.getGeometry().getExtent(), b)
-              const feature = new Feature(fromExtent(extent))
-              shape.getSource().addFeature(feature)
-            }
-          } else if (layer.get('ref') === 'stations') {
-            const circle = new Circle(newFeature.getGeometry().getCoordinates(), b)
-            const feature = new Feature(circle)
-            shape.getSource().addFeature(feature)
-          }
-        }
+        _drawBuffer(layer, newFeature)
       }
       // Refresh target area polygons
       if (layer.get('ref') === 'warnings') {
