@@ -798,8 +798,6 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    console.log(response.payload)
-
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('<div class="defra-flood-list__item">')
     Code.expect(response.payload).to.contain('<time datetime="2020-02-27T14:30:00.000Z">on 27/02/2020 2:30pm</time>')

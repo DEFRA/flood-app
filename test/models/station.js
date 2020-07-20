@@ -112,7 +112,7 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.station.hasPercentiles).to.equal(true)
   })
   lab.test('Test station viewModel FFOI station with Impacts', async () => {
-    const stationData = data.stationFFOI
+    const stationData = data.stationForecastData
 
     const viewModel = new ViewModel(stationData)
 
@@ -124,5 +124,16 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.thresholds[0].level).to.equal('2.35')
     Code.expect(Result.isUpstream).to.equal(true)
     Code.expect(Result.isDownstream).to.equal(false)
+  })
+  lab.test('Test station viewModel 1 alert 1 warning 1 severe', async () => {
+    const stationData = data.stationAWSW
+
+    const viewModel = new ViewModel(stationData)
+
+    const Result = viewModel
+
+    Code.expect(Result.station.id).to.equal(1001)
+    Code.expect(Result.warningAnd).to.equal(' and ')
+    Code.expect(Result.warningsBanner).to.equal('1 flood warning')
   })
 })

@@ -16,14 +16,6 @@ class ViewModel {
     this.station = new Station(station)
     this.station.riverNavigation = river
 
-    /*
-    var levelType = this.station.isGroundwater ? 'Groundwater' : (this.station.isCoastal ? 'Sea' : 'River')
-
-    Object.assign(this, {
-      pageTitle: `${levelType} level at ${station.name}`
-    })
-    */
-
     // Group warnings/alerts by severity level
 
     const warningsAlertsGroups = groupBy(warningsAlerts, 'severity_value')
