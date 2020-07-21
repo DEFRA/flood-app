@@ -19,48 +19,31 @@ lab.experiment('Station model test', () => {
     await sandbox.restore()
   })
   lab.test('Test station-forecast viewModel FFOI station 7377', async () => {
-    const stationData = data.stationForecastData
+    const stationData = data.forcastStationModelData
 
-    const today = moment().format('YYYY-MM-DD')
-    const latestTime = moment().add(30, 'minutes').format('HH:mm:ss')
-    const forecastBegining = moment().add(45, 'minutes').format('HH:mm:ss')
+    stationData.values.$.date = moment().subtract(1, 'day').format('YYYY-MM-DD')
+    stationData.values.$.time = moment().subtract(2, 'hours').format('HH:mm:ss')
 
-    const tommorowDate = moment().add(1, 'day').format('YYYY-MM-DD')
-    const tommorowForecast = moment().add(1, 'day').format('HH:mm:ss')
+    stationData.values.SetofValues[0].$.startDate = moment().subtract(4, 'days').format('YYYY-MM-DD')
+    stationData.values.SetofValues[0].$.startTime = moment().subtract(2, 'hours').format('HH:mm:ss')
 
-    const outsideOfForecast = moment().add(37, 'hours').format('YYYY-MM-DD')
-    const timeOutsideOfForecast = moment().add(37, 'hours').format('HH:mm:ss')
+    stationData.values.SetofValues[0].$.endDate = moment().add(6, 'days').format('YYYY-MM-DD')
+    stationData.values.SetofValues[0].$.endTime = moment().subtract(2, 'hours').format('HH:mm:ss')
 
-    stationData.values.$.date = today
-    stationData.values.$.time = moment().format('HH:mm:ss')
+    stationData.values.SetofValues[0].Value[0].$.date = moment().add(2, 'days').format('YYYY-MM-DD')
+    stationData.values.SetofValues[0].Value[0].$.time = moment().format('HH:mm:ss')
 
-    stationData.values.SetofValues[0].$.startDate = today
-    stationData.values.SetofValues[0].$.startTime = moment().format('HH:mm:ss')
+    stationData.values.SetofValues[0].Value[1].$.date = moment().format('YYYY-MM-DD')
+    stationData.values.SetofValues[0].Value[1].$.time = moment().add(1, 'hours').format('HH:mm:ss')
 
-    stationData.values.SetofValues[0].$.endDate = moment().add(36, 'hours').format('YYYY-MM-DD')
-    stationData.values.SetofValues[0].$.startTime = moment().add(36, 'hours').format('HH:mm:ss')
-
-    stationData.values.SetofValues[0].Value[0].$.date = today
-    stationData.values.SetofValues[0].Value[0].$.time = latestTime
-
-    stationData.values.SetofValues[0].Value[1].$.date = today
-    stationData.values.SetofValues[0].Value[1].$.time = forecastBegining
-
-    stationData.values.SetofValues[0].Value[2].$.date = tommorowDate
-    stationData.values.SetofValues[0].Value[2].$.time = tommorowForecast
-
-    stationData.values.SetofValues[0].Value[3].$.date = outsideOfForecast
-    stationData.values.SetofValues[0].Value[3].$.time = timeOutsideOfForecast
+    stationData.values.SetofValues[0].Value[2].$.date = moment().add(22, 'hours').format('YYYY-MM-DD')
+    stationData.values.SetofValues[0].Value[2].$.time = moment().subtract(2, 'hours').format('HH:mm:ss')
 
     const viewModel = new ViewModel(stationData)
 
     const Result = viewModel
 
-    console.log(Result)
-
     Code.expect(Result.hasForecastData).to.equal(true)
-    Code.expect(Result.maxValue._).to.equal('0.333')
-    Code.expect(Result.processedValues[0].formattedTimestamp).to.contain('today')
-    Code.expect(Result.processedValues[2].formattedTimestamp).to.contain('tomorrow')
+    Code.expect(Result.maxValue._).to.equal('0.202')
   })
 })
