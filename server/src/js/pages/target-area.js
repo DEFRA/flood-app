@@ -11,7 +11,7 @@ window.flood.utils.addBrowserBackButton()
 
 // Create LiveMap
 window.flood.maps.createLiveMap('map', {
-  btnText: `View map of flood ${window.flood.model.area.code.slice(4, 5).toLowerCase() === 'w' ? 'warning' : 'alert'} area`,
+  btnText: `View map of the flood ${window.flood.model.area.code.slice(4, 5).toLowerCase() === 'w' ? 'warning' : 'alert'} area`,
   btnClasses: 'defra-button-map govuk-!-margin-bottom-4',
   layers: 'mv,ts,tw,ta',
   targetArea: {
