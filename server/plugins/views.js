@@ -36,7 +36,7 @@ module.exports = {
       env: config.env,
       appVersion: pkg.version,
       assetPath: '/assets',
-      serviceName: 'Check flood risk',
+      serviceName: 'Check for flooding',
       gaAccId,
       gaOptId,
       fbAppId
