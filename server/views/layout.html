@@ -3,7 +3,7 @@
 {% from "footer/macro.njk" import govukFooter %}
 {% from "warning-text/macro.njk" import govukWarningText %}
 
-{% set metaTitle = (pageTitle or model.pageTitle or 'Check flood risk') + ' - GOV.UK' %}
+{% set metaTitle = (pageTitle or model.pageTitle or 'Check for flooding') + ' - GOV.UK' %}
 {% set metaDescription = model.metaDescription | default('Check your risk of flooding: get current flood warnings, river and sea levels, check the 5-day forecast or use flood risk maps') %}
 {% set metaKeywords = model.metaKeywords | default('flooding, flood risk, flood map, flood warnings, flood alerts, river levels, advice, guiance, gov.uk, england') %}
 {% set metaCanonical = model.metaCanonical %}
@@ -69,7 +69,7 @@
     homepageUrl: "https://www.gov.uk/",
     containerClasses: "govuk-width-container",
     serviceName: serviceName,
-    serviceUrl: "/start-page"
+    serviceUrl: "/find-location"
   }) }}
 
 {% endblock %}
