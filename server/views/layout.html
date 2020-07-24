@@ -8,6 +8,7 @@
 {% set metaKeywords = model.metaKeywords | default('flooding, flood risk, flood map, flood warnings, flood alerts, river levels, advice, guiance, gov.uk, england') %}
 {% set metaCanonical = model.metaCanonical %}
 {% set metaNoIndex = model.metaNoIndex %}
+{% set metaFeedback = model.feedback %}
 
 {% block pageTitle %}
   {{ metaTitle }}
@@ -127,7 +128,11 @@
 {% endblock %}
 
 {% block footer %}
-  {% include "./partials/feedback.html" %}
+  {% if metaFeedback %}
+    {% include "./partials/feedback.html" %}
+  {% endif %}
+
+
   {{ govukFooter({
     meta: {
       items: [
