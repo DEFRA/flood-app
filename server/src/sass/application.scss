@@ -46,10 +46,11 @@ $govuk-global-styles: true;
 @import "components/flood-meta";
 @import "components/flood-tabs";
 @import "components/context-footer";
+@import "components/feedback";
 
 // Utilities
 @import "utilities/details";
 @import "utilities/summary-list";
 
 // Datatables
-@import "node_modules/datatables.net-dt/css/jquery.dataTables"
+@import "node_modules/datatables.net-dt/css/jquery.dataTables";
