@@ -1,0 +1,20 @@
+.defra-feedback {
+    position:relative;
+    z-index:1;
+    border-bottom: 10px solid govuk-colour('blue');
+    margin-bottom:-1px;
+    &__container {
+        @extend .govuk-width-container;
+        background-color: govuk-colour('blue');
+        border-bottom: 1px solid white;
+        padding: 25px;
+        box-sizing:border-box;
+    }
+    a {
+        @include govuk-font($size: 16, $weight: bold);
+        color: white;
+    }
+    a:focus {
+        color: $govuk-link-active-colour;
+    }
+}
