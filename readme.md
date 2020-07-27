@@ -21,7 +21,7 @@ Install dependencies
 `$ npm i`
 
 
-ONce the environment variables below are set, you are now ready to start:
+Once the environment variables below are set, you are now ready to start:
 
 `$ node index.js`
 

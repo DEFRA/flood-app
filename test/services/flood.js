@@ -4,6 +4,7 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
+const data = require('../data')
 
 lab.experiment('Flood service test', () => {
   let sandbox
@@ -300,7 +301,7 @@ lab.experiment('Flood service test', () => {
     Code.expect(result.getFloodsWithin).to.equal('TEST')
   })
 
-  lab.test('Test getFloodArea endpoint', async () => {
+  lab.test('Test getFloodArea endpoint warning', async () => {
     const fakeFloodData = () => { return { getFloodArea: 'TEST' } }
 
     const util = require('../../server/util')
@@ -310,6 +311,21 @@ lab.experiment('Flood service test', () => {
     const floodService = require('../../server/services/flood')
 
     const result = await floodService.getFloodArea('1234w')
+
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.getFloodArea).to.equal('TEST')
+  })
+
+  lab.test('Test getFloodArea endpoint alert', async () => {
+    const fakeFloodData = () => { return { getFloodArea: 'TEST' } }
+
+    const util = require('../../server/util')
+
+    sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getFloodArea('1234a')
 
     Code.expect(result).to.be.an.object()
     Code.expect(result.getFloodArea).to.equal('TEST')
@@ -498,5 +514,93 @@ lab.experiment('Flood service test', () => {
     const result = await floodService.getWarningsAlertsWithinStationBuffer([1, 2])
     Code.expect(result).to.be.an.object()
     Code.expect(result.getWarningsAlertsWithinStationBuffer).to.equal('TEST')
+  })
+  lab.test('Test getRiverById endpoint', async () => {
+    const fakeRiverData = () => {
+      return [
+        {
+          river_id:"sankey-brook",
+          river_name:"Sankey Brook",
+          navigable:true,
+          view_rank:3,
+          rank:1,
+          rloi_id:5031,
+          up:null,
+          down:5069,
+          telemetry_id:"694039",
+          region:"North West",
+          catchment:"Lower Mersey",
+          wiski_river_name:"Sankey Brook",
+          agency_name:"Causey Bridge",
+          external_name:"Causey Bridge",
+          station_type:"S",
+          status:"Active",
+          qualifier:"u",
+          iswales:false,
+          value:"0.289",
+          value_timestamp:"2020-07-27T09:15:00.000Z",
+          value_erred:false,
+          percentile_5:"2.5",
+          percentile_95:"0.209",
+          centroid:"0101000020E610000095683DBA03FA04C089E4A73671B64A40",
+          lon:-2.62207742214111,
+          lat:53.4253300018109
+        }
+      ]
+    }
+
+    const util = require('../../server/util')
+
+    sandbox.stub(util, 'getJson').callsFake(fakeRiverData)
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getRiverById('sankey-brook')
+
+    Code.expect(result).to.be.an.array()
+    Code.expect(result[0].river_id).to.equal('sankey-brook')
+  })
+  lab.test('Test getRiverStationByStationId endpoint', async () => {
+    const fakeRiverStationData = () => {
+      return {
+          river_id:"sankey-brook",
+          river_name:"Sankey Brook",
+          navigable:true,
+          view_rank:3,
+          rank:1,
+          rloi_id:5031,
+          up:null,
+          down:5069,
+          telemetry_id:"694039",
+          region:"North West",
+          catchmen:"Lower Mersey",
+          wiski_river_name:"Sankey Brook",
+          agency_name:"Causey Bridge",
+          external_name:"Causey Bridge",
+          station_type:"S",
+          status:"Active",
+          qualifier:"u",
+          iswales:false,
+          value:"0.348",
+          value_timestamp:"2020-07-27T09:30:00.000Z",
+          value_erred:false,
+          percentile_5:"2.5",
+          percentile_95:"0.209",
+          centroid:"0101000020E610000095683DBA03FA04C089E4A73671B64A40",
+          lon:-2.62207742214111,
+          lat:53.4253300018109
+      }
+    }
+
+    const util = require('../../server/util')
+
+    sandbox.stub(util, 'getJson').callsFake(fakeRiverStationData)
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getRiverStationByStationId(5031)
+
+    Code.expect(result).to.be.an.object()
+    Code.expect(result.river_id).to.equal('sankey-brook')
   })
 })
