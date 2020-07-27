@@ -1,11 +1,8 @@
 'use strict'
-const config = require('../../server/config')
-
 const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
-const data = require('../data')
 
 lab.experiment('Flood service test', () => {
   let sandbox
@@ -525,32 +522,32 @@ lab.experiment('Flood service test', () => {
     const fakeRiverData = () => {
       return [
         {
-          river_id:"sankey-brook",
-          river_name:"Sankey Brook",
-          navigable:true,
-          view_rank:3,
-          rank:1,
-          rloi_id:5031,
-          up:null,
-          down:5069,
-          telemetry_id:"694039",
-          region:"North West",
-          catchment:"Lower Mersey",
-          wiski_river_name:"Sankey Brook",
-          agency_name:"Causey Bridge",
-          external_name:"Causey Bridge",
-          station_type:"S",
-          status:"Active",
-          qualifier:"u",
-          iswales:false,
-          value:"0.289",
-          value_timestamp:"2020-07-27T09:15:00.000Z",
-          value_erred:false,
-          percentile_5:"2.5",
-          percentile_95:"0.209",
-          centroid:"0101000020E610000095683DBA03FA04C089E4A73671B64A40",
-          lon:-2.62207742214111,
-          lat:53.4253300018109
+          river_id: 'sankey-brook',
+          river_name: 'Sankey Brook',
+          navigable: true,
+          view_rank: 3,
+          rank: 1,
+          rloi_id: 5031,
+          up: null,
+          down: 5069,
+          telemetry_id: '694039',
+          region: 'North West',
+          catchment: 'Lower Mersey',
+          wiski_river_name: 'Sankey Brook',
+          agency_name: 'Causey Bridge',
+          external_name: 'Causey Bridge',
+          station_type: 'S',
+          status: 'Active',
+          qualifier: 'u',
+          iswales: false,
+          value: '0.289',
+          value_timestamp: '2020-07-27T09:15:00.000Z',
+          value_erred: false,
+          percentile_5: '2.5',
+          percentile_95: '0.209',
+          centroid: '0101000020E610000095683DBA03FA04C089E4A73671B64A40',
+          lon: -2.62207742214111,
+          lat: 53.4253300018109
         }
       ]
     }
@@ -569,32 +566,32 @@ lab.experiment('Flood service test', () => {
   lab.test('Test getRiverStationByStationId endpoint', async () => {
     const fakeRiverStationData = () => {
       return {
-          river_id:"sankey-brook",
-          river_name:"Sankey Brook",
-          navigable:true,
-          view_rank:3,
-          rank:1,
-          rloi_id:5031,
-          up:null,
-          down:5069,
-          telemetry_id:"694039",
-          region:"North West",
-          catchmen:"Lower Mersey",
-          wiski_river_name:"Sankey Brook",
-          agency_name:"Causey Bridge",
-          external_name:"Causey Bridge",
-          station_type:"S",
-          status:"Active",
-          qualifier:"u",
-          iswales:false,
-          value:"0.348",
-          value_timestamp:"2020-07-27T09:30:00.000Z",
-          value_erred:false,
-          percentile_5:"2.5",
-          percentile_95:"0.209",
-          centroid:"0101000020E610000095683DBA03FA04C089E4A73671B64A40",
-          lon:-2.62207742214111,
-          lat:53.4253300018109
+        river_id: 'sankey-brook',
+        river_name: 'Sankey Brook',
+        navigable: true,
+        view_rank: 3,
+        rank: 1,
+        rloi_id: 5031,
+        up: null,
+        down: 5069,
+        telemetry_id: '694039',
+        region: 'North West',
+        catchmen: 'Lower Mersey',
+        wiski_river_name: 'Sankey Brook',
+        agency_name: 'Causey Bridge',
+        external_name: 'Causey Bridge',
+        station_type: 'S',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '0.348',
+        value_timestamp: '2020-07-27T09:30:00.000Z',
+        value_erred: false,
+        percentile_5: '2.5',
+        percentile_95: '0.209',
+        centroid: '0101000020E610000095683DBA03FA04C089E4A73671B64A40',
+        lon: -2.62207742214111,
+        lat: 53.4253300018109
       }
     }
 
