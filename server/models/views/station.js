@@ -24,6 +24,9 @@ class ViewModel {
     })
     */
 
+    Object.assign(this, {
+      feedback: true
+    })
     // Group warnings/alerts by severity level
 
     const warningsAlertsGroups = groupBy(warningsAlerts, 'severity_value')
