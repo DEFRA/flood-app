@@ -1,4 +1,5 @@
 'use strict'
+const config = require('../../server/config')
 
 const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
@@ -272,18 +273,23 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getFloods endpoint', async () => {
-    const fakeFloodData = () => { return { getFloods: 'TEST' } }
+    const fakeFloodData = { getFloods: 'TEST' }
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050/floods')
+      .once()
+      .returns(fakeFloodData)
 
     const floodService = require('../../server/services/flood')
 
     const result = await floodService.getFloods()
 
-    Code.expect(result).to.be.an.object()
-    Code.expect(result.getFloods).to.equal('TEST')
+    sandbox.verify()
+    Code.expect(result).to.equal(fakeFloodData)
   })
 
   lab.test('Test getFloodsWithin endpoint', async () => {
