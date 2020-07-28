@@ -2,50 +2,54 @@
 
 # flood-app
 
+This is the front end application for the Check for flooding service
+
 ## Getting started
 
 ### Prerequisites
-Install Node.js v12.x.x
 
-### Clone and build
+Running flood-db: https://github.com/DEFRA/flood-db
+Running flood-gis: https://github.com/DEFRA/flood-gis
+Running flood-service: https://github.com/DEFRA/flood-service
 
-Clone this repo
+Node.js v12.x.x
 
-`$ git clone https://github.com/DEFRA/flood-app`
+### Testing the application
+```
+$ npm i
+$ npm run test
+```
 
-`$ cd flood-app/`
+Functional testing: https://github.com/DEFRA/flood-service-tests-v2
 
+### Running the application
+```
+$ npm i
+$ node index.js
+```
 
-Install dependencies
-
-`$ npm i`
-
-
-ONce the environment variables below are set, you are now ready to start:
-
-`$ node index.js`
-
-
-Open your browser at
-
-`http://localhost:3009`
+Go to http://localhost:3009
 
 # Environment variables
+
+DEFRA employees can find examples of environment variables stored in our private gitlab repository
 
 | name     | description      | required | default |            valid            |             notes             |
 |----------|------------------|:--------:|---------|:---------------------------:|:-----------------------------:|
 | NODE_ENV | Node environment |    no    | dev | dev, tst, prd |                               |
 | PORT     | Port number      |    no    | 3009    |                             |                               |
-| FLOOD_APP_SERVICE_URL   | flood-service  |    yes    |         |                             | For flood api |
 | FLOOD_APP_BING_KEY   | MS Bing Key  |    yes    |         |                             | For location search |
 | FLOOD_APP_GEOSERVER_URL   | Geoserver  |    yes    |         |                             | For maps ows |
-| FLOOD_APP_HTTP_TIMEOUT   | Http timeout  |    no    |  10000 (10s)       |                             | For maps ows |
-| HTTPS_PROXY   | Proxy address |    no    |         |                             | For external api calls |
-| FLOOD_APP_GA_ID   | Google analytics Id |    no    |    ''     |                             |  |
-| FLOOD_APP_FBAPP_ID   | Facebook AppId |    no    |    ''     |                             |  |
-| FLOOD_APP_SITE_URL   | Site Url  |    no    | http://localhost:3009 |                             | For SEO metadata |
-| FLOOD_APP_ERRBIT_POST_ERRORS | Errbit activation |    no    |   true, false   |  |       |
-| FLOOD_APP_ERRBIT_ENV     | Errbit env      |    no    |     ||       |
-| FLOOD_APP_ERRBIT_KEY | Errbit key |    no    |         |  |       |
-| FLOOD_APP_ERRBIT_HOST     | Errbit host      |    no    |     ||       |
-| FLOOD_APP_ERRBIT_PROXY  | Errbit proxy |    no    | ''    ||       |
+| FLOOD_APP_SERVICE_URL   | flood-service  |    yes    |         |                             | For flood api |
+| FLOOD_APP_GA_ID   | Google analytics Id |    no    |         |                             |  |
+| FLOOD_APP_RAINFALL_URL | Rainfall api | yes | https://environment.data.gov.uk/flood-monitoring | |
+| FLOOD_APP_SITE_URL   | Site Url  |    yes    | http://localhost:3009 |                             | For SEO metadata |
+| FLOOD_RISK_URL   | Flood risk Url  |    yes    |  |                             | To link to correct flood risk environment |
+| FLOOD_APP_SESSION_PASSWORD | cookie password | yes | | |
+| FLOOD_APP_REDIS_HOST | redis cache host | no | | |  |
+| FLOOD_APP_REDIS_PORT | redis cache port | no | | |  |
+| FLOOD_APP_LOCAL_CACHE | to cache or not | no | false | |  |
+| FLOOD_APP_GA_OPT_ID | google opt id | no | | |  |
+
+
+
