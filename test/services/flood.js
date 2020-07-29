@@ -22,41 +22,42 @@ lab.experiment('Flood service test', () => {
     const floodService = require('../../server/services/flood')
     Code.expect(floodService).to.be.a.object()
   })
-
-  lab.test('Test for flood warnings', async () => {
-    const fakeFloodData = () => {
-      return {
-        floods: [{
-          ta_code: '013FWFD5',
-          ta_id: 174393,
-          ta_name: 'River Goyt at Whaley Bridge',
-          quick_dial: '143052',
-          region: 'North West',
-          area: 'South',
-          floodtype: 'f',
-          severity_value: 3,
-          severitydescription: 'Severe Flood Warning',
-          warningkey: 106435,
-          message_received: '2019-08-04T18:38:00.000Z',
-          severity_changed: '2019-08-01T12:51:00.000Z',
-          situation_changed: '2019-08-04T18:38:00.000Z',
-          situation: 'River levels in the River Goyt could still rise rapidly as a result of water potentially flowing from Toddbrook Reservoir on 4th August 2019. \n\nPotential for short lived intense rain showers for this evening (04/08/19) and for a band of rain moving quickly through the area in the early hours of Monday morning (05/08/19). \n\nEvacuation plans have been implemented in Whaley Bridge. \n\nIf you believe that you are in immediate danger, please call 999. Please be aware of your surroundings, keep up to date with the current situation, and avoid using low lying footpaths near local watercourses.',
-          geometry: '{"type":"Point","coordinates":[-1.98390234673153,53.3296569611127]}'
-        }
-        ]
-      }
+  lab.test('Test getFloods endpoint', async () => {
+    const floods = [{
+      ta_code: '013FWFD5',
+      ta_id: 174393,
+      ta_name: 'River Goyt at Whaley Bridge',
+      quick_dial: '143052',
+      region: 'North West',
+      area: 'South',
+      floodtype: 'f',
+      severity_value: 3,
+      severitydescription: 'Severe Flood Warning',
+      warningkey: 106435,
+      message_received: '2019-08-04T18:38:00.000Z',
+      severity_changed: '2019-08-01T12:51:00.000Z',
+      situation_changed: '2019-08-04T18:38:00.000Z',
+      situation: 'River levels in the River Goyt could still rise rapidly as a result of water potentially flowing from Toddbrook Reservoir on 4th August 2019. \n\nPotential for short lived intense rain showers for this evening (04/08/19) and for a band of rain moving quickly through the area in the early hours of Monday morning (05/08/19). \n\nEvacuation plans have been implemented in Whaley Bridge. \n\nIf you believe that you are in immediate danger, please call 999. Please be aware of your surroundings, keep up to date with the current situation, and avoid using low lying footpaths near local watercourses.',
+      geometry: '{"type":"Point","coordinates":[-1.98390234673153,53.3296569611127]}'
     }
+    ]
+
+    const util = require('../../server/util')
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050/floods')
+      .once()
+      .returns(floods)
 
     const floodService = require('../../server/services/flood')
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
 
-    floodService.floods = await floodService.getFloods()
+    const result = await floodService.getFloods()
 
-    Code.expect(floodService.floods.floods[0].ta_code).to.equal('013FWFD5')
-    Code.expect(floodService.floods.groups[0].title).to.equal('1 Severe flood warning')
-    Code.expect(floodService.floods.timestamp).to.be.undefined()
+    sandbox.verify()
+    Code.expect(result).to.equal(floods)
   })
-
   lab.test('Test for outlook', async () => {
     const fakeOutlookData = () => {
       return {
@@ -290,18 +291,23 @@ lab.experiment('Flood service test', () => {
   })
 
   lab.test('Test getFloodsWithin endpoint', async () => {
-    const fakeFloodData = () => { return { getFloodsWithin: 'TEST' } }
+    const bbox = [1, 2, 3, 4]
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050/floods-within/1/2/3/4')
+      .once()
+      .returns(bbox)
 
     const floodService = require('../../server/services/flood')
 
     const result = await floodService.getFloodsWithin([1, 2, 3, 4])
 
-    Code.expect(result).to.be.an.object()
-    Code.expect(result.getFloodsWithin).to.equal('TEST')
+    sandbox.verify()
+    Code.expect(result).to.equal(bbox)
   })
 
   lab.test('Test getFloodArea endpoint warning', async () => {
@@ -362,20 +368,24 @@ lab.experiment('Flood service test', () => {
     Code.expect(result).to.be.an.object()
     Code.expect(result.getStationById).to.equal('TEST')
   })
-
-  lab.test('Test getStationsWithin endpoint', async () => {
-    const fakeFloodData = () => { return { getStationsWithin: 'TEST' } }
+  lab.test('Test  getStationsWithin endpoint', async () => {
+    const bbox = [1, 2, 3, 4]
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050/stations-within/1/2/3/4')
+      .once()
+      .returns(bbox)
 
     const floodService = require('../../server/services/flood')
 
     const result = await floodService.getStationsWithin([1, 2, 3, 4])
 
-    Code.expect(result).to.be.an.object()
-    Code.expect(result.getStationsWithin).to.equal('TEST')
+    sandbox.verify()
+    Code.expect(result).to.equal(bbox)
   })
 
   lab.test('Test getStationTelemetry endpoint', async () => {
@@ -407,7 +417,6 @@ lab.experiment('Flood service test', () => {
     Code.expect(result).to.be.an.object()
     Code.expect(result.getStationForecastThresholds).to.equal('TEST')
   })
-
   lab.test('Test getStationForecastData endpoint', async () => {
     const fakeFloodData = () => { return { getStationForecastData: 'TEST' } }
 
@@ -422,20 +431,25 @@ lab.experiment('Flood service test', () => {
     Code.expect(result).to.be.an.object()
     Code.expect(result.getStationForecastData).to.equal('TEST')
   })
-
-  lab.test('Test getStationsGeoJson endpoint', async () => {
-    const fakeFloodData = () => { return { getStationsGeoJson: 'TEST' } }
+  lab.test('Test getIsEngland endpoint', async () => {
+    const lat = 1
+    const lng = 2
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050/is-england/2/1')
+      .once()
+      .returns(true)
 
     const floodService = require('../../server/services/flood')
 
-    const result = await floodService.getStationsGeoJson()
+    const result = await floodService.getIsEngland(lng, lat)
 
-    Code.expect(result).to.be.an.object()
-    Code.expect(result.getStationsGeoJson).to.equal('TEST')
+    sandbox.verify()
+    Code.expect(result).to.equal(true)
   })
 
   lab.test('Test getIsEngland endpoint', async () => {
@@ -452,158 +466,214 @@ lab.experiment('Flood service test', () => {
     Code.expect(result).to.be.an.object()
     Code.expect(result.getIsEngland).to.equal('TEST')
   })
-
-  lab.test('Test getImpactData endpoint', async () => {
-    const fakeFloodData = () => { return { getImpactData: 'TEST' } }
+  lab.test('Test getImpactsData endpoint', async () => {
+    const id = '7077'
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050/impacts/7077')
+      .once()
+      .returns(id)
 
     const floodService = require('../../server/services/flood')
 
     const result = await floodService.getImpactData(7077)
 
-    Code.expect(result).to.be.an.object()
-    Code.expect(result.getImpactData).to.equal('TEST')
+    sandbox.verify()
+    Code.expect(result).to.equal(id)
   })
-
   lab.test('Test getImpactsWithin endpoint', async () => {
-    const fakeFloodData = () => { return { getImpactsWithin: 'TEST' } }
+    const bbox = [1, 2, 3, 4]
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050/impacts-within/1/2/3/4')
+      .once()
+      .returns(bbox)
 
     const floodService = require('../../server/services/flood')
 
     const result = await floodService.getImpactsWithin([1, 2, 3, 4])
 
-    Code.expect(result).to.be.an.object()
-    Code.expect(result.getImpactsWithin).to.equal('TEST')
+    sandbox.verify()
+    Code.expect(result).to.equal(bbox)
   })
-
-  lab.test('Test getStationsWithinTargetArea endpoint', async () => {
-    const fakeFloodData = () => {
-      return {
-        getStationsWithinTargetArea: 'TEST'
-      }
-    }
+  lab.test('Test getStationsWithinTargetArea', async () => {
+    const fakeStation = { Station: '1001' }
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050/stations-within-target-area/053FWFPUWI09')
+      .once()
+      .returns(fakeStation)
 
     const floodService = require('../../server/services/flood')
 
     const result = await floodService.getStationsWithinTargetArea('053FWFPUWI09')
-    Code.expect(result).to.be.an.object()
-    Code.expect(result.getStationsWithinTargetArea).to.equal('TEST')
-  })
 
-  lab.test('Test getWarningsAlertsWithinStationBuffer endpoint', async () => {
-    const fakeFloodData = () => {
-      return {
-        getWarningsAlertsWithinStationBuffer: 'TEST'
-      }
-    }
+    sandbox.verify()
+    Code.expect(result).to.equal(fakeStation)
+  })
+  lab.test('Test getWarningsAlertsWithinStationBuffer', async () => {
+    const fakeAlert = { Alert: 'sankey-brook' }
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeFloodData)
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050/warnings-alerts-within-station-buffer/1/2')
+      .once()
+      .returns(fakeAlert)
 
     const floodService = require('../../server/services/flood')
 
     const result = await floodService.getWarningsAlertsWithinStationBuffer([1, 2])
-    Code.expect(result).to.be.an.object()
-    Code.expect(result.getWarningsAlertsWithinStationBuffer).to.equal('TEST')
+
+    sandbox.verify()
+    Code.expect(result).to.equal(fakeAlert)
   })
-  lab.test('Test getRiverById endpoint', async () => {
-    const fakeRiverData = () => {
-      return [
-        {
-          river_id: 'sankey-brook',
-          river_name: 'Sankey Brook',
-          navigable: true,
-          view_rank: 3,
-          rank: 1,
-          rloi_id: 5031,
-          up: null,
-          down: 5069,
-          telemetry_id: '694039',
-          region: 'North West',
-          catchment: 'Lower Mersey',
-          wiski_river_name: 'Sankey Brook',
-          agency_name: 'Causey Bridge',
-          external_name: 'Causey Bridge',
-          station_type: 'S',
-          status: 'Active',
-          qualifier: 'u',
-          iswales: false,
-          value: '0.289',
-          value_timestamp: '2020-07-27T09:15:00.000Z',
-          value_erred: false,
-          percentile_5: '2.5',
-          percentile_95: '0.209',
-          centroid: '0101000020E610000095683DBA03FA04C089E4A73671B64A40',
-          lon: -2.62207742214111,
-          lat: 53.4253300018109
-        }
-      ]
-    }
+  lab.test('Test getRiverById', async () => {
+    const fakeRiverData = { riverId: 'sankey-brook' }
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeRiverData)
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050/river/sankey-brook')
+      .once()
+      .returns(fakeRiverData)
 
     const floodService = require('../../server/services/flood')
 
     const result = await floodService.getRiverById('sankey-brook')
 
-    Code.expect(result).to.be.an.array()
-    Code.expect(result[0].river_id).to.equal('sankey-brook')
+    sandbox.verify()
+    Code.expect(result).to.equal(fakeRiverData)
   })
-  lab.test('Test getRiverStationByStationId endpoint', async () => {
-    const fakeRiverStationData = () => {
-      return {
-        river_id: 'sankey-brook',
-        river_name: 'Sankey Brook',
-        navigable: true,
-        view_rank: 3,
-        rank: 1,
-        rloi_id: 5031,
-        up: null,
-        down: 5069,
-        telemetry_id: '694039',
-        region: 'North West',
-        catchmen: 'Lower Mersey',
-        wiski_river_name: 'Sankey Brook',
-        agency_name: 'Causey Bridge',
-        external_name: 'Causey Bridge',
-        station_type: 'S',
-        status: 'Active',
-        qualifier: 'u',
-        iswales: false,
-        value: '0.348',
-        value_timestamp: '2020-07-27T09:30:00.000Z',
-        value_erred: false,
-        percentile_5: '2.5',
-        percentile_95: '0.209',
-        centroid: '0101000020E610000095683DBA03FA04C089E4A73671B64A40',
-        lon: -2.62207742214111,
-        lat: 53.4253300018109
-      }
-    }
+  lab.test('Test getRiverStationByStationId', async () => {
+    const fakeRiverStationData = { riverStationId: '5031' }
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeRiverStationData)
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050/river-station-by-station-id/5031')
+      .once()
+      .returns(fakeRiverStationData)
 
     const floodService = require('../../server/services/flood')
 
     const result = await floodService.getRiverStationByStationId(5031)
 
-    Code.expect(result).to.be.an.object()
-    Code.expect(result.river_id).to.equal('sankey-brook')
+    sandbox.verify()
+    Code.expect(result).to.equal(fakeRiverStationData)
+  })
+  lab.test('Test getStationsOverview endpoint', async () => {
+    const fakeStationsData = [{ station: 1001 }, { station: 1002 }]
+
+    const util = require('../../server/util')
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050/stations-overview')
+      .once()
+      .returns(fakeStationsData)
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getStationsOverview()
+
+    sandbox.verify()
+    Code.expect(result).to.equal(fakeStationsData)
+  })
+  lab.test('Test getServiceHealth endpoint', async () => {
+    const serviceURL = 'http://localhost:8050'
+
+    const util = require('../../server/util')
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050')
+      .once()
+      .returns(serviceURL)
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getServiceHealth()
+
+    sandbox.verify()
+    Code.expect(result).to.equal(serviceURL)
+  })
+  lab.test('Test getStationsHealth endpoint', async () => {
+    const stationHealthURL = 'http://localhost:8050/stations-health'
+
+    const util = require('../../server/util')
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050/stations-health')
+      .once()
+      .returns(stationHealthURL)
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getStationsHealth()
+
+    sandbox.verify()
+    Code.expect(result).to.equal(stationHealthURL)
+  })
+  lab.test('Test getTelemetryHealth endpoint', async () => {
+    const telemetryHealthURL = 'http://localhost:8050/telemetry-health'
+
+    const util = require('../../server/util')
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050/telemetry-health')
+      .once()
+      .returns(telemetryHealthURL)
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getTelemetryHealth()
+
+    sandbox.verify()
+
+    Code.expect(result).to.equal(telemetryHealthURL)
+  })
+  lab.test('Test getFfoiHealth endpoint', async () => {
+    const ffoiHealthURL = 'http://localhost:8050/ffoi-health'
+
+    const util = require('../../server/util')
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050/ffoi-health')
+      .once()
+      .returns(ffoiHealthURL)
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getFfoiHealth()
+
+    sandbox.verify()
+    Code.expect(result).to.equal(ffoiHealthURL)
   })
 })
