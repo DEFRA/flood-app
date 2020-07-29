@@ -34,6 +34,7 @@ module.exports = {
     isCached: true,
     context: {
       env: config.env,
+      stage: config.stage,
       appVersion: pkg.version,
       assetPath: '/assets',
       serviceName: 'Check for flooding',

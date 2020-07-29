@@ -6,11 +6,11 @@ const defaultPort = 3009
 const schema = joi.object({
   restClientTimeoutMillis: joi.number().default(15000),
   port: joi.number().default(defaultPort),
-  env: joi.string().valid('dev', 'tst', 'test', 'prd').default('dev'),
+  env: joi.string().valid('development', 'dev', 'test', 'tst', 'production').default('production'),
+  stage: joi.string().default(''),
   serviceUrl: joi.string().uri().default('http://localhost:8050'),
   geoserverUrl: joi.string().uri().default('http://localhost:8080'),
   rainfallApiUrl: joi.string().uri().default('http://localhost:3000'),
-  // rainfallApiUrl: joi.string().uri().default('https://environment.data.gov.uk/flood-monitoring'),
   bingKey: joi.string().required(),
   ordnanceSurveyKey: joi.string().optional(),
   browserRefreshUrl: joi.string().optional(),
@@ -28,6 +28,7 @@ const config = {
   restClientTimeoutMillis: 10000,
   port: process.env.PORT,
   env: process.env.NODE_ENV,
+  stage: process.env.FLOOD_APP_STAGE,
   serviceUrl: process.env.FLOOD_APP_SERVICE_URL,
   geoserverUrl: process.env.FLOOD_APP_GEOSERVER_URL,
   rainfallApiUrl: process.env.FLOOD_APP_RAINFALL_API_URL,
@@ -55,7 +56,7 @@ if (result.error) {
 const value = result.value
 
 // Add some helper props
-value.isDev = value.env === 'dev'
-value.isProd = value.env === 'prd'
+value.isDev = value.env !== 'production'
+value.isProd = value.env === 'production'
 
 module.exports = value
