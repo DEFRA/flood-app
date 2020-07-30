@@ -3,6 +3,7 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
+const config = require('../../server/config')
 
 lab.experiment('Flood service test', () => {
   let sandbox
@@ -12,6 +13,7 @@ lab.experiment('Flood service test', () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/util.js')]
     sandbox = await sinon.createSandbox()
+    sandbox.stub(config, 'serviceUrl').value('http://server2')
   })
 
   lab.afterEach(async () => {
@@ -30,7 +32,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/floods')
+      .withArgs('http://server2/floods')
       .once()
       .returns(fakeFloodData)
 
@@ -49,7 +51,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/floods-within/1/2/3/4')
+      .withArgs('http://server2/floods-within/1/2/3/4')
       .once()
       .returns(bbox)
 
@@ -68,7 +70,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/flood-area/warning/1234w')
+      .withArgs('http://server2/flood-area/warning/1234w')
       .once()
       .returns(fakeFloodData)
 
@@ -87,7 +89,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/flood-area/alert/1234a')
+      .withArgs('http://server2/flood-area/alert/1234a')
       .once()
       .returns(fakeFloodData)
 
@@ -106,7 +108,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/flood-guidance-statement')
+      .withArgs('http://server2/flood-guidance-statement')
       .once()
       .returns(fakeFloodData)
 
@@ -127,7 +129,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/station/1001/u')
+      .withArgs('http://server2/station/1001/u')
       .once()
       .returns(station)
 
@@ -146,7 +148,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/stations-within/1/2/3/4')
+      .withArgs('http://server2/stations-within/1/2/3/4')
       .once()
       .returns(bbox)
 
@@ -165,7 +167,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/stations-within-target-area/053FWFPUWI09')
+      .withArgs('http://server2/stations-within-target-area/053FWFPUWI09')
       .once()
       .returns(fakeStation)
 
@@ -184,7 +186,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/warnings-alerts-within-station-buffer/1/2')
+      .withArgs('http://server2/warnings-alerts-within-station-buffer/1/2')
       .once()
       .returns(fakeAlert)
 
@@ -203,7 +205,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/river/sankey-brook')
+      .withArgs('http://server2/river/sankey-brook')
       .once()
       .returns(fakeRiverData)
 
@@ -222,7 +224,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/river-station-by-station-id/5031')
+      .withArgs('http://server2/river-station-by-station-id/5031')
       .once()
       .returns(fakeRiverStationData)
 
@@ -241,7 +243,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/station/7077/u/telemetry')
+      .withArgs('http://server2/station/7077/u/telemetry')
       .once()
       .returns(fakeFloodData)
 
@@ -260,7 +262,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/station/7077/forecast/thresholds')
+      .withArgs('http://server2/station/7077/forecast/thresholds')
       .once()
       .returns(fakeFloodData)
 
@@ -279,7 +281,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/station/7077/forecast/data')
+      .withArgs('http://server2/station/7077/forecast/data')
       .once()
       .returns(fakeFloodData)
 
@@ -291,25 +293,22 @@ lab.experiment('Flood service test', () => {
     Code.expect(result.getStationForecastData).to.equal('TEST')
   })
   lab.test('Test getStationsGeoJson endpoint', async () => {
-    const config = require('../../server/config')
-
-    const geoJsonURL = `${config.geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&sortBy=atrisk&outputFormat=application%2Fjson`
+    sandbox.stub(config, 'geoserverUrl').value('http://server1')
 
     const util = require('../../server/util')
-
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs(`${config.geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&sortBy=atrisk&outputFormat=application%2Fjson`)
+      .withArgs('http://server1/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&sortBy=atrisk&outputFormat=application%2Fjson')
       .once()
-      .returns(geoJsonURL)
+      .returns('ok')
 
     const floodService = require('../../server/services/flood')
 
     const result = await floodService.getStationsGeoJson()
 
     sandbox.verify()
-    Code.expect(result).to.equal(geoJsonURL)
+    Code.expect(result).to.equal('ok')
   })
   lab.test('Test getIsEngland endpoint', async () => {
     const lat = 1
@@ -320,7 +319,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/is-england/2/1')
+      .withArgs('http://server2/is-england/2/1')
       .once()
       .returns(true)
 
@@ -339,7 +338,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/impacts/7077')
+      .withArgs('http://server2/impacts/7077')
       .once()
       .returns(id)
 
@@ -358,7 +357,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/impacts-within/1/2/3/4')
+      .withArgs('http://server2/impacts-within/1/2/3/4')
       .once()
       .returns(bbox)
 
@@ -370,14 +369,14 @@ lab.experiment('Flood service test', () => {
     Code.expect(result).to.equal(bbox)
   })
   lab.test('Test getRivers endpoint', async () => {
-    const riversURL = 'http://localhost:8050/rivers'
+    const riversURL = 'http://server2/rivers'
 
     const util = require('../../server/util')
 
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/rivers')
+      .withArgs('http://server2/rivers')
       .once()
       .returns(riversURL)
 
@@ -396,7 +395,7 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/stations-overview')
+      .withArgs('http://server2/stations-overview')
       .once()
       .returns(fakeStationsData)
 
@@ -408,14 +407,14 @@ lab.experiment('Flood service test', () => {
     Code.expect(result).to.equal(fakeStationsData)
   })
   lab.test('Test getServiceHealth endpoint', async () => {
-    const serviceURL = 'http://localhost:8050'
+    const serviceURL = 'http://server2'
 
     const util = require('../../server/util')
 
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050')
+      .withArgs('http://server2')
       .once()
       .returns(serviceURL)
 
@@ -427,35 +426,32 @@ lab.experiment('Flood service test', () => {
     Code.expect(result).to.equal(serviceURL)
   })
   lab.test('Test getGeoserverHealth endpoint', async () => {
-    const config = require('../../server/config')
-
-    const geoJsonURL = `${config.geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert&maxFeatures=1&outputFormat=application%2Fjson`
+    sandbox.stub(config, 'geoserverUrl').value('http://server2')
 
     const util = require('../../server/util')
-
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs(`${config.geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert&maxFeatures=1&outputFormat=application%2Fjson`)
+      .withArgs('http://server2/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert&maxFeatures=1&outputFormat=application%2Fjson')
       .once()
-      .returns(geoJsonURL)
+      .returns('ok')
 
     const floodService = require('../../server/services/flood')
 
     const result = await floodService.getGeoserverHealth()
 
     sandbox.verify()
-    Code.expect(result).to.equal(geoJsonURL)
+    Code.expect(result).to.equal('ok')
   })
   lab.test('Test getStationsHealth endpoint', async () => {
-    const stationHealthURL = 'http://localhost:8050/stations-health'
+    const stationHealthURL = 'http://server2/stations-health'
 
     const util = require('../../server/util')
 
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/stations-health')
+      .withArgs('http://server2/stations-health')
       .once()
       .returns(stationHealthURL)
 
@@ -467,14 +463,14 @@ lab.experiment('Flood service test', () => {
     Code.expect(result).to.equal(stationHealthURL)
   })
   lab.test('Test getTelemetryHealth endpoint', async () => {
-    const telemetryHealthURL = 'http://localhost:8050/telemetry-health'
+    const telemetryHealthURL = 'http://server2/telemetry-health'
 
     const util = require('../../server/util')
 
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/telemetry-health')
+      .withArgs('http://server2/telemetry-health')
       .once()
       .returns(telemetryHealthURL)
 
@@ -487,14 +483,14 @@ lab.experiment('Flood service test', () => {
     Code.expect(result).to.equal(telemetryHealthURL)
   })
   lab.test('Test getFfoiHealth endpoint', async () => {
-    const ffoiHealthURL = 'http://localhost:8050/ffoi-health'
+    const ffoiHealthURL = 'http://server2/ffoi-health'
 
     const util = require('../../server/util')
 
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://localhost:8050/ffoi-health')
+      .withArgs('http://server2/ffoi-health')
       .once()
       .returns(ffoiHealthURL)
 
