@@ -38,7 +38,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getFloods()
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getFloodsWithin endpoint', async () => {
@@ -55,7 +54,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getFloodsWithin([1, 2, 3, 4])
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getFloodArea endpoint warning', async () => {
@@ -123,7 +121,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationById(id, direction)
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test  getStationsWithin endpoint', async () => {
@@ -140,7 +137,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationsWithin([1, 2, 3, 4])
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getStationsWithinTargetArea', async () => {
@@ -157,7 +153,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationsWithinTargetArea('053FWFPUWI09')
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getWarningsAlertsWithinStationBuffer', async () => {
@@ -174,7 +169,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getWarningsAlertsWithinStationBuffer([1, 2])
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getRiverById', async () => {
@@ -191,7 +185,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getRiverById('sankey-brook')
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getRiverStationByStationId', async () => {
@@ -208,7 +201,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getRiverStationByStationId(5031)
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getStationTelemetry endpoint', async () => {
@@ -274,7 +266,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationsGeoJson()
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getIsEngland endpoint', async () => {
@@ -294,7 +285,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getIsEngland(lng, lat)
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getImpactsData endpoint', async () => {
@@ -311,7 +301,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getImpactData(7077)
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getImpactsWithin endpoint', async () => {
@@ -328,7 +317,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getImpactsWithin([1, 2, 3, 4])
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getRivers endpoint', async () => {
@@ -345,7 +333,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getRivers()
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getStationsOverview endpoint', async () => {
@@ -362,7 +349,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationsOverview()
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getServiceHealth endpoint', async () => {
@@ -379,7 +365,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getServiceHealth()
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getGeoserverHealth endpoint', async () => {
@@ -397,7 +382,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getGeoserverHealth()
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getStationsHealth endpoint', async () => {
@@ -414,7 +398,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationsHealth()
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getTelemetryHealth endpoint', async () => {
@@ -430,8 +413,6 @@ lab.experiment('Flood service test', () => {
     const floodService = require('../../server/services/flood')
 
     const result = await floodService.getTelemetryHealth()
-
-    sandbox.verify()
 
     Code.expect(result).to.equal('ok')
   })
@@ -449,7 +430,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getFfoiHealth()
 
-    sandbox.verify()
     Code.expect(result).to.equal('ok')
   })
 })
