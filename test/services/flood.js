@@ -290,6 +290,27 @@ lab.experiment('Flood service test', () => {
     Code.expect(result).to.be.an.object()
     Code.expect(result.getStationForecastData).to.equal('TEST')
   })
+  lab.test('Test getStationsGeoJson endpoint', async () => {
+    const config = require('../../server/config')
+
+    const geoJsonURL = `${config.geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&sortBy=atrisk&outputFormat=application%2Fjson`
+
+    const util = require('../../server/util')
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs(`${config.geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&sortBy=atrisk&outputFormat=application%2Fjson`)
+      .once()
+      .returns(geoJsonURL)
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getStationsGeoJson()
+
+    sandbox.verify()
+    Code.expect(result).to.equal(geoJsonURL)
+  })
   lab.test('Test getIsEngland endpoint', async () => {
     const lat = 1
     const lng = 2
@@ -348,6 +369,25 @@ lab.experiment('Flood service test', () => {
     sandbox.verify()
     Code.expect(result).to.equal(bbox)
   })
+  lab.test('Test getRivers endpoint', async () => {
+    const riversURL = 'http://localhost:8050/rivers'
+
+    const util = require('../../server/util')
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://localhost:8050/rivers')
+      .once()
+      .returns(riversURL)
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getRivers()
+
+    sandbox.verify()
+    Code.expect(result).to.equal(riversURL)
+  })
   lab.test('Test getStationsOverview endpoint', async () => {
     const fakeStationsData = [{ station: 1001 }, { station: 1002 }]
 
@@ -385,6 +425,27 @@ lab.experiment('Flood service test', () => {
 
     sandbox.verify()
     Code.expect(result).to.equal(serviceURL)
+  })
+  lab.test('Test getGeoserverHealth endpoint', async () => {
+    const config = require('../../server/config')
+
+    const geoJsonURL = `${config.geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert&maxFeatures=1&outputFormat=application%2Fjson`
+
+    const util = require('../../server/util')
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs(`${config.geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert&maxFeatures=1&outputFormat=application%2Fjson`)
+      .once()
+      .returns(geoJsonURL)
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getGeoserverHealth()
+
+    sandbox.verify()
+    Code.expect(result).to.equal(geoJsonURL)
   })
   lab.test('Test getStationsHealth endpoint', async () => {
     const stationHealthURL = 'http://localhost:8050/stations-health'
