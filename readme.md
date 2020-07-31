@@ -23,6 +23,9 @@ $ npm run test
 Functional testing: https://github.com/DEFRA/flood-service-tests-v2
 
 ### Running the application
+
+Once the environment variables below are set, you are now ready to start:
+
 ```
 $ npm i
 $ node index.js
