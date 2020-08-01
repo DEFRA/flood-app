@@ -1,0 +1,91 @@
+{
+  "thresholds": [
+    {
+      "ffoi_station_threshold_id": 507,
+      "ffoi_station_id": 87,
+      "fwis_code": "062WAF28Mimmshal",
+      "value": 0.96,
+      "fwa_name": "Mimmshall Brook",
+      "fwa_type": "a",
+      "fwa_severity": -1
+    },
+    {
+      "ffoi_station_threshold_id": 508,
+      "ffoi_station_id": 87,
+      "fwis_code": "062WAF28UpColne",
+      "value": 2.3,
+      "fwa_name": "Upper River Colne and Radlett Brook",
+      "fwa_type": "a",
+      "fwa_severity": -1
+    },
+    {
+      "ffoi_station_threshold_id": 509,
+      "ffoi_station_id": 87,
+      "fwis_code": "062FWF28Warrengt",
+      "value": 2.24,
+      "fwa_name": "Mimmshall Brook at Warrengate Road",
+      "fwa_type": "w",
+      "fwa_severity": -1
+    },
+    {
+      "ffoi_station_threshold_id": 510,
+      "ffoi_station_id": 87,
+      "fwis_code": "062FWF28CHeath",
+      "value": 2.7,
+      "fwa_name": "River Colne at Colney Heath",
+      "fwa_type": "w",
+      "fwa_severity": -1
+    }
+  ],
+  "values": {
+    "$": {
+      "stationReference": "2810TH",
+      "stationName": "Warrengate Road",
+      "key": "fwfidata/ENT_7024/THFSTHTS20200720072604327.XML",
+      "date": "2020-07-20",
+      "time": "07:26:04"
+    },
+    "SetofValues": [
+      {
+        "$": {
+          "parameter": "Water Level",
+          "qualifier": "Stage",
+          "dataType": "Instantaneous",
+          "period": "15 min",
+          "characteristic": "Forecast",
+          "units": "m",
+          "startDate": "2020-07-17",
+          "startTime": "06:45:00",
+          "endDate": "2020-07-27",
+          "endTime": "06:45:00"
+        },
+        "Value": [
+          {
+            "_": "0.202",
+            "$": {
+              "date": "2020-07-20",
+              "time": "16:45:00",
+              "flag1": "3"
+            }
+          },
+          {
+            "_": "0.202",
+            "$": {
+              "date": "2020-07-21",
+              "time": "10:00:00",
+              "flag1": "3"
+            }
+          },
+          {
+            "_": "0.202",
+            "$": {
+              "date": "2020-07-22",
+              "time": "07:00:00",
+              "flag1": "3"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

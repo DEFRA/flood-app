@@ -23,6 +23,9 @@ $ npm run test
 Functional testing: https://github.com/DEFRA/flood-service-tests-v2
 
 ### Running the application
+
+Once the environment variables below are set, you are now ready to start:
+
 ```
 $ npm i
 $ node index.js
@@ -36,7 +39,8 @@ DEFRA employees can find examples of environment variables stored in our private
 
 | name     | description      | required | default |            valid            |             notes             |
 |----------|------------------|:--------:|---------|:---------------------------:|:-----------------------------:|
-| NODE_ENV | Node environment |    no    | dev | dev, tst, prd |                               |
+| NODE_ENV | Node environment |    no    | production | development, dev, test, tst, production |                               |
+| FLOOD_APP_STAGE | Flavour of environment | no | '' | ||
 | PORT     | Port number      |    no    | 3009    |                             |                               |
 | FLOOD_APP_BING_KEY   | MS Bing Key  |    yes    |         |                             | For location search |
 | FLOOD_APP_GEOSERVER_URL   | Geoserver  |    yes    |         |                             | For maps ows |

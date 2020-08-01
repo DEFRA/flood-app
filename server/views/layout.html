@@ -27,7 +27,7 @@
   {% if metaNoIndex %}
   <meta name="robots" content="noindex" />
   {% endif %}
-  <!-- Stage: {{ env }} -->
+  <!-- Stage: {{ env }} {{ stage }} -->
   <!-- Application version: {{ appVersion }} -->
 
   <!--[if !IE 8]><!-->
@@ -61,8 +61,6 @@
       a.appendChild(r);
     })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
   </script> -->
-  <!-- Env: {{env}} -->
-  <!-- Application version: {{appVersion}} -->
 {% endblock %}
 
 {% block header %}

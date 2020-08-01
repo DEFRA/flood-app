@@ -6,6 +6,7 @@ const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
 const ViewModel = require('../../server/models/views/station')
 const data = require('../data')
+const moment = require('moment-timezone')
 
 lab.experiment('Station model test', () => {
   let sandbox
@@ -112,7 +113,38 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.station.hasPercentiles).to.equal(true)
   })
   lab.test('Test station viewModel FFOI station with Impacts', async () => {
-    const stationData = data.stationFFOI
+    const stationData = data.stationForecastData
+
+    const today = moment().format('YYYY-MM-DD')
+    const latestTime = moment().add(30, 'minutes').format('HH:mm:ss')
+    const forecastBegining = moment().add(45, 'minutes').format('HH:mm:ss')
+
+    const tommorowDate = moment().add(1, 'day').format('YYYY-MM-DD')
+    const tommorowForecast = moment().add(1, 'day').format('HH:mm:ss')
+
+    const outsideOfForecast = moment().add(37, 'hours').format('YYYY-MM-DD')
+    const timeOutsideOfForecast = moment().add(37, 'hours').format('HH:mm:ss')
+
+    stationData.values.$.date = today
+    stationData.values.$.time = moment().format('HH:mm:ss')
+
+    stationData.values.SetofValues[0].$.startDate = today
+    stationData.values.SetofValues[0].$.startTime = moment().format('HH:mm:ss')
+
+    stationData.values.SetofValues[0].$.endDate = moment().add(36, 'hours').format('YYYY-MM-DD')
+    stationData.values.SetofValues[0].$.startTime = moment().add(36, 'hours').format('HH:mm:ss')
+
+    stationData.values.SetofValues[0].Value[0].$.date = today
+    stationData.values.SetofValues[0].Value[0].$.time = latestTime
+
+    stationData.values.SetofValues[0].Value[1].$.date = today
+    stationData.values.SetofValues[0].Value[1].$.time = forecastBegining
+
+    stationData.values.SetofValues[0].Value[2].$.date = tommorowDate
+    stationData.values.SetofValues[0].Value[2].$.time = tommorowForecast
+
+    stationData.values.SetofValues[0].Value[3].$.date = outsideOfForecast
+    stationData.values.SetofValues[0].Value[3].$.time = timeOutsideOfForecast
 
     const viewModel = new ViewModel(stationData)
 
@@ -124,5 +156,17 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.thresholds[0].level).to.equal('2.35')
     Code.expect(Result.isUpstream).to.equal(true)
     Code.expect(Result.isDownstream).to.equal(false)
+    Code.expect(Result.severeBanner).to.equal('Severe flood warning for Coast from Fleetwood to Blackpool')
+  })
+  lab.test('Test station viewModel 1 alert 1 warning 1 severe', async () => {
+    const stationData = data.stationAWSW
+
+    const viewModel = new ViewModel(stationData)
+
+    const Result = viewModel
+
+    Code.expect(Result.station.id).to.equal(1001)
+    Code.expect(Result.warningAnd).to.equal(' and ')
+    Code.expect(Result.warningsBanner).to.equal('1 flood warning')
   })
 })
