@@ -322,7 +322,6 @@ lab.experiment('location service test', () => {
                   locality: 'Warrington',
                   countryRegionIso2: 'GB'
                 },
-                // confidence: 'Medium',
                 confidence: 'High',
                 entityType: 'PopulatedPlace',
                 geocodePoints: [
@@ -426,7 +425,6 @@ lab.experiment('location service test', () => {
                   locality: 'Warrington',
                   countryRegionIso2: 'GB'
                 },
-                // confidence: 'Medium',
                 confidence: 'High',
                 entityType: 'PopulatedPlace',
                 geocodePoints: [
@@ -456,7 +454,6 @@ lab.experiment('location service test', () => {
                   locality: 'Warrington',
                   countryRegionIso2: 'GB'
                 },
-                // confidence: 'Medium',
                 confidence: 'High',
                 entityType: 'PopulatedPlace',
                 geocodePoints: [
@@ -522,7 +519,6 @@ lab.experiment('location service test', () => {
                   locality: 'Warrington, Warrington',
                   countryRegionIso2: 'GB'
                 },
-                // confidence: 'Medium',
                 confidence: 'High',
                 entityType: 'PopulatedPlace',
                 geocodePoints: [
@@ -588,7 +584,6 @@ lab.experiment('location service test', () => {
                   locality: 'Warrington, TEST',
                   countryRegionIso2: 'GB'
                 },
-                // confidence: 'Medium',
                 confidence: 'High',
                 entityType: 'PopulatedPlace',
                 geocodePoints: [
