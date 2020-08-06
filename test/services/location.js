@@ -292,72 +292,6 @@ lab.experiment('location service test', () => {
     const result = await Code.expect(rejects()).to.reject()
     Code.expect(result.message).to.equal('Invalid geocode results (no resourceSets)')
   })
-
-  lab.test('Check for Bing call returning duplicate location name in description', async () => {
-    const util = require('../../server/util')
-
-    const fakeLocationData = () => {
-      return {
-        authenticationResultCode: 'ValidCredentials 6',
-        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
-        copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
-        resourceSets: [
-          {
-            estimatedTotal: 1,
-            resources: [
-              {
-                __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [53.367538452148437, -2.6395580768585205, 53.420841217041016, -2.5353000164031982],
-                name: 'Test address line, Warrington, Warrington',
-                point: {
-                  type: 'Point',
-                  coordinates: [53.393871307373047, -2.5893499851226807]
-                },
-                address: {
-                  addressLine: 'Test address line',
-                  adminDistrict: 'England',
-                  adminDistrict2: 'Warrington',
-                  countryRegion: 'United Kingdom',
-                  formattedAddress: 'Warrington, Warrington',
-                  locality: 'Warrington',
-                  countryRegionIso2: 'GB'
-                },
-                confidence: 'High',
-                entityType: 'PopulatedPlace',
-                geocodePoints: [
-                  {
-                    type: 'Point',
-                    coordinates: [53.393871307373047, -2.5893499851226807],
-                    calculationMethod: 'Rooftop',
-                    usageTypes: ['Display']
-                  }
-                ],
-                matchCodes: ['Good']
-              }
-            ]
-          }
-        ],
-        statusCode: 200,
-        statusDescription: 'OK',
-        traceId: 'b755f46d8f4e48a88e6e8a76c94aa775|DU00000D65|7.7.0.0|Ref A: 2D76360D146B4861AB917B06CE6569DE Ref B: DB3EDGE1113 Ref C: 2019-08-01T11:08:17Z'
-      }
-    }
-
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
-    sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
-
-    const location = require('../../server/services/location')
-
-    const result = await location.find('').then((resolvedValue) => {
-      return resolvedValue
-    }, (error) => {
-      return error
-    })
-
-    Code.expect(result).to.be.a.object()
-    Code.expect(result.Error).to.be.undefined()
-    Code.expect(result.name).to.equal('Warrington')
-  })
   lab.test('Invalid data returned from third party location search', async () => {
     const util = require('../../server/util')
 
@@ -396,7 +330,7 @@ lab.experiment('location service test', () => {
     const result = await Code.expect(rejects()).to.reject()
     Code.expect(result.message).to.equal('Invalid geocode results (no resourceSets)')
   })
-  lab.test('Check for Bing call with multiple resources returned', async () => {
+  lab.test('Bing call returns multiple resources', async () => {
     const util = require('../../server/util')
 
     const fakeLocationData = () => {
@@ -490,7 +424,7 @@ lab.experiment('location service test', () => {
     Code.expect(result.Error).to.be.undefined()
     Code.expect(result.name).to.equal('First location in resource array')
   })
-  lab.test('remove the duplicate city/town name', async () => {
+  lab.test('remove the duplicate city/town name in locality', async () => {
     const util = require('../../server/util')
 
     const fakeLocationData = () => {
@@ -505,7 +439,7 @@ lab.experiment('location service test', () => {
               {
                 __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
                 bbox: [53.367538452148437, -2.6395580768585205, 53.420841217041016, -2.5353000164031982],
-                name: 'Test address line, Warrington, Warrington',
+                name: 'Test address line',
                 point: {
                   type: 'Point',
                   coordinates: [53.393871307373047, -2.5893499851226807]
@@ -515,7 +449,7 @@ lab.experiment('location service test', () => {
                   adminDistrict: 'England',
                   adminDistrict2: 'Warrington',
                   countryRegion: 'United Kingdom',
-                  formattedAddress: 'Warrington, Warrington',
+                  formattedAddress: 'Warrington',
                   locality: 'Warrington, Warrington',
                   countryRegionIso2: 'GB'
                 },
@@ -555,7 +489,7 @@ lab.experiment('location service test', () => {
     Code.expect(result.Error).to.be.undefined()
     Code.expect(result.name).to.equal('Warrington')
   })
-  lab.test('additional city/town name after a , not removed', async () => {
+  lab.test('additional city/town name after a , in locality not removed if not duplicate', async () => {
     const util = require('../../server/util')
 
     const fakeLocationData = () => {
@@ -800,7 +734,7 @@ lab.experiment('location service test', () => {
     Code.expect(result.isUK).to.equal(true)
     Code.expect(result.isScotlandOrNorthernIreland).to.equal(true)
   })
-  lab.test('Check for location with same name as address', async () => {
+  lab.test('location with same name as address removed for anomimity', async () => {
     const util = require('../../server/util')
 
     const fakeLocationData = () => {
@@ -820,7 +754,7 @@ lab.experiment('location service test', () => {
                   51.507404,
                   -0.119396694
                 ],
-                name: 'London',
+                name: 'Richard Taunton House',
                 point: {
                   type: 'Point',
                   coordinates: [
@@ -829,12 +763,12 @@ lab.experiment('location service test', () => {
                   ]
                 },
                 address: {
-                  addressLine: 'London',
+                  addressLine: 'Richard Taunton House',
                   adminDistrict: 'England',
                   adminDistrict2: 'London',
                   countryRegion: 'United Kingdom',
                   formattedAddress: 'London SW1A 2AA',
-                  locality: 'London',
+                  locality: 'Richard Taunton House',
                   postalCode: 'SW1A 2AA',
                   countryRegionIso2: 'GB'
                 },
