@@ -104,7 +104,7 @@ lab.experiment('Flood service test', () => {
 
     Code.expect(result).to.equal('ok')
   })
-  lab.test('Test  getStationById endpoint', async () => {
+  lab.test('Test getStationById endpoint', async () => {
     const direction = 'u'
     const id = 1001
 
@@ -123,7 +123,7 @@ lab.experiment('Flood service test', () => {
 
     Code.expect(result).to.equal('ok')
   })
-  lab.test('Test  getStationsWithin endpoint', async () => {
+  lab.test('Test getStationsWithin endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
