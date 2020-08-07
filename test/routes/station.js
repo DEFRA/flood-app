@@ -1380,4 +1380,154 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('We take measurements more often as the risk of flooding increases.')
   })
+  lab.test('GET station/2033 should redirect to nrw page ', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationData = () => {
+      return {
+        rloi_id: 2033,
+        station_type: 'S',
+        qualifier: 'u',
+        telemetry_context_id: '13809678',
+        telemetry_id: '2072',
+        wiski_id: '2072',
+        post_process: false,
+        subtract: null,
+        region: 'Wales',
+        area: 'NRW-South East',
+        catchment: 'Severn Uplands',
+        display_region: '',
+        display_area: '',
+        display_catchment: '',
+        agency_name: 'Llanidloes',
+        external_name: 'Llanidloes',
+        location_info: 'Llanidloes',
+        x_coord_actual: 295500,
+        y_coord_actual: 284810,
+        actual_ngr: '',
+        x_coord_display: 295500,
+        y_coord_display: 284810,
+        site_max: '4',
+        wiski_river_name: 'River Severn',
+        date_open: '1994-03-28T23:00:00.000Z',
+        stage_datum: '158',
+        period_of_record: 'to date',
+        por_max_value: '3.072',
+        date_por_max: '1998-10-27T23:45:00.000Z',
+        highest_level: '2.778',
+        date_highest_level: '2012-06-08T22:45:00.000Z',
+        por_min_value: '0.759',
+        date_por_min: '2001-06-14T23:00:00.000Z',
+        percentile_5: '1.54',
+        percentile_95: '0.897',
+        comments: '',
+        status: 'Active',
+        status_reason: '',
+        status_date: null,
+        coordinates: '{"type":"Point","coordinates":[-3.53914009747622,52.4512181833538]}',
+        geography: '0101000020E61000001AFBF4AE28500CC0BA6E7684C1394A40',
+        centroid: '0101000020E61000001AFBF4AE28500CC0BA6E7684C1394A40'
+      }
+    }
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+
+    const stationPlugin = {
+      plugin: {
+        name: 'station',
+        register: (server, options) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(stationPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/station/2033'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(302)
+  })
+  lab.test('GET station/2042/upstream should redirect as upstream is specified ', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationData = () => {
+      return {
+        rloi_id: 2042,
+        station_type: 'M',
+        qualifier: 'u',
+        telemetry_context_id: '13810510',
+        telemetry_id: '2088',
+        wiski_id: '2088',
+        post_process: false,
+        subtract: null,
+        region: 'Midlands',
+        area: 'Staffordshire Warwickshire and West Midlands',
+        catchment: 'Warwickshire Avon',
+        display_region: 'Midlands',
+        display_area: '',
+        display_catchment: '',
+        agency_name: 'Lilbourne',
+        external_name: 'Lilbourne',
+        location_info: 'Lilbourne',
+        x_coord_actual: 456360,
+        y_coord_actual: 277780,
+        actual_ngr: '',
+        x_coord_display: 456360,
+        y_coord_display: 277780,
+        site_max: '3',
+        wiski_river_name: 'River Avon',
+        date_open: '1972-04-26T23:00:00.000Z',
+        stage_datum: '93.6',
+        period_of_record: 'to date',
+        por_max_value: '1.878',
+        date_por_max: '2016-03-09T15:30:00.000Z',
+        highest_level: '1.75',
+        date_highest_level: '2012-11-25T11:15:00.000Z',
+        por_min_value: '0.057',
+        date_por_min: '2003-10-20T04:45:00.000Z',
+        percentile_5: '0.659',
+        percentile_95: '0.098',
+        comments: '',
+        status: 'Active',
+        status_reason: '',
+        status_date: null,
+        coordinates: '{"type":"Point","coordinates":[-1.17316039381184,52.3951465511329]}',
+        geography: '0101000020E61000003F2646D543C5F2BF161F852994324A40',
+        centroid: '0101000020E61000003F2646D543C5F2BF161F852994324A40'
+      }
+    }
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+
+    const stationPlugin = {
+      plugin: {
+        name: 'station',
+        register: (server, options) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(stationPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/station/2042/upstream'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(302)
+  })
 })
