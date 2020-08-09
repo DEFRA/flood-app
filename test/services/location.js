@@ -292,8 +292,139 @@ lab.experiment('location service test', () => {
     const result = await Code.expect(rejects()).to.reject()
     Code.expect(result.message).to.equal('Invalid geocode results (no resourceSets)')
   })
+  lab.test('Invalid data returned from third party location search', async () => {
+    const util = require('../../server/util')
 
-  lab.test('Check for Bing call returning duplicate location name in description', async () => {
+    const fakeLocationData = () => {}
+
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
+
+    const location = require('../../server/services/location')
+
+    const rejects = async () => {
+      await location.find()
+    }
+
+    const result = await Code.expect(rejects()).to.reject()
+
+    Code.expect(result.message).to.equal('Invalid data returned from third party location search')
+  })
+  lab.test('Check for Bing call returning null value', async () => {
+    const util = require('../../server/util')
+
+    const fakeLocationData = () => {
+      return null
+    }
+
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
+
+    const location = require('../../server/services/location')
+
+    const rejects = async () => {
+      await location.find('').then((resolvedValue) => {
+        return resolvedValue
+      })
+    }
+
+    const result = await Code.expect(rejects()).to.reject()
+    Code.expect(result.message).to.equal('Invalid geocode results (no resourceSets)')
+  })
+  lab.test('Bing call returns multiple resources', async () => {
+    const util = require('../../server/util')
+
+    const fakeLocationData = () => {
+      return {
+        authenticationResultCode: 'ValidCredentials 6',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
+        resourceSets: [
+          {
+            estimatedTotal: 2,
+            resources: [
+              {
+                __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+                bbox: [53.367538452148437, -2.6395580768585205, 53.420841217041016, -2.5353000164031982],
+                name: 'First location in resource array',
+                point: {
+                  type: 'Point',
+                  coordinates: [53.393871307373047, -2.5893499851226807]
+                },
+                address: {
+                  addressLine: 'Test address line',
+                  adminDistrict: 'England',
+                  adminDistrict2: 'Warrington',
+                  countryRegion: 'United Kingdom',
+                  formattedAddress: 'Warrington, Warrington',
+                  locality: 'Warrington',
+                  countryRegionIso2: 'GB'
+                },
+                confidence: 'High',
+                entityType: 'PopulatedPlace',
+                geocodePoints: [
+                  {
+                    type: 'Point',
+                    coordinates: [53.393871307373047, -2.5893499851226807],
+                    calculationMethod: 'Rooftop',
+                    usageTypes: ['Display']
+                  }
+                ],
+                matchCodes: ['Good']
+              },
+              {
+                __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+                bbox: [53.367538452148443, -2.6395580768585243, 53.420841217041043, -2.5353000164031943],
+                name: 'Test address',
+                point: {
+                  type: 'Point',
+                  coordinates: [53.393871307373043, -2.5893499851226843]
+                },
+                address: {
+                  addressLine: 'Test address line',
+                  adminDistrict: 'England',
+                  adminDistrict2: 'Warrington',
+                  countryRegion: 'United Kingdom',
+                  formattedAddress: 'Warrington, Warrington',
+                  locality: 'Warrington',
+                  countryRegionIso2: 'GB'
+                },
+                confidence: 'High',
+                entityType: 'PopulatedPlace',
+                geocodePoints: [
+                  {
+                    type: 'Point',
+                    coordinates: [53.393871307373043, -2.5893499851226843],
+                    calculationMethod: 'Rooftop',
+                    usageTypes: ['Display']
+                  }
+                ],
+                matchCodes: ['Good']
+              }
+            ]
+          }
+        ],
+        statusCode: 200,
+        statusDescription: 'OK',
+        traceId: 'b755f46d8f4e48a88e6e8a76c94aa775|DU00000D65|7.7.0.0|Ref A: 2D76360D146B4861AB917B06CE6569DE Ref B: DB3EDGE1113 Ref C: 2019-08-01T11:08:17Z'
+      }
+    }
+
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
+
+    const location = require('../../server/services/location')
+
+    const result = await location.find('').then((resolvedValue) => {
+      return resolvedValue
+    }, (error) => {
+      return error
+    })
+
+    Code.expect(result).to.be.a.object()
+    Code.expect(result.Error).to.be.undefined()
+    Code.expect(result.name).to.equal('First location in resource array')
+  })
+  lab.test('remove the duplicate city/town name in locality', async () => {
     const util = require('../../server/util')
 
     const fakeLocationData = () => {
@@ -308,7 +439,7 @@ lab.experiment('location service test', () => {
               {
                 __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
                 bbox: [53.367538452148437, -2.6395580768585205, 53.420841217041016, -2.5353000164031982],
-                name: 'Test address line, Warrington, Warrington',
+                name: 'Test address line',
                 point: {
                   type: 'Point',
                   coordinates: [53.393871307373047, -2.5893499851226807]
@@ -318,11 +449,10 @@ lab.experiment('location service test', () => {
                   adminDistrict: 'England',
                   adminDistrict2: 'Warrington',
                   countryRegion: 'United Kingdom',
-                  formattedAddress: 'Warrington, Warrington',
-                  locality: 'Warrington',
+                  formattedAddress: 'Warrington',
+                  locality: 'Warrington, Warrington',
                   countryRegionIso2: 'GB'
                 },
-                // confidence: 'Medium',
                 confidence: 'High',
                 entityType: 'PopulatedPlace',
                 geocodePoints: [
@@ -358,5 +488,341 @@ lab.experiment('location service test', () => {
     Code.expect(result).to.be.a.object()
     Code.expect(result.Error).to.be.undefined()
     Code.expect(result.name).to.equal('Warrington')
+  })
+  lab.test('additional city/town name after a , in locality not removed if not duplicate', async () => {
+    const util = require('../../server/util')
+
+    const fakeLocationData = () => {
+      return {
+        authenticationResultCode: 'ValidCredentials 6',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
+        resourceSets: [
+          {
+            estimatedTotal: 1,
+            resources: [
+              {
+                __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+                bbox: [53.367538452148437, -2.6395580768585205, 53.420841217041016, -2.5353000164031982],
+                name: 'Test address line, Warrington, Warrington',
+                point: {
+                  type: 'Point',
+                  coordinates: [53.393871307373047, -2.5893499851226807]
+                },
+                address: {
+                  addressLine: 'Test address line',
+                  adminDistrict: 'England',
+                  adminDistrict2: 'Warrington',
+                  countryRegion: 'United Kingdom',
+                  formattedAddress: 'Warrington, Warrington',
+                  locality: 'Warrington, TEST',
+                  countryRegionIso2: 'GB'
+                },
+                confidence: 'High',
+                entityType: 'PopulatedPlace',
+                geocodePoints: [
+                  {
+                    type: 'Point',
+                    coordinates: [53.393871307373047, -2.5893499851226807],
+                    calculationMethod: 'Rooftop',
+                    usageTypes: ['Display']
+                  }
+                ],
+                matchCodes: ['Good']
+              }
+            ]
+          }
+        ],
+        statusCode: 200,
+        statusDescription: 'OK',
+        traceId: 'b755f46d8f4e48a88e6e8a76c94aa775|DU00000D65|7.7.0.0|Ref A: 2D76360D146B4861AB917B06CE6569DE Ref B: DB3EDGE1113 Ref C: 2019-08-01T11:08:17Z'
+      }
+    }
+
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
+
+    const location = require('../../server/services/location')
+
+    const result = await location.find('').then((resolvedValue) => {
+      return resolvedValue
+    }, (error) => {
+      return error
+    })
+
+    Code.expect(result).to.be.a.object()
+    Code.expect(result.Error).to.be.undefined()
+    Code.expect(result.name).to.equal('Warrington, TEST')
+  })
+  lab.test('Check for location outside of the UK', async () => {
+    const util = require('../../server/util')
+
+    const isEngland = () => {
+      return { is_england: false }
+    }
+
+    const fakeLocationData = () => {
+      return {
+        authenticationResultCode: 'ValidCredentials',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright © 2020 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
+        resourceSets: [
+          {
+            estimatedTotal: 1,
+            resources: [
+              {
+                __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+                bbox: [
+                  53.30989,
+                  -6.28652,
+                  53.31206,
+                  -6.2853
+                ],
+                name: 'Terenure Park, Dublin, County Dublin, D6W, Ireland',
+                point: {
+                  type: 'Point',
+                  coordinates: [
+                    53.31098,
+                    -6.28593
+                  ]
+                },
+                address: {
+                  addressLine: 'Terenure Park',
+                  adminDistrict: 'County Dublin',
+                  countryRegion: 'Ireland',
+                  formattedAddress: 'Terenure Park, Dublin, County Dublin, D6W, Ireland',
+                  locality: 'Dublin',
+                  postalCode: 'D6W',
+                  countryRegionIso2: 'IE'
+                },
+                confidence: 'High',
+                entityType: 'RoadBlock',
+                geocodePoints: [
+                  {
+                    type: 'Point',
+                    coordinates: [
+                      53.31098,
+                      -6.28593
+                    ],
+                    calculationMethod: 'Interpolation',
+                    usageTypes: [
+                      'Display'
+                    ]
+                  },
+                  {
+                    type: 'Point',
+                    coordinates: [
+                      53.31098,
+                      -6.28593
+                    ],
+                    calculationMethod: 'Interpolation',
+                    usageTypes: [
+                      'Route'
+                    ]
+                  }
+                ],
+                matchCodes: [
+                  'Good'
+                ]
+              }
+            ]
+          }
+        ],
+        statusCode: 200,
+        statusDescription: 'OK',
+        traceId: 'd330f134370d45208e97f7f9f7e41e11|DU00000D63|0.0.0.1|Ref A: 3D3CBEC2539A43AF8DFA27D094D509F0 Ref B: DB3EDGE0809 Ref C: 2020-08-03T12:34:03Z'
+      }
+    }
+
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
+
+    const location = require('../../server/services/location')
+
+    const result = await location.find('Terenure').then((resolvedValue) => {
+      return resolvedValue
+    }, (error) => {
+      return error
+    })
+
+    Code.expect(result).to.be.a.object()
+    Code.expect(result.address).to.equal('Terenure Park, Dublin, County Dublin, D6W, Ireland')
+    Code.expect(result.isUK).to.equal(false)
+    Code.expect(result.isScotlandOrNorthernIreland).to.equal(false)
+  })
+  lab.test('Check for location outside of England but in the UK', async () => {
+    const util = require('../../server/util')
+
+    const isEngland = () => {
+      return { is_england: false }
+    }
+
+    const fakeLocationData = () => {
+      return {
+        authenticationResultCode: 'ValidCredentials',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright © 2020 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
+        resourceSets: [
+          {
+            estimatedTotal: 2,
+            resources: [
+              {
+                __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+                bbox: [
+                  54.14351,
+                  -6.36584,
+                  54.21084,
+                  -6.30529
+                ],
+                name: 'Newry, Newry and Mourne',
+                point: {
+                  type: 'Point',
+                  coordinates: [
+                    54.1769,
+                    -6.34155
+                  ]
+                },
+                address: {
+                  adminDistrict: 'Northern Ireland',
+                  adminDistrict2: 'Newry and Mourne',
+                  countryRegion: 'United Kingdom',
+                  formattedAddress: 'Newry, Newry and Mourne',
+                  locality: 'Newry',
+                  countryRegionIso2: 'GB'
+                },
+                confidence: 'High',
+                entityType: 'PopulatedPlace',
+                geocodePoints: [
+                  {
+                    type: 'Point',
+                    coordinates: [
+                      54.1769,
+                      -6.34155
+                    ],
+                    calculationMethod: 'Rooftop',
+                    usageTypes: [
+                      'Display'
+                    ]
+                  }
+                ],
+                matchCodes: [
+                  'Ambiguous'
+                ]
+              }
+            ]
+          }
+        ],
+        statusCode: 200,
+        statusDescription: 'OK',
+        traceId: '97ff62188a0745baa8d8d7c5ad6ba6e7|DU00000D5B|0.0.0.1|Ref A: BE25EF947E7A481FB1BF54E82C0D3AC3 Ref B: DB3EDGE0908 Ref C: 2020-08-03T13:04:29Z'
+      }
+    }
+
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
+
+    const location = require('../../server/services/location')
+
+    const result = await location.find('newry').then((resolvedValue) => {
+      return resolvedValue
+    }, (error) => {
+      return error
+    })
+
+    Code.expect(result).to.be.a.object()
+    Code.expect(result.address).to.equal('Newry, Newry and Mourne')
+    Code.expect(result.isUK).to.equal(true)
+    Code.expect(result.isScotlandOrNorthernIreland).to.equal(true)
+  })
+  lab.test('location with same name as address removed for anomimity', async () => {
+    const util = require('../../server/util')
+
+    const fakeLocationData = () => {
+      return {
+        authenticationResultCode: 'ValidCredentials',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright © 2020 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
+        resourceSets: [
+          {
+            estimatedTotal: 1,
+            resources: [
+              {
+                __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+                bbox: [
+                  51.49968,
+                  -0.13594331,
+                  51.507404,
+                  -0.119396694
+                ],
+                name: 'Richard Taunton House',
+                point: {
+                  type: 'Point',
+                  coordinates: [
+                    51.50354,
+                    -0.12767
+                  ]
+                },
+                address: {
+                  addressLine: 'Richard Taunton House',
+                  adminDistrict: 'England',
+                  adminDistrict2: 'London',
+                  countryRegion: 'United Kingdom',
+                  formattedAddress: 'London SW1A 2AA',
+                  locality: 'Richard Taunton House',
+                  postalCode: 'SW1A 2AA',
+                  countryRegionIso2: 'GB'
+                },
+                confidence: 'High',
+                entityType: 'Address',
+                geocodePoints: [
+                  {
+                    type: 'Point',
+                    coordinates: [
+                      51.50354,
+                      -0.12767
+                    ],
+                    calculationMethod: 'Rooftop',
+                    usageTypes: [
+                      'Display'
+                    ]
+                  },
+                  {
+                    type: 'Point',
+                    coordinates: [
+                      51.503223,
+                      -0.12770759
+                    ],
+                    calculationMethod: 'Rooftop',
+                    usageTypes: [
+                      'Route'
+                    ]
+                  }
+                ],
+                matchCodes: [
+                  'Good'
+                ]
+              }
+            ]
+          }
+        ],
+        statusCode: 200,
+        statusDescription: 'OK',
+        traceId: 'af2702421c21415694695e07e8d01df5|DU00000D65|0.0.0.1|Ref A: 5EAB714B92AC412D8DB79686DB92BFD4 Ref B: DB3EDGE1519 Ref C: 2020-08-03T14:01:18Z'
+      }
+    }
+
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
+
+    const location = require('../../server/services/location')
+
+    const result = await location.find('Richard Taunton House').then((resolvedValue) => {
+      return resolvedValue
+    }, (error) => {
+      return error
+    })
+
+    Code.expect(result).to.be.a.object()
+    Code.expect(result.address).to.equal('London SW1A 2AA')
   })
 })
