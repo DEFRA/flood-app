@@ -10,12 +10,10 @@ function request (method, url, options, ext = false) {
     .then(response => {
       const res = response.res
       const payload = response.payload
-
       if (res.statusCode !== 200) {
         const err = (payload || new Error('Unknown error'))
         throw err
       }
-
       return payload
     })
 }
@@ -31,7 +29,6 @@ function post (url, options) {
 function postJson (url, options) {
   options = options || {}
   options.json = true
-
   return post(url, options)
 }
 

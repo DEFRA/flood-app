@@ -69,9 +69,7 @@ function Forecast (data, isCoastal, latestObserved) {
     FALThreshold: [],
     FWThreshold: []
   }
-
   // TODO THIS NEEDS A REFACTOR BADLY
-
   // Sort the thresholds and get their severity object
   function sortThresholds (threshold) {
     if (threshold.fwa_severity > -1) {
@@ -92,7 +90,6 @@ function Forecast (data, isCoastal, latestObserved) {
   data.thresholds.forEach(sortThresholds, this)
 
   this.hasWarnings = this.warnings[1] > 0 || this.warnings[2] > 0 || this.warnings[3] > 0
-
   if (this.hasWarnings) {
     if (this.warnings[3] === 1) {
       this.warningMessage = 'A severe flood warning is in place nearby.'

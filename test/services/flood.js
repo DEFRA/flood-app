@@ -252,9 +252,9 @@ lab.experiment('Flood service test', () => {
     Code.expect(result).to.equal('ok')
   })
   lab.test('Test getStationsGeoJson endpoint', async () => {
+    const util = require('../../server/util')
     sandbox.stub(config, 'geoserverUrl').value('http://server1')
 
-    const util = require('../../server/util')
     sandbox
       .mock(util)
       .expects('getJson')
