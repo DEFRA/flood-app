@@ -217,7 +217,6 @@ class ViewModel {
       } else {
         this.station.hasPercentiles = false
       }
-
       // Low/Med/High
       if (this.station.hasPercentiles) {
         if (this.station.type === 'c') {
