@@ -71,4 +71,17 @@ lab.experiment('Routes test - river-and-sea-levels', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
+  lab.test('POST /river-and-sea-levels with blank location', async () => {
+    const options = {
+      method: 'POST',
+      url: '/river-and-sea-levels',
+      payload: {
+        location: ''
+      }
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.headers['content-type']).to.include('text/html')
+  })
 })
