@@ -988,7 +988,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('Sankey Brook')
     Code.expect(response.statusCode).to.equal(200)
   })
-  lab.test('GET /river-and-sea-levels querey returns undefined', async () => {
+  lab.test('GET /river-and-sea-levels blank querey', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
