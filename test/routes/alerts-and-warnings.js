@@ -287,4 +287,74 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location')
     Code.expect(response.statusCode).to.equal(200)
   })
+  lab.test('GET /alerts-and-warnings ', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeFloodsData = () => []
+
+    const fakeStationsData = () => []
+    const fakeImpactsData = () => []
+
+    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+
+    const warningsPlugin = {
+      plugin: {
+        name: 'warnings',
+        register: (server, options) => {
+          server.route(require('../../server/routes/alerts-and-warnings'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(warningsPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('No flood alerts or warnings')
+    Code.expect(response.statusCode).to.equal(200)
+  })
+  lab.test('GET /alerts-and-warnings?station=1001 ', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationById = () => data.fakeGetStationById
+
+    const fakeAlertsWithinBuffer = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationById)
+    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeAlertsWithinBuffer)
+
+    const warningsPlugin = {
+      plugin: {
+        name: 'warnings',
+        register: (server, options) => {
+          server.route(require('../../server/routes/alerts-and-warnings'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(warningsPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings?station=1001'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('Showing alerts and warnings within 5 miles of Beeding Bridge.')
+    Code.expect(response.statusCode).to.equal(200)
+  })
 })

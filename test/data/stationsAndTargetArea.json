@@ -1,0 +1,36 @@
+{
+  "stations":[
+    {
+      "river_id":"worsley-brook",
+      "river_name":"Worsley Brook",
+      "navigable":true,
+      "view_rank":3,
+      "rank":1,
+      "rloi_id":5193,
+      "up":null,
+      "down":null,
+      "telemetry_id":"690350",
+      "region":"North West",
+      "catchment":"Northern Manchester",
+      "wiski_river_name":"Worsley Brook",
+      "agency_name":"Chestnut Road",
+      "external_name":"Chestnut Road",
+      "station_type":"S",
+      "status":"Active",
+      "qualifier":"u",
+      "iswales":false,
+      "value":"0.277",
+      "value_timestamp":"2020-08-18T15:00:00.000Z",
+      "value_erred":false,
+      "percentile_5":"1.79",
+      "percentile_95":"0.071",
+      "centroid":"0101000020E61000005CA23122290103C0D0E296FF3DBF4A40",
+      "lon":-2.37556673730823,
+      "lat":53.4940795408962
+    }
+  ],
+  "targetArea":{
+    "fws_tacode":"013WAFGL",
+    "ta_name":"River Glaze catchment including Leigh and East Wigan"
+  }
+}
