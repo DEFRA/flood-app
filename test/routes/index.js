@@ -17,12 +17,6 @@ lab.experiment('Get Routes test', () => {
       port: 3009,
       host: 'localhost'
     })
-
-    // await server.register(require('@hapi/inert'))
-    // await server.register(require('@hapi/h2o2'))
-    // await server.register(require('../../server/plugins/views'))
-    // await server.register(require('../../server/plugins/router'))
-    // await server.initialize()
   })
 
   lab.afterEach(async () => {

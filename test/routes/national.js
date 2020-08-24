@@ -27,7 +27,7 @@ lab.experiment('Routes test - national view', () => {
     await sandbox.restore()
   })
 
-  lab.test('GET /national view', async () => {
+  lab.test('GET /national view no alerts or warnings', async () => {
     // Create dummy flood data in place of cached data
     const fakeFloodData = () => {
       return {
