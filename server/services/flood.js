@@ -42,6 +42,7 @@ module.exports = {
     return util.getJson(`${serviceUrl}/floods`)
   },
 
+  // bbox refers to binding box defined using coordinates x1,y1 & x2, y2
   getFloodsWithin (bbox) {
     return util.getJson(`${serviceUrl}/floods-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`)
   },
@@ -56,6 +57,7 @@ module.exports = {
     return util.getJson(`${serviceUrl}/flood-area/${type}/${code}`)
   },
 
+  // fetching the flood guidance statement using service layer leveraging s3
   getOutlook () {
     return util.getJson(`${serviceUrl}/flood-guidance-statement`)
   },
@@ -64,6 +66,7 @@ module.exports = {
     return util.getJson(`${serviceUrl}/station/${id}/${direction}`)
   },
 
+  // get stations within the binding box defined using coordinates x1, y1 & x2, y2
   getStationsWithin (bbox) {
     return util.getJson(`${serviceUrl}/stations-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`)
   },
@@ -86,6 +89,7 @@ module.exports = {
     return util.getJson(`${serviceUrl}/river-station-by-station-id/${id}`)
   },
 
+  // direction is either 'u' or 'd'
   getStationTelemetry (id, direction) {
     return util.getJson(`${serviceUrl}/station/${id}/${direction}/telemetry`)
   },
@@ -110,6 +114,7 @@ module.exports = {
     return util.getJson(`${serviceUrl}/impacts/${id}`)
   },
 
+  // bbox refers to binding box defined using coordinates x1,y1 & x2,y2
   getImpactsWithin (bbox) {
     return util.getJson(`${serviceUrl}/impacts-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`)
   },
@@ -138,6 +143,7 @@ module.exports = {
     return util.getJson(`${serviceUrl}/telemetry-health`)
   },
 
+  // get flood forecast information service health
   getFfoiHealth () {
     return util.getJson(`${serviceUrl}/ffoi-health`)
   }
