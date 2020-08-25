@@ -14,11 +14,7 @@
           <strong class="bold-small">This station is closed and no data is available.</strong>
         </div>
         <br>
-        {#
-        <p class="nojs-hide ie-hide">
-          Use the <a href="/river-and-sea-levels?lat={{model.lat}}&lng={{model.long}}">map</a> to select another station.
-        </p>
-        #}
+
       {% else %}
         <!-- Station latest value banner -->
         {% if model.recentValue.err %}
@@ -32,11 +28,7 @@
           <p>
             Reasons for this include very low river levels or a technical fault with the measuring equipment.
           </p>
-          {#
-          <p class="nojs-hide ie-hide">
-            Use the <a href="/river-and-sea-levels?lat={{model.lat}}&lng={{model.long}}">map</a> to select another station.
-          </p>
-          #}
+
         {% else %}
           {% if model.station.isSuspended %}
             <div class="govuk-warning-text">
@@ -46,11 +38,6 @@
                 {{ model.station.statusReason if model.station.statusReason else "This station is temporarily closed and no data is available." }}
               </strong>
             </div>
-            {#
-            <p class="nojs-hide ie-hide">
-              Use the <a href="/river-and-sea-levels?lat={{model.lat}}&lng={{model.long}}">map</a> to select another station.
-            </p>
-            #}
           {% else %}
             {% if model.readings %}
               {% if model.ffoi.hasWarnings %}
@@ -78,13 +65,6 @@
                   </p>
                 {% endif %}
 
-                {#
-                {% if not model.isFfoi %}
-                  <p>
-                    <a href="{{model.warningsUrl}}">Check for flood warnings in this area</a>
-                  </p>
-                {% endif %}
-                #}
               {% endif %}
               {% if model.recentValue %}
                 <p>Latest recorded level <strong>{{model.recentValue._ | toFixed(2)}}m</strong> at 
