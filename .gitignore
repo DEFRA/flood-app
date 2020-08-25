@@ -4,8 +4,5 @@ node_modules
 npm-debug.log
 logs
 server/dist
-rivers/output.json
-rivers/rivers.json
-rivers/stations.json
 coverage
 lcov.info
