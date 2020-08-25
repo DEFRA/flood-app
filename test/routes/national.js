@@ -9,7 +9,6 @@ lab.experiment('Routes test - national view', () => {
   let sandbox
   let server
 
-  // Use a Sinon sandbox to manage spies, stubs and mocks for each test.
   lab.beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/util.js')]

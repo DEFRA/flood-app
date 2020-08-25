@@ -8,11 +8,10 @@ const config = require('../../server/config')
 lab.experiment('Flood service test', () => {
   let sandbox
 
-  // Use a Sinon sandbox to manage spies, stubs and mocks for each test.
   lab.beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/util.js')]
-    sandbox = await sinon.createSandbox()
+    sandbox = sinon.createSandbox()
     sandbox.stub(config, 'serviceUrl').value('http://server2')
   })
 
