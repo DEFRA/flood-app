@@ -9,7 +9,6 @@ const Rain = require('../../server/services/rain')
 lab.experiment('Flood service test', () => {
   let sandbox
 
-  // Use a Sinon sandbox to manage spies, stubs and mocks for each test.
   lab.beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/rain.js')]
     delete require.cache[require.resolve('../../server/util.js')]

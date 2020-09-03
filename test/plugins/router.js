@@ -9,7 +9,6 @@ lab.experiment('router plugin test', () => {
   let sandbox
   let server
 
-  // Use a Sinon sandbox to manage spies, stubs and mocks for each test.
   lab.beforeEach(async () => {
     sandbox = await sinon.createSandbox()
     server = Hapi.server({

@@ -109,7 +109,6 @@ lab.experiment('Outlook model test', () => {
 
   const outlook = new Outlook(outlookFakeData)
 
-  // Use a Sinon sandbox to manage spies, stubs and mocks for each test.
   lab.beforeEach(async () => {
     sandbox = await sinon.createSandbox()
   })

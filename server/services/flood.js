@@ -43,7 +43,8 @@ module.exports = {
   },
 
   getFloodsWithin (bbox) {
-    return util.getJson(`${serviceUrl}/floods-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`)
+    const xyCoordsPath = bbox.join('/')
+    return util.getJson(`${serviceUrl}/floods-within/${xyCoordsPath}`)
   },
 
   getFloodArea (code) {
@@ -56,6 +57,7 @@ module.exports = {
     return util.getJson(`${serviceUrl}/flood-area/${type}/${code}`)
   },
 
+  // fetching the flood guidance statement using service layer leveraging s3
   getOutlook () {
     return util.getJson(`${serviceUrl}/flood-guidance-statement`)
   },
@@ -65,7 +67,8 @@ module.exports = {
   },
 
   getStationsWithin (bbox) {
-    return util.getJson(`${serviceUrl}/stations-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`)
+    const xyCoordsPath = bbox.join('/')
+    return util.getJson(`${serviceUrl}/stations-within/${xyCoordsPath}`)
   },
 
   getStationsWithinTargetArea (taCode) {
@@ -86,6 +89,7 @@ module.exports = {
     return util.getJson(`${serviceUrl}/river-station-by-station-id/${id}`)
   },
 
+  // direction is either 'u' or 'd'
   getStationTelemetry (id, direction) {
     return util.getJson(`${serviceUrl}/station/${id}/${direction}/telemetry`)
   },
@@ -111,7 +115,8 @@ module.exports = {
   },
 
   getImpactsWithin (bbox) {
-    return util.getJson(`${serviceUrl}/impacts-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`)
+    const xyCoordsPath = bbox.join('/')
+    return util.getJson(`${serviceUrl}/impacts-within/${xyCoordsPath}`)
   },
 
   getRivers () {

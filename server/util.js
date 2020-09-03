@@ -64,7 +64,7 @@ function cleanseLocation (location) {
 }
 
 function addBufferToBbox (bbox, m) {
-  // Convert bbox into polygon, add buffer, and convert back to bbox as db query needs a bbox envelope
+  // Convert bbox (binding box) )into polygon, add buffer, and convert back to bbox as db query needs a bbox envelope
   return turf.bbox(turf.buffer(turf.bboxPolygon(bbox), m, { units: 'meters' }))
 }
 
