@@ -43,13 +43,8 @@ module.exports = {
   },
 
   getFloodsWithin (bbox) {
-    const coOrds = {
-      x1: bbox[0],
-      y1: bbox[1],
-      x2: bbox[2],
-      y2: bbox[3]
-    }
-    return util.getJson(`${serviceUrl}/floods-within/${coOrds.x1}/${coOrds.y1}/${coOrds.x2}/${coOrds.y2}`)
+    const xyCoordsPath = bbox.join('/')
+    return util.getJson(`${serviceUrl}/floods-within/${xyCoordsPath}`)
   },
 
   getFloodArea (code) {
@@ -72,13 +67,8 @@ module.exports = {
   },
 
   getStationsWithin (bbox) {
-    const coOrds = {
-      x1: bbox[0],
-      y1: bbox[1],
-      x2: bbox[2],
-      y2: bbox[3]
-    }
-    return util.getJson(`${serviceUrl}/stations-within/${coOrds.x1}/${coOrds.y1}/${coOrds.x2}/${coOrds.y2}`)
+    const xyCoordsPath = bbox.join('/')
+    return util.getJson(`${serviceUrl}/stations-within/${xyCoordsPath}`)
   },
 
   getStationsWithinTargetArea (taCode) {
@@ -125,13 +115,8 @@ module.exports = {
   },
 
   getImpactsWithin (bbox) {
-    const coOrds = {
-      x1: bbox[0],
-      y1: bbox[1],
-      x2: bbox[2],
-      y2: bbox[3]
-    }
-    return util.getJson(`${serviceUrl}/impacts-within/${coOrds.x1}/${coOrds.y1}/${coOrds.x2}/${coOrds.y2}`)
+    const xyCoordsPath = bbox.join('/')
+    return util.getJson(`${serviceUrl}/impacts-within/${xyCoordsPath}`)
   },
 
   getRivers () {
