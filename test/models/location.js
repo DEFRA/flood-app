@@ -8,13 +8,8 @@ const ViewModel = require('../../server/models/views/location')
 const data = require('../data')
 
 lab.experiment('Outlook model test', () => {
-  let sandbox
-
-  lab.beforeEach(async () => {
-    sandbox = await sinon.createSandbox()
-  })
   lab.afterEach(async () => {
-    await sandbox.restore()
+    await sinon.restore()
   })
   lab.test('Test location viewModel a with flood warning', async () => {
     const floodWarning = data.floodWarning

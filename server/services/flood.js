@@ -42,9 +42,14 @@ module.exports = {
     return util.getJson(`${serviceUrl}/floods`)
   },
 
-  // bbox refers to binding box defined using coordinates x1,y1 & x2, y2
   getFloodsWithin (bbox) {
-    return util.getJson(`${serviceUrl}/floods-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`)
+    const coOrds = {
+      x1: bbox[0],
+      y1: bbox[1],
+      x2: bbox[2],
+      y2: bbox[3]
+    }
+    return util.getJson(`${serviceUrl}/floods-within/${coOrds.x1}/${coOrds.y1}/${coOrds.x2}/${coOrds.y2}`)
   },
 
   getFloodArea (code) {
@@ -66,9 +71,14 @@ module.exports = {
     return util.getJson(`${serviceUrl}/station/${id}/${direction}`)
   },
 
-  // get stations within the binding box defined using coordinates x1, y1 & x2, y2
   getStationsWithin (bbox) {
-    return util.getJson(`${serviceUrl}/stations-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`)
+    const coOrds = {
+      x1: bbox[0],
+      y1: bbox[1],
+      x2: bbox[2],
+      y2: bbox[3]
+    }
+    return util.getJson(`${serviceUrl}/stations-within/${coOrds.x1}/${coOrds.y1}/${coOrds.x2}/${coOrds.y2}`)
   },
 
   getStationsWithinTargetArea (taCode) {
@@ -114,9 +124,14 @@ module.exports = {
     return util.getJson(`${serviceUrl}/impacts/${id}`)
   },
 
-  // bbox refers to binding box defined using coordinates x1,y1 & x2,y2
   getImpactsWithin (bbox) {
-    return util.getJson(`${serviceUrl}/impacts-within/${bbox[0]}/${bbox[1]}/${bbox[2]}/${bbox[3]}`)
+    const coOrds = {
+      x1: bbox[0],
+      y1: bbox[1],
+      x2: bbox[2],
+      y2: bbox[3]
+    }
+    return util.getJson(`${serviceUrl}/impacts-within/${coOrds.x1}/${coOrds.y1}/${coOrds.x2}/${coOrds.y2}`)
   },
 
   getRivers () {
@@ -143,7 +158,6 @@ module.exports = {
     return util.getJson(`${serviceUrl}/telemetry-health`)
   },
 
-  // get flood forecast information service health
   getFfoiHealth () {
     return util.getJson(`${serviceUrl}/ffoi-health`)
   }

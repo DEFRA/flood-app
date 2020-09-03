@@ -133,9 +133,9 @@ function LiveMap (mapId, options) {
       const props = feature.getProperties()
       let state = 'normal'
       // Stations
-      if (props.status === 'Suspended' || props.status === 'Closed' || (!props.value && !props.iswales)) { // Any station that is closed or suspended
+      if (props.status === 'Suspended' || props.status === 'Closed' || (!props.value && !props.iswales)) {
         state = 'error'
-      } else if (props.value && props.atrisk && props.type !== 'C' && !props.iswales) { // Any station (excluding sea levels) that is at risk
+      } else if (props.value && props.atrisk && props.type !== 'C' && !props.iswales) {
         state = 'high'
       }
       // WebGl: Feature properties must be strings or numbers
