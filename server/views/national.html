@@ -51,7 +51,7 @@
     {% if model.hasActiveFloods %}
       <span id="map-live"></span>
     {% endif %}
-    <p class="defra-flood-meta {% if model.hasActiveFloods %} defra-flood-meta--border govuk-!-margin-top-3{% endif %}  govuk-!-margin-bottom-6">
+    <p class="defra-flood-meta {% if model.hasActiveFloods or model.hasWarningsRemoved %} defra-flood-meta--border govuk-!-margin-top-3{% endif %}  govuk-!-margin-bottom-6">
       <time datetime="{{model.dateFormatted}}">{{model.dateFormatted}}</time>
     </p> 
 
@@ -115,7 +115,6 @@
       </nav>
     </aside>
   </div>
-
 </div>
 
 {% endblock %}
