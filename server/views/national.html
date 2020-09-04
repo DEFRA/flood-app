@@ -51,17 +51,17 @@
     {% if model.hasActiveFloods %}
       <span id="map-live"></span>
     {% endif %}
-    <p class="defra-flood-meta defra-flood-meta--border govuk-!-margin-top-6 govuk-!-margin-bottom-6">
+    <p class="defra-flood-meta {% if model.hasActiveFloods %} defra-flood-meta--border govuk-!-margin-top-3{% endif %}  govuk-!-margin-bottom-6">
       <time datetime="{{model.dateFormatted}}">{{model.dateFormatted}}</time>
-    </p>
+    </p> 
 
     <a href="/find-location" class="defra-button-start govuk-!-margin-bottom-7" data-module="govuk-button">
       Check for flooding near you
     </a>
 
-    <h2 class="govuk-heading-m">Check river, sea and groundwater levels</h2>
-    <p>There are around 2,500 measuring stations, most along main rivers and the coast. These levels can give you a better understanding of your flood risk.</p>
-    <p><a href="/river-and-sea-levels">Find a river, sea or groundwater level</a>.</p>
+    <h2 class="govuk-heading-m">Latest river, sea and groundwater levels</h2>
+    <p>There are around 2,500 measuring stations, most along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
+    <p><a href="/river-and-sea-levels">Find a river, sea or groundwater level</a></p>
 
     <h2 class="govuk-heading-m govuk-!-margin-top-2" id="outlook">Flood forecast for the next 5 days</h2>
     <p class="govuk-body">
@@ -71,7 +71,7 @@
     <span id="map-outlook"></span>
     {% endif %}
     <p class="defra-flood-meta defra-flood-meta--border govuk-!-margin-top-6 govuk-!-margin-bottom-4">
-      <time datetime="{{ model.outlook.timestampOutlook }}">Updated at {{ model.outlook.timestampOutlook | formatDate }}</time><br>
+      <time datetime="{{ model.outlook.timestampOutlook }}">{{ model.outlook.timestampOutlook }}</time><br>
       Produced by the Met Office and Environment Agency
     </p>
     {% include "partials/context-footer.html" %}
