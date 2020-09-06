@@ -13,7 +13,6 @@ const isEngland = () => {
 lab.experiment('location service test', () => {
   let sandbox
 
-  // Use a Sinon sandbox to manage spies, stubs and mocks for each test.
   lab.beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/location')]
     sandbox = await sinon.createSandbox()
@@ -22,11 +21,6 @@ lab.experiment('location service test', () => {
   lab.afterEach(async () => {
     await sandbox.restore()
   })
-
-  // lab.test('Check location service exists', () => {
-  //   Code.expect(location).to.be.a.object()
-  // })
-
   lab.test('Check for invalid location', async () => {
     const fakeLocationData = () => {
       return {}

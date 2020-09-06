@@ -2,16 +2,13 @@
 
 const Lab = require('@hapi/lab')
 const Hapi = require('@hapi/hapi')
-// const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
-// const config = require('../../server/config')
 
 lab.experiment('router on-post-handler test', () => {
   let sandbox
   let server
 
-  // Use a Sinon sandbox to manage spies, stubs and mocks for each test.
   lab.beforeEach(async () => {
     sandbox = await sinon.createSandbox()
     server = Hapi.server({
@@ -20,8 +17,6 @@ lab.experiment('router on-post-handler test', () => {
     })
     await server.register(require('@hapi/inert'))
     await server.register(require('@hapi/h2o2'))
-    // await server.register(require('../../server/plugins/views'))
-    // await server.register(require('../../server/plugins/router'))
     await server.register(require('../../server/plugins/on-post-handler'))
     await server.initialize()
   })

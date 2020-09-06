@@ -3,20 +3,10 @@
 const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
-const sinon = require('sinon')
 const ViewModel = require('../../server/models/views/location')
 const data = require('../data')
 
 lab.experiment('Outlook model test', () => {
-  let sandbox
-
-  // Use a Sinon sandbox to manage spies, stubs and mocks for each test.
-  lab.beforeEach(async () => {
-    sandbox = await sinon.createSandbox()
-  })
-  lab.afterEach(async () => {
-    await sandbox.restore()
-  })
   lab.test('Test location viewModel a with flood warning', async () => {
     const floodWarning = data.floodWarning
     const viewModel = new ViewModel(floodWarning)

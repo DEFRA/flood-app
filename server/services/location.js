@@ -51,7 +51,7 @@ async function find (location) {
 
   // Temporary addition to remove the duplicate city/town name
   if (name.split(',').length === 2) {
-    var parts = name.toLowerCase().split(',')
+    const parts = name.toLowerCase().split(',')
     if (parts[0].trim() === parts[1].trim()) {
       name = name.substr(0, name.indexOf(','))
     }

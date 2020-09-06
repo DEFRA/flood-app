@@ -2,7 +2,7 @@
 
 # flood-app
 
-This is the front end application for the Check for flooding service
+This is the front end application to check the flooding service
 
 ## Getting started
 

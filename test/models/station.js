@@ -11,7 +11,6 @@ const moment = require('moment-timezone')
 lab.experiment('Station model test', () => {
   let sandbox
 
-  // Use a Sinon sandbox to manage spies, stubs and mocks for each test.
   lab.beforeEach(async () => {
     sandbox = await sinon.createSandbox()
   })
