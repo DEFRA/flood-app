@@ -1,7 +1,9 @@
 const path = require('path')
+const env = process.env.NODE_ENV
+const inDev = env === 'dev' || env === 'development'
 module.exports = (env, argv) => ({
-  mode: 'development', // 'development' or 'production',
-  devtool: 'source-map', // 'source-map' or 'none',
+  mode: !inDev ? 'production' : 'development',
+  devtool: !inDev ? 'none' : 'source-map',
   entry: {
     core: './server/src/js/core',
     'alerts-and-warnings': './server/src/js/pages/alerts-and-warnings',
