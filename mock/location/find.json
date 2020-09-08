@@ -1,0 +1,14 @@
+{
+  "name": "Warrington",
+  "center": [ -2.587002992630005, 53.392662048339844 ],
+  "bbox": [
+    -2.6657945744149276,
+    53.35190353880631,
+    -2.5090504943942675,
+    53.43648430898617
+  ],
+  "address": "Warrington, Warrington",
+  "isEngland": { "is_england": true },
+  "isUK": true,
+  "isScotlandOrNorthernIreland": false
+}
