@@ -1,5 +1,5 @@
 const path = require('path')
-const env = require('./server/config').env
+const env = process.env.NODE_ENV
 const inDev = env === 'dev' || env === 'development'
 module.exports = (env, argv) => ({
   mode: !inDev ? 'production' : 'development',
