@@ -61,7 +61,11 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <p>
-     {{model.situation}}
+      {% if model.situation %}
+        {{model.situation}}
+      {% else %}
+        {{ model.displayableText }}
+      {% endif %}
     </p>
 
     <p class="defra-flood-meta defra-flood-meta--border govuk-!-margin-top-6 govuk-!-margin-bottom-6">
@@ -72,22 +76,11 @@
     
     <div><span id="map"></span></div>
 
-    {% if model.flood and model.severity.isActive %}
-    <div class="govuk-inset-text govuk-!-margin-top-2">
-      {% if model.severity.id === 3 %}
-      A severe flood warning means there is a danger to life. <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-severe-flood-warning">Find out what to do if you get a severe flood warning</a>.
-      {% elif model.severity.id == 2 %}
-      A flood warning means flooding is expected and you need to act now. <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-warning">Find out what to do if you get a flood warning</a>.
-      {% else %}
-      A flood alert means flooding is possible and you need to be prepared. <a href="/what-to-do-in-a-flood#what-to-do-if-you-get-a-flood-alert">Find out what to do if you get a flood alert</a>.
-      {% endif %}
-    </div>
-    {% endif %}
-    <p><a href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email.</a></p>
-    <h2 class="govuk-heading-m">Check river, sea or groundwater levels</h2>
-    <p>They can give you a better understanding of your flood risk.</p>
+    <h2 class="govuk-heading-m">Latest river, sea and groundwater levels</h2>
+    <p>Most measuring stations are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
     <p><a href="/river-and-sea-levels?target-area={{ model.targetArea }}">Find a river, sea or groundwater level in this area.</a></p>
-  
+    <p><a href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email.</a></p>
+
   {% include "partials/context-footer.html" %}
 
   </div>
