@@ -100,11 +100,11 @@ class ViewModel {
             if (group.floods.length === 1) {
               this.removedLink = `/target-area/${group.floods[0].ta_code}`
               this.removedLinkText = '1 flood alert or warning was removed '
-              this.removedText2 = 'in the last 24 hours.'
+              this.removedText = 'in the last 24 hours.'
             } else {
               this.removedLink = `/alerts-and-warnings?q=${location}#removed`
               this.removedLinkText = 'Flood alerts and warnings were removed'
-              this.removedText2 = 'in the last 24 hours'
+              this.removedText = 'in the last 24 hours'
             }
             break
         }
