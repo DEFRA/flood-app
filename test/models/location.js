@@ -71,7 +71,7 @@ lab.experiment('Outlook model test', () => {
     Code.expect(Result.bannerMainLink).to.equal('/target-area/011FWFNC6KC')
     Code.expect(Result.bannerSub).to.equal('Flooding is expected')
     Code.expect(Result.alertsSummaryLink).to.equal('/target-area/011WAFDW')
-    Code.expect(Result.alertsSummaryLinkText).to.equal('A flood alert')
+    Code.expect(Result.alertsSummaryLinkText).to.equal('1 flood alert')
     Code.expect(Result.alertsSummaryText).to.equal('is')
   })
   lab.test('Test alternate primaryStatement with multiple Flood Alert', async () => {

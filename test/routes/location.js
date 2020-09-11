@@ -666,7 +666,7 @@ lab.experiment('Routes test - location - 2', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('Some flooding is possible')
     Code.expect(response.payload).to.contain('There is a flood alert in this area')
-    Code.expect(response.payload).to.contain('The flood warning for <a href="/target-area/053WAF117BED">Barlings Eau and Duckpool Catchwater</a> was removed')
+    Code.expect(response.payload).to.contain('<a href="/target-area/053WAF117BED">1 flood alert or warning was removed </a> in the last 24 hours.')
   })
   lab.test('GET /location query not in England', async () => {
     const floodService = require('../../server/services/flood')
@@ -757,7 +757,7 @@ lab.experiment('Routes test - location - 2', () => {
     Code.expect(response.payload).to.contain('There is a danger to life')
     Code.expect(response.payload).to.contain('Severe flood warning for ')
     Code.expect(response.payload).to.contain('2 flood warnings')
-    Code.expect(response.payload).to.contain('A flood alert')
+    Code.expect(response.payload).to.contain('1 flood alert')
   })
   lab.test('GET /location with query parameters check for 1 warning 2 alerts 2 nlif', async () => {
     const floodService = require('../../server/services/flood')
@@ -886,9 +886,9 @@ lab.experiment('Routes test - location - 2', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain(' - flooding is possible')
+    Code.expect(response.payload).to.contain(' also in the wider area, where some flooding is possible.')
     Code.expect(response.payload).to.contain('Flood warning for')
-    Code.expect(response.payload).to.contain('Some flood alerts and warnings were removed')
+    Code.expect(response.payload).to.contain('Flood alerts and warnings were removed')
     Code.expect(response.payload).to.contain('in the last 24 hours')
   })
   lab.test('GET /location with query parameters check for 2 severe warnings', async () => {
