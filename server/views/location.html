@@ -61,18 +61,16 @@
     {% if model.hasFloods %}
       {% if model.alerts  %}
       <p class="govuk-body">
-        <a href="{{ model.alertsSummaryLink }}">{{ model.alertsSummaryLinkText }}</a> {{ model.alertsSummaryText }} in this area - flooding is possible. 
+        <a href="{{ model.alertsSummaryLink }}">{{ model.alertsSummaryLinkText }}</a> {{ model.alertsSummaryText }} also in the wider area, where some flooding is possible. 
       </p>
       {% endif %}
       {% if model.removed  %}
       <p class="govuk-body">
-        {{ model.removedText1 }}<a href="{{ model.removedLink }}">{{ model.removedLinkText }}</a> {{ model.removedText2 }}
+        <a href="{{ model.removedLink }}">{{ model.removedLinkText }}</a> {{ model.removedText }}
       </p>
       {% endif %}
     {% else %}
-      <p class="govuk-body">
-        Not what you expected? This service tells you your risk of flooding from rivers, the sea and groundwater. If there's surface water flooding (also known as flash flooding) in your area, <a href="https://www.gov.uk/find-local-council">contact your local council</a>.
-      </p>
+      <p>This service tells you your risk of flooding from rivers, the sea and groundwater. <a href="https://www.gov.uk/find-local-council">Contact your local council about surface water flooding</a> (also known as flash flooding).</p>
     {% endif %}
 
     {% if model.hasActiveFloods %}
@@ -83,20 +81,20 @@
       <time datetime="{{model.dateFormatted}}">{{model.dateFormatted}}</time>
     </p>
 
-    <p><a href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
-
+    
     <!-- River and sea levels -->
-    <h2 class="govuk-heading-m">Latest river, sea and groundwater levels</h2>
+    <h2 class="govuk-heading-m">Check river, sea and groundwater levels</h2>
     <p>Most measuring stations are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
-    <p><a href="/river-and-sea-levels?q={{ model.location }}">Find a river, sea or groundwater level in this area</a></p>
+    <p><a href="/river-and-sea-levels?q={{ model.location }}">Find a river, sea or groundwater level in this area</a></p> 
     <!-- end river and sea levels -->
-
+    
     {% if model.hasActiveImpacts %}
     <p class="govuk-body">
       Historic records show <a href="/historic-impacts?q={{ model.q }}">{{ model.activeImpacts.length }} flood impact{% if model.activeImpacts.length > 1 %}s{% endif %}</a> in this area at current river levels.
     </p>
     {% endif %}
-
+    
+    <p><a href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
     {% include "partials/context-footer.html" %}
     
   </div>
