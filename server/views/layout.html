@@ -83,6 +83,13 @@
     }) }}
   {% endif %}
 
+  <!-- If external http calls are being mocked -->
+  {% if isMockExternalHttp %}
+    {{ govukWarningText({
+      html: 'External Http requests are currently being mocked on this service,  please view the <a href="https://flood-warning-information.service.gov.uk/warnings">production service</a> for up to date warnings data',
+      iconFallbackText: "Warning"
+    }) }}
+  {% endif %}
     {{ govukPhaseBanner({
     tag: {
       text: "Beta"

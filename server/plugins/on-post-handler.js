@@ -1,5 +1,5 @@
 // Plugin is to add some fields required by the service layout to route context object
-const { siteUrl } = require('../config')
+const { siteUrl, mockExternalHttp } = require('../config')
 const floodService = require('../services/flood')
 
 module.exports = {
@@ -18,6 +18,7 @@ module.exports = {
           if (request.response.source.context) {
             request.response.source.context.fullUrl = encodeURI(fullUrl)
             request.response.source.context.isDummyData = floodService.floods.isDummyData
+            request.response.source.context.isMockExternalHttp = mockExternalHttp
             if (request.response.source.context.model) {
               request.response.source.context.model.referer = request.headers.referer
             } else {
@@ -29,6 +30,7 @@ module.exports = {
             request.response.source.context = {
               fullUrl: encodeURI(fullUrl),
               isDummyData: floodService.floods.isDummyData,
+              isMockExternalHttp: floodService.mockExternalHttp,
               model: {
                 referer: request.headers.referer
               }

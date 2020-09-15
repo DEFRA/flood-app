@@ -20,7 +20,8 @@ const schema = joi.object({
   fbAppId: joi.string().default(''),
   siteUrl: joi.string().default(`http://localhost:${defaultPort}`),
   floodRiskUrl: joi.string().default(`http://localhost:${defaultPort}`),
-  sessionPassword: joi.string()
+  sessionPassword: joi.string(),
+  mockExternalHttp: joi.boolean().default(false)
 })
 
 // Build config
@@ -39,7 +40,8 @@ const config = {
   fbAppId: process.env.FLOOD_APP_FBAPP_ID,
   siteUrl: process.env.FLOOD_APP_SITE_URL,
   floodRiskUrl: process.env.FLOOD_RISK_URL,
-  sessionPassword: process.env.FLOOD_APP_SESSION_PASSWORD
+  sessionPassword: process.env.FLOOD_APP_SESSION_PASSWORD,
+  mockExternalHttp: process.env.FLOOD_APP_MOCK_EXTERNAL_HTTP
 }
 
 // Validate config
