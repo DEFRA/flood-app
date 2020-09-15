@@ -9,7 +9,7 @@ class ViewModel {
       metaCanonical: '/national',
       hasActiveFloods: floods.hasActiveFloods,
       highestSeverityId: floods.highestSeverityId,
-      dateFormatted: 'Up to date as of ' + moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY'),
+      dateFormatted: 'Updated ' + moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY'),
       feedback: true,
       hasWarningsRemoved: floods._groups[3].name === 4 && floods._groups[3].count > 0,
       timestampOutlook: 'Updated at ' + moment(outlook._timestampOutlook).tz('Europe/London').format('h:mma') + ' on ' + moment(outlook._timestampOutlook).tz('Europe/London').format('D MMMM YYYY'),

@@ -1,5 +1,6 @@
+const moment = require('moment-timezone')
 const severity = require('../models/severity')
-const { groupBy, formatDate } = require('../util')
+const { groupBy } = require('../util')
 
 class Floods {
   constructor (data, national = true) {
@@ -20,7 +21,7 @@ class Floods {
                               ${item.id === 4 ? 'Removed' : 'Updated'}
                           </dt>
                           <dd>
-                              <time datetime="${flood.situation_changed}">${formatDate(flood.situation_changed)}</time>
+                              <time datetime="${flood.situation_changed}">${moment.tz(flood.situation_changed, 'Europe/London').format('h:mma')} on ${moment(flood.situation_changed).tz('Europe/London').format('D MMMM YYYY')}</time>
                           </dd>
                             </div>
                         </dl>
