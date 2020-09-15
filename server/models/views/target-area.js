@@ -37,9 +37,12 @@ class ViewModel {
     const areaDescription = `Flood ${type} area: ${area.description}`
     const parentAreaAlert = (!!(((flood && severityLevel.id === 4) && (type === 'warning')) || !flood) && (parentSeverityLevel && parentSeverityLevel.isActive))
 
-    const situationChanged = flood
+    let situationChanged = flood
       ? `Updated ${timeSituationChanged} on ${dateSituationChanged}`
       : `Up to date as of ${timeSituationChanged} on ${dateSituationChanged}`
+    if (flood && severityLevel.id === 4) {
+      situationChanged = `Removed ${timeSituationChanged} on ${dateSituationChanged}`
+    }
 
     const pageTitle = (severityLevel && severityLevel.isActive ? severityLevel.title + ' for ' + area.name : `${area.name} flood ${type} area`)
     const metaDescription = `Advice and guidance for residents living in the flood risk area: ${area.description}.`
