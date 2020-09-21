@@ -17,8 +17,11 @@ class ViewModel {
 
     const mapTitle = `View map of the flood ${type} area`
 
-    const displayableText = type === 'warning' ? 'We\'ll update this page when there\'s a flood warning in the area.\nA flood warning means flooding to some property is expected. ' +
-      'A severe flood warning means there\'s a danger to life.' : 'We\'ll update this page when there\'s a flood alert in the area, which means flooding to low lying land is possible.'
+    const displayableText1 = `We'll update this page when there's a flood ${type} in the area.`
+    const displayableText2 = type === 'alert'
+      ? 'A flood alert means flooding to low lying land is possible.'
+      : 'A flood warning means flooding to some property is expected. A severe flood warning means there\'s a danger to life.'
+
     let situation = flood ? flood.situation : ''
 
     const dateSituationChanged = flood
@@ -58,7 +61,8 @@ class ViewModel {
       severity: severityLevel,
       situationChanged,
       situation: situation,
-      displayableText: displayableText,
+      displayableText1: displayableText1,
+      displayableText2: displayableText2,
       parentAreaAlert: parentAreaAlert,
       areaDescription: areaDescription,
       targetArea: area.code,
