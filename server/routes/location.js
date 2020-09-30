@@ -24,7 +24,7 @@ module.exports = {
       return h.redirect('/find-location')
     }
     if (!place.isEngland.is_england) {
-      return h.view('location-not-england')
+      return h.view('location-not-england', { pageTitle: 'This service covers England only - River and sea levels in England' })
     }
     const [
       impacts,
