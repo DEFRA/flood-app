@@ -16,7 +16,7 @@ module.exports = [{
       return h.view('impacts', { model })
     }
     if (!place.isEngland.is_england) {
-      return h.view('location-not-england')
+      return h.view('location-not-england', { pageTitle: 'This service covers England only - River and sea levels in England' })
     }
     impacts = await floodService.getImpactsWithin(place.bbox)
     model = new ViewModel({ location, place, impacts })
