@@ -37,20 +37,14 @@ module.exports = {
       return h.redirect(nrwStationUrl + id)
     }
 
-    // Get telemetry
-    const telemetry = await floodService.getStationTelemetry(id, direction)
-
-    // Get thresholds first as this will tell us if should be a forecast or not
-    const thresholds = await floodService.getStationForecastThresholds(id)
-
-    // Get impacts for the station
-    const impacts = await floodService.getImpactData(station.rloi_id)
-
-    // Get warnings and alerts within station buffer
-
-    const coords = JSON.parse(station.coordinates)
-
-    const warningsAlerts = await floodService.getWarningsAlertsWithinStationBuffer(coords.coordinates)
+    // batching all the service calls together, greatly improves page performance
+    const [telemetry, thresholds, impacts, warningsAlerts, river] = await Promise.all([
+      floodService.getStationTelemetry(id, direction),
+      floodService.getStationForecastThresholds(id),
+      floodService.getImpactData(station.rloi_id),
+      floodService.getWarningsAlertsWithinStationBuffer(station.rloi_id),
+      floodService.getRiverStationByStationId(id)
+    ])
 
     if (station.status === 'Closed') {
       const river = []
@@ -58,10 +52,8 @@ module.exports = {
       return h.view('station', { model })
     }
 
-    const river = await floodService.getRiverStationByStationId(id)
-
     // Check if it's a forecast station
-    if (thresholds.length) { // DL: getStationForecastThresholds can return an empty object??
+    if (thresholds.length) {
       // Forecast station
       const values = await floodService.getStationForecastData(station.wiski_id)
       const forecast = { thresholds, values }

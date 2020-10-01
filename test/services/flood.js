@@ -160,13 +160,13 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/warnings-alerts-within-station-buffer/1/2')
+      .withArgs('http://server2/warnings-alerts-within-station-buffer/1001')
       .once()
       .returns('ok')
 
     const floodService = require('../../server/services/flood')
 
-    const result = await floodService.getWarningsAlertsWithinStationBuffer([1, 2])
+    const result = await floodService.getWarningsAlertsWithinStationBuffer([1001])
 
     Code.expect(result).to.equal('ok')
   })
