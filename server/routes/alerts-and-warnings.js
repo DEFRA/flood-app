@@ -18,9 +18,7 @@ module.exports = [{
       : null
 
     if (station) {
-      // Get warnings and alerts within station buffer
-      const coords = JSON.parse(station.coordinates)
-      const warningsAlerts = await floodService.getWarningsAlertsWithinStationBuffer(coords.coordinates)
+      const warningsAlerts = await floodService.getWarningsAlertsWithinStationBuffer(station.rloi_id)
       floods = new Floods({ floods: warningsAlerts })
       model = new ViewModel({ location, place, floods, station })
       return h.view('alerts-and-warnings', { model })
