@@ -469,12 +469,14 @@ lab.experiment('Test - /station/{id}', () => {
     const fakeImpactsData = () => []
     const fakeThresholdsData = () => []
     const fakeWarningsAlertsData = () => []
+    const fakeRiverStationData = () => []
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
+    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverStationData)
 
     const stationPlugin = {
       plugin: {
