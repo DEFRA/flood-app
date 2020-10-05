@@ -12,8 +12,9 @@ module.exports = [{
     let model, place, stations
     // If river-id provided show the river
     if (request.query['river-id']) {
-      const stations = await floodService.getRiverById(request.query['river-id'])
-      model = new ViewModel({ location, place, stations })
+      const riverId = request.query['river-id']
+      const stations = await floodService.getRiverById(riverId)
+      model = new ViewModel({ location, place, stations, riverId })
       return h.view('river-and-sea-levels', { model })
       // Else target-area
     } else if (request.query['target-area']) {
