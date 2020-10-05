@@ -144,9 +144,6 @@
         display: block;
         padding-left:0px;
         @include govuk-font($size: 19, $weight: bold);
-        a {
-            text-decoration:none;
-        }
     }
     &__item-desc,
     &__item-meta {
