@@ -104,7 +104,7 @@ class ViewModel {
             } else {
               this.removedLink = `/alerts-and-warnings?q=${location}#removed`
               this.removedLinkText = 'Flood alerts and warnings were removed'
-              this.removedText = 'in the last 24 hours'
+              this.removedText = 'in the last 24 hours.'
             }
             break
         }
