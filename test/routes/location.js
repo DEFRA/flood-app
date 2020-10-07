@@ -507,7 +507,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('No flood alerts or warnings')
-    Code.expect(response.payload).to.contain('Call Floodline for advice about flooding from rivers, the sea and groundwater')
+    Code.expect(response.payload).to.contain('Call Floodline for advice')
   })
   lab.test('GET /location with query parameters check for no warnings', async () => {
     const floodService = require('../../server/services/flood')
