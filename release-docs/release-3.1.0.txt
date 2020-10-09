@@ -17,7 +17,7 @@ Note: The cached data set is going to be updated/delivered into the service in t
 	a: Add following to properties:
 
 DB_REPO_BRANCH=master
-DB_REPO_URL=####GET OAUTH KEY AND URL FROM SETTINGS####
+DB_REPO_URL=https://github.com/DEFRA/flood-db.git
 DB_REPO_DIRECTORY=flood-db
 
 	b: Save and execute job
