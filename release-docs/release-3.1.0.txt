@@ -1,0 +1,25 @@
+# Service refresh release-3.1.0
+
+# Tickets
+fis-708
+
+# Information
+
+This is a release to sort out some performance issues for first round of performance testing.  The App is changed to get the 8km TA to station relationship from a cached dataset, as opposed to inline which is causing a service/database bottleneck
+
+# Instructions
+
+Note: The cached data set is going to be updated/delivered into the service in the same job that updates the target area dataset, as this is the time that the dataset will need to be refreshed fully.
+
+1.	Execute job: LFW_{stage}_02_UPDATE_DATABASE
+2.	Execute job: LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+3.	Update job: LFW_{stage}_99_LOAD_FLOOD_ALERT_AREAS
+	a: Add following to properties:
+
+DB_REPO_BRANCH=master
+DB_REPO_URL=https://d0aae2796f51091f7bb50bf2f40e36f611925431:x-oauth-basic@github.com/DEFRA/flood-db.git
+DB_REPO_DIRECTORY=flood-db
+
+	b: Save and execute job
+
+Confirm with developers that deployment was successful.
