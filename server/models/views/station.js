@@ -113,7 +113,6 @@ class ViewModel {
     } else {
       this.isAlertLinkRendered = true
     }
-
     this.id = this.station.id
     this.telemetry = telemetry || []
     this.catchments = []
