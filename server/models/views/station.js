@@ -41,77 +41,90 @@ class ViewModel {
     switch (numAlerts) {
       case 0:
         break
+      case 1:
+        if (!numWarnings && !numSevereWarnings) {
+          this.severityLevel = 'alert'
+          this.alertsBanner = 'There is a flood alert in this area'
+          this.alertsLink = `/target-area/${warningsAlertsGroups['1'][0].ta_code}`
+        }
+        this.isAlertLinkRendered = true
+        break
       default: {
         this.severityLevel = 'alert'
+        this.alertsBanner = 'There are flood alerts in this area'
         this.alertsLink = `/alerts-and-warnings?station=${this.station.id}#alerts`
-        this.alertsBanner = `${numAlerts} flood alert`
-
-        if (numAlerts === 1) {
-          if (!numWarnings && !numSevereWarnings) {
-            this.alertsBanner = 'There is a flood alert in this area'
-          }
-          this.alertsLink = `/target-area/${warningsAlertsGroups['1'][0].ta_code}`
-        } else {
-          this.alertsBanner += 's'
-        }
+        this.isAlertLinkRendered = true
       }
     }
 
     switch (numWarnings) {
       case 0:
         break
-      default: {
-        this.severityLevel = 'warning'
-        this.warningsLink = `/alerts-and-warnings?station=${this.station.id}#warnings`
-        this.warningsBanner = `${numWarnings} flood warning`
-
-        if (numWarnings === 1) {
-          if (!numAlerts && !numSevereWarnings) {
-            this.warningsBanner = `Flood warning for ${warningsAlertsGroups['2'][0].ta_name}`
-          }
+      case 1:
+        if (!numAlerts && !numSevereWarnings) {
+          this.severityLevel = 'warning'
+          this.warningsBanner = `Flood warning for ${warningsAlertsGroups['2'][0].ta_name}`
           this.warningsLink = `/target-area/${warningsAlertsGroups['2'][0].ta_code}`
         } else {
-          this.warningsBanner += 's'
-          if (!numAlerts && !numSevereWarnings) {
-            this.warningsBanner += ' in this area'
-          }
+          this.severityLevel = 'warning'
+          this.warningsBanner = 'There is a flood warning in this area'
+          this.warningsLink = `/alerts-and-warnings?station=${this.station.id}#warnings`
         }
+        this.isWarningLinkRendered = true
+        break
+      default: {
+        this.severityLevel = 'warning'
+        this.warningsBanner = 'There are flood warnings in this area'
+        this.warningsLink = `/alerts-and-warnings?station=${this.station.id}#warnings`
+        this.isWarningLinkRendered = true
       }
     }
 
     switch (numSevereWarnings) {
       case 0:
         break
-      default: {
-        this.severityLevel = 'warning'
-        this.severeLink = `/alerts-and-warnings?station=${this.station.id}#severe`
-        this.severeBanner = `${numSevereWarnings} severe flood warning`
-
-        if (numSevereWarnings === 1) {
-          if (!numAlerts && !numWarnings) {
-            this.severeBanner = `Severe flood warning for ${warningsAlertsGroups['3'][0].ta_name}`
-          }
+      case 1:
+        if (!numAlerts && !numWarnings) {
+          this.severityLevel = 'severe'
+          this.severeBanner = `Severe flood warning for ${warningsAlertsGroups['3'][0].ta_name}`
           this.severeLink = `/target-area/${warningsAlertsGroups['3'][0].ta_code}`
         } else {
-          this.severeBanner += 's'
-          if (!numAlerts && !numWarnings) {
-            this.warningsBanner += ' in this area'
-          }
+          this.severityLevel = 'severe'
+          this.severeBanner = 'There is a severe flood warning in this area'
+          this.severeLink = `/alerts-and-warnings?station=${this.station.id}#severe`
         }
+        this.isSevereLinkRenedered = true
+        break
+      default: {
+        this.severityLevel = 'severe'
+        this.severeBanner = 'There are severe flood warnings in this area'
+        this.severeLink = `/alerts-and-warnings?station=${this.station.id}#severe`
+        this.isSevereLinkRenedered = true
       }
     }
 
-    if (numSevereWarnings) {
-      if (numAlerts && numWarnings) {
-        this.severeAnd = ', '
-        this.warningAnd = ' and '
-      } else if (numAlerts || numWarnings) {
-        this.severeAnd = ' and '
-      }
-    } else if (numAlerts && numWarnings) {
-      this.warningAnd = ' and '
+    if (numSevereWarnings && (numWarnings || numAlerts)) {
+      this.isSevereLinkRenedered = true
+      this.isWarningLinkRendered = false
+      this.isAlertLinkRendered = false
+    } else if (numWarnings && numAlerts) {
+      this.isWarningLinkRendered = true
+      this.isAlertLinkRendered = false
+    } else {
+      this.isAlertLinkRendered = true
     }
-
+    //
+    // if (numSevereWarnings) {
+    //   if (numAlerts && numWarnings) {
+    //     this.severeAnd = ', '
+    //     this.warningAnd = ' and '
+    //   } else if (numAlerts || numWarnings) {
+    //     this.severeAnd = ' and '
+    //   }
+    // } else if (numAlerts && numWarnings) {
+    //   this.warningAnd = ' and '
+    // }
+    //
     this.id = this.station.id
     this.telemetry = telemetry || []
     this.catchments = []
