@@ -22,9 +22,9 @@ function LineChart (containerId, data) {
   let hasObserved = false
   let hasForecast = false
   if (data.observed.length) {
-    lines = data.observed.reverse()
+    lines = data.observed.filter(l => !(l.err || l._ < 0)).reverse()
     // First chronolgical point
-    dataPoint = JSON.parse(JSON.stringify(data.observed[data.observed.length - 1]))
+    dataPoint = JSON.parse(JSON.stringify(lines[0]))
     hasObserved = true
   }
   if (data.forecast.length) {
@@ -64,8 +64,8 @@ function LineChart (containerId, data) {
   let observedArea, observed, forecastArea, forecast
   if (hasObserved) {
     chartWrapper.append('g').classed('observed observed-focus', true)
-    observedArea = svg.select('.observed').append('path').datum(data.observed).classed('observed-area', true)
-    observed = svg.select('.observed').append('path').datum(data.observed).classed('observed-line', true)
+    observedArea = svg.select('.observed').append('path').datum(lines).classed('observed-area', true)
+    observed = svg.select('.observed').append('path').datum(lines).classed('observed-line', true)
   }
   if (hasForecast) {
     chartWrapper.append('g').classed('forecast', true)
