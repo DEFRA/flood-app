@@ -113,18 +113,7 @@ class ViewModel {
     } else {
       this.isAlertLinkRendered = true
     }
-    //
-    // if (numSevereWarnings) {
-    //   if (numAlerts && numWarnings) {
-    //     this.severeAnd = ', '
-    //     this.warningAnd = ' and '
-    //   } else if (numAlerts || numWarnings) {
-    //     this.severeAnd = ' and '
-    //   }
-    // } else if (numAlerts && numWarnings) {
-    //   this.warningAnd = ' and '
-    // }
-    //
+
     this.id = this.station.id
     this.telemetry = telemetry || []
     this.catchments = []
