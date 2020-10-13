@@ -37,13 +37,13 @@ function LineChart (containerId, data) {
   let dataPointLocator = dataPointLatest
 
   // Area generator
-  const area = d3.area().curve(d3.curveCardinal)
+  const area = d3.area().curve(d3.curveMonotoneX)
     .x(function (d) { return x(new Date(d.ts)) })
     .y0(function (d) { return height })
     .y1(function (d) { return y(d._) })
 
   // Line generator
-  const line = d3.line().curve(d3.curveCardinal)
+  const line = d3.line().curve(d3.curveMonotoneX)
     .x(function (d) { return x(new Date(d.ts)) })
     .y(function (d) { return y(d._) })
 
