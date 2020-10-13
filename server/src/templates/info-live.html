@@ -53,20 +53,4 @@
 {% if model.down %}
 <button class="defra-map-info__button defra-map-info__button--down govuk-!-margin-bottom-1" data-id="stations.{{ model.down }}">Downstream</button>
 {% endif %}
-{% elif model.stationReference %}
-<h2 class="govuk-body govuk-!-margin-bottom-1">Rainfall</h2>
-<p class="govuk-body-s govuk-!-margin-bottom-1">
-    <strong><a class="defra-map-info__link" href="/rain-guage/{{ model.id }}">Measurment at grid ref {{ model.gridRef }}</a></strong></br>
-    {% if model.value > 0 %}
-    {{ model.value }}mm in the last 24 hour period
-    {% else %}
-    0mm or no recent measurements
-    {% endif %}
-</p>
-{% elif model.stationReference %}
-<h2 class="govuk-body govuk-!-margin-bottom-1">Historic flooding</h2>
-<p class="govuk-body-s govuk-!-margin-bottom-1">
-    <strong>{{ props.description }}</strong><br/>
-    <a href="/station/{{ props.stationId }}?t={{ props.impactId }}">River level at {{ props.stationName }}</a>
-</p>
 {% endif %}
