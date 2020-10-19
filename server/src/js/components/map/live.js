@@ -29,7 +29,8 @@ function LiveMap (mapId, options) {
   const state = {
     visibleFeatures: [],
     selectedFeatureId: '',
-    initialExt: []
+    initialExt: [],
+    hasOverlays: false
   }
 
   // View
@@ -79,7 +80,9 @@ function LiveMap (mapId, options) {
     layers: layers,
     queryParamKeys: ['v', 'lyr', 'ext', 'fid'],
     interactions: interactions,
-    headingText: options.headingText,
+    originalTitle: options.originalTitle,
+    title: options.title,
+    heading: options.heading,
     keyTemplate: 'key-live.html',
     isBack: options.isBack
   }
@@ -88,10 +91,13 @@ function LiveMap (mapId, options) {
   const container = new MapContainer(mapId, containerOptions)
   const map = container.map
   const containerElement = container.containerElement
+  const viewport = container.viewport
+  const viewportDescription = container.viewportDescription
   const keyElement = container.keyElement
   const resetButton = container.resetButton
   const closeInfoButton = container.closeInfoButton
   const openKeyButton = container.openKeyButton
+  // const keyboardButton = container.keyboardButton
 
   //
   // Private methods
@@ -184,11 +190,22 @@ function LiveMap (mapId, options) {
         setFeatureHtml(newFeature)
         selected.getSource().addFeature(newFeature)
         selected.setStyle(maps.styles[layer.get('ref')]) // WebGL: layers don't use a style function
-        container.showInfo(newFeature)
+        container.showInfo('Selected feature information', newFeature.get('html'))
       }
       // Refresh target area polygons
       if (layer.get('ref') === 'warnings') {
         targetAreaPolygons.setStyle(maps.styles.targetAreaPolygons)
+      }
+      // Toggle overlay selected state
+      if (state.hasOverlays) {
+        if (originalFeature && map.getOverlayById(state.selectedFeatureId)) {
+          const overlayElement = map.getOverlayById(state.selectedFeatureId).getElement().parentNode
+          overlayElement.classList.remove('defra-key-symbol--selected')
+        }
+        if (newFeature && map.getOverlayById(newFeatureId)) {
+          const overlayElement = map.getOverlayById(newFeatureId).getElement().parentNode
+          overlayElement.classList.add('defra-key-symbol--selected')
+        }
       }
     })
     state.selectedFeatureId = newFeatureId
@@ -212,6 +229,25 @@ function LiveMap (mapId, options) {
     window.history.replaceState(data, title, uri)
   }
 
+  // Generate feature name
+  const featureName = (feature) => {
+    let name = ''
+    if (feature.get('type') === 'C') {
+      name = `Sea level measurement: ${feature.get('name')}`
+    } else if (feature.get('type') === 'S' || feature.get('type') === 'M') {
+      name = `River level measurement: ${feature.get('name')}, ${feature.get('river')}`
+    } else if (feature.get('type') === 'G') {
+      name = `Groundwater measurement: ${feature.get('name')}`
+    } else if (feature.get('severity_value') === 3) {
+      name = `Severe flood warning: ${feature.get('ta_name')}`
+    } else if (feature.get('severity_value') === 2) {
+      name = `Flood warning: ${feature.get('ta_name')}`
+    } else if (feature.get('severity_value') === 1) {
+      name = `Flood alert: ${feature.get('ta_name')}`
+    }
+    return name
+  }
+
   // Get features visible in the current viewport
   const getVisibleFeatures = () => {
     const features = []
@@ -224,11 +260,11 @@ function LiveMap (mapId, options) {
       layers.push(warnings)
     }
     layers.forEach((layer) => {
-      if (features.length > 9) return true
       layer.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
         if (feature.get('isVisible') !== 'true') { return false }
         features.push({
           id: feature.getId(),
+          name: featureName(feature),
           state: layer.get('ref'), // Used to style the overlay
           isBigZoom: isBigZoom,
           centre: feature.getGeometry().getCoordinates()
@@ -240,34 +276,54 @@ function LiveMap (mapId, options) {
 
   // Show overlays
   const showOverlays = () => {
-    if (!maps.isKeyboard) { return }
-    hideOverlays()
     state.visibleFeatures = getVisibleFeatures()
-    if (state.visibleFeatures.length <= 9) {
-      state.visibleFeatures.forEach((feature, i) => {
-        const overlayElement = document.createTextNode(i + 1)
+    const numFeatures = state.visibleFeatures.length
+    const numWarnings = state.visibleFeatures.filter((feature) => feature.state === 'warnings').length
+    const mumMeasurements = state.visibleFeatures.filter((feature) => feature.state === 'stations').length
+    const features = state.visibleFeatures.slice(0, 9)
+    // Show visual overlays
+    hideOverlays()
+    if (maps.isKeyboard && numFeatures >= 1 && numFeatures <= 9) {
+      state.hasOverlays = true
+      features.forEach((feature, i) => {
+        const overlayElement = document.createElement('span')
+        overlayElement.setAttribute('aria-hidden', true)
+        overlayElement.innerText = i + 1
+        const selected = feature.id === state.selectedFeatureId ? 'defra-key-symbol--selected' : ''
         map.addOverlay(
           new Overlay({
+            id: feature.id,
             element: overlayElement,
             position: feature.centre,
-            className: `defra-map-overlay defra-map-overlay--${feature.state}${feature.isBigZoom ? '-bigZoom' : ''}`,
+            className: `defra-key-symbol defra-key-symbol--${feature.state}${feature.isBigZoom ? '-bigZoom' : ''} ${selected}`,
             offset: [0, 0]
           })
         )
       })
     }
+    // Show non-visual feature details
+    const model = {
+      numFeatures: numFeatures,
+      numWarnings: numWarnings,
+      mumMeasurements: mumMeasurements,
+      features: features
+    }
+    const html = window.nunjucks.render('description-live.html', { model: model })
+    viewportDescription.innerHTML = html
   }
 
   // Hide overlays
   const hideOverlays = () => {
+    state.hasOverlays = false
     map.getOverlays().clear()
   }
 
   // Set target area polygon opacity
   const setOpacityTargetAreaPolygons = () => {
+    // Hide or show layer depending on resolution
     const resolution = Math.floor(map.getView().getResolution())
     targetAreaPolygons.setVisible(resolution < maps.liveMaxBigZoom)
-    // Opacity graduates with resolution
+    // Opacity graduates with zoom
     targetAreaPolygons.setOpacity((-Math.abs(map.getView().getZoom()) + 20) / 10)
   }
 
@@ -317,7 +373,7 @@ function LiveMap (mapId, options) {
   }
 
   // Set feature overlay html
-  const setFeatureHtml = async (feature) => {
+  const setFeatureHtml = (feature) => {
     const model = feature.getProperties()
     model.id = feature.getId().substring(feature.getId().indexOf('.') + 1)
     // Format dates for river levels
@@ -401,14 +457,6 @@ function LiveMap (mapId, options) {
     })
   }
 
-  // Set smart key visibility. To follow...
-  if (options.hasSmartKey) {
-    const keyItems = document.querySelectorAll('.defra-map-key__section--layers .defra-map-key__item')
-    forEach(keyItems, (keyItem) => {
-      keyItem.style.display = 'none'
-    })
-  }
-
   //
   // Events
   //
@@ -460,6 +508,9 @@ function LiveMap (mapId, options) {
     setOpacityTargetAreaPolygons()
     // Timer used to stop 100 url replaces in 30 seconds limit
     clearTimeout(timer)
+    // Clear viewport description to force screen reader to re-read
+    viewportDescription.innerHTML = ''
+    // Tasks dependent on a time delay
     timer = setTimeout(() => {
       // Show overlays for visible features
       showOverlays()
@@ -485,7 +536,14 @@ function LiveMap (mapId, options) {
   })
 
   // Set selected feature if map is clicked
+  // Clear overlays if non-keyboard interaction
   map.addEventListener('click', (e) => {
+    // Hide overlays if non-keyboard interaction
+    if (!maps.isKeyboard) {
+      hideOverlays()
+    }
+    // Hide keyboard shortcuts button
+
     // Get mouse coordinates and check for feature
     const featureId = map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
       if (!defaultLayers.includes(layer)) {
@@ -500,33 +558,10 @@ function LiveMap (mapId, options) {
     setSelectedFeature(featureId)
   })
 
-  // Handle all liveMap specific key presses
-  containerElement.addEventListener('keyup', (e) => {
-    // Show overlays when tab, enter or space is press
-    if (e.key === 'Tab' || e.key === 'Enter' || e.key === ' ') {
+  // Show overlays on first tab in from browser controls
+  viewport.addEventListener('focus', (e) => {
+    if (maps.isKeyboard) {
       showOverlays()
-    }
-    // Clear selected feature when pressing escape
-    if (e.key === 'Escape' && state.selectedFeatureId !== '') {
-      setSelectedFeature()
-    }
-    // Set selected feature on [1-9] key presss
-    if (!isNaN(e.key) && e.key >= 1 && e.key <= state.visibleFeatures.length && state.visibleFeatures.length <= 9) {
-      setSelectedFeature(state.visibleFeatures[e.key - 1].id)
-    }
-  })
-
-  // Hide overlays on click (excludes checkbox click)
-  containerElement.addEventListener('click', (e) => {
-    if (!maps.isKeyboard) {
-      hideOverlays()
-    }
-  })
-
-  // Hide overlays on checkbox pointerup
-  keyElement.addEventListener('pointerup', (e) => {
-    if (e.target.nodeName === 'INPUT' && e.target.type === 'checkbox') {
-      hideOverlays()
     }
   })
 
@@ -548,9 +583,9 @@ function LiveMap (mapId, options) {
       }
       setLayerVisibility(lyrs)
       targetAreaPolygons.setStyle(maps.styles.targetAreaPolygons)
-      showOverlays()
       lyrs = lyrs.join(',')
       replaceHistory('lyr', lyrs)
+      showOverlays()
     }
   })
 
@@ -571,22 +606,29 @@ function LiveMap (mapId, options) {
     containerElement.focus()
   })
 
+  // Handle all liveMap specific key presses
+  containerElement.addEventListener('keyup', (e) => {
+    // Show overlays when any key is pressed other than Escape
+    if (e.key !== 'Escape') {
+      showOverlays()
+    }
+    // Clear selected feature when pressing escape
+    if (e.key === 'Escape' && state.selectedFeatureId !== '') {
+      setSelectedFeature()
+    }
+    // Set selected feature on [1-9] key presss
+    if (!isNaN(e.key) && e.key >= 1 && e.key <= state.visibleFeatures.length && state.visibleFeatures.length <= 9) {
+      setSelectedFeature(state.visibleFeatures[e.key - 1].id)
+    }
+  })
+
   // River level navigation
   containerElement.addEventListener('click', (e) => {
     if (e.target.classList.contains('defra-map-info__button')) {
-      const direction = e.target.classList.contains('defra-map-info__button--up') ? 'up' : 'down'
       const newFeatureId = e.target.getAttribute('data-id')
       const feature = stations.getSource().getFeatureById(newFeatureId)
       setSelectedFeature(newFeatureId)
       panToFeature(feature)
-      // Set focus back to up or down button
-      const upstream = document.querySelector('.defra-map-info__button--up')
-      const downstream = document.querySelector('.defra-map-info__button--down')
-      if ((direction === 'up' && upstream) || (direction === 'down' && !downstream)) {
-        upstream.focus()
-      } else {
-        downstream.focus()
-      }
     }
   })
 }
@@ -596,10 +638,15 @@ function LiveMap (mapId, options) {
 // (This is done mainly to avoid the rule
 // "do not use 'new' for side effects. (no-new)")
 maps.createLiveMap = (mapId, options = {}) => {
+  // Set meta title and page heading
+  options.originalTitle = document.title
+  options.heading = 'Live flood map'
+  options.title = options.heading + ' - Check for flooding - GOV.UK'
+
   // Set initial history state
   if (!window.history.state) {
     const data = {}
-    const title = document.title
+    const title = options.title // document.title
     const uri = window.location.href
     window.history.replaceState(data, title, uri)
   }
@@ -609,34 +656,37 @@ maps.createLiveMap = (mapId, options = {}) => {
   const button = document.createElement('button')
   button.id = mapId + '-btn'
   button.innerHTML = options.btnText || 'View map'
+  button.innerHTML += '<span class="govuk-visually-hidden">(Visual only)</span>'
   button.className = options.btnClasses || 'defra-button-map'
   btnContainer.parentNode.replaceChild(button, btnContainer)
 
   // Detect keyboard interaction
-  if (maps.isKeyboard !== false && maps.isKeyboard !== true) {
-    window.addEventListener('keydown', (e) => {
-      maps.isKeyboard = true
+  window.addEventListener('keydown', (e) => {
+    maps.isKeyboard = true
+  })
+  // Needs keyup to detect first tab into web area
+  window.addEventListener('keyup', (e) => {
+    maps.isKeyboard = true
+  })
+  window.addEventListener('pointerdown', (e) => {
+    maps.isKeyboard = false
+  })
+  window.addEventListener('focusin', (e) => {
+    if (maps.isKeyboard) {
+      e.target.setAttribute('keyboard-focus', '')
+    }
+  })
+  window.addEventListener('focusout', (e) => {
+    forEach(document.querySelectorAll('[keyboard-focus]'), (element) => {
+      element.removeAttribute('keyboard-focus')
     })
-    window.addEventListener('pointerdown', (e) => {
-      maps.isKeyboard = false
-    })
-    window.addEventListener('focusin', (e) => {
-      if (maps.isKeyboard) {
-        e.target.setAttribute('keyboard-focus', '')
-      }
-    })
-    window.addEventListener('focusout', (e) => {
-      forEach(document.querySelectorAll('[keyboard-focus]'), (element) => {
-        element.removeAttribute('keyboard-focus')
-      })
-    })
-  }
+  })
 
   // Create map on button press
   button.addEventListener('click', (e) => {
     // Advance history
     const data = { v: mapId, isBack: true }
-    const title = document.title
+    const title = options.title // document.title
     let uri = window.location.href
     uri = addOrUpdateParameter(uri, 'v', mapId)
     // Add any querystring parameters from constructor

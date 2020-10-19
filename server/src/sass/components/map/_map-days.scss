@@ -1,14 +1,8 @@
 // Day control  
 .defra-map-days {
-  position:absolute;
-  bottom:10px;
-  left:10px;
-  right:10px;
-  @include mq ($from: tablet) {
-    position:static;
-    float:left;
-    width:100%;
-  }
+  position:static;
+  float:left;
+  width:100%;
   @include mq ($from: 1011px) {
     position:absolute;
     bottom:0px;

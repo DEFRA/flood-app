@@ -1,17 +1,31 @@
 // Key
 .defra-map-key__section {
-  ul {
-    padding:0;
-    margin:0;
-    list-style-type: none;
-  }
+  display: block;
+  border:0px;
+  margin:0px;
+  padding:0px;
 }
 .defra-map-key__section-title {
+  position:relative;
   @include govuk-font($size: 16, $weight: bold);
   display: block;
-  margin:0 15px;
-  padding:15px 0px 0px;
-  border-top:1px solid $govuk-border-colour;
+  margin:0;
+  padding:15px 15px 0px;
+  box-sizing: border-box;
+  width: 100%;
+  &:before {
+    position:absolute;
+    content:'';
+    height:1px;
+    top:0px;
+    left:15px;
+    right:15px;
+    border-top:1px solid $govuk-border-colour;
+  }
+}
+.defra-map-key ul {
+  margin:0;
+  padding:0;
 }
 .defra-map-key__item {
   display:block;
@@ -27,7 +41,7 @@
   position: relative;
   @include govuk-font($size: 16);
 }
-.defra-map-key__item:first-child {
+.defra-map-key__item:first-of-type {
   padding-top:10px;
 }
 .defra-map-key__item:last-child {
@@ -109,6 +123,53 @@
     background-image: svg-url('<svg width="32" height="32" viewBox="0 0 32 32"><rect x="5" y="5" width="22" height="22" style="fill:rgb(255,221,0);stroke:rgb(255,221,0);stroke-width:1px;"/><path d="M13,5L5,13" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:1px;"/><path d="M21,5L5,21" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:1px;"/><path d="M27,23L23,27" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:1px;"/><path d="M27,7L7,27" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:1px;"/><path d="M27,15L15,27" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:1px;"/></svg>');
   }
 }
+
+// Attribution
+/*
+.defra-map-key__attribution .govuk-details {
+  position:relative;
+  padding:15px 15px 10px;
+  margin:0px;
+  @include govuk-font($size: 14);
+  .govuk-details__summary {
+    padding-left:0px;
+    color: $govuk-text-colour;
+  }
+  .govuk-details__summary:before {
+    border-width:0px;
+  }
+  &[open]:before {
+    content:'';
+    position:absolute;
+    top:0px;
+    left:15px;
+    right:15px;
+    height:1px;
+    border-top:1px solid $govuk-border-colour;
+  }
+  &[open] > .govuk-details__summary {
+    padding-left:15px !important;
+  }
+  &[open] > .govuk-details__summary:before {
+    border-width: 10px 6px 0px 6px !important;
+  }
+  &[open] > .govuk-details__text {
+    padding:10px 0px 0px 0px;
+    border:0px;
+  }
+  ul {
+    @include govuk-font($size: 14);
+    list-style:none;
+    margin:0;
+    padding:0;
+    -webkit-user-select: auto;
+    -khtml-user-select: auto;
+    -moz-user-select: auto;
+    -ms-user-select: auto;
+    user-select: auto;
+  }
+}
+*/
 
 // Overides
 .defra-map-key {

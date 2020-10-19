@@ -221,7 +221,9 @@ function OutlookMap (mapId, options) {
     controls: [dayControl],
     queryParamKeys: ['v'],
     interactions: interactions,
-    headingText: options.headingText,
+    originalTitle: options.originalTitle,
+    title: options.title,
+    heading: options.heading,
     keyTemplate: 'key-outlook.html',
     isBack: options.isBack
   }
@@ -291,10 +293,15 @@ function OutlookMap (mapId, options) {
 // (This is done mainly to avoid the rule
 // "do not use 'new' for side effects. (no-new)")
 maps.createOutlookMap = (mapId, options = {}) => {
+  // Set meta title and page heading
+  options.originalTitle = document.title
+  options.heading = 'Flood outlook map'
+  options.title = options.heading + ' - Check for flooding - GOV.UK' // `Map view: ${document.title}`
+
   // Set initial history state
   if (!window.history.state) {
     const data = {}
-    const title = document.title
+    const title = options.title
     const uri = window.location.href
     window.history.replaceState(data, title, uri)
   }
@@ -304,6 +311,7 @@ maps.createOutlookMap = (mapId, options = {}) => {
   const button = document.createElement('button')
   button.id = mapId + '-btn'
   button.innerHTML = options.btnText || 'View map'
+  button.innerHTML += '<span class="govuk-visually-hidden">(Visual only)</span>'
   button.className = options.btnClasses || 'defra-button-map'
   btnContainer.parentNode.replaceChild(button, btnContainer)
 
@@ -339,7 +347,7 @@ maps.createOutlookMap = (mapId, options = {}) => {
   button.addEventListener('click', (e) => {
     // Advance history
     const data = { v: mapId, isBack: true }
-    const title = document.title
+    const title = options.title
     let uri = window.location.href
     uri = addOrUpdateParameter(uri, 'v', mapId)
     window.history.pushState(data, title, uri)

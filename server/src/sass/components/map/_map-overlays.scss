@@ -1,36 +1,48 @@
 // Map keyboard access overlays
-.defra-map-overlay {
+.defra-key-symbol {
     position:relative;
     z-index:2;
-    @include govuk-font($size: 19, $weight: bold);
+    display: block;
+    position: relative;
+    @include govuk-font($size: 16, $weight: bold);
+    padding: 0px 7px;
+    min-width: 26px;
+    box-sizing: border-box;
     text-align:center;
-    width:20px;
-    height:20px;
-    text-shadow:
-     -1px -1px 0 #fff,  
-      1px -1px 0 #fff,
-      -1px 1px 0 #fff,
-       1px 1px 0 #fff;
+    background-color: white;
+    -webkit-box-shadow: 1px 1px 0 1px $govuk-input-border-colour, 0px 0px 0 1px $govuk-input-border-colour;
+    -moz-box-shadow: 1px 1px 0 1px $govuk-input-border-colour, 0px 0px 0 1px $govuk-input-border-colour;
+    -ms-box-shadow: 1px 1px 0 1px $govuk-input-border-colour, 0px 0px 0 1px $govuk-input-border-colour;
+    box-shadow: 1px 1px 0 1px $govuk-input-border-colour, 0px 0px 0 1px $govuk-input-border-colour;
+    border-radius: 3px;
+    line-height:27px !important;
+    &--selected {
+      z-index: 3;
+      box-shadow: 0 0 0 3px $govuk-input-border-colour;
+    }
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
-  .defra-map-overlay--stations,
-  .defra-map-overlay--rainfall {
-    margin-left:-9px;
-    margin-top:-32px;
+  .defra-key-symbol--stations,
+  .defra-key-symbol--rainfall {
+    margin-left:-13px;
+    margin-top:-43px;
     &-bigZoom {
-      margin-left:-10px;
-      margin-top:-40px;
+      margin-left:-13px;
+      margin-top:-48px;
     }
   }
-  .defra-map-overlay--warnings {
-    margin-left:-10px;
-    margin-top:-44px;
+  .defra-key-symbol--warnings {
+    margin-left:-13px;
+    margin-top:-48px;
     &-bigZoom {
-      margin-left:-10px;
-      margin-top:-12px;
+      margin-left:-13px;
+      margin-top:-13px;
     }
   }
-  .defra-map-overlay--impacts,
-  .defra-map-overlay--impacts-bigZoom {
-    margin-left:-10px;
-    margin-top:-44px;
+  .defra-key-symbol--impacts,
+  .defra-key-symbol--impacts-bigZoom {
+    margin-left:-13px;
+    margin-top:-48px;
   }
