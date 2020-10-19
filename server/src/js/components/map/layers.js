@@ -4,8 +4,35 @@ Initialises the window.flood.maps layers
 */
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer'
 import { BingMaps, Vector as VectorSource } from 'ol/source'
-import { bbox } from 'ol/loadingstrategy'
 import { GeoJSON } from 'ol/format'
+import * as http from 'http'
+
+//
+// Vector source
+//
+
+const targetAreaPolygonsSource = new VectorSource({
+  format: new GeoJSON(),
+  projection: 'EPSG:3857',
+  // Custom loader to only send get request if below resolution cutoff
+  loader: (extent, resolution) => {
+    if (resolution < window.flood.maps.liveMaxBigZoom) {
+      http.get(`/api/ows?service=wfs&version=2.0.0&request=getFeature&typename=flood:flood_warning_alert&outputFormat=application/json&srsname=EPSG:3857&bbox=${extent.join(',')},EPSG:3857`, (response) => {
+        let data = ''
+        response.on('data', (chunk) => { data += chunk })
+        response.on('end', () => {
+          targetAreaPolygonsSource.addFeatures(new GeoJSON().readFeatures(JSON.parse(data)))
+        })
+      }).on('error', (err) => {
+        console.log('Error: ' + err.message)
+      })
+    }
+  },
+  // Custom strategy to only return extent if below resolution cutoff
+  strategy: (extent, resolution) => {
+    return resolution < window.flood.maps.liveMaxBigZoom ? [extent] : [[0, 0, 0, 0]]
+  }
+})
 
 window.flood.maps.layers = {
 
@@ -44,14 +71,7 @@ window.flood.maps.layers = {
   targetAreaPolygons: () => {
     return new VectorLayer({
       ref: 'targetAreaPolygons',
-      source: new VectorSource({
-        format: new GeoJSON(),
-        projection: 'EPSG:3857',
-        url: (extent) => {
-          return `/api/ows?service=wfs&version=2.0.0&request=getFeature&typename=flood:flood_warning_alert&outputFormat=application/json&srsname=EPSG:3857&bbox=${extent.join(',')},EPSG:3857`
-        },
-        strategy: bbox
-      }),
+      source: targetAreaPolygonsSource,
       style: window.flood.maps.styles.targetAreaPolygons,
       visible: false,
       zIndex: 2
