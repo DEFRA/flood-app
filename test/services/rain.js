@@ -14,6 +14,7 @@ lab.experiment('Flood service test', () => {
     delete require.cache[require.resolve('../../server/util.js')]
     sandbox = await sinon.createSandbox()
     sandbox.stub(config, 'serviceUrl').value('http://server2')
+    sandbox.stub(config, 'rainfallApiUrl').value('https://environment.data.gov.uk/flood-monitoring')
   })
 
   lab.afterEach(async () => {
