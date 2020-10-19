@@ -43,10 +43,12 @@ DEFRA employees can find examples of environment variables stored in our private
 | FLOOD_APP_STAGE | Flavour of environment | no | '' | ||
 | PORT     | Port number      |    no    | 3009    |                             |                               |
 | FLOOD_APP_BING_KEY   | MS Bing Key  |    yes    |         |                             | For location search |
+| FLOOD_APP_BING_URL   | MS Bing Location Search  |    yes    |         |                             | For location search |
 | FLOOD_APP_GEOSERVER_URL   | Geoserver  |    yes    |         |                             | For maps ows |
 | FLOOD_APP_SERVICE_URL   | flood-service  |    yes    |         |                             | For flood api |
 | FLOOD_APP_GA_ID   | Google analytics Id |    no    |         |                             |  |
-| FLOOD_APP_RAINFALL_URL | Rainfall api | yes | https://environment.data.gov.uk/flood-monitoring | |
+| FLOOD_APP_RAINFALL_API_URL | Rainfall api | yes | https://environment.data.gov.uk/flood-monitoring | |
+| FLOOD_APP_NRW_STATION_URL | NRW station search  | yes | https://rloi.naturalresources.wales/ViewDetails?station= | |
 | FLOOD_APP_SITE_URL   | Site Url  |    yes    | http://localhost:3009 |                             | For SEO metadata |
 | FLOOD_RISK_URL   | Flood risk Url  |    yes    |  |                             | To link to correct flood risk environment |
 | FLOOD_APP_SESSION_PASSWORD | cookie password | yes | | |
