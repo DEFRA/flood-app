@@ -1,11 +1,11 @@
-const { bingKey } = require('../config')
+const { bingKey, bingUrl } = require('../config')
 const { getJson, addBufferToBbox } = require('../util')
 const floodServices = require('./flood')
+const util = require('util')
 
 async function find (location) {
   const query = encodeURIComponent(location)
-  const url = `https://dev.virtualearth.net/REST/v1/Locations?query=${query},UK&userRegion=GB&include=ciso2&c=en-GB&maxResults=2&userIP=127.0.0.1&key=${bingKey}&includeEntityTypes=PopulatedPlace,AdminDivision2`
-
+  const url = util.format(bingUrl, query, bingKey)
   let data = await getJson(url, true)
 
   if (data === undefined) {

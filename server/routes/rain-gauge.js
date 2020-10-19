@@ -7,7 +7,7 @@ const wreck = require('@hapi/wreck').defaults({
   timeout: config.restClientTimeoutMillis
 })
 
-// const rainfallApiUri = config.rainfallApiUrl
+const rainfallApiUri = config.rainfallApiUrl
 
 module.exports = [{
   method: 'GET',
@@ -36,9 +36,8 @@ module.exports = [{
     // Reset session. TODO: refactor if necessary
     request.yar.reset()
     const { id, label, readingsLimit } = request.params
-    // const url = rainfallApiUri + '/id/stations/' + id
 
-    let readingsUrl = 'https://environment.data.gov.uk/flood-monitoring/id/stations/' + id + '/readings?parameter=rainfall&_sorted'
+    let readingsUrl = rainfallApiUri + id + '/readings?parameter=rainfall&_sorted'
     if (readingsLimit) {
       readingsUrl += '&_limit=' + readingsLimit
     } else {

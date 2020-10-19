@@ -132,6 +132,9 @@ class ViewModel {
     //
     // 6 hour data
     //
+    if (!Array.isArray(rainMeasures.items) || !rainMeasures.items.length) {
+      return
+    }
     const endDateMinutes = rainMeasures.items[0].dateTime // Start from latest entry
     const measuresMinutes = rainMeasures.items.slice(0, 24).map(a => a.value).reverse() // reversed for display
     this.graphMinutes = new Graph(
