@@ -111,6 +111,18 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.station.river).to.equal('Groundwater Level')
     Code.expect(Result.station.hasPercentiles).to.equal(true)
   })
+  lab.test('Test station viewModel plotNegativeValues should be true for groundwater station', async () => {
+    const viewModel = new ViewModel(data.stationGroudwater)
+    Code.expect(viewModel.station.plotNegativeValues).to.equal(true)
+  })
+  lab.test('Test station viewModel plotNegativeValues should be false for river station', async () => {
+    const viewModel = new ViewModel(data.stationRiver)
+    Code.expect(viewModel.station.plotNegativeValues).to.equal(false)
+  })
+  lab.test('Test station viewModel plotNegativeValues should be true for coastal station', async () => {
+    const viewModel = new ViewModel(data.stationCoastal)
+    Code.expect(viewModel.station.plotNegativeValues).to.equal(true)
+  })
   lab.test('Test station viewModel FFOI station with Impacts', async () => {
     const stationData = data.stationForecastData
 

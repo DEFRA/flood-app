@@ -22,8 +22,10 @@ function LineChart (containerId, data) {
   let hasObserved = false
   let hasForecast = false
   if (data.observed.length) {
-    lines = data.observed.filter(l => !(l.err || l._ < 0)).reverse()
-    // First chronolgical point
+    const errorFilter = l => !l.err
+    const errorAndNegativeFilter = l => errorFilter(l) && l._ >= 0
+    const filterFunction = data.plotNegativeValues ? errorFilter : errorAndNegativeFilter
+    lines = data.observed.filter(filterFunction).reverse()
     dataPoint = JSON.parse(JSON.stringify(lines[0]))
     hasObserved = true
   }
