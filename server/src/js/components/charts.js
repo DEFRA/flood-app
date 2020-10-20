@@ -26,7 +26,7 @@ function LineChart (containerId, data) {
     const errorAndNegativeFilter = l => errorFilter(l) && l._ >= 0
     const filterFunction = data.plotNegativeValues ? errorFilter : errorAndNegativeFilter
     lines = data.observed.filter(filterFunction).reverse()
-    dataPoint = JSON.parse(JSON.stringify(lines[0]))
+    dataPoint = lines[0] ? JSON.parse(JSON.stringify(lines[0])) : null
     hasObserved = true
   }
   if (data.forecast.length) {
@@ -251,8 +251,8 @@ function LineChart (containerId, data) {
 
   function modifyAxis () {
     // Initialize scales
-    xExtent = d3.extent(lines, function (d, i) { return new Date(d.ts) })
-    yExtent = d3.extent(lines, function (d, i) { return d._ })
+    xExtent = d3.extent(data.observed, function (d, i) { return new Date(d.ts) })
+    yExtent = d3.extent(data.observed, function (d, i) { return d._ })
 
     // Increase X range by 5% from now value
     let date = new Date(data.now)
@@ -351,8 +351,10 @@ function LineChart (containerId, data) {
     y.nice()
 
     // Update locator position
-    locatorX = Math.floor(x(new Date(dataPointLocator.ts)))
-    locatorY = Math.floor(y(dataPointLocator._))
+    if (dataPointLocator) {
+      locatorX = Math.floor(x(new Date(dataPointLocator.ts)))
+      locatorY = Math.floor(y(dataPointLocator._))
+    }
   }
 
   function updateToolTipBackground () {
