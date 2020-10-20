@@ -7,9 +7,9 @@ window.flood = {
       const xmlhttp = new window.XMLHttpRequest()
 
       xmlhttp.onreadystatechange = () => {
-        if (this.readyState === 4 && this.status === 200) {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
           try {
-            const json = JSON.parse(this.responseText)
+            const json = JSON.parse(xmlhttp.responseText)
             callback(null, json)
           } catch (err) {
             callback(err)

@@ -5,7 +5,8 @@ Initialises the window.flood.maps layers
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer'
 import { BingMaps, Vector as VectorSource } from 'ol/source'
 import { GeoJSON } from 'ol/format'
-import * as http from 'http'
+
+const { xhr } = window.flood.utils
 
 //
 // Vector source
@@ -17,14 +18,12 @@ const targetAreaPolygonsSource = new VectorSource({
   // Custom loader to only send get request if below resolution cutoff
   loader: (extent, resolution) => {
     if (resolution < window.flood.maps.liveMaxBigZoom) {
-      http.get(`/api/ows?service=wfs&version=2.0.0&request=getFeature&typename=flood:flood_warning_alert&outputFormat=application/json&srsname=EPSG:3857&bbox=${extent.join(',')},EPSG:3857`, (response) => {
-        let data = ''
-        response.on('data', (chunk) => { data += chunk })
-        response.on('end', () => {
-          targetAreaPolygonsSource.addFeatures(new GeoJSON().readFeatures(JSON.parse(data)))
-        })
-      }).on('error', (err) => {
-        console.log('Error: ' + err.message)
+      xhr(`/api/ows?service=wfs&version=2.0.0&request=getFeature&typename=flood:flood_warning_alert&outputFormat=application/json&srsname=EPSG:3857&bbox=${extent.join(',')},EPSG:3857`, (err, json) => {
+        if (err) {
+          console.log('Error: ' + err)
+        } else {
+          targetAreaPolygonsSource.addFeatures(new GeoJSON().readFeatures(json))
+        }
       })
     }
   },
