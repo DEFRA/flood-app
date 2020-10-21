@@ -1,0 +1,11 @@
+# Service refresh release-3.2.0
+
+# Tickets
+
+FIS-726 -- map reset button hotfix
+
+# Instructions
+
+Execute job: LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Confirm with developers that deployment was successful.
