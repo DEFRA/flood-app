@@ -12,15 +12,7 @@
       -1px 1px 0 #fff,
        1px 1px 0 #fff;
   }
-  .defra-map-overlay--stations,
-  .defra-map-overlay--rainfall {
-    margin-left:-9px;
-    margin-top:-32px;
-    &-bigZoom {
-      margin-left:-10px;
-      margin-top:-40px;
-    }
-  }
+  .defra-map-overlay--stations
   .defra-map-overlay--warnings {
     margin-left:-10px;
     margin-top:-44px;
