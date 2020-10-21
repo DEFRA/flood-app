@@ -47,7 +47,6 @@ function LiveMap (mapId, options) {
   const targetAreaPolygons = maps.layers.targetAreaPolygons()
   const warnings = maps.layers.warnings()
   const stations = maps.layers.stations()
-  // const rainfall = maps.layers.rainfall()
   const impacts = maps.layers.impacts()
   const selected = maps.layers.selected()
 
@@ -60,7 +59,6 @@ function LiveMap (mapId, options) {
 
   // These layers can be manipulated
   const dataLayers = [
-    // rainfall,
     stations,
     warnings,
     impacts
@@ -158,8 +156,6 @@ function LiveMap (mapId, options) {
         // Stations
         (ref === 'stations' && isHighLevel && lyrCodes.includes('sh')) ||
         (ref === 'stations' && !isHighLevel && lyrCodes.includes('st')) ||
-        // Rainfall
-        (ref === 'rainfall' && lyrCodes.includes('rf')) ||
         // Impacts
         (ref === 'impacts' && lyrCodes.includes('hi')) ||
         // Target area provided
