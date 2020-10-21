@@ -22,9 +22,11 @@ function LineChart (containerId, data) {
   let hasObserved = false
   let hasForecast = false
   if (data.observed.length) {
-    lines = data.observed.filter(l => !(l.err || l._ < 0)).reverse()
-    // First chronolgical point
-    dataPoint = JSON.parse(JSON.stringify(lines[0]))
+    const errorFilter = l => !l.err
+    const errorAndNegativeFilter = l => errorFilter(l) && l._ >= 0
+    const filterFunction = data.plotNegativeValues ? errorFilter : errorAndNegativeFilter
+    lines = data.observed.filter(filterFunction).reverse()
+    dataPoint = lines[0] ? JSON.parse(JSON.stringify(lines[0])) : null
     hasObserved = true
   }
   if (data.forecast.length) {
@@ -249,8 +251,8 @@ function LineChart (containerId, data) {
 
   function modifyAxis () {
     // Initialize scales
-    xExtent = d3.extent(lines, function (d, i) { return new Date(d.ts) })
-    yExtent = d3.extent(lines, function (d, i) { return d._ })
+    xExtent = d3.extent(data.observed, function (d, i) { return new Date(d.ts) })
+    yExtent = d3.extent(data.observed, function (d, i) { return data.plotNegativeValues ? d._ : Math.max(d._, 0) })
 
     // Increase X range by 5% from now value
     let date = new Date(data.now)
@@ -349,8 +351,10 @@ function LineChart (containerId, data) {
     y.nice()
 
     // Update locator position
-    locatorX = Math.floor(x(new Date(dataPointLocator.ts)))
-    locatorY = Math.floor(y(dataPointLocator._))
+    if (dataPointLocator) {
+      locatorX = Math.floor(x(new Date(dataPointLocator.ts)))
+      locatorY = Math.floor(y(dataPointLocator._))
+    }
   }
 
   function updateToolTipBackground () {
