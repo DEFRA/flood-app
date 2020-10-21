@@ -252,7 +252,7 @@ function LineChart (containerId, data) {
   function modifyAxis () {
     // Initialize scales
     xExtent = d3.extent(data.observed, function (d, i) { return new Date(d.ts) })
-    yExtent = d3.extent(data.observed, function (d, i) { return d._ })
+    yExtent = d3.extent(data.observed, function (d, i) { return data.plotNegativeValues ? d._ : Math.max(d._, 0) })
 
     // Increase X range by 5% from now value
     let date = new Date(data.now)
