@@ -111,15 +111,6 @@ window.flood.maps.styles = {
     }
     const isSelected = feature.get('isSelected')
     return isSelected ? styleCache.impactSelected : styleCache.impact
-  },
-
-  rainfall: (feature, resolution) => {
-    if (feature.get('isVisible') !== 'true') {
-      return
-    }
-    const isSelected = feature.get('isSelected')
-    const isBigSymbol = resolution <= window.flood.maps.liveMaxBigZoom
-    return isSelected ? (isBigSymbol ? styleCache.rainfallBigSelected : styleCache.rainfallSelected) : (isBigSymbol ? styleCache.rainfallBig : styleCache.rainfall)
   }
 }
 
@@ -248,14 +239,10 @@ const styleCache = {
   levelBigSelected: createStyle({ offset: [100, 600], zIndex: 10 }),
   levelErrorBig: createStyle({ offset: [0, 700], zIndex: 1 }),
   levelErrorBigSelected: createStyle({ offset: [100, 700], zIndex: 10 }),
-  rainfallBig: createStyle({ offset: [0, 800], zIndex: 1 }),
-  rainfallBigSelected: createStyle({ offset: [100, 800], zIndex: 10 }),
   levelHigh: createStyle({ offset: [0, 900], zIndex: 3 }),
   levelHighSelected: createStyle({ offset: [100, 900], zIndex: 10 }),
   level: createStyle({ offset: [0, 1000], zIndex: 2 }),
   levelSelected: createStyle({ offset: [100, 1000], zIndex: 10 }),
   levelError: createStyle({ offset: [0, 1100], zIndex: 1 }),
-  levelErrorSelected: createStyle({ offset: [100, 1100], zIndex: 10 }),
-  rainfall: createStyle({ offset: [0, 1200], zIndex: 1 }),
-  rainfallSelected: createStyle({ offset: [100, 1200], zIndex: 10 })
+  levelErrorSelected: createStyle({ offset: [100, 1100], zIndex: 10 })
 }
