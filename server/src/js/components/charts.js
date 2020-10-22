@@ -66,13 +66,15 @@ function LineChart (containerId, data) {
   let observedArea, observed, forecastArea, forecast
   if (hasObserved) {
     chartWrapper.append('g').classed('observed observed-focus', true)
-    observedArea = svg.select('.observed').append('path').datum(lines.filter(l => l.type === 'observed')).classed('observed-area', true)
-    observed = svg.select('.observed').append('path').datum(lines.filter(l => l.type === 'observed')).classed('observed-line', true)
+    const observedLine = lines.filter(l => l.type === 'observed')
+    observedArea = svg.select('.observed').append('path').datum(observedLine).classed('observed-area', true)
+    observed = svg.select('.observed').append('path').datum(observedLine).classed('observed-line', true)
   }
   if (hasForecast) {
     chartWrapper.append('g').classed('forecast', true)
-    forecastArea = svg.select('.forecast').append('path').datum(lines.filter(l => l.type === 'forecast')).classed('forecast-area', true)
-    forecast = svg.select('.forecast').append('path').datum(lines.filter(l => l.type === 'forecast')).classed('forecast-line', true)
+    const forecastLine = lines.filter(l => l.type === 'forecast')
+    forecastArea = svg.select('.forecast').append('path').datum(forecastLine).classed('forecast-area', true)
+    forecast = svg.select('.forecast').append('path').datum(forecastLine).classed('forecast-line', true)
   }
 
   // Add timeline
