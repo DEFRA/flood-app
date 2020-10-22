@@ -26,7 +26,7 @@ function LineChart (containerId, data) {
     const errorAndNegativeFilter = l => errorFilter(l) && l._ >= 0
     const filterFunction = data.plotNegativeValues ? errorFilter : errorAndNegativeFilter
     lines = data.observed.filter(filterFunction).map(l => ({ ...l, type: 'observed' })).reverse()
-    dataPoint = lines[0] ? JSON.parse(JSON.stringify(lines[0])) : null
+    dataPoint = lines[lines.length - 1] ? JSON.parse(JSON.stringify(lines[lines.length - 1])) : null
     hasObserved = true
   }
   if (data.forecast.length) {
