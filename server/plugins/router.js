@@ -19,7 +19,6 @@ const routes = [].concat(
   require('../routes/recovering-after-a-flood'),
   require('../routes/alerts-and-warnings'),
   require('../routes/river-and-sea-levels'),
-  require('../routes/impacts'),
   require('../routes/cookies'),
   require('../routes/terms-and-conditions'),
   require('../routes/privacy-notice'),
