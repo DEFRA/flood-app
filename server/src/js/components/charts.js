@@ -25,12 +25,12 @@ function LineChart (containerId, data) {
     const errorFilter = l => !l.err
     const errorAndNegativeFilter = l => errorFilter(l) && l._ >= 0
     const filterFunction = data.plotNegativeValues ? errorFilter : errorAndNegativeFilter
-    lines = data.observed.filter(filterFunction).reverse()
-    dataPoint = lines[0] ? JSON.parse(JSON.stringify(lines[0])) : null
+    lines = data.observed.filter(filterFunction).map(l => ({ ...l, type: 'observed' })).reverse()
+    dataPoint = lines[lines.length - 1] ? JSON.parse(JSON.stringify(lines[lines.length - 1])) : null
     hasObserved = true
   }
   if (data.forecast.length) {
-    lines = lines.concat(data.forecast)
+    lines = lines.concat(data.forecast.map(l => ({ ...l, type: 'forecast' })))
     hasForecast = true
   }
 
@@ -66,13 +66,15 @@ function LineChart (containerId, data) {
   let observedArea, observed, forecastArea, forecast
   if (hasObserved) {
     chartWrapper.append('g').classed('observed observed-focus', true)
-    observedArea = svg.select('.observed').append('path').datum(lines).classed('observed-area', true)
-    observed = svg.select('.observed').append('path').datum(lines).classed('observed-line', true)
+    const observedLine = lines.filter(l => l.type === 'observed')
+    observedArea = svg.select('.observed').append('path').datum(observedLine).classed('observed-area', true)
+    observed = svg.select('.observed').append('path').datum(observedLine).classed('observed-line', true)
   }
   if (hasForecast) {
     chartWrapper.append('g').classed('forecast', true)
-    forecastArea = svg.select('.forecast').append('path').datum(data.forecast).classed('forecast-area', true)
-    forecast = svg.select('.forecast').append('path').datum(data.forecast).classed('forecast-line', true)
+    const forecastLine = lines.filter(l => l.type === 'forecast')
+    forecastArea = svg.select('.forecast').append('path').datum(forecastLine).classed('forecast-area', true)
+    forecast = svg.select('.forecast').append('path').datum(forecastLine).classed('forecast-line', true)
   }
 
   // Add timeline
