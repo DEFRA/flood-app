@@ -252,9 +252,11 @@ function LineChart (containerId, data) {
   }
 
   function modifyAxis () {
-    // Initialize scales
-    xExtent = d3.extent(data.observed, function (d, i) { return new Date(d.ts) })
-    yExtent = d3.extent(data.observed, function (d, i) { return data.plotNegativeValues ? d._ : Math.max(d._, 0) })
+    // Note: xExtent uses observed and forecast data rather than lines for the scenario where river levels
+    // start or end as -ve since we still need to determine the datetime span of the graph even if the
+    // values are excluded from plotting by virtue of being -ve
+    xExtent = d3.extent(data.observed.concat(data.forecast), function (d, i) { return new Date(d.ts) })
+    yExtent = d3.extent(lines, function (d, i) { return data.plotNegativeValues ? d._ : Math.max(d._, 0) })
 
     // Increase X range by 5% from now value
     let date = new Date(data.now)
