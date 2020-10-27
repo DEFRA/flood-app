@@ -1,0 +1,25 @@
+#Beta (service refresh) release 3.3.0 - 28 October 2020
+
+This is to deploy a load of content change tickets for service refresh
+
+# Tickets
+https://eaflood.atlassian.net/browse/FIS-550
+https://eaflood.atlassian.net/browse/FIS-578
+https://eaflood.atlassian.net/browse/FIS-579
+https://eaflood.atlassian.net/browse/FIS-673
+https://eaflood.atlassian.net/browse/FIS-674
+https://eaflood.atlassian.net/browse/FIS-675
+https://eaflood.atlassian.net/browse/FIS-677
+https://eaflood.atlassian.net/browse/FIS-678
+https://eaflood.atlassian.net/browse/FIS-726
+
+# Deployment
+Please run a full code build
+Execute: 
+LFW_{stage}_02_UPDATE_DATABASE
+LFW_{stage}_03_UPDATE_GEOSERVER_PIPELINE
+LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Inform flood devs
+
+Thanks.
