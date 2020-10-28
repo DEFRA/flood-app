@@ -521,6 +521,13 @@
     border: 0;
   }
 }
+.defra-map--info-open .defra-map-controls__container {
+  visibility: hidden;
+  @include mq ($from: tablet) {
+    visibility: visible;
+  }
+}
+
 // Viewport focus keyboard access tooltip
 .defra-map-tooltip {
   position: absolute; 

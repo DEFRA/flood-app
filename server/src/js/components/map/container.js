@@ -316,6 +316,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
     viewport.setAttribute('aria-live', 'assertive')
     state.isInfoOpen = false
     infoElement.parentNode.removeChild(infoElement)
+    containerElement.classList.remove('defra-map--info-open')
     // Re-enable screen reader access to siblings
     hideSiblings(false)
     keyElement.setAttribute('aria-hidden', state.isTablet)
@@ -349,6 +350,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
     // Prevent screen reader from accessing siblings and key
     hideSiblings(true)
     keyElement.setAttribute('aria-hidden', true)
+    containerElement.classList.add('defra-map--info-open')
     // Temporarily stop screen reader announcing viewport changes
     viewport.setAttribute('aria-live', 'off')
     infoLabel.innerText = title
