@@ -8,12 +8,17 @@ async function find (location) {
   const url = util.format(bingUrl, query, bingKey)
   let data = await getJson(url, true)
 
-  if (data === undefined) {
+  if (!data) {
     throw new Error('Invalid data returned from third party location search')
   }
 
+  // Check for OK status returned
+  if (data.statusCode !== 200) {
+    throw new Error(`Location search returned status: ${data.statusCode || 'unknown'}, message: ${data.description || 'not set'}`)
+  }
+
   // Check that the json is relevant
-  if (data === null || !data.resourceSets || !data.resourceSets.length) {
+  if (!data.resourceSets || !data.resourceSets.length) {
     throw new Error('Invalid geocode results (no resourceSets)')
   }
 

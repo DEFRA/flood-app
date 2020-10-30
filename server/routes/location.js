@@ -15,12 +15,11 @@ module.exports = {
       place = await locationService.find(util.cleanseLocation(location))
     } catch (err) {
       console.error(err)
-      request.yar.set('displayError', displayErrors['location-services-error'])
+      request.yar.set('displayError', { ...displayErrors['location-services-error'], ...{ input: location } })
       return h.redirect('/find-location')
     }
     if (!place) {
-      request.yar.set('displayError', displayErrors['invalid-location'])
-      request.yar.set('locationError', { input: location })
+      request.yar.set('displayError', { ...displayErrors['invalid-location'], ...{ input: location } })
       return h.redirect('/find-location')
     }
     if (!place.isEngland.is_england) {

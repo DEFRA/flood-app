@@ -17,11 +17,10 @@ module.exports = [{
     } else {
       // Error
       const err = request.yar.get('displayError')
-      request.yar.set('displayError', {})
-      const location = request.yar.get('locationError').input
-      request.yar.set('locationError', {})
+      request.yar.set('displayError', null)
+      const location = err.input || ''
       const model = new ViewModel({ location, err })
-      return h.view('find-location', { model })
+      return h.view(err.view || 'find-location', { model })
     }
   }
 }, {
