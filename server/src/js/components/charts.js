@@ -22,13 +22,15 @@ function LineChart (containerId, data) {
   let hasObserved = false
   let hasForecast = false
   if (data.observed.length) {
-    lines = data.observed.reverse()
-    // First chronolgical point
-    dataPoint = JSON.parse(JSON.stringify(data.observed[data.observed.length - 1]))
+    const errorFilter = l => !l.err
+    const errorAndNegativeFilter = l => errorFilter(l) && l._ >= 0
+    const filterFunction = data.plotNegativeValues ? errorFilter : errorAndNegativeFilter
+    lines = data.observed.filter(filterFunction).map(l => ({ ...l, type: 'observed' })).reverse()
+    dataPoint = lines[lines.length - 1] ? JSON.parse(JSON.stringify(lines[lines.length - 1])) : null
     hasObserved = true
   }
   if (data.forecast.length) {
-    lines = lines.concat(data.forecast)
+    lines = lines.concat(data.forecast.map(l => ({ ...l, type: 'forecast' })))
     hasForecast = true
   }
 
@@ -37,13 +39,13 @@ function LineChart (containerId, data) {
   let dataPointLocator = dataPointLatest
 
   // Area generator
-  const area = d3.area().curve(d3.curveCardinal)
+  const area = d3.area().curve(d3.curveMonotoneX)
     .x(function (d) { return x(new Date(d.ts)) })
     .y0(function (d) { return height })
     .y1(function (d) { return y(d._) })
 
   // Line generator
-  const line = d3.line().curve(d3.curveCardinal)
+  const line = d3.line().curve(d3.curveMonotoneX)
     .x(function (d) { return x(new Date(d.ts)) })
     .y(function (d) { return y(d._) })
 
@@ -64,13 +66,15 @@ function LineChart (containerId, data) {
   let observedArea, observed, forecastArea, forecast
   if (hasObserved) {
     chartWrapper.append('g').classed('observed observed-focus', true)
-    observedArea = svg.select('.observed').append('path').datum(data.observed).classed('observed-area', true)
-    observed = svg.select('.observed').append('path').datum(data.observed).classed('observed-line', true)
+    const observedLine = lines.filter(l => l.type === 'observed')
+    observedArea = svg.select('.observed').append('path').datum(observedLine).classed('observed-area', true)
+    observed = svg.select('.observed').append('path').datum(observedLine).classed('observed-line', true)
   }
   if (hasForecast) {
     chartWrapper.append('g').classed('forecast', true)
-    forecastArea = svg.select('.forecast').append('path').datum(data.forecast).classed('forecast-area', true)
-    forecast = svg.select('.forecast').append('path').datum(data.forecast).classed('forecast-line', true)
+    const forecastLine = lines.filter(l => l.type === 'forecast')
+    forecastArea = svg.select('.forecast').append('path').datum(forecastLine).classed('forecast-area', true)
+    forecast = svg.select('.forecast').append('path').datum(forecastLine).classed('forecast-line', true)
   }
 
   // Add timeline
@@ -248,8 +252,10 @@ function LineChart (containerId, data) {
   }
 
   function modifyAxis () {
-    // Initialize scales
-    xExtent = d3.extent(lines, function (d, i) { return new Date(d.ts) })
+    // Note: xExtent uses observed and forecast data rather than lines for the scenario where river levels
+    // start or end as -ve since we still need to determine the datetime span of the graph even if the
+    // values are excluded from plotting by virtue of being -ve
+    xExtent = d3.extent(data.observed.concat(data.forecast), function (d, i) { return new Date(d.ts) })
     yExtent = d3.extent(lines, function (d, i) { return d._ })
 
     // Increase X range by 5% from now value
@@ -349,8 +355,10 @@ function LineChart (containerId, data) {
     y.nice()
 
     // Update locator position
-    locatorX = Math.floor(x(new Date(dataPointLocator.ts)))
-    locatorY = Math.floor(y(dataPointLocator._))
+    if (dataPointLocator) {
+      locatorX = Math.floor(x(new Date(dataPointLocator.ts)))
+      locatorY = Math.floor(y(dataPointLocator._))
+    }
   }
 
   function updateToolTipBackground () {

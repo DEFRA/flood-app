@@ -94,7 +94,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('<strong>This service provides flood risk information for England only.</strong>')
+    Code.expect(response.payload).to.contain('outside of England')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /rivers-and-sea-levels Bing returns error', async () => {
@@ -628,6 +628,8 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     Code.expect(response.payload).to.contain('3 level')
     Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=sankey-brook">Sankey Brook</a>')
+    Code.expect(response.payload).to.contain('Showing Sankey Brook levels. <a href="/river-and-sea-levels"> Show all levels</a>')
+    Code.expect(response.payload).to.contain('Sankey Brook - River and sea levels in England - GOV.UK')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /river-and-sea-levels stations in Wales', async () => {
@@ -1144,5 +1146,195 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(404)
+  })
+  lab.test('GET /river-and-sea-levels?river-id=Sea%20Levels ', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationsData = () => [
+      {
+        river_id: 'Sea Levels',
+        river_name: 'Sea Levels',
+        navigable: false,
+        view_rank: 1,
+        rank: null,
+        rloi_id: 5067,
+        up: null,
+        down: null,
+        telemetry_id: 'E73439',
+        region: 'Anglian',
+        catchment: 'England - West Coast',
+        wiski_river_name: 'Tide',
+        agency_name: 'Heysham',
+        external_name: 'Heysham',
+        station_type: 'C',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '3.063',
+        value_timestamp: '2020-10-02T12:45:00.000Z',
+        value_erred: false,
+        percentile_5: null,
+        percentile_95: null,
+        centroid: '0101000020E6100000C97993B4B15C07C0376E1A6612044B40',
+        lon: -2.92026082110462,
+        lat: 54.0318114880615
+      },
+      {
+        river_id: 'Sea Levels',
+        river_name: 'Sea Levels',
+        navigable: false,
+        view_rank: 1,
+        rank: null,
+        rloi_id: 3062,
+        up: null,
+        down: null,
+        telemetry_id: 'E72539',
+        region: 'Anglian',
+        catchment: 'England - South Coast',
+        wiski_river_name: 'Tide',
+        agency_name: 'Hinkley Point',
+        external_name: 'Hinkley Point',
+        station_type: 'C',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '-3.91',
+        value_timestamp: '2020-10-02T12:45:00.000Z',
+        value_erred: false,
+        percentile_5: null,
+        percentile_95: null,
+        centroid: '0101000020E61000002C5F78ACF80C09C052D11D3FF59A4940',
+        lon: -3.13133368246408,
+        lat: 51.2106093307108
+      }
+    ]
+
+    sandbox.stub(floodService, 'getRiverById').callsFake(fakeStationsData)
+
+    const fakeGetJson = () => data.warringtonGetJson
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?river-id=Sea%20Levels'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('2 levels')
+    Code.expect(response.payload).to.contain('Showing Sea levels. <a href="/river-and-sea-levels"> Show all levels</a>')
+    Code.expect(response.payload).to.contain('Sea levels in England - GOV.UK')
+    Code.expect(response.statusCode).to.equal(200)
+  })
+  lab.test('GET /river-and-sea-levels?river-id=Groundwater%20Levels ', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationsData = () => [
+      {
+        river_id: 'Groundwater Levels',
+        river_name: 'Groundwater Levels',
+        navigable: false,
+        view_rank: 2,
+        rank: null,
+        rloi_id: 9306,
+        up: null,
+        down: null,
+        telemetry_id: 'TQ35_42',
+        region: 'Thames',
+        catchment: 'London',
+        wiski_river_name: 'Groundwater Level',
+        agency_name: 'Woldingham Road',
+        external_name: 'Woldingham Road',
+        station_type: 'G',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '77.15',
+        value_timestamp: '2020-10-02T06:00:00.000Z',
+        value_erred: false,
+        percentile_5: '104.628',
+        percentile_95: '70.609',
+        centroid: '0101000020E6100000D5C8218D26B6AFBF8266C677D7A54940',
+        lon: -0.061936573722862,
+        lat: 51.2956380575897
+      },
+      {
+        river_id: 'Groundwater Levels',
+        river_name: 'Groundwater Levels',
+        navigable: false,
+        view_rank: 2,
+        rank: null,
+        rloi_id: 3317,
+        up: null,
+        down: null,
+        telemetry_id: '43121',
+        region: 'South West',
+        catchment: 'Dorset Stour',
+        wiski_river_name: 'Groundwater Level',
+        agency_name: 'Woodyates',
+        external_name: 'Woodyates',
+        station_type: 'G',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '70.69',
+        value_timestamp: '2020-10-02T09:00:00.000Z',
+        value_erred: false,
+        percentile_5: '102',
+        percentile_95: '0',
+        centroid: '0101000020E6100000FFBBD41148A8FFBFE5E804E0C97C4940',
+        lon: -1.97858435597641,
+        lat: 50.9749107383703
+      }
+    ]
+
+    sandbox.stub(floodService, 'getRiverById').callsFake(fakeStationsData)
+
+    const fakeGetJson = () => data.warringtonGetJson
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?river-id=Groundwater%20Levels'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('2 levels')
+    Code.expect(response.payload).to.contain('Showing Groundwater levels. <a href="/river-and-sea-levels"> Show all levels</a>')
+    Code.expect(response.payload).to.contain('Groundwater levels in England - GOV.UK')
+    Code.expect(response.statusCode).to.equal(200)
   })
 })

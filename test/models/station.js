@@ -79,7 +79,7 @@ lab.experiment('Station model test', () => {
 
     Code.expect(Result.station.id).to.equal(1001)
     Code.expect(Result.banner).to.equal(1)
-    Code.expect(Result.severityLevel).to.equal('warning')
+    Code.expect(Result.severityLevel).to.equal('severe')
     Code.expect(Result.severeBanner).to.equal('Severe flood warning for Coast from Fleetwood to Blackpool')
     Code.expect(Result.severeLink).to.equal('/target-area/012WACFB')
   })
@@ -92,12 +92,12 @@ lab.experiment('Station model test', () => {
 
     Code.expect(Result.station.id).to.equal(1001)
     Code.expect(Result.banner).to.equal(2)
-    Code.expect(Result.severityLevel).to.equal('warning')
-    Code.expect(Result.severeBanner).to.equal('2 severe flood warnings')
+    Code.expect(Result.severityLevel).to.equal('severe')
+    Code.expect(Result.severeBanner).to.equal('There are severe flood warnings in this area')
     Code.expect(Result.severeLink).to.equal('/alerts-and-warnings?station=1001#severe')
-    Code.expect(Result.alertsBanner).to.equal('2 flood alerts')
+    Code.expect(Result.alertsBanner).to.equal('There are flood alerts in this area')
     Code.expect(Result.alertsLink).to.equal('/alerts-and-warnings?station=1001#alerts')
-    Code.expect(Result.warningsBanner).to.equal('2 flood warnings')
+    Code.expect(Result.warningsBanner).to.equal('There are flood warnings in this area')
     Code.expect(Result.warningsLink).to.equal('/alerts-and-warnings?station=1001#warnings')
   })
   lab.test('Test station viewModel groundwater station', async () => {
@@ -110,6 +110,18 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.station.id).to.equal(9302)
     Code.expect(Result.station.river).to.equal('Groundwater Level')
     Code.expect(Result.station.hasPercentiles).to.equal(true)
+  })
+  lab.test('Test station viewModel plotNegativeValues should be true for groundwater station', async () => {
+    const viewModel = new ViewModel(data.stationGroudwater)
+    Code.expect(viewModel.station.plotNegativeValues).to.equal(true)
+  })
+  lab.test('Test station viewModel plotNegativeValues should be false for river station', async () => {
+    const viewModel = new ViewModel(data.stationRiver)
+    Code.expect(viewModel.station.plotNegativeValues).to.equal(false)
+  })
+  lab.test('Test station viewModel plotNegativeValues should be true for coastal station', async () => {
+    const viewModel = new ViewModel(data.stationCoastal)
+    Code.expect(viewModel.station.plotNegativeValues).to.equal(true)
   })
   lab.test('Test station viewModel FFOI station with Impacts', async () => {
     const stationData = data.stationForecastData
@@ -165,7 +177,6 @@ lab.experiment('Station model test', () => {
     const Result = viewModel
 
     Code.expect(Result.station.id).to.equal(1001)
-    Code.expect(Result.warningAnd).to.equal(' and ')
-    Code.expect(Result.warningsBanner).to.equal('1 flood warning')
+    Code.expect(Result.warningsBanner).to.equal('There is a flood warning in this area')
   })
 })

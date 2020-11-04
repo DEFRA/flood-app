@@ -32,7 +32,8 @@ if (chart.length) {
   const lineChart = window.flood.charts.createLineChart('line-chart', {
     now: new Date(),
     observed: window.flood.model.telemetry,
-    forecast: window.flood.model.ffoi && !window.flood.model.forecastOutOfDate ? window.flood.model.ffoi.processedValues : []
+    forecast: window.flood.model.ffoi && !window.flood.model.forecastOutOfDate ? window.flood.model.ffoi.processedValues : [],
+    plotNegativeValues: window.flood.model.station.plotNegativeValues
   })
   if (window.flood.utils.getParameterByName('t')) {
     // Find threshold in model

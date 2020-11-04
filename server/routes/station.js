@@ -3,7 +3,7 @@ const boom = require('@hapi/boom')
 const floodService = require('../services/flood')
 const ViewModel = require('../models/views/station')
 const additionalWelshStations = [4162, 4170, 4173, 4174, 4176]
-const nrwStationUrl = 'https://rloi.naturalresources.wales/ViewDetails?station='
+const { nrwStationUrl } = require('../config')
 
 module.exports = {
   method: 'GET',
