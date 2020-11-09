@@ -121,53 +121,6 @@
   }
 }
 
-// Attribution
-/*
-.defra-map-key__attribution .govuk-details {
-  position:relative;
-  padding:15px 15px 10px;
-  margin:0px;
-  @include govuk-font($size: 14);
-  .govuk-details__summary {
-    padding-left:0px;
-    color: $govuk-text-colour;
-  }
-  .govuk-details__summary:before {
-    border-width:0px;
-  }
-  &[open]:before {
-    content:'';
-    position:absolute;
-    top:0px;
-    left:15px;
-    right:15px;
-    height:1px;
-    border-top:1px solid $govuk-border-colour;
-  }
-  &[open] > .govuk-details__summary {
-    padding-left:15px !important;
-  }
-  &[open] > .govuk-details__summary:before {
-    border-width: 10px 6px 0px 6px !important;
-  }
-  &[open] > .govuk-details__text {
-    padding:10px 0px 0px 0px;
-    border:0px;
-  }
-  ul {
-    @include govuk-font($size: 14);
-    list-style:none;
-    margin:0;
-    padding:0;
-    -webkit-user-select: auto;
-    -khtml-user-select: auto;
-    -moz-user-select: auto;
-    -ms-user-select: auto;
-    user-select: auto;
-  }
-}
-*/
-
 // Overides
 .defra-map-key {
   .govuk-checkboxes__label:before,

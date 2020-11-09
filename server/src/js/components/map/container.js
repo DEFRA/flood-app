@@ -113,18 +113,6 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   })
   map.addControl(openKeyButton)
 
-  // Create the open key button
-  /*
-  const keyboardButtonElement = document.createElement('button')
-  keyboardButtonElement.className = 'defra-map__keyboard'
-  keyboardButtonElement.innerHTML = 'Keyboard shortcuts'
-  const keyboardButton = new Control({
-    element: keyboardButtonElement,
-    target: controlsElement
-  })
-  map.addControl(keyboardButton)
-  */
-
   // Create controls container element
   const controlsContainerElement = document.createElement('div')
   controlsContainerElement.className = 'defra-map-controls__container'
@@ -337,7 +325,6 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   this.resetButton = resetButtonElement
   this.openKeyButton = openKeyButtonElement
   this.closeInfoButton = closeInfoButton
-  // this.keyboardButton = keyboardButtonElement
   this.state = state
 
   //
@@ -446,7 +433,6 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
     infoElement.blur()
     keyElement.blur()
     viewport.removeAttribute('keyboard-focus')
-    // keyboardButtonElement.classList.remove('defra-map__keyboard--visible')
   })
 
   // Disable pinch and double tap zoom
