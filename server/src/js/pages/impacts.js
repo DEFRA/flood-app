@@ -1,6 +1,6 @@
 'use strict'
+import 'elm-pep'
 import '../components/nunjucks'
-import '../core'
 import '../components/map/maps'
 import '../components/map/styles'
 import '../components/map/layers'

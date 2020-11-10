@@ -1,17 +1,31 @@
 // Key
 .defra-map-key__section {
-  ul {
-    padding:0;
-    margin:0;
-    list-style-type: none;
-  }
+  display: block;
+  border:0px;
+  margin:0px;
+  padding:0px;
 }
 .defra-map-key__section-title {
+  position:relative;
   @include govuk-font($size: 16, $weight: bold);
   display: block;
-  margin:0 15px;
-  padding:15px 0px 0px;
-  border-top:1px solid $govuk-border-colour;
+  margin:0;
+  padding:15px 15px 0px;
+  box-sizing: border-box;
+  width: 100%;
+  &:before {
+    position:absolute;
+    content:'';
+    height:1px;
+    top:0px;
+    left:15px;
+    right:15px;
+    border-top:1px solid $govuk-border-colour;
+  }
+}
+.defra-map-key ul {
+  margin:0;
+  padding:0;
 }
 .defra-map-key__item {
   display:block;
@@ -27,7 +41,7 @@
   position: relative;
   @include govuk-font($size: 16);
 }
-.defra-map-key__item:first-child {
+.defra-map-key__item:first-of-type {
   padding-top:10px;
 }
 .defra-map-key__item:last-child {
