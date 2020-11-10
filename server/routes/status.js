@@ -12,6 +12,7 @@ module.exports = {
       place = await locationService.find('Warrington')
       locationEnd = new Date()
     } catch (err) {
+      console.error(`Location search error: [${err.name}] [${err.message}]`)
       place = null
       locationEnd = new Date()
     }

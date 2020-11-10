@@ -3,6 +3,7 @@ const ViewModel = require('../models/views/river-and-sea-levels')
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
 const util = require('../util')
+const LocationNotFoundError = require('../location-not-found-error')
 
 module.exports = [{
   method: 'GET',
@@ -31,9 +32,16 @@ module.exports = [{
       try {
         place = await locationService.find(util.cleanseLocation(location))
       } catch (error) {
-        // If location search error show national list with error
-        stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
-        model = new ViewModel({ location, place, stations, error })
+        console.error(`Location search error: [${error.name}] [${error.message}]`)
+        if (error instanceof LocationNotFoundError) {
+          // No location found so display zero results
+          stations = []
+          model = new ViewModel({ location, place, stations })
+        } else {
+          // If location search error show national list with error
+          stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
+          model = new ViewModel({ location, place, stations, error })
+        }
         return h.view('river-and-sea-levels', { model })
       }
       // If no place found or not UK or Scotland and Northern Ireland

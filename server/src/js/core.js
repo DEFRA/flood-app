@@ -68,7 +68,6 @@ window.flood = {
           window.history.back()
         })
         // ie 11 prepend hack
-        // nav.prepend(hyperlink)
         nav.insertBefore(hyperlink, nav.childNodes[0])
       }
     }

@@ -13,7 +13,8 @@ module.exports = (env, argv) => ({
     station: './server/src/js/pages/station',
     'stations-overview': './server/src/js/pages/stations-overview',
     'target-area': './server/src/js/pages/target-area',
-    location: './server/src/js/pages/location'
+    location: './server/src/js/pages/location',
+    'find-location': './server/src/js/pages/find-location'
   },
   output: {
     path: path.resolve(__dirname, 'server/dist/js')
