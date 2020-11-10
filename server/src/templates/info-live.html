@@ -1,56 +1,85 @@
 {% if model.ta_name %}
-<h2 class="govuk-body govuk-!-margin-bottom-1">
-    {% if model.severity_value  %}
-        {% if model.severity_value === 3 %}
-        Severe flood warning
-        {% elif model.severity_value === 2 %}
-        Flood warning
-        {% elif model.severity_value === 1 %}
-        Flood alert
-        {% else %}
-            {% if model.ta_code.charAt(4).toLowerCase() === 'w' %}
-            Flood warning removed
+<div id="infoDescription">
+    <p class="defra-map-info__feature">
+        <span class="defra-map-info__type">
+        {% if model.severity_value  %}
+            {% if model.severity_value === 3 %}
+            Severe flood warning
+            {% elif model.severity_value === 2 %}
+            Flood warning
+            {% elif model.severity_value === 1 %}
+            Flood alert
             {% else %}
-            Flood alert removed
+                {% if model.ta_code.charAt(4).toLowerCase() === 'w' %}
+                Flood warning removed
+                {% else %}
+                Flood alert removed
+                {% endif %}
             {% endif %}
+        {% elif model.ta_code.charAt(4).toLowerCase() === 'w' %}
+        Flood warning (inactive)
+        {% else %}
+        Flood alert (inactive)
         {% endif %}
-    {% elif model.ta_code.charAt(4).toLowerCase() === 'w' %}
-    Flood warning (inactive)
-    {% else %}
-    Flood alert (inactive)
-    {% endif %}
-</h2>
-<p class="govuk-body-s govuk-!-margin-bottom-1">
-    <strong><a class="defra-map-info__link" href="/target-area/{{ model.id }}">{{ model.ta_name }}</a></strong>
-</p>
+        </span>
+        <span class="govuk-visually-hidden">for</span>
+        <span class="defra-map-info__name">
+            <a href="/target-area/{{ model.id }}">{{ model.ta_name }}</a>
+        </span>
+    </p>
+</div>
 {% elif model.river %}
-<h2 class="govuk-body govuk-!-margin-bottom-1">
-    {% if model.type === 'C' %}Sea level{% elif model.type === 'G' %}Groundwater level{% else %}River level{% endif %}
-    {% if model.value and model.type !== 'C' and model.status !== 'Closed' and model.status !== 'Suspended' and not model.iswales %}
-    {% if model.atrisk %}(high){% elif model.value < model.percentile_95 %}(low){% else %}(normal){% endif %}
-    {% endif %}
-</h2>
-<p class="govuk-body-s govuk-!-margin-bottom-2">
-    <strong>
-        <a class="defra-map-info__link" href="/station/{{ model.id }}">
-            {{ model.name }}{% if model.type === 'S' or model.type === 'M' %}, {{ model.river }}{% endif %}
-            {% if model.iswales %}(Natural Resources Wales){% endif %}
-        </a>
-    </strong></br>
-    {% if not model.iswales %}
-    {% if model.status === 'Closed' or model.status === 'Suspended' %}
-    Closed or temporarily out of service
-    {% elif model.value %}
-    {{ model.value | round(2) }}m at {{ model.date }}
-    {% else %}
-    There is a problem with the latest measurement
-    {% endif %}
-    {% endif %}
-</p>
+<div id="infoDescription">
+    <p class="defra-map-info__feature">
+        <span class="defra-map-info__type">
+            {% if model.type === 'C' %}Sea level measurement{% elif model.type === 'G' %}Groundwater measurement{% else %}River level measurement{% endif %}
+        </span>
+        <span class="govuk-visually-hidden">at</span>
+        <span class="defra-map-info__name">
+            <a href="/station/{{ model.id }}">
+                {{ model.name }}{% if model.type === 'S' or model.type === 'M' %}, {{ model.river }}{% endif %}
+                {% if model.iswales %}(Natural Resources Wales){% endif %}
+            </a>
+        </span>
+    </p>
+    <p class="defra-map-info__meta">
+        <span class="govuk-visually-hidden">Latest measurement: </span>
+        {% if model.status === 'Closed' or model.status === 'Suspended' %}
+            Closed or temporarily out of service
+        {% elif model.value %}
+            {{ model.value | round(2) }}m at {{ model.date }}
+            {% if model.value and model.type !== 'C' and model.status !== 'Closed' and model.status !== 'Suspended' and not model.iswales %}
+                {% if model.atrisk %}(high){% elif model.value < model.percentile_95 %}(low){% else %}(normal){% endif %}
+            {% endif %}
+        {% else %}
+            There is a problem with the latest measurement
+        {% endif %}
+    </p>
+</div>
 {% if model.up %}
-<button class="defra-map-info__button defra-map-info__button--up govuk-!-margin-bottom-1 govuk-!-margin-right-2" data-id="stations.{{ model.up }}">Upstream</button>
+<button class="defra-map-info__button defra-map-info__button--up" data-id="stations.{{ model.up }}" aria-controls="viewport infoDescription">
+    <span class="govuk-visually-hidden">Select next</span> Upstream  <span class="govuk-visually-hidden">measurement</span>
+</button>
 {% endif %}
 {% if model.down %}
-<button class="defra-map-info__button defra-map-info__button--down govuk-!-margin-bottom-1" data-id="stations.{{ model.down }}">Downstream</button>
-{% endif %}
+<button class="defra-map-info__button defra-map-info__button--down" data-id="stations.{{ model.down }}" aria-controls="viewport infoDescription">
+    <span class="govuk-visually-hidden">Select next</span> Downstream <span class="govuk-visually-hidden">measurement</span>
+</button>
+{% endif %} 
+{% elif model.stationReference %}
+<p class="govuk-body govuk-!-margin-bottom-1">Rainfall</p>
+<p class="govuk-body-s govuk-!-margin-bottom-1">
+    <a class="govuk-!-font-weight-bold defra-map-info__link" href="/rain-guage/{{ model.id }}">Measurment at grid ref {{ model.gridRef }}</a>
+    {% if model.value > 0 %}
+    {{ model.value }}mm in the last 24 hour period
+    {% else %}
+    0mm or no recent measurements
+    {% endif %}
+</p>
+{% elif model.stationReference %}
+<p class="govuk-body govuk-!-margin-bottom-1">Historic flooding</p>
+<p class="govuk-body-s govuk-!-margin-bottom-1">
+    <strong>{{ props.description }}</strong><br/>
+    <a href="/station/{{ props.stationId }}?t={{ props.impactId }}">River level at {{ props.stationName }}</a>
+</p>
 {% endif %}
