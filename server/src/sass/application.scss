@@ -1,5 +1,12 @@
 $govuk-global-styles: true;
 
+// DL: Tablet/desktop overide to address modern iPads 
+$govuk-breakpoints: (
+  mobile:  320px,
+  tablet:  641px,
+  desktop: 835px
+) !default;
+
 // GOV.UK Frontend
 @import "node_modules/govuk-frontend/govuk/all";
 
