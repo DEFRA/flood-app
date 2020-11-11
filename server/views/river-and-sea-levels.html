@@ -107,9 +107,6 @@
             {% endfor %}
         </ul>
         {% else %}
-
-        {% if model.isEngland === false %}
-
         <p class="govuk-body govuk-!-margin-top-4">
           <strong>No river, sea or groundwater levels found.</strong>    
         </p>
@@ -124,24 +121,6 @@
           <li>Northern Ireland <a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">visit the Northern Ireland Direct website</a></li>
           <li>Wales <a href="https://naturalresources.wales/flooding">visit the Natural Resources Wales website</a></li>
         </ul>
-
-        {% else %}
-
-        <p class="govuk-body govuk-!-margin-top-4">
-          <strong>No river, sea or groundwater levels found.</strong>    
-        </p>
-        <p class="govuk-body">This might be because:</p>
-        <ul class="govuk-list govuk-list--bullet">
-          <li>the service does not recognise what you searched - check the spelling or enter a broader location</li>
-          <li>you searched for a place that's outside of England</li>
-        </ul>
-        <p class="govuk-body">To check for flooding in:</p>
-        <ul class="govuk-list govuk-list--bullet">
-          <li>Scotland <a href="https://www.sepa.org.uk">visit the Scottish Environment Protection Agency website</a></li>
-          <li>Northern Ireland <a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">visit the Northern Ireland Direct website</a></li>
-          <li>Wales <a href="https://naturalresources.wales/flooding">visit the Natural Resources Wales website</a></li>
-        </ul>
-        {% endif %}
         {% endif %}
     </div>
 </div>

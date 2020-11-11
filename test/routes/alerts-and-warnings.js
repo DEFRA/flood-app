@@ -73,7 +73,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('No flood alerts or warnings near this location.')
+    Code.expect(response.payload).to.contain('No alerts or warnings found')
     Code.expect(response.payload).to.contain('0 results')
     Code.expect(response.statusCode).to.equal(200)
   })
@@ -104,7 +104,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('No flood alerts or warnings near this location.')
+    Code.expect(response.payload).to.contain('No alerts or warnings found')
     Code.expect(response.payload).to.contain('0 results')
     Code.expect(response.statusCode).to.equal(200)
   })
@@ -143,7 +143,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('<strong>This service provides flood risk information for England only.</strong>')
+    Code.expect(response.payload).to.contain('you searched for a place that\'s outside of England')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /alerts-and-warnings with query parameters, show alert, warnings and severe', async () => {
@@ -318,8 +318,7 @@ lab.experiment('Test - /alerts-warnings', () => {
     }
 
     const response = await server.inject(options)
-
-    Code.expect(response.payload).to.contain('No flood alerts or warnings')
+    Code.expect(response.payload).to.contain('No alerts or warnings found')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /alerts-and-warnings?station=1001 ', async () => {

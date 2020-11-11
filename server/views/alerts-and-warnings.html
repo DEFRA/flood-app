@@ -79,27 +79,20 @@
             {% endfor %}
         </ul>
         {% else %}
-
-        {% if model.isEngland === false %}
-
-          <p class="govuk-body govuk-!-margin-top-4">
-            <strong>This service provides flood risk information for England only.</strong>    
-          </p>
-          <p>Flood risk information for Northern Ireland is available from <a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">Northern Ireland Direct</a>.</p>
-          <p>Flood risk information for Scotland is available from <a href="https://www.sepa.org.uk/environment/water/flooding/">the Scottish Environment Protection Agency</a>.</p>
-          <p>Flood risk information for Wales is available from <a href="https://naturalresources.wales/flooding?lang=en">Natural Resources Wales</a>.</p>
-
-        {% else %}
         <p class="govuk-body govuk-!-margin-top-4">
-            <strong>No flood alerts or warnings{% if model.placeName or model.q %} near this location{% endif %}.</strong>
+          <strong>No alerts or warnings found</strong>    
         </p>
-        <p class="govuk-body">Improve your search results by:</p>
+        <p class="govuk-body">This might be because:</p>
         <ul class="govuk-list govuk-list--bullet">
-            <li>removing the filter</li>
-            <li>searching a broader location</li>
-            <li>double-checking your spelling</li>
+          <li>the service does not recognise what you searched - check the spelling or enter a broader location</li>
+          <li>you searched for a place that's outside of England</li>
         </ul>
-        {% endif %}
+        <p class="govuk-body">To check for flooding in:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>Scotland <a href="https://www.sepa.org.uk">visit the Scottish Environment Protection Agency website</a></li>
+          <li>Northern Ireland <a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">visit the Northern Ireland Direct website</a></li>
+          <li>Wales <a href="https://naturalresources.wales/flooding">visit the Natural Resources Wales website</a></li>
+        </ul>
         {% endif %}
     </div>
 </div>

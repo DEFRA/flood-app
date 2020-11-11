@@ -160,7 +160,7 @@ lab.experiment('location service test', () => {
     })
 
     Code.expect(result.name).to.equal('LocationNotFoundError')
-    Code.expect(result.message).to.equal('Location search returned low confidence results')
+    Code.expect(result.message).to.equal('Location search returned low confidence results or only country region')
   })
 
   lab.test('Check for Bing call returning medium confidence and hence no results', async () => {
@@ -218,7 +218,7 @@ lab.experiment('location service test', () => {
     })
 
     Code.expect(result.name).to.equal('LocationNotFoundError')
-    Code.expect(result.message).to.equal('Location search returned low confidence results')
+    Code.expect(result.message).to.equal('Location search returned low confidence results or only country region')
   })
 
   lab.test('Check for Bing call returning no data resources and hence no results', async () => {

@@ -1,4 +1,4 @@
-// const joi = require('@hapi/joi')
+const joi = require('@hapi/joi')
 const ViewModel = require('../models/views/location')
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
@@ -11,10 +11,6 @@ module.exports = {
   handler: async (request, h) => {
     const { q: location } = request.query
 
-    if (!location) {
-      return h.redirect('/find-location')
-    }
-
     let place
 
     try {
@@ -22,15 +18,15 @@ module.exports = {
     } catch (err) {
       console.error(`Location search error: [${err.name}] [${err.message}]`)
       if (err instanceof LocationNotFoundError) {
-        return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding - GOV.UK' })
+        return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding' })
       } else {
-        return h.view('location-error', { pageTitle: 'Error: Find location - Check for flooding - GOV.UK' })
+        return h.view('location-error', { pageTitle: 'Error: Find location - Check for flooding' })
       }
     }
 
     if (!place.isEngland.is_england) {
       console.error('Location search error: Valid response but location not in England.')
-      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding - GOV.UK' })
+      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding' })
     }
 
     const [
@@ -46,10 +42,18 @@ module.exports = {
     return h.view('location', { model })
   },
   options: {
-    // validate: {
-    //   query: joi.object({
-    //     q: joi.string().trim().max(200).required(),
-    //   })
-    // }
+    validate: {
+      query: joi.object({
+        q: joi.string().trim().max(200).required()
+      }),
+      failAction: (request, h, err) => {
+        console.error('Location search error: Invalid or no string input.')
+        if (!request.query.q) {
+          return h.redirect('/find-location').takeover()
+        } else {
+          return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding' }).takeover()
+        }
+      }
+    }
   }
 }
