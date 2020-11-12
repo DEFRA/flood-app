@@ -18,15 +18,15 @@ module.exports = {
     } catch (err) {
       console.error(`Location search error: [${err.name}] [${err.message}]`)
       if (err instanceof LocationNotFoundError) {
-        return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding' })
+        return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location })
       } else {
-        return h.view('location-error', { pageTitle: 'Error: Find location - Check for flooding' })
+        return h.view('location-error', { pageTitle: 'Error: Find location - Check for flooding', location: location })
       }
     }
 
     if (!place.isEngland.is_england) {
       console.error('Location search error: Valid response but location not in England.')
-      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding' })
+      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location })
     }
 
     const [
@@ -51,7 +51,7 @@ module.exports = {
         if (!request.query.q) {
           return h.redirect('/find-location').takeover()
         } else {
-          return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding' }).takeover()
+          return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: request.query.q }).takeover()
         }
       }
     }
