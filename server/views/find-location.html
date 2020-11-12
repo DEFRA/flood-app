@@ -4,6 +4,13 @@
 {% from "input/macro.njk" import govukInput %}
 
 {% block content %}
+
+{% if model.referer %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full" id="browserBackContainer"></div>
+</div>
+{% endif %}
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
 
@@ -19,4 +26,9 @@
     <p><a href="/">Or check for flooding in all of England</a></p>
   </div>
 </div>
+{% endblock %}
+
+{% block bodyEnd %}
+{{ super() }}
+<script src="{{assetPath}}/js/find-location.js"></script>
 {% endblock %}

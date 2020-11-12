@@ -1,15 +1,24 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="govuk-width-container">
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-xl">Sorry, there is a problem with this page</h1>
-            <p>Try again later or check the <a href="/">latest flood risk situation in England</a>.</p>
-            <p>For river and sea flooding, call the 24-hour Floodline service.</p>
-            <p>Telephone: 0345 988 1188<br>Type talk: 0345 602 6340 (for the hard of hearing)<br><a href="https://gov.uk/call-charges">Find out more about call charges</a>.</p>  
-            <p><a href="https://www.gov.uk/find-local-council">Contact your local council</a> if you are not sure of the source of flooding.</p>
-      </div>
+
+{% if model.referer %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full" id="browserBackContainer"></div>
+</div>
+{% endif %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Sorry, there is a problem with the service</h1>
+        <p class="govuk-!-padding-top-4">Try again later, or <a href="/">check the flood risk for England</a>.</p>
+        <p>Call Floodline for advice about flooding from rivers, the sea and groundwater.</p>
+        <p>Telephone: 0345 988 1188<br>Textphone: 0345 602 6340<br>Open 24 hours a day, 7 days a week.<br><a href="https://gov.uk/call-charges">Find out more about call charges</a>.</p>
     </div>
 </div>
+{% endblock %}
+
+{% block bodyEnd %}
+{{ super() }}
+<script src="{{assetPath}}/js/find-location.js"></script>
 {% endblock %}

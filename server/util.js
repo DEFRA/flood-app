@@ -4,12 +4,16 @@ const config = require('./config')
 const wreck = require('@hapi/wreck').defaults({
   timeout: config.httpTimeoutMs
 })
+const LocationSearchError = require('./location-search-error')
 
 function request (method, url, options, ext = false) {
   return wreck[method](url, options)
     .then(response => {
       const res = response.res
       const payload = response.payload
+      if (res.headers['x-ms-bm-ws-info'] === '1') {
+        throw new LocationSearchError('Empty location search response indicated by header check of x-ms-bm-ws-info')
+      }
       if (res.statusCode !== 200) {
         const err = (payload || new Error('Unknown error'))
         throw err

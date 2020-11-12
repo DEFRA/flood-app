@@ -44,7 +44,7 @@ class ViewModel {
         this.subtitle = 'Showing ' + riverId + ' levels.'
       }
     } else {
-      this.pageTitle = `${placeName ? placeName + ' - ' : ''}River and sea levels in England`
+      this.pageTitle = `${location ? location + ' - ' : ''}River and sea levels in England`
     }
 
     const today = moment.tz().endOf('day')

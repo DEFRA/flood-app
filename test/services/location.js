@@ -40,7 +40,7 @@ lab.experiment('location service test', () => {
     }
     const result = await Code.expect(rejects()).to.reject()
     Code.expect(result).to.be.a.object()
-    Code.expect(result.message).to.equal('Invalid geocode results (no resourceSets)')
+    Code.expect(result.message).to.equal('Location search returned status: unknown, message: not set')
   })
 
   lab.test('Check for valid location', async () => {
@@ -159,7 +159,8 @@ lab.experiment('location service test', () => {
       return error
     })
 
-    Code.expect(result).to.be.undefined()
+    Code.expect(result.name).to.equal('LocationNotFoundError')
+    Code.expect(result.message).to.equal('Location search returned low confidence results or only country region')
   })
 
   lab.test('Check for Bing call returning medium confidence and hence no results', async () => {
@@ -216,7 +217,8 @@ lab.experiment('location service test', () => {
       return error
     })
 
-    Code.expect(result).to.be.undefined()
+    Code.expect(result.name).to.equal('LocationNotFoundError')
+    Code.expect(result.message).to.equal('Location search returned low confidence results or only country region')
   })
 
   lab.test('Check for Bing call returning no data resources and hence no results', async () => {
@@ -250,7 +252,8 @@ lab.experiment('location service test', () => {
       return error
     })
 
-    Code.expect(result).to.be.undefined()
+    Code.expect(result.name).to.equal('LocationNotFoundError')
+    Code.expect(result.message).to.equal('Location search returned no results')
   })
 
   lab.test('Check for Bing call returning invalid query', async () => {
@@ -284,7 +287,8 @@ lab.experiment('location service test', () => {
     }
 
     const result = await Code.expect(rejects()).to.reject()
-    Code.expect(result.message).to.equal('Invalid geocode results (no resourceSets)')
+    Code.expect(result.name).to.equal('LocationSearchError')
+    Code.expect(result.message).to.contain('Location search returned status: 400')
   })
   lab.test('Invalid data returned from third party location search', async () => {
     const util = require('../../server/util')
@@ -301,7 +305,8 @@ lab.experiment('location service test', () => {
 
     const result = await Code.expect(rejects()).to.reject()
 
-    Code.expect(result.message).to.equal('Invalid data returned from third party location search')
+    Code.expect(result.name).to.equal('LocationSearchError')
+    Code.expect(result.message).to.equal('Missing or corrupt contents from location search')
   })
   lab.test('Check for Bing call returning null value', async () => {
     const util = require('../../server/util')
@@ -322,7 +327,8 @@ lab.experiment('location service test', () => {
     }
 
     const result = await Code.expect(rejects()).to.reject()
-    Code.expect(result.message).to.equal('Invalid geocode results (no resourceSets)')
+    Code.expect(result.name).to.equal('LocationSearchError')
+    Code.expect(result.message).to.equal('Missing or corrupt contents from location search')
   })
   lab.test('Bing call returns multiple resources', async () => {
     const util = require('../../server/util')

@@ -19,7 +19,7 @@ class ViewModel {
       if (this.station && this.station.agency_name) {
         this.pageTitle = `${this.station.agency_name} - flood alerts and warnings`
       } else {
-        this.pageTitle = `${this.placeName ? this.placeName + ' f' : 'F'}lood alerts and warnings`
+        this.pageTitle = `${location ? location + ' f' : 'F'}lood alerts and warnings`
       }
     }
     this.countFloods = floods ? floods.floods.length : 0
