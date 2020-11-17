@@ -284,8 +284,6 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
     keyElement.setAttribute('aria-modal', true)
     keyElement.setAttribute('aria-hidden', false)
     keyElement.focus()
-    console.log(keyElement)
-    console.log(document.activeElement)
     // Lock body scroll
     disableBodyScroll(document.querySelector('.defra-map-key__content'))
   }
