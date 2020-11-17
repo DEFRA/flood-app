@@ -279,10 +279,13 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
     hideSiblings(true)
     state.isKeyOpen = true
     containerElement.classList.add('defra-map--key-open')
+    keyElement.style.display = 'block' // Safari v14 bug
     keyElement.setAttribute('open', true)
     keyElement.setAttribute('aria-modal', true)
     keyElement.setAttribute('aria-hidden', false)
     keyElement.focus()
+    console.log(keyElement)
+    console.log(document.activeElement)
     // Lock body scroll
     disableBodyScroll(document.querySelector('.defra-map-key__content'))
   }
@@ -293,6 +296,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
     if (state.isTablet) {
       keyElement.setAttribute('open', false)
       keyElement.setAttribute('aria-modal', true)
+      keyElement.style.display = 'none' // Safari v14 bug
     }
     keyElement.setAttribute('aria-hidden', state.isTablet)
     hideSiblings(false)
@@ -375,9 +379,11 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
     if (state.isTablet) {
       keyElement.setAttribute('open', state.isKeyOpen)
       keyElement.setAttribute('aria-modal', true)
+      keyElement.style.display = state.isKeyOpen ? 'block' : 'none' // Safari v14 bug
     } else {
       keyElement.removeAttribute('open')
       keyElement.removeAttribute('aria-modal')
+      keyElement.style.display = 'block' // Safari v14 bug
     }
     keyElement.setAttribute('aria-hidden', (state.isTablet && !state.isKeyOpen) || (!state.isTablet && state.isInfoOpen))
   }
