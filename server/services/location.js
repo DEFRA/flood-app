@@ -2,32 +2,42 @@ const { bingKey, bingUrl } = require('../config')
 const { getJson, addBufferToBbox } = require('../util')
 const floodServices = require('./flood')
 const util = require('util')
+const LocationSearchError = require('../location-search-error')
+const LocationNotFoundError = require('../location-not-found-error')
 
 async function find (location) {
   const query = encodeURIComponent(location)
   const url = util.format(bingUrl, query, bingKey)
-  let data = await getJson(url, true)
+  const bingData = await getJson(url, true)
 
-  if (data === undefined) {
-    throw new Error('Invalid data returned from third party location search')
+  // At this point we expect to have received a 200 status code from location search api call
+  // but check status code within payload to ensure valid.
+
+  if (!bingData || bingData.length === 0) {
+    throw new LocationSearchError('Missing or corrupt contents from location search')
+  }
+
+  // Check for OK status returned
+  if (bingData.statusCode !== 200) {
+    throw new LocationSearchError(`Location search returned status: ${bingData.statusCode || 'unknown'}, message: ${bingData.description || 'not set'}`)
   }
 
   // Check that the json is relevant
-  if (data === null || !data.resourceSets || !data.resourceSets.length) {
-    throw new Error('Invalid geocode results (no resourceSets)')
+  if (!bingData.resourceSets || !bingData.resourceSets.length) {
+    throw new LocationNotFoundError('Invalid geocode results (no resourceSets)')
   }
 
   // Ensure we have some results
-  const set = data.resourceSets[0]
+  const set = bingData.resourceSets[0]
   if (set.estimatedTotal === 0) {
-    return
+    throw new LocationNotFoundError('Location search returned no results')
   }
 
-  data = set.resources[0]
+  const data = set.resources[0]
 
   // Determine the confidence level of the result and return if it's not acceptable.
   if (data.confidence.toLowerCase() === 'low' || data.entityType.toLowerCase() === 'countryregion') {
-    return
+    throw new LocationNotFoundError('Location search returned low confidence results or only country region')
   }
 
   let {

@@ -55,7 +55,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('No river, sea or groundwater levels found.')
+    Code.expect(response.payload).to.contain('No river, sea or groundwater levels found')
     Code.expect(response.payload).to.contain('0 levels')
     Code.expect(response.statusCode).to.equal(200)
   })
@@ -94,7 +94,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('outside of England')
+    Code.expect(response.payload).to.contain('If you searched a place in England, you should:')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /rivers-and-sea-levels Bing returns error', async () => {

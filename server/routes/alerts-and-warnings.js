@@ -4,6 +4,7 @@ const Floods = require('../models/floods')
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
 const util = require('../util')
+const LocationNotFoundError = require('../location-not-found-error')
 
 module.exports = [{
   method: 'GET',
@@ -30,8 +31,14 @@ module.exports = [{
       try {
         place = await locationService.find(util.cleanseLocation(location))
       } catch (error) {
-        const floods = floodService.floods
-        model = new ViewModel({ location, place, floods, station, error })
+        console.error(`Location search error: [${error.name}] [${error.message}]`)
+        if (error instanceof LocationNotFoundError) {
+          // No location found so display zero results
+          model = new ViewModel({ location, place, floods, station })
+        } else {
+          const floods = floodService.floods
+          model = new ViewModel({ location, place, floods, station, error })
+        }
         return h.view('alerts-and-warnings', { model })
       }
 

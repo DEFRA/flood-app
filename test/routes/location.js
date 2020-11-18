@@ -47,9 +47,8 @@ lab.experiment('Routes test - location - 2', () => {
       url: '/location'
     }
     const response = await server.inject(options)
-    const payload = JSON.parse(response.payload)
-    Code.expect(response.statusCode).to.equal(400)
-    Code.expect(payload.message).to.equal('Invalid request query input')
+    Code.expect(response.headers.location).to.equal('/find-location')
+    Code.expect(response.payload).to.equal('')
   })
   lab.test('GET /location with query parameters giving undefined location', async () => {
     const fakeGetJson = () => {
@@ -82,6 +81,7 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/views'))
     await server.register(locationPlugin)
 
     await server.initialize()
@@ -91,8 +91,8 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers.location).to.equal('/find-location')
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('The service could not find \'xxxxxx\'')
   })
   lab.test('GET /location with query parameters giving defined location', async () => {
     const floodService = require('../../server/services/flood')
@@ -215,7 +215,8 @@ lab.experiment('Routes test - location - 2', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(400)
+    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.headers.location).to.equal('/find-location')
   })
   lab.test('GET /location with query parameters check for 1 alert 1 nlif', async () => {
     const floodService = require('../../server/services/flood')
@@ -462,8 +463,8 @@ lab.experiment('Routes test - location - 2', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.headers.location).to.equal('/find-location')
-    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('Sorry, there is a problem with the service')
   })
   lab.test('GET /national view', async () => {
     const fakeFloodData = () => {
@@ -710,7 +711,7 @@ lab.experiment('Routes test - location - 2', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('This service covers England only')
+    Code.expect(response.payload).to.contain('The service could not find')
   })
   lab.test('GET /location with query parameters for location-1sw-2w-1a', async () => {
     const floodService = require('../../server/services/flood')

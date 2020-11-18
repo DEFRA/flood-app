@@ -23,7 +23,7 @@
 {% if model.error %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <div class="defra-service-error">
+    <div class="defra-service-error govuk-!-margin-bottom-7">
       <h2 class="defra-service-error__title" id="error-summary-title">
         Sorry, there is currently a problem searching a location
       </h2>
@@ -107,41 +107,20 @@
             {% endfor %}
         </ul>
         {% else %}
-
-        {% if model.isEngland === false %}
-
-        <p class="govuk-body govuk-!-margin-top-4">
-          <strong>No river, sea or groundwater levels found.</strong>    
-        </p>
-        <p class="govuk-body">This might be because:</p>
+        <h2 class="govuk-heading-s govuk-!-margin-top-4">
+        No river, sea or groundwater levels found
+        </h2>
+        <p class="govuk-body">If you searched a place in England, you should:</p>
         <ul class="govuk-list govuk-list--bullet">
-          <li>the service does not recognise what you searched - check the spelling or enter a broader location</li>
-          <li>you searched for a place that's outside of England</li>
+          <li>check the spelling</li>
+          <li>enter a broader location</li>
         </ul>
-        <p class="govuk-body">To check for flooding in:</p>
+        <p class="govuk-body">If you searched a place outside England, you should visit:</p>
         <ul class="govuk-list govuk-list--bullet">
-          <li>Scotland <a href="https://www.sepa.org.uk">visit the Scottish Environment Protection Agency website</a></li>
-          <li>Northern Ireland <a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">visit the Northern Ireland Direct website</a></li>
-          <li>Wales <a href="https://naturalresources.wales/flooding">visit the Natural Resources Wales website</a></li>
-        </ul>
-
-        {% else %}
-
-        <p class="govuk-body govuk-!-margin-top-4">
-          <strong>No river, sea or groundwater levels found.</strong>    
-        </p>
-        <p class="govuk-body">This might be because:</p>
-        <ul class="govuk-list govuk-list--bullet">
-          <li>the service does not recognise what you searched - check the spelling or enter a broader location</li>
-          <li>you searched for a place that's outside of England</li>
-        </ul>
-        <p class="govuk-body">To check for flooding in:</p>
-        <ul class="govuk-list govuk-list--bullet">
-          <li>Scotland <a href="https://www.sepa.org.uk">visit the Scottish Environment Protection Agency website</a></li>
-          <li>Northern Ireland <a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">visit the Northern Ireland Direct website</a></li>
-          <li>Wales <a href="https://naturalresources.wales/flooding">visit the Natural Resources Wales website</a></li>
-        </ul>
-        {% endif %}
+          <li><a href="https://www.sepa.org.uk/environment/water/flooding/">Scottish Environment Protection Agency</a></li>
+          <li><a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">Northern Ireland Direct</a></li>
+          <li><a href="https://naturalresources.wales/flooding">Natural Resources Wales</a></li>
+        </ul>         
         {% endif %}
     </div>
 </div>

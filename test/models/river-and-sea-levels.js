@@ -22,7 +22,7 @@ lab.experiment('river-and-sea-levels model test', () => {
 
     const Result = viewModel
 
-    Code.expect(Result.pageTitle).to.equal('Cheshire - River and sea levels in England')
+    Code.expect(Result.pageTitle).to.equal('cheshire - River and sea levels in England')
     Code.expect(Result.countLevels).to.equal(74)
   })
 })

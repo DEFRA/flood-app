@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% if model.referer %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full" id="browserBackContainer"></div>
+</div>
+{% endif %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">
+      The service could not find '{{ location }}'
+    </h1>
+    <p class="govuk-body">If you searched a place in England, you should:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>check the spelling</li>
+      <li>enter a broader location</li>
+    </ul>
+    <p class="govuk-body"><a href="/find-location">Go back to search a location</a></p>
+    <p class="govuk-body">If you searched a place outside England, you should visit:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li><a href="https://www.sepa.org.uk/environment/water/flooding/">Scottish Environment Protection Agency</a></li>
+      <li><a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">Northern Ireland Direct</a></li>
+      <li><a href="https://naturalresources.wales/flooding">Natural Resources Wales</a></li>
+    </ul>
+  </div>
+</div>
+{% endblock %}
+
+{% block bodyEnd %}
+{{ super() }}
+<script src="{{assetPath}}/js/find-location.js"></script>
+{% endblock %}
