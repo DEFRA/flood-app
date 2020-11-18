@@ -18,7 +18,11 @@ function request (method, url, options, ext = false) {
         const err = (payload || new Error('Unknown error'))
         throw err
       }
-      return payload
+      if (res.headers['x-ms-bm-ws-info']) {
+        return { ...payload, headers: res.headers }
+      } else {
+        return payload
+      }
     })
 }
 

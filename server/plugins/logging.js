@@ -1,4 +1,4 @@
-const isProd = require('../config').isProd
+const isProd = true // require('../config').isProd
 
 module.exports = {
   plugin: require('@hapi/good'),

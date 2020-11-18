@@ -4,32 +4,54 @@ const floodServices = require('./flood')
 const util = require('util')
 const LocationSearchError = require('../location-search-error')
 const LocationNotFoundError = require('../location-not-found-error')
-
+let count = 0
 async function find (location) {
   const query = encodeURIComponent(location)
   const url = util.format(bingUrl, query, bingKeyLocation)
-  const bingData = await getJson(url, true)
+  let bingData = null
 
+  try {
+    bingData = await getJson(url, true)
+  } catch (err) {
+    console.log(count + ' - ' + err)
+    console.log(count + ' - ' + JSON.stringify(err))
+    throw err
+  }
+
+  count++
+  console.log(count)
   // At this point we expect to have received a 200 status code from location search api call
   // but check status code within payload to ensure valid.
 
   if (!bingData || bingData.length === 0) {
+    console.log(count + ' ' + query)
+    console.log(count + ' ' + url)
+    console.log(count + ' ' + JSON.stringify(bingData))
     throw new LocationSearchError('Missing or corrupt contents from location search')
   }
 
   // Check for OK status returned
   if (bingData.statusCode !== 200) {
+    console.log(count + ' ' + query)
+    console.log(count + ' ' + url)
+    console.log(count + ' ' + JSON.stringify(bingData))
     throw new LocationSearchError(`Location search returned status: ${bingData.statusCode || 'unknown'}, message: ${bingData.description || 'not set'}`)
   }
 
   // Check that the json is relevant
   if (!bingData.resourceSets || !bingData.resourceSets.length) {
+    console.log(count + ' ' + query)
+    console.log(count + ' ' + url)
+    console.log(count + ' ' + JSON.stringify(bingData))
     throw new LocationNotFoundError('Invalid geocode results (no resourceSets)')
   }
 
   // Ensure we have some results
   const set = bingData.resourceSets[0]
   if (set.estimatedTotal === 0) {
+    console.log(count + ' ' + query)
+    console.log(count + ' ' + url)
+    console.log(count + ' ' + JSON.stringify(bingData))
     throw new LocationNotFoundError('Location search returned no results')
   }
 
@@ -37,6 +59,9 @@ async function find (location) {
 
   // Determine the confidence level of the result and return if it's not acceptable.
   if (data.confidence.toLowerCase() === 'low' || data.entityType.toLowerCase() === 'countryregion') {
+    console.log(count + ' ' + query)
+    console.log(count + ' ' + url)
+    console.log(count + ' ' + JSON.stringify(bingData))
     throw new LocationNotFoundError('Location search returned low confidence results or only country region')
   }
 
