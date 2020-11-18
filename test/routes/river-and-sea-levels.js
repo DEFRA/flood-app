@@ -94,7 +94,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('If the place you searched was in England, you should:')
+    Code.expect(response.payload).to.contain('If you searched a place in England, you should:')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /rivers-and-sea-levels Bing returns error', async () => {

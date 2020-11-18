@@ -92,7 +92,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('The service cannot find \'xxxxxx\'')
+    Code.expect(response.payload).to.contain('The service could not find \'xxxxxx\'')
   })
   lab.test('GET /location with query parameters giving defined location', async () => {
     const floodService = require('../../server/services/flood')
@@ -711,7 +711,7 @@ lab.experiment('Routes test - location - 2', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('The service cannot find')
+    Code.expect(response.payload).to.contain('The service could not find')
   })
   lab.test('GET /location with query parameters for location-1sw-2w-1a', async () => {
     const floodService = require('../../server/services/flood')
