@@ -186,7 +186,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   infoElement.appendChild(infoContainer)
 
   // Create key
-  const keyElement = document.createElement('div')
+  const = document.createElement('div')
   keyElement.className = 'defra-map-key'
   keyElement.id = 'key'
   keyElement.setAttribute('aria-labelledby', 'mapKeyLabel')
