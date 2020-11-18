@@ -81,7 +81,7 @@
   &:focus {
     outline: none;
   }
-  &:focus[keyboard-focus]:after {
+  &:focus[open="true"][keyboard-focus]:after {
     position:absolute;
     pointer-events: none;
     content:'';
@@ -250,7 +250,7 @@
 .defra-map--key-open {
   .defra-map-key {
     @include mq ($until: desktop) {
-      display: block;
+      // display: block; // Safari v14 bug needs to be applied with JS
       left:0;
       top:0px;
       bottom:0px;
@@ -390,6 +390,7 @@
   }
   &-in,
   &-out {
+    display:block;
     border:0;
     height:41px;
     width:41px;
