@@ -20,7 +20,7 @@ module.exports = {
       if (err instanceof LocationNotFoundError) {
         return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location })
       } else {
-        return h.view('location-error', { pageTitle: 'Error: Find location - Check for flooding', location: location })
+        return h.view('location-error', { pageTitle: 'Sorry, there is a problem with the service - Check for flooding', location: location })
       }
     }
 

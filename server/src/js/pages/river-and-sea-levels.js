@@ -13,7 +13,7 @@ window.flood.utils.addBrowserBackButton()
 // Create LiveMap
 if (document.getElementById('map')) {
   window.flood.maps.createLiveMap('map', {
-    btnText: 'View on map',
+    btnText: 'View map',
     btnClasses: 'defra-button-map-s',
     layers: 'mv,sh,st',
     extent: window.flood.model.placeBbox

@@ -115,11 +115,13 @@ class ViewModel {
       }
     })
 
-    // add on 444m (0.004 deg) to the stations bounding box to stop stations clipping edge of viewport
-    stationsBbox[0] = stationsBbox[0] - 0.004
-    stationsBbox[1] = stationsBbox[1] - 0.004
-    stationsBbox[2] = stationsBbox[2] + 0.004
-    stationsBbox[3] = stationsBbox[3] + 0.004
+    if (stationsBbox.length > 0) {
+      // add on 444m (0.004 deg) to the stations bounding box to stop stations clipping edge of viewport
+      stationsBbox[0] = stationsBbox[0] - 0.004
+      stationsBbox[1] = stationsBbox[1] - 0.004
+      stationsBbox[2] = stationsBbox[2] + 0.004
+      stationsBbox[3] = stationsBbox[3] + 0.004
+    }
 
     // generate object keyed by river_ids
     this.stations = groupBy(stations, 'river_id')

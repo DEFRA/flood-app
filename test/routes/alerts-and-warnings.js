@@ -143,7 +143,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('If the place you searched was in England, you should:')
+    Code.expect(response.payload).to.contain('If you searched a place in England, you should:')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /alerts-and-warnings with query parameters, show alert, warnings and severe', async () => {
