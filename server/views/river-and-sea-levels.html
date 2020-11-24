@@ -58,9 +58,7 @@
     <div class="govuk-grid-column-two-thirds">
         <div class="defra-search-summary" id="searchSummary">
             <h2 class="defra-search-summary__count">{{ model.countLevels }} level{% if model.countLevels != 1 %}s{% endif %}</h2>
-            {% if model.countLevels %}
             <span id="map"></span>
-            {% endif %}
         </div>
         {% if model.countLevels %}
         <ul class="defra-flood-list">
