@@ -25,7 +25,8 @@ class ViewModel {
     */
 
     Object.assign(this, {
-      feedback: true
+      feedback: true,
+      bingMaps: config.bingKeyMaps
     })
     // Group warnings/alerts by severity level
 
