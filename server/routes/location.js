@@ -44,7 +44,14 @@ module.exports = {
   options: {
     validate: {
       query: joi.object({
-        q: joi.string().trim().max(200).required()
+        q: joi.string().trim().max(200).required(),
+        cz: joi.string(),
+        l: joi.string(),
+        btn: joi.string(),
+        ext: joi.string(),
+        fid: joi.string(),
+        lyr: joi.string(),
+        v: joi.string()
       }),
       failAction: (request, h, err) => {
         console.error('Location search error: Invalid or no string input.')
