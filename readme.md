@@ -42,7 +42,8 @@ DEFRA employees can find examples of environment variables stored in our private
 | NODE_ENV | Node environment |    no    | production | development, dev, test, tst, production |                               |
 | FLOOD_APP_STAGE | Flavour of environment | no | '' | ||
 | PORT     | Port number      |    no    | 3009    |                             |                               |
-| FLOOD_APP_BING_KEY   | MS Bing Key  |    yes    |         |                             | For location search |
+| FLOOD_APP_BING_HEY_MAP   | MS Bing Key  |    yes    |         |                             | For location search |
+| FLOOD_APP_BING_KEY_LOCATION   | MS Bing Key  |    yes    |         |                             | For location search |
 | FLOOD_APP_BING_URL   | MS Bing Location Search  |    yes    |         |                             | For location search |
 | FLOOD_APP_GEOSERVER_URL   | Geoserver  |    yes    |         |                             | For maps ows |
 | FLOOD_APP_SERVICE_URL   | flood-service  |    yes    |         |                             | For flood api |

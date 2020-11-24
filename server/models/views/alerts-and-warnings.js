@@ -1,3 +1,5 @@
+const { bingKeyMaps } = require('../../config')
+
 class ViewModel {
   constructor ({ location, place, floods, station, error }) {
     Object.assign(this, {
@@ -30,7 +32,8 @@ class ViewModel {
     this.expose = {
       station: this.station,
       placeBbox: this.placeBbox,
-      countFloods: this.countFloods
+      countFloods: this.countFloods,
+      bingMaps: bingKeyMaps
     }
   }
 }
