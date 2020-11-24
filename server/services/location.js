@@ -1,4 +1,4 @@
-const { bingKey, bingUrl } = require('../config')
+const { bingKeyLocation, bingUrl } = require('../config')
 const { getJson, addBufferToBbox } = require('../util')
 const floodServices = require('./flood')
 const util = require('util')
@@ -7,7 +7,7 @@ const LocationNotFoundError = require('../location-not-found-error')
 
 async function find (location) {
   const query = encodeURIComponent(location)
-  const url = util.format(bingUrl, query, bingKey)
+  const url = util.format(bingUrl, query, bingKeyLocation)
   const bingData = await getJson(url, true)
 
   // At this point we expect to have received a 200 status code from location search api call

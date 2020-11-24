@@ -1,5 +1,6 @@
 const severity = require('../severity')
 const moment = require('moment-timezone')
+const { bingKeyMaps } = require('../../config')
 
 class ViewModel {
   constructor (options) {
@@ -62,7 +63,8 @@ class ViewModel {
       areaDescription: areaDescription,
       targetArea: area.code,
       feedback: true,
-      mapTitle
+      mapTitle,
+      bingMaps: bingKeyMaps
     }, options)
   }
 }

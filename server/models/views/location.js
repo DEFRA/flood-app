@@ -1,6 +1,6 @@
 const severity = require('../severity')
 const { groupBy } = require('../../util')
-const { floodRiskUrl } = require('../../config')
+const { floodRiskUrl, bingKeyMaps } = require('../../config')
 const moment = require('moment-timezone')
 
 class ViewModel {
@@ -133,7 +133,8 @@ class ViewModel {
     this.activeImpacts = impacts.filter(active => active.telemetryactive === true)
     this.hasActiveImpacts = !!this.activeImpacts.length
     this.expose = {
-      placeBbox: this.placeBbox
+      placeBbox: this.placeBbox,
+      bingMaps: bingKeyMaps
     }
   }
 }
