@@ -1,5 +1,6 @@
 const moment = require('moment-timezone')
 const { groupBy } = require('../../util')
+const { bingKeyMaps } = require('../../config')
 
 class ViewModel {
   constructor ({ location, place, stations, targetArea, riverId, error }) {
@@ -128,7 +129,8 @@ class ViewModel {
 
     this.export = {
       countLevels: this.countLevels,
-      placeBbox: place ? place.bbox : stationsBbox
+      placeBbox: place ? place.bbox : stationsBbox,
+      bingMaps: bingKeyMaps
     }
   }
 }
