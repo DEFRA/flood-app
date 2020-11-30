@@ -1,0 +1,20 @@
+# Service refresh release 3.5.0
+
+# Tickets
+
+fis-676
+fis-716
+fis-715
+fis-729
+fis-750
+
+# Information
+
+This is a code release for a load of bug fixs and ci tickets for service refresh
+
+# Instructions
+
+Execute job: LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Please note that for this release the bing api key has been split into 2 and been given security settings.  Therefore there is higher chance for there to be an issue on deployment.
+
