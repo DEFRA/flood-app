@@ -48,7 +48,7 @@ module.exports = [{
         return h.view('alerts-and-warnings', { model })
       } else {
         // Data passed to floods model so the schema is the same as cached floods
-        const data = await floodService.getFloodsWithin(place.bbox)
+        const data = await floodService.getFloodsWithin(place.bbox2k)
         floods = new Floods(data)
         model = new ViewModel({ location, place, floods, station })
         return h.view('alerts-and-warnings', { model })
