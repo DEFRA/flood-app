@@ -10,7 +10,7 @@ class ViewModel {
     Object.assign(this, {
       q: location,
       place,
-      placeBbox: place ? place.bbox : [],
+      placeBbox: place ? place.bbox2k : [],
       floods,
       impacts,
       location: title,

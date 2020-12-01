@@ -52,7 +52,7 @@ module.exports = [{
         return h.view('river-and-sea-levels', { model })
       } else {
         // Finally show place filtered station list
-        stations = await floodService.getStationsWithin(place.bbox)
+        stations = await floodService.getStationsWithin(place.bbox10k)
         model = new ViewModel({ location, place, stations })
         model.referer = request.headers.referer
         return h.view('river-and-sea-levels', { model })

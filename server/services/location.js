@@ -81,13 +81,16 @@ async function find (location) {
 
   const isEngland = await floodServices.getIsEngland(center[0], center[1])
 
-  // add on 2000m buffer to place.bbox for search
-  bbox = addBufferToBbox(bbox, 2000)
+  // add on 2000m buffer to place.bbox for warnings and alerts search
+  const bbox2k = addBufferToBbox(bbox, 2000)
+  // add on 10000m buffer to place.bbox for stations search
+  const bbox10k = addBufferToBbox(bbox, 10000)
 
   return {
     name,
     center,
-    bbox,
+    bbox2k,
+    bbox10k,
     address,
     isEngland,
     isUK,

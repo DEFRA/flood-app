@@ -34,9 +34,9 @@ module.exports = {
       { floods },
       stations
     ] = await Promise.all([
-      floodService.getImpactsWithin(place.bbox),
-      floodService.getFloodsWithin(place.bbox),
-      floodService.getStationsWithin(place.bbox)
+      floodService.getImpactsWithin(place.bbox2k),
+      floodService.getFloodsWithin(place.bbox2k),
+      floodService.getStationsWithin(place.bbox10k)
     ])
     const model = new ViewModel({ location, place, floods, stations, impacts })
     return h.view('location', { model })

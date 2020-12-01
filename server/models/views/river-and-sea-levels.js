@@ -129,7 +129,7 @@ class ViewModel {
 
     this.export = {
       countLevels: this.countLevels,
-      placeBbox: place ? place.bbox : stationsBbox,
+      placeBbox: place ? place.bbox10k : stationsBbox,
       bingMaps: bingKeyMaps
     }
   }
