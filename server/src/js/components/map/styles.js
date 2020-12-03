@@ -2,12 +2,12 @@
 /*
 Sets up the window.flood.maps styles objects
 */
-import { Style, Icon, Fill, Stroke } from 'ol/style'
+import { Style, Icon, Fill, Stroke, Text, Circle } from 'ol/style'
 
 window.flood.maps.styles = {
 
   //
-  // Vector styles
+  // Vector styles live
   //
 
   targetAreaPolygons: (feature) => {
@@ -38,22 +38,22 @@ window.flood.maps.styles = {
     switch (severity) {
       case 3: // Severe warning
         strokeColour = '#D4351C'
-        fillColour = pattern('severe')
+        fillColour = targetAreaPolygonPattern('severe')
         zIndex = 11
         break
       case 2: // Warning
         strokeColour = '#D4351C'
-        fillColour = pattern('warning')
+        fillColour = targetAreaPolygonPattern('warning')
         zIndex = 10
         break
       case 1: // Alert
         strokeColour = '#F47738'
-        fillColour = pattern('alert')
+        fillColour = targetAreaPolygonPattern('alert')
         zIndex = isGroundwater ? 4 : 7
         break
       default: // Removed or inactive
         strokeColour = '#626A6E'
-        fillColour = pattern('removed')
+        fillColour = targetAreaPolygonPattern('removed')
         zIndex = 1
     }
     zIndex = isSelected ? zIndex + 2 : zIndex
@@ -111,10 +111,91 @@ window.flood.maps.styles = {
     }
     const isSelected = feature.get('isSelected')
     return isSelected ? styleCache.impactSelected : styleCache.impact
+  },
+
+  //
+  // Vector styles outlook
+  //
+
+  outlookPolygons: (feature) => {
+    if (!feature.get('isVisible')) {
+      return
+    }
+    const zIndex = feature.get('z-index')
+    const lineDash = [2, 3]
+    let strokeColour = '#85994b'
+    let fillColour = outlookPolygonPattern('veryLow')
+    if (feature.get('risk-level') === 2) {
+      strokeColour = '#ffdd00'
+      fillColour = outlookPolygonPattern('low')
+    } else if (feature.get('risk-level') === 3) {
+      strokeColour = '#F47738'
+      fillColour = outlookPolygonPattern('medium')
+    } else if (feature.get('risk-level') === 4) {
+      strokeColour = '#D4351C'
+      fillColour = outlookPolygonPattern('high')
+    }
+    return new Style({
+      stroke: new Stroke({ color: strokeColour, width: 1 }),
+      fill: new Fill({ color: fillColour }),
+      lineDash: lineDash,
+      zIndex: zIndex
+    })
+  },
+
+  places: (feature, resolution) => {
+    const display = (() => {
+      if (resolution > 1600) {
+        return 1
+      } else if (resolution > 800) {
+        return 2
+      } else if (resolution > 400) {
+        return 3
+      } else {
+        return 4
+      }
+    })()
+
+    if (parseInt(feature.get('d')) > display) {
+      return
+    }
+    return [
+      new Style({
+        text: new Text({
+          text: feature.get('n'),
+          font: 'bold 14px GDS Transport, Arial, sans-serif',
+          offsetY: -12,
+          stroke: new Stroke({
+            color: '#ffffff',
+            width: 2
+          })
+        })
+      }),
+      new Style({
+        text: new Text({
+          text: feature.get('n'),
+          font: 'bold 14px GDS Transport, Arial, sans-serif',
+          offsetY: -12
+        }),
+        image: new Circle({
+          fill: new Fill({
+            color: '#0b0c0c'
+          }),
+          stroke: new Stroke({
+            width: 0
+          }),
+          radius: 2
+        })
+      })
+    ]
   }
 }
 
-const pattern = (style) => {
+//
+// SVG fill paterns
+//
+
+const targetAreaPolygonPattern = (style) => {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
   const dpr = window.devicePixelRatio || 1
@@ -188,6 +269,89 @@ const pattern = (style) => {
       ctx.fillRect(0, 0, 8, 8)
       ctx.beginPath()
       ctx.fillStyle = '#626A6E'
+      ctx.arc(4, 4, 1, 0, 2 * Math.PI)
+      ctx.closePath()
+      ctx.fill()
+      break
+  }
+  ctx.restore()
+  return ctx.createPattern(canvas, 'repeat')
+}
+
+const outlookPolygonPattern = (style) => {
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+  const dpr = window.devicePixelRatio || 1
+  canvas.width = 8 * dpr
+  canvas.height = 8 * dpr
+  ctx.scale(dpr, dpr)
+  switch (style) {
+    case 'high':
+      ctx.fillStyle = '#D4351C'
+      ctx.fillRect(0, 0, 8, 8)
+      ctx.beginPath()
+      ctx.fillStyle = '#ffffff'
+      ctx.moveTo(0, 3.3)
+      ctx.lineTo(4.7, 8)
+      ctx.lineTo(3.3, 8)
+      ctx.lineTo(0, 4.7)
+      ctx.closePath()
+      ctx.moveTo(3.3, 0)
+      ctx.lineTo(4.7, 0)
+      ctx.lineTo(8, 3.3)
+      ctx.lineTo(8, 4.7)
+      ctx.closePath()
+      ctx.fill()
+      break
+    case 'medium':
+      ctx.fillStyle = '#F47738'
+      ctx.fillRect(0, 0, 8, 8)
+      ctx.beginPath()
+      ctx.fillStyle = '#ffffff'
+      ctx.moveTo(3.3, 0)
+      ctx.lineTo(4.7, 0)
+      ctx.lineTo(0, 4.7)
+      ctx.lineTo(0, 3.3)
+      ctx.closePath()
+      ctx.moveTo(3.3, 8)
+      ctx.lineTo(4.7, 8)
+      ctx.lineTo(8, 4.7)
+      ctx.lineTo(8, 3.3)
+      ctx.closePath()
+      ctx.moveTo(4.7, 0)
+      ctx.lineTo(8, 3.3)
+      ctx.lineTo(7.3, 4)
+      ctx.lineTo(4, 0.7)
+      ctx.closePath()
+      ctx.moveTo(0, 4.7)
+      ctx.lineTo(3.3, 8)
+      ctx.lineTo(4, 7.3)
+      ctx.lineTo(0.7, 4)
+      ctx.closePath()
+      ctx.fill()
+      break
+    case 'low':
+      ctx.fillStyle = '#ffdd00'
+      ctx.fillRect(0, 0, 8, 8)
+      ctx.beginPath()
+      ctx.fillStyle = '#ffffff'
+      ctx.moveTo(0, 3.3)
+      ctx.lineTo(0, 4.7)
+      ctx.lineTo(4.7, 0)
+      ctx.lineTo(3.3, 0)
+      ctx.closePath()
+      ctx.moveTo(3.3, 8)
+      ctx.lineTo(4.7, 8)
+      ctx.lineTo(8, 4.7)
+      ctx.lineTo(8, 3.3)
+      ctx.closePath()
+      ctx.fill()
+      break
+    case 'veryLow':
+      ctx.fillStyle = '#85994b'
+      ctx.fillRect(0, 0, 8, 8)
+      ctx.beginPath()
+      ctx.fillStyle = '#ffffff'
       ctx.arc(4, 4, 1, 0, 2 * Math.PI)
       ctx.closePath()
       ctx.fill()

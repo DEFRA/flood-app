@@ -4,11 +4,7 @@
 // TODO: needs refactoring into layers and styles
 // ALSO need to fix the functionality, I don't think the tickets have been developed as of 31/01/2020
 import { View } from 'ol'
-import { Vector as VectorLayer } from 'ol/layer'
-import { Vector as VectorSource } from 'ol/source'
 import { defaults as defaultInteractions } from 'ol/interaction'
-import { GeoJSON } from 'ol/format'
-import { Style, Fill, Stroke } from 'ol/style'
 import { unByKey } from 'ol/Observable'
 import { Control } from 'ol/control'
 
@@ -22,136 +18,15 @@ function OutlookMap (mapId, options) {
   const view = new View({
     zoom: 6,
     minZoom: 6,
-    maxZoom: 7,
+    maxZoom: 9,
     center: maps.center,
     extent: maps.extentLarge
   })
 
-  // Fill patterns
-  const pattern = (style) => {
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
-    const dpr = window.devicePixelRatio || 1
-    canvas.width = 8 * dpr
-    canvas.height = 8 * dpr
-    ctx.scale(dpr, dpr)
-    switch (style) {
-      case 'high':
-        ctx.fillStyle = '#D4351C'
-        ctx.fillRect(0, 0, 8, 8)
-        ctx.beginPath()
-        ctx.fillStyle = '#ffffff'
-        ctx.moveTo(0, 3.3)
-        ctx.lineTo(4.7, 8)
-        ctx.lineTo(3.3, 8)
-        ctx.lineTo(0, 4.7)
-        ctx.closePath()
-        ctx.moveTo(3.3, 0)
-        ctx.lineTo(4.7, 0)
-        ctx.lineTo(8, 3.3)
-        ctx.lineTo(8, 4.7)
-        ctx.closePath()
-        ctx.fill()
-        break
-      case 'medium':
-        ctx.fillStyle = '#F47738'
-        ctx.fillRect(0, 0, 8, 8)
-        ctx.beginPath()
-        ctx.fillStyle = '#ffffff'
-        ctx.moveTo(3.3, 0)
-        ctx.lineTo(4.7, 0)
-        ctx.lineTo(0, 4.7)
-        ctx.lineTo(0, 3.3)
-        ctx.closePath()
-        ctx.moveTo(3.3, 8)
-        ctx.lineTo(4.7, 8)
-        ctx.lineTo(8, 4.7)
-        ctx.lineTo(8, 3.3)
-        ctx.closePath()
-        ctx.moveTo(4.7, 0)
-        ctx.lineTo(8, 3.3)
-        ctx.lineTo(7.3, 4)
-        ctx.lineTo(4, 0.7)
-        ctx.closePath()
-        ctx.moveTo(0, 4.7)
-        ctx.lineTo(3.3, 8)
-        ctx.lineTo(4, 7.3)
-        ctx.lineTo(0.7, 4)
-        ctx.closePath()
-        ctx.fill()
-        break
-      case 'low':
-        ctx.fillStyle = '#ffdd00'
-        ctx.fillRect(0, 0, 8, 8)
-        ctx.beginPath()
-        ctx.fillStyle = '#ffffff'
-        ctx.moveTo(0, 3.3)
-        ctx.lineTo(0, 4.7)
-        ctx.lineTo(4.7, 0)
-        ctx.lineTo(3.3, 0)
-        ctx.closePath()
-        ctx.moveTo(3.3, 8)
-        ctx.lineTo(4.7, 8)
-        ctx.lineTo(8, 4.7)
-        ctx.lineTo(8, 3.3)
-        ctx.closePath()
-        ctx.fill()
-        break
-      case 'veryLow':
-        ctx.fillStyle = '#85994b'
-        ctx.fillRect(0, 0, 8, 8)
-        ctx.beginPath()
-        ctx.fillStyle = '#ffffff'
-        ctx.arc(4, 4, 1, 0, 2 * Math.PI)
-        ctx.closePath()
-        ctx.fill()
-        break
-    }
-    ctx.restore()
-    return ctx.createPattern(canvas, 'repeat')
-  }
-
-  // Styles
-  const style = (feature) => {
-    if (!feature.get('isVisible')) {
-      return
-    }
-    const zIndex = feature.get('z-index')
-    const lineDash = [2, 3]
-    let strokeColour = '#85994b'
-    let fillColour = pattern('veryLow')
-    if (feature.get('risk-level') === 2) {
-      strokeColour = '#ffdd00'
-      fillColour = pattern('low')
-    } else if (feature.get('risk-level') === 3) {
-      strokeColour = '#F47738'
-      fillColour = pattern('medium')
-    } else if (feature.get('risk-level') === 4) {
-      strokeColour = '#D4351C'
-      fillColour = pattern('high')
-    }
-    return new Style({
-      stroke: new Stroke({ color: strokeColour, width: 1 }),
-      fill: new Fill({ color: fillColour }),
-      lineDash: lineDash,
-      zIndex: zIndex
-    })
-  }
-
   // Layers
-  const road = maps.layers.road()
-  const areasOfConcern = new VectorLayer({
-    ref: 'areasOfConcern',
-    source: new VectorSource({
-      format: new GeoJSON(),
-      projection: 'EPSG:3857',
-      url: '/api/outlook.geojson'
-    }),
-    renderMode: 'hybrid',
-    style: style,
-    opacity: 0.6,
-    zIndex: 200
-  })
+  const topography = maps.layers.topography()
+  const areasOfConcern = maps.layers.areasOfConcern()
+  const places = maps.layers.places()
 
   // Configure default interactions
   const interactions = defaultInteractions({
@@ -217,7 +92,7 @@ function OutlookMap (mapId, options) {
   // Options to pass to the MapContainer constructor
   const containerOptions = {
     view: view,
-    layers: [road, areasOfConcern],
+    layers: [topography, areasOfConcern, places],
     controls: [dayControl],
     queryParamKeys: ['v'],
     interactions: interactions,
@@ -265,7 +140,7 @@ function OutlookMap (mapId, options) {
   setExtentFromLonLat(map, extent)
 
   // Show layers
-  road.setVisible(true)
+  topography.setVisible(true)
 
   //
   // Events
