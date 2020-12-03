@@ -144,27 +144,33 @@ window.flood.maps.styles = {
   },
 
   places: (feature, resolution) => {
-    const display = (() => {
-      if (resolution > 1600) {
-        return 1
-      } else if (resolution > 800) {
-        return 2
-      } else if (resolution > 400) {
-        return 3
-      } else {
-        return 4
-      }
-    })()
-
-    if (parseInt(feature.get('d')) > display) {
+    // Hide places that are not appriate for resolution
+    const d = parseInt(feature.get('d'))
+    const s = parseInt(feature.get('s'))
+    const r = parseInt(resolution)
+    let hideName = false
+    if (r > 1600 && d > 1) {
+      hideName = true
+    } else if (r > 800 && d > 2) {
+      hideName = true
+    } else if (r > 400 && d > 3) {
+      hideName = true
+    } else if (d > 4) {
+      hideName = true
+    }
+    if (hideName) {
       return
     }
+    // Set font style for place
+    const font = `${s === 1 ? 'bold 14px' : '12px'} GDS Transport, Arial, sans-serif`
+    const radius = s === 1 ? 3 : 2
+    const offsetY = s === 1 ? -13 : -12
     return [
       new Style({
         text: new Text({
           text: feature.get('n'),
-          font: 'bold 14px GDS Transport, Arial, sans-serif',
-          offsetY: -12,
+          font: font,
+          offsetY: offsetY,
           stroke: new Stroke({
             color: '#ffffff',
             width: 2
@@ -174,8 +180,8 @@ window.flood.maps.styles = {
       new Style({
         text: new Text({
           text: feature.get('n'),
-          font: 'bold 14px GDS Transport, Arial, sans-serif',
-          offsetY: -12
+          font: font,
+          offsetY: offsetY
         }),
         image: new Circle({
           fill: new Fill({
@@ -184,7 +190,7 @@ window.flood.maps.styles = {
           stroke: new Stroke({
             width: 0
           }),
-          radius: 2
+          radius: radius
         })
       })
     ]
