@@ -162,7 +162,7 @@ window.flood.maps.styles = {
       return
     }
     // Set font style for place
-    const font = `${s === 1 ? 'bold 14px' : '12px'} GDS Transport, Arial, sans-serif`
+    const font = `${s === 1 ? 'bold 16px' : '14px'} GDS Transport, Arial, sans-serif`
     const radius = s === 1 ? 3 : 2
     const offsetY = s === 1 ? -13 : -12
     return [

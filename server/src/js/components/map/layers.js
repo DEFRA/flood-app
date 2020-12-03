@@ -91,7 +91,8 @@ window.flood.maps.layers = {
       visible: true,
       zIndex: 5,
       updateWhileAnimating: true,
-      updateWhileInteracting: true
+      updateWhileInteracting: true,
+      renderMode: 'hybrid'
     })
   },
 
