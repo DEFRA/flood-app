@@ -144,56 +144,28 @@ window.flood.maps.styles = {
   },
 
   places: (feature, resolution) => {
-    // Hide places that are not appriate for resolution
+    // Hide places that are not appropriate for resolution
     const d = parseInt(feature.get('d'))
     const s = parseInt(feature.get('s'))
     const r = parseInt(resolution)
-    let hideName = false
+    let showName = true
     if (r > 1600 && d > 1) {
-      hideName = true
+      showName = false
     } else if (r > 800 && d > 2) {
-      hideName = true
+      showName = false
     } else if (r > 400 && d > 3) {
-      hideName = true
+      showName = false
     } else if (d > 4) {
-      hideName = true
+      showName = false
     }
-    if (hideName) {
+    if (!showName) {
       return
     }
-    // Set font style for place
-    const font = `${s === 1 ? 'bold 16px' : '14px'} GDS Transport, Arial, sans-serif`
-    const radius = s === 1 ? 3 : 2
-    const offsetY = s === 1 ? -13 : -12
-    return [
-      new Style({
-        text: new Text({
-          text: feature.get('n'),
-          font: font,
-          offsetY: offsetY,
-          stroke: new Stroke({
-            color: '#ffffff',
-            width: 2
-          })
-        })
-      }),
-      new Style({
-        text: new Text({
-          text: feature.get('n'),
-          font: font,
-          offsetY: offsetY
-        }),
-        image: new Circle({
-          fill: new Fill({
-            color: '#0b0c0c'
-          }),
-          stroke: new Stroke({
-            width: 0
-          }),
-          radius: radius
-        })
-      })
-    ]
+    // Get appropriate style from cache and set text
+    const textStyle = s === 1 ? styleCache.textLarge : styleCache.text
+    textStyle[0].getText().setText(feature.get('n'))
+    textStyle[1].getText().setText(feature.get('n'))
+    return textStyle
   }
 }
 
@@ -368,10 +340,46 @@ const outlookPolygonPattern = (style) => {
 }
 
 //
-// Style caching
+// Style caching, improves render performance
 //
 
-const createStyle = (options) => {
+const createTextStyle = (options) => {
+  const defaults = {
+    font: '14px GDS Transport, Arial, sans-serif',
+    offsetY: -12,
+    radius: 2
+  }
+  options = Object.assign({}, defaults, options)
+  return [
+    new Style({
+      text: new Text({
+        font: options.font,
+        offsetY: options.offsetY,
+        stroke: new Stroke({
+          color: '#ffffff',
+          width: 2
+        })
+      })
+    }),
+    new Style({
+      text: new Text({
+        font: options.font,
+        offsetY: options.offsetY
+      }),
+      image: new Circle({
+        fill: new Fill({
+          color: '#0b0c0c'
+        }),
+        stroke: new Stroke({
+          width: 0
+        }),
+        radius: options.radius
+      })
+    })
+  ]
+}
+
+const createIconStyle = (options) => {
   const defaults = {
     size: [100, 100],
     anchor: [0.5, 0.5],
@@ -393,26 +401,28 @@ const createStyle = (options) => {
 }
 
 const styleCache = {
-  severe: createStyle({ offset: [0, 0], zIndex: 5 }),
-  severeSelected: createStyle({ offset: [100, 0], zIndex: 10 }),
-  warning: createStyle({ offset: [0, 100], zIndex: 4 }),
-  warningSelected: createStyle({ offset: [100, 100], zIndex: 10 }),
-  alert: createStyle({ offset: [0, 200], zIndex: 3 }),
-  alertSelected: createStyle({ offset: [100, 200], zIndex: 10 }),
-  targetArea: createStyle({ offset: [0, 300], zIndex: 1 }),
-  targetAreaSelected: createStyle({ offset: [100, 300], zIndex: 10 }),
-  impact: createStyle({ offset: [0, 400], zIndex: 1 }),
-  impactSelected: createStyle({ offset: [100, 400], zIndex: 10 }),
-  levelHighBig: createStyle({ offset: [0, 500], zIndex: 3 }),
-  levelHighBigSelected: createStyle({ offset: [100, 500], zIndex: 10 }),
-  levelBig: createStyle({ offset: [0, 600], zIndex: 2 }),
-  levelBigSelected: createStyle({ offset: [100, 600], zIndex: 10 }),
-  levelErrorBig: createStyle({ offset: [0, 700], zIndex: 1 }),
-  levelErrorBigSelected: createStyle({ offset: [100, 700], zIndex: 10 }),
-  levelHigh: createStyle({ offset: [0, 900], zIndex: 3 }),
-  levelHighSelected: createStyle({ offset: [100, 900], zIndex: 10 }),
-  level: createStyle({ offset: [0, 1000], zIndex: 2 }),
-  levelSelected: createStyle({ offset: [100, 1000], zIndex: 10 }),
-  levelError: createStyle({ offset: [0, 1100], zIndex: 1 }),
-  levelErrorSelected: createStyle({ offset: [100, 1100], zIndex: 10 })
+  severe: createIconStyle({ offset: [0, 0], zIndex: 5 }),
+  severeSelected: createIconStyle({ offset: [100, 0], zIndex: 10 }),
+  warning: createIconStyle({ offset: [0, 100], zIndex: 4 }),
+  warningSelected: createIconStyle({ offset: [100, 100], zIndex: 10 }),
+  alert: createIconStyle({ offset: [0, 200], zIndex: 3 }),
+  alertSelected: createIconStyle({ offset: [100, 200], zIndex: 10 }),
+  targetArea: createIconStyle({ offset: [0, 300], zIndex: 1 }),
+  targetAreaSelected: createIconStyle({ offset: [100, 300], zIndex: 10 }),
+  impact: createIconStyle({ offset: [0, 400], zIndex: 1 }),
+  impactSelected: createIconStyle({ offset: [100, 400], zIndex: 10 }),
+  levelHighBig: createIconStyle({ offset: [0, 500], zIndex: 3 }),
+  levelHighBigSelected: createIconStyle({ offset: [100, 500], zIndex: 10 }),
+  levelBig: createIconStyle({ offset: [0, 600], zIndex: 2 }),
+  levelBigSelected: createIconStyle({ offset: [100, 600], zIndex: 10 }),
+  levelErrorBig: createIconStyle({ offset: [0, 700], zIndex: 1 }),
+  levelErrorBigSelected: createIconStyle({ offset: [100, 700], zIndex: 10 }),
+  levelHigh: createIconStyle({ offset: [0, 900], zIndex: 3 }),
+  levelHighSelected: createIconStyle({ offset: [100, 900], zIndex: 10 }),
+  level: createIconStyle({ offset: [0, 1000], zIndex: 2 }),
+  levelSelected: createIconStyle({ offset: [100, 1000], zIndex: 10 }),
+  levelError: createIconStyle({ offset: [0, 1100], zIndex: 1 }),
+  levelErrorSelected: createIconStyle({ offset: [100, 1100], zIndex: 10 }),
+  text: createTextStyle(),
+  textLarge: createTextStyle({ font: 'Bold 16px GDS Transport, Arial, sans-serif', offsetY: -13, radius: 3 })
 }
