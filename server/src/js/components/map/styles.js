@@ -148,7 +148,7 @@ window.flood.maps.styles = {
     const d = parseInt(feature.get('d'))
     const s = parseInt(feature.get('s'))
     const r = parseInt(resolution)
-    let showName = true
+    let showName = d >= 1
     if (r > 1600 && d > 1) {
       showName = false
     } else if (r > 800 && d > 2) {
