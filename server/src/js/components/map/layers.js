@@ -5,6 +5,7 @@ Initialises the window.flood.maps layers
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer'
 import { BingMaps, Vector as VectorSource } from 'ol/source'
 import { GeoJSON } from 'ol/format'
+import LayerGroup from 'ol/layer/Group'
 
 const { xhr } = window.flood.utils
 
@@ -52,14 +53,26 @@ window.flood.maps.layers = {
   },
 
   road: () => {
-    return new TileLayer({
+    return new LayerGroup({
       ref: 'road',
-      source: new BingMaps({
-        key: window.flood.model.bingMaps,
-        imagerySet: 'RoadOnDemand'
-      }),
       visible: false,
-      zIndex: 0
+      zIndex: 0,
+      layers: [
+        new TileLayer({
+          source: new BingMaps({
+            key: window.flood.model.bingMaps,
+            imagerySet: 'ordnanceSurvey'
+          }),
+          maxResolution: 50
+        }),
+        new TileLayer({
+          source: new BingMaps({
+            key: window.flood.model.bingMaps,
+            imagerySet: 'RoadOnDemand'
+          }),
+          minResolution: 50
+        })
+      ]
     })
   },
 

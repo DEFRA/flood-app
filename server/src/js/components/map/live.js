@@ -37,7 +37,7 @@ function LiveMap (mapId, options) {
   const view = new View({
     zoom: 6, // Default zoom
     minZoom: 6, // Minimum zoom level
-    maxZoom: 18, // Max zoom level
+    maxZoom: 16, // Max zoom level (OS 50k raster too pixelated beyond this)
     center: maps.centre, // Default centre required
     extent: maps.extentLarge // Constrains extent
   })
