@@ -8,7 +8,7 @@ class ViewModel {
       station: station || null,
       metaNoIndex: true,
       placeName: place ? place.name : '',
-      placeBbox: place ? place.bbox : [],
+      placeBbox: place ? place.bbox2k : [],
       placeCentre: place ? place.center : [],
       timestamp: Date.now(),
       error: error ? true : null,

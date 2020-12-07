@@ -1252,7 +1252,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('<a href="/target-area/062FWF46Hertford">River Lee at Hertford and Ware</a>')
-    Code.expect(response.payload).to.contain('The highest level in the forecast is')
+    Code.expect(response.payload).to.contain('The highest level in our forecast is')
   })
   lab.test('GET station/5146 with latest value over hour old but < 24 hours ', async () => {
     const floodService = require('../../server/services/flood')

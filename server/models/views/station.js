@@ -189,7 +189,7 @@ class ViewModel {
             const forecastHighestPoint = parseFloat(highestPoint._).toFixed(2)
             const forecastHighestPointTime = highestPoint.formattedTimestamp
 
-            this.forecastDetails = `The highest level in the forecast is ${forecastHighestPoint}m at ${forecastHighestPointTime}. Forecasts come from a computer model and changes regularly.`
+            this.forecastDetails = `The highest level in our forecast is ${forecastHighestPoint}m at ${forecastHighestPointTime}. Forecasts come from a computer model and can change.`
           }
         }
 
