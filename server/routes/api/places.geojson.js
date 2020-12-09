@@ -463,6 +463,7 @@ const data = {
     { type: 'Feature', properties: { n: 'Penrith', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-2.75, 54.66] } },
     { type: 'Feature', properties: { n: 'Selby', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-1.07, 53.78] } },
     { type: 'Feature', properties: { n: 'Skipton', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-2.02, 53.96] } },
+    { type: 'Feature', properties: { n: 'Morpeth', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-1.69, 55.17] } },
     { type: 'Feature', properties: { n: 'Whitby', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-0.62, 54.49] } },
     { type: 'Feature', properties: { n: 'Great Driffield', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-0.44, 54.01] } },
     { type: 'Feature', properties: { n: 'Berwick', d: 3, s: 6 }, geometry: { type: 'Point', coordinates: [-2.01, 55.77] } },
@@ -472,12 +473,15 @@ const data = {
     { type: 'Feature', properties: { n: 'Launceston', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-4.36, 50.64] } },
     { type: 'Feature', properties: { n: 'Blandford Forum', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-2.17, 50.85] } },
     { type: 'Feature', properties: { n: 'Richmond', d: 3, s: 6 }, geometry: { type: 'Point', coordinates: [-1.74, 54.40] } },
+    { type: 'Feature', properties: { n: 'Alnwick', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-1.71, 55.41] } },
     { type: 'Feature', properties: { n: 'Keswick', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-3.13, 54.60] } },
     { type: 'Feature', properties: { n: 'Thirsk', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-1.34, 54.23] } },
     { type: 'Feature', properties: { n: 'Malton', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-0.79, 54.14] } },
     { type: 'Feature', properties: { n: 'Ambleside', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-2.96, 54.43] } },
+    { type: 'Feature', properties: { n: 'Wooler', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-2.02, 55.55] } },
     { type: 'Feature', properties: { n: 'Hawes', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-2.20, 54.30] } },
-    { type: 'Feature', properties: { n: 'Alston', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-2.44, 54.81] } }
+    { type: 'Feature', properties: { n: 'Alston', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-2.44, 54.81] } },
+    { type: 'Feature', properties: { n: 'Otterburn', d: 4, s: 6 }, geometry: { type: 'Point', coordinates: [-2.18, 55.24] } }
   ]
 }
 
