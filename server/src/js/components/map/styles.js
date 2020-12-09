@@ -22,10 +22,7 @@ window.flood.maps.styles = {
       warningId = 'flood.' + feature.getId()
     }
     const warning = warningsSource.getFeatureById(warningId)
-    if (!warning || warning.get('isVisible') !== 'true') {
-      return new Style()
-    }
-
+    if (!warning || warning.get('isVisible') !== 'true') { return new Style() }
     const severity = warning.get('severity_value')
     const isSelected = warning.get('isSelected')
     const isGroundwater = warning.getId().substring(6, 9) === 'FAG'
@@ -62,11 +59,7 @@ window.flood.maps.styles = {
     const stroke = new Style({ stroke: new Stroke({ color: strokeColour, width: 2 }), zIndex: zIndex })
     const fill = new Style({ fill: new Fill({ color: fillColour }), zIndex: zIndex })
 
-    if (isSelected) {
-      return [selectedStroke, stroke, fill]
-    } else {
-      return [stroke, fill]
-    }
+    return isSelected ? [selectedStroke, stroke, fill] : [stroke, fill]
   },
 
   warnings: (feature, resolution) => {
@@ -118,9 +111,7 @@ window.flood.maps.styles = {
   //
 
   outlookPolygons: (feature) => {
-    if (!feature.get('isVisible')) {
-      return
-    }
+    if (!feature.get('isVisible')) { return }
     const zIndex = feature.get('z-index')
     const lineDash = [2, 3]
     let strokeColour = '#85994b'
@@ -135,12 +126,15 @@ window.flood.maps.styles = {
       strokeColour = '#D4351C'
       fillColour = outlookPolygonPattern('high')
     }
-    return new Style({
+    const isSelected = feature.get('isSelected')
+    const selectedStroke = new Style({ stroke: new Stroke({ color: '#FFDD00', width: 16 }), zIndex: zIndex })
+    const style = new Style({
       stroke: new Stroke({ color: strokeColour, width: 1 }),
       fill: new Fill({ color: fillColour }),
       lineDash: lineDash,
       zIndex: zIndex
     })
+    return isSelected ? [selectedStroke, style] : style
   },
 
   places: (feature, resolution) => {

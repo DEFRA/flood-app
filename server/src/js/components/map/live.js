@@ -257,7 +257,7 @@ function LiveMap (mapId, options) {
     }
     layers.forEach((layer) => {
       layer.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
-        if (feature.get('isVisible') !== 'true') { return false }
+        if (!feature.get('isVisible')) { return false }
         features.push({
           id: feature.getId(),
           name: featureName(feature),
@@ -538,8 +538,6 @@ function LiveMap (mapId, options) {
     if (!maps.isKeyboard) {
       hideOverlays()
     }
-    // Hide keyboard shortcuts button
-
     // Get mouse coordinates and check for feature
     const featureId = map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
       if (!defaultLayers.includes(layer)) {
