@@ -1,5 +1,5 @@
 //
-// Temporary route in app. This wil need moving to service cache if used.
+// Temporary route in app. This may need refactoring.
 //
 
 const data = {
