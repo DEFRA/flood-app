@@ -273,13 +273,18 @@ lab.experiment('Outlook model test', () => {
                 [-3.6927796667441735, 54.78347074469547]]],
             type: 'Polygon'
           },
+          id: 2660,
           properties:
           {
             'risk-level': 1,
             'z-index': 10,
-            day: 5,
+            days: [5],
             html: '<p class="govuk-body-s">Details of source, likelyhood and impact</p>',
             isSmooth: true,
+            labelPosition: [
+              -2.08465592935681,
+              54.1276207351252
+            ],
             polyType: 'inland',
             type: 'concernArea'
           },
