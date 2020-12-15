@@ -150,11 +150,11 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   map.addControl(zoom)
 
   // Create attribution control
-  const attributtionElement = document.createElement('button')
-  attributtionElement.className = 'defra-map-attribution'
-  attributtionElement.innerHTML = '<span class="govuk-visually-hidden">List attributions</span>'
+  const attributtionButtonElement = document.createElement('button')
+  attributtionButtonElement.className = 'defra-map-attribution'
+  attributtionButtonElement.innerHTML = '<span class="govuk-visually-hidden">List attributions</span>'
   const attributionButton = new Control({
-    element: attributtionElement,
+    element: attributtionButtonElement,
     target: controlsContainerElement
   })
   map.addControl(attributionButton)
@@ -227,7 +227,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   //
 
   const hideSiblings = (isHidden) => {
-    const siblings = document.querySelectorAll('#' + mapId + ' > *:not(#info):not(#key)')
+    const siblings = document.querySelectorAll(`#${mapId} > *:not(#info):not(#key)`)
     forEach(siblings, (sibling) => { sibling.setAttribute('aria-hidden', isHidden) })
   }
 
@@ -310,7 +310,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
     // Re-enable screen reader access to siblings
     hideSiblings(false)
     keyElement.setAttribute('aria-hidden', state.isTablet)
-    state.isAttributionsOpen ? attributtionElement.focus() : viewport.focus()
+    state.isAttributionsOpen ? attributtionButtonElement.focus() : viewport.focus()
     state.isAttributionsOpen = false
   }
 
@@ -326,7 +326,9 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   this.infoElement = infoElement
   this.resetButton = resetButtonElement
   this.openKeyButton = openKeyButtonElement
+  this.closeKeyButton = closeKeyButton
   this.closeInfoButton = closeInfoButton
+  this.attributionButton = attributtionButtonElement
   this.state = state
 
   //
@@ -413,7 +415,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   })
 
   // Show attributions click
-  attributtionElement.addEventListener('click', (e) => {
+  attributtionButtonElement.addEventListener('click', (e) => {
     const infoDescription = document.createElement('div')
     infoDescription.id = 'infoDescription'
     state.isAttributionsOpen = true

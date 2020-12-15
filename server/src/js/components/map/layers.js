@@ -52,6 +52,20 @@ window.flood.maps.layers = {
     })
   },
 
+  /*
+  road: () => {
+    return new TileLayer({
+      ref: 'road',
+      source: new BingMaps({
+        key: window.flood.model.bingMaps,
+        imagerySet: 'RoadOnDemand'
+      }),
+      visible: false,
+      zIndex: 0
+    })
+  },
+  */
+
   road: () => {
     return new LayerGroup({
       ref: 'road',

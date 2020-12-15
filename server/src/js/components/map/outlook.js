@@ -77,6 +77,7 @@ function OutlookMap (mapId, options) {
 
   // Create day control
   const dayControlsElement = document.createElement('div')
+  dayControlsElement.id = 'map-days'
   const dayControlsContainer = document.createElement('div')
   dayControlsElement.className = 'defra-map-days'
   dayControlsContainer.className = 'defra-map-days__container'
@@ -116,6 +117,10 @@ function OutlookMap (mapId, options) {
   // Create MapContainer
   const container = new MapContainer(mapId, containerOptions)
   const containerElement = container.containerElement
+  const closeInfoButton = container.closeInfoButton
+  const openKeyButton = container.openKeyButton
+  const closeKeyButton = container.closeKeyButton
+  const attributionButton = container.attributionButton
   const viewport = container.viewport
   const map = container.map
 
@@ -308,8 +313,12 @@ function OutlookMap (mapId, options) {
     if (maps.isKeyboard) { showOverlays() }
   })
 
-  // Handle all liveMap specific key presses
+  // Handle all Outlook Map specific key presses
   containerElement.addEventListener('keyup', (e) => {
+    // Re-instate days when key has been closed
+    if (e.key === 'Escape') {
+      showDays()
+    }
     // Show overlays when any key is pressed other than Escape
     if (e.key !== 'Escape') {
       showOverlays()
@@ -322,6 +331,28 @@ function OutlookMap (mapId, options) {
     if (!isNaN(e.key) && e.key >= 1 && e.key <= state.visibleFeatures.length && state.visibleFeatures.length <= 9) {
       setSelectedFeature(state.visibleFeatures[e.key - 1].id)
     }
+  })
+
+  // Clear selectedfeature when info is closed
+  closeInfoButton.addEventListener('click', (e) => {
+    setSelectedFeature()
+  })
+
+  // Clear selectedfeature and hide days when key is opened
+  openKeyButton.addEventListener('click', (e) => {
+    setSelectedFeature()
+    hideDays()
+  })
+
+  // Re-instate days when key has been closed
+  closeKeyButton.addEventListener('click', (e) => {
+    showDays()
+  })
+
+  // Clear selectedfeature and hide days when attribution is opended
+  attributionButton.addEventListener('click', (e) => {
+    setSelectedFeature()
+    hideDays()
   })
 
   // Day control button
