@@ -9,6 +9,8 @@
 {% set metaCanonical = model.metaCanonical %}
 {% set metaNoIndex = model.metaNoIndex %}
 {% set metaFeedback = model.feedback %}
+{% set liveServiceText = ( liveServiceText or 'use the current service') %}
+{% set liveServicePath = ( liveServicePath or '/warnings') %}
 
 {% block pageTitle %}
   {{ metaTitle }}
@@ -90,13 +92,17 @@
       iconFallbackText: "Warning"
     }) }}
   {% endif %}
-    {{ govukPhaseBanner({
-    tag: {
-      text: "Beta"
-    },
-    html: 'This is a new service – <a class="govuk-link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965">leave feedback</a> to help us to improve it, or <a class="govuk-link" href="https://flood-warning-information.service.gov.uk/warnings">use the current service</a>.'
-  }) }}
 
+  <div class="govuk-phase-banner">
+    <p class="govuk-phase-banner__content">
+      <strong class="govuk-tag govuk-phase-banner__content__tag">
+        beta
+      </strong>
+      <span class="govuk-phase-banner__text">
+        'This is a new service – <a class="govuk-link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965">leave feedback</a> to help us to improve it, or <a class="govuk-link" href="{{floodRiskUrl}}{{liveServicePath}}">{{liveServiceText}}</a>
+      </span>
+    </p>
+  </div>
 
 {% endblock %}
 

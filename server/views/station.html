@@ -1,5 +1,8 @@
 {% extends 'layout.html' %}
 
+{% set liveServiceText = 'go to the current version of this page' %}
+{% set liveServicePath = '/station/' + model.station.id %}
+
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
