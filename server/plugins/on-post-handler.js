@@ -15,15 +15,17 @@ module.exports = {
             })
           }
 
+          const requestHeadersReferer = request.headers.referer && request.headers.referer.startsWith(siteUrl) ? request.headers.referer : ''
+
           if (request.response.source.context) {
             request.response.source.context.fullUrl = encodeURI(fullUrl)
             request.response.source.context.isDummyData = floodService.floods.isDummyData
             request.response.source.context.isMockExternalHttp = mockExternalHttp
             if (request.response.source.context.model) {
-              request.response.source.context.model.referer = request.headers.referer
+              request.response.source.context.model.referer = requestHeadersReferer
             } else {
               request.response.source.context.model = {
-                referer: request.headers.referer
+                referer: requestHeadersReferer
               }
             }
           } else {
@@ -32,7 +34,7 @@ module.exports = {
               isDummyData: floodService.floods.isDummyData,
               isMockExternalHttp: floodService.mockExternalHttp,
               model: {
-                referer: request.headers.referer
+                referer: requestHeadersReferer
               }
             }
           }
