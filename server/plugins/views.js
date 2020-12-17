@@ -2,7 +2,7 @@ const nunjucks = require('nunjucks')
 const util = require('../util')
 const config = require('../config')
 const pkg = require('../../package.json')
-const { gaAccId, gaOptId, fbAppId, floodRiskUrl } = config
+const { gaAccId, gaOptId, fbAppId, floodFisUrl } = config
 
 module.exports = {
   plugin: require('@hapi/vision'),
@@ -41,7 +41,7 @@ module.exports = {
       gaAccId,
       gaOptId,
       fbAppId,
-      floodRiskUrl
+      floodFisUrl
     }
   }
 }

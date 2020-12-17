@@ -23,7 +23,8 @@ const schema = joi.object({
   siteUrl: joi.string().default(`http://localhost:${defaultPort}`),
   floodRiskUrl: joi.string().default(`http://localhost:${defaultPort}`),
   sessionPassword: joi.string(),
-  mockExternalHttp: joi.boolean().default(false)
+  mockExternalHttp: joi.boolean().default(false),
+  floodFisUrl: joi.string().default(`http://localhost:${defaultPort}`)
 })
 
 // Build config
@@ -45,7 +46,8 @@ const config = {
   siteUrl: process.env.FLOOD_APP_SITE_URL,
   floodRiskUrl: process.env.FLOOD_RISK_URL,
   sessionPassword: process.env.FLOOD_APP_SESSION_PASSWORD,
-  mockExternalHttp: process.env.FLOOD_APP_MOCK_EXTERNAL_HTTP
+  mockExternalHttp: process.env.FLOOD_APP_MOCK_EXTERNAL_HTTP,
+  floodFisUrl: process.env.FLOOD_APP_FIS_URL
 }
 
 // Validate config
