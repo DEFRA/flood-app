@@ -51,6 +51,7 @@ DEFRA employees can find examples of environment variables stored in our private
 | FLOOD_APP_NRW_STATION_URL | NRW station search  | yes | https://rloi.naturalresources.wales/ViewDetails?station= | |
 | FLOOD_APP_SITE_URL   | Site Url  |    yes    | http://localhost:3009 |                             | For SEO metadata |
 | FLOOD_RISK_URL   | Flood risk Url  |    yes    |  |                             | To link to correct flood risk environment |
+| FLOOD_APP_FIS_URL   | Flood Information Service Url  |    yes    |  |                             | To link to correct flood information sevrvice environment |
 | FLOOD_APP_SESSION_PASSWORD | cookie password | yes | | |
 | FLOOD_APP_REDIS_HOST | redis cache host | no | | |  |
 | FLOOD_APP_REDIS_PORT | redis cache port | no | | |  |

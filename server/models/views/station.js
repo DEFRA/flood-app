@@ -411,6 +411,7 @@ class ViewModel {
 
     // Set canonical url
     this.metaCanonical = `/station/${this.station.id}${this.station.direction === 'upstream' ? '' : '/downstream'}`
+    this.liveServiceUrl = `/station/${this.station.id}${this.station.direction === 'downstream' ? '?direction=d' : ''}`
   }
 }
 
