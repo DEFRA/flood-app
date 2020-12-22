@@ -1,0 +1,13 @@
+# LFW service refresh beta release 3.6.0 date tbc
+
+# Tickets
+https://eaflood.atlassian.net/browse/FSR-77
+https://eaflood.atlassian.net/browse/FSR-88
+
+# release
+https://eaflood.atlassian.net/projects/FSR/versions/15079/tab/release-report-all-issues
+
+# Instructions
+Straight forward build.
+
+Execute job: LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
