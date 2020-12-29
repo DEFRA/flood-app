@@ -1,6 +1,6 @@
 const severity = require('../severity')
 const { groupBy } = require('../../util')
-const { floodRiskUrl, bingKeyMaps } = require('../../config')
+const { floodFisUrl, bingKeyMaps } = require('../../config')
 const moment = require('moment-timezone')
 
 class ViewModel {
@@ -16,7 +16,7 @@ class ViewModel {
       location: title,
       pageTitle: `Check for flooding in ${title}`,
       metaDescription: `Nearby flood alerts and warnings; latest river and sea levels and flood risk advice for residents living in the ${title} area.`,
-      floodRiskUrl,
+      floodFisUrl,
       dateFormatted: 'Up to date as of ' + moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY'),
       feedback: true
     })
