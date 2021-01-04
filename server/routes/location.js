@@ -13,6 +13,10 @@ module.exports = {
 
     let place
 
+    if (location.match(/^england$/i)) {
+      return h.redirect('/')
+    }
+
     try {
       place = await locationService.find(util.cleanseLocation(location))
     } catch (err) {
