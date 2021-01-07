@@ -23,7 +23,7 @@ module.exports = [{
       model = new ViewModel({ location, place, stations, targetArea })
       return h.view('river-and-sea-levels', { model })
       // Else no location
-    } else if (typeof location === 'undefined' || location === '') {
+    } else if (typeof location === 'undefined' || location === '' || location.match(/^england$/i)) {
       stations = await floodService.getStationsWithin([-6.73, 49.36, 2.85, 55.8])
       model = new ViewModel({ location, place, stations })
       return h.view('river-and-sea-levels', { model })
