@@ -230,6 +230,7 @@ function OutlookMap (mapId, options) {
 
   // Create MapContainer
   const container = new MapContainer(mapId, containerOptions)
+  const keyElement = container.keyElement
   const map = container.map
 
   //
@@ -246,6 +247,16 @@ function OutlookMap (mapId, options) {
     // Set button properties
     forEach(document.querySelectorAll('.defra-map-days__button'), (button, i) => {
       button.setAttribute('aria-selected', i + 1 === parseInt(day))
+    })
+  }
+
+  // Outlook set feature visiblity
+  const setVisibility = (riskLevel, isChecked) => {
+    // Set feature visibility
+    areasOfConcern.getSource().forEachFeature((feature) => {
+      if (parseInt(feature.get('risk-level')) === parseInt(riskLevel)) {
+        feature.set('isVisible', isChecked)
+      }
     })
   }
 
@@ -285,6 +296,14 @@ function OutlookMap (mapId, options) {
       e.currentTarget.focus()
       setDay(e.currentTarget.getAttribute('data-day'))
     })
+  })
+
+  // Key checkbox click
+  keyElement.addEventListener('click', (e) => {
+    if (e.target.nodeName === 'INPUT') {
+      const riskLevel = e.target.getAttribute('data-risk-level')
+      setVisibility(riskLevel, e.target.checked)
+    }
   })
 }
 
