@@ -18,6 +18,12 @@ const { setExtentFromLonLat, getLonLatFromExtent } = window.flood.maps
 const MapContainer = maps.MapContainer
 
 function OutlookMap (mapId, options) {
+  // State
+  const state = {
+    visibleRiskLevels: [1, 2, 3, 4],
+    day: 1
+  }
+
   // View
   const view = new View({
     zoom: 6,
@@ -237,26 +243,13 @@ function OutlookMap (mapId, options) {
   // Private methods
   //
 
-  // Outlook set day function
-  const setDay = (day) => {
-    // Set feature visibility
+  // Set feature visiblity
+  const setFeatureVisibility = () => {
     areasOfConcern.getSource().forEachFeature((feature) => {
-      const isVisible = parseInt(feature.get('day')) === parseInt(day)
+      const riskLevel = parseInt(feature.get('risk-level'))
+      const day = parseInt(feature.get('day'))
+      const isVisible = state.visibleRiskLevels.includes(riskLevel) && day === state.day
       feature.set('isVisible', isVisible)
-    })
-    // Set button properties
-    forEach(document.querySelectorAll('.defra-map-days__button'), (button, i) => {
-      button.setAttribute('aria-selected', i + 1 === parseInt(day))
-    })
-  }
-
-  // Outlook set feature visiblity
-  const setVisibility = (riskLevel, isChecked) => {
-    // Set feature visibility
-    areasOfConcern.getSource().forEachFeature((feature) => {
-      if (parseInt(feature.get('risk-level')) === parseInt(riskLevel)) {
-        feature.set('isVisible', isChecked)
-      }
     })
   }
 
@@ -286,7 +279,7 @@ function OutlookMap (mapId, options) {
   const change = areasOfConcern.getSource().on('change', (e) => {
     if (e.target.getState() === 'ready') {
       unByKey(change) // Remove ready event when layer is ready
-      setDay(1)
+      setFeatureVisibility()
     }
   })
 
@@ -294,15 +287,20 @@ function OutlookMap (mapId, options) {
   forEach(document.querySelectorAll('.defra-map-days__button'), (button) => {
     button.addEventListener('click', (e) => {
       e.currentTarget.focus()
-      setDay(e.currentTarget.getAttribute('data-day'))
+      state.day = parseInt(e.currentTarget.getAttribute('data-day'))
+      setFeatureVisibility()
+      // Set button properties
+      forEach(document.querySelectorAll('.defra-map-days__button'), (button, i) => {
+        button.setAttribute('aria-selected', i + 1 === state.day)
+      })
     })
   })
 
   // Key checkbox click
   keyElement.addEventListener('click', (e) => {
     if (e.target.nodeName === 'INPUT') {
-      const riskLevel = e.target.getAttribute('data-risk-level')
-      setVisibility(riskLevel, e.target.checked)
+      state.visibleRiskLevels = [...keyElement.querySelectorAll('input:checked')].map(e => parseInt(e.getAttribute('data-risk-level')))
+      setFeatureVisibility()
     }
   })
 }
