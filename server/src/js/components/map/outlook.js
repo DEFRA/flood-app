@@ -253,6 +253,13 @@ function OutlookMap (mapId, options) {
     })
   }
 
+  // Set day control current day
+  const setDay = () => {
+    forEach(document.querySelectorAll('.defra-map-days__button'), (button, i) => {
+      button.setAttribute('aria-selected', i + 1 === state.day)
+    })
+  }
+
   //
   // Setup
   //
@@ -280,6 +287,7 @@ function OutlookMap (mapId, options) {
     if (e.target.getState() === 'ready') {
       unByKey(change) // Remove ready event when layer is ready
       setFeatureVisibility()
+      setDay()
     }
   })
 
@@ -289,10 +297,7 @@ function OutlookMap (mapId, options) {
       e.currentTarget.focus()
       state.day = parseInt(e.currentTarget.getAttribute('data-day'))
       setFeatureVisibility()
-      // Set button properties
-      forEach(document.querySelectorAll('.defra-map-days__button'), (button, i) => {
-        button.setAttribute('aria-selected', i + 1 === state.day)
-      })
+      setDay()
     })
   })
 
