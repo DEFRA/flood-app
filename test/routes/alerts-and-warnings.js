@@ -286,6 +286,68 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location')
     Code.expect(response.statusCode).to.equal(200)
   })
+  lab.test('GET /alerts-and-warnings - England parameter query', async () => {
+    // Create dummy flood data in place of cached data
+    const fakeFloodData = () => {
+      return {
+        floods: [
+          {
+            ta_code: '013FWFCH29',
+            id: 4558714,
+            ta_name: 'Wider area at risk from Sankey Brook at Dallam',
+            quick_dial: '305027',
+            region: 'Midlands',
+            area: 'Central',
+            floodtype: 'f',
+            severity_value: 2,
+            severitydescription: 'Flood Warning',
+            warningkey: 1,
+            message_received: '2020-01-08T13:09:09.628Z',
+            severity_changed: '2020-01-08T13:09:09.628Z',
+            situation_changed: '2020-01-08T13:09:09.628Z',
+            situation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elits nibh.'
+          }
+        ]
+      }
+    }
+
+    const fakeOutlookData = () => {
+      const outlook = require('../data/outlook.json')
+      return outlook.statements[0]
+    }
+
+    const floodService = require('../../server/services/flood')
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+    // Fake the cached flood data
+    floodService.floods = await floodService.getFloods()
+    floodService.outlook = await floodService.getOutlook()
+
+    const warningsPlugin = {
+      plugin: {
+        name: 'warnings',
+        register: (server, options) => {
+          server.route(require('../../server/routes/alerts-and-warnings'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(warningsPlugin)
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings?q=England'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('1 result')
+  })
   lab.test('GET /alerts-and-warnings ', async () => {
     const floodService = require('../../server/services/flood')
 

@@ -19,7 +19,7 @@ class ViewModel {
 
     this.locationInput = {
       label: {
-        text: 'Town, city or postcode'
+        text: 'Town, city or postcode in England'
       },
       id: 'location',
       name: 'location',

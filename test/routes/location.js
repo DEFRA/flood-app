@@ -466,7 +466,7 @@ lab.experiment('Routes test - location - 2', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('Sorry, there is a problem with the service')
   })
-  lab.test('GET /national view', async () => {
+  lab.test('GET national view', async () => {
     const fakeFloodData = () => {
       return {
         floods: []
@@ -1104,5 +1104,51 @@ lab.experiment('Routes test - location - 2', () => {
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('There are no flood warnings or alerts in this area but some')
+  })
+  lab.test('GET /location with query parameter England - redirect to national page', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    const fakeFloodsData = () => {
+      return { floods: [] }
+    }
+    const fakeStationsData = () => []
+    const fakeImpactsData = () => []
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+
+    const fakeGetJson = () => data.warringtonGetJson
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/location?q=England'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.headers.location).to.equal('/')
   })
 })
