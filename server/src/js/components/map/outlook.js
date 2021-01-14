@@ -191,7 +191,8 @@ function OutlookMap (mapId, options) {
       if (number > 3 && number < 21) return 'th'
       switch (number % 10) { case 1: return 'st'; case 2: return 'nd'; case 3: return 'rd'; default: return 'th' }
     }
-    return number + nth(number)
+    const month = date.toLocaleString('en-GB', { month: 'short' })
+    return `<span class="defra-map-days__month">${month} </span>${number}${nth(number)}`
   }
 
   // Create day control
