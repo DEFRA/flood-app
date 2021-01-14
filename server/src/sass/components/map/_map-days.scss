@@ -37,6 +37,7 @@
     display: inline-block;
     @include govuk-font($size: 19, $weight: regular);
     text-decoration:underline;
+    margin-bottom: 2px;
   }
   &[aria-selected=true] {
     background-color: white;
