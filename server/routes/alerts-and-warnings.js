@@ -23,7 +23,7 @@ module.exports = [{
       floods = new Floods({ floods: warningsAlerts })
       model = new ViewModel({ location, place, floods, station })
       return h.view('alerts-and-warnings', { model })
-    } else if (typeof location === 'undefined' || location === '') {
+    } else if (typeof location === 'undefined' || location === '' || location.match(/^england$/i)) {
       const floods = floodService.floods
       model = new ViewModel({ location, place, floods, station })
       return h.view('alerts-and-warnings', { model })
