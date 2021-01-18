@@ -98,15 +98,11 @@
 .defra-map__exit,
 .defra-map__back {
   float:left;
-  z-index: 3;
-  margin:0;
+  margin:10px 0px 0px 10px;
   border:0;
+  padding:0;
   height:39px;
   width:40px;
-  padding:0;
-  border:0;
-  margin-left:10px;
-  margin-top:10px;
   cursor:pointer;
   background-color:white;
   color: govuk-colour('black');
@@ -160,7 +156,6 @@
   float:left;
   margin-left:5px;
   margin-top:10px;
-  z-index: 3;
   border:0;
   height:39px;
   width:40px;
@@ -330,7 +325,7 @@
   }
   pointer-events: none;
 }
-.defra-map-controls__container {
+.defra-map-controls__bottom {
   position:absolute;
   left:10px;
   bottom:10px;
@@ -344,7 +339,6 @@
 // Map controls - reset location
 .defra-map-reset {
   float:right;
-  z-index:3;
   width:41px;
   height:auto;
   border:0;
@@ -383,7 +377,6 @@
     display: block;
     float:right;
     clear:right;
-    z-index: 3;
     width:41px;
     height:auto;
     margin-top:5px;
@@ -429,11 +422,9 @@
 
 // Map controls - Show attributions
 .defra-map-attribution {
-  display: block;
   float:right;
   clear: both;
   @include govuk-font($size: 19);
-  z-index:3;
   border:0;
   height:41px;
   width:41px;
@@ -521,7 +512,7 @@
     border: 0;
   }
 }
-.defra-map--info-open .defra-map-controls__container {
+.defra-map--info-open .defra-map-controls__bottom {
   visibility: hidden;
   @include mq ($from: tablet) {
     visibility: visible;
