@@ -233,6 +233,8 @@ function OutlookMap (mapId, options) {
       const day = parseInt(feature.get('day'), 10)
       const isVisible = state.visibleRiskLevels.includes(riskLevel) && day === state.day
       feature.set('isVisible', isVisible)
+      console.log(riskLevel + ' ' + feature.get('day'))
+      console.log(state)
     })
   }
 
@@ -311,6 +313,7 @@ function OutlookMap (mapId, options) {
         return id
       }
     })
+    console.log(featureId)
     setSelectedFeature(featureId)
   })
 
