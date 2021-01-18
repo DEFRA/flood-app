@@ -63,8 +63,7 @@ class Outlook {
               days: riskAreaBlock.days,
               labelPosition: poly.label_position,
               'risk-level': riskLevel,
-              'z-index': (riskLevel * 10),
-              html: '<p class="govuk-body-s">Details of source, likelyhood and impact</p>'
+              'z-index': (riskLevel * 10)
             }
           }
 

@@ -19,6 +19,7 @@ const MapContainer = maps.MapContainer
 function OutlookMap (mapId, options) {
   // State
   const state = {
+    selectedFeatureId: -1,
     visibleRiskLevels: [1, 2, 3, 4],
     day: 1
   }
@@ -230,11 +231,9 @@ function OutlookMap (mapId, options) {
   const setFeatureVisibility = () => {
     areasOfConcern.getSource().forEachFeature((feature) => {
       const riskLevel = parseInt(feature.get('risk-level'), 10)
-      const day = parseInt(feature.get('day'), 10)
-      const isVisible = state.visibleRiskLevels.includes(riskLevel) && day === state.day
+      const hasDay = feature.get('days').includes(state.day)
+      const isVisible = state.visibleRiskLevels.includes(riskLevel) && hasDay
       feature.set('isVisible', isVisible)
-      console.log(riskLevel + ' ' + feature.get('day'))
-      console.log(state)
     })
   }
 
@@ -313,7 +312,6 @@ function OutlookMap (mapId, options) {
         return id
       }
     })
-    console.log(featureId)
     setSelectedFeature(featureId)
   })
 
