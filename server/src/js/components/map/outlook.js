@@ -55,10 +55,6 @@ function OutlookMap (mapId, options) {
     now.setSeconds(0, 0)
     if (date.getTime() === now.getTime()) {
       return 'Today'
-    } else if (date.getTime() + 86400000 === now.getTime()) {
-      return 'Yesterday'
-    } else if (date.getTime() - 86400000 === now.getTime()) {
-      return 'Tomorrow'
     } else {
       return date.toLocaleString('en-GB', { weekday: 'short' })
     }
