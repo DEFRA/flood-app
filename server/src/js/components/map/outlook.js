@@ -43,9 +43,8 @@ function OutlookMap (mapId, options) {
     pinchRotate: false
   })
 
-  // Format date Today, Yesterday, Tomorrow or 'Monday/Tuesday etc'
+  // Format day today or Monday, Tuesday etc
   const formatDay = (date) => {
-    // date.setDate(date.getDate() + 256)
     date.setHours(0)
     date.setMinutes(0)
     date.setSeconds(0, 0)
@@ -60,6 +59,7 @@ function OutlookMap (mapId, options) {
     }
   }
 
+  // Format date as 4th or 23rd etc
   const formatDate = (date) => {
     const number = date.getDate()
     const nth = (number) => {
@@ -89,6 +89,10 @@ function OutlookMap (mapId, options) {
     dayButtonContainer.innerHTML = `<strong>${dayName}</strong><br/>${date}<span class="defra-map-days__icon defra-map-days__icon--risk-level-${day.level}"></span>`
     dayButtonElement.appendChild(dayButtonContainer)
     dayControlsContainer.appendChild(dayButtonElement)
+    // Set state day to current day
+    if (dayName.toLowerCase() === 'today') {
+      state.day = day.idx
+    }
   })
   dayControlsElement.appendChild(dayControlsContainer)
   const dayControl = new Control({
@@ -147,7 +151,6 @@ function OutlookMap (mapId, options) {
     state.visibleFeatures = getVisibleFeatures()
     const numFeatures = state.visibleFeatures.length
     const features = state.visibleFeatures.slice(0, 9)
-    // Show visual overlays
     hideOverlays()
     if (maps.isKeyboard && numFeatures >= 1 && numFeatures <= 9) {
       state.hasOverlays = true
@@ -167,17 +170,15 @@ function OutlookMap (mapId, options) {
         )
       })
     }
-    // Show non-visual feature details
-    /*
-    const model = {
-      numFeatures: numFeatures,
-      numWarnings: numWarnings,
-      mumMeasurements: mumMeasurements,
-      features: features
-    }
-    const html = window.nunjucks.render('description-live.html', { model: model })
-    viewportDescription.innerHTML = html
-    */
+    // ToDo: Show non-visual feature details
+    // const model = {
+    //   numFeatures: numFeatures,
+    //   numWarnings: numWarnings,
+    //   mumMeasurements: mumMeasurements,
+    //   features: features
+    // }
+    // const html = window.nunjucks.render('description-live.html', { model: model })
+    // viewportDescription.innerHTML = html
   }
 
   // Set selected feature
@@ -240,7 +241,7 @@ function OutlookMap (mapId, options) {
     })
   }
 
-  // Hides Days control when key is open
+  // Hide day control
   const hideDays = () => {
     dayControlsElement.style.display = 'none'
     dayControlsElement.setAttribute('open', false)
@@ -248,7 +249,7 @@ function OutlookMap (mapId, options) {
     dayControlsElement.setAttribute('aria-hidden', true)
   }
 
-  // Shows Days control when key is closed
+  // Show day control
   const showDays = () => {
     dayControlsElement.style.display = 'block'
     dayControlsElement.setAttribute('open', true)
