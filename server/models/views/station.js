@@ -366,12 +366,15 @@ class ViewModel {
     }
 
     if (impacts) {
+      const station = this.station
       impacts.forEach(function (impact) {
         thresholds.push({
           id: impact.impactid,
           value: Number(impact.value).toFixed(2),
           description: impact.description,
-          shortname: impact.shortname
+          shortname: impact.shortname,
+          type: '',
+          isExceeded: station.recentValue && !station.recentValue.err && station.recentValue._ >= impact.value
         })
       })
     }
