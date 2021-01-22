@@ -1,0 +1,31 @@
+# Service refresh beta Release 3.7.0 27th January 2021
+
+# release
+
+https://eaflood.atlassian.net/projects/FSR/versions/15123/tab/release-report-all-issues
+
+# tickets
+
+FSR-85 amendments to national link on location summary page
+FSR-181 England input
+FSR-182 national page link
+FSR-207 impact reached bug fix
+FS-35 cross over ticket from production for DNS issues in flood-data serverless
+
+# webops instructions
+
+NOTE: this release is a release for the check-for-flooding service application and the flood-data serverless application
+
+# flood-data (https://github.com/DEFRA/flood-data)
+
+Execute job: LFW_{stage}_99_DEPLOY_FLOOD_DATA_PIPELINE
+
+ensure job successfully updates lambda functions with no errors in console log.
+
+# flood-app
+
+Execute job: LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+and contact flood dev and test to perform service checks.
+
+Thanks.
