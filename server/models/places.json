@@ -364,21 +364,6 @@
       {
         "type":"Feature",
         "properties":{
-          "n":"Aberdeen",
-          "d":3,
-          "s":3
-        },
-        "geometry":{
-          "type":"Point",
-          "coordinates":[
-            -2.11,
-            57.15
-          ]
-        }
-      },
-      {
-        "type":"Feature",
-        "properties":{
           "n":"Luton",
           "d":3,
           "s":3
@@ -628,21 +613,6 @@
           "coordinates":[
             -0.35,
             51.58
-          ]
-        }
-      },
-      {
-        "type":"Feature",
-        "properties":{
-          "n":"Dundee",
-          "d":3,
-          "s":3
-        },
-        "geometry":{
-          "type":"Point",
-          "coordinates":[
-            -2.97,
-            56.46
           ]
         }
       },
@@ -1879,21 +1849,6 @@
       {
         "type":"Feature",
         "properties":{
-          "n":"Paisley",
-          "d":4,
-          "s":4
-        },
-        "geometry":{
-          "type":"Point",
-          "coordinates":[
-            -4.42,
-            55.85
-          ]
-        }
-      },
-      {
-        "type":"Feature",
-        "properties":{
           "n":"East Ham",
           "d":-1,
           "s":4
@@ -1963,21 +1918,6 @@
           "coordinates":[
             -2.23,
             53.01
-          ]
-        }
-      },
-      {
-        "type":"Feature",
-        "properties":{
-          "n":"East Kilbride",
-          "d":4,
-          "s":4
-        },
-        "geometry":{
-          "type":"Point",
-          "coordinates":[
-            -4.18,
-            55.76
           ]
         }
       },
@@ -2353,21 +2293,6 @@
           "coordinates":[
             -1.03,
             50.88
-          ]
-        }
-      },
-      {
-        "type":"Feature",
-        "properties":{
-          "n":"Inverness",
-          "d":4,
-          "s":4
-        },
-        "geometry":{
-          "type":"Point",
-          "coordinates":[
-            -4.22,
-            57.48
           ]
         }
       },
@@ -2914,21 +2839,6 @@
       {
         "type":"Feature",
         "properties":{
-          "n":"Hamilton",
-          "d":4,
-          "s":4
-        },
-        "geometry":{
-          "type":"Point",
-          "coordinates":[
-            -4.04,
-            55.78
-          ]
-        }
-      },
-      {
-        "type":"Feature",
-        "properties":{
           "n":"Weymouth",
           "d":2,
           "s":4
@@ -3064,21 +2974,6 @@
       {
         "type":"Feature",
         "properties":{
-          "n":"Livingston",
-          "d":4,
-          "s":4
-        },
-        "geometry":{
-          "type":"Point",
-          "coordinates":[
-            -3.52,
-            55.88
-          ]
-        }
-      },
-      {
-        "type":"Feature",
-        "properties":{
           "n":"Clacton-on-Sea",
           "d":4,
           "s":4
@@ -3088,36 +2983,6 @@
           "coordinates":[
             1.15,
             51.79
-          ]
-        }
-      },
-      {
-        "type":"Feature",
-        "properties":{
-          "n":"Cumbernauld",
-          "d":4,
-          "s":4
-        },
-        "geometry":{
-          "type":"Point",
-          "coordinates":[
-            -3.99,
-            55.95
-          ]
-        }
-      },
-      {
-        "type":"Feature",
-        "properties":{
-          "n":"Dunfermline",
-          "d":4,
-          "s":4
-        },
-        "geometry":{
-          "type":"Point",
-          "coordinates":[
-            -3.44,
-            56.07
           ]
         }
       },
@@ -3148,21 +3013,6 @@
           "coordinates":[
             -3.03,
             53.49
-          ]
-        }
-      },
-      {
-        "type":"Feature",
-        "properties":{
-          "n":"Leith",
-          "d":4,
-          "s":4
-        },
-        "geometry":{
-          "type":"Point",
-          "coordinates":[
-            -3.17,
-            55.98
           ]
         }
       },
