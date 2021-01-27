@@ -35,7 +35,7 @@
   text-align:left;
   strong {
     display: inline-block;
-    @include govuk-font($size: 19, $weight: regular);
+    @include govuk-font($size: 19, $weight: bold);
     text-decoration:underline;
     margin-bottom: 2px;
   }

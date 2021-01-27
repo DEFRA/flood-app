@@ -37,7 +37,7 @@ function LiveMap (mapId, options) {
   const view = new View({
     zoom: 6, // Default zoom
     minZoom: 6, // Minimum zoom level
-    maxZoom: 18, // Max zoom level
+    maxZoom: 18,
     center: maps.centre, // Default centre required
     extent: maps.extentLarge // Constrains extent
   })
@@ -257,7 +257,7 @@ function LiveMap (mapId, options) {
     }
     layers.forEach((layer) => {
       layer.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
-        if (feature.get('isVisible') !== 'true') { return false }
+        if (!feature.get('isVisible')) { return false }
         features.push({
           id: feature.getId(),
           name: featureName(feature),
@@ -538,8 +538,6 @@ function LiveMap (mapId, options) {
     if (!maps.isKeyboard) {
       hideOverlays()
     }
-    // Hide keyboard shortcuts button
-
     // Get mouse coordinates and check for feature
     const featureId = map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
       if (!defaultLayers.includes(layer)) {
