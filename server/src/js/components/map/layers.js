@@ -63,30 +63,6 @@ window.flood.maps.layers = {
     })
   },
 
-  // road: () => {
-  //   return new LayerGroup({
-  //     ref: 'road',
-  //     visible: false,
-  //     zIndex: 0,
-  //     layers: [
-  //       new TileLayer({
-  //         source: new BingMaps({
-  //           key: window.flood.model.bingMaps,
-  //           imagerySet: 'ordnanceSurvey'
-  //         }),
-  //         maxResolution: 50
-  //       }),
-  //       new TileLayer({
-  //         source: new BingMaps({
-  //           key: window.flood.model.bingMaps,
-  //           imagerySet: 'RoadOnDemand'
-  //         }),
-  //         minResolution: 50
-  //       })
-  //     ]
-  //   })
-  // },
-
   satellite: () => {
     return new TileLayer({
       ref: 'satellite',
