@@ -12,9 +12,17 @@ FSR-182 national page link
 FSR-207 impact reached bug fix
 FS-35 cross over ticket from production for DNS issues in flood-data serverless
 
+Hotfixes
+FSR-210 - stationProcess executing every 15 minutes instead of on demand
+
 # webops instructions
 
-NOTE: this release is a release for the check-for-flooding service application and the flood-data serverless application
+NOTE: this release is a release for the check-for-flooding service application, flood-data serverless application and a FWFI server script update.
+
+# FWFI server (https://gitlab-dev.aws-int.defra.cloud/flood/lfw/-/tree/feature/ldn-environments)
+
+Execute job: LFW_{stage}_99_UPDATE_FWFI_LOADER_PIPELINE
+
 
 # flood-data (https://github.com/DEFRA/flood-data)
 
