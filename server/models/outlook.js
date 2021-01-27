@@ -54,37 +54,38 @@ class Outlook {
           this._hasOutlookConcern = true
         }
 
-        riskAreaBlock.days.forEach(day => {
-          riskAreaBlock.polys.forEach(poly => {
-            const feature = {
-              type: 'Feature',
-              properties: {
-                type: 'concernArea',
-                day: day,
-                'risk-level': riskLevel,
-                'z-index': (riskLevel * 10),
-                html: '<p class="govuk-body-s">Details of source, likelyhood and impact</p>'
-              }
+        riskAreaBlock.polys.forEach(poly => {
+          const feature = {
+            type: 'Feature',
+            id: poly.id,
+            properties: {
+              type: 'concernArea',
+              days: riskAreaBlock.days,
+              labelPosition: poly.label_position,
+              'risk-level': riskLevel,
+              'z-index': (riskLevel * 10)
             }
+          }
 
-            if (poly.poly_type === 'inland') {
-              feature.geometry = {
-                type: 'Polygon',
-                coordinates: poly.coordinates
-              }
-              feature.properties.polyType = 'inland'
-            } else if (poly.poly_type === 'coastal') {
-              feature.geometry = {
-                type: 'LineString',
-                coordinates: poly.coordinates
-              }
-              feature.properties.polyType = 'coastal'
-              // Put coastal areas on top of inland areas
-              feature.properties['z-index'] += 1
+          if (poly.poly_type === 'inland') {
+            feature.geometry = {
+              type: 'Polygon',
+              coordinates: poly.coordinates
             }
-            this._geoJson.features.push(feature)
+            feature.properties.polyType = 'inland'
+          } else if (poly.poly_type === 'coastal') {
+            feature.geometry = {
+              type: 'LineString',
+              coordinates: poly.coordinates
+            }
+            feature.properties.polyType = 'coastal'
+            // Put coastal areas on top of inland areas
+            feature.properties['z-index'] += 1
+          }
+          this._geoJson.features.push(feature)
 
-            // Set highest daily risk level
+          // Set highest daily risk level
+          riskAreaBlock.days.forEach(day => {
             if (riskLevel > this._riskLevels[day - 1]) {
               this._riskLevels[day - 1] = riskLevel
             }

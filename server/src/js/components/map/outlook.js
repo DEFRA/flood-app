@@ -3,12 +3,11 @@
 // It uses the MapContainer
 // TODO: needs refactoring into layers and styles
 // ALSO need to fix the functionality, I don't think the tickets have been developed as of 31/01/2020
-import { View } from 'ol'
-import { Vector as VectorLayer } from 'ol/layer'
-import { Vector as VectorSource } from 'ol/source'
+import { View, Overlay } from 'ol'
 import { defaults as defaultInteractions } from 'ol/interaction'
-import { GeoJSON } from 'ol/format'
-import { Style, Fill, Stroke } from 'ol/style'
+import { transform } from 'ol/proj'
+import { Point } from 'ol/geom'
+import { getCenter } from 'ol/extent'
 import { unByKey } from 'ol/Observable'
 import { Control } from 'ol/control'
 
@@ -20,6 +19,7 @@ const MapContainer = maps.MapContainer
 function OutlookMap (mapId, options) {
   // State
   const state = {
+    selectedFeatureId: -1,
     visibleRiskLevels: [1, 2, 3, 4],
     day: 1
   }
@@ -28,145 +28,23 @@ function OutlookMap (mapId, options) {
   const view = new View({
     zoom: 6,
     minZoom: 6,
-    maxZoom: 7,
+    maxZoom: 9,
     center: maps.center,
     extent: maps.extentLarge
   })
 
-  // Fill patterns
-  const pattern = (style) => {
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
-    const dpr = window.devicePixelRatio || 1
-    canvas.width = 8 * dpr
-    canvas.height = 8 * dpr
-    ctx.scale(dpr, dpr)
-    switch (style) {
-      case 'high':
-        ctx.fillStyle = '#D4351C'
-        ctx.fillRect(0, 0, 8, 8)
-        ctx.beginPath()
-        ctx.fillStyle = '#ffffff'
-        ctx.moveTo(0, 3.3)
-        ctx.lineTo(4.7, 8)
-        ctx.lineTo(3.3, 8)
-        ctx.lineTo(0, 4.7)
-        ctx.closePath()
-        ctx.moveTo(3.3, 0)
-        ctx.lineTo(4.7, 0)
-        ctx.lineTo(8, 3.3)
-        ctx.lineTo(8, 4.7)
-        ctx.closePath()
-        ctx.fill()
-        break
-      case 'medium':
-        ctx.fillStyle = '#F47738'
-        ctx.fillRect(0, 0, 8, 8)
-        ctx.beginPath()
-        ctx.fillStyle = '#ffffff'
-        ctx.moveTo(3.3, 0)
-        ctx.lineTo(4.7, 0)
-        ctx.lineTo(0, 4.7)
-        ctx.lineTo(0, 3.3)
-        ctx.closePath()
-        ctx.moveTo(3.3, 8)
-        ctx.lineTo(4.7, 8)
-        ctx.lineTo(8, 4.7)
-        ctx.lineTo(8, 3.3)
-        ctx.closePath()
-        ctx.moveTo(4.7, 0)
-        ctx.lineTo(8, 3.3)
-        ctx.lineTo(7.3, 4)
-        ctx.lineTo(4, 0.7)
-        ctx.closePath()
-        ctx.moveTo(0, 4.7)
-        ctx.lineTo(3.3, 8)
-        ctx.lineTo(4, 7.3)
-        ctx.lineTo(0.7, 4)
-        ctx.closePath()
-        ctx.fill()
-        break
-      case 'low':
-        ctx.fillStyle = '#ffdd00'
-        ctx.fillRect(0, 0, 8, 8)
-        ctx.beginPath()
-        ctx.fillStyle = '#ffffff'
-        ctx.moveTo(0, 3.3)
-        ctx.lineTo(0, 4.7)
-        ctx.lineTo(4.7, 0)
-        ctx.lineTo(3.3, 0)
-        ctx.closePath()
-        ctx.moveTo(3.3, 8)
-        ctx.lineTo(4.7, 8)
-        ctx.lineTo(8, 4.7)
-        ctx.lineTo(8, 3.3)
-        ctx.closePath()
-        ctx.fill()
-        break
-      case 'veryLow':
-        ctx.fillStyle = '#85994b'
-        ctx.fillRect(0, 0, 8, 8)
-        ctx.beginPath()
-        ctx.fillStyle = '#ffffff'
-        ctx.arc(4, 4, 1, 0, 2 * Math.PI)
-        ctx.closePath()
-        ctx.fill()
-        break
-    }
-    ctx.restore()
-    return ctx.createPattern(canvas, 'repeat')
-  }
-
-  // Styles
-  const style = (feature) => {
-    if (!feature.get('isVisible')) {
-      return
-    }
-    const zIndex = feature.get('z-index')
-    const lineDash = [2, 3]
-    let strokeColour = '#85994b'
-    let fillColour = pattern('veryLow')
-    if (feature.get('risk-level') === 2) {
-      strokeColour = '#ffdd00'
-      fillColour = pattern('low')
-    } else if (feature.get('risk-level') === 3) {
-      strokeColour = '#F47738'
-      fillColour = pattern('medium')
-    } else if (feature.get('risk-level') === 4) {
-      strokeColour = '#D4351C'
-      fillColour = pattern('high')
-    }
-    return new Style({
-      stroke: new Stroke({ color: strokeColour, width: 1 }),
-      fill: new Fill({ color: fillColour }),
-      lineDash: lineDash,
-      zIndex: zIndex
-    })
-  }
-
   // Layers
-  const road = maps.layers.road()
-  const areasOfConcern = new VectorLayer({
-    ref: 'areasOfConcern',
-    source: new VectorSource({
-      format: new GeoJSON(),
-      projection: 'EPSG:3857',
-      url: '/api/outlook.geojson'
-    }),
-    renderMode: 'hybrid',
-    style: style,
-    opacity: 0.6,
-    zIndex: 200
-  })
+  const topography = maps.layers.topography()
+  const areasOfConcern = maps.layers.areasOfConcern()
+  const places = maps.layers.places()
 
   // Configure default interactions
   const interactions = defaultInteractions({
     pinchRotate: false
   })
 
-  // Format date Today, Yesterday, Tomorrow or 'Monday/Tuesday etc'
+  // Format day today or Monday, Tuesday etc
   const formatDay = (date) => {
-    // date.setDate(date.getDate() + 256)
     date.setHours(0)
     date.setMinutes(0)
     date.setSeconds(0, 0)
@@ -176,15 +54,12 @@ function OutlookMap (mapId, options) {
     now.setSeconds(0, 0)
     if (date.getTime() === now.getTime()) {
       return 'Today'
-    } else if (date.getTime() + 86400000 === now.getTime()) {
-      return 'Yesterday'
-    } else if (date.getTime() - 86400000 === now.getTime()) {
-      return 'Tomorrow'
     } else {
       return date.toLocaleString('en-GB', { weekday: 'short' })
     }
   }
 
+  // Format date as 4th or 23rd etc
   const formatDate = (date) => {
     const number = date.getDate()
     const nth = (number) => {
@@ -197,6 +72,7 @@ function OutlookMap (mapId, options) {
 
   // Create day control
   const dayControlsElement = document.createElement('div')
+  dayControlsElement.id = 'map-days'
   const dayControlsContainer = document.createElement('div')
   dayControlsElement.className = 'defra-map-days'
   dayControlsContainer.className = 'defra-map-days__container'
@@ -213,6 +89,10 @@ function OutlookMap (mapId, options) {
     dayButtonContainer.innerHTML = `<strong>${dayName}</strong><br/>${date}<span class="defra-map-days__icon defra-map-days__icon--risk-level-${day.level}"></span>`
     dayButtonElement.appendChild(dayButtonContainer)
     dayControlsContainer.appendChild(dayButtonElement)
+    // Set state day to current day
+    if (dayName.toLowerCase() === 'today') {
+      state.day = day.idx
+    }
   })
   dayControlsElement.appendChild(dayControlsContainer)
   const dayControl = new Control({
@@ -222,7 +102,7 @@ function OutlookMap (mapId, options) {
   // Options to pass to the MapContainer constructor
   const containerOptions = {
     view: view,
-    layers: [road, areasOfConcern],
+    layers: [topography, areasOfConcern, places],
     controls: [dayControl],
     queryParamKeys: ['v'],
     interactions: interactions,
@@ -235,6 +115,12 @@ function OutlookMap (mapId, options) {
 
   // Create MapContainer
   const container = new MapContainer(mapId, containerOptions)
+  const containerElement = container.containerElement
+  const closeInfoButton = container.closeInfoButton
+  const openKeyButton = container.openKeyButton
+  const closeKeyButton = container.closeKeyButton
+  const attributionButton = container.attributionButton
+  const viewport = container.viewport
   const keyElement = container.keyElement
   const map = container.map
 
@@ -242,12 +128,108 @@ function OutlookMap (mapId, options) {
   // Private methods
   //
 
+  // Get features visible in the current viewport
+  const getVisibleFeatures = () => {
+    const features = []
+    const extent = map.getView().calculateExtent(map.getSize())
+    areasOfConcern.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
+      if (!feature.get('isVisible')) { return false }
+      let labelPosition = getCenter(feature.getGeometry().getExtent())
+      if (feature.get('labelPosition').length) {
+        labelPosition = new Point(transform(feature.get('labelPosition'), 'EPSG:4326', 'EPSG:3857')).getCoordinates()
+      }
+      features.push({
+        id: feature.getId(),
+        centre: labelPosition
+      })
+    })
+    return features
+  }
+
+  // Show overlays
+  const showOverlays = () => {
+    state.visibleFeatures = getVisibleFeatures()
+    const numFeatures = state.visibleFeatures.length
+    const features = state.visibleFeatures.slice(0, 9)
+    hideOverlays()
+    if (maps.isKeyboard && numFeatures >= 1 && numFeatures <= 9) {
+      state.hasOverlays = true
+      features.forEach((feature, i) => {
+        const overlayElement = document.createElement('span')
+        overlayElement.setAttribute('aria-hidden', true)
+        overlayElement.innerText = i + 1
+        const selected = feature.id === state.selectedFeatureId ? 'defra-key-symbol--selected' : ''
+        map.addOverlay(
+          new Overlay({
+            id: feature.id,
+            element: overlayElement,
+            position: feature.centre,
+            className: `defra-key-symbol defra-key-symbol--${feature.state}${feature.isBigZoom ? '-bigZoom' : ''} ${selected}`,
+            offset: [0, 0]
+          })
+        )
+      })
+    }
+    // ToDo: Show non-visual feature details
+    // const model = {
+    //   numFeatures: numFeatures,
+    //   numWarnings: numWarnings,
+    //   mumMeasurements: mumMeasurements,
+    //   features: features
+    // }
+    // const html = window.nunjucks.render('description-live.html', { model: model })
+    // viewportDescription.innerHTML = html
+  }
+
+  // Set selected feature
+  const setSelectedFeature = (newFeatureId = '') => {
+    const originalFeature = areasOfConcern.getSource().getFeatureById(state.selectedFeatureId)
+    const newFeature = areasOfConcern.getSource().getFeatureById(newFeatureId)
+    if (originalFeature) {
+      originalFeature.set('isSelected', false)
+    }
+    if (newFeature) {
+      newFeature.set('isSelected', true)
+      setFeatureHtml(newFeature)
+      hideDays()
+      container.showInfo('Selected feature information', newFeature.get('html'))
+    } else {
+      showDays()
+    }
+    // Toggle overlay selected state
+    if (state.hasOverlays) {
+      if (originalFeature && map.getOverlayById(state.selectedFeatureId)) {
+        const overlayElement = map.getOverlayById(state.selectedFeatureId).getElement().parentNode
+        overlayElement.classList.remove('defra-key-symbol--selected')
+      }
+      if (newFeature && map.getOverlayById(newFeatureId)) {
+        const overlayElement = map.getOverlayById(newFeatureId).getElement().parentNode
+        overlayElement.classList.add('defra-key-symbol--selected')
+      }
+    }
+    state.selectedFeatureId = newFeatureId
+  }
+
+  // Hide overlays
+  const hideOverlays = () => {
+    state.hasOverlays = false
+    map.getOverlays().clear()
+  }
+
+  // Set feature overlay html
+  const setFeatureHtml = (feature) => {
+    const model = feature.getProperties()
+    model.id = feature.getId()
+    const html = window.nunjucks.render('info-outlook.html', { model: model })
+    feature.set('html', html)
+  }
+
   // Set feature visiblity
   const setFeatureVisibility = () => {
     areasOfConcern.getSource().forEachFeature((feature) => {
       const riskLevel = parseInt(feature.get('risk-level'), 10)
-      const day = parseInt(feature.get('day'), 10)
-      const isVisible = state.visibleRiskLevels.includes(riskLevel) && day === state.day
+      const hasDay = feature.get('days').includes(state.day)
+      const isVisible = state.visibleRiskLevels.includes(riskLevel) && hasDay
       feature.set('isVisible', isVisible)
     })
   }
@@ -257,6 +239,22 @@ function OutlookMap (mapId, options) {
     forEach(document.querySelectorAll('.defra-map-days__button'), (button, i) => {
       button.setAttribute('aria-selected', i + 1 === state.day)
     })
+  }
+
+  // Hide day control
+  const hideDays = () => {
+    dayControlsElement.style.display = 'none'
+    dayControlsElement.setAttribute('open', false)
+    dayControlsElement.removeAttribute('aria-modal')
+    dayControlsElement.setAttribute('aria-hidden', true)
+  }
+
+  // Show day control
+  const showDays = () => {
+    dayControlsElement.style.display = 'block'
+    dayControlsElement.setAttribute('open', true)
+    dayControlsElement.setAttribute('aria-modal', true)
+    dayControlsElement.removeAttribute('aria-hidden')
   }
 
   //
@@ -275,7 +273,7 @@ function OutlookMap (mapId, options) {
   setExtentFromLonLat(map, extent)
 
   // Show layers
-  road.setVisible(true)
+  topography.setVisible(true)
 
   //
   // Events
@@ -290,10 +288,82 @@ function OutlookMap (mapId, options) {
     }
   })
 
+  // Show cursor when hovering over features
+  map.addEventListener('pointermove', (e) => {
+    // Detect vector feature at mouse coords
+    const hit = map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
+      if (layer === areasOfConcern) { return true }
+    })
+    map.getTarget().style.cursor = hit ? 'pointer' : ''
+  })
+
+  // Set selected feature if map is clicked
+  // Clear overlays if non-keyboard interaction
+  map.addEventListener('click', (e) => {
+    // Hide overlays if non-keyboard interaction
+    if (!maps.isKeyboard) { hideOverlays() }
+    // Get mouse coordinates and check for feature
+    const featureId = map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
+      if (layer === areasOfConcern) {
+        const id = feature.getId()
+        return id
+      }
+    })
+    setSelectedFeature(featureId)
+  })
+
+  // Show overlays on first tab in from browser controls
+  viewport.addEventListener('focus', (e) => {
+    if (maps.isKeyboard) { showOverlays() }
+  })
+
+  // Handle all Outlook Map specific key presses
+  containerElement.addEventListener('keyup', (e) => {
+    // Re-instate days when key has been closed
+    if (e.key === 'Escape') {
+      showDays()
+    }
+    // Show overlays when any key is pressed other than Escape
+    if (e.key !== 'Escape') {
+      showOverlays()
+    }
+    // Clear selected feature when pressing escape
+    if (e.key === 'Escape' && state.selectedFeatureId !== '') {
+      setSelectedFeature()
+    }
+    // Set selected feature on [1-9] key presss
+    if (!isNaN(e.key) && e.key >= 1 && e.key <= state.visibleFeatures.length && state.visibleFeatures.length <= 9) {
+      setSelectedFeature(state.visibleFeatures[e.key - 1].id)
+    }
+  })
+
+  // Clear selectedfeature when info is closed
+  closeInfoButton.addEventListener('click', (e) => {
+    setSelectedFeature()
+  })
+
+  // Clear selectedfeature and hide days when key is opened
+  openKeyButton.addEventListener('click', (e) => {
+    setSelectedFeature()
+    hideDays()
+  })
+
+  // Re-instate days when key has been closed
+  closeKeyButton.addEventListener('click', (e) => {
+    showDays()
+  })
+
+  // Clear selectedfeature and hide days when attribution is opended
+  attributionButton.addEventListener('click', (e) => {
+    setSelectedFeature()
+    hideDays()
+  })
+
   // Day control button
   forEach(document.querySelectorAll('.defra-map-days__button'), (button) => {
     button.addEventListener('click', (e) => {
       e.currentTarget.focus()
+      if (!maps.isKeyboard) { hideOverlays() }
       state.day = parseInt(e.currentTarget.getAttribute('data-day'), 10)
       setFeatureVisibility()
       setDaysButton()
@@ -337,24 +407,26 @@ maps.createOutlookMap = (mapId, options = {}) => {
   btnContainer.parentNode.replaceChild(button, btnContainer)
 
   // Detect keyboard interaction
-  if (maps.isKeyboard !== false && maps.isKeyboard !== true) {
-    window.addEventListener('keydown', (e) => {
-      maps.isKeyboard = true
+  window.addEventListener('keydown', (e) => {
+    maps.isKeyboard = true
+  })
+  // Needs keyup to detect first tab into web area
+  window.addEventListener('keyup', (e) => {
+    maps.isKeyboard = true
+  })
+  window.addEventListener('pointerdown', (e) => {
+    maps.isKeyboard = false
+  })
+  window.addEventListener('focusin', (e) => {
+    if (maps.isKeyboard) {
+      e.target.setAttribute('keyboard-focus', '')
+    }
+  })
+  window.addEventListener('focusout', (e) => {
+    forEach(document.querySelectorAll('[keyboard-focus]'), (element) => {
+      element.removeAttribute('keyboard-focus')
     })
-    window.addEventListener('pointerdown', (e) => {
-      maps.isKeyboard = false
-    })
-    window.addEventListener('focusin', (e) => {
-      if (maps.isKeyboard) {
-        e.target.setAttribute('keyboard-focus', '')
-      }
-    })
-    window.addEventListener('focusout', (e) => {
-      forEach(document.querySelectorAll('[keyboard-focus]'), (element) => {
-        element.removeAttribute('keyboard-focus')
-      })
-    })
-  }
+  })
 
   // Manage scroll position
   if (!maps.hasScrollListener) {
