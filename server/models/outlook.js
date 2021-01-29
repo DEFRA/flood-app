@@ -94,14 +94,24 @@ class Outlook {
       })
     })
 
+    // // Smooth outlook polygons
+    // this._geoJson.features.forEach((feature) => {
+    //   // Turf library used to create extra coordinates for Polygons
+    //   if (feature.geometry.type === 'Polygon') {
+    //     const smoothed = polygonSmooth(feature, { iterations: 4 })
+    //     const coordinates = smoothed.features[0].geometry.coordinates
+    //     feature.geometry.coordinates = coordinates
+    //     feature.properties.isSmooth = true
+    //   }
+
     // Smooth outlook polygons
     this._geoJson.features.forEach((feature) => {
       // Turf library used to create extra coordinates for Polygons
       if (feature.geometry.type === 'Polygon') {
-        const smoothed = polygonSmooth(feature, { iterations: 4 })
-        const coordinates = smoothed.features[0].geometry.coordinates
-        feature.geometry.coordinates = coordinates
-        feature.properties.isSmooth = true
+        // const smoothed = polygonSmooth(feature, { iterations: 4 })
+        // const coordinates = smoothed.features[0].geometry.coordinates
+        feature.geometry.coordinatesOrig = feature.geometry.coordinates
+        // feature.geometry.coordinates = coordinates
       }
 
       // Convert linestrings to polygons
