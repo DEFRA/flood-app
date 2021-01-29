@@ -54,6 +54,7 @@ module.exports = {
         ]])
         const featureCoords = turf.polygon(feature.geometry.coordinatesOrig)
         // console.log('JFS: feature.geometry.coordinatesOrig: ', feature.geometry.coordinatesOrig)
+        console.log('JFS: feature: ', feature)
         // console.log('JFS: locationCoords: ', JSON.stringify(locationCoords))
         // console.log('JFS: featureCoords: ', JSON.stringify(featureCoords))
         const intersection = turf.intersect(featureCoords, locationCoords)

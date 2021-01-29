@@ -17,6 +17,7 @@ class OutlookTabs {
               const impact = riskLevels[key][0]
               const likelyhood = riskLevels[key][1]
               const riskLevel = lookup[impact - 1][likelyhood - 1]
+              const polyId = poly.id
 
               // exclude 2,2 or less
 
@@ -27,7 +28,8 @@ class OutlookTabs {
                   impact,
                   likelyhood,
                   day,
-                  messageId: `${riskLevel}-i${impact}-l${likelyhood}`
+                  messageId: `${riskLevel}-i${impact}-l${likelyhood}`,
+                  polyId
                 })
               }
             })
@@ -35,6 +37,8 @@ class OutlookTabs {
         })
       })
     })
+
+    console.log(polys)
 
     // Where source and the day are the same, remove items with lowest risk-level if risk-level
     // is the same then lowest impact if impact is the same then lowest likelihood. We should now
