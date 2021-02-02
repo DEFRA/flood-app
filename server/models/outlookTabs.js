@@ -7,19 +7,19 @@ class OutlookTabs {
     const polys = []
     const lookup = [[1, 1, 1, 1], [1, 1, 2, 2], [2, 2, 3, 3], [2, 3, 3, 4]]
 
+    const locationCoords = turf.polygon([[
+      [place.bbox2k[0], place.bbox2k[1]],
+      [place.bbox2k[0], place.bbox2k[3]],
+      [place.bbox2k[2], place.bbox2k[3]],
+      [place.bbox2k[2], place.bbox2k[1]],
+      [place.bbox2k[0], place.bbox2k[1]]
+    ]])
+
     outlook.risk_areas.forEach((riskArea) => {
       riskArea.risk_area_blocks.forEach(riskAreaBlock => {
         riskAreaBlock.polys.forEach(poly => {
         // test if poly intersects
-        //    const poly = {}
           const polyCoords = turf.polygon(poly.coordinates)
-          const locationCoords = turf.polygon([[
-            [place.bbox2k[0], place.bbox2k[1]],
-            [place.bbox2k[0], place.bbox2k[3]],
-            [place.bbox2k[2], place.bbox2k[3]],
-            [place.bbox2k[2], place.bbox2k[1]],
-            [place.bbox2k[0], place.bbox2k[1]]
-          ]])
           const intersection = turf.intersect(polyCoords, locationCoords)
           if (intersection) {
             const riskLevels = riskAreaBlock.risk_levels
