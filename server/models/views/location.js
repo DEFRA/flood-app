@@ -4,7 +4,7 @@ const { floodFisUrl, bingKeyMaps } = require('../../config')
 const moment = require('moment-timezone')
 
 class ViewModel {
-  constructor ({ location, place, floods, stations, impacts }) {
+  constructor ({ location, place, floods, stations, impacts, tabs }) {
     const title = place.name
 
     Object.assign(this, {
@@ -13,6 +13,7 @@ class ViewModel {
       placeBbox: place ? place.bbox2k : [],
       floods,
       impacts,
+      tabs,
       location: title,
       pageTitle: `Check for flooding in ${title}`,
       metaDescription: `Nearby flood alerts and warnings; latest river and sea levels and flood risk advice for residents living in the ${title} area.`,
@@ -136,6 +137,10 @@ class ViewModel {
       placeBbox: this.placeBbox,
       bingMaps: bingKeyMaps
     }
+
+    // Outlook tabs
+    this.outlookGroups = groupBy(this.tabs.polys, 'day')
+    this.outLookGroupKeys = Object.keys(this.outlookGroups)
   }
 }
 
