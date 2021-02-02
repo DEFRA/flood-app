@@ -25,6 +25,16 @@ class OutlookTabs {
             const riskLevels = riskAreaBlock.risk_levels
 
             riskAreaBlock.days.forEach(day => {
+              let tab
+              switch (day) {
+                case 1:
+                  tab = 'today'
+                  break
+                case 2:
+                  tab = 'tomorrow'
+                  break
+                default: tab = 'outlook'
+              }
               Object.keys(riskLevels).forEach(key => {
                 const impact = riskLevels[key][0]
                 const likelyhood = riskLevels[key][1]
@@ -33,6 +43,7 @@ class OutlookTabs {
 
                 if (impact > 1 && !(impact === 2 && likelyhood === 1)) {
                   polys.push({
+                    tab: tab,
                     riskLevel,
                     source: key,
                     impact,

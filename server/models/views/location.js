@@ -139,8 +139,23 @@ class ViewModel {
     }
 
     // Outlook tabs
-    this.outlookGroups = groupBy(this.tabs.polys, 'day')
+    this.outlookGroups = groupBy(this.tabs.polys, 'tab')
     this.outLookGroupKeys = Object.keys(this.outlookGroups)
+    console.log('JFS: this.outlookGroups: ', this.outlookGroups)
+    console.log('JFS: this.outlookGroupKeys: ', this.outLookGroupKeys)
+
+    const tomorrowObj = this.outlookGroups.tomorrow
+    const outlookObj = this.outlookGroups.outlook
+    const todayObj = this.outlookGroups.today
+
+    // const sortedTodayObj = todayObj.sort((a, b) => (a.source > b.source ? 1 : -1))
+    todayObj.sort((a, b) => (a.source > b.source ? 1 : -1))
+    tomorrowObj.sort((a, b) => (a.source > b.source ? 1 : -1))
+    outlookObj.sort((a, b) => (a.source > b.source ? 1 : -1))
+    // console.log('JFS: todayObj: ', sortedTodayObj)
+    console.log('JFS: todayObj: ', todayObj)
+    console.log('JFS: tomorrowObj: ', tomorrowObj)
+    console.log('JFS: outlookObj: ', outlookObj)
   }
 }
 
