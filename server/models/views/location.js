@@ -139,23 +139,49 @@ class ViewModel {
     }
 
     // Outlook tabs
-    this.outlookGroups = groupBy(this.tabs.polys, 'tab')
-    this.outLookGroupKeys = Object.keys(this.outlookGroups)
-    console.log('JFS: this.outlookGroups: ', this.outlookGroups)
-    console.log('JFS: this.outlookGroupKeys: ', this.outLookGroupKeys)
+    // this.outlookGroups = groupBy(this.tabs.polys, 'day')
+    // this.outLookGroupKeys = Object.keys(this.outlookGroups)
 
-    const tomorrowObj = this.outlookGroups.tomorrow
-    const outlookObj = this.outlookGroups.outlook
-    const todayObj = this.outlookGroups.today
+    // const groups = ['day', 'messageId']
+    // const grouped = {}
+
+    // this.tabs.polys.forEach(function (a) {
+    //   groups.reduce(function (o, g, i) {
+    //     o[a[g]] = o[a[g]] || (i + 1 === groups.length ? [] : {})
+    //     return o[a[g]]
+    //   }, grouped).push(a)
+    // })
+
+    const groups = ['day', 'messageId']
+    const grouped = {}
+
+    this.tabs.polys.forEach(function (a) {
+      groups.reduce(function (o, g, i) {
+        o[a[g]] = o[a[g]] || (i + 1 === groups.length ? [] : {})
+        return o[a[g]]
+      }, grouped).push(a)
+    })
+
+    // console.log('JFS: this.outlookGroups: ', this.outlookGroups)
+    // console.log('JFS: this.outlookGroupKeys: ', this.outLookGroupKeys)
+
+    // const tomorrowObj = this.outlookGroups.tomorrow
+    // const outlookObj = this.outlookGroups.outlook
+    // todayObj = this.outlookGroups.today
 
     // const sortedTodayObj = todayObj.sort((a, b) => (a.source > b.source ? 1 : -1))
-    todayObj.sort((a, b) => (a.source > b.source ? 1 : -1))
-    tomorrowObj.sort((a, b) => (a.source > b.source ? 1 : -1))
-    outlookObj.sort((a, b) => (a.source > b.source ? 1 : -1))
+    // grouped['1'].surface.sort((a, b) => (a.riskLevel < b.riskLevel) ? 1 : (a.riskLevel === b.riskLevel) ? ((a.impact > b.impact) ? 1 : (a.impact === b.impact) ? ((a.likelyhood > b.likelyhood) ? 1 : -1) : -1) : -1)
+    // grouped['1'].river.sort((a, b) => (a.riskLevel < b.riskLevel) ? 1 : (a.riskLevel === b.riskLevel) ? ((a.impact > b.impact) ? 1 : (a.impact === b.impact) ? ((a.likelyhood > b.likelyhood) ? 1 : -1) : -1) : -1)
+
+    console.log(grouped)
+    console.log(grouped['1'])
+    // tomorrowObj.sort((a, b) => (a.riskLevel < b.riskLevel) ? 1 : (a.riskLevel === b.riskLevel) ? ((a.impact > b.impact) ? 1 : (a.impact === b.impact) ? ((a.likelyhood > b.likelyhood) ? 1 : -1) : -1) : -1)
+
+    // outlookObj.sort((a, b) => (a.riskLevel < b.riskLevel) ? 1 : (a.riskLevel === b.riskLevel) ? ((a.impact > b.impact) ? 1 : (a.impact === b.impact) ? ((a.likelyhood > b.likelyhood) ? 1 : -1) : -1) : -1)
     // console.log('JFS: todayObj: ', sortedTodayObj)
-    console.log('JFS: todayObj: ', todayObj)
-    console.log('JFS: tomorrowObj: ', tomorrowObj)
-    console.log('JFS: outlookObj: ', outlookObj)
+    // console.log('JFS: todayObj: ', todayObj)
+    // console.log('JFS: tomorrowObj: ', tomorrowObj)
+    // console.log('JFS: outlookObj: ', outlookObj)
   }
 }
 
