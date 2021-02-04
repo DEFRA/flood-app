@@ -5,6 +5,7 @@ const moment = require('moment-timezone')
 
 class ViewModel {
   constructor ({ location, place, floods, stations, impacts, tabs }) {
+    // console.log('JFS: tabs: ', tabs)
     const title = place.name
 
     Object.assign(this, {
@@ -139,8 +140,8 @@ class ViewModel {
     }
 
     // Outlook tabs
-    // this.outlookGroups = groupBy(this.tabs.polys, 'day')
-    // this.outLookGroupKeys = Object.keys(this.outlookGroups)
+    this.outlookGroups = groupBy(this.tabs.polys, 'tab')
+    this.outLookGroupKeys = Object.keys(this.outlookGroups)
 
     // const groups = ['day', 'messageId']
     // const grouped = {}
@@ -152,32 +153,125 @@ class ViewModel {
     //   }, grouped).push(a)
     // })
 
-    const groups = ['day', 'messageId']
-    const grouped = {}
+    // const groups = ['day', 'messageId']
+    // const grouped = {}
 
-    this.tabs.polys.forEach(function (a) {
-      groups.reduce(function (o, g, i) {
-        o[a[g]] = o[a[g]] || (i + 1 === groups.length ? [] : {})
-        return o[a[g]]
-      }, grouped).push(a)
-    })
+    // this.tabs.polys.forEach(function (a) {
+    //   groups.reduce(function (o, g, i) {
+    //     o[a[g]] = o[a[g]] || (i + 1 === groups.length ? [] : {})
+    //     return o[a[g]]
+    //   }, grouped).push(a)
+    // })
 
     // console.log('JFS: this.outlookGroups: ', this.outlookGroups)
     // console.log('JFS: this.outlookGroupKeys: ', this.outLookGroupKeys)
 
-    // const tomorrowObj = this.outlookGroups.tomorrow
-    // const outlookObj = this.outlookGroups.outlook
-    // todayObj = this.outlookGroups.today
+    const tomorrowObj = this.outlookGroups.tomorrow
+    const outlookObj = this.outlookGroups.outlook
+    const todayObj = this.outlookGroups.today
 
+    // TODAY
+
+    console.log('JFS: todayObg unsorted: ', todayObj)
+
+    todayObj.sort((a, b) => {
+      if (a.source === b.source) {
+        return (a.messageId > b.messageId) ? -1 : (a.messageId < b.messageId) ? 1 : 0
+      } else {
+        return (a.source < b.source) ? -1 : 1
+      }
+    })
+
+    console.log('JFS: todayObj sorted: ', todayObj)
+
+    const resultToday = []
+    const mapToday = new Map()
+    for (const item of todayObj) {
+      if (!mapToday.has(item.source)) {
+        mapToday.set(item.source, true) // set any value to Map
+        resultToday.push({
+          source: item.source,
+          messageId: item.messageId,
+          polyId: item.polyId
+        })
+      }
+    }
+    console.log(resultToday)
+
+    this.resultToday = resultToday
+
+    // TOMORROW
+
+    console.log('JFS: tomorrowObj unsorted: ', tomorrowObj)
+
+    tomorrowObj.sort((a, b) => {
+      if (a.source === b.source) {
+        return (a.messageId > b.messageId) ? -1 : (a.messageId < b.messageId) ? 1 : 0
+      } else {
+        return (a.source < b.source) ? -1 : 1
+      }
+    })
+
+    console.log('JFS: tomorrowObj sorted: ', tomorrowObj)
+
+    const resultTomorrow = []
+    const mapTomorrow = new Map()
+    for (const item of tomorrowObj) {
+      if (!mapTomorrow.has(item.source)) {
+        mapTomorrow.set(item.source, true) // set any value to Map
+        resultTomorrow.push({
+          source: item.source,
+          messageId: item.messageId,
+          polyId: item.polyId
+        })
+      }
+    }
+
+    console.log(resultTomorrow)
+
+    this.resultTomorrow = resultTomorrow
+
+    // OUTLOOK
+
+    console.log('JFS: outlookObj unsorted: ', outlookObj)
+
+    outlookObj.sort((a, b) => {
+      if (a.source === b.source) {
+        return (a.messageId > b.messageId) ? -1 : (a.messageId < b.messageId) ? 1 : 0
+      } else {
+        return (a.source < b.source) ? -1 : 1
+      }
+    })
+
+    console.log('JFS: outlookObj sorted: ', outlookObj)
+
+    const resultOutlook = []
+    const mapOutlook = new Map()
+    for (const item of outlookObj) {
+      if (!mapOutlook.has(item.source)) {
+        mapOutlook.set(item.source, true) // set any value to Map
+        resultOutlook.push({
+          source: item.source,
+          messageId: item.messageId,
+          polyId: item.polyId
+        })
+      }
+    }
+
+    console.log(resultOutlook)
+
+    this.resultOutlook = resultOutlook
+
+    // todayObj.sort((a, b) => (a.source > b.source ? 1 : -1))
     // const sortedTodayObj = todayObj.sort((a, b) => (a.source > b.source ? 1 : -1))
-    // grouped['1'].surface.sort((a, b) => (a.riskLevel < b.riskLevel) ? 1 : (a.riskLevel === b.riskLevel) ? ((a.impact > b.impact) ? 1 : (a.impact === b.impact) ? ((a.likelyhood > b.likelyhood) ? 1 : -1) : -1) : -1)
-    // grouped['1'].river.sort((a, b) => (a.riskLevel < b.riskLevel) ? 1 : (a.riskLevel === b.riskLevel) ? ((a.impact > b.impact) ? 1 : (a.impact === b.impact) ? ((a.likelyhood > b.likelyhood) ? 1 : -1) : -1) : -1)
+    // grouped['1'].surface.sort((a, b) => (a.riskLevel < b.riskLevel) ? 1 : (a.riskLevel === b.riskLevel) ? ((a.impact > b.impact) ? 1 : (a.impact === b.impact) ? ((a.likelihood > b.likelihood) ? 1 : -1) : -1) : -1)
+    // grouped['1'].river.sort((a, b) => (a.riskLevel < b.riskLevel) ? 1 : (a.riskLevel === b.riskLevel) ? ((a.impact > b.impact) ? 1 : (a.impact === b.impact) ? ((a.likelihood > b.likelihood) ? 1 : -1) : -1) : -1)
 
-    console.log(grouped)
-    console.log(grouped['1'])
-    // tomorrowObj.sort((a, b) => (a.riskLevel < b.riskLevel) ? 1 : (a.riskLevel === b.riskLevel) ? ((a.impact > b.impact) ? 1 : (a.impact === b.impact) ? ((a.likelyhood > b.likelyhood) ? 1 : -1) : -1) : -1)
+    // console.log(grouped)
+    // console.log(grouped['1'])
+    // tomorrowObj.sort((a, b) => (a.riskLevel < b.riskLevel) ? 1 : (a.riskLevel === b.riskLevel) ? ((a.impact > b.impact) ? 1 : (a.impact === b.impact) ? ((a.likelihood > b.likelihood) ? 1 : -1) : -1) : -1)
 
-    // outlookObj.sort((a, b) => (a.riskLevel < b.riskLevel) ? 1 : (a.riskLevel === b.riskLevel) ? ((a.impact > b.impact) ? 1 : (a.impact === b.impact) ? ((a.likelyhood > b.likelyhood) ? 1 : -1) : -1) : -1)
+    // outlookObj.sort((a, b) => (a.riskLevel < b.riskLevel) ? 1 : (a.riskLevel === b.riskLevel) ? ((a.impact > b.impact) ? 1 : (a.impact === b.impact) ? ((a.likelihood > b.likelihood) ? 1 : -1) : -1) : -1)
     // console.log('JFS: todayObj: ', sortedTodayObj)
     // console.log('JFS: todayObj: ', todayObj)
     // console.log('JFS: tomorrowObj: ', tomorrowObj)

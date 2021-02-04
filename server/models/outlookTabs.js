@@ -37,19 +37,19 @@ class OutlookTabs {
               }
               Object.keys(riskLevels).forEach(key => {
                 const impact = riskLevels[key][0]
-                const likelyhood = riskLevels[key][1]
-                const riskLevel = lookup[impact - 1][likelyhood - 1]
+                const likelihood = riskLevels[key][1]
+                const riskLevel = lookup[impact - 1][likelihood - 1]
                 const polyId = poly.id
 
-                if (impact > 1 && !(impact === 2 && likelyhood === 1)) {
+                if (impact > 1 && !(impact === 2 && likelihood === 1)) {
                   polys.push({
                     tab: tab,
                     riskLevel,
                     source: key,
                     impact,
-                    likelyhood,
+                    likelihood,
                     day,
-                    messageId: `${riskLevel}-i${impact}-l${likelyhood}`,
+                    messageId: `${riskLevel}-i${impact}-l${likelihood}`,
                     polyId
                   })
                 }
