@@ -125,5 +125,29 @@
       "forecastmax": "1.896",
       "forecastactive": false
     }
-  ]
+  ],
+  "tabs": {
+      "polys": [
+        {
+          "tab": "outlook",
+          "riskLevel": 1,
+          "source": "river",
+          "impact": 2,
+          "likelihood": "2",
+          "day": "3",
+          "messageId": "1-i2-l2",
+          "polyId": "8057"
+        },
+        {
+          "tab": "outlook",
+          "riskLevel": 1,
+          "source": "river",
+          "impact": 2,
+          "likelihood": "2",
+          "day": "3",
+          "messageId": "1-i2-l2",
+          "polyId": "8058"
+        }        
+      ]
+    }
 }

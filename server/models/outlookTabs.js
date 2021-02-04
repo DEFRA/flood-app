@@ -15,50 +15,52 @@ class OutlookTabs {
       [place.bbox2k[0], place.bbox2k[1]]
     ]])
 
-    outlook.risk_areas.forEach((riskArea) => {
-      riskArea.risk_area_blocks.forEach(riskAreaBlock => {
-        riskAreaBlock.polys.forEach(poly => {
-        // test if poly intersects
-          const polyCoords = turf.polygon(poly.coordinates)
-          const intersection = turf.intersect(polyCoords, locationCoords)
-          if (intersection) {
-            const riskLevels = riskAreaBlock.risk_levels
+    if (outlook.risk_areas) {
+      outlook.risk_areas.forEach((riskArea) => {
+        riskArea.risk_area_blocks.forEach(riskAreaBlock => {
+          riskAreaBlock.polys.forEach(poly => {
+            // test if poly intersects
+            const polyCoords = turf.polygon(poly.coordinates)
+            const intersection = turf.intersect(polyCoords, locationCoords)
+            if (intersection) {
+              const riskLevels = riskAreaBlock.risk_levels
 
-            riskAreaBlock.days.forEach(day => {
-              let tab
-              switch (day) {
-                case 1:
-                  tab = 'today'
-                  break
-                case 2:
-                  tab = 'tomorrow'
-                  break
-                default: tab = 'outlook'
-              }
-              Object.keys(riskLevels).forEach(key => {
-                const impact = riskLevels[key][0]
-                const likelihood = riskLevels[key][1]
-                const riskLevel = lookup[impact - 1][likelihood - 1]
-                const polyId = poly.id
-
-                if (impact > 1 && !(impact === 2 && likelihood === 1)) {
-                  polys.push({
-                    tab: tab,
-                    riskLevel,
-                    source: key,
-                    impact,
-                    likelihood,
-                    day,
-                    messageId: `${riskLevel}-i${impact}-l${likelihood}`,
-                    polyId
-                  })
+              riskAreaBlock.days.forEach(day => {
+                let tab
+                switch (day) {
+                  case 1:
+                    tab = 'today'
+                    break
+                  case 2:
+                    tab = 'tomorrow'
+                    break
+                  default: tab = 'outlook'
                 }
+                Object.keys(riskLevels).forEach(key => {
+                  const impact = riskLevels[key][0]
+                  const likelihood = riskLevels[key][1]
+                  const riskLevel = lookup[impact - 1][likelihood - 1]
+                  const polyId = poly.id
+
+                  if (impact > 1 && !(impact === 2 && likelihood === 1)) {
+                    polys.push({
+                      tab: tab,
+                      riskLevel,
+                      source: key,
+                      impact,
+                      likelihood,
+                      day,
+                      messageId: `${riskLevel}-i${impact}-l${likelihood}`,
+                      polyId
+                    })
+                  }
+                })
               })
-            })
-          }
+            }
+          })
         })
       })
-    })
+    }
 
     this.polys = polys
 
