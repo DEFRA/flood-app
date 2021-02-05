@@ -150,26 +150,12 @@ class ViewModel {
     // TODAY
 
     if (todayObj) {
-      todayObj.sort((a, b) => {
-        if (a.source === b.source) {
-          return (a.messageId > b.messageId) ? -1 : (a.messageId < b.messageId) ? 1 : 0
-        } else {
-          return (a.source < b.source) ? -1 : 1
-        }
-      })
+      todayObj.sort((a, b) => (a.source > b.source) ? 1 : (a.source === b.source) ? ((a.messageId < b.messageId) ? 1 : -1) : -1)
 
-      const resultToday = []
       const mapToday = new Map()
-      for (const item of todayObj) {
-        if (!mapToday.has(item.source)) {
-          mapToday.set(item.source, true) // set any value to Map
-          resultToday.push({
-            source: item.source,
-            messageId: item.messageId,
-            polyId: item.polyId
-          })
-        }
-      }
+      const resultToday = []
+
+      this.newMethod(todayObj, mapToday, resultToday)
 
       this.resultToday = resultToday
     }
@@ -177,26 +163,12 @@ class ViewModel {
     // TOMORROW
 
     if (tomorrowObj) {
-      tomorrowObj.sort((a, b) => {
-        if (a.source === b.source) {
-          return (a.messageId > b.messageId) ? -1 : (a.messageId < b.messageId) ? 1 : 0
-        } else {
-          return (a.source < b.source) ? -1 : 1
-        }
-      })
+      tomorrowObj.sort((a, b) => (a.source > b.source) ? 1 : (a.source === b.source) ? ((a.messageId < b.messageId) ? 1 : -1) : -1)
 
-      const resultTomorrow = []
       const mapTomorrow = new Map()
-      for (const item of tomorrowObj) {
-        if (!mapTomorrow.has(item.source)) {
-          mapTomorrow.set(item.source, true) // set any value to Map
-          resultTomorrow.push({
-            source: item.source,
-            messageId: item.messageId,
-            polyId: item.polyId
-          })
-        }
-      }
+      const resultTomorrow = []
+
+      this.newMethod(todayObj, mapTomorrow, resultTomorrow)
 
       this.resultTomorrow = resultTomorrow
     }
@@ -204,28 +176,27 @@ class ViewModel {
     // OUTLOOK
 
     if (outlookObj) {
-      outlookObj.sort((a, b) => {
-        if (a.source === b.source) {
-          return (a.messageId > b.messageId) ? -1 : (a.messageId < b.messageId) ? 1 : 0
-        } else {
-          return (a.source < b.source) ? -1 : 1
-        }
-      })
+      outlookObj.sort((a, b) => (a.source > b.source) ? 1 : (a.source === b.source) ? ((a.messageId < b.messageId) ? 1 : -1) : -1)
 
-      const resultOutlook = []
       const mapOutlook = new Map()
-      for (const item of outlookObj) {
-        if (!mapOutlook.has(item.source)) {
-          mapOutlook.set(item.source, true) // set any value to Map
-          resultOutlook.push({
-            source: item.source,
-            messageId: item.messageId,
-            polyId: item.polyId
-          })
-        }
-      }
+      const resultOutlook = []
+
+      this.newMethod(todayObj, mapOutlook, resultOutlook)
 
       this.resultOutlook = resultOutlook
+    }
+  }
+
+  newMethod (a, b, c) {
+    for (const item of a) {
+      if (!b.has(item.source)) {
+        b.set(item.source, true) // set any value to Map
+        c.push({
+          source: item.source,
+          messageId: item.messageId,
+          polyId: item.polyId
+        })
+      }
     }
   }
 }
