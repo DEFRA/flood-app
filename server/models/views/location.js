@@ -140,63 +140,73 @@ class ViewModel {
 
     // Outlook tabs
 
-    this.outlookGroups = this.tabs.polys ? groupBy(this.tabs.polys, 'tab') : ''
-    this.outLookGroupKeys = Object.keys(this.outlookGroups)
+    // Sort array
 
-    const tomorrowObj = this.outlookGroups.tomorrow
-    const outlookObj = this.outlookGroups.outlook
-    const todayObj = this.outlookGroups.today
+    const fullArray = this.tabs.polys
 
-    // TODAY
+    if (fullArray) {
+      fullArray.sort((a, b) => {
+        if (a.day === b.day) {
+          if (a.source === b.source) {
+            return (a.messageId > b.messageId) ? -1 : (a.messageId < b.messageId) ? 1 : 0
+          } else {
+            return (a.source < b.source) ? -1 : 1
+          }
+        } else {
+          return (a.day < b.day) ? -1 : 1
+        }
+      })
 
-    if (todayObj) {
-      todayObj.sort((a, b) => (a.source > b.source) ? 1 : (a.source === b.source) ? ((a.messageId < b.messageId) ? 1 : -1) : -1)
+      // Group by day
 
-      const mapToday = new Map()
-      const resultToday = []
+      this.groupByDay = groupBy(fullArray, 'day')
 
-      this.newMethod(todayObj, mapToday, resultToday)
+      this.groupByDayFull = groupBy(fullArray, 'day')
 
-      this.resultToday = resultToday
-    }
+      // Find distinct messages for each source for each day
 
-    // TOMORROW
+      for (const [day, messages] of Object.entries(this.groupByDay)) {
+        const uniqueArray = []
+        const mapMessages = new Map()
+        for (const item of messages) {
+          if (!mapMessages.has(item.source)) {
+            mapMessages.set(item.source, true) // set any value to Map
+            uniqueArray.push({
+              day: item.day,
+              source: item.source,
+              messageId: item.messageId,
+              polyId: item.polyId
+            })
+          }
+        }
 
-    if (tomorrowObj) {
-      tomorrowObj.sort((a, b) => (a.source > b.source) ? 1 : (a.source === b.source) ? ((a.messageId < b.messageId) ? 1 : -1) : -1)
-
-      const mapTomorrow = new Map()
-      const resultTomorrow = []
-
-      this.newMethod(todayObj, mapTomorrow, resultTomorrow)
-
-      this.resultTomorrow = resultTomorrow
-    }
-
-    // OUTLOOK
-
-    if (outlookObj) {
-      outlookObj.sort((a, b) => (a.source > b.source) ? 1 : (a.source === b.source) ? ((a.messageId < b.messageId) ? 1 : -1) : -1)
-
-      const mapOutlook = new Map()
-      const resultOutlook = []
-
-      this.newMethod(todayObj, mapOutlook, resultOutlook)
-
-      this.resultOutlook = resultOutlook
-    }
-  }
-
-  newMethod (a, b, c) {
-    for (const item of a) {
-      if (!b.has(item.source)) {
-        b.set(item.source, true) // set any value to Map
-        c.push({
-          source: item.source,
-          messageId: item.messageId,
-          polyId: item.polyId
-        })
+        this.groupByDay[day] = uniqueArray
       }
+
+      // Combine sources with same messageId
+
+      if (this.groupByDay['1']) {
+        const arrayObj = this.groupByDay['1'].reduce((map, order) => {
+          const { messageId } = order
+          if (map[messageId]) {
+            map[messageId].push(order.source)
+          } else {
+            map[messageId] = [order.source]
+          }
+          return map
+        }, {})
+
+        const output = Object.keys(arrayObj).map(key => ({ id: key, sources: arrayObj[key] }))
+
+        console.log('Output: ', output)
+        this.todayTabContent = `${output[0].sources}: Very low risk, impact minor (2), likelihood low (2).`
+
+        console.log('todayTabContent: ', this.todayTabContent)
+      }
+
+      this.newTab1 = this.groupByDay['1']
+      this.newTab2 = this.groupByDay['2']
+      this.newTab3 = [this.groupByDay['3'], this.groupByDay['4'], this.groupByDay['5']]
     }
   }
 }
