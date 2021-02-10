@@ -160,7 +160,19 @@ window.flood.maps.styles = {
     textStyle[0].getText().setText(feature.get('n'))
     textStyle[1].getText().setText(feature.get('n'))
     return textStyle
+  },
+
+  //
+  // Debug styles
+  //
+
+  bbox: (feature) => {
+    return new Style({
+      stroke: new Stroke({ color: '#1d70b8', width: 2, lineDash: [4, 4] }),
+      fill: new Stroke({ color: 'transparent' })
+    })
   }
+
 }
 
 //

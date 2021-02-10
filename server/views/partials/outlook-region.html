@@ -49,7 +49,6 @@
         <p>The flood risk is very low.</p>
 
         {% endif %}
-
     </div>
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tomorrow">
         <h3 class="govuk-heading-s">Tomorrow</h3>
@@ -77,7 +76,6 @@
         <p>The flood risk is very low.</p>
 
         {% endif %}
-
     </div>
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="outlook">
         <h3 class="govuk-heading-s">Outlook</h3>
@@ -114,6 +112,7 @@
 
     </div>
 </div>
+<span id="map-outlook"></span>
 <p class="defra-flood-meta">
     Updated <time datetime="{{ model.tabs.issueUTC }}">{{ model.tabs.issueDate }}</time>.</br>Produced by the Met Office and Environment Agency
 </p>

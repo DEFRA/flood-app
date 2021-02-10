@@ -134,14 +134,15 @@ class ViewModel {
     // create an array of all active impacts
     this.activeImpacts = impacts.filter(active => active.telemetryactive === true)
     this.hasActiveImpacts = !!this.activeImpacts.length
-    this.expose = {
-      placeBbox: this.placeBbox,
-      bingMaps: bingKeyMaps
-    }
 
     // Outlook tabs
 
-    // Sort array of polygons in day / messageId / source order
+    // Expose model values for client side javascript
+    this.expose = {
+      placeBbox: this.placeBbox,
+      outlookDays: tabs.days,
+      bingMaps: bingKeyMaps
+    }
   }
 }
 

@@ -101,16 +101,16 @@
   margin:10px 0px 0px 10px;
   border:0;
   padding:0;
-  height:39px;
+  height:40px;
   width:40px;
   cursor:pointer;
   background-color:white;
   color: govuk-colour('black');
   font-size:16px;
-  line-height:39px;
-  background-image: svg-url('<svg width="20" height="21" viewBox="0 0 20 21"><path d="M3.121,8.379l8.379,-8.379l2.121,2.121l-6.878,6.879l12.257,0l0,3l-12.257,0l6.878,6.879l-2.121,2.121l-10.5,-10.5l2.121,-2.121Z" fill="#0b0c0c"/></svg>');
-  background-size: 20px 21px;
-  background-position: 10px 9px;
+  line-height:40px;
+  background-image: svg-url('<svg width="20" height="20" viewBox="0 0 20 20"><path d="M4.828,11L12.314,18.485L10.899,19.899L1,10L10.899,0.101L12.314,1.515L4.828,9L19,9L19,11L4.828,11Z" style="fill:#0b0c0c;stroke:#0b0c0c;stroke-width:0.1px"/></svg>');
+  background-size: 20px;
+  background-position: 10px 10px;
   background-repeat: no-repeat;
   text-indent:-5000px;
   @include mq ($from: desktop) {
@@ -127,7 +127,6 @@
   }
   &:focus[keyboard-focus] {
     background-color: $govuk-focus-colour;
-    background-image: svg-url('<svg width="20" height="21" viewBox="0 0 20 21"><path d="M3.121,8.379l8.379,-8.379l2.121,2.121l-6.878,6.879l12.257,0l0,3l-12.257,0l6.878,6.879l-2.121,2.121l-10.5,-10.5l2.121,-2.121Z" fill="#0b0c0c"/></svg>');
     color: $govuk-text-colour;
     outline:none;
   }
@@ -142,11 +141,10 @@
   pointer-events: auto;
 }
 .defra-map__exit {
-  background-image: svg-url('<svg width="15" height="15" viewBox="0 0 15 15" version="1.1"><path d="M7.5,5.005l5.005,-5.005l2.495,2.495l-5.005,5.005l5.005,5.005l-2.495,2.495l-5.005,-5.005l-5.005,5.005l-2.495,-2.495l5.005,-5.005l-5.005,-5.005l2.495,-2.495l5.005,5.005Z" fill="#0b0c0c"/></svg>');
-  background-size: 15px 15px;
-  background-position: 12px 12px;
+  background-image: svg-url('<svg width="14" height="14" viewBox="0 0 14 14"><path d="M7,5.6L12.6,0L14,1.4L8.4,7L14,12.6L12.6,14L7,8.4L1.4,14L0,12.6L5.6,7L0,1.4L1.4,0L7,5.6Z" style="fill:#0b0c0c;stroke:#0b0c0c;stroke-width:0.1px"/></svg>');
+  background-size: 14px;
+  background-position: 13px;
   &:focus[keyboard-focus] {
-    background-image: svg-url('<svg width="15" height="15" viewBox="0 0 15 15" version="1.1"><path d="M7.5,5.005l5.005,-5.005l2.495,2.495l-5.005,5.005l5.005,5.005l-2.495,2.495l-5.005,-5.005l-5.005,5.005l-2.495,-2.495l5.005,-5.005l-5.005,-5.005l2.495,-2.495l5.005,5.005Z" fill="#0b0c0c"/></svg>');
     outline:none;
   }
 }
@@ -156,8 +154,7 @@
   float:left;
   margin-left:5px;
   margin-top:10px;
-  border:0;
-  height:39px;
+  height:40px;
   width:40px;
   padding:0;
   border:0;
@@ -165,11 +162,11 @@
   background-color:white;
   color: govuk-colour('black');
   font-size:16px;
-  line-height:39px;
+  line-height:40px;
   text-indent: -5000px;
-  background-image: svg-url('<svg width="18" height="17" viewBox="0 0 18 17" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M16.125,9.75l1.875,1.25l-9,6l-9,-6l1.875,-1.25l7.125,4.75l7.125,-4.75" style="fill:#0b0c0c;"/><path d="M9,0l-9,6l9,6l9,-6l-9,-6Zm0,2.5l-5.25,3.5l5.25,3.5l5.25,-3.5l-5.25,-3.5Z" style="fill:#0b0c0c;"/></svg>');
+  background-image: svg-url('<svg width="18" height="17" viewBox="0 0 18 17"><path d="M16.215,9.81L18,11L9,17L0,11L1.785,9.81L8.945,14.583C8.978,14.606 9.022,14.606 9.055,14.583L16.215,9.81Z" style="fill:#0b0c0c;"/><path d="M9,0L0,6L9,12L18,6L9,0ZM9,2.38L14.43,6L9,9.62L3.57,6L9,2.38Z" style="fill:#0b0c0c;"/></svg>');
   background-size: 18px 17px;
-  background-position: 11px 11px;
+  background-position: 11px 11.5px;
   background-repeat: no-repeat;
   @include mq ($from: desktop) {
     display: none;
@@ -283,17 +280,17 @@
   position:absolute;
   right:5px;
   top:5px;
-  width:41px;
-  height:41px;
+  width:40px;
+  height:40px;
   margin:0;
   border:0;
   padding:0;
   border:0;
   cursor:pointer;
   background-color: #ffffff;
-  background-image: svg-url('<svg width="15" height="15" viewBox="0 0 15 15"><path d="M7.5,5.005l5.005,-5.005l2.495,2.495l-5.005,5.005l5.005,5.005l-2.495,2.495l-5.005,-5.005l-5.005,5.005l-2.495,-2.495l5.005,-5.005l-5.005,-5.005l2.495,-2.495l5.005,5.005Z" fill="#0b0c0c"/></svg>');
-  background-size: 15px 15px;
-  background-position: 13px 13px;
+  background-image: svg-url('<svg width="14" height="14" viewBox="0 0 14 14"><path d="M7,5.6L12.6,0L14,1.4L8.4,7L14,12.6L12.6,14L7,8.4L1.4,14L0,12.6L5.6,7L0,1.4L1.4,0L7,5.6Z" style="fill:#0b0c0c;stroke:#0b0c0c;stroke-width:0.1px"/></svg>');
+  background-size: 14px;
+  background-position: 13px;
   background-repeat: no-repeat;
   color: white;
   text-indent:-5000px;
@@ -339,17 +336,14 @@
 // Map controls - reset location
 .defra-map-reset {
   float:right;
-  width:41px;
-  height:auto;
   border:0;
-  height:41px;
-  width:41px;
+  height:40px;
+  width:40px;
   padding:0;
-  border:0;
   cursor:pointer;
-  background-image: svg-url('<svg width="31" height="31" viewBox="0 0 31 31"><path d="M7.054,12.871L10.25,6.407L14.25,13.335L7.054,12.871Z" style="fill:rgb(11,12,12);"/><path d="M12.25,9.871C13.206,9.317 14.316,9 15.5,9C19.087,9 22,11.913 22,15.5C22,19.087 19.087,22 15.5,22C11.913,22 9,19.087 9,15.5" style="fill:none;stroke:rgb(11,12,12);stroke-width:2.67px;"/></svg>');
+  background-image: svg-url('<svg width="30" height="30" viewBox="0 0 30 30"><path d="M7.054,12.871l3.196,-6.464l4,6.928l-7.196,-0.464Z" style="fill:#0b0c0c;"/><path d="M12.25,9.871c0.956,-0.554 2.066,-0.871 3.25,-0.871c3.587,0 6.5,2.913 6.5,6.5c0,3.587 -2.913,6.5 -6.5,6.5c-3.587,0 -6.5,-2.913 -6.5,-6.5" style="fill:none;stroke:#0b0c0c;stroke-width:2px;"/></svg>');
   background-color:white;
-  background-size:31px;
+  background-size:30px;
   background-position:5px 5px;
   overflow: hidden;
   text-indent: -5000px;
@@ -377,7 +371,7 @@
     display: block;
     float:right;
     clear:right;
-    width:41px;
+    width:40px;
     height:auto;
     margin-top:5px;
   }
@@ -385,13 +379,12 @@
   &-out {
     display:block;
     border:0;
-    height:41px;
-    width:41px;
+    height:40px;
+    width:40px;
     padding:0;
-    border:0;
     cursor:pointer;
     background-color:white;
-    background-size:31px;
+    background-size:30px;
     background-position:5px 5px;
     overflow: hidden;
     text-indent: -5000px;
@@ -401,10 +394,10 @@
     border: 0;
   }
   &-in {
-    background-image: svg-url('<svg width="31" height="31" viewBox="0 0 31 31"><rect width="13" height="3" x="9" y="14" fill="#0b0c0c" /><rect width="3" height="13" x="14" y="9" fill="#0b0c0c" /></svg>');
+    background-image: svg-url('<svg width="30" height="30" viewBox="0 0 30 30"><rect width="14" height="2" x="8" y="14" style="fill:#0b0c0c"/><rect width="2" height="14" x="14" y="8" style="fill:#0b0c0c"/></svg>');
   }
   &-out {
-    background-image: svg-url('<svg width="31" height="31" viewBox="0 0 31 31"><rect width="13" height="3" x="9" y="14" fill="#0b0c0c" /></svg>');
+    background-image: svg-url('<svg width="30" height="30" viewBox="0 0 30 30"><rect width="14" height="2" x="8" y="14" style="fill:#0b0c0c"/></svg>');
   }
   &-in:hover,
   &-out:hover {
@@ -426,8 +419,8 @@
   clear: both;
   @include govuk-font($size: 19);
   border:0;
-  height:41px;
-  width:41px;
+  height:40px;
+  width:40px;
   padding:0;
   margin-top: 5px;
   cursor:pointer;
@@ -487,15 +480,15 @@
   position:absolute;
   top:0px;
   right:0px;
-  width:41px;
-  height:41px;
+  width:40px;
+  height:40px;
   padding:0;
   border:0;
   cursor:pointer;
   background-color: #ffffff;
-  background-image: svg-url('<svg width="15" height="15" viewBox="0 0 15 15" version="1.1"><path d="M7.5,5.005l5.005,-5.005l2.495,2.495l-5.005,5.005l5.005,5.005l-2.495,2.495l-5.005,-5.005l-5.005,5.005l-2.495,-2.495l5.005,-5.005l-5.005,-5.005l2.495,-2.495l5.005,5.005Z" fill="#0b0c0c"/></svg>');
-  background-size: 15px 15px;
-  background-position: 13px 13px;
+  background-image: svg-url('<svg width="14" height="14" viewBox="0 0 14 14"><path d="M7,5.6L12.6,0L14,1.4L8.4,7L14,12.6L12.6,14L7,8.4L1.4,14L0,12.6L5.6,7L0,1.4L1.4,0L7,5.6Z" style="fill:#0b0c0c;stroke:#0b0c0c;stroke-width:0.1px"/></svg>');
+  background-size: 14px;
+  background-position: 13px;
   background-repeat: no-repeat;
   overflow: hidden;
   text-indent: -5000px;
