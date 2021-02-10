@@ -134,10 +134,6 @@ class ViewModel {
     // create an array of all active impacts
     this.activeImpacts = impacts.filter(active => active.telemetryactive === true)
     this.hasActiveImpacts = !!this.activeImpacts.length
-    this.expose = {
-      placeBbox: this.placeBbox,
-      bingMaps: bingKeyMaps
-    }
 
     // Outlook tabs
 
@@ -232,6 +228,13 @@ class ViewModel {
       Object.entries(this.groupByDayMessage['2']).forEach(([key, value]) => {
         this.messages3.push(`${key}: ${value}: ${outlookContent[key]}`)
       })
+    }
+
+    // Expose model values for client side javascript
+    this.expose = {
+      placeBbox: this.placeBbox,
+      outlookDays: tabs.days,
+      bingMaps: bingKeyMaps
     }
   }
 }

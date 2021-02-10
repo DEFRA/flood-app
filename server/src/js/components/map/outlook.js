@@ -3,13 +3,16 @@
 // It uses the MapContainer
 // TODO: needs refactoring into layers and styles
 // ALSO need to fix the functionality, I don't think the tickets have been developed as of 31/01/2020
-import { View, Overlay } from 'ol'
+import { View, Overlay, Feature } from 'ol' // debug: remove Feature
 import { defaults as defaultInteractions } from 'ol/interaction'
-import { transform } from 'ol/proj'
-import { Point } from 'ol/geom'
+import { transform, transformExtent } from 'ol/proj' // debug: transformExtent
+import { Point } from 'ol/geom' // debug: remove poygon
 import { getCenter } from 'ol/extent'
 import { unByKey } from 'ol/Observable'
 import { Control } from 'ol/control'
+import { fromExtent } from 'ol/geom/Polygon' // debug: remove
+import { Vector as VectorLayer } from 'ol/layer' // debug: remove
+import { Vector as VectorSource } from 'ol/source' // debug: remove
 
 const { addOrUpdateParameter, getParameterByName, forEach } = window.flood.utils
 const maps = window.flood.maps
@@ -121,6 +124,7 @@ function OutlookMap (mapId, options) {
   const closeKeyButton = container.closeKeyButton
   const attributionButton = container.attributionButton
   const viewport = container.viewport
+  const viewportDescription = container.viewportDescription
   const keyElement = container.keyElement
   const map = container.map
 
@@ -138,9 +142,11 @@ function OutlookMap (mapId, options) {
       if (feature.get('labelPosition').length) {
         labelPosition = new Point(transform(feature.get('labelPosition'), 'EPSG:4326', 'EPSG:3857')).getCoordinates()
       }
+      console.log(feature.getProperties())
       features.push({
         id: feature.getId(),
-        centre: labelPosition
+        centre: labelPosition,
+        name: feature.get('name')
       })
     })
     return features
@@ -170,15 +176,12 @@ function OutlookMap (mapId, options) {
         )
       })
     }
-    // ToDo: Show non-visual feature details
-    // const model = {
-    //   numFeatures: numFeatures,
-    //   numWarnings: numWarnings,
-    //   mumMeasurements: mumMeasurements,
-    //   features: features
-    // }
-    // const html = window.nunjucks.render('description-live.html', { model: model })
-    // viewportDescription.innerHTML = html
+    const model = {
+      numFeatures: numFeatures,
+      features: features
+    }
+    const html = window.nunjucks.render('description-outlook.html', { model: model })
+    viewportDescription.innerHTML = html
   }
 
   // Set selected feature
@@ -275,6 +278,27 @@ function OutlookMap (mapId, options) {
   // Show layers
   topography.setVisible(true)
 
+  // Set start day
+  if (options.startDay) {
+    state.day = options.startDay
+  }
+
+  // Centre map on bbox
+  if (options.bbox && options.bbox.length) {
+    maps.setExtentFromLonLat(map, options.bbox)
+    // debug: add bbox
+    map.addLayer(new VectorLayer({
+      ref: 'bbox',
+      source: new VectorSource({
+        projection: 'EPSG:3857',
+        features: [new Feature(fromExtent(transformExtent(options.bbox, 'EPSG:4326', 'EPSG:3857')))]
+      }),
+      style: window.flood.maps.styles.bbox,
+      visible: true,
+      zIndex: 99
+    }))
+  }
+
   //
   // Events
   //
@@ -286,6 +310,17 @@ function OutlookMap (mapId, options) {
       setFeatureVisibility()
       setDaysButton()
     }
+  })
+
+  // Clear viewport description to force screen reader to re-read
+  let timer = null
+  map.addEventListener('moveend', (e) => {
+    viewportDescription.innerHTML = ''
+    // Tasks dependent on a time delay
+    timer = setTimeout(() => {
+      // Show overlays for visible features
+      showOverlays()
+    }, 350)
   })
 
   // Show cursor when hovering over features

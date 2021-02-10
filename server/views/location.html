@@ -87,10 +87,11 @@
     <p><a href="/river-and-sea-levels?q={{ model.location }}">Find a river, sea or groundwater level in this area</a></p> 
     <!-- end river and sea levels -->
     
+    {% include "partials/outlook-region.html" %}
+    
     <p><a href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
     {% include "partials/context-footer.html" %}
 
-    {% include "partials/outlook-region.html" %}
   </div>
   <div class="govuk-grid-column-one-third">
     {% include "partials/related-content.html" %}

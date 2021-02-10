@@ -6,6 +6,7 @@ class OutlookTabs {
 
     const polys = []
     const lookup = [[1, 1, 1, 1], [1, 1, 2, 2], [2, 2, 3, 3], [2, 3, 3, 4]]
+    const issueDate = (new Date(outlook.issued_at)).getTime()
 
     const locationCoords = turf.polygon([[
       [place.bbox2k[0], place.bbox2k[1]],
@@ -62,7 +63,18 @@ class OutlookTabs {
       })
     }
 
+    // Create days array for use with map
+    const days = [0, 1, 2, 3, 4].map(i => {
+      const date = new Date(issueDate)
+      return {
+        idx: i + 1,
+        level: 1,
+        date: new Date(date.setDate(date.getDate() + i))
+      }
+    })
+
     this.polys = polys
+    this.days = days
 
     // Where source and the day are the same, remove items with lowest risk-level if risk-level
     // is the same then lowest impact if impact is the same then lowest likelihood. We should now

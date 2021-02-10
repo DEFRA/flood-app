@@ -14,7 +14,9 @@ class Outlook {
     this._riskLevels = [0, 0, 0, 0, 0]
 
     // Build outlook GeoJSON
-    const lookup = [[1, 1, 1, 1], [1, 1, 2, 2], [2, 2, 3, 3], [2, 3, 3, 4]]
+    const riskMatrix = [[1, 1, 1, 1], [1, 1, 2, 2], [2, 2, 3, 3], [2, 3, 3, 4]]
+    const riskBands = ['Very low', 'Low', 'Medium', 'High']
+
     this._geoJson = {
       type: 'FeatureCollection',
       features: []
@@ -22,6 +24,7 @@ class Outlook {
 
     outlook.risk_areas.forEach((riskArea) => {
       riskArea.risk_area_blocks.forEach(riskAreaBlock => {
+        let sources = []
         let rImpact = 0
         let rLikelyhood = 0
         let sImpact = 0
@@ -35,19 +38,26 @@ class Outlook {
         if (riskAreaBlock.risk_levels.river) {
           rImpact = riskAreaBlock.risk_levels.river[0]
           rLikelyhood = riskAreaBlock.risk_levels.river[1]
-          rRisk = lookup[rImpact - 1][rLikelyhood - 1]
+          rRisk = riskMatrix[rImpact - 1][rLikelyhood - 1]
+          sources.push('river')
         }
         if (riskAreaBlock.risk_levels.surface) {
           sImpact = riskAreaBlock.risk_levels.surface[0]
           sLikelyhood = riskAreaBlock.risk_levels.surface[1]
-          sRisk = lookup[sImpact - 1][sLikelyhood - 1]
+          sRisk = riskMatrix[sImpact - 1][sLikelyhood - 1]
+          sources.push('surface water')
         }
         if (riskAreaBlock.risk_levels.coastal) {
           cImpact = riskAreaBlock.risk_levels.coastal[0]
           cLikelyhood = riskAreaBlock.risk_levels.coastal[1]
-          cRisk = lookup[cImpact - 1][cLikelyhood - 1]
+          cRisk = riskMatrix[cImpact - 1][cLikelyhood - 1]
+          sources.push('coastal')
         }
         const riskLevel = Math.max(rRisk, sRisk, cRisk)
+
+        // Build up sources string and feature name
+        sources = sources.length > 1 ? sources.slice(0, -1).join(', ') + ' and ' + sources[sources.length - 1] : sources
+        const featureName = `${riskBands[riskLevel - 1]} risk of ${sources} flooding`
 
         // Set hasOutlookConcern flag
         if (riskLevel > 0) {
@@ -62,6 +72,7 @@ class Outlook {
               type: 'concernArea',
               days: riskAreaBlock.days,
               labelPosition: poly.label_position,
+              name: featureName,
               'risk-level': riskLevel,
               'z-index': (riskLevel * 10)
             }
