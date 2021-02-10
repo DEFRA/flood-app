@@ -2,7 +2,7 @@ const severity = require('../severity')
 const { groupBy } = require('../../util')
 const { floodFisUrl, bingKeyMaps } = require('../../config')
 const moment = require('moment-timezone')
-const outlookContent = require('../outlook-content.json')
+// const outlookContent = require('../outlook-content.json')
 
 class ViewModel {
   constructor ({ location, place, floods, stations, impacts, tabs }) {
@@ -142,97 +142,6 @@ class ViewModel {
     // Outlook tabs
 
     // Sort array of polygons in day / messageId / source order
-
-    const fullArray = this.tabs.polys
-
-    if (fullArray) {
-      fullArray.sort((a, b) => {
-        if (a.day === b.day) {
-          if (a.messageId === b.messageId) {
-            return (a.source > b.source) ? -1 : (a.source < b.source) ? 1 : 0
-          } else {
-            return (a.messageId > b.messageId) ? -1 : 1
-          }
-        } else {
-          return (a.day < b.day) ? -1 : 1
-        }
-      })
-
-      // Group by day
-
-      this.groupByDay = groupBy(fullArray, 'day')
-
-      this.groupByDayFull = groupBy(fullArray, 'day') // DEBUG PURPOSES ONY
-
-      // Initalize groupByDayMessage 5 element array
-
-      this.groupByDayMessage = [{}, {}, {}, {}, {}]
-
-      const riskLevelText = {
-        1: 'Very low',
-        2: 'Low',
-        3: 'Medium',
-        4: 'High'
-      }
-
-      // Initialze daily risk level array to very low
-
-      this.dailyRisk = [riskLevelText[1], riskLevelText[1], riskLevelText[1], riskLevelText[1], riskLevelText[1]]
-
-      // Find distinct messages for each source for each day
-      for (const [day, messages] of Object.entries(this.groupByDay)) { // Outer loop messages
-        const uniqueArray = []
-        const mapMessages = new Map()
-
-        for (const [index, item] of messages.entries()) { // Inner loop sources
-          if (!mapMessages.has(item.source)) {
-            if (index === 0) {
-              this.dailyRisk[day - 1] = riskLevelText[item.riskLevel] // This equates to maximum risk level for the day
-            }
-            mapMessages.set(item.source, true) // set any value to Map
-            uniqueArray.push({
-              day: day,
-              source: item.source,
-              messageId: item.messageId,
-              riskLevel: item.riskLevel
-            })
-          }
-        }
-
-        // Create object grouped by messageId
-        const groupByUniqueArrayObj = groupBy(uniqueArray, 'messageId')
-
-        // create array of sources for each messageId
-        for (const [messageId, array] of Object.entries(groupByUniqueArrayObj)) {
-          const sourcesArr = array.map(element => element.source)
-          groupByUniqueArrayObj[messageId] = sourcesArr
-        }
-
-        // Add above for each day
-
-        this.groupByDayMessage[day - 1] = groupByUniqueArrayObj
-      }
-
-      // Build content for each outlook tab. TODO: Refactor this.
-
-      this.tab1 = this.groupByDayMessage['0'] // Day 1
-      this.tab2 = this.groupByDayMessage['1'] // Day 2
-      this.tab3 = [this.groupByDayMessage['2'], this.groupByDayMessage['3'], this.groupByDayMessage['4']] // Day 3, 4, 5
-
-      this.messages1 = []
-      this.messages2 = []
-      this.messages3 = []
-
-      Object.entries(this.groupByDayMessage['0']).forEach(([key, value]) => {
-        this.messages1.push(`${key}: ${value}: ${outlookContent[key]}`)
-      })
-      Object.entries(this.groupByDayMessage['1']).forEach(([key, value]) => {
-        this.messages2.push(`${key}: ${value}: ${outlookContent[key]}`)
-      })
-      Object.entries(this.groupByDayMessage['2']).forEach(([key, value]) => {
-        this.messages3.push(`${key}: ${value}: ${outlookContent[key]}`)
-      })
-    }
   }
 }
 

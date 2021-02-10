@@ -8,40 +8,40 @@
             <a class="govuk-tabs__tab" href="#today">
                 <span class="defra-flood-tabs__label">Today</span>
             </a>
-            <span class="defra-flood-tabs__label-risk">{{ model.dailyRisk[0] }} risk</span>
+            <span class="defra-flood-tabs__label-risk">{{ model.tabs.dailyRisk[0] }} risk</span>
         </li>
         <li class="govuk-tabs__list-item">
             <a class="govuk-tabs__tab" href="#tomorrow">
                 <span class="defra-flood-tabs__label">Tomorrow</span>
             </a>
             <!--<span class="defra-flood-tabs__icon">Warning</span>-->
-            <span class="defra-flood-tabs__label-risk">{{ model.dailyRisk[1] }} risk</span>
+            <span class="defra-flood-tabs__label-risk">{{ model.tabs.dailyRisk[1] }} risk</span>
         </li>
             <li class="govuk-tabs__list-item">
             <a class="govuk-tabs__tab" href="#outlook">
                 <span class="defra-flood-tabs__label">Outlook</span>
             </a>
-            <span class="defra-flood-tabs__label-risk">{{ model.dailyRisk[2] }} risk</span>
+            <span class="defra-flood-tabs__label-risk">{{ model.tabs.dailyRisk[2] }} risk</span>
         </li>
     </ul>
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="today">
         <h3 class="govuk-heading-s">Today</h3>
 
-        {% if model.tab1 %}
+        {% if model.tabs.tab1 %}
 
         <p>
-            Today the flood risk is {{ model.dailyRisk[0] | lower }} risk.
+            Today the flood risk is {{ model.tabs.dailyRisk[0] | lower }} risk.
 
-            {% for messageId, sources in model.tab1 %}
+            {% for messageId, sources in model.tabs.tab1 %}
                 {% include "partials/outlook-region-messages.html" %}
             {% endfor %}
 
             <hr>
-            <pre>{{ model.messages1 }}</pre>
+            <pre>{{ model.tabs.messages1 }}</pre>
             <hr>
-            <pre>{{ model.groupByDayFull['1'] | dump(2) | safe }}</pre>
+            <pre>{{ model.tabs.groupByDayFull['1'] | dump(2) | safe }}</pre>
             <hr>
-            <pre>{{ model.tab1 | dump(2) | safe }}</pre>
+            <pre>{{ model.tabs.tab1 | dump(2) | safe }}</pre>
         </p>
 
         {% else %}
@@ -54,21 +54,21 @@
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tomorrow">
         <h3 class="govuk-heading-s">Tomorrow</h3>
 
-        {% if model.tab1 %}
+        {% if model.tabs.tab1 %}
 
         <p>
-            On day 2 the flood risk is {{ model.dailyRisk[1] | lower }} risk.
+            On day 2 the flood risk is {{ model.tabs.dailyRisk[1] | lower }} risk.
 
-            {% for messageId, sources in model.tab2 %}           
+            {% for messageId, sources in model.tabs.tab2 %}           
             {% include "partials/outlook-region-messages.html" %}
             {% endfor %}
 
             <hr>
-            <pre>{{ model.messages2 }}</pre>
+            <pre>{{ model.tabs.messages2 }}</pre>
             <hr>
-            <pre>{{ model.groupByDayFull['2'] | dump(2) | safe }}</pre>
+            <pre>{{ model.tabs.groupByDayFull['2'] | dump(2) | safe }}</pre>
             <hr>
-            <pre>{{ model.tab2 | dump(2) | safe }}</pre>
+            <pre>{{ model.tabs.tab2 | dump(2) | safe }}</pre>
 
         </p>
 
@@ -82,13 +82,13 @@
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="outlook">
         <h3 class="govuk-heading-s">Outlook</h3>
 
-        {% if model.tab3 %}
+        {% if model.tabs.tab3 %}
 
-        {% for day in model.tab3 %}
+        {% for day in model.tabs.tab3 %}
         {% set dayNum = loop.index + 2 %}
 
         <p>
-            On day {{ dayNum }} the flood risk is {{ model.dailyRisk[dayNum - 1] | lower }}.
+            On day {{ dayNum }} the flood risk is {{ model.tabs.dailyRisk[dayNum - 1] | lower }}.
             {% for messageId, sources in day %}
             <br />
             {% include "partials/outlook-region-messages.html" %}
@@ -104,16 +104,16 @@
         {% endif %}
 
         <hr>
-        <pre>{{ model.messages3 | dump(2) | safe }}</pre>
+        <pre>{{ model.tabs.messages3 | dump(2) | safe }}</pre>
         <hr>
-        <pre>{{ model.groupByDayFull['3'] | dump(2) | safe }}</pre>
-        <pre>{{ model.groupByDayFull['4'] | dump(2) | safe }}</pre>
-        <pre>{{ model.groupByDayFull['5'] | dump(2) | safe }}</pre>
+        <pre>{{ model.tabs.groupByDayFull['3'] | dump(2) | safe }}</pre>
+        <pre>{{ model.tabs.groupByDayFull['4'] | dump(2) | safe }}</pre>
+        <pre>{{ model.tabs.groupByDayFull['5'] | dump(2) | safe }}</pre>
         <hr>
-        <pre>{{ model.newTab3 | dump(2) | safe }}</pre>
+        <pre>{{ model.tabs.newTab3 | dump(2) | safe }}</pre>
 
     </div>
 </div>
 <p class="defra-flood-meta">
-    Updated <time datetime="">{{ model.outlook.issueDate }}</time>.</br>Produced by the Met Office and Environment Agency
+    Updated <time datetime="{{ model.tabs.issueUTC }}">{{ model.tabs.issueDate }}</time>.</br>Produced by the Met Office and Environment Agency
 </p>
