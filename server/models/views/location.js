@@ -164,10 +164,22 @@ class ViewModel {
 
       this.groupByDayFull = groupBy(fullArray, 'day') // DEBUG PURPOSES ONY
 
-      this.groupByDayMessage = []
+      // Initalize groupByDay message 5 element array
+
+      this.groupByDayMessage = [{}, {}, {}, {}, {}]
+
+      // Initialze daily risk to very low
+
+      const riskLevelText = {
+        1: 'Very low',
+        2: 'Low',
+        3: 'Medium',
+        4: 'High'
+      }
+
+      this.dailyRisk = [riskLevelText[1], riskLevelText[1], riskLevelText[1], riskLevelText[1], riskLevelText[1]]
 
       // Find distinct messages for each source for each day
-
       for (const [day, messages] of Object.entries(this.groupByDay)) { // Outer loop messages
         const uniqueArray = []
         const mapMessages = new Map()
@@ -178,10 +190,12 @@ class ViewModel {
             uniqueArray.push({
               day: day,
               source: item.source,
-              messageId: item.messageId
+              messageId: item.messageId,
+              riskLevel: item.riskLevel
               // messageIdContent: outlookContent[item.messageId]
               // polyId: item.polyId
             })
+            this.dailyRisk[day - 1] = riskLevelText[item.riskLevel] // This equates to maximum risk level for the day
           }
         }
 
@@ -195,16 +209,15 @@ class ViewModel {
         }
 
         // Add above for each day
-        this.groupByDayMessage.push(groupByUniqueArrayObj)
+
+        this.groupByDayMessage[day - 1] = groupByUniqueArrayObj
       }
 
-      // Combine sources with same messageId
+      // Build content for each outlook tab. TODO: Refactor this.
 
-      this.newTab1 = this.groupByDayMessage['0'] // Day 1
-      this.newTab2 = this.groupByDayMessage['1'] // Day 2
-      this.newTab3 = [this.groupByDayMessage['2'], this.groupByDayMessage['3'], this.groupByDayMessage['4']] // Day 3, 4, 5
-
-      // Create messages content
+      this.tab1 = this.groupByDayMessage['0'] // Day 1
+      this.tab2 = this.groupByDayMessage['1'] // Day 2
+      this.tab3 = [this.groupByDayMessage['2'], this.groupByDayMessage['3'], this.groupByDayMessage['4']] // Day 3, 4, 5
 
       this.messages1 = []
       this.messages2 = []

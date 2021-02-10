@@ -1,0 +1,100 @@
+<h2 class="govuk-heading-m">Regional flood forecast</h2>
+<div class="defra-flood-tabs" data-module="govuk-tabs">
+    <h2 class="govuk-tabs__title">
+        Contents
+    </h2>
+    <ul class="govuk-tabs__list">
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#today">
+                <span class="defra-flood-tabs__label">Today</span>
+            </a>
+            <span class="defra-flood-tabs__label-risk">{{ model.dailyRisk[0] }} risk</span>
+        </li>
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#tomorrow">
+                <span class="defra-flood-tabs__label">Tomorrow</span>
+            </a>
+            <!--<span class="defra-flood-tabs__icon">Warning</span>-->
+            <span class="defra-flood-tabs__label-risk">{{ model.dailyRisk[1] }} risk</span>
+        </li>
+            <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#outlook">
+                <span class="defra-flood-tabs__label">Outlook</span>
+            </a>
+            <span class="defra-flood-tabs__label-risk">{{ model.dailyRisk[2] }} risk</span>
+        </li>
+    </ul>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="today">
+        <h3 class="govuk-heading-s">Today</h3>
+        <p>
+            Today the flood risk is {{ model.dailyRisk[0] | lower }} risk.
+
+            {% for messageId, sources in model.tab1 %}
+                {% include "partials/outlook-region-messages.html" %}
+            {% endfor %}
+
+            <hr>
+            <pre>{{ model.messages1 }}</pre>
+            <hr>
+            <pre>{{ model.groupByDayFull['1'] | dump(2) | safe }}</pre>
+            <hr>
+            <pre>{{ model.tab1 | dump(2) | safe }}</pre>
+        </p>
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tomorrow">
+        <h3 class="govuk-heading-s">Tomorrow</h3>
+        <p>
+            On day 2 the flood risk is {{ model.dailyRisk[1] | lower }} risk.
+
+            {% for messageId, sources in model.tab2 %}           
+            {% include "partials/outlook-region-messages.html" %}
+            {% endfor %}
+
+            <hr>
+            <pre>{{ model.messages2 }}</pre>
+            <hr>
+            <pre>{{ model.groupByDayFull['2'] | dump(2) | safe }}</pre>
+            <hr>
+            <pre>{{ model.tab2 | dump(2) | safe }}</pre>
+
+        </p>
+
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="outlook">
+        <h3 class="govuk-heading-s">Outlook</h3>
+
+        {% if model.tab3 %}
+
+        {% for day in model.tab3 %}
+        {% set dayNum = loop.index + 2 %}
+
+        <p>
+            On day {{ dayNum }} the flood risk is {{ model.dailyRisk[dayNum] }}.
+            {% for messageId, sources in day %}
+            <br />
+            {% include "partials/outlook-region-messages.html" %}
+            {% endfor %}
+        </p>
+
+        {% endfor %}
+
+        {% else %}
+
+        <p>The flood risk is very low.</p>
+
+        {% endif %}
+
+        <hr>
+        <pre>{{ model.messages3 | dump(2) | safe }}</pre>
+        <hr>
+        <pre>{{ model.groupByDayFull['3'] | dump(2) | safe }}</pre>
+        <pre>{{ model.groupByDayFull['4'] | dump(2) | safe }}</pre>
+        <pre>{{ model.groupByDayFull['5'] | dump(2) | safe }}</pre>
+        <hr>
+        <pre>{{ model.newTab3 | dump(2) | safe }}</pre>
+
+    </div>
+</div>
+<p class="defra-flood-meta">
+    Updated <time datetime="">{{ model.outlook.issueDate }}</time>.</br>Produced by the Met Office and Environment Agency
+</p>

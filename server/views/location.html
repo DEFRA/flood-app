@@ -90,48 +90,7 @@
     <p><a href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
     {% include "partials/context-footer.html" %}
 
-    <h2 class="govuk-heading-m">Flood forecast for the region</h2>
-    <div class="defra-flood-tabs govuk-!-padding-top-2" data-module="govuk-tabs">
-      <h2 class="govuk-tabs__title">
-        Contents
-      </h2>
-      <ul class="govuk-tabs__list" role="tablist">
-        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected" role="presentation">
-          <a class="govuk-tabs__tab" href="#today" id="tab_today" role="tab" aria-controls="today" aria-selected="true" tabindex="0">
-            <span class="defra-flood-tabs__label">Today</span>
-            <span class="defra-flood-tabs__icon"></span>
-          </a>
-        </li>
-        <li class="govuk-tabs__list-item" role="presentation">
-          <a class="govuk-tabs__tab" href="#tomorrow" id="tab_tomorrow" role="tab" aria-controls="tomorrow" aria-selected="false" tabindex="-1">
-            <span class="defra-flood-tabs__label">Tomorrow</span>
-            <span class="defra-flood-tabs__icon"></span>
-          </a>
-        </li>
-        <li class="govuk-tabs__list-item" role="presentation">
-          <a class="govuk-tabs__tab" href="#outlook" id="tab_outlook" role="tab" aria-controls="outlook" aria-selected="false" tabindex="-1">
-            <span class="defra-flood-tabs__label">Outlook</span>
-            <span class="defra-flood-tabs__icon"></span>
-          </a>
-        </li>
-      </ul>
-      <div class="govuk-tabs__panel" id="today" role="tabpanel" aria-labelledby="tab_today">
-        <h3 class="govuk-heading-s">Today</h3>
-        {% include "partials/outlook-today.html" %}
-      </div>
-      <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tomorrow" role="tabpanel" aria-labelledby="tab_tomorrow">
-        <h3 class="govuk-heading-s">Tomorrow</h3>
-        {% include "partials/outlook-tomorrow.html" %}
-      </div>
-      <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="outlook" role="tabpanel" aria-labelledby="tab_outlook">
-        <h3 class="govuk-heading-s">Outlook</h3>
-        {% include "partials/outlook-outlook.html" %}
-      </div>
-      <button id="map-live-btn" class="defra-button-map govuk-!-margin-bottom-4">View a map of flood risk areas<span class="govuk-visually-hidden">(Visual only)</span></button>
-      <p class="defra-flood-meta">
-        <time datetime="">Updated today at 10:30am</time>. Produced by the Met Office and Environment Agency
-      </p>
-    </div>
+    {% include "partials/outlook-region.html" %}
   </div>
   <div class="govuk-grid-column-one-third">
     {% include "partials/related-content.html" %}

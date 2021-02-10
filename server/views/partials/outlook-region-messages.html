@@ -1,0 +1,24 @@
+{% switch messageId %}
+{% case "2-i2-l3" %}
+<span>Low risk (2), impact minor (2), likelihood medium (3) due to {{ sources }}.</span>
+{% case "2-i2-l4" %}
+<span>Low risk (2), impact minor (2), likelihood high (4) due to {{ sources }}.</span>
+{% case "2-i3-l1" %}
+<span>Low risk (2), impact significant (3), likelihood very low (1) due to {{ sources }}.</span>
+{% case "2-i3-l2" %}
+<span>Low risk (2), impact significant (3), likelihood low (2) due to {{ sources }}.</span>
+{% case "2-i4-l1" %}
+<span>Low risk (2), impact severe (4), likelihood very low (1) due to {{ sources }}.</span>
+{% case "3-i3-l3" %}
+<span>Medium risk (3), impact significant (3), likelihood medium (3) due to {{ sources }}.</span>
+{% case "3-i3-l4" %}
+<span>Medium risk (3), impact significant (3), likelihood high (4) due to {{ sources }}.</span>
+{% case "3-i4-l2" %}
+<span>Medium risk (3), impact severe (4), likelihood low (2) due to {{ sources }}.</span>
+{% case "3-i4-l3" %}
+<span>Medium risk (3), impact severe (4), likelihood medium (3) due to {{ sources }}.</span>
+{% case "4-i4-l4" %}
+<span>High risk (4), impact severe (4), likelihood high (4) due to {{ sources }}.</span>
+{% default %}
+<span>Very low risk (1), impact minor (2), likelihood low (2) due to {{ sources }}.</span>
+{% endswitch %}
