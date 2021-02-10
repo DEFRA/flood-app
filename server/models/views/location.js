@@ -141,7 +141,7 @@ class ViewModel {
 
     // Outlook tabs
 
-    // Sort array of polygons in day / messageId/ source order
+    // Sort array of polygons in day / messageId / source order
 
     const fullArray = this.tabs.polys
 
@@ -164,11 +164,9 @@ class ViewModel {
 
       this.groupByDayFull = groupBy(fullArray, 'day') // DEBUG PURPOSES ONY
 
-      // Initalize groupByDay message 5 element array
+      // Initalize groupByDayMessage 5 element array
 
       this.groupByDayMessage = [{}, {}, {}, {}, {}]
-
-      // Initialze daily risk to very low
 
       const riskLevelText = {
         1: 'Very low',
@@ -177,6 +175,8 @@ class ViewModel {
         4: 'High'
       }
 
+      // Initialze daily risk level array to very low
+
       this.dailyRisk = [riskLevelText[1], riskLevelText[1], riskLevelText[1], riskLevelText[1], riskLevelText[1]]
 
       // Find distinct messages for each source for each day
@@ -184,18 +184,18 @@ class ViewModel {
         const uniqueArray = []
         const mapMessages = new Map()
 
-        for (const item of messages) { // Inner loop sources
+        for (const [index, item] of messages.entries()) { // Inner loop sources
           if (!mapMessages.has(item.source)) {
+            if (index === 0) {
+              this.dailyRisk[day - 1] = riskLevelText[item.riskLevel] // This equates to maximum risk level for the day
+            }
             mapMessages.set(item.source, true) // set any value to Map
             uniqueArray.push({
               day: day,
               source: item.source,
               messageId: item.messageId,
               riskLevel: item.riskLevel
-              // messageIdContent: outlookContent[item.messageId]
-              // polyId: item.polyId
             })
-            this.dailyRisk[day - 1] = riskLevelText[item.riskLevel] // This equates to maximum risk level for the day
           }
         }
 

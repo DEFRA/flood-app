@@ -26,6 +26,9 @@
     </ul>
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="today">
         <h3 class="govuk-heading-s">Today</h3>
+
+        {% if model.tab1 %}
+
         <p>
             Today the flood risk is {{ model.dailyRisk[0] | lower }} risk.
 
@@ -40,9 +43,19 @@
             <hr>
             <pre>{{ model.tab1 | dump(2) | safe }}</pre>
         </p>
+
+        {% else %}
+
+        <p>The flood risk is very low.</p>
+
+        {% endif %}
+
     </div>
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tomorrow">
         <h3 class="govuk-heading-s">Tomorrow</h3>
+
+        {% if model.tab1 %}
+
         <p>
             On day 2 the flood risk is {{ model.dailyRisk[1] | lower }} risk.
 
@@ -59,6 +72,12 @@
 
         </p>
 
+        {% else %}
+
+        <p>The flood risk is very low.</p>
+
+        {% endif %}
+
     </div>
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="outlook">
         <h3 class="govuk-heading-s">Outlook</h3>
@@ -69,7 +88,7 @@
         {% set dayNum = loop.index + 2 %}
 
         <p>
-            On day {{ dayNum }} the flood risk is {{ model.dailyRisk[dayNum] }}.
+            On day {{ dayNum }} the flood risk is {{ model.dailyRisk[dayNum - 1] | lower }}.
             {% for messageId, sources in day %}
             <br />
             {% include "partials/outlook-region-messages.html" %}
