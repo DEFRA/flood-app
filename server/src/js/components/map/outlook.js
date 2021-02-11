@@ -142,7 +142,6 @@ function OutlookMap (mapId, options) {
       if (feature.get('labelPosition').length) {
         labelPosition = new Point(transform(feature.get('labelPosition'), 'EPSG:4326', 'EPSG:3857')).getCoordinates()
       }
-      console.log(feature.getProperties())
       features.push({
         id: feature.getId(),
         centre: labelPosition,
@@ -316,6 +315,8 @@ function OutlookMap (mapId, options) {
   let timer = null
   map.addEventListener('moveend', (e) => {
     viewportDescription.innerHTML = ''
+    // Timer used to control screen reader pace
+    clearTimeout(timer)
     // Tasks dependent on a time delay
     timer = setTimeout(() => {
       // Show overlays for visible features
