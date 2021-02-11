@@ -284,6 +284,7 @@ lab.experiment('Outlook model test', () => {
               -2.08465592935681,
               54.1276207351252
             ],
+            name: 'Very low risk of river, surface water and coastal flooding',
             polyType: 'inland',
             type: 'concernArea'
           },
