@@ -2,7 +2,7 @@ const turf = require('@turf/turf')
 const { groupBy } = require('../util')
 const outlookContent = require('./outlook-content.json')
 const moment = require('moment-timezone')
-// const formatDate = require('../util').formatDate
+const formatDate = require('../util').formatDate
 
 class OutlookTabs {
   constructor (outlook, place) {
@@ -12,11 +12,13 @@ class OutlookTabs {
     const lookup = [[1, 1, 1, 1], [1, 1, 2, 2], [2, 2, 3, 3], [2, 3, 3, 4]]
     const issueDate = (new Date(outlook.issued_at)).getTime()
 
-    // const issueDate = formatDate(outlook.issued_at, 'h:mma') + ' on ' + formatDate(outlook.issued_at, 'D MMMM YYYY')
+    const formatedIssueDate = formatDate(outlook.issued_at, 'h:mma') + ' on ' + formatDate(outlook.issued_at, 'D MMMM YYYY')
     const issueUTC = moment(outlook.issued_at).tz('Europe/London').format()
+    const yesterday = moment().subtract(1, 'days')
 
     this.issueDate = issueDate
     this.issueUTC = issueUTC
+    this.formatedIssueDate = formatedIssueDate
 
     const locationCoords = turf.polygon([[
       [place.bbox2k[0], place.bbox2k[1]],
@@ -131,13 +133,50 @@ class OutlookTabs {
 
     // Build content for each outlook tab. TODO: Refactor this.
 
-    this.tab1 = this.groupByDayMessage['0'] // Day 1
-    this.tab2 = this.groupByDayMessage['1'] // Day 2
-    this.tab3 = [this.groupByDayMessage['2'], this.groupByDayMessage['3'], this.groupByDayMessage['4']] // Day 3, 4, 5
+    // if FGS is from yesterday push 1 in to tab1 instead of 0
+    if (moment(issueDate).isSame(yesterday, 'day')) {
+      this.tab1 = this.groupByDayMessage['1'] // Day 2
+      this.tab2 = this.groupByDayMessage['2'] // Day 3
+      this.tab3 = [this.groupByDayMessage['3'],
+        this.groupByDayMessage['4']] // Day 4, 5
+
+      this.tab2.day = moment(issueDate).add(1, 'days').format('dddd')
+      this.tab3.days = [moment(issueDate).add(2, 'days').format('dddd'), moment(issueDate).add(3, 'days').format('dddd')]
+    } else {
+      this.tab1 = this.groupByDayMessage['0'] // Day 1
+
+      this.tab2 = this.groupByDayMessage['1'] // Day 2
+      if (this.tab2) { this.dayTab2 = moment(issueDate).add(1, 'days').format('dddd') }
+
+      this.tab3 = [
+        this.groupByDayMessage['2'],
+        this.groupByDayMessage['3'],
+        this.groupByDayMessage['4']] // Day 3, 4, 5
+
+      const day3 = this.groupByDayMessage['2']
+      const day4 = this.groupByDayMessage['3']
+      const day5 = this.groupByDayMessage['4']
+
+      if (Object.keys(day4)[0] === Object.keys(day5)[0]) {
+        const risk = outlookContent[Object.keys(day4)[0]]
+        const sources = Object.values(day4)[0]
+
+        this.tab3.day4day5 = `On Sunday and Monday the flood risk is ${risk} due to ${sources} flooding`
+      }
+
+      console.log(day3)
+      console.log(day4)
+      console.log(day5)
+    }
+
+    // if (this.tab3[0]) { this.tab3[0].day = moment(issueDate).add(2, 'days').format('dddd') }
+    // if (this.tab3[1]) { this.tab3[1].day = moment(issueDate).add(3, 'days').format('dddd') }
+    // if (this.tab3[2]) { this.tab3[2].day = moment(issueDate).add(4, 'days').format('dddd') }
 
     this.messages1 = []
     this.messages2 = []
     this.messages3 = []
+
     // Create days array for use with map
     const days = [0, 1, 2, 3, 4].map(i => {
       const date = new Date(issueDate)
@@ -150,15 +189,17 @@ class OutlookTabs {
 
     this.days = days
 
-    Object.entries(this.groupByDayMessage['0']).forEach(([key, value]) => {
-      this.messages1.push(`${key}: ${value}: ${outlookContent[key]}`)
-    })
-    Object.entries(this.groupByDayMessage['1']).forEach(([key, value]) => {
-      this.messages2.push(`${key}: ${value}: ${outlookContent[key]}`)
-    })
-    Object.entries(this.groupByDayMessage['2']).forEach(([key, value]) => {
-      this.messages3.push(`${key}: ${value}: ${outlookContent[key]}`)
-    })
+    // debug stuff, remove when done
+
+    // Object.entries(this.groupByDayMessage['0']).forEach(([key, value]) => {
+    //   this.messages1.push(`${key}: ${value}: ${outlookContent[key]}`)
+    // })
+    // Object.entries(this.groupByDayMessage['1']).forEach(([key, value]) => {
+    //   this.messages2.push(`${key}: ${value}: ${outlookContent[key]}`)
+    // })
+    // Object.entries(this.groupByDayMessage['2']).forEach(([key, value]) => {
+    //   this.messages3.push(`${key}: ${value}: ${outlookContent[key]}`)
+    // })
   }
 }
 

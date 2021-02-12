@@ -27,13 +27,16 @@
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="today">
         <h3 class="govuk-heading-s">Today</h3>
 
+
         {% if model.tabs.tab1 %}
 
         <p>
             Today the flood risk is {{ model.tabs.dailyRisk[0] | lower }} risk.
+            <br>
 
             {% for messageId, sources in model.tabs.tab1 %}
                 {% include "partials/outlook-region-messages.html" %}
+                <br>
             {% endfor %}
 
             <hr>
@@ -46,20 +49,21 @@
 
         {% else %}
 
-        <p>The flood risk is very low.</p>
+        <p>Today the flood risk is very low.</p>
 
         {% endif %}
     </div>
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tomorrow">
         <h3 class="govuk-heading-s">Tomorrow</h3>
 
-        {% if model.tabs.tab1 %}
+        {% if model.tabs.tab2 %}
 
         <p>
-            On day 2 the flood risk is {{ model.tabs.dailyRisk[1] | lower }} risk.
-
+            On {{ model.tabs.dayTab2 }} the flood risk is {{ model.tabs.dailyRisk[1] | lower }} risk.
+            <br>
             {% for messageId, sources in model.tabs.tab2 %}           
             {% include "partials/outlook-region-messages.html" %}
+            <br>
             {% endfor %}
 
             <hr>
@@ -86,10 +90,9 @@
         {% set dayNum = loop.index + 2 %}
 
         <p>
-            On day {{ dayNum }} the flood risk is {{ model.tabs.dailyRisk[dayNum - 1] | lower }}.
+            On {{ model.tabs.tab3[dayNum - 1].day }} the flood risk is {{ model.tabs.dailyRisk[dayNum - 1] | lower }}.
             {% for messageId, sources in day %}
-            <br />
-            {% include "partials/outlook-region-messages.html" %}
+        
             {% endfor %}
         </p>
 
@@ -100,15 +103,6 @@
         <p>The flood risk is very low.</p>
 
         {% endif %}
-
-        <hr>
-        <pre>{{ model.tabs.messages3 | dump(2) | safe }}</pre>
-        <hr>
-        <pre>{{ model.tabs.groupByDayFull['3'] | dump(2) | safe }}</pre>
-        <pre>{{ model.tabs.groupByDayFull['4'] | dump(2) | safe }}</pre>
-        <pre>{{ model.tabs.groupByDayFull['5'] | dump(2) | safe }}</pre>
-        <hr>
-        <pre>{{ model.tabs.newTab3 | dump(2) | safe }}</pre>
 
     </div>
 </div>
