@@ -29,7 +29,7 @@
 {% endif %}
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-three-quarters">
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-0">
       {% if model.station.isGroundwater %}Groundwater{% elif model.station.isCoastal %}Sea{% else %} {{ model.station.river }} {% endif %}
       level {% if model.station.isMulti %} {% if model.station.isDownstream %}downstream{% else %}upstream{% endif %}{% endif %} at {{ model.station.name }}
@@ -121,24 +121,18 @@
               <div class="defra-flood-statistics__column"> 
                 <dt class="defra-flood-statistics__key">State</dt>
                 <dd class="defra-flood-statistics__value">
-                  <strong class="defra-flood-statistics__impact defra-flood-statistics__impact{% if model.station.state === 'Normal' %}--normal{% elif model.station.state === 'High' %}--high{% endif %}">
+                  <a href="#state" class="defra-flood-statistics__data-tip">
                     {{ model.station.state }}
-                  </strong>
-                    {{ model.station.stateInformation}}
+                  </a>
+                  <span class="defra-flood-statistics__value-detail">{{ model.station.stateInformation}}</span>
                 </dd>
               </div>
               {% endif %}
               <div class="defra-flood-statistics__column">
                 <dt class="defra-flood-statistics__key">Height</dt>
                 <dd class="defra-flood-statistics__value">
-                  <strong class="defra-flood-statistics__impact">
-                  {% if model.station.isRiver and model.recentValueBelowZero %}
-                    <abbr title="Less than or equal to">&le;</abbr> 0m
-                  {% else %}
-                    {{ (model.station.recentValue._).toFixed(2) }}m
-                  {% endif %}
-                  </strong>
-                    at <time datetime="">{{ model.station.recentValue.formattedTime }}</time> {{ model.station.recentValue.dateWhen }}
+                  <a href="#height" class="defra-flood-statistics__data-tip">{% if model.station.isRiver and model.recentValueBelowZero %} 0m{% else %}{{ (model.station.recentValue._).toFixed(2) }}m{% endif %}</a>
+                  <span class="defra-flood-statistics__value-detail">at <time datetime="">{{ model.station.recentValue.formattedTime }}</time> {{ model.station.recentValue.dateWhen }}</span>
                 </dd>
               </div>
             </dl>
@@ -191,7 +185,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <figure class="defra-line-chart" aria-hidden="true" hidden>
+    <figure class="defra-line-chart govuk-!-margin-top-4" aria-hidden="true" hidden>
       <figcaption class="govuk-heading-m govuk-!-margin-bottom-7">Height over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
         <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
         {% if model.isFfoi and not model.forecastOutOfDate %}
@@ -249,13 +243,13 @@
 
 {# Station Details #}
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
+  <div class="govuk-grid-column-two-thirds">
     <h2 class="govuk-heading-m govuk-!-margin-top-6">Technical information for this measuring station</h2>
-    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Site datum is {{ model.station.stageDatum }}mAOD</h3>
-    <p>All measurements are </p>
+    <h3 class="govuk-heading-s govuk-!-padding-top-0 govuk-!-margin-bottom-0" id="state">Normal range</h3>
+    <p>Site datum is here is {{ model.station.stageDatum }}mAOD.</p>
     {% if model.station.hasPercentiles %}
-    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Normal range is {{ model.station.percentile95 }}m to {{ model.station.percentile5 }}m</h3>
-    <p>What is normal range</p>
+    <h3 class="govuk-heading-s govuk-!-padding-top-0 govuk-!-margin-bottom-0" id="height">How levels are measured</h3>
+    <p>Normal range is {{ model.station.percentile95 }}m to {{ model.station.percentile5 }}m</p>
     {% endif %}
   </div>  
 </div>  

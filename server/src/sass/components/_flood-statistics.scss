@@ -32,8 +32,20 @@
         @include govuk-font($size: 16);
         margin:0;
     }
-    &__impact {
+    &__data-tip {
         @include govuk-font($size: 24, $weight: bold);
+        border-bottom: 1px dashed govuk-colour('dark-grey');
+        margin-bottom: -1px;
+        display: inline-block;
+        color: $govuk-text-colour !important;
+        text-decoration: none;
+    }
+    &__data-tip:focus {
+        border-bottom: 0px;
+        margin-bottom: 0px;
+    }
+    &__value-detail {
+        margin-top: 5px;
         display: block;
     }
 }
