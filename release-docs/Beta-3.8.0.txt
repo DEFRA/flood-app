@@ -1,0 +1,9 @@
+Service refresh release 3.8.0 Wednesday 17th February 2021
+
+Target area update
+
+The service refresh update will update both target areas and also the station 8km relationship data (both performed by the flood-alert-areas data job)
+
+Execute job: LFW_{stage}_99_LOAD_FLOOD_ALERT_AREAS
+
+Execute job: LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
