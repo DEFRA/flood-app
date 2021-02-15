@@ -57,7 +57,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <div class="defra-service-error govuk-!-margin-bottom-2">
+      <div class="defra-service-error govuk-!-margin-top-6 govuk-!-margin-bottom-2">
         <h2 class="defra-service-error__title" id="error-summary-title">
           This measuring station is currently offline
         </h2>
@@ -78,7 +78,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <div class="defra-service-error govuk-!-margin-bottom-2">
+      <div class="defra-service-error govuk-!-margin-top-6 govuk-!-margin-bottom-2">
         <h2 class="defra-service-error__title" id="error-summary-title">
           This measuring station is closed
         </h2>
@@ -92,7 +92,7 @@
 {% else %}
 
 {% if model.isFfoi and model.forecastOutOfDate %}
-  <div class="defra-service-error govuk-!-margin-bottom-8">
+  <div class="defra-service-error govuk-!-margin-top-6 govuk-!-margin-bottom-8">
     <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is a problem with the forecast data</h2>
     <p class="govuk-body govuk-!-margin-bottom-0">
       The forecast data is missing or more than 24 hours old.
@@ -106,7 +106,7 @@
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
           {% if model.outOfDate === true %}
-            <div class="defra-service-error govuk-!-margin-bottom-8">
+            <div class="defra-service-error govuk-!-margin-top-6 govuk-!-margin-bottom-8">
               <h2 class="defra-service-error__title" id="error-summary-title">Sorry, this data feed was interrupted</h2>
               <p class="govuk-body govuk-!-margin-bottom-0">
                 Normal service resumed at {{ model.station.formattedStatusTime }} on {{ model.station.formattedStatusDate }}.
@@ -158,7 +158,7 @@
       {# if latest mesurement is in error #}
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-          <div class="defra-service-error govuk-!-margin-bottom-3">
+          <div class="defra-service-error govuk-!-margin-top-6 govuk-!-margin-bottom-3">
             <h2 class="defra-service-error__title" id="error-summary-title">
               Sorry, there is a problem with the latest measurement
             </h2>
@@ -172,7 +172,7 @@
 
   {% else %}
     
-  <div class="defra-service-error govuk-!-margin-bottom-3">
+  <div class="defra-service-error govuk-!-margin-top-6 govuk-!-margin-bottom-3">
     <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>
     <p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>
   </div>
@@ -243,16 +243,65 @@
 
 {# Station Details #}
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-m govuk-!-margin-top-6">Technical information for this measuring station</h2>
-    <h3 class="govuk-heading-s govuk-!-padding-top-0 govuk-!-margin-bottom-0" id="state">Normal range</h3>
-    <p>Site datum is here is {{ model.station.stageDatum }}mAOD.</p>
-    {% if model.station.hasPercentiles %}
-    <h3 class="govuk-heading-s govuk-!-padding-top-0 govuk-!-margin-bottom-0" id="height">How levels are measured</h3>
-    <p>Normal range is {{ model.station.percentile95 }}m to {{ model.station.percentile5 }}m</p>
-    {% endif %}
+  <div class="govuk-grid-column-full">
+    <details class="govuk-details govuk-!-margin-top-6" data-module="govuk-details">
+      <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">
+          View technical information for this measuring station
+        </span>
+      </summary>
+      <div class="govuk-details__text">
+        <dl class="govuk-summary-list govuk-summary-list--no-border govuk-summary-list--defra-flood-station govuk-!-font-size-16">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Site datum
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ model.station.stageDatum }}<abbr title="metres above ordnance datum">mAOD</abbr>
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Station name
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ model.station.name }}
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Normal range
+            </dt>
+            <dd class="govuk-summary-list__value">
+            {% if model.station.hasPercentiles %}
+                {{ model.station.percentile95 }}m to {{ model.station.percentile5 }}m
+            {% endif %}
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Station ID
+            </dt>
+            <dd class="govuk-summary-list__value">
+              {{ model.station.id }}
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </details>
+    <p>
+      <a href="">
+        {% if model.station.isCoastal %}
+        How river levels are measured
+        {% elif model.station.isGround %}
+        How groundwater levels are measured
+        {% else %}
+        How river levels are measured
+        {% endif %}
+      </a>
+    </p>
   </div>  
-</div>  
+</div>
 
 {% endblock %}
 
