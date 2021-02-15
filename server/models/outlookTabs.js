@@ -146,16 +146,35 @@ class OutlookTabs {
       this.tab1 = this.groupByDayMessage['0'] // Day 1
 
       this.tab2 = this.groupByDayMessage['1'] // Day 2
-      if (this.tab2) { this.dayTab2 = moment(issueDate).add(1, 'days').format('dddd') }
 
-      this.tab3 = [
-        this.groupByDayMessage['2'],
-        this.groupByDayMessage['3'],
-        this.groupByDayMessage['4']] // Day 3, 4, 5
+      // Create day name for days 2,3,4,5
+
+      this.dayName = [
+        moment(issueDate).format('dddd'), // Day 1
+        moment(issueDate).add(1, 'days').format('dddd'), // Day 2
+        moment(issueDate).add(2, 'days').format('dddd'), // Day 3
+        moment(issueDate).add(3, 'days').format('dddd'), // Day 4
+        moment(issueDate).add(4, 'days').format('dddd') // Day 5
+      ]
+
+      // Tab 3 day combinations.
+      //
+      // day 3, day 4, day 5 messageIds all different
+      // day 3 and day 4 equal, day 5 different
+      // day 4 and day 5 equal, day 3 different
+      // day 3, day 4, day 5 all the same
+
+      // this.tab3 = [
+      //   this.groupByDayMessage['2'],
+      //   this.groupByDayMessage['3'],
+      //   this.groupByDayMessage['4']
+      // ] // Day 3, 4, 5]
 
       const day3 = this.groupByDayMessage['2']
       const day4 = this.groupByDayMessage['3']
       const day5 = this.groupByDayMessage['4']
+
+      this.tab3 = [day3, day4, day5]
 
       if (Object.keys(day4)[0] === Object.keys(day5)[0]) {
         const risk = outlookContent[Object.keys(day4)[0]]
@@ -191,15 +210,15 @@ class OutlookTabs {
 
     // debug stuff, remove when done
 
-    // Object.entries(this.groupByDayMessage['0']).forEach(([key, value]) => {
-    //   this.messages1.push(`${key}: ${value}: ${outlookContent[key]}`)
-    // })
-    // Object.entries(this.groupByDayMessage['1']).forEach(([key, value]) => {
-    //   this.messages2.push(`${key}: ${value}: ${outlookContent[key]}`)
-    // })
-    // Object.entries(this.groupByDayMessage['2']).forEach(([key, value]) => {
-    //   this.messages3.push(`${key}: ${value}: ${outlookContent[key]}`)
-    // })
+    Object.entries(this.groupByDayMessage['0']).forEach(([key, value]) => {
+      this.messages1.push(`${key}: ${value}: ${outlookContent[key]}`)
+    })
+    Object.entries(this.groupByDayMessage['1']).forEach(([key, value]) => {
+      this.messages2.push(`${key}: ${value}: ${outlookContent[key]}`)
+    })
+    Object.entries(this.groupByDayMessage['2']).forEach(([key, value]) => {
+      this.messages3.push(`${key}: ${value}: ${outlookContent[key]}`)
+    })
   }
 }
 

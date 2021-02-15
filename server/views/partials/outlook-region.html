@@ -31,7 +31,7 @@
         {% if model.tabs.tab1 %}
 
         <p>
-            Today the flood risk is {{ model.tabs.dailyRisk[0] | lower }} risk.
+            Today({{ model.tabs.dayName[0] }}) the flood risk is {{ model.tabs.dailyRisk[0] | lower }} risk.
             <br>
 
             {% for messageId, sources in model.tabs.tab1 %}
@@ -59,7 +59,7 @@
         {% if model.tabs.tab2 %}
 
         <p>
-            On {{ model.tabs.dayTab2 }} the flood risk is {{ model.tabs.dailyRisk[1] | lower }} risk.
+            On {{ model.tabs.dayName[1] }} the flood risk is {{ model.tabs.dailyRisk[1] | lower }} risk.
             <br>
             {% for messageId, sources in model.tabs.tab2 %}           
             {% include "partials/outlook-region-messages.html" %}
@@ -90,9 +90,10 @@
         {% set dayNum = loop.index + 2 %}
 
         <p>
-            On {{ model.tabs.tab3[dayNum - 1].day }} the flood risk is {{ model.tabs.dailyRisk[dayNum - 1] | lower }}.
+            On {{ model.tabs.dayName[dayNum - 1] }} the flood risk is {{ model.tabs.dailyRisk[dayNum - 1] | lower }}.
+            <br><br>
             {% for messageId, sources in day %}
-        
+            {% include "partials/outlook-region-messages.html" %}
             {% endfor %}
         </p>
 
@@ -103,7 +104,12 @@
         <p>The flood risk is very low.</p>
 
         {% endif %}
-
+        <!-- <hr>
+        <pre>{{ model.tabs.messages3 | dump(2) | safe }}</pre>
+        <hr>
+        <pre>{{ model.tabs.groupByDayFull['3'] | dump(2) | safe }}</pre>
+        <hr>
+        <pre>{{ model.tabs.tab3 | dump(2) | safe }}</pre> -->
     </div>
 </div>
 <span id="map-outlook"></span>
