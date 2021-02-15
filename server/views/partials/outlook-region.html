@@ -32,19 +32,19 @@
 
         <p>
             Today({{ model.tabs.dayName[0] }}) the flood risk is {{ model.tabs.dailyRisk[0] | lower }} risk.
-            <br>
+            <br><br>
 
             {% for messageId, sources in model.tabs.tab1 %}
                 {% include "partials/outlook-region-messages.html" %}
                 <br>
             {% endfor %}
 
-            <hr>
+            <!-- <hr>
             <pre>{{ model.tabs.messages1 }}</pre>
             <hr>
             <pre>{{ model.tabs.groupByDayFull['1'] | dump(2) | safe }}</pre>
             <hr>
-            <pre>{{ model.tabs.tab1 | dump(2) | safe }}</pre>
+            <pre>{{ model.tabs.tab1 | dump(2) | safe }}</pre> -->
         </p>
 
         {% else %}
@@ -60,18 +60,18 @@
 
         <p>
             On {{ model.tabs.dayName[1] }} the flood risk is {{ model.tabs.dailyRisk[1] | lower }} risk.
-            <br>
+            <br><br>
             {% for messageId, sources in model.tabs.tab2 %}           
             {% include "partials/outlook-region-messages.html" %}
             <br>
             {% endfor %}
 
-            <hr>
+            <!-- <hr>
             <pre>{{ model.tabs.messages2 }}</pre>
             <hr>
             <pre>{{ model.tabs.groupByDayFull['2'] | dump(2) | safe }}</pre>
             <hr>
-            <pre>{{ model.tabs.tab2 | dump(2) | safe }}</pre>
+            <pre>{{ model.tabs.tab2 | dump(2) | safe }}</pre> -->
 
         </p>
 
@@ -94,6 +94,7 @@
             <br><br>
             {% for messageId, sources in day %}
             {% include "partials/outlook-region-messages.html" %}
+            <br>
             {% endfor %}
         </p>
 
