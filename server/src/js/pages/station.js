@@ -13,7 +13,7 @@ window.flood.utils.addBrowserBackButton()
 
 // Create LiveMap
 window.flood.maps.createLiveMap('map', {
-  btnText: '<span>View map</span>',
+  btnText: 'View map',
   btnClasses: 'defra-button-map-s',
   layers: 'mv,sh,st',
   centre: JSON.parse(window.flood.model.station.coordinates).coordinates,
@@ -21,13 +21,14 @@ window.flood.maps.createLiveMap('map', {
   zoom: 14
 })
 
-const chart = document.getElementsByClassName('defra-line-chart')
+const chart = document.querySelector('.defra-line-chart')
 
-if (chart.length) {
+if (chart) {
   // If javascript is enabled make content visible to all but assitive technology
   // var figure = chart.parentNode
-  chart[0].setAttribute('aria-hidden', true)
-  chart[0].removeAttribute('hidden')
+  chart.setAttribute('aria-hidden', true)
+  chart.removeAttribute('hidden')
+
   // Create line chart instance
   const lineChart = window.flood.charts.createLineChart('line-chart', {
     now: new Date(),
@@ -35,6 +36,7 @@ if (chart.length) {
     forecast: window.flood.model.ffoi && !window.flood.model.forecastOutOfDate ? window.flood.model.ffoi.processedValues : [],
     plotNegativeValues: window.flood.model.station.plotNegativeValues
   })
+
   if (window.flood.utils.getParameterByName('t')) {
     // Find threshold in model
     const thresholdId = window.flood.utils.getParameterByName('t')
@@ -64,14 +66,19 @@ if (chart.length) {
   // Add threshold buttons
   Array.from(document.querySelectorAll('.defra-flood-impact-list__value')).forEach(value => {
     const button = document.createElement('button')
-    button.innerHTML = 'Show on chart'
+    button.innerHTML = 'Show on chart <span class="govuk-visually-hidden">(visual only)</span>'
     button.className = 'defra-button-text-s'
+    button.setAttribute('aria-controls', 'line-chart')
     button.addEventListener('click', function (e) {
+      // Call chart method to add threshold
       lineChart.addThreshold({
         id: value.getAttribute('data-id'),
         level: Number(value.getAttribute('data-level')),
         name: value.getAttribute('data-name')
       })
+      // Scroll viewport to chart
+      const offsetTop = chart.getBoundingClientRect().top + window.scrollY
+      window.scrollTo(0, offsetTop)
     })
     const action = value.querySelector('.defra-flood-impact-list__action')
     if (action) {
