@@ -12,13 +12,13 @@ class OutlookTabs {
     const lookup = [[1, 1, 1, 1], [1, 1, 2, 2], [2, 2, 3, 3], [2, 3, 3, 4]]
     const issueDate = (new Date(outlook.issued_at)).getTime()
 
-    const formatedIssueDate = formatDate(outlook.issued_at, 'h:mma') + ' on ' + formatDate(outlook.issued_at, 'D MMMM YYYY')
+    const formattedIssueDate = formatDate(outlook.issued_at, 'h:mma') + ' on ' + formatDate(outlook.issued_at, 'D MMMM YYYY')
     const issueUTC = moment(outlook.issued_at).tz('Europe/London').format()
     const yesterday = moment().subtract(1, 'days')
 
     this.issueDate = issueDate
     this.issueUTC = issueUTC
-    this.formatedIssueDate = formatedIssueDate
+    this.formattedIssueDate = formattedIssueDate
 
     const locationCoords = turf.polygon([[
       [place.bbox2k[0], place.bbox2k[1]],
@@ -64,6 +64,10 @@ class OutlookTabs {
       })
     }
 
+    // Sort array of polygons that intersect with the location bounding box by:
+    //
+    // day / messageId / source
+
     polys.sort((a, b) => {
       if (a.day === b.day) {
         if (a.messageId === b.messageId) {
@@ -96,6 +100,11 @@ class OutlookTabs {
     // Initialze daily risk level array to very low
 
     this.dailyRisk = [riskLevelText[1], riskLevelText[1], riskLevelText[1], riskLevelText[1], riskLevelText[1]]
+    this.dailyRiskAsNum = [1, 1, 1, 1, 1]
+
+    // Initialze array to identify risk level trend between days.
+
+    this.trend = []
 
     // Find distinct messages for each source for each day
     for (const [day, messages] of Object.entries(this.groupByDay)) { // Outer loop messages
@@ -106,6 +115,7 @@ class OutlookTabs {
         if (!mapMessages.has(item.source)) {
           if (index === 0) {
             this.dailyRisk[day - 1] = riskLevelText[item.riskLevel] // This equates to maximum risk level for the day
+            this.dailyRiskAsNum[day - 1] = item.riskLevel
           }
           mapMessages.set(item.source, true) // set any value to Map
           uniqueArray.push({
@@ -114,6 +124,17 @@ class OutlookTabs {
             messageId: item.messageId,
             riskLevel: item.riskLevel
           })
+        }
+      }
+
+      // Establish risk level trend for days 2, 3, 4 and 5
+      for (let i = 1; i < 5; i++) {
+        if (this.dailyRiskAsNum[i] > this.dailyRiskAsNum[i - 1]) {
+          this.trend[i] = 'increases to'
+        } else if (this.dailyRiskAsNum[i] < this.dailyRiskAsNum[i - 1]) {
+          this.trend[i] = 'reduces to'
+        } else {
+          this.trend[i] = 'remains at'
         }
       }
 
@@ -163,12 +184,6 @@ class OutlookTabs {
       // day 3 and day 4 equal, day 5 different
       // day 4 and day 5 equal, day 3 different
       // day 3, day 4, day 5 all the same
-
-      // this.tab3 = [
-      //   this.groupByDayMessage['2'],
-      //   this.groupByDayMessage['3'],
-      //   this.groupByDayMessage['4']
-      // ] // Day 3, 4, 5]
 
       const day3 = this.groupByDayMessage['2']
       const day4 = this.groupByDayMessage['3']

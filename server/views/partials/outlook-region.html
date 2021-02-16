@@ -31,7 +31,7 @@
         {% if model.tabs.tab1 %}
 
         <p>
-            Today({{ model.tabs.dayName[0] }}) the flood risk is {{ model.tabs.dailyRisk[0] | lower }} risk.
+            Today({{ model.tabs.dayName[0] }}) the flood risk is {{ model.tabs.dailyRisk[0] | lower }}.
             <br><br>
 
             {% for messageId, sources in model.tabs.tab1 %}
@@ -59,7 +59,7 @@
         {% if model.tabs.tab2 %}
 
         <p>
-            On {{ model.tabs.dayName[1] }} the flood risk is {{ model.tabs.dailyRisk[1] | lower }} risk.
+            On {{ model.tabs.dayName[1] }} the flood risk {{ model.tabs.trend[1]}} {{ model.tabs.dailyRisk[1] | lower }}.
             <br><br>
             {% for messageId, sources in model.tabs.tab2 %}           
             {% include "partials/outlook-region-messages.html" %}
@@ -90,7 +90,7 @@
         {% set dayNum = loop.index + 2 %}
 
         <p>
-            On {{ model.tabs.dayName[dayNum - 1] }} the flood risk is {{ model.tabs.dailyRisk[dayNum - 1] | lower }}.
+            On {{ model.tabs.dayName[dayNum - 1] }} the flood risk {{ model.tabs.trend[dayNum - 1]}} {{ model.tabs.dailyRisk[dayNum - 1] | lower }}.
             <br><br>
             {% for messageId, sources in day %}
             {% include "partials/outlook-region-messages.html" %}
@@ -115,5 +115,5 @@
 </div>
 <span id="map-outlook"></span>
 <p class="defra-flood-meta">
-    Updated <time datetime="{{ model.tabs.issueUTC }}">{{ model.tabs.issueDate }}</time>.</br>Produced by the Met Office and Environment Agency
+    Updated <time datetime="{{ model.tabs.issueUTC }}">{{ model.tabs.formattedIssueDate }}</time>.</br>Produced by the Met Office and Environment Agency
 </p>

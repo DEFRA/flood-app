@@ -167,6 +167,7 @@ function OutlookMap (mapId, options) {
         map.addOverlay(
           new Overlay({
             id: feature.id,
+            featureName: feature.name,
             element: overlayElement,
             position: feature.centre,
             className: `defra-key-symbol defra-key-symbol--${feature.state}${feature.isBigZoom ? '-bigZoom' : ''} ${selected}`,
