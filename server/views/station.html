@@ -121,9 +121,7 @@
               <div class="defra-flood-statistics__column"> 
                 <dt class="defra-flood-statistics__key">State</dt>
                 <dd class="defra-flood-statistics__value">
-                  <a href="#state" class="defra-flood-statistics__data-tip">
-                    {{ model.station.state }}
-                  </a>
+                  {{ model.station.state }}
                   <span class="defra-flood-statistics__value-detail">{{ model.station.stateInformation}}</span>
                 </dd>
               </div>
@@ -131,7 +129,7 @@
               <div class="defra-flood-statistics__column">
                 <dt class="defra-flood-statistics__key">Height</dt>
                 <dd class="defra-flood-statistics__value">
-                  <a href="#height" class="defra-flood-statistics__data-tip">{% if model.station.isRiver and model.recentValueBelowZero %} 0m{% else %}{{ (model.station.recentValue._).toFixed(2) }}m{% endif %}</a>
+                  {% if model.station.isRiver and model.recentValueBelowZero %} 0m{% else %}{{ (model.station.recentValue._).toFixed(2) }}m{% endif %}
                   <span class="defra-flood-statistics__value-detail">at <time datetime="">{{ model.station.recentValue.formattedTime }}</time> {{ model.station.recentValue.dateWhen }}</span>
                 </dd>
               </div>
@@ -188,6 +186,7 @@
     <figure class="defra-line-chart govuk-!-margin-top-4" aria-hidden="true" hidden>
       <figcaption class="govuk-heading-m govuk-!-margin-bottom-7">Height over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
         <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
+        <!--
         {% if model.isFfoi and not model.forecastOutOfDate %}
         <p class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0"> {{ model.forecastDetails }}</p>
         {% endif %}
@@ -197,11 +196,20 @@
         {% if model.station.isRiver and model.hasNegativeValues %}
         <p class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0">Levels that are very low or below zero are normal for some stations.</p>
         {% endif %}
+        -->
     </figure>
   </div>
 </div>
 
 {% endif %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <p class="govuk-body-s govuk-!-margin-bottom-0">
+      <a href="/about-water-measurements">About water measurements{% if model.isFfoi and not model.forecastOutOfDate %} and forecasts{% endif %}</a>
+    </p>
+  </div>
+</div>
 
 {# Impacts and thresholds #}
 {% if model.thresholds.length > 0 %}
@@ -237,7 +245,10 @@
   </div>
 </div>
   {% if model.station.hasImpacts %}
-    <p class="govuk-body-s govuk-!-margin-top-3 govuk-!-margin-bottom-0">Past impacts might not happen at the same level if flood defences have been put in place since then.</p>
+    <!--<p class="govuk-body-s govuk-!-margin-top-3 govuk-!-margin-bottom-0">Past impacts might not happen at the same level if flood defences have been put in place since then.</p>-->
+    <p class="govuk-body-s govuk-!-margin-top-3 govuk-!-margin-bottom-0">
+      <a href="/about-water-measurements">About historic flood impacts</a>
+    </p>
   {% endif %}
 {% endif %}
 
@@ -289,17 +300,6 @@
         </dl>
       </div>
     </details>
-    <p>
-      <a href="">
-        {% if model.station.isCoastal %}
-        How river levels are measured
-        {% elif model.station.isGround %}
-        How groundwater levels are measured
-        {% else %}
-        How river levels are measured
-        {% endif %}
-      </a>
-    </p>
   </div>  
 </div>
 
