@@ -154,6 +154,12 @@ class OutlookTabs {
 
     // Build content for each outlook tab. TODO: Refactor this.
 
+    // Create highest daily risk for days in the Outlook tab
+
+    const max = Math.max(...this.dailyRiskAsNum.splice(2))
+
+    this.dailyRiskOutlookMax = riskLevelText[max]
+
     // if FGS is from yesterday push 1 in to tab1 instead of 0
     if (moment(issueDate).isSame(yesterday, 'day')) {
       this.tab1 = this.groupByDayMessage['1'] // Day 2
