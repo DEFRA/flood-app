@@ -104,7 +104,7 @@ class OutlookTabs {
 
     // Initialze array to identify risk level trend between days.
 
-    this.trend = []
+    this.trend = ['', 'remains at', 'remains at', 'remains at', 'remains at']
 
     // Find distinct messages for each source for each day
     for (const [day, messages] of Object.entries(this.groupByDay)) { // Outer loop messages
@@ -156,7 +156,7 @@ class OutlookTabs {
 
     // Create highest daily risk for days in the Outlook tab
 
-    const max = Math.max(...this.dailyRiskAsNum.splice(2))
+    const max = Math.max(...this.dailyRiskAsNum.slice(2))
 
     this.dailyRiskOutlookMax = riskLevelText[max]
 
