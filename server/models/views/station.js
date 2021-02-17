@@ -18,6 +18,7 @@ class ViewModel {
 
     /*
     var levelType = this.station.isGroundwater ? 'Groundwater' : (this.station.isCoastal ? 'Sea' : 'River')
+
     Object.assign(this, {
       pageTitle: `${levelType} level at ${station.name}`
     })
