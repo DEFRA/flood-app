@@ -1,45 +1,28 @@
 .defra-flood-nav {
-    @include govuk-font($size: 16);
-    padding-top: 10px;
-    margin-left: -7.5px;
-    margin-right: -7.5px;
-    .defra-button-map-s,
     &__link {
-        display: inline-block;
-        margin-left: 7.5px;
-        margin-right: 7.5px;
-        margin-bottom: 10px;
+        @extend .govuk-back-link;
+        position:relative;
+        padding-left:0px;
+        margin-right:10px;
+        @include govuk-responsive-margin(7, 'bottom');
+        background:none;
+        border-left:0px;
+        border-right:0px;
+        border-top:0px;
+        padding:0px;
+        cursor: pointer;
     }
-    &__link:visited {
-        color: $govuk-link-colour;
+    &__link:before {
+        content:none;
     }
-    &__link:hover {
-        color: $govuk-link-hover-colour;
-    }
-    &__link:focus {
-        color: $govuk-text-colour;
-    }
-    &__link--upstream,
-    &__link--downstream {
+    &__icon {
         position: relative;
-        padding-left: 18px;
+        left:0px;
+        top:2px;
+        margin-right:2px;
     }
-    &__link--upstream:before,
-    &__link--downstream:before {
-        content: '';
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        background-image: svg-url('<svg width="14" height="18" viewBox="0 0 14 18" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M6,4.828L2.414,8.414L1,7L7,1L13,7L11.586,8.414L8,4.828L8,17L6,17L6,4.828Z" style="fill:#0b0c0c;fill-rule:nonzero;"/></svg>');
-        background-color: transparent;
-        background-size: 14px 18px;
-        background-repeat: no-repeat;
-        background-position: top left;
-        width: 14px;
-        height: 18px;
-    }
-    &__link--downstream:before {
-        background-image: svg-url('<svg width="14" height="18" viewBox="0 0 14 18" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M6,13.172L2.414,9.586L1,11L7,17L13,11L11.586,9.586L8,13.172L8,1L6,1L6,13.172Z" style="fill:#0b0c0c;fill-rule:nonzero;"/></svg>');
+    .defra-button-map-s {
+        float:right;
+        margin-top:15px;
     }
 }
-

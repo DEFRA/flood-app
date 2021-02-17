@@ -275,16 +275,6 @@ function LineChart (containerId, data) {
     renderThresholds()
   }
 
-  // const zoomScaleX = (e) => {
-  //   if (!e.sourceEvent.target.closest('.threshold')) {
-  //     xScale.domain(e.transform.rescaleX(xScaleInitial).domain())
-  //     hideTooltip()
-  //     updateLocator()
-  //     renderChart()
-  //     renderThresholds()
-  //   }
-  // }
-
   //
   // Setup
   //
@@ -378,10 +368,6 @@ function LineChart (containerId, data) {
   // Set y output range
   yScale.range([height, 0])
 
-  // Set zoom with new width and height
-  // const zoom = d3.zoom().extent([[0, 0], [width, height]]).scaleExtent([1, 10]).translateExtent([[0, 0], [width, height]])
-  // svg.call(zoom)
-
   // State properties
   let locatorX = -1
   let locatorY = -1
@@ -419,8 +405,6 @@ function LineChart (containerId, data) {
     renderChart()
     renderThresholds()
   })
-
-  // zoom.on('zoom', zoomScaleX)
 
   svgInner.on('click', (e) => {
     if (e.target.closest('.threshold')) return

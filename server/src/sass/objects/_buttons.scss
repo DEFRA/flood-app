@@ -82,21 +82,22 @@
     }
     &-s {
         @extend .defra-button-map;
-        padding-left:17px;
-        @include mq ($from: tablet) {
-            padding-left:18px;
+        text-decoration: none;
+        color: $govuk-text-colour;
+        @include mq ($until: tablet) {
+            padding-left:17px;
         }
         @include govuk-font($size: 16);
     }
     &-s:before {
-        top:0px;
-        background-size:12px 16px;
-        height:16px;
-        width:12px;
+        @include mq ($until: tablet) {
+            top:0px;
+            background-size:12px 16px;
+            height:16px;
+            width:12px;
+        }
         @include mq ($from: tablet) {
-            background-size:13.5px 18px;
-            height:18px;
-            width:13.5px;
+            top: -1px;
         }
     }
     span {
