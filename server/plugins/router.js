@@ -4,7 +4,6 @@ const routes = [].concat(
   require('../routes/national'),
   require('../routes/target-area'),
   require('../routes/station'),
-  require('../routes/about-water-measurements'),
   require('../routes/roadmap'),
   require('../routes/public'),
   require('../routes/api/stations.geojson'),
