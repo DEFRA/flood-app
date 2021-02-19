@@ -1,6 +1,19 @@
 'use strict'
 // Chart component
-import * as d3 from 'd3'
+
+import { area as d3Area, line as d3Line, curveMonotoneX } from 'd3-shape'
+
+import { axisBottom, axisLeft } from 'd3-axis'
+
+import { scaleLinear, scaleTime } from 'd3-scale'
+
+import { timeFormat } from 'd3-time-format'
+
+import { timeDay } from 'd3-time'
+
+import { select, selectAll, pointer } from 'd3-selection'
+
+import { bisector, extent } from 'd3-array'
 
 function LineChart (containerId, data) {
   // Settings
@@ -32,21 +45,21 @@ function LineChart (containerId, data) {
   let dataPointLocator = dataPointLatest
 
   // Area generator
-  const area = d3.area().curve(d3.curveMonotoneX)
+  const area = d3Area().curve(curveMonotoneX)
     .x((d) => { return xScale(new Date(d.ts)) })
     .y0((d) => { return height })
     .y1((d) => { return yScale(d._) })
 
   // Line generator
-  const line = d3.line().curve(d3.curveMonotoneX)
+  const line = d3Line().curve(curveMonotoneX)
     .x((d) => { return xScale(new Date(d.ts)) })
     .y((d) => { return yScale(d._) })
 
   // Set level and date formats
-  const parseTime = d3.timeFormat('%-I:%M%p')
-  const parseDate = d3.timeFormat('%e %b')
-  const parseDateShort = d3.timeFormat('%-e/%-m')
-  const parseDateLong = d3.timeFormat('%a, %e %b')
+  const parseTime = timeFormat('%-I:%M%p')
+  const parseDate = timeFormat('%e %b')
+  const parseDateShort = timeFormat('%-e/%-m')
+  const parseDateLong = timeFormat('%a, %e %b')
 
   //
   // Private methods
@@ -54,15 +67,15 @@ function LineChart (containerId, data) {
 
   const renderChart = () => {
     // Set isMobile boolean
-    const parentWidth = Math.floor(d3.select('#' + containerId).node().getBoundingClientRect().width)
+    const parentWidth = Math.floor(select('#' + containerId).node().getBoundingClientRect().width)
     const isMobile = window.innerWidth <= windowBreakPoint && parentWidth <= svgBreakPoint
 
     // Draw axis
-    const xAxis = d3.axisBottom().tickSizeOuter(0)
-    xAxis.scale(xScale).ticks(d3.timeDay).tickFormat((d) => {
+    const xAxis = axisBottom().tickSizeOuter(0)
+    xAxis.scale(xScale).ticks(timeDay).tickFormat((d) => {
       return isMobile ? parseDateShort(d) : parseDateLong(d)
     })
-    yAxis = d3.axisLeft().ticks(5).tickFormat((d) => {
+    yAxis = axisLeft().ticks(5).tickFormat((d) => {
       return parseFloat(d).toFixed(2) + 'm'
     }).tickSizeOuter(0)
     yAxis.scale(yScale)
@@ -77,14 +90,14 @@ function LineChart (containerId, data) {
     // Update grid lines
     svg.select('.x.grid')
       .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(xScale)
-        .ticks(d3.timeDay)
+      .call(axisBottom(xScale)
+        .ticks(timeDay)
         .tickSize(-height, 0, 0)
         .tickFormat('')
       )
     svg.select('.y.grid')
       .attr('transform', 'translate(0,' + 0 + ')')
-      .call(d3.axisLeft(yScale)
+      .call(axisLeft(yScale)
         .ticks(5)
         .tickSize(-width, 0, 0)
         .tickFormat('')
@@ -116,13 +129,13 @@ function LineChart (containerId, data) {
     // Hide x axis labels that overlap with time now label
     const timeNowX = timeLabel.node().getBoundingClientRect().left
     const timeNowWidth = timeLabel.node().getBoundingClientRect().width
-    const ticks = d3.selectAll('.x .tick')
+    const ticks = selectAll('.x .tick')
     ticks.each((d, i, n) => {
       const tick = n[i]
       const tickX = tick.getBoundingClientRect().left
       const tickWidth = tick.getBoundingClientRect().width
       const isOverlap = (tickX + tickWidth + 5) > timeNowX && tickX <= (timeNowX + timeNowWidth + 5)
-      d3.select(tick).classed('tick--hidden', isOverlap)
+      select(tick).classed('tick--hidden', isOverlap)
     })
   }
 
@@ -198,8 +211,8 @@ function LineChart (containerId, data) {
   const showTooltip = (e) => {
     // Remove existing content
     toolTip.select('text').selectAll('*').remove()
-    const mouseDate = xScale.invert(d3.pointer(e)[0])
-    const bisectDate = d3.bisector((d) => { return new Date(d.ts) }).left
+    const mouseDate = xScale.invert(pointer(e)[0])
+    const bisectDate = bisector((d) => { return new Date(d.ts) }).left
     const i = bisectDate(lines, mouseDate, 1) // returns the index to the current data item
     const d0 = lines[i - 1]
     const d1 = lines[i] || lines[i - 1]
@@ -208,7 +221,7 @@ function LineChart (containerId, data) {
     dataPoint.ts = d.ts
     dataPoint._ = d._
     toolTipX = xScale(new Date(dataPoint.ts))
-    toolTipY = d3.pointer(e)[1]
+    toolTipY = pointer(e)[1]
     toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(Number(dataPoint._).toFixed(2) + 'm')
     toolTip.select('text').append('tspan').attr('x', 12).attr('dy', '1.4em').text(parseTime(new Date(dataPoint.ts)).toLowerCase() + ', ' + parseDate(new Date(dataPoint.ts)))
     // Update tooltip left/right background
@@ -244,10 +257,10 @@ function LineChart (containerId, data) {
     yExtent[1] = yExtentDataMax <= bufferedUpper ? bufferedUpper : yExtentDataMax
     yExtent[0] = yExtentDataMin >= bufferedLower ? bufferedLower : yExtentDataMin
     // Update y scale
-    yScale = d3.scaleLinear().domain(yExtent).nice()
+    yScale = scaleLinear().domain(yExtent).nice()
     yScale.range([height, 0])
     // Update y axis
-    yAxis = d3.axisLeft()
+    yAxis = axisLeft()
     yAxis.ticks(5).tickFormat((d) => { return parseFloat(d).toFixed(2) + 'm' }).tickSizeOuter(0)
     yAxis.scale(yScale)
   }
@@ -279,7 +292,7 @@ function LineChart (containerId, data) {
   // Setup
   //
 
-  const svg = d3.select('#' + containerId).append('svg').style('pointer-events', 'none')
+  const svg = select('#' + containerId).append('svg').style('pointer-events', 'none')
   const svgInner = svg.append('g').style('pointer-events', 'all')
   svgInner.append('g').classed('y grid', true)
   svgInner.append('g').classed('x grid', true)
@@ -324,7 +337,7 @@ function LineChart (containerId, data) {
 
   // Get width and height
   const margin = { top: 25, bottom: 25, left: 28, right: 28 }
-  const containerBoundingRect = d3.select('#' + containerId).node().getBoundingClientRect()
+  const containerBoundingRect = select('#' + containerId).node().getBoundingClientRect()
   let width = Math.floor(containerBoundingRect.width) - margin.left - margin.right
   let height = Math.floor(containerBoundingRect.height) - margin.top - margin.bottom
 
@@ -333,7 +346,7 @@ function LineChart (containerId, data) {
   // values are excluded from plotting by virtue of being -ve
 
   // Set x scale extent
-  const xExtent = d3.extent(data.observed.concat(data.forecast), (d, i) => { return new Date(d.ts) })
+  const xExtent = extent(data.observed.concat(data.forecast), (d, i) => { return new Date(d.ts) })
   // Increase x extent by 5% from now value
   let date = new Date(data.now)
   const percentile = Math.round(Math.abs(xExtent[0] - date) * 0.05)
@@ -343,14 +356,14 @@ function LineChart (containerId, data) {
   xExtent[0] = Math.min.apply(Math, xRange)
   xExtent[1] = Math.max.apply(Math, xRange)
   // Set x input domain
-  const xScaleInitial = d3.scaleTime().domain(xExtent)
-  const xScale = d3.scaleTime().domain(xExtent)
+  const xScaleInitial = scaleTime().domain(xExtent)
+  const xScale = scaleTime().domain(xExtent)
   // Set x output range
   xScaleInitial.range([0, width])
   xScale.range([0, width])
 
   // Set y scale extent
-  const yExtent = d3.extent(lines, (d, i) => { return d._ })
+  const yExtent = extent(lines, (d, i) => { return d._ })
   // Adjust y extent to highest and lowest values from the data
   yExtent[0] = Math.min.apply(Math, yExtent)
   yExtent[1] = Math.max.apply(Math, yExtent)
@@ -364,7 +377,7 @@ function LineChart (containerId, data) {
   const yExtentDataMin = yExtent[0]
   const yExtentDataMax = yExtent[1]
   // Set y input domain
-  let yScale = d3.scaleLinear().domain(yExtent).nice()
+  let yScale = scaleLinear().domain(yExtent).nice()
   // Set y output range
   yScale.range([height, 0])
 
@@ -395,7 +408,7 @@ function LineChart (containerId, data) {
   //
 
   window.addEventListener('resize', () => {
-    const containerBoundingRect = d3.select('#' + containerId).node().getBoundingClientRect()
+    const containerBoundingRect = select('#' + containerId).node().getBoundingClientRect()
     width = Math.floor(containerBoundingRect.width) - margin.left - margin.right
     height = Math.floor(containerBoundingRect.height) - margin.top - margin.bottom
     xScale.range([0, width])
