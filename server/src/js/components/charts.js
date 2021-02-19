@@ -251,11 +251,14 @@ function LineChart (containerId, data) {
     // Extend or reduce y extent
     const maxThreshold = Math.max.apply(Math, thresholds.map((x) => { return x.level }))
     const minThreshold = Math.min.apply(Math, thresholds.map((x) => { return x.level }))
-    const range = Math.max(maxThreshold, yExtentDataMax) - Math.min(minThreshold, yExtentDataMin)
-    const bufferedUpper = maxThreshold + (range / 5)
-    const bufferedLower = minThreshold - (range / 5)
-    yExtent[1] = yExtentDataMax <= bufferedUpper ? bufferedUpper : yExtentDataMax
-    yExtent[0] = yExtentDataMin >= bufferedLower ? bufferedLower : yExtentDataMin
+    const maxData = Math.max(maxThreshold, yExtentDataMax)
+    const minData = Math.min(minThreshold, yExtentDataMin)
+    const range = maxData - minData
+    // Add 1/3rd or range above and below, capped at zero for non-negative ranges
+    const yRangeUpperBuffered = (maxData + (range / 3)).toFixed(2)
+    const yRangeLowerBuffered = (minData - (range / 3)).toFixed(2)
+    yExtent[1] = yExtentDataMax <= yRangeUpperBuffered ? yRangeUpperBuffered : yExtentDataMax
+    yExtent[0] = yExtent[0] >= 0 ? (yRangeLowerBuffered < 0 ? 0 : yRangeLowerBuffered) : yExtent[0]
     // Update y scale
     yScale = scaleLinear().domain(yExtent).nice()
     yScale.range([height, 0])
@@ -367,15 +370,15 @@ function LineChart (containerId, data) {
   // Adjust y extent to highest and lowest values from the data
   yExtent[0] = Math.min.apply(Math, yExtent)
   yExtent[1] = Math.max.apply(Math, yExtent)
-  // Add y axis buffers (25% above and below, capped at zero for non-negative ranges)
-  const yRange = yExtent[1] - yExtent[0]
-  const yRangeUpperBuffer = yExtent[1] + (yRange / 2)
-  const yRangeLowerBuffer = yExtent[0] - (yRange / 2)
-  yExtent[0] = yExtent[0] >= 0 ? (yRangeLowerBuffer < 0 ? 0 : yRangeLowerBuffer) : yExtent[0]
-  yExtent[1] = yRangeUpperBuffer
   // Reference to intial y extent min and max used when removing thresholds
   const yExtentDataMin = yExtent[0]
   const yExtentDataMax = yExtent[1]
+  // Add 1/3rd or range above and below, capped at zero for non-negative ranges
+  const yRange = yExtent[1] - yExtent[0]
+  const yRangeUpperBuffer = (yExtent[1] + (yRange / 3)).toFixed(2)
+  const yRangeLowerBuffer = (yExtent[0] - (yRange / 3)).toFixed(2)
+  yExtent[0] = yExtent[0] >= 0 ? (yRangeLowerBuffer < 0 ? 0 : yRangeLowerBuffer) : yExtent[0]
+  yExtent[1] = yRangeUpperBuffer
   // Set y input domain
   let yScale = scaleLinear().domain(yExtent).nice()
   // Set y output range
