@@ -32,8 +32,29 @@ class OutlookTabs {
       outlook.risk_areas.forEach((riskArea) => {
         riskArea.risk_area_blocks.forEach(riskAreaBlock => {
           riskAreaBlock.polys.forEach(poly => {
+            // if linestring ( i.e. coastal ) add buffer and change geometry
+
+            if (poly.poly_type === 'coastal') {
+              const feature = {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'LineString',
+                  coordinates: poly.coordinates
+                }
+              }
+
+              const buffer = turf.buffer(feature, 3, { units: 'miles' })
+
+              const coordinates = buffer.geometry.coordinates
+              feature.geometry.type = 'Polygon'
+              feature.geometry.coordinates = coordinates
+              poly.coordinates = coordinates
+            }
+
             // test if poly intersects
             const polyCoords = turf.polygon(poly.coordinates)
+
             const intersection = turf.intersect(polyCoords, locationCoords)
             if (intersection) {
               const riskLevels = riskAreaBlock.risk_levels
