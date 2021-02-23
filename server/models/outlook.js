@@ -1,5 +1,6 @@
 const turf = require('@turf/turf')
 const polygonSmooth = require('@turf/polygon-smooth')
+const messageContent = require('./outlook-content.json')
 
 class Outlook {
   constructor (outlook) {
@@ -64,6 +65,21 @@ class Outlook {
           this._hasOutlookConcern = true
         }
 
+        const rKey = [rRisk, `i${rImpact}`, `l${rLikelyhood}`].join('-')
+        const sKey = [sRisk, `i${sImpact}`, `l${sLikelyhood}`].join('-')
+        const cKey = [cRisk, `i${cImpact}`, `l${cLikelyhood}`].join('-')
+
+        const messageGroupObj = {}
+        messageGroupObj[rKey] = { sources: ['river'], message: messageContent[rKey] }
+        messageGroupObj[sKey]
+          ? messageGroupObj[sKey].sources.push('surface')
+          : messageGroupObj[sKey] = { sources: ['surface'], message: messageContent[sKey] }
+        messageGroupObj[cKey]
+          ? messageGroupObj[cKey].sources.push('coastal')
+          : messageGroupObj[cKey] = { sources: ['coastal'], message: messageContent[cKey] }
+
+        delete messageGroupObj['0-i0-l0']
+
         riskAreaBlock.polys.forEach(poly => {
           const feature = {
             type: 'Feature',
@@ -73,6 +89,7 @@ class Outlook {
               days: riskAreaBlock.days,
               labelPosition: poly.label_position,
               name: featureName,
+              message: messageGroupObj,
               'risk-level': riskLevel,
               'z-index': (riskLevel * 10)
             }

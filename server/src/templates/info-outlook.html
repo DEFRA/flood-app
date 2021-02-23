@@ -1,8 +1,8 @@
 <div id="infoDescription">
-    <p class="defra-map-info__feature">
-        <span class="defra-map-info__type">
-            {{ model.id }}
-            {{ model.name }}
-        </span>
-    </p>
-</div>
+    <h2 class="govuk-heading-s">{{ model.id }}</h2>
+    {% for messageID, messageText in model.message %}
+    <p class="govuk-body-s govuk-!-margin-bottom-0">There is {{ messageText.message | lower}} of {{ messageText.sources }} flooding. </p>
+        <br>
+    {% endfor %}
+    <!-- <p class="govuk-body-s govuk-!-margin-bottom-0">{{ model.message | dump(2) | safe }}</p> -->
+  </div>
