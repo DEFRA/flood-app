@@ -27,34 +27,36 @@ class Outlook {
       riskArea.risk_area_blocks.forEach(riskAreaBlock => {
         let sources = []
         let rImpact = 0
-        let rLikelyhood = 0
+        let rLikelihood = 0
         let sImpact = 0
-        let sLikelyhood = 0
+        let sLikelihood = 0
         let cImpact = 0
-        let cLikelyhood = 0
+        let cLikelihood = 0
         let rRisk = 0
         let sRisk = 0
         let cRisk = 0
 
         if (riskAreaBlock.risk_levels.river) {
           rImpact = riskAreaBlock.risk_levels.river[0]
-          rLikelyhood = riskAreaBlock.risk_levels.river[1]
-          rRisk = riskMatrix[rImpact - 1][rLikelyhood - 1]
+          rLikelihood = riskAreaBlock.risk_levels.river[1]
+          rRisk = riskMatrix[rImpact - 1][rLikelihood - 1]
           sources.push('river')
         }
         if (riskAreaBlock.risk_levels.surface) {
           sImpact = riskAreaBlock.risk_levels.surface[0]
-          sLikelyhood = riskAreaBlock.risk_levels.surface[1]
-          sRisk = riskMatrix[sImpact - 1][sLikelyhood - 1]
+          sLikelihood = riskAreaBlock.risk_levels.surface[1]
+          sRisk = riskMatrix[sImpact - 1][sLikelihood - 1]
           sources.push('surface water')
         }
         if (riskAreaBlock.risk_levels.coastal) {
           cImpact = riskAreaBlock.risk_levels.coastal[0]
-          cLikelyhood = riskAreaBlock.risk_levels.coastal[1]
-          cRisk = riskMatrix[cImpact - 1][cLikelyhood - 1]
+          cLikelihood = riskAreaBlock.risk_levels.coastal[1]
+          cRisk = riskMatrix[cImpact - 1][cLikelihood - 1]
           sources.push('coastal')
         }
         const riskLevel = Math.max(rRisk, sRisk, cRisk)
+        const impactLevel = Math.max(rImpact, sImpact, cImpact)
+        const likelihoodLevel = Math.max(rLikelihood, sLikelihood, cLikelihood)
 
         // Build up sources string and feature name
         sources = sources.length > 1 ? sources.slice(0, -1).join(', ') + ' and ' + sources[sources.length - 1] : sources
@@ -65,9 +67,9 @@ class Outlook {
           this._hasOutlookConcern = true
         }
 
-        const rKey = [rRisk, `i${rImpact}`, `l${rLikelyhood}`].join('-')
-        const sKey = [sRisk, `i${sImpact}`, `l${sLikelyhood}`].join('-')
-        const cKey = [cRisk, `i${cImpact}`, `l${cLikelyhood}`].join('-')
+        const rKey = [rRisk, `i${rImpact}`, `l${rLikelihood}`].join('-')
+        const sKey = [sRisk, `i${sImpact}`, `l${sLikelihood}`].join('-')
+        const cKey = [cRisk, `i${cImpact}`, `l${cLikelihood}`].join('-')
 
         const messageGroupObj = {}
         messageGroupObj[rKey] = { sources: ['river'], message: messageContent[rKey] }
@@ -79,6 +81,15 @@ class Outlook {
           : messageGroupObj[cKey] = { sources: ['coastal'], message: messageContent[cKey] }
 
         delete messageGroupObj['0-i0-l0']
+
+        // Build sources string
+
+        for (const messageObj of Object.values(messageGroupObj)) {
+          if (messageObj.sources.length > 1) {
+            const lastSource = messageObj.sources.pop()
+            messageObj.sources[0] = messageObj.sources.join(', ') + ' and ' + lastSource
+          }
+        }
 
         riskAreaBlock.polys.forEach(poly => {
           const feature = {
@@ -110,7 +121,9 @@ class Outlook {
             // Put coastal areas on top of inland areas
             feature.properties['z-index'] += 1
           }
-          this._geoJson.features.push(feature)
+          if (impactLevel > 1 && !(impactLevel === 2 && likelihoodLevel === 1)) {
+            this._geoJson.features.push(feature)
+          }
 
           // Set highest daily risk level
           riskAreaBlock.days.forEach(day => {

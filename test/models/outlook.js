@@ -289,9 +289,8 @@ lab.experiment('Outlook model test', () => {
               '1-i2-l2': {
                 message: 'Very low risk, impact minor (2), likelihood low (2).',
                 sources: [
-                  'river',
-                  'surface',
-                  'coastal'
+                  'river, surface and coastal',
+                  'surface'
                 ]
               }
             },
