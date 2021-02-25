@@ -253,12 +253,13 @@ function LineChart (containerId, data) {
     const minThreshold = Math.min.apply(Math, thresholds.map((x) => { return x.level }))
     const maxData = Math.max(maxThreshold, yExtentDataMax)
     const minData = Math.min(minThreshold, yExtentDataMin)
-    const range = maxData - minData
+    let range = maxData - minData
+    range = range < 1 ? 1 : range
     // Add 1/3rd or range above and below, capped at zero for non-negative ranges
     const yRangeUpperBuffered = (maxData + (range / 3)).toFixed(2)
     const yRangeLowerBuffered = (minData - (range / 3)).toFixed(2)
     yExtent[1] = yExtentDataMax <= yRangeUpperBuffered ? yRangeUpperBuffered : yExtentDataMax
-    yExtent[0] = yExtent[0] >= 0 ? (yRangeLowerBuffered < 0 ? 0 : yRangeLowerBuffered) : yExtent[0]
+    yExtent[0] = window.flood.model.station.isRiver ? (yRangeLowerBuffered < 0 ? 0 : yRangeLowerBuffered) : yRangeLowerBuffered
     // Update y scale
     yScale = scaleLinear().domain(yExtent).nice()
     yScale.range([height, 0])
@@ -374,10 +375,13 @@ function LineChart (containerId, data) {
   const yExtentDataMin = yExtent[0]
   const yExtentDataMax = yExtent[1]
   // Add 1/3rd or range above and below, capped at zero for non-negative ranges
-  const yRange = yExtent[1] - yExtent[0]
+  let yRange = yExtent[1] - yExtent[0]
+  yRange = yRange < 1 ? 1 : yRange // make range minimum 1m to stop zigzag
   const yRangeUpperBuffer = (yExtent[1] + (yRange / 3)).toFixed(2)
   const yRangeLowerBuffer = (yExtent[0] - (yRange / 3)).toFixed(2)
-  yExtent[0] = yExtent[0] >= 0 ? (yRangeLowerBuffer < 0 ? 0 : yRangeLowerBuffer) : yExtent[0]
+
+  yExtent[0] = window.flood.model.station.isRiver ? (yRangeLowerBuffer < 0 ? 0 : yRangeLowerBuffer) : yRangeLowerBuffer
+
   yExtent[1] = yRangeUpperBuffer
   // Set y input domain
   let yScale = scaleLinear().domain(yExtent).nice()
