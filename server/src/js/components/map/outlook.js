@@ -182,6 +182,15 @@ function OutlookMap (mapId, options) {
     }
     const html = window.nunjucks.render('description-outlook.html', { model: model })
     viewportDescription.innerHTML = html
+    // ToDo: Show non-visual feature details
+    // const model = {
+    //   numFeatures: numFeatures,
+    //   numWarnings: numWarnings,
+    //   mumMeasurements: mumMeasurements,
+    //   features: features
+    // }
+    // const html = window.nunjucks.render('description-live.html', { model: model })
+    // viewportDescription.innerHTML = html
   }
 
   // Set selected feature
