@@ -151,11 +151,11 @@ class OutlookTabs {
       // Establish risk level trend for days 2, 3, 4 and 5
       for (let i = 1; i < 5; i++) {
         if (this.dailyRiskAsNum[i] > this.dailyRiskAsNum[i - 1]) {
-          this.trend[i] = 'increases to'
+          this.trend[i] = 'rises to'
         } else if (this.dailyRiskAsNum[i] < this.dailyRiskAsNum[i - 1]) {
-          this.trend[i] = 'reduces to'
+          this.trend[i] = 'falls to'
         } else {
-          this.trend[i] = 'remains at'
+          this.trend[i] = 'remains'
         }
       }
 
@@ -163,8 +163,21 @@ class OutlookTabs {
       const groupByUniqueArrayObj = groupBy(uniqueArray, 'messageId')
 
       // create array of sources for each messageId
+
+      const expandedSource = {
+        river: 'overflowing rivers',
+        surface: 'runoff from rainfall or blocked drains',
+        ground: 'a high water table',
+        coastal: 'high tides or large waves'
+      }
+
       for (const [messageId, array] of Object.entries(groupByUniqueArrayObj)) {
-        const sourcesArr = array.map(element => element.source)
+        let sourcesArr = array.map(element => expandedSource[element.source] || element.source)
+        if (sourcesArr.length > 1) {
+          const lastSource = sourcesArr.pop()
+          // messageObj.sources[0] = messageObj.sources.join(', ') + ' and ' + lastSource
+          sourcesArr = sourcesArr.slice(0).join(', ') + ' and ' + lastSource
+        }
         groupByUniqueArrayObj[messageId] = sourcesArr
       }
 
@@ -222,6 +235,13 @@ class OutlookTabs {
       } else if (isEqual(day3, day4)) {
         this.tab3 = [day3, day5]
         this.dayName[2] = `${this.dayName[2]} and ${this.dayName[3]}`
+
+        // Shuffle down fifth day into fourth day slot as days 3 & 4 have been merged into day 3.
+        // Move associated risk values and trend descriptions as well.
+        this.dayName[3] = this.dayName[4]
+        this.dailyRiskAsNum[3] = this.dailyRiskAsNum[4]
+        this.trend[3] = this.trend[4]
+        this.dailyRisk[3] = this.dailyRisk[4]
       } else if (isEqual(day4, day5)) {
         this.tab3 = [day3, day4]
         this.dayName[3] = `${this.dayName[3]} and ${this.dayName[4]}`
