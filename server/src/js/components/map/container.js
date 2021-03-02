@@ -114,9 +114,9 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   map.addControl(openKeyButton)
 
   // Create controls container element
-  const controlsContainerElement = document.createElement('div')
-  controlsContainerElement.className = 'defra-map-controls__container'
-  controlsElement.appendChild(controlsContainerElement)
+  const controlsBottomElement = document.createElement('div')
+  controlsBottomElement.className = 'defra-map-controls__bottom'
+  controlsElement.appendChild(controlsBottomElement)
 
   // Create reset control
   const resetButtonElement = document.createElement('button')
@@ -126,7 +126,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   resetButtonElement.setAttribute('aria-controls', 'viewport')
   const resetButton = new Control({
     element: resetButtonElement,
-    target: controlsContainerElement
+    target: controlsBottomElement
   })
   map.addControl(resetButton)
 
@@ -145,7 +145,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
     zoomOutLabel: zoomOutElement,
     zoomInTipLabel: '',
     zoomOutTipLabel: '',
-    target: controlsContainerElement
+    target: controlsBottomElement
   })
   map.addControl(zoom)
 
@@ -155,7 +155,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   attributtionElement.innerHTML = '<span class="govuk-visually-hidden">List attributions</span>'
   const attributionButton = new Control({
     element: attributtionElement,
-    target: controlsContainerElement
+    target: controlsBottomElement
   })
   map.addControl(attributionButton)
 
@@ -211,7 +211,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
 
   // Add any custom controls into the controls container after the info panel
   options.controls.forEach(control => {
-    control.setTarget(controlsContainerElement)
+    control.setTarget(controlsBottomElement)
     map.addControl(control)
   })
 

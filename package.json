@@ -1,6 +1,6 @@
 {
   "name": "flood-app",
-  "version": "3.8.0",
+  "version": "3.9.0",
   "description": "Flood risk app",
   "main": "index.js",
   "repository": "github:defra/flood-app",
@@ -47,7 +47,7 @@
     "blipp": "^4.0.1",
     "body-scroll-lock": "^3.0.2",
     "core-js": "^2.6.11",
-    "d3": "^5.15.0",
+    "d3": "^6.2.0",
     "datatables.net-dt": "^1.10.20",
     "elm-pep": "^1.0.6",
     "geojson": "0.5.0",
