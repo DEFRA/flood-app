@@ -36,8 +36,8 @@ jobs:
                 FLOOD_APP_BING_KEY_LOCATION: "${{ secrets.FLOOD_APP_BING_KEY_LOCATION }}"
                 FLOOD_APP_BING_KEY_MAP: "${{ secrets.FLOOD_APP_BING_KEY_MAP }}"
                 FLOOD_APP_BING_URL: "${{ secrets.FLOOD_APP_BING_URL }}"
-                FLOOD_APP_BING_URL: "${{ secrets.FLOOD_APP_NRW_STATION_URL }}"
-                FLOOD_APP_BING_URL: "${{ secrets.FLOOD_APP_SESSION_PASSWORD }}"
+                FLOOD_APP_NRW_STATION_URL: "${{ secrets.FLOOD_APP_NRW_STATION_URL }}"
+                FLOOD_APP_SESSION_PASSWORD: "${{ secrets.FLOOD_APP_SESSION_PASSWORD }}"
               run: npm run unit-test
 
             - name: Publish test coverage
