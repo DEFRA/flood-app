@@ -15,7 +15,7 @@
     "build:css": "build/build-css",
     "build": "build/build",
     "lint": "standard",
-    "unit-test": "lab --verbose -c -r console -o stdout -r lcov -o lcov.info",
+    "unit-test": "lab --verbose -c -r console -o stdout -r lcov -o coverage/lcov.info",
     "test": "npm run lint && npm run unit-test",
     "postinstall": "npm run build"
   },
