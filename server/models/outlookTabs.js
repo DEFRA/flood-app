@@ -144,12 +144,12 @@ class OutlookTabs {
 
       // Establish risk level trend for days 2, 3, 4 and 5
       for (let i = 1; i < 5; i++) {
-        if (this.dailyRiskAsNum[i] > this.dailyRiskAsNum[i - 1]) {
-          this.trend[i] = 'rises to'
-        } else if (this.dailyRiskAsNum[i] < this.dailyRiskAsNum[i - 1]) {
-          this.trend[i] = 'falls to'
+        if (dailyRiskAsNum[i] > dailyRiskAsNum[i - 1]) {
+          trend[i] = 'rises to'
+        } else if (dailyRiskAsNum[i] < dailyRiskAsNum[i - 1]) {
+          trend[i] = 'falls to'
         } else {
-          this.trend[i] = 'remains'
+          trend[i] = 'remains'
         }
       }
 
