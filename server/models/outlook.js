@@ -38,9 +38,12 @@ class Outlook {
         let sLikelihood = 0
         let cImpact = 0
         let cLikelihood = 0
+        let gImpact = 0
+        let gLikelihood = 0
         let rRisk = 0
         let sRisk = 0
         let cRisk = 0
+        let gRisk = 0
 
         if (riskAreaBlock.risk_levels.river) {
           rImpact = riskAreaBlock.risk_levels.river[0]
@@ -54,18 +57,26 @@ class Outlook {
           sRisk = riskMatrix[sImpact - 1][sLikelihood - 1]
           sources.push('surface water')
         }
+        if (riskAreaBlock.risk_levels.ground) {
+          gImpact = riskAreaBlock.risk_levels.ground[0]
+          gLikelihood = riskAreaBlock.risk_levels.ground[1]
+          gRisk = riskMatrix[gImpact - 1][gLikelihood - 1]
+          sources.push('ground water')
+        }
         if (riskAreaBlock.risk_levels.coastal) {
           cImpact = riskAreaBlock.risk_levels.coastal[0]
           cLikelihood = riskAreaBlock.risk_levels.coastal[1]
           cRisk = riskMatrix[cImpact - 1][cLikelihood - 1]
           sources.push('coastal')
         }
-        const riskLevel = Math.max(rRisk, sRisk, cRisk)
-        const impactLevel = Math.max(rImpact, sImpact, cImpact)
-        const likelihoodLevel = Math.max(rLikelihood, sLikelihood, cLikelihood)
+
+        const riskLevel = Math.max(rRisk, sRisk, cRisk, gRisk)
+        const impactLevel = Math.max(rImpact, sImpact, cImpact, gImpact)
+        const likelihoodLevel = Math.max(rLikelihood, sLikelihood, cLikelihood, gLikelihood)
 
         // Build up sources string and feature name
         sources = sources.length > 1 ? sources.slice(0, -1).join(', ') + ' and ' + sources[sources.length - 1] : sources
+
         const featureName = `${riskBands[riskLevel - 1]} risk of ${sources} flooding`
 
         // Set hasOutlookConcern flag
@@ -76,8 +87,10 @@ class Outlook {
         const rKey = [rRisk, `i${rImpact}`, `l${rLikelihood}`].join('-')
         const sKey = [sRisk, `i${sImpact}`, `l${sLikelihood}`].join('-')
         const cKey = [cRisk, `i${cImpact}`, `l${cLikelihood}`].join('-')
+        const gKey = [gRisk, `i${gImpact}`, `l${gLikelihood}`].join('-')
 
         const messageGroupObj = {}
+
         messageGroupObj[rKey] = { sources: ['river'], message: messageContent[rKey] }
         messageGroupObj[sKey]
           ? messageGroupObj[sKey].sources.push('surface')
@@ -85,6 +98,9 @@ class Outlook {
         messageGroupObj[cKey]
           ? messageGroupObj[cKey].sources.push('coastal')
           : messageGroupObj[cKey] = { sources: ['coastal'], message: messageContent[cKey] }
+        messageGroupObj[gKey]
+          ? messageGroupObj[gKey].sources.push('ground')
+          : messageGroupObj[gKey] = { sources: ['ground'], message: messageContent[gKey] }
 
         delete messageGroupObj['0-i0-l0']
 
@@ -93,7 +109,7 @@ class Outlook {
         for (const messageObj of Object.values(messageGroupObj)) {
           if (messageObj.sources.length > 1) {
             const lastSource = messageObj.sources.pop()
-            messageObj.sources[0] = messageObj.sources.join(', ') + ' and ' + lastSource
+            messageObj.sources = messageObj.sources.slice(0).join(', ') + ' and ' + lastSource
           }
         }
 
@@ -107,6 +123,7 @@ class Outlook {
               labelPosition: poly.label_position,
               name: featureName,
               message: messageGroupObj,
+              additionalMessage: riskAreaBlock.additional_information,
               'risk-level': riskLevel,
               'z-index': (riskLevel * 10)
             }
