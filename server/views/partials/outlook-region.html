@@ -38,13 +38,6 @@
                 {% include "partials/outlook-region-messages.html" %}
                 <br>
             {% endfor %}
-
-            <!-- <hr> -->
-            <!-- <pre>{{ model.tabs.messages1 | dump(2) | safe  }}</pre>
-            <hr>
-            <pre>{{ model.tabs.groupByDayFull['1'] | dump(2) | safe }}</pre>
-            <hr>
-            <pre>{{ model.tabs.tab1 | dump(2) | safe }}</pre> -->
         </p>
 
         {% else %}
@@ -65,14 +58,6 @@
             {% include "partials/outlook-region-messages.html" %}
             <br>
             {% endfor %}
-
-            <!-- <hr>
-            <pre>{{ model.tabs.messages2  | dump(2) | safe  }}</pre>
-            <hr>
-            <pre>{{ model.tabs.groupByDayFull['2'] | dump(2) | safe }}</pre>
-            <hr>
-            <pre>{{ model.tabs.tab2 | dump(2) | safe }}</pre> -->
-
         </p>
 
         {% else %}
@@ -105,12 +90,6 @@
         <p>The flood risk is very low.</p>
 
         {% endif %}
-        <!-- <hr>
-        <pre>{{ model.tabs.messages3 | dump(2) | safe }}</pre>
-        <hr>
-        <pre>{{ model.tabs.groupByDayFull['3'] | dump(2) | safe }}</pre>
-        <hr>
-        <pre>{{ model.tabs.tab3 | dump(2) | safe }}</pre> -->
     </div>
 </div>
 <span id="map-outlook"></span>

@@ -1,15 +1,21 @@
 const turf = require('@turf/turf')
 const polygonSmooth = require('@turf/polygon-smooth')
 const messageContent = require('./outlook-content.json')
+// const moment = require('moment-timezone')
 
 class Outlook {
   constructor (outlook) {
     this._outlook = outlook
     // Has concern areas flag
     this._hasOutlookConcern = false
+    this._outOfDate = true
 
     // Issued date
     this._timestampOutlook = (new Date(outlook.issued_at)).getTime()
+
+    const now = new Date()
+    const oneday = 60 * 60 * 24 * 1000
+    this._outOfDate = (now - this._timestampOutlook) > oneday
 
     // Highest daily risk
     this._riskLevels = [0, 0, 0, 0, 0]
@@ -194,6 +200,10 @@ class Outlook {
 
   get days () {
     return this._days
+  }
+
+  get outOfDate () {
+    return this._outOfDate
   }
 }
 

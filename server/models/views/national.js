@@ -37,7 +37,8 @@ class ViewModel {
         outlookUTC: this.outlookUTC,
         full: item.full,
         hasOutlookConcern: item.hasOutlookConcern,
-        days: item.days
+        days: item.days,
+        outOfDate: item.outOfDate
       }
     })[0]
   }
