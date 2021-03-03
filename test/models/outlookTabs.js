@@ -66,4 +66,42 @@ lab.experiment('outlookTabs model test', () => {
     Code.expect(viewModel.formattedIssueDate).to.equal(formattedIssueDate)
     Code.expect(viewModel.outOfDate).to.equal(false)
   })
+  lab.test('Test location that doesnt intersect any polygons', async () => {
+    const outlook = data.fgs
+
+    const place = {
+      name: 'Leeds, West Yorkshire',
+      center: [-1.549103021621704, 53.79969024658203],
+      bbox2k: [
+        -1.8271425769371719,
+        53.68323734173208,
+        -1.263577380034181,
+        53.96163312595407
+      ],
+      bbox10k: [
+        -1.9339620740885206,
+        53.62036759094084,
+        -1.1564925522600658,
+        54.02466027935582
+      ],
+      address: 'Leeds, West Yorkshire',
+      isEngland: { is_england: true },
+      isUK: true,
+      isScotlandOrNorthernIreland: false
+    }
+
+    const expectedOutlookTab1 = '{}'
+    const expectedOutlookTab2 = '{}'
+    const expectedOutlookTab3 = '[{"1-i2-l2":"runoff from rainfall or blocked drains and overflowing rivers"}]'
+
+    const viewModel = new OutlookTabsModel(outlook, place)
+
+    console.log(JSON.stringify(viewModel.tab1))
+    console.log(JSON.stringify(viewModel.tab2))
+    console.log(JSON.stringify(viewModel.tab3))
+
+    Code.expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
+    Code.expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
+    Code.expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
+  })
 })

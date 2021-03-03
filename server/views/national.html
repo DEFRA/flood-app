@@ -63,14 +63,12 @@
     <p>There are around 2,500 measuring stations, most along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
     <p><a href="/river-and-sea-levels">Find a river, sea or groundwater level</a></p>
 
-    {% if not model.outlook.outOfDate %}
     <h2 class="govuk-heading-m govuk-!-margin-top-2" id="outlook">Flood forecast for the next 5 days</h2>
     <p class="govuk-body">
       {{ model.outlook.full | safe }}
     </p>
     {% if model.outlook.hasOutlookConcern %}
     <span id="map-outlook"></span>
-    {% endif %}
     {% endif %}
 
   

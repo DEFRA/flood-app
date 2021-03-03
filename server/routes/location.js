@@ -35,6 +35,7 @@ module.exports = {
     }
 
     const outlook = await floodService.getOutlook()
+
     const tabs = new OutlookTabsModel(outlook, place)
 
     const [
