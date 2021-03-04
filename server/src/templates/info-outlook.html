@@ -2,9 +2,8 @@
     <h2 class="govuk-heading-s">{{ model.name }}</h2>
     {% for messageID, messageText in model.message %}
     <p class="govuk-body-s govuk-!-margin-bottom-0">There is {{ messageText.message | lower}} of {{ messageText.sources }} flooding. </p>
-        <br>
     {% endfor %}
-    <hr>
-    <p class="govuk-body-s govuk-!-margin-bottom-0">{{ model.additionalMessage }}</p>
+    <!-- <hr>
+    <p class="govuk-body-s govuk-!-margin-bottom-0">{{ model.additionalMessage }}</p> -->
     <!-- <p class="govuk-body-s govuk-!-margin-bottom-0">{{ model.message | dump(2) | safe }}</p> -->
 </div>

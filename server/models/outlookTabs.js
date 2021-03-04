@@ -183,9 +183,9 @@ class OutlookTabs {
 
     // Create highest daily risk for days in the Outlook tab
 
-    const max = Math.max(...dailyRiskAsNum.slice(2))
+    const dailyRiskOutlookMax = Math.max(...dailyRiskAsNum.slice(2))
 
-    const dailyRiskOutlookMax = riskLevelText[max]
+    const dailyRiskOutlookMaxText = riskLevelText[dailyRiskOutlookMax]
 
     // Create days array for use with map
     const days = [0, 1, 2, 3, 4].map(i => {
@@ -242,9 +242,9 @@ class OutlookTabs {
         // Shuffle down fifth day into fourth day slot as days 3 & 4 have been merged into day 3.
         // Move associated risk values and trend descriptions as well.
         this.dayName[3] = this.dayName[4]
-        this.dailyRiskAsNum[3] = this.dailyRiskAsNum[4]
-        this.trend[3] = this.trend[4]
-        this.dailyRisk[3] = this.dailyRisk[4]
+        dailyRiskAsNum[3] = dailyRiskAsNum[4]
+        trend[3] = trend[4]
+        dailyRisk[3] = dailyRisk[4]
       } else if (isEqual(day4, day5)) {
         this.tab3 = [day3, day4]
         this.dayName[3] = `${this.dayName[3]} and ${this.dayName[4]}`
@@ -259,7 +259,9 @@ class OutlookTabs {
     this.issueUTC = issueUTC
     this.formattedIssueDate = formattedIssueDate
     this.dailyRisk = dailyRisk
+    this.dailyRiskAsNum = dailyRiskAsNum
     this.dailyRiskOutlookMax = dailyRiskOutlookMax
+    this.dailyRiskOutlookMaxText = dailyRiskOutlookMaxText
     this.trend = trend
   }
 }
