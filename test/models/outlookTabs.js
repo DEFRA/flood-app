@@ -96,12 +96,69 @@ lab.experiment('outlookTabs model test', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    console.log(JSON.stringify(viewModel.tab1))
-    console.log(JSON.stringify(viewModel.tab2))
-    console.log(JSON.stringify(viewModel.tab3))
-
     Code.expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
     Code.expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
     Code.expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
+  })
+  lab.test('Test each trend is set ', async () => {
+    const outlook = data.fgsTrends
+
+    const place = {
+      name: 'Oxford, Oxfordshire',
+      center: [-1.2634600400924683, 51.75374221801758],
+      bbox2k: [
+        -1.329536933050235,
+        51.695334476413464,
+        -1.1505065416098395,
+        51.81192091799338
+      ],
+      bbox10k: [
+        -1.4306291351125646,
+        51.63281784493552,
+        -1.0492938978465878,
+        51.8745177168812
+      ],
+      address: 'Oxford, Oxfordshire',
+      isEngland: { is_england: true },
+      isUK: true,
+      isScotlandOrNorthernIreland: false
+    }
+
+    const viewModel = new OutlookTabsModel(outlook, place)
+
+    Code.expect(viewModel.trend[0]).to.equal('')
+    Code.expect(viewModel.trend[1]).to.equal('rises to')
+    Code.expect(viewModel.trend[2]).to.equal('falls to')
+    Code.expect(viewModel.trend[3]).to.equal('remains')
+  })
+  lab.test('Test FGS with all alerts less than very low are filtered and dont get shown  ', async () => {
+    const outlook = data.fgsBelowVeryLow
+
+    const place = {
+      name: 'Oxford, Oxfordshire',
+      center: [-1.2634600400924683, 51.75374221801758],
+      bbox2k: [
+        -1.329536933050235,
+        51.695334476413464,
+        -1.1505065416098395,
+        51.81192091799338
+      ],
+      bbox10k: [
+        -1.4306291351125646,
+        51.63281784493552,
+        -1.0492938978465878,
+        51.8745177168812
+      ],
+      address: 'Oxford, Oxfordshire',
+      isEngland: { is_england: true },
+      isUK: true,
+      isScotlandOrNorthernIreland: false
+    }
+
+    const viewModel = new OutlookTabsModel(outlook, place)
+
+    Code.expect(viewModel.tab1).to.equal({})
+    Code.expect(viewModel.tab1).to.equal({})
+    Code.expect(viewModel.tab1).to.equal({})
   })
 })
