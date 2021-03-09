@@ -161,7 +161,7 @@ lab.experiment('outlookTabs model test', () => {
     Code.expect(viewModel.tab1).to.equal({})
     Code.expect(viewModel.tab1).to.equal({})
   })
-  lab.test('Test flood risk is the same on Day 3 and day 4 not day 5  ', async () => {
+  lab.test('Test flood risk is the same on Day 3 and day 4 but different on day 5  ', async () => {
     const outlook = {
       id: 1107,
       issued_at: '2019-08-08T09:30:00Z',

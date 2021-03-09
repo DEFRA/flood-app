@@ -2,7 +2,6 @@ const severity = require('../severity')
 const { groupBy } = require('../../util')
 const { floodFisUrl, bingKeyMaps } = require('../../config')
 const moment = require('moment-timezone')
-// const outlookContent = require('../outlook-content.json')
 
 class ViewModel {
   constructor ({ location, place, floods, stations, impacts, tabs }) {
