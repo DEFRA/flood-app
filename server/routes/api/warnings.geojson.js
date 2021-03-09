@@ -5,7 +5,7 @@ module.exports = {
   path: '/api/warnings.geojson',
   options: {
     description: 'Get warnings data in geojson format',
-    handler: async (request, h) => {
+    handler: async () => {
       return floodService.floods.geojson
     },
     app: {

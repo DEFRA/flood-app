@@ -5,9 +5,7 @@ module.exports = {
   path: '/api/places.geojson',
   options: {
     description: 'Get places data',
-    handler: async (request, h) => {
-      return data
-    },
+    handler: async () => data,
     app: {
       useErrorPages: false
     }

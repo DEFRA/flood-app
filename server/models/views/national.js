@@ -1,6 +1,8 @@
 const moment = require('moment-timezone')
 const formatDate = require('../../util').formatDate
 const { bingKeyMaps } = require('../../config')
+const tz = 'Europe/London'
+const momentTz = moment.tz(tz)
 
 class ViewModel {
   constructor (floods, outlook) {
@@ -11,12 +13,12 @@ class ViewModel {
       metaCanonical: '/national',
       hasActiveFloods: floods.hasActiveFloods,
       highestSeverityId: floods.highestSeverityId,
-      dateFormatted: moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY'),
-      dateUTC: moment().tz('Europe/London').format(),
+      dateFormatted: `${momentTz.format('h:mma')} on ${momentTz.format('D MMMM YYYY')}`,
+      dateUTC: momentTz.format(),
       feedback: true,
       hasWarningsRemoved: floods._groups[3].name === 4 && floods._groups[3].count > 0,
-      outlookTimestamp: formatDate(outlook._timestampOutlook, 'h:mma') + ' on ' + formatDate(outlook._timestampOutlook, 'D MMMM YYYY'),
-      outlookUTC: moment(outlook._timestampOutlook).tz('Europe/London').format(),
+      outlookTimestamp: `${formatDate(outlook._timestampOutlook, 'h:mma')} on ${formatDate(outlook._timestampOutlook, 'D MMMM YYYY')}`,
+      outlookUTC: moment(outlook._timestampOutlook).tz(tz).format(),
       bingMaps: bingKeyMaps
     })
 
