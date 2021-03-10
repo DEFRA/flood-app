@@ -278,7 +278,6 @@ lab.experiment('Outlook model test', () => {
           {
             'risk-level': 1,
             'z-index': 10,
-            additionalMessage: 'Heavy thundery showers. Urban areas and small catchments most at risk.',
             days: [5],
             isSmooth: true,
             labelPosition: [
@@ -289,7 +288,7 @@ lab.experiment('Outlook model test', () => {
             message: {
               '1-i2-l2': {
                 message: 'Very low risk, impact minor (2), likelihood low (2).',
-                sources: 'river, surface and coastal'
+                sources: 'overflowing rivers, runoff from rainfall or blocked drains and high tides or large waves'
               }
             },
             polyType: 'inland',
