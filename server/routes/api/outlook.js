@@ -5,7 +5,7 @@ module.exports = {
   path: '/api/outlook.geojson',
   options: {
     description: 'Get outlook geojson data from cache',
-    handler: async (request, h) => {
+    handler: async () => {
       return floodService.outlook.geoJson
     },
     app: {
