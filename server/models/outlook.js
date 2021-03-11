@@ -97,16 +97,16 @@ class Outlook {
           coastal: 'high tides or large waves'
         }
 
-        messageGroupObj[rKey] = { sources: [expandedSource['river']], message: messageContent[rKey] }
+        messageGroupObj[rKey] = { sources: [expandedSource.river], message: messageContent[rKey] }
         messageGroupObj[sKey]
-          ? messageGroupObj[sKey].sources.push(expandedSource['surface'])
-          : messageGroupObj[sKey] = { sources: [expandedSource['surface']], message: messageContent[sKey] }
+          ? messageGroupObj[sKey].sources.push(expandedSource.surface)
+          : messageGroupObj[sKey] = { sources: [expandedSource.surface], message: messageContent[sKey] }
         messageGroupObj[cKey]
-          ? messageGroupObj[cKey].sources.push(expandedSource['coastal'])
-          : messageGroupObj[cKey] = { sources: [expandedSource['coastal']], message: messageContent[cKey] }
+          ? messageGroupObj[cKey].sources.push(expandedSource.coastal)
+          : messageGroupObj[cKey] = { sources: [expandedSource.coastal], message: messageContent[cKey] }
         messageGroupObj[gKey]
-          ? messageGroupObj[gKey].sources.push(expandedSource['ground'])
-          : messageGroupObj[gKey] = { sources: [expandedSource['ground']], message: messageContent[gKey] }
+          ? messageGroupObj[gKey].sources.push(expandedSource.ground)
+          : messageGroupObj[gKey] = { sources: [expandedSource.ground], message: messageContent[gKey] }
 
         delete messageGroupObj['0-i0-l0']
 

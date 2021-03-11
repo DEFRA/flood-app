@@ -86,9 +86,15 @@
     <p>Most measuring stations are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
     <p><a href="/river-and-sea-levels?q={{ model.location }}">Find a river, sea or groundwater level in this area</a></p> 
     <!-- end river and sea levels -->
-   
-    {% include "partials/outlook-region.html" %}
-    
+    <h2 class="govuk-heading-m">Regional flood forecast</h2>
+    {% if model.outOfDate %}
+    <div class="defra-service-error govuk-!-margin-bottom-3">
+      <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>
+      <p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>
+    </div>
+    {% else %}
+      {% include "partials/outlook-region.html" %}
+    {% endif %}
     <p><a href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
     {% include "partials/context-footer.html" %}
 

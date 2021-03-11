@@ -1,4 +1,3 @@
-<h2 class="govuk-heading-m">Regional flood forecast</h2>
 <div class="defra-flood-tabs" data-module="govuk-tabs">
     <h2 class="govuk-tabs__title">
         Contents
@@ -38,7 +37,7 @@
 
         {% if model.tabs.tab1 %}
 
-        <p>Today<!--({{ model.tabs.dayName[0] }})--> there's a {{ model.tabs.dailyRisk[0] | lower }} risk of flooding.</p>
+        <p>Today({{ model.tabs.dayName[0] }}) there's a {{ model.tabs.dailyRisk[0] | lower }} risk of flooding.</p>
 
             {% for messageId, sources in model.tabs.tab1 %}
             {% if loop.first %}<p>{% endif %}

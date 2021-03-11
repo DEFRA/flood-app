@@ -12,10 +12,13 @@ class OutlookTabs {
     const formattedIssueDate = formatDate(outlook.issued_at, 'h:mma') + ' on ' + formatDate(outlook.issued_at, 'D MMMM YYYY')
     const issueUTC = moment(outlook.issued_at).tz('Europe/London').format()
     const yesterday = moment().subtract(1, 'days')
+    const dayMinus2 = moment().subtract(2, 'days')
 
     const now = new Date()
     const oneday = 60 * 60 * 24 * 1000
     const outOfDate = (now - issueDate) > oneday
+
+    // const hours48 = 2 * 60 * 60 * 24 * 1000
 
     const locationCoords = turf.polygon([[
       [place.bbox2k[0], place.bbox2k[1]],
@@ -119,7 +122,7 @@ class OutlookTabs {
 
     // Initialze array to identify risk level trend between days.
 
-    const trend = ['', 'remains at', 'remains at', 'remains at', 'remains at']
+    const trend = ['', 'remains', 'remains', 'remains', 'remains']
 
     // Find distinct messages for each source for each day
     for (const [day, messages] of Object.entries(groupByDay)) { // Outer loop messages
@@ -197,6 +200,15 @@ class OutlookTabs {
       }
     })
 
+    // Create day name for days 2,3,4,5
+    this.dayName = [
+      moment(issueDate).format('dddd'), // Day 1
+      moment(issueDate).add(1, 'days').format('dddd'), // Day 2
+      moment(issueDate).add(2, 'days').format('dddd'), // Day 3
+      moment(issueDate).add(3, 'days').format('dddd'), // Day 4
+      moment(issueDate).add(4, 'days').format('dddd') // Day 5
+    ]
+
     // if FGS is from yesterday push 1 in to tab1 instead of 0
     if (moment(issueDate).isSame(yesterday, 'day')) {
       this.tab1 = groupByDayMessage['1'] // Day 2
@@ -206,20 +218,31 @@ class OutlookTabs {
 
       this.tab2.day = moment(issueDate).add(1, 'days').format('dddd')
       this.tab3.days = [moment(issueDate).add(2, 'days').format('dddd'), moment(issueDate).add(3, 'days').format('dddd')]
+
+      // dayName and daily risk arrays need to tie in with the above
+      this.dayName.shift()
+      dailyRisk.shift()
+      dailyRiskAsNum.shift()
+      trend.shift()
+
+      // if FGS is day before yesterday push 2 in to tab1 instead of 0
+    } else if ((moment(issueDate).isSame(dayMinus2, 'day'))) {
+      this.tab1 = groupByDayMessage['2'] // Day 3
+      this.tab2 = groupByDayMessage['3'] // Day 4
+      this.tab3 = [groupByDayMessage['4']] // Day 5
+
+      this.tab2.day = moment(issueDate).add(2, 'days').format('dddd')
+      this.tab3.days = [moment(issueDate).add(3, 'days').format('dddd'), moment(issueDate).add(4, 'days').format('dddd')]
+
+      // dayName and daily risk arrays need to tie in with the above
+      this.dayName.splice(0, 2)
+      dailyRisk.splice(0, 2)
+      dailyRiskAsNum.splice(0, 2)
+      trend.splice(0, 2)
     } else {
       this.tab1 = groupByDayMessage['0'] // Day 1
 
       this.tab2 = groupByDayMessage['1'] // Day 2
-
-      // Create day name for days 2,3,4,5
-
-      this.dayName = [
-        moment(issueDate).format('dddd'), // Day 1
-        moment(issueDate).add(1, 'days').format('dddd'), // Day 2
-        moment(issueDate).add(2, 'days').format('dddd'), // Day 3
-        moment(issueDate).add(3, 'days').format('dddd'), // Day 4
-        moment(issueDate).add(4, 'days').format('dddd') // Day 5
-      ]
 
       // Tab 3 day combinations.
       //

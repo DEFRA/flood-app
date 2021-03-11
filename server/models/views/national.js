@@ -4,6 +4,12 @@ const { bingKeyMaps } = require('../../config')
 
 class ViewModel {
   constructor (floods, outlook) {
+    // Check if flood guidance statement is older than 48 hours
+    const issueDate = moment(outlook._timestampOutlook)
+    const now = new Date()
+    const hours48 = 2 * 60 * 60 * 24 * 1000
+    const outlookOutOfDate = (now - issueDate) > hours48
+
     Object.assign(this, {
       pageTitle: 'Flood warnings in England',
       metaDescription: 'Check the latest flood risk situation for england and the 5-day flood forecast.',
@@ -17,6 +23,7 @@ class ViewModel {
       hasWarningsRemoved: floods._groups[3].name === 4 && floods._groups[3].count > 0,
       outlookTimestamp: formatDate(outlook._timestampOutlook, 'h:mma') + ' on ' + formatDate(outlook._timestampOutlook, 'D MMMM YYYY'),
       outlookUTC: moment(outlook._timestampOutlook).tz('Europe/London').format(),
+      outlookOutOfDate,
       bingMaps: bingKeyMaps
     })
 
@@ -37,8 +44,7 @@ class ViewModel {
         outlookUTC: this.outlookUTC,
         full: item.full,
         hasOutlookConcern: item.hasOutlookConcern,
-        days: item.days,
-        outOfDate: item.outOfDate
+        days: item.days
       }
     })[0]
   }
