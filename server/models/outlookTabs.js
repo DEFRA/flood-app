@@ -14,12 +14,6 @@ class OutlookTabs {
     const yesterday = moment().subtract(1, 'days')
     const dayMinus2 = moment().subtract(2, 'days')
 
-    const now = new Date()
-    const oneday = 60 * 60 * 24 * 1000
-    const outOfDate = (now - issueDate) > oneday
-
-    // const hours48 = 2 * 60 * 60 * 24 * 1000
-
     const locationCoords = turf.polygon([[
       [place.bbox2k[0], place.bbox2k[1]],
       [place.bbox2k[0], place.bbox2k[3]],
@@ -276,7 +270,6 @@ class OutlookTabs {
       }
     }
 
-    this.outOfDate = outOfDate
     this.days = days
     this.issueDate = issueDate
     this.issueUTC = issueUTC

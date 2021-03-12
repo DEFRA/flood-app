@@ -12,10 +12,6 @@ class Outlook {
     // Issued date
     this._timestampOutlook = (new Date(outlook.issued_at)).getTime()
 
-    const now = new Date()
-    const oneday = 60 * 60 * 24 * 1000
-    this._outOfDate = (now - this._timestampOutlook) > oneday
-
     // Highest daily risk
     this._riskLevels = [0, 0, 0, 0, 0]
 

@@ -39,19 +39,6 @@ lab.experiment('outlookTabs model test', () => {
     Code.expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
     Code.expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
   })
-  lab.test('Test FGS issued is yesterdays, Tab1 is populated from day2', async () => {
-    const outlook = data.fgs
-
-    outlook.issued_at = moment().utc().subtract(1, 'days').format()
-
-    const tab1 = '{"3-i3-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]}'
-
-    const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true, isScotlandOrNorthernIreland: false }
-
-    const viewModel = new OutlookTabsModel(outlook, place)
-
-    Code.expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
-  })
   lab.test('Test OutlookTabs is formating date correctly and outOfDate is false for FGS created today', async () => {
     const outlook = data.fgs
 
@@ -64,7 +51,6 @@ lab.experiment('outlookTabs model test', () => {
     const viewModel = new OutlookTabsModel(outlook, place)
 
     Code.expect(viewModel.formattedIssueDate).to.equal(formattedIssueDate)
-    Code.expect(viewModel.outOfDate).to.equal(false)
   })
   lab.test('Test location that doesnt intersect any polygons', async () => {
     const outlook = data.fgs
@@ -284,5 +270,69 @@ lab.experiment('outlookTabs model test', () => {
     const viewModel = new OutlookTabsModel(outlook, place)
 
     Code.expect(viewModel.dayName[2]).to.equal('Saturday and Sunday')
+  })
+  lab.test('Test FGS issued is yesterdays, Tab1 is populated from day2', async () => {
+    const outlook = data.fgs
+
+    outlook.issued_at = moment().utc().subtract(1, 'days').format()
+
+    const tab1 = '{"1-i2-l2":["overflowing rivers"]}'
+
+    const place = {
+      name: 'Derby, Derby City',
+      center: [-1.4756419658660889, 52.921897888183594],
+      bbox2k: [
+        -1.5828973176670098,
+        52.845351372881574,
+        -1.3570171292814597,
+        52.983832884330376
+      ],
+      bbox10k: [
+        -1.6869915641940156,
+        52.78266779268941,
+        -1.2527871601245748,
+        53.04660850960424
+      ],
+      address: 'Derby, Derby City',
+      isEngland: { is_england: true },
+      isUK: true,
+      isScotlandOrNorthernIreland: false
+    }
+
+    const viewModel = new OutlookTabsModel(outlook, place)
+
+    Code.expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
+  })
+  lab.test('Test FGS issued is > 24 but <= 48 hours, Tab1 is populated from day3', async () => {
+    const outlook = data.fgs
+
+    outlook.issued_at = moment().utc().subtract(40, 'hours').format()
+
+    const tab1 = '{}'
+
+    const place = {
+      name: 'Derby, Derby City',
+      center: [-1.4756419658660889, 52.921897888183594],
+      bbox2k: [
+        -1.5828973176670098,
+        52.845351372881574,
+        -1.3570171292814597,
+        52.983832884330376
+      ],
+      bbox10k: [
+        -1.6869915641940156,
+        52.78266779268941,
+        -1.2527871601245748,
+        53.04660850960424
+      ],
+      address: 'Derby, Derby City',
+      isEngland: { is_england: true },
+      isUK: true,
+      isScotlandOrNorthernIreland: false
+    }
+
+    const viewModel = new OutlookTabsModel(outlook, place)
+
+    Code.expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
   })
 })
