@@ -210,14 +210,15 @@ class OutlookTabs {
       this.tab3 = [groupByDayMessage['3'],
         groupByDayMessage['4']] // Day 4, 5
 
-      this.tab2.day = moment(issueDate).add(1, 'days').format('dddd')
-      this.tab3.days = [moment(issueDate).add(2, 'days').format('dddd'), moment(issueDate).add(3, 'days').format('dddd')]
-
       // dayName and daily risk arrays need to tie in with the above
       this.dayName.shift()
       dailyRisk.shift()
       dailyRiskAsNum.shift()
       trend.shift()
+
+      const tabCheck = this.areTabsBlank()
+
+      this.allTabsAreLow(tabCheck)
 
       // if FGS is day before yesterday push 2 in to tab1 instead of 0
     } else if ((moment(issueDate).isSame(dayMinus2, 'day'))) {
@@ -225,8 +226,9 @@ class OutlookTabs {
       this.tab2 = groupByDayMessage['3'] // Day 4
       this.tab3 = [groupByDayMessage['4']] // Day 5
 
-      this.tab2.day = moment(issueDate).add(2, 'days').format('dddd')
-      this.tab3.days = [moment(issueDate).add(3, 'days').format('dddd'), moment(issueDate).add(4, 'days').format('dddd')]
+      const tabCheck = this.areTabsBlank()
+
+      this.allTabsAreLow(tabCheck)
 
       // dayName and daily risk arrays need to tie in with the above
       this.dayName.splice(0, 2)
@@ -268,6 +270,11 @@ class OutlookTabs {
       } else {
         this.tab3 = [day3, day4, day5]
       }
+
+      // check if all tabs have no data
+      const tabCheck = this.areTabsBlank()
+
+      this.allTabsAreLow(tabCheck)
     }
 
     this.days = days
@@ -279,6 +286,20 @@ class OutlookTabs {
     this.dailyRiskOutlookMax = dailyRiskOutlookMax
     this.dailyRiskOutlookMaxText = dailyRiskOutlookMaxText
     this.trend = trend
+  }
+
+  areTabsBlank () {
+    return [
+      Object.keys(this.tab1).length === 0,
+      Object.keys(this.tab2).length === 0,
+      Object.keys(this.tab3[0]).length === 0
+    ]
+  }
+
+  allTabsAreLow (tabCheck) {
+    if (tabCheck.indexOf(false) === -1) {
+      this.lowForFive = true
+    }
   }
 }
 

@@ -1,3 +1,6 @@
+{% if model.tabs.lowForFive %}
+<p class="govuk-body">The flood risk for the next 5 days is very low.</p>
+{% else %}
 <div class="defra-flood-tabs" data-module="govuk-tabs">
     <h2 class="govuk-tabs__title">
         Contents
@@ -98,6 +101,7 @@
     </div>
 </div>
 <span id="map-outlook"></span>
+{% endif %}
 <p class="defra-flood-meta">
     Updated <time datetime="{{ model.tabs.issueUTC }}">{{ model.tabs.formattedIssueDate }}</time>.</br>Produced by the Met Office and Environment Agency
 </p>

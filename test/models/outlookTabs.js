@@ -80,11 +80,14 @@ lab.experiment('outlookTabs model test', () => {
     const expectedOutlookTab2 = '{}'
     const expectedOutlookTab3 = '[{"1-i2-l2":"runoff from rainfall or blocked drains and overflowing rivers"}]'
 
+    const lowForFive = true
+
     const viewModel = new OutlookTabsModel(outlook, place)
 
     Code.expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
     Code.expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
     Code.expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
+    Code.expect(viewModel).to.not.contain(lowForFive)
   })
   lab.test('Test each trend is set ', async () => {
     const outlook = data.fgsTrends
@@ -146,6 +149,7 @@ lab.experiment('outlookTabs model test', () => {
     Code.expect(viewModel.tab1).to.equal({})
     Code.expect(viewModel.tab1).to.equal({})
     Code.expect(viewModel.tab1).to.equal({})
+    Code.expect(viewModel.lowForFive).to.equal(true)
   })
   lab.test('Test flood risk is the same on Day 3 and day 4 but different on day 5  ', async () => {
     const outlook = {

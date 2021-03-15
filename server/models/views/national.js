@@ -5,12 +5,6 @@ const tz = 'Europe/London'
 
 class ViewModel {
   constructor (floods, outlook) {
-    // Check if flood guidance statement is older than 48 hours
-    const issueDate = moment(outlook._timestampOutlook)
-    const now = new Date()
-    const hours48 = 2 * 60 * 60 * 24 * 1000
-    const outlookOutOfDate = (now - issueDate) > hours48
-
     Object.assign(this, {
       pageTitle: 'Flood warnings in England',
       metaDescription: 'Check the latest flood risk situation for england and the 5-day flood forecast.',
