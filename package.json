@@ -1,6 +1,6 @@
 {
   "name": "flood-app",
-  "version": "3.8.0",
+  "version": "3.9.0",
   "description": "Flood risk app",
   "main": "index.js",
   "repository": "github:defra/flood-app",
@@ -15,7 +15,7 @@
     "build:css": "build/build-css",
     "build": "build/build",
     "lint": "standard",
-    "unit-test": "lab --verbose -c -r console -o stdout -r lcov -o lcov.info",
+    "unit-test": "lab --verbose -c -r console -o stdout -r lcov -o coverage/lcov.info",
     "test": "npm run lint && npm run unit-test",
     "postinstall": "npm run build"
   },
@@ -47,7 +47,6 @@
     "babel-loader": "^8.1.0",
     "blipp": "^4.0.1",
     "body-scroll-lock": "^3.0.2",
-    "codeclimate-test-reporter": "0.5.1",
     "core-js": "^2.6.11",
     "d3": "^6.2.0",
     "datatables.net-dt": "^1.10.20",

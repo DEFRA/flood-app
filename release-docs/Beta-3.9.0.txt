@@ -1,0 +1,14 @@
+# service refresh (beta) release 3.9.0 Wednesday 3rd March 2021
+
+# Release
+https://eaflood.atlassian.net/projects/FSR/versions/15190/tab/release-report-all-issues
+
+# Tickets
+FSR-205 - river station data update
+FSR-243 - station page graph updates
+
+# Webops instructions
+
+Execute job: LFW_{stage}_MISC_JOBS/LFW_{stage}_99_LOAD_RIVERS  ## this should take 10 seconds or so to execute the data load
+
+Execute job: LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
