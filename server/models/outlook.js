@@ -1,5 +1,5 @@
 const turf = require('@turf/turf')
-const polygonSmooth = require('@turf/polygon-smooth')
+// const polygonSmooth = require('@turf/polygon-smooth')
 const messageContent = require('./outlook-content.json')
 
 class Outlook {
@@ -160,18 +160,22 @@ class Outlook {
     })
 
     // Smooth outlook polygons
+    //
+    // TODO: Reintroduce smoothing if too few points on Met Office polygons.
+    // May need to use different smoothing library.
+    //
     this._geoJson.features.forEach((feature) => {
       // Turf library used to create extra coordinates for Polygons
-      if (feature.geometry.type === 'Polygon') {
-        const smoothed = polygonSmooth(feature, { iterations: 4 })
-        const coordinates = smoothed.features[0].geometry.coordinates
-        feature.geometry.coordinates = coordinates
-        feature.properties.isSmooth = true
-      }
+      // if (feature.geometry.type === 'Polygon') {
+      //   const smoothed = polygonSmooth(feature, { iterations: 4 })
+      //   const coordinates = smoothed.features[0].geometry.coordinates
+      //   feature.geometry.coordinates = coordinates
+      //   feature.properties.isSmooth = true
+      // }
 
       // Convert linestrings to polygons
       if (feature.geometry.type === 'LineString') {
-        const buffer = turf.buffer(feature, 3, { units: 'miles' })
+        const buffer = turf.buffer(feature, 1, { units: 'miles' })
         const coordinates = buffer.geometry.coordinates
         feature.geometry.type = 'Polygon'
         feature.geometry.coordinates = coordinates

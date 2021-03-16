@@ -222,10 +222,6 @@ class OutlookTabs {
       this.tab2 = groupByDayMessage['3'] // Day 4
       this.tab3 = [groupByDayMessage['4']] // Day 5
 
-      // const tabCheck = this.areTabsBlank()
-
-      // this.allTabsAreLow(tabCheck)
-
       // dayName and daily risk arrays need to tie in with the above
       this.dayName.splice(0, 2)
       dailyRisk.splice(0, 2)

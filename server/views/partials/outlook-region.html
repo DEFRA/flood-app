@@ -40,7 +40,7 @@
 
         {% if model.tabs.tab1 %}
 
-        <p>Today({{ model.tabs.dayName[0] }}) there's a {{ model.tabs.dailyRisk[0] | lower }} risk of flooding.</p>
+        <p>Today there's a {{ model.tabs.dailyRisk[0] | lower }} risk of flooding.</p>
 
             {% for messageId, sources in model.tabs.tab1 %}
             {% if loop.first %}<p>{% endif %}

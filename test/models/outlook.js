@@ -132,7 +132,8 @@ lab.experiment('Outlook model test', () => {
 
     Code.expect(Result).to.be.equal(true)
   })
-  lab.test('Check outlook geoJson', async () => {
+  // TODO: Reintroduce this test for when polygons require smoothing
+  lab.test.skip('Check outlook geoJson', async () => {
     const Result = await outlook.geoJson
 
     const geoOutput = {
