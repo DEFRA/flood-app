@@ -131,13 +131,11 @@ class OutlookTabs {
 
       // Establish risk level trend for days 2, 3, 4 and 5
       for (let i = 1; i < 5; i++) {
-        if (dailyRiskAsNum[i] > dailyRiskAsNum[i - 1]) {
-          trend[i] = 'rises to'
-        } else if (dailyRiskAsNum[i] < dailyRiskAsNum[i - 1]) {
-          trend[i] = 'falls to'
-        } else {
-          trend[i] = 'remains'
-        }
+        dailyRiskAsNum[i] > dailyRiskAsNum[i - 1]
+          ? trend[i] = 'rises to'
+          : dailyRiskAsNum[i] < dailyRiskAsNum[i - 1]
+            ? trend[i] = 'falls to'
+            : trend[i] = 'remains'
       }
 
       // Create object grouped by messageId
