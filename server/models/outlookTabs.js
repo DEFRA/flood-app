@@ -80,19 +80,9 @@ class OutlookTabs {
     }
 
     // Sort array of polygons that intersect with the location bounding box by:
-    // day / messageId / source
+    // day if day is the same by messageId if messageId is the same by source
 
-    polys.sort((a, b) => {
-      if (a.day === b.day) {
-        if (a.messageId === b.messageId) {
-          return (a.source > b.source) ? -1 : (a.source < b.source) ? 1 : 0
-        } else {
-          return (a.messageId > b.messageId) ? -1 : 1
-        }
-      } else {
-        return (a.day < b.day) ? -1 : 1
-      }
-    })
+    polys.sort((a, b) => a.day === b.day ? a.messageId === b.messageId ? a.source > b.source ? -1 : a.source < b.source ? 1 : 0 : a.messageId > b.messageId ? -1 : 1 : a.day < b.day ? -1 : 1)
 
     // Group by day
 
