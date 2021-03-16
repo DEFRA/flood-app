@@ -310,7 +310,10 @@ lab.experiment('outlookTabs model test', () => {
   lab.test('Test FGS issued is > 24 but <= 48 hours, Tab1 is populated from day3', async () => {
     const outlook = data.fgs
 
-    outlook.issued_at = moment().utc().subtract(40, 'hours').format()
+    // outlook.issued_at = moment().utc().subtract(40, 'hours').format()
+    outlook.issued_at = moment().subtract(2, 'days').format()
+
+    console.log(outlook.issued_at)
 
     const tab1 = '{}'
 
