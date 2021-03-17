@@ -78,9 +78,6 @@
 
         {% if model.tabs.tab3 %}
 
-        <!-- <pre>{{ model.tabs.dailyRisk | dump(2) }}</pre>
-        <pre>{{ model.tabs.trend | dump(2) }}</pre> -->
-
         {% for day in model.tabs.tab3 %}
         {% set dayNum = loop.index + 2 %}
 
