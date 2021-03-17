@@ -98,20 +98,11 @@ class Outlook {
           if (messageGroupObj[key]) {
             messageGroupObj[key].sources.push(expandedSource[pos])
           } else {
-            messageGroupObj[key] = { sources: [expandedSource[pos]], message: messageContent[pos] }
+            messageGroupObj[key] = { sources: [expandedSource[pos]], message: messageContent[key] }
           }
         }
 
         delete messageGroupObj['0-i0-l0']
-
-        // Build sources string
-
-        for (const messageObj of Object.values(messageGroupObj)) {
-          if (messageObj.sources.length > 1) {
-            const lastSource = messageObj.sources.pop()
-            messageObj.sources = `${messageObj.sources.slice(0).join(', ')} and ${lastSource}`
-          }
-        }
 
         riskAreaBlock.polys.forEach(poly => {
           const feature = {
