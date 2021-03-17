@@ -22,10 +22,10 @@ class ViewModel {
       dateUTC: moment().tz(tz).format(),
       feedback: true,
       hasWarningsRemoved: floods._groups[3].name === 4 && floods._groups[3].count > 0,
+      bingMaps: bingKeyMaps,
       outlookTimestamp: `${formatDate(outlook._timestampOutlook, 'h:mma')} on ${formatDate(outlook._timestampOutlook, 'D MMMM YYYY')}`,
       outlookUTC: moment(outlook._timestampOutlook).tz(tz).format(),
-      outlookOutOfDate,
-      bingMaps: bingKeyMaps
+      outlookOutOfDate
     })
 
     // Strip out flood array as it is superflous to the view

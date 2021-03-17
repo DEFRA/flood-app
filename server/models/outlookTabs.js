@@ -9,7 +9,7 @@ class OutlookTabs {
     const lookup = [[1, 1, 1, 1], [1, 1, 2, 2], [2, 2, 3, 3], [2, 3, 3, 4]]
     const issueDate = moment(outlook.issued_at)
 
-    const formattedIssueDate = formatDate(outlook.issued_at, 'h:mma') + ' on ' + formatDate(outlook.issued_at, 'D MMMM YYYY')
+    const formattedIssueDate = `${formatDate(outlook.issued_at, 'h:mma')} on ${formatDate(outlook.issued_at, 'D MMMM YYYY')}`
     const issueUTC = moment(outlook.issued_at).tz('Europe/London').format()
     const yesterday = moment().subtract(1, 'days')
     const dayMinus2 = moment().subtract(2, 'days')
@@ -23,7 +23,7 @@ class OutlookTabs {
     ]])
 
     if (outlook.risk_areas) {
-      outlook.risk_areas.forEach((riskArea) => {
+      outlook.risk_areas.forEach(riskArea => {
         riskArea.risk_area_blocks.forEach(riskAreaBlock => {
           riskAreaBlock.polys.forEach(poly => {
             // if linestring ( i.e. coastal ) add buffer and change geometry for use with turf
@@ -63,12 +63,12 @@ class OutlookTabs {
                   if (impact > 1 && !(impact === 2 && likelihood === 1)) {
                     polys.push({
                       riskLevel,
-                      source: key,
                       impact,
                       likelihood,
                       day,
-                      messageId: `${riskLevel}-i${impact}-l${likelihood}`,
-                      polyId
+                      polyId,
+                      source: key,
+                      messageId: `${riskLevel}-i${impact}-l${likelihood}`
                     })
                   }
                 })
@@ -164,8 +164,7 @@ class OutlookTabs {
         let sourcesArr = array.map(element => expandedSource[element.source] || element.source)
         if (sourcesArr.length > 1) {
           const lastSource = sourcesArr.pop()
-          // messageObj.sources[0] = messageObj.sources.join(', ') + ' and ' + lastSource
-          sourcesArr = sourcesArr.slice(0).join(', ') + ' and ' + lastSource
+          sourcesArr = `${sourcesArr.slice(0).join(', ')} and ${lastSource}`
         }
         groupByUniqueArrayObj[messageId] = sourcesArr
       }
