@@ -40,7 +40,7 @@
     "@hapi/vision": "^6.0.0",
     "@hapi/wreck": "^17.0.0",
     "@hapi/yar": "^10.1.0",
-    "@turf/polygon-smooth": "^5.0.1",
+    "@turf/polygon-smooth": "^6.3.0",
     "@turf/turf": "^5.1.6",
     "accessible-autocomplete": "2.0.2",
     "babel-loader": "^8.1.0",
