@@ -22,7 +22,7 @@ module.exports = {
         ]
       }
       for (let i = 0; i < impacts.length; i++) {
-        var obsDate = impacts[i].obsfloodmonth && impacts[i].obsfloodyear ? '(' + impacts[i].obsfloodmonth + ' ' + impacts[i].obsfloodyear + ')' : ''
+        const obsDate = impacts[i].obsfloodmonth && impacts[i].obsfloodyear ? '(' + impacts[i].obsfloodmonth + ' ' + impacts[i].obsfloodyear + ')' : ''
         geojsonObject.features.push({
           type: 'Feature',
           id: 'impacts.' + impacts[i].impactid,

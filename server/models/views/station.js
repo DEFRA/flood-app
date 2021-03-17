@@ -248,8 +248,8 @@ class ViewModel {
     */
 
     // Set pageTitle, metaDescription and metaKeywords
-    var stationType, stationLocation
-    stationLocation = this.station.name
+    let stationType
+    const stationLocation = this.station.name
     if (this.station.type === 'c') {
       stationType = 'Sea'
     } else if (this.station.type === 'g') {
@@ -269,7 +269,7 @@ class ViewModel {
     this.metaKeywords = `${stationType} level, ${this.station.name}${this.station.isRiver ? ', ' + this.station.river : ''}${forecast ? ', forecast level' : ''}, flood risk, flood map, gov.uk`
 
     // Thresholds
-    var thresholds = []
+    let thresholds = []
 
     if (this.station.recentValue && !this.station.recentValue.err) {
       thresholds.push({

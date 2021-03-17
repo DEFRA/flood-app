@@ -11,7 +11,7 @@ module.exports = [{
   path: '/alerts-and-warnings',
   handler: async (request, h) => {
     const { q: location } = request.query
-    var model, place, floods
+    let model, place, floods
 
     const direction = request.query.direction === 'downstream' ? 'd' : 'u'
     const station = request.query.station
