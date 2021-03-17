@@ -227,7 +227,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   //
 
   const hideSiblings = (isHidden) => {
-    const siblings = document.querySelectorAll('#' + mapId + ' > *:not(#info):not(#key)')
+    const siblings = document.querySelectorAll(`#${mapId} > *:not(#info):not(#key)`)
     forEach(siblings, (sibling) => { sibling.setAttribute('aria-hidden', isHidden) })
   }
 
@@ -326,7 +326,9 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   this.infoElement = infoElement
   this.resetButton = resetButtonElement
   this.openKeyButton = openKeyButtonElement
+  this.closeKeyButton = closeKeyButton
   this.closeInfoButton = closeInfoButton
+  this.attributionButton = attributtionElement
   this.state = state
 
   //

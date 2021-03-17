@@ -1,5 +1,7 @@
 const moment = require('moment-timezone')
+const formatDate = require('../../util').formatDate
 const { bingKeyMaps } = require('../../config')
+const tz = 'Europe/London'
 
 class ViewModel {
   constructor (floods, outlook) {
@@ -10,10 +12,12 @@ class ViewModel {
       metaCanonical: '/national',
       hasActiveFloods: floods.hasActiveFloods,
       highestSeverityId: floods.highestSeverityId,
-      dateFormatted: 'Updated ' + moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY'),
+      dateFormatted: `${moment().tz(tz).format('h:mma')} on ${moment().tz(tz).format('D MMMM YYYY')}`,
+      dateUTC: moment().tz(tz).format(),
       feedback: true,
       hasWarningsRemoved: floods._groups[3].name === 4 && floods._groups[3].count > 0,
-      timestampOutlook: 'Updated at ' + moment(outlook._timestampOutlook).tz('Europe/London').format('h:mma') + ' on ' + moment(outlook._timestampOutlook).tz('Europe/London').format('D MMMM YYYY'),
+      outlookTimestamp: `${formatDate(outlook._timestampOutlook, 'h:mma')} on ${formatDate(outlook._timestampOutlook, 'D MMMM YYYY')}`,
+      outlookUTC: moment(outlook._timestampOutlook).tz(tz).format(),
       bingMaps: bingKeyMaps
     })
 
@@ -30,7 +34,8 @@ class ViewModel {
     // Strip out superflous outlook data
     this.outlook = [outlook].map(item => {
       return {
-        timestampOutlook: this.timestampOutlook,
+        outlookTimestamp: this.outlookTimestamp,
+        outlookUTC: this.outlookUTC,
         full: item.full,
         hasOutlookConcern: item.hasOutlookConcern,
         days: item.days
