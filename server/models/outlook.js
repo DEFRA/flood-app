@@ -69,7 +69,6 @@ class Outlook {
         const likelihoodLevel = Math.max(rLikelihood, sLikelihood, cLikelihood, gLikelihood)
 
         // Build up sources string and feature name
-        // sources = sources.length > 1 ? sources.slice(0, -1).join(', ') + ' and ' + sources[sources.length - 1] : sources
         sources = sources.length > 1 ? `${sources.slice(0, -1).join(', ')} and ${sources[sources.length - 1]}` : sources
 
         const featureName = `${riskBands[riskLevel - 1]} risk of ${sources} flooding`
@@ -86,23 +85,22 @@ class Outlook {
 
         const messageGroupObj = {}
 
-        const expandedSource = {
-          river: 'overflowing rivers',
-          surface: 'runoff from rainfall or blocked drains',
-          ground: 'a high water table',
-          coastal: 'high tides or large waves'
-        }
+        const expandedSource = [
+          'overflowing rivers',
+          'runoff from rainfall or blocked drains',
+          'a high water table',
+          'high tides or large waves'
+        ]
 
-        messageGroupObj[rKey] = { sources: [expandedSource.river], message: messageContent[rKey] }
-        messageGroupObj[sKey]
-          ? messageGroupObj[sKey].sources.push(expandedSource.surface)
-          : messageGroupObj[sKey] = { sources: [expandedSource.surface], message: messageContent[sKey] }
-        messageGroupObj[cKey]
-          ? messageGroupObj[cKey].sources.push(expandedSource.coastal)
-          : messageGroupObj[cKey] = { sources: [expandedSource.coastal], message: messageContent[cKey] }
-        messageGroupObj[gKey]
-          ? messageGroupObj[gKey].sources.push(expandedSource.ground)
-          : messageGroupObj[gKey] = { sources: [expandedSource.ground], message: messageContent[gKey] }
+        const keyArr = [rKey, sKey, cKey, gKey]
+
+        for (const [pos, key] of keyArr.entries()) {
+          if (messageGroupObj[key]) {
+            messageGroupObj[key].sources.push(expandedSource[pos])
+          } else {
+            messageGroupObj[key] = { sources: [expandedSource[pos]], message: messageContent[pos] }
+          }
+        }
 
         delete messageGroupObj['0-i0-l0']
 
