@@ -1,5 +1,4 @@
 const turf = require('@turf/turf')
-// const polygonSmooth = require('@turf/polygon-smooth')
 const messageContent = require('./outlook-content.json')
 
 class Outlook {
@@ -70,7 +69,8 @@ class Outlook {
         const likelihoodLevel = Math.max(rLikelihood, sLikelihood, cLikelihood, gLikelihood)
 
         // Build up sources string and feature name
-        sources = sources.length > 1 ? sources.slice(0, -1).join(', ') + ' and ' + sources[sources.length - 1] : sources
+        // sources = sources.length > 1 ? sources.slice(0, -1).join(', ') + ' and ' + sources[sources.length - 1] : sources
+        sources = sources.length > 1 ? `${sources.slice(0, -1).join(', ')} and ${sources[sources.length - 1]}` : sources
 
         const featureName = `${riskBands[riskLevel - 1]} risk of ${sources} flooding`
 
@@ -111,7 +111,7 @@ class Outlook {
         for (const messageObj of Object.values(messageGroupObj)) {
           if (messageObj.sources.length > 1) {
             const lastSource = messageObj.sources.pop()
-            messageObj.sources = messageObj.sources.slice(0).join(', ') + ' and ' + lastSource
+            messageObj.sources = `${messageObj.sources.slice(0).join(', ')} and ${lastSource}`
           }
         }
 
@@ -159,20 +159,7 @@ class Outlook {
       })
     })
 
-    // Smooth outlook polygons
-    //
-    // TODO: Reintroduce smoothing if too few points on Met Office polygons.
-    // May need to use different smoothing library.
-    //
     this._geoJson.features.forEach((feature) => {
-      // Turf library used to create extra coordinates for Polygons
-      // if (feature.geometry.type === 'Polygon') {
-      //   const smoothed = polygonSmooth(feature, { iterations: 4 })
-      //   const coordinates = smoothed.features[0].geometry.coordinates
-      //   feature.geometry.coordinates = coordinates
-      //   feature.properties.isSmooth = true
-      // }
-
       // Convert linestrings to polygons
       if (feature.geometry.type === 'LineString') {
         const buffer = turf.buffer(feature, 1, { units: 'miles' })

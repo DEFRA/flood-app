@@ -254,10 +254,18 @@ class OutlookTabs {
 
     // Check if all tabs have no data
 
+    // Tab 3 may have up to 3 days content
+    let tab3Empty = true
+    this.tab3.forEach(item => {
+      if (Object.keys(item).length !== 0) {
+        tab3Empty = false
+      }
+    })
+
     if (
       Object.keys(this.tab1).length === 0 &&
       Object.keys(this.tab2).length === 0 &&
-      (Object.keys(this.tab3).length === 1 && Object.keys(this.tab3[0]).length === 0)
+      tab3Empty
     ) {
       this.lowForFive = true
     }
