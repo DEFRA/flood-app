@@ -72,16 +72,19 @@ class OutlookPolys {
     // day if day is the same by messageId if messageId is the same by source
 
     polys.sort((a, b) => {
-      if (a.day === b.day) {
-        if (a.messageId === b.messageId) {
-          const altb = a.source < b.source ? 1 : 0
-          return (a.source > b.source) ? -1 : altb
-        } else {
-          return (a.messageId > b.messageId) ? -1 : 1
-        }
-      } else {
-        return (a.day < b.day) ? -1 : 1
+      if (a.day !== b.day) {
+        return a
+          .day < b.day ? -1 : 1
       }
+      if (a.messageId !== b
+        .messageId) {
+        return a
+          .messageId > b.messageId
+          ? -1 : 1
+      }
+      var r = a.source < b.source
+        ? 1 : 0
+      return a.source > b.source ? -1 : r
     })
 
     this.polys = polys
