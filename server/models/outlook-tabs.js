@@ -13,10 +13,6 @@ class OutlookTabs {
     const yesterday = moment().subtract(1, 'days')
     const dayMinus2 = moment().subtract(2, 'days')
 
-    if (!outlook.risk_areas) {
-      return []
-    }
-
     const polys = new OutlookPolys(outlook, place)
     // Group by day
 
