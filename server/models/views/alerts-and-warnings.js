@@ -25,9 +25,9 @@ class ViewModel {
       }
     }
     this.countFloods = floods ? floods.floods.length : 0
-    this.floods = floods ? floods.groups.map(item => {
-      return item
-    }) : []
+    this.floods = floods
+      ? floods.groups.map(item => item)
+      : []
 
     this.expose = {
       station: this.station,
