@@ -3,6 +3,7 @@ const moment = require('moment-timezone')
 const formatDate = require('../util').formatDate
 const isEqual = require('lodash.isequal')
 const OutlookPolys = require('./outlook-polys')
+const OutLookTabGroupMessages = require('./outlook-tabs-group-messages')
 
 class OutlookTabs {
   constructor (outlook, place) {
@@ -20,7 +21,7 @@ class OutlookTabs {
 
     // Initalize groupByDayMessage 5 element array
 
-    const groupByDayMessage = [{}, {}, {}, {}, {}]
+    let groupByDayMessage = [{}, {}, {}, {}, {}]
 
     const riskLevelText = {
       1: 'Very low',
@@ -40,59 +41,8 @@ class OutlookTabs {
 
     // Find distinct messages for each source for each day
     for (const [day, messages] of Object.entries(groupByDay)) { // Outer loop messages
-      const intDay = parseInt(day)
-      const uniqueArray = []
-      const mapMessages = new Map()
-
-      for (const [index, item] of messages.entries()) { // Inner loop sources
-        if (!mapMessages.has(item.source)) {
-          if (index === 0) {
-            dailyRisk[intDay - 1] = riskLevelText[item.riskLevel] // This equates to maximum risk level for the day
-            dailyRiskAsNum[intDay - 1] = item.riskLevel
-          }
-          mapMessages.set(item.source, true) // set any value to Map
-          uniqueArray.push({
-            day: day,
-            source: item.source,
-            messageId: item.messageId,
-            riskLevel: item.riskLevel
-          })
-        }
-      }
-
-      // Establish risk level trend for days 2, 3, 4 and 5
-      for (let i = 1; i < 5; i++) {
-        const fallsRemains = dailyRiskAsNum[i] < dailyRiskAsNum[i - 1]
-          ? 'falls to'
-          : 'remains'
-        trend[i] = dailyRiskAsNum[i] > dailyRiskAsNum[i - 1]
-          ? 'rises to'
-          : fallsRemains
-      }
-
-      // Create object grouped by messageId
-      const groupByUniqueArrayObj = groupBy(uniqueArray, 'messageId')
-
-      // create array of sources for each messageId
-
-      const expandedSource = {
-        river: 'overflowing rivers',
-        surface: 'runoff from rainfall or blocked drains',
-        ground: 'a high water table',
-        coastal: 'high tides or large waves'
-      }
-
-      for (const [messageId, array] of Object.entries(groupByUniqueArrayObj)) {
-        let sourcesArr = array.map(element => expandedSource[element.source] || element.source)
-        if (sourcesArr.length > 1) {
-          const lastSource = sourcesArr.pop()
-          sourcesArr = `${sourcesArr.slice(0).join(', ')} and ${lastSource}`
-        }
-        groupByUniqueArrayObj[messageId] = sourcesArr
-      }
-
-      // Add above for each day
-      groupByDayMessage[intDay - 1] = groupByUniqueArrayObj
+      const outLookTabGroupMessages = new OutLookTabGroupMessages(groupByDayMessage, messages, dailyRisk, riskLevelText, dailyRiskAsNum, day, trend)
+      groupByDayMessage = outLookTabGroupMessages.groupByDayMessage
     }
 
     // Build content for each outlook tab.
