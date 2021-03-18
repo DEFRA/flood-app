@@ -73,7 +73,11 @@ class OutlookTabs {
     ]
 
     // if FGS is from yesterday push 1 in to tab1 instead of 0
-    if (moment(issueDate).isSame(yesterday, 'day')) {
+
+    const issueDateMinus1 = moment(issueDate).isSame(yesterday, 'day')
+    const issueDateMinus2 = (moment(issueDate).isSame(dayMinus2, 'day'))
+
+    if (issueDateMinus1) {
       this.tab1 = groupByDayMessage['1'] // Day 2
       this.tab2 = groupByDayMessage['2'] // Day 3
       this.tab3 = [groupByDayMessage['3'],
@@ -86,7 +90,7 @@ class OutlookTabs {
       trend.shift()
 
       // if FGS is day before yesterday push 2 in to tab1 instead of 0
-    } else if ((moment(issueDate).isSame(dayMinus2, 'day'))) {
+    } else if (issueDateMinus2) {
       this.tab1 = groupByDayMessage['2'] // Day 3
       this.tab2 = groupByDayMessage['3'] // Day 4
       this.tab3 = [groupByDayMessage['4']] // Day 5
