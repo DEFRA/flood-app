@@ -3,7 +3,7 @@
 const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
-const OutlookTabsModel = require('../../server/models/outlookTabs')
+const OutlookTabsModel = require('../../server/models/outlook-tabs')
 const data = require('../data')
 const moment = require('moment')
 const formatDate = require('../../server/util').formatDate

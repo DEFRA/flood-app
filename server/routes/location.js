@@ -1,6 +1,6 @@
 const joi = require('@hapi/joi')
 const ViewModel = require('../models/views/location')
-const OutlookTabsModel = require('../models/outlookTabs')
+const OutlookTabsModel = require('../models/outlook-tabs')
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
 const util = require('../util')
