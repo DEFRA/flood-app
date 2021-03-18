@@ -85,7 +85,8 @@ class OutlookTabs {
     polys.sort((a, b) => {
       if (a.day === b.day) {
         if (a.messageId === b.messageId) {
-          return (a.source > b.source) ? -1 : (a.source < b.source) ? 1 : 0
+          const altb = a.source < b.source ? 1 : 0
+          return (a.source > b.source) ? -1 : altb
         } else {
           return (a.messageId > b.messageId) ? -1 : 1
         }
