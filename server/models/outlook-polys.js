@@ -82,7 +82,7 @@ class OutlookPolys {
           .messageId > b.messageId
           ? -1 : 1
       }
-      var r = a.source < b.source
+      const r = a.source < b.source
         ? 1 : 0
       return a.source > b.source ? -1 : r
     })
