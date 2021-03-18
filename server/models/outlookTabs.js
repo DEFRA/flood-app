@@ -120,14 +120,15 @@ class OutlookTabs {
 
     // Find distinct messages for each source for each day
     for (const [day, messages] of Object.entries(groupByDay)) { // Outer loop messages
+      const intDay = parseInt(day)
       const uniqueArray = []
       const mapMessages = new Map()
 
       for (const [index, item] of messages.entries()) { // Inner loop sources
         if (!mapMessages.has(item.source)) {
           if (index === 0) {
-            dailyRisk[day - 1] = riskLevelText[item.riskLevel] // This equates to maximum risk level for the day
-            dailyRiskAsNum[day - 1] = item.riskLevel
+            dailyRisk[intDay - 1] = riskLevelText[item.riskLevel] // This equates to maximum risk level for the day
+            dailyRiskAsNum[intDay - 1] = item.riskLevel
           }
           mapMessages.set(item.source, true) // set any value to Map
           uniqueArray.push({
@@ -141,11 +142,12 @@ class OutlookTabs {
 
       // Establish risk level trend for days 2, 3, 4 and 5
       for (let i = 1; i < 5; i++) {
+        const fallsRemains = dailyRiskAsNum[i] < dailyRiskAsNum[i - 1]
+          ? 'falls to'
+          : 'remains'
         trend[i] = dailyRiskAsNum[i] > dailyRiskAsNum[i - 1]
           ? 'rises to'
-          : dailyRiskAsNum[i] < dailyRiskAsNum[i - 1]
-            ? 'falls to'
-            : 'remains'
+          : fallsRemains
       }
 
       // Create object grouped by messageId
@@ -170,10 +172,10 @@ class OutlookTabs {
       }
 
       // Add above for each day
-      groupByDayMessage[day - 1] = groupByUniqueArrayObj
+      groupByDayMessage[intDay - 1] = groupByUniqueArrayObj
     }
 
-    // Build content for each outlook tab. TODO: Refactor this.
+    // Build content for each outlook tab.
 
     // Create highest daily risk for days in the Outlook tab
 
