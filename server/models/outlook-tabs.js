@@ -147,13 +147,7 @@ class OutlookTabs {
       }
     })
 
-    if (
-      Object.keys(this.tab1).length === 0 &&
-      Object.keys(this.tab2).length === 0 &&
-      tab3Empty
-    ) {
-      this.lowForFive = true
-    }
+    this.areTabsEmpty(tab3Empty)
 
     this.days = days
     this.issueDate = issueDate
@@ -164,6 +158,14 @@ class OutlookTabs {
     this.dailyRiskOutlookMax = dailyRiskOutlookMax
     this.dailyRiskOutlookMaxText = dailyRiskOutlookMaxText
     this.trend = trend
+  }
+
+  areTabsEmpty (tab3Empty) {
+    if (Object.keys(this.tab1).length === 0 &&
+      Object.keys(this.tab2).length === 0 &&
+      tab3Empty) {
+      this.lowForFive = true
+    }
   }
 }
 
