@@ -24,128 +24,7 @@ class Outlook {
     }
 
     outlook.risk_areas.forEach((riskArea) => {
-      riskArea.risk_area_blocks.forEach(riskAreaBlock => {
-        let sources = []
-        let rImpact = 0
-        let rLikelihood = 0
-        let sImpact = 0
-        let sLikelihood = 0
-        let cImpact = 0
-        let cLikelihood = 0
-        let gImpact = 0
-        let gLikelihood = 0
-        let rRisk = 0
-        let sRisk = 0
-        let cRisk = 0
-        let gRisk = 0
-
-        if (riskAreaBlock.risk_levels.river) {
-          rImpact = riskAreaBlock.risk_levels.river[0]
-          rLikelihood = riskAreaBlock.risk_levels.river[1]
-          rRisk = riskMatrix[rImpact - 1][rLikelihood - 1]
-          sources.push('river')
-        }
-        if (riskAreaBlock.risk_levels.surface) {
-          sImpact = riskAreaBlock.risk_levels.surface[0]
-          sLikelihood = riskAreaBlock.risk_levels.surface[1]
-          sRisk = riskMatrix[sImpact - 1][sLikelihood - 1]
-          sources.push('surface water')
-        }
-        if (riskAreaBlock.risk_levels.ground) {
-          gImpact = riskAreaBlock.risk_levels.ground[0]
-          gLikelihood = riskAreaBlock.risk_levels.ground[1]
-          gRisk = riskMatrix[gImpact - 1][gLikelihood - 1]
-          sources.push('ground water')
-        }
-        if (riskAreaBlock.risk_levels.coastal) {
-          cImpact = riskAreaBlock.risk_levels.coastal[0]
-          cLikelihood = riskAreaBlock.risk_levels.coastal[1]
-          cRisk = riskMatrix[cImpact - 1][cLikelihood - 1]
-          sources.push('coastal')
-        }
-
-        const riskLevel = Math.max(rRisk, sRisk, cRisk, gRisk)
-        const impactLevel = Math.max(rImpact, sImpact, cImpact, gImpact)
-        const likelihoodLevel = Math.max(rLikelihood, sLikelihood, cLikelihood, gLikelihood)
-
-        // Build up sources string and feature name
-        sources = sources.length > 1 ? `${sources.slice(0, -1).join(', ')} and ${sources[sources.length - 1]}` : sources
-
-        const featureName = `${riskBands[riskLevel - 1]} risk of ${sources} flooding`
-
-        // Set hasOutlookConcern flag
-        if (riskLevel > 0) {
-          this._hasOutlookConcern = true
-        }
-
-        const rKey = [rRisk, `i${rImpact}`, `l${rLikelihood}`].join('-')
-        const sKey = [sRisk, `i${sImpact}`, `l${sLikelihood}`].join('-')
-        const cKey = [cRisk, `i${cImpact}`, `l${cLikelihood}`].join('-')
-        const gKey = [gRisk, `i${gImpact}`, `l${gLikelihood}`].join('-')
-
-        const messageGroupObj = {}
-
-        const expandedSource = [
-          'overflowing rivers',
-          'runoff from rainfall or blocked drains',
-          'a high water table',
-          'high tides or large waves'
-        ]
-
-        const keyArr = [rKey, sKey, cKey, gKey]
-
-        for (const [pos, key] of keyArr.entries()) {
-          if (messageGroupObj[key]) {
-            messageGroupObj[key].sources.push(expandedSource[pos])
-          } else {
-            messageGroupObj[key] = { sources: [expandedSource[pos]], message: messageContent[key] }
-          }
-        }
-
-        delete messageGroupObj['0-i0-l0']
-
-        riskAreaBlock.polys.forEach(poly => {
-          const feature = {
-            type: 'Feature',
-            id: poly.id,
-            properties: {
-              type: 'concernArea',
-              days: riskAreaBlock.days,
-              labelPosition: poly.label_position,
-              name: featureName,
-              message: messageGroupObj,
-              'risk-level': riskLevel,
-              'z-index': (riskLevel * 10)
-            }
-          }
-
-          if (poly.poly_type === 'inland') {
-            feature.geometry = {
-              type: 'Polygon',
-              coordinates: poly.coordinates
-            }
-            feature.properties.polyType = 'inland'
-          } else if (poly.poly_type === 'coastal') {
-            feature.geometry = {
-              type: 'LineString',
-              coordinates: poly.coordinates
-            }
-            feature.properties.polyType = 'coastal'
-            // Put coastal areas on top of inland areas
-            feature.properties['z-index'] += 1
-          }
-          if (impactLevel > 1 && !(impactLevel === 2 && likelihoodLevel === 1)) {
-            this._geoJson.features.push(feature)
-          }
-
-          // Set highest daily risk level
-          riskAreaBlock.days.forEach(day => {
-            if (riskLevel > this._riskLevels[day - 1]) {
-              this._riskLevels[day - 1] = riskLevel
-            }
-          })
-        })
-      })
+      this.groupSourceAndRisk(riskArea, riskMatrix, riskBands)
     })
 
     this._geoJson.features.forEach((feature) => {
@@ -169,6 +48,131 @@ class Outlook {
         level: this._riskLevels[i],
         date: new Date(date.setDate(date.getDate() + i))
       }
+    })
+  }
+
+  groupSourceAndRisk (riskArea, riskMatrix, riskBands) {
+    riskArea.risk_area_blocks.forEach(riskAreaBlock => {
+      let sources = []
+      let rImpact = 0
+      let rLikelihood = 0
+      let sImpact = 0
+      let sLikelihood = 0
+      let cImpact = 0
+      let cLikelihood = 0
+      let gImpact = 0
+      let gLikelihood = 0
+      let rRisk = 0
+      let sRisk = 0
+      let cRisk = 0
+      let gRisk = 0
+
+      if (riskAreaBlock.risk_levels.river) {
+        rImpact = riskAreaBlock.risk_levels.river[0]
+        rLikelihood = riskAreaBlock.risk_levels.river[1]
+        rRisk = riskMatrix[rImpact - 1][rLikelihood - 1]
+        sources.push('river')
+      }
+      if (riskAreaBlock.risk_levels.surface) {
+        sImpact = riskAreaBlock.risk_levels.surface[0]
+        sLikelihood = riskAreaBlock.risk_levels.surface[1]
+        sRisk = riskMatrix[sImpact - 1][sLikelihood - 1]
+        sources.push('surface water')
+      }
+      if (riskAreaBlock.risk_levels.ground) {
+        gImpact = riskAreaBlock.risk_levels.ground[0]
+        gLikelihood = riskAreaBlock.risk_levels.ground[1]
+        gRisk = riskMatrix[gImpact - 1][gLikelihood - 1]
+        sources.push('ground water')
+      }
+      if (riskAreaBlock.risk_levels.coastal) {
+        cImpact = riskAreaBlock.risk_levels.coastal[0]
+        cLikelihood = riskAreaBlock.risk_levels.coastal[1]
+        cRisk = riskMatrix[cImpact - 1][cLikelihood - 1]
+        sources.push('coastal')
+      }
+
+      const riskLevel = Math.max(rRisk, sRisk, cRisk, gRisk)
+      const impactLevel = Math.max(rImpact, sImpact, cImpact, gImpact)
+      const likelihoodLevel = Math.max(rLikelihood, sLikelihood, cLikelihood, gLikelihood)
+
+      // Build up sources string and feature name
+      sources = sources.length > 1 ? `${sources.slice(0, -1).join(', ')} and ${sources[sources.length - 1]}` : sources
+
+      const featureName = `${riskBands[riskLevel - 1]} risk of ${sources} flooding`
+
+      // Set hasOutlookConcern flag
+      if (riskLevel > 0) {
+        this._hasOutlookConcern = true
+      }
+
+      const rKey = [rRisk, `i${rImpact}`, `l${rLikelihood}`].join('-')
+      const sKey = [sRisk, `i${sImpact}`, `l${sLikelihood}`].join('-')
+      const cKey = [cRisk, `i${cImpact}`, `l${cLikelihood}`].join('-')
+      const gKey = [gRisk, `i${gImpact}`, `l${gLikelihood}`].join('-')
+
+      const messageGroupObj = {}
+
+      const expandedSource = [
+        'overflowing rivers',
+        'runoff from rainfall or blocked drains',
+        'a high water table',
+        'high tides or large waves'
+      ]
+
+      const keyArr = [rKey, sKey, cKey, gKey]
+
+      for (const [pos, key] of keyArr.entries()) {
+        if (messageGroupObj[key]) {
+          messageGroupObj[key].sources.push(expandedSource[pos])
+        } else {
+          messageGroupObj[key] = { sources: [expandedSource[pos]], message: messageContent[key] }
+        }
+      }
+
+      delete messageGroupObj['0-i0-l0']
+
+      riskAreaBlock.polys.forEach(poly => {
+        const feature = {
+          type: 'Feature',
+          id: poly.id,
+          properties: {
+            type: 'concernArea',
+            days: riskAreaBlock.days,
+            labelPosition: poly.label_position,
+            name: featureName,
+            message: messageGroupObj,
+            'risk-level': riskLevel,
+            'z-index': (riskLevel * 10)
+          }
+        }
+
+        if (poly.poly_type === 'inland') {
+          feature.geometry = {
+            type: 'Polygon',
+            coordinates: poly.coordinates
+          }
+          feature.properties.polyType = 'inland'
+        } else if (poly.poly_type === 'coastal') {
+          feature.geometry = {
+            type: 'LineString',
+            coordinates: poly.coordinates
+          }
+          feature.properties.polyType = 'coastal'
+          // Put coastal areas on top of inland areas
+          feature.properties['z-index'] += 1
+        }
+        if (impactLevel > 1 && !(impactLevel === 2 && likelihoodLevel === 1)) {
+          this._geoJson.features.push(feature)
+        }
+
+        // Set highest daily risk level
+        riskAreaBlock.days.forEach(day => {
+          if (riskLevel > this._riskLevels[day - 1]) {
+            this._riskLevels[day - 1] = riskLevel
+          }
+        })
+      })
     })
   }
 
