@@ -102,9 +102,9 @@ lab.experiment('location service test', () => {
     Code.expect(result.Error).to.be.undefined()
     Code.expect(result.address).to.equal('United Kingdom')
     // Test that bounding box for location has been given 2km buffer
-    Code.expect(result.bbox2k).to.equal(JSON.parse('[-18.297640835711686,49.94624559508356,12.557641064593524,60.79096093998717]'))
+    Code.expect(result.bbox2k).to.equal(JSON.parse('[-18.316484081675988,49.939891170718475,12.576484310557825,60.79964993825727]'))
     // Test that bounding box for location has been given 10km buffer
-    Code.expect(result.bbox10k).to.equal(JSON.parse('[-18.36950605844125,49.89997768952511,12.629506287323087,60.82601178696]'))
+    Code.expect(result.bbox10k).to.equal(JSON.parse('[-18.46371955596045,49.86823323015424,12.723719784842281,60.86947435757287]'))
   })
 
   lab.test('Check for Bing call returning low confidence and hence no results', async () => {

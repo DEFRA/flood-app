@@ -73,18 +73,21 @@ class OutlookPolys {
 
     polys.sort((a, b) => {
       if (a.day !== b.day) {
-        return a
-          .day < b.day ? -1 : 1
+        return a.day < b.day
+          ? -1
+          : 1
       }
-      if (a.messageId !== b
-        .messageId) {
-        return a
-          .messageId > b.messageId
-          ? -1 : 1
+      if (a.messageId !== b.messageId) {
+        return a.messageId > b.messageId
+          ? -1
+          : 1
       }
       const r = a.source < b.source
-        ? 1 : 0
-      return a.source > b.source ? -1 : r
+        ? 1
+        : 0
+      return a.source > b.source
+        ? -1
+        : r
     })
 
     this.polys = polys
