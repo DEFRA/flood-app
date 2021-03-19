@@ -7,8 +7,8 @@ $(document).ready(function () {
   $('#stations-overview').DataTable({
     initComplete: function () {
       this.api().columns().every(function () {
-        var column = this
-        var noSelect = [
+        const column = this
+        const noSelect = [
           'rloi_id',
           'telemetry_id',
           'wiski_id',
@@ -23,10 +23,10 @@ $(document).ready(function () {
           'percentile_95'
         ]
         if (noSelect.indexOf(column.header().innerHTML) === -1) {
-          var select = $('<select><option value="">' + column.header().innerHTML + '</option></select>')
+          const select = $('<select><option value="">' + column.header().innerHTML + '</option></select>')
             .appendTo($(column.header()).empty())
             .on('change', function () {
-              var val = $.fn.dataTable.util.escapeRegex(
+              const val = $.fn.dataTable.util.escapeRegex(
                 $(this).val()
               )
               column
@@ -38,6 +38,7 @@ $(document).ready(function () {
             select.append('<option value="' + d + '">' + d + '</option>')
           })
         }
+        return null
       })
       $('#loading').addClass('off-screen')
       $('#stations-overview').removeClass('off-screen')

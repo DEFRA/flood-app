@@ -10,8 +10,10 @@ class Floods {
       let floods = grouped[item.id]
       const count = floods ? floods.length : 0
       // For each flood we want to build an HTML header view of it for the /alerts-and-warnings route (this is off the back of performance tuning)
-      floods = !floods ? floods : floods.map(flood => {
-        flood.html = `<li class="defra-flood-list__item defra-flood-list__item--${item.hash}">
+      floods = !floods
+        ? floods
+        : floods.map(flood => {
+          flood.html = `<li class="defra-flood-list__item defra-flood-list__item--${item.hash}">
                         <span class="defra-flood-list__item-title">
                             <a href="/target-area/${flood.ta_code}">${flood.ta_name}</a>
                         </span>
@@ -26,8 +28,8 @@ class Floods {
                             </div>
                         </dl>
                       </li>`
-        return flood
-      })
+          return flood
+        })
       return {
         name: item.id,
         count: count,
