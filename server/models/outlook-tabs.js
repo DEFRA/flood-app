@@ -77,6 +77,32 @@ class OutlookTabs {
     const issueDateMinus1 = moment(issueDate).isSame(yesterday, 'day')
     const issueDateMinus2 = (moment(issueDate).isSame(dayMinus2, 'day'))
 
+    this.createTabs(issueDateMinus1, groupByDayMessage, dailyRisk, dailyRiskAsNum, trend, issueDateMinus2)
+
+    // Check if all tabs have no data
+
+    // Tab 3 may have up to 3 days content
+    let tab3Empty = true
+    this.tab3.forEach(item => {
+      if (Object.keys(item).length !== 0) {
+        tab3Empty = false
+      }
+    })
+
+    this.areTabsLow(tab3Empty)
+
+    this.days = days
+    this.issueDate = issueDate
+    this.issueUTC = issueUTC
+    this.formattedIssueDate = formattedIssueDate
+    this.dailyRisk = dailyRisk
+    this.dailyRiskAsNum = dailyRiskAsNum
+    this.dailyRiskOutlookMax = dailyRiskOutlookMax
+    this.dailyRiskOutlookMaxText = dailyRiskOutlookMaxText
+    this.trend = trend
+  }
+
+  createTabs (issueDateMinus1, groupByDayMessage, dailyRisk, dailyRiskAsNum, trend, issueDateMinus2) {
     if (issueDateMinus1) {
       this.tab1 = groupByDayMessage['1'] // Day 2
       this.tab2 = groupByDayMessage['2'] // Day 3
@@ -111,7 +137,6 @@ class OutlookTabs {
       // day 3 and day 4 equal, day 5 different
       // day 4 and day 5 equal, day 3 different
       // day 3, day 4, day 5 all the same
-
       const day3 = groupByDayMessage['2']
       const day4 = groupByDayMessage['3']
       const day5 = groupByDayMessage['4']
@@ -136,34 +161,14 @@ class OutlookTabs {
         this.tab3 = [day3, day4, day5]
       }
     }
+  }
 
-    // Check if all tabs have no data
-
-    // Tab 3 may have up to 3 days content
-    let tab3Empty = true
-    this.tab3.forEach(item => {
-      if (Object.keys(item).length !== 0) {
-        tab3Empty = false
-      }
-    })
-
-    if (
-      Object.keys(this.tab1).length === 0 &&
+  areTabsLow (tab3Empty) {
+    if (Object.keys(this.tab1).length === 0 &&
       Object.keys(this.tab2).length === 0 &&
-      tab3Empty
-    ) {
+      tab3Empty) {
       this.lowForFive = true
     }
-
-    this.days = days
-    this.issueDate = issueDate
-    this.issueUTC = issueUTC
-    this.formattedIssueDate = formattedIssueDate
-    this.dailyRisk = dailyRisk
-    this.dailyRiskAsNum = dailyRiskAsNum
-    this.dailyRiskOutlookMax = dailyRiskOutlookMax
-    this.dailyRiskOutlookMaxText = dailyRiskOutlookMaxText
-    this.trend = trend
   }
 }
 
