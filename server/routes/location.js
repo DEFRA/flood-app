@@ -38,7 +38,7 @@ module.exports = {
 
     const outlook = await floodService.getOutlook()
 
-    const issueDate = moment(outlook.issued_at)
+    const issueDate = moment(outlook.issued_at).valueOf()
     const now = moment().tz(tz).valueOf()
     const hours48 = 2 * 60 * 60 * 24 * 1000
     const outOfDate = (now - issueDate) > hours48
