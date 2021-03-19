@@ -301,6 +301,7 @@ lab.experiment('Routes test - location - 2', () => {
     Code.expect(response.statusCode).to.equal(200)
 
     Code.expect(response.payload).to.contain('Flooding is expected')
+    Code.expect(response.payload).to.contain('<time datetime="">Up to date as of ')
   })
   lab.test('GET /location with query parameters check for 1 alert 1 nlif', async () => {
     const floodService = require('../../server/services/flood')
