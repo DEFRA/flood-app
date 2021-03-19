@@ -6,6 +6,7 @@ const locationService = require('../services/location')
 const util = require('../util')
 const LocationNotFoundError = require('../location-not-found-error')
 const moment = require('moment-timezone')
+const tz = 'Europe/London'
 
 module.exports = {
   method: 'GET',
@@ -38,7 +39,7 @@ module.exports = {
     const outlook = await floodService.getOutlook()
 
     const issueDate = moment(outlook.issued_at)
-    const now = new Date()
+    const now = moment().tz(tz).valueOf()
     const hours48 = 2 * 60 * 60 * 24 * 1000
     const outOfDate = (now - issueDate) > hours48
 
