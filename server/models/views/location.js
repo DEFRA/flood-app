@@ -47,7 +47,22 @@ class ViewModel {
         return !!item.floods // filters out any without a floods array
       })
 
-      this.bannerWarningAlerts(groups, location, warnings, severeWarnings)
+      groups.forEach((group, i) => {
+        switch (group.severity.hash) {
+          case 'severe':
+            this.groupSevere(group, location)
+            break
+          case 'warning':
+            this.groupWarning(group, location)
+            break
+          case 'alert':
+            this.groupAlert(warnings, severeWarnings, group, location)
+            break
+          case 'removed':
+            this.groupRemoved(group, location)
+            break
+        }
+      })
     }
 
     // Count stations that are 'high'
@@ -82,71 +97,68 @@ class ViewModel {
     }
   }
 
-  bannerWarningAlerts (groups, location, warnings, severeWarnings) {
-    groups.forEach((group, i) => {
-      switch (group.severity.hash) {
-        case 'severe':
-          this.bannerSevereSub = 'There is a danger to life'
-          this.severitySevereTitle = group.severity.title
-          if (group.floods.length === 1) {
-            this.bannerSevereMainLink = `/target-area/${group.floods[0].ta_code}`
-            this.bannerSevereMainText = `Severe flood warning for ${group.floods[0].ta_name}`
-          } else {
-            this.bannerSevereMainLink = `/alerts-and-warnings?q=${location}#severe`
-            this.bannerSevereMainText = `${group.floods.length} severe flood warnings in this area`
-          }
-          break
-        case 'warning':
-          this.bannerSub = 'Flooding is expected'
-          this.severity = group.severity.hash
-          this.severityTitle = group.severity.title
-          if (group.floods.length === 1) {
-            this.bannerMainLink = `/target-area/${group.floods[0].ta_code}`
-            this.bannerMainText = `Flood warning for ${group.floods[0].ta_name}`
-          } else {
-            this.bannerMainLink = `/alerts-and-warnings?q=${location}#warnings`
-            this.bannerMainText = `${group.floods.length} flood warnings in this area`
-          }
-          break
-        case 'alert':
-          if (!warnings.length && !severeWarnings.length) {
-            this.bannerSub = 'Some flooding is possible'
-            this.severity = group.severity.hash
-            this.severityTitle = group.severity.title
-            if (group.floods.length === 1) {
-              this.bannerMainLink = `/target-area/${group.floods[0].ta_code}`
-              this.bannerMainText = 'There is a flood alert in this area'
-            } else {
-              this.bannerMainLink = `/alerts-and-warnings?q=${location}#alerts`
-              this.bannerMainText = `${group.floods.length} flood alerts in this area`
-            }
-          } else {
-            this.alerts = group.floods.length
-            if (group.floods.length === 1) {
-              this.alertsSummaryLink = `/target-area/${group.floods[0].ta_code}`
-              this.alertsSummaryLinkText = '1 flood alert'
-              this.alertsSummaryText = 'is'
-            } else {
-              this.alertsSummaryLink = `/alerts-and-warnings?q=${location}#alerts`
-              this.alertsSummaryLinkText = `${group.floods.length} flood alerts`
-              this.alertsSummaryText = 'are'
-            }
-          }
-          break
-        case 'removed':
-          this.removed = group.floods.length
-          if (group.floods.length === 1) {
-            this.removedLink = `/target-area/${group.floods[0].ta_code}`
-            this.removedLinkText = '1 flood alert or warning was removed '
-            this.removedText = 'in the last 24 hours.'
-          } else {
-            this.removedLink = `/alerts-and-warnings?q=${location}#removed`
-            this.removedLinkText = 'Flood alerts and warnings were removed'
-            this.removedText = 'in the last 24 hours.'
-          }
-          break
+  groupSevere (group, location) {
+    this.bannerSevereSub = 'There is a danger to life'
+    this.severitySevereTitle = group.severity.title
+    if (group.floods.length === 1) {
+      this.bannerSevereMainLink = `/target-area/${group.floods[0].ta_code}`
+      this.bannerSevereMainText = `Severe flood warning for ${group.floods[0].ta_name}`
+    } else {
+      this.bannerSevereMainLink = `/alerts-and-warnings?q=${location}#severe`
+      this.bannerSevereMainText = `${group.floods.length} severe flood warnings in this area`
+    }
+  }
+
+  groupWarning (group, location) {
+    this.bannerSub = 'Flooding is expected'
+    this.severity = group.severity.hash
+    this.severityTitle = group.severity.title
+    if (group.floods.length === 1) {
+      this.bannerMainLink = `/target-area/${group.floods[0].ta_code}`
+      this.bannerMainText = `Flood warning for ${group.floods[0].ta_name}`
+    } else {
+      this.bannerMainLink = `/alerts-and-warnings?q=${location}#warnings`
+      this.bannerMainText = `${group.floods.length} flood warnings in this area`
+    }
+  }
+
+  groupAlert (warnings, severeWarnings, group, location) {
+    if (!warnings.length && !severeWarnings.length) {
+      this.bannerSub = 'Some flooding is possible'
+      this.severity = group.severity.hash
+      this.severityTitle = group.severity.title
+      if (group.floods.length === 1) {
+        this.bannerMainLink = `/target-area/${group.floods[0].ta_code}`
+        this.bannerMainText = 'There is a flood alert in this area'
+      } else {
+        this.bannerMainLink = `/alerts-and-warnings?q=${location}#alerts`
+        this.bannerMainText = `${group.floods.length} flood alerts in this area`
       }
-    })
+    } else {
+      this.alerts = group.floods.length
+      if (group.floods.length === 1) {
+        this.alertsSummaryLink = `/target-area/${group.floods[0].ta_code}`
+        this.alertsSummaryLinkText = '1 flood alert'
+        this.alertsSummaryText = 'is'
+      } else {
+        this.alertsSummaryLink = `/alerts-and-warnings?q=${location}#alerts`
+        this.alertsSummaryLinkText = `${group.floods.length} flood alerts`
+        this.alertsSummaryText = 'are'
+      }
+    }
+  }
+
+  groupRemoved (group, location) {
+    this.removed = group.floods.length
+    if (group.floods.length === 1) {
+      this.removedLink = `/target-area/${group.floods[0].ta_code}`
+      this.removedLinkText = '1 flood alert or warning was removed '
+      this.removedText = 'in the last 24 hours.'
+    } else {
+      this.removedLink = `/alerts-and-warnings?q=${location}#removed`
+      this.removedLinkText = 'Flood alerts and warnings were removed'
+      this.removedText = 'in the last 24 hours.'
+    }
   }
 }
 
