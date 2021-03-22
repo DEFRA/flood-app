@@ -23,7 +23,7 @@ class Outlook {
       features: []
     }
 
-    outlook.risk_areas.forEach((riskArea) => {
+    outlook.risk_areas.forEach(riskArea => {
       riskArea.risk_area_blocks.forEach(riskAreaBlock => {
         let sources = []
         let rImpact = 0
@@ -99,6 +99,13 @@ class Outlook {
             messageGroupObj[key].sources.push(expandedSource[pos])
           } else {
             messageGroupObj[key] = { sources: [expandedSource[pos]], message: messageContent[key] }
+          }
+        }
+
+        for (const [messageId, messageObj] of Object.entries(messageGroupObj)) {
+          if (messageObj.sources.length > 1) {
+            const lastSource = messageObj.sources.pop()
+            messageGroupObj[messageId].sources[0] = `${messageObj.sources.slice(0).join(', ')} and ${lastSource}`
           }
         }
 

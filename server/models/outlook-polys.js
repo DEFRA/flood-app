@@ -27,7 +27,7 @@ class OutlookPolys {
               }
             }
 
-            const buffer = turf.buffer(feature, 3, { units: 'miles' })
+            const buffer = turf.buffer(feature, 1, { units: 'miles' })
             const coordinates = buffer.geometry.coordinates
             feature.geometry.type = 'Polygon'
             feature.geometry.coordinates = coordinates
