@@ -78,7 +78,12 @@ class Outlook {
           this._hasOutlookConcern = true
         }
 
-        const messageGroupObj = this.expandSourceDescription(rRisk, rImpact, rLikelihood, sRisk, sImpact, sLikelihood, cRisk, cImpact, cLikelihood, gRisk, gImpact, gLikelihood)
+        const rKey = [rRisk, `i${rImpact}`, `l${rLikelihood}`].join('-')
+        const sKey = [sRisk, `i${sImpact}`, `l${sLikelihood}`].join('-')
+        const cKey = [cRisk, `i${cImpact}`, `l${cLikelihood}`].join('-')
+        const gKey = [gRisk, `i${gImpact}`, `l${gLikelihood}`].join('-')
+
+        const messageGroupObj = this.expandSourceDescription(rKey, sKey, cKey, gKey)
 
         this.generatePolyFeature(riskAreaBlock, featureName, messageGroupObj, riskLevel, impactLevel, likelihoodLevel)
       })
@@ -108,12 +113,7 @@ class Outlook {
     })
   }
 
-  expandSourceDescription (rRisk, rImpact, rLikelihood, sRisk, sImpact, sLikelihood, cRisk, cImpact, cLikelihood, gRisk, gImpact, gLikelihood) {
-    const rKey = [rRisk, `i${rImpact}`, `l${rLikelihood}`].join('-')
-    const sKey = [sRisk, `i${sImpact}`, `l${sLikelihood}`].join('-')
-    const cKey = [cRisk, `i${cImpact}`, `l${cLikelihood}`].join('-')
-    const gKey = [gRisk, `i${gImpact}`, `l${gLikelihood}`].join('-')
-
+  expandSourceDescription (rKey, sKey, cKey, gKey) {
     const messageGroupObj = {}
 
     const expandedSource = [
