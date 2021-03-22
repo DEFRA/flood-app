@@ -78,7 +78,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   viewport.setAttribute('role', 'application')
   viewport.setAttribute('aria-label', 'Interactive map viewer')
   viewport.setAttribute('aria-describedby', 'viewportDescription')
-  viewport.setAttribute('aria-live', 'assertive')
+  viewport.setAttribute('aria-live', 'polite')
   viewport.className = `defra-map-viewport ${viewport.className}`
   viewport.tabIndex = 0
 
