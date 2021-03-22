@@ -4,16 +4,21 @@ const floodService = require('../services/flood')
 module.exports = {
   plugin: {
     name: 'data-schedule',
-    register: async (server, options) => {
+    register: async () => {
       // Schedule warnings data
       const getFloods = async () => {
         floodService.floods = await floodService.getFloods()
         console.log('Floods cached')
       }
-      // get stations geojson data for map
+      // get stations geojson data from geoserver
       const getStationsGeojson = async () => {
         floodService.stationsGeojson = await floodService.getStationsGeoJson()
         console.log('Stations geojson cached')
+      }
+      // get rainfall geojson from geoserver
+      const getRainfallGeojson = async () => {
+        floodService.rainfallGeojson = await floodService.getRainfallGeojson()
+        console.log('Rainfall geojson cached')
       }
       // get outlook (5df) data
       const getOutlook = async () => {
@@ -27,19 +32,20 @@ module.exports = {
       })
 
       schedule.scheduleJob('1,16,31,46 * * * *', async () => {
+        // Chain 15 min jobs so we don't overload
         await getStationsGeojson()
-      })
-
-      schedule.scheduleJob('1,16,31,46 * * * *', async () => {
+        await getRainfallGeojson()
         await getOutlook()
       })
 
       // Start up
       console.log('Caching data please wait...')
+      // On startup just hit all loads at once
       await Promise.all([
         getFloods(),
         getOutlook(),
-        getStationsGeojson()
+        getStationsGeojson(),
+        getRainfallGeojson()
       ])
 
       console.log('Data cache complete.')
