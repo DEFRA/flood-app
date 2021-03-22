@@ -32,7 +32,7 @@ const routes = [].concat(
 module.exports = {
   plugin: {
     name: 'router',
-    register: (server, options) => {
+    register: (server) => {
       server.route(routes)
     }
   }
