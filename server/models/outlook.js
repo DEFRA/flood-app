@@ -78,38 +78,7 @@ class Outlook {
           this._hasOutlookConcern = true
         }
 
-        const rKey = [rRisk, `i${rImpact}`, `l${rLikelihood}`].join('-')
-        const sKey = [sRisk, `i${sImpact}`, `l${sLikelihood}`].join('-')
-        const cKey = [cRisk, `i${cImpact}`, `l${cLikelihood}`].join('-')
-        const gKey = [gRisk, `i${gImpact}`, `l${gLikelihood}`].join('-')
-
-        const messageGroupObj = {}
-
-        const expandedSource = [
-          'overflowing rivers',
-          'runoff from rainfall or blocked drains',
-          'a high water table',
-          'high tides or large waves'
-        ]
-
-        const keyArr = [rKey, sKey, cKey, gKey]
-
-        for (const [pos, key] of keyArr.entries()) {
-          if (messageGroupObj[key]) {
-            messageGroupObj[key].sources.push(expandedSource[pos])
-          } else {
-            messageGroupObj[key] = { sources: [expandedSource[pos]], message: messageContent[key] }
-          }
-        }
-
-        for (const [messageId, messageObj] of Object.entries(messageGroupObj)) {
-          if (messageObj.sources.length > 1) {
-            const lastSource = messageObj.sources.pop()
-            messageGroupObj[messageId].sources[0] = `${messageObj.sources.slice(0).join(', ')} and ${lastSource}`
-          }
-        }
-
-        delete messageGroupObj['0-i0-l0']
+        const messageGroupObj = this.expandSourceDescription(rRisk, rImpact, rLikelihood, sRisk, sImpact, sLikelihood, cRisk, cImpact, cLikelihood, gRisk, gImpact, gLikelihood)
 
         this.generatePolyFeature(riskAreaBlock, featureName, messageGroupObj, riskLevel, impactLevel, likelihoodLevel)
       })
@@ -137,6 +106,42 @@ class Outlook {
         date: new Date(date.setDate(date.getDate() + i))
       }
     })
+  }
+
+  expandSourceDescription (rRisk, rImpact, rLikelihood, sRisk, sImpact, sLikelihood, cRisk, cImpact, cLikelihood, gRisk, gImpact, gLikelihood) {
+    const rKey = [rRisk, `i${rImpact}`, `l${rLikelihood}`].join('-')
+    const sKey = [sRisk, `i${sImpact}`, `l${sLikelihood}`].join('-')
+    const cKey = [cRisk, `i${cImpact}`, `l${cLikelihood}`].join('-')
+    const gKey = [gRisk, `i${gImpact}`, `l${gLikelihood}`].join('-')
+
+    const messageGroupObj = {}
+
+    const expandedSource = [
+      'overflowing rivers',
+      'runoff from rainfall or blocked drains',
+      'a high water table',
+      'high tides or large waves'
+    ]
+
+    const keyArr = [rKey, sKey, cKey, gKey]
+
+    for (const [pos, key] of keyArr.entries()) {
+      if (messageGroupObj[key]) {
+        messageGroupObj[key].sources.push(expandedSource[pos])
+      } else {
+        messageGroupObj[key] = { sources: [expandedSource[pos]], message: messageContent[key] }
+      }
+    }
+
+    for (const [messageId, messageObj] of Object.entries(messageGroupObj)) {
+      if (messageObj.sources.length > 1) {
+        const lastSource = messageObj.sources.pop()
+        messageGroupObj[messageId].sources[0] = `${messageObj.sources.slice(0).join(', ')} and ${lastSource}`
+      }
+    }
+
+    delete messageGroupObj['0-i0-l0']
+    return messageGroupObj
   }
 
   generatePolyFeature (riskAreaBlock, featureName, messageGroupObj, riskLevel, impactLevel, likelihoodLevel) {
