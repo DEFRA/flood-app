@@ -313,8 +313,6 @@ lab.experiment('outlookTabs model test', () => {
     // outlook.issued_at = moment().utc().subtract(40, 'hours').format()
     outlook.issued_at = moment().subtract(2, 'days').format()
 
-    console.log(outlook.issued_at)
-
     const tab1 = '{}'
 
     const place = {
