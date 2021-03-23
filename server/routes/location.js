@@ -5,6 +5,7 @@ const floodService = require('../services/flood')
 const locationService = require('../services/location')
 const util = require('../util')
 const LocationNotFoundError = require('../location-not-found-error')
+const formatDate = require('../util').formatDate
 const moment = require('moment-timezone')
 const tz = 'Europe/London'
 
@@ -44,7 +45,13 @@ module.exports = {
     const outOfDate = (now - issueDate) > hours48
 
     const riskAreasCount = outlook.risk_areas ? outlook.risk_areas.length : 0
+
     const tabs = outOfDate || riskAreasCount === 0 ? { lowForFive: true } : new OutlookTabsModel(outlook, place)
+
+    if (riskAreasCount === 0) {
+      tabs.formattedIssueDate = `${formatDate(outlook.issued_at, 'h:mma')} on ${formatDate(outlook.issued_at, 'D MMMM YYYY')}`
+      tabs.issueUTC = moment(outlook.issued_at).tz('Europe/London').format()
+    }
 
     const [
       impacts,
