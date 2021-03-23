@@ -136,6 +136,21 @@ window.flood.maps.layers = {
     })
   },
 
+  rainfall: () => {
+    return new VectorLayer({
+      ref: 'rainfall',
+      featureCodes: 'rf',
+      source: new VectorSource({
+        format: new GeoJSON(),
+        projection: 'EPSG:3857',
+        url: '/api/rainfall.geojson'
+      }),
+      style: window.flood.maps.styles.stations,
+      visible: false,
+      zIndex: 4
+    })
+  },
+
   impacts: () => {
     return new VectorLayer({
       ref: 'impacts',
