@@ -124,14 +124,14 @@ window.flood.maps.layers = {
   stations: () => {
     return new VectorLayer({
       ref: 'stations',
-      featureCodes: 'sh, st',
+      featureCodes: 'ri, ti, gr',
       source: new VectorSource({
         format: new GeoJSON(),
         projection: 'EPSG:3857',
         url: '/api/stations.geojson'
       }),
       style: window.flood.maps.styles.stations,
-      visible: false,
+      visible: true,
       zIndex: 4
     })
   },
@@ -145,24 +145,9 @@ window.flood.maps.layers = {
         projection: 'EPSG:3857',
         url: '/api/rainfall.geojson'
       }),
-      style: window.flood.maps.styles.stations,
-      visible: false,
+      style: window.flood.maps.styles.rainfall,
+      visible: true,
       zIndex: 4
-    })
-  },
-
-  impacts: () => {
-    return new VectorLayer({
-      ref: 'impacts',
-      featureCodes: 'hi',
-      source: new VectorSource({
-        format: new GeoJSON(),
-        projection: 'EPSG:3857',
-        url: '/api/impacts'
-      }),
-      style: window.flood.maps.styles.impacts,
-      visible: false,
-      zIndex: 6
     })
   },
 
