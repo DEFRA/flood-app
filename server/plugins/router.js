@@ -32,8 +32,6 @@ const routes = [].concat(
 module.exports = {
   plugin: {
     name: 'router',
-    register: (server) => {
-      server.route(routes)
-    }
+    register: server => { server.route(routes) }
   }
 }
