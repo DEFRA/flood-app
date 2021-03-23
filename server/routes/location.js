@@ -44,7 +44,7 @@ module.exports = {
     const outOfDate = (now - issueDate) > hours48
 
     const riskAreasCount = outlook.risk_areas ? outlook.risk_areas.length : 0
-    const tabs = outOfDate || riskAreasCount === 0 ? {} : new OutlookTabsModel(outlook, place)
+    const tabs = outOfDate || riskAreasCount === 0 ? { lowForFive: true } : new OutlookTabsModel(outlook, place)
 
     const [
       impacts,
