@@ -102,9 +102,9 @@ lab.experiment('location service test', () => {
     Code.expect(result.Error).to.be.undefined()
     Code.expect(result.address).to.equal('United Kingdom')
     // Test that bounding box for location has been given 2km buffer
-    Code.expect(result.bbox2k).to.equal(JSON.parse('[-18.297640835711686,49.94624559508356,12.557641064593524,60.79096093998717]'))
+    Code.expect(result.bbox2k).to.equal(JSON.parse('[-18.316484081675988,49.939891170718475,12.576484310557825,60.79964993825727]'))
     // Test that bounding box for location has been given 10km buffer
-    Code.expect(result.bbox10k).to.equal(JSON.parse('[-18.36950605844125,49.89997768952511,12.629506287323087,60.82601178696]'))
+    Code.expect(result.bbox10k).to.equal(JSON.parse('[-18.46371955596045,49.86823323015424,12.723719784842281,60.86947435757287]'))
   })
 
   lab.test('Check for Bing call returning low confidence and hence no results', async () => {
@@ -346,7 +346,7 @@ lab.experiment('location service test', () => {
             resources: [
               {
                 __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [53.367538452148437, -2.6395580768585205, 53.420841217041016, -2.5353000164031982],
+                bbox: [53.36753845214843, -2.639558076858520, 53.42084121704101, -2.535300016403198],
                 name: 'First location in resource array',
                 point: {
                   type: 'Point',
@@ -375,11 +375,11 @@ lab.experiment('location service test', () => {
               },
               {
                 __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [53.367538452148443, -2.6395580768585243, 53.420841217041043, -2.5353000164031943],
+                bbox: [53.36753845214844, -2.639558076858524, 53.42084121704104, -2.535300016403194],
                 name: 'Test address',
                 point: {
                   type: 'Point',
-                  coordinates: [53.393871307373043, -2.5893499851226843]
+                  coordinates: [53.39387130737304, -2.589349985122684]
                 },
                 address: {
                   addressLine: 'Test address line',
@@ -395,7 +395,7 @@ lab.experiment('location service test', () => {
                 geocodePoints: [
                   {
                     type: 'Point',
-                    coordinates: [53.393871307373043, -2.5893499851226843],
+                    coordinates: [53.39387130737304, -2.589349985122684],
                     calculationMethod: 'Rooftop',
                     usageTypes: ['Display']
                   }
@@ -440,11 +440,11 @@ lab.experiment('location service test', () => {
             resources: [
               {
                 __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [53.367538452148437, -2.6395580768585205, 53.420841217041016, -2.5353000164031982],
+                bbox: [53.36753845214843, -2.639558076858520, 53.42084121704101, -2.535300016403198],
                 name: 'Test address line',
                 point: {
                   type: 'Point',
-                  coordinates: [53.393871307373047, -2.5893499851226807]
+                  coordinates: [53.39387130737304, -2.589349985122680]
                 },
                 address: {
                   addressLine: 'Test address line',
@@ -460,7 +460,7 @@ lab.experiment('location service test', () => {
                 geocodePoints: [
                   {
                     type: 'Point',
-                    coordinates: [53.393871307373047, -2.5893499851226807],
+                    coordinates: [53.39387130737304, -2.589349985122680],
                     calculationMethod: 'Rooftop',
                     usageTypes: ['Display']
                   }
@@ -505,7 +505,7 @@ lab.experiment('location service test', () => {
             resources: [
               {
                 __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [53.367538452148437, -2.6395580768585205, 53.420841217041016, -2.5353000164031982],
+                bbox: [53.36753845214843, -2.639558076858520, 53.42084121704101, -2.535300016403198],
                 name: 'Test address line, Warrington, Warrington',
                 point: {
                   type: 'Point',

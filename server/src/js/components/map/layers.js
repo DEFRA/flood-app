@@ -39,11 +39,23 @@ window.flood.maps.layers = {
   // Tile layers
   //
 
+  topography: () => {
+    return new TileLayer({
+      ref: 'road',
+      source: new BingMaps({
+        key: window.flood.model.bingMaps + '&c4w=1&cstl=rd&src=h&st=me|lv:0_trs|v:0_pt|v:0',
+        imagerySet: 'RoadOnDemand'
+      }),
+      visible: false,
+      zIndex: 0
+    })
+  },
+
   road: () => {
     return new TileLayer({
       ref: 'road',
       source: new BingMaps({
-        key: window.flood.model.bingMaps, // + '&c4w=1&cstl=rd&src=h&st=ar|fc:b5db81_wt|fc:a3ccff_tr|fc:50a964f4;sc:50a964f4_ard|fc:ffffff;sc:ffffff_rd|fc:50fed89d;sc:50eab671;lbc:626a6e_mr|lbc:626a6e_hr|lbc:626a6e_st|fc:ffffff;sc:ffffff_g|lc:dfdfdf_trs|lbc:626a6e',
+        key: window.flood.model.bingMaps,
         imagerySet: 'RoadOnDemand'
       }),
       visible: false,
@@ -66,6 +78,23 @@ window.flood.maps.layers = {
   //
   // Vector layers
   //
+
+  places: () => {
+    return new VectorLayer({
+      ref: 'places',
+      source: new VectorSource({
+        format: new GeoJSON(),
+        projection: 'EPSG:3857',
+        url: '/api/places.geojson'
+      }),
+      style: window.flood.maps.styles.places,
+      visible: true,
+      zIndex: 5,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      renderMode: 'hybrid'
+    })
+  },
 
   targetAreaPolygons: () => {
     return new VectorLayer({
@@ -119,6 +148,21 @@ window.flood.maps.layers = {
       style: window.flood.maps.styles.impacts,
       visible: false,
       zIndex: 6
+    })
+  },
+
+  areasOfConcern: () => {
+    return new VectorLayer({
+      ref: 'areasOfConcern',
+      source: new VectorSource({
+        format: new GeoJSON(),
+        projection: 'EPSG:3857',
+        url: '/api/outlook.geojson'
+      }),
+      renderMode: 'hybrid',
+      style: window.flood.maps.styles.outlookPolygons,
+      opacity: 0.6,
+      zIndex: 4
     })
   },
 

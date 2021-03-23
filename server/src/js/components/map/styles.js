@@ -2,12 +2,12 @@
 /*
 Sets up the window.flood.maps styles objects
 */
-import { Style, Icon, Fill, Stroke } from 'ol/style'
+import { Style, Icon, Fill, Stroke, Text, Circle } from 'ol/style'
 
 window.flood.maps.styles = {
 
   //
-  // Vector styles
+  // Vector styles live
   //
 
   targetAreaPolygons: (feature) => {
@@ -22,10 +22,7 @@ window.flood.maps.styles = {
       warningId = 'flood.' + feature.getId()
     }
     const warning = warningsSource.getFeatureById(warningId)
-    if (!warning || warning.get('isVisible') !== 'true') {
-      return new Style()
-    }
-
+    if (!warning || warning.get('isVisible') !== 'true') { return new Style() }
     const severity = warning.get('severity_value')
     const isSelected = warning.get('isSelected')
     const isGroundwater = warning.getId().substring(6, 9) === 'FAG'
@@ -38,22 +35,22 @@ window.flood.maps.styles = {
     switch (severity) {
       case 3: // Severe warning
         strokeColour = '#D4351C'
-        fillColour = pattern('severe')
+        fillColour = targetAreaPolygonPattern('severe')
         zIndex = 11
         break
       case 2: // Warning
         strokeColour = '#D4351C'
-        fillColour = pattern('warning')
+        fillColour = targetAreaPolygonPattern('warning')
         zIndex = 10
         break
       case 1: // Alert
         strokeColour = '#F47738'
-        fillColour = pattern('alert')
+        fillColour = targetAreaPolygonPattern('alert')
         zIndex = isGroundwater ? 4 : 7
         break
       default: // Removed or inactive
         strokeColour = '#626A6E'
-        fillColour = pattern('removed')
+        fillColour = targetAreaPolygonPattern('removed')
         zIndex = 1
     }
     zIndex = isSelected ? zIndex + 2 : zIndex
@@ -62,11 +59,7 @@ window.flood.maps.styles = {
     const stroke = new Style({ stroke: new Stroke({ color: strokeColour, width: 2 }), zIndex: zIndex })
     const fill = new Style({ fill: new Fill({ color: fillColour }), zIndex: zIndex })
 
-    if (isSelected) {
-      return [selectedStroke, stroke, fill]
-    } else {
-      return [stroke, fill]
-    }
+    return isSelected ? [selectedStroke, stroke, fill] : [stroke, fill]
   },
 
   warnings: (feature, resolution) => {
@@ -111,10 +104,82 @@ window.flood.maps.styles = {
     }
     const isSelected = feature.get('isSelected')
     return isSelected ? styleCache.impactSelected : styleCache.impact
+  },
+
+  //
+  // Vector styles outlook
+  //
+
+  outlookPolygons: (feature) => {
+    if (!feature.get('isVisible')) { return }
+    const zIndex = feature.get('z-index')
+    const lineDash = [2, 3]
+    let strokeColour = '#85994b'
+    let fillColour = outlookPolygonPattern('veryLow')
+    if (feature.get('risk-level') === 2) {
+      strokeColour = '#ffdd00'
+      fillColour = outlookPolygonPattern('low')
+    } else if (feature.get('risk-level') === 3) {
+      strokeColour = '#F47738'
+      fillColour = outlookPolygonPattern('medium')
+    } else if (feature.get('risk-level') === 4) {
+      strokeColour = '#D4351C'
+      fillColour = outlookPolygonPattern('high')
+    }
+    const isSelected = feature.get('isSelected')
+    const selectedStroke = new Style({ stroke: new Stroke({ color: '#FFDD00', width: 16 }), zIndex: zIndex })
+    const style = new Style({
+      stroke: new Stroke({ color: strokeColour, width: 1 }),
+      fill: new Fill({ color: fillColour }),
+      lineDash: lineDash,
+      zIndex: zIndex
+    })
+    return isSelected ? [selectedStroke, style] : style
+  },
+
+  places: (feature, resolution) => {
+    // Hide places that are not appropriate for resolution
+    const d = parseInt(feature.get('d'))
+    const s = parseInt(feature.get('s'))
+    const r = parseInt(resolution)
+    let showName = d >= 1
+    if (r > 1600 && d > 1) {
+      showName = false
+    } else if (r > 800 && d > 2) {
+      showName = false
+    } else if (r > 400 && d > 3) {
+      showName = false
+    } else if (d > 4) {
+      showName = false
+    }
+    if (!showName) {
+      return
+    }
+    // Get appropriate style from cache and set text
+    const textStyle = s === 1 ? styleCache.textLarge : styleCache.text
+    textStyle[0].getText().setText(feature.get('n'))
+    textStyle[1].getText().setText(feature.get('n'))
+    return textStyle
+  },
+
+  //
+  // Debug styles
+  //
+
+  bbox: (feature) => {
+    return new Style({
+      stroke: new Stroke({ color: '#1d70b8', width: 2, lineDash: [4, 4] }),
+      fill: new Stroke({ color: 'transparent' })
+    })
   }
+
 }
 
-const pattern = (style) => {
+//
+// SVG fill paterns
+//
+
+const targetAreaPolygonPattern = (style) => {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
   const dpr = window.devicePixelRatio || 1
@@ -197,11 +262,130 @@ const pattern = (style) => {
   return ctx.createPattern(canvas, 'repeat')
 }
 
+const outlookPolygonPattern = (style) => {
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+  const dpr = window.devicePixelRatio || 1
+  canvas.width = 8 * dpr
+  canvas.height = 8 * dpr
+  ctx.scale(dpr, dpr)
+  switch (style) {
+    case 'high':
+      ctx.fillStyle = '#D4351C'
+      ctx.fillRect(0, 0, 8, 8)
+      ctx.beginPath()
+      ctx.fillStyle = '#ffffff'
+      ctx.moveTo(0, 3.3)
+      ctx.lineTo(4.7, 8)
+      ctx.lineTo(3.3, 8)
+      ctx.lineTo(0, 4.7)
+      ctx.closePath()
+      ctx.moveTo(3.3, 0)
+      ctx.lineTo(4.7, 0)
+      ctx.lineTo(8, 3.3)
+      ctx.lineTo(8, 4.7)
+      ctx.closePath()
+      ctx.fill()
+      break
+    case 'medium':
+      ctx.fillStyle = '#F47738'
+      ctx.fillRect(0, 0, 8, 8)
+      ctx.beginPath()
+      ctx.fillStyle = '#ffffff'
+      ctx.moveTo(3.3, 0)
+      ctx.lineTo(4.7, 0)
+      ctx.lineTo(0, 4.7)
+      ctx.lineTo(0, 3.3)
+      ctx.closePath()
+      ctx.moveTo(3.3, 8)
+      ctx.lineTo(4.7, 8)
+      ctx.lineTo(8, 4.7)
+      ctx.lineTo(8, 3.3)
+      ctx.closePath()
+      ctx.moveTo(4.7, 0)
+      ctx.lineTo(8, 3.3)
+      ctx.lineTo(7.3, 4)
+      ctx.lineTo(4, 0.7)
+      ctx.closePath()
+      ctx.moveTo(0, 4.7)
+      ctx.lineTo(3.3, 8)
+      ctx.lineTo(4, 7.3)
+      ctx.lineTo(0.7, 4)
+      ctx.closePath()
+      ctx.fill()
+      break
+    case 'low':
+      ctx.fillStyle = '#ffdd00'
+      ctx.fillRect(0, 0, 8, 8)
+      ctx.beginPath()
+      ctx.fillStyle = '#ffffff'
+      ctx.moveTo(0, 3.3)
+      ctx.lineTo(0, 4.7)
+      ctx.lineTo(4.7, 0)
+      ctx.lineTo(3.3, 0)
+      ctx.closePath()
+      ctx.moveTo(3.3, 8)
+      ctx.lineTo(4.7, 8)
+      ctx.lineTo(8, 4.7)
+      ctx.lineTo(8, 3.3)
+      ctx.closePath()
+      ctx.fill()
+      break
+    case 'veryLow':
+      ctx.fillStyle = '#85994b'
+      ctx.fillRect(0, 0, 8, 8)
+      ctx.beginPath()
+      ctx.fillStyle = '#ffffff'
+      ctx.arc(4, 4, 1, 0, 2 * Math.PI)
+      ctx.closePath()
+      ctx.fill()
+      break
+  }
+  ctx.restore()
+  return ctx.createPattern(canvas, 'repeat')
+}
+
 //
-// Style caching
+// Style caching, improves render performance
 //
 
-const createStyle = (options) => {
+const createTextStyle = (options) => {
+  const defaults = {
+    font: '14px GDS Transport, Arial, sans-serif',
+    offsetY: -12,
+    radius: 2
+  }
+  options = Object.assign({}, defaults, options)
+  return [
+    new Style({
+      text: new Text({
+        font: options.font,
+        offsetY: options.offsetY,
+        stroke: new Stroke({
+          color: '#ffffff',
+          width: 2
+        })
+      })
+    }),
+    new Style({
+      text: new Text({
+        font: options.font,
+        offsetY: options.offsetY
+      }),
+      image: new Circle({
+        fill: new Fill({
+          color: '#0b0c0c'
+        }),
+        stroke: new Stroke({
+          width: 0
+        }),
+        radius: options.radius
+      })
+    })
+  ]
+}
+
+const createIconStyle = (options) => {
   const defaults = {
     size: [100, 100],
     anchor: [0.5, 0.5],
@@ -223,26 +407,28 @@ const createStyle = (options) => {
 }
 
 const styleCache = {
-  severe: createStyle({ offset: [0, 0], zIndex: 5 }),
-  severeSelected: createStyle({ offset: [100, 0], zIndex: 10 }),
-  warning: createStyle({ offset: [0, 100], zIndex: 4 }),
-  warningSelected: createStyle({ offset: [100, 100], zIndex: 10 }),
-  alert: createStyle({ offset: [0, 200], zIndex: 3 }),
-  alertSelected: createStyle({ offset: [100, 200], zIndex: 10 }),
-  targetArea: createStyle({ offset: [0, 300], zIndex: 1 }),
-  targetAreaSelected: createStyle({ offset: [100, 300], zIndex: 10 }),
-  impact: createStyle({ offset: [0, 400], zIndex: 1 }),
-  impactSelected: createStyle({ offset: [100, 400], zIndex: 10 }),
-  levelHighBig: createStyle({ offset: [0, 500], zIndex: 3 }),
-  levelHighBigSelected: createStyle({ offset: [100, 500], zIndex: 10 }),
-  levelBig: createStyle({ offset: [0, 600], zIndex: 2 }),
-  levelBigSelected: createStyle({ offset: [100, 600], zIndex: 10 }),
-  levelErrorBig: createStyle({ offset: [0, 700], zIndex: 1 }),
-  levelErrorBigSelected: createStyle({ offset: [100, 700], zIndex: 10 }),
-  levelHigh: createStyle({ offset: [0, 900], zIndex: 3 }),
-  levelHighSelected: createStyle({ offset: [100, 900], zIndex: 10 }),
-  level: createStyle({ offset: [0, 1000], zIndex: 2 }),
-  levelSelected: createStyle({ offset: [100, 1000], zIndex: 10 }),
-  levelError: createStyle({ offset: [0, 1100], zIndex: 1 }),
-  levelErrorSelected: createStyle({ offset: [100, 1100], zIndex: 10 })
+  severe: createIconStyle({ offset: [0, 0], zIndex: 5 }),
+  severeSelected: createIconStyle({ offset: [100, 0], zIndex: 10 }),
+  warning: createIconStyle({ offset: [0, 100], zIndex: 4 }),
+  warningSelected: createIconStyle({ offset: [100, 100], zIndex: 10 }),
+  alert: createIconStyle({ offset: [0, 200], zIndex: 3 }),
+  alertSelected: createIconStyle({ offset: [100, 200], zIndex: 10 }),
+  targetArea: createIconStyle({ offset: [0, 300], zIndex: 1 }),
+  targetAreaSelected: createIconStyle({ offset: [100, 300], zIndex: 10 }),
+  impact: createIconStyle({ offset: [0, 400], zIndex: 1 }),
+  impactSelected: createIconStyle({ offset: [100, 400], zIndex: 10 }),
+  levelHighBig: createIconStyle({ offset: [0, 500], zIndex: 3 }),
+  levelHighBigSelected: createIconStyle({ offset: [100, 500], zIndex: 10 }),
+  levelBig: createIconStyle({ offset: [0, 600], zIndex: 2 }),
+  levelBigSelected: createIconStyle({ offset: [100, 600], zIndex: 10 }),
+  levelErrorBig: createIconStyle({ offset: [0, 700], zIndex: 1 }),
+  levelErrorBigSelected: createIconStyle({ offset: [100, 700], zIndex: 10 }),
+  levelHigh: createIconStyle({ offset: [0, 900], zIndex: 3 }),
+  levelHighSelected: createIconStyle({ offset: [100, 900], zIndex: 10 }),
+  level: createIconStyle({ offset: [0, 1000], zIndex: 2 }),
+  levelSelected: createIconStyle({ offset: [100, 1000], zIndex: 10 }),
+  levelError: createIconStyle({ offset: [0, 1100], zIndex: 1 }),
+  levelErrorSelected: createIconStyle({ offset: [100, 1100], zIndex: 10 }),
+  text: createTextStyle(),
+  textLarge: createTextStyle({ font: 'Bold 16px GDS Transport, Arial, sans-serif', offsetY: -13, radius: 3 })
 }

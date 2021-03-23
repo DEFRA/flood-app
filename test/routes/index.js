@@ -288,4 +288,25 @@ lab.experiment('Get Routes test', () => {
     Code.expect(response.payload).to.include('Personal information charter')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
+
+  lab.test('GET /api/places.geojson', async () => {
+    const plugin = {
+      plugin: {
+        name: 'places.geojson',
+        register: (server, options) => {
+          server.route(require('../../server/routes/api/places.geojson'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(plugin)
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/api/places.geojson'
+    }
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+  })
 })

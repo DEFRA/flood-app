@@ -1,9 +1,13 @@
 const joi = require('@hapi/joi')
 const ViewModel = require('../models/views/location')
+const OutlookTabsModel = require('../models/outlook-tabs')
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
 const util = require('../util')
 const LocationNotFoundError = require('../location-not-found-error')
+const formatDate = require('../util').formatDate
+const moment = require('moment-timezone')
+const tz = 'Europe/London'
 
 module.exports = {
   method: 'GET',
@@ -33,6 +37,22 @@ module.exports = {
       return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location })
     }
 
+    const outlook = await floodService.getOutlook()
+
+    const issueDate = moment(outlook.issued_at).valueOf()
+    const now = moment().tz(tz).valueOf()
+    const hours48 = 2 * 60 * 60 * 24 * 1000
+    const outOfDate = (now - issueDate) > hours48
+
+    const riskAreasCount = outlook.risk_areas ? outlook.risk_areas.length : 0
+
+    const tabs = outOfDate || riskAreasCount === 0 ? { lowForFive: true } : new OutlookTabsModel(outlook, place)
+
+    if (riskAreasCount === 0) {
+      tabs.formattedIssueDate = `${formatDate(outlook.issued_at, 'h:mma')} on ${formatDate(outlook.issued_at, 'D MMMM YYYY')}`
+      tabs.issueUTC = moment(outlook.issued_at).tz('Europe/London').format()
+    }
+
     const [
       impacts,
       { floods },
@@ -42,7 +62,7 @@ module.exports = {
       floodService.getFloodsWithin(place.bbox2k),
       floodService.getStationsWithin(place.bbox10k)
     ])
-    const model = new ViewModel({ location, place, floods, stations, impacts })
+    const model = new ViewModel({ location, place, floods, stations, impacts, tabs, outOfDate })
     return h.view('location', { model })
   },
   options: {

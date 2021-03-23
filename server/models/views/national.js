@@ -1,8 +1,16 @@
 const moment = require('moment-timezone')
+const formatDate = require('../../util').formatDate
 const { bingKeyMaps } = require('../../config')
+const tz = 'Europe/London'
 
 class ViewModel {
   constructor (floods, outlook) {
+    // Check if flood guidance statement is older than 48 hours
+    const issueDate = moment(outlook._timestampOutlook).valueOf()
+    const now = moment().tz(tz).valueOf()
+    const hours48 = 2 * 60 * 60 * 24 * 1000
+    const outlookOutOfDate = (now - issueDate) > hours48
+
     Object.assign(this, {
       pageTitle: 'Flood warnings in England',
       metaDescription: 'Check the latest flood risk situation for england and the 5-day flood forecast.',
@@ -10,11 +18,14 @@ class ViewModel {
       metaCanonical: '/national',
       hasActiveFloods: floods.hasActiveFloods,
       highestSeverityId: floods.highestSeverityId,
-      dateFormatted: 'Updated ' + moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY'),
+      dateFormatted: `${moment().tz(tz).format('h:mma')} on ${moment().tz(tz).format('D MMMM YYYY')}`,
+      dateUTC: moment().tz(tz).format(),
       feedback: true,
       hasWarningsRemoved: floods._groups[3].name === 4 && floods._groups[3].count > 0,
-      timestampOutlook: 'Updated at ' + moment(outlook._timestampOutlook).tz('Europe/London').format('h:mma') + ' on ' + moment(outlook._timestampOutlook).tz('Europe/London').format('D MMMM YYYY'),
-      bingMaps: bingKeyMaps
+      bingMaps: bingKeyMaps,
+      outlookTimestamp: `${formatDate(outlook._timestampOutlook, 'h:mma')} on ${formatDate(outlook._timestampOutlook, 'D MMMM YYYY')}`,
+      outlookUTC: moment(outlook._timestampOutlook).tz(tz).format(),
+      outlookOutOfDate
     })
 
     // Strip out flood array as it is superflous to the view
@@ -30,7 +41,8 @@ class ViewModel {
     // Strip out superflous outlook data
     this.outlook = [outlook].map(item => {
       return {
-        timestampOutlook: this.timestampOutlook,
+        outlookTimestamp: this.outlookTimestamp,
+        outlookUTC: this.outlookUTC,
         full: item.full,
         hasOutlookConcern: item.hasOutlookConcern,
         days: item.days

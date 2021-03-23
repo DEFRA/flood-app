@@ -132,7 +132,8 @@ lab.experiment('Outlook model test', () => {
 
     Code.expect(Result).to.be.equal(true)
   })
-  lab.test('Check outlook geoJson', async () => {
+  // TODO: Reintroduce this test for when polygons require smoothing
+  lab.test.skip('Check outlook geoJson', async () => {
     const Result = await outlook.geoJson
 
     const geoOutput = {
@@ -273,13 +274,24 @@ lab.experiment('Outlook model test', () => {
                 [-3.6927796667441735, 54.78347074469547]]],
             type: 'Polygon'
           },
+          id: 2660,
           properties:
           {
             'risk-level': 1,
             'z-index': 10,
-            day: 5,
-            html: '<p class="govuk-body-s">Details of source, likelyhood and impact</p>',
+            days: [5],
             isSmooth: true,
+            labelPosition: [
+              -2.08465592935681,
+              54.1276207351252
+            ],
+            name: 'Very low risk of river, surface water and coastal flooding',
+            message: {
+              '1-i2-l2': {
+                message: 'Very low risk, impact minor (2), likelihood low (2).',
+                sources: 'overflowing rivers, runoff from rainfall or blocked drains and high tides or large waves'
+              }
+            },
             polyType: 'inland',
             type: 'concernArea'
           },

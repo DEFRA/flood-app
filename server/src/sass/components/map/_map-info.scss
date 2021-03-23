@@ -5,25 +5,28 @@
   &__content dd {
     margin: 0px;
   }
-  &__feature {
-    margin-bottom: 0px;
-  }
-  &__type {
-    display: block;
-    @extend .govuk-body;
-    margin-bottom: 5px;
-  }
   &__name {
     display: block;
-    @include govuk-font($size: 16, $weight: bold);
+    @include govuk-font($size: 19, $weight: bold);
+    margin: 0px;
+  }
+  &__name--emphasis {
+    font-weight: bold;
+  }
+  &__description {
+    @extend .govuk-body;
+    margin-bottom: 0px;
+    margin-top: 10px;
   }
   &__meta {
     display: block;
-    @include govuk-font($size: 16);
-    margin-bottom: 10px;
+    @include govuk-font($size: 14);
+    margin-top: 10px;
+    margin-bottom: 0px;
   }
-  &__secondary {
-    color: $govuk-secondary-text-colour;
+  &__buttons {
+    margin-top: 10px;
+    border-top:1px solid $govuk-border-colour;
   }
   &__button {
     @extend .defra-button-map-s;
@@ -33,41 +36,41 @@
   }
   &__button--up {
     padding-left:16px;
-    margin-bottom:5px;
+    margin-top:10px;
     margin-right:10px;
   }
   &__button--down {
     padding-left:16px;
-    margin-bottom:5px;
+    margin-top:10px;
   }
   &__button--up:hover:before {
-    background-image: svg-url('<svg width="13" height="15" viewBox="0 0 13 15" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M6.5,0L0,6.5L1.4,8L5.4,4L5.4,15L7.4,15L7.4,4L11.7,8L13,6.4L6.5,0Z" style="fill:#003078;fill-rule:nonzero;"/></svg>');
+    background-image: svg-url('<svg width="14" height="14" viewBox="0 0 14 14"><path d="M6,4.828L2.414,8.414L1,7L7,1L13,7L11.586,8.414L8,4.828L8,13L6,13L6,4.828Z" style="fill:#003078;"/></svg>');
   }
   &__button--up:focus[keyboard-focus]:before {
-    background-image: svg-url('<svg width="13" height="15" viewBox="0 0 13 15" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M6.5,0L0,6.5L1.4,8L5.4,4L5.4,15L7.4,15L7.4,4L11.7,8L13,6.4L6.5,0Z" style="fill:#0b0c0c;fill-rule:nonzero;"/></svg>');
+    background-image: svg-url('<svg width="14" height="14" viewBox="0 0 14 14"><path d="M6,4.828L2.414,8.414L1,7L7,1L13,7L11.586,8.414L8,4.828L8,13L6,13L6,4.828Z" style="fill:#0b0c0c;"/></svg>');
   }
   &__button--up:before,
   &__button--up:active:before {
     content: '';
     position: absolute;
-    top:2px;
+    top:1px;
     left:0px;
-    background-image: svg-url('<svg width="13" height="15" viewBox="0 0 13 15" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M6.5,0L0,6.5L1.4,8L5.4,4L5.4,15L7.4,15L7.4,4L11.7,8L13,6.4L6.5,0Z" style="fill:#0b0c0c;fill-rule:nonzero;"/></svg>');
+    background-image: svg-url('<svg width="14" height="14" viewBox="0 0 14 14"><path d="M6,4.828L2.414,8.414L1,7L7,1L13,7L11.586,8.414L8,4.828L8,13L6,13L6,4.828Z" style="fill:#0b0c0c;"/></svg>');
     background-color:transparent;
-    background-size:13px 15px;
+    background-size:14px;
     background-repeat: no-repeat;
     background-position: top left;
-    width:13px;
-    height:13px;
+    width:14px;
+    height:14px;
     @include mq ($from: tablet) {
-      height:15px;
+      top:3px;
     }
   }
   &__button--down:hover:before {
-    background-image: svg-url('<svg width="13" height="15" viewBox="0 0 13 15" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M0,8.5L6.5,15L13,8.6L11.7,7L7.4,11L7.4,0L5.4,0L5.4,11L1.4,7L0,8.5Z" style="fill:#003078;"/></svg>');
+    background-image: svg-url('<svg width="14" height="14" viewBox="0 0 14 14"><path d="M6,9.172L2.414,5.586L1,7L7,13L13,7L11.586,5.586L8,9.172L8,1L6,1L6,9.172Z" style="fill:#003078;"/></svg>');
   }
   &__button--down:focus[keyboard-focus]:before {
-    background-image: svg-url('<svg width="13" height="15" viewBox="0 0 13 15" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M0,8.5L6.5,15L13,8.6L11.7,7L7.4,11L7.4,0L5.4,0L5.4,11L1.4,7L0,8.5Z" style="fill:#0b0c0c;"/></svg>');
+    background-image: svg-url('<svg width="14" height="14" viewBox="0 0 14 14"><path d="M6,9.172L2.414,5.586L1,7L7,13L13,7L11.586,5.586L8,9.172L8,1L6,1L6,9.172Z" style="fill:#0b0c0c;"/></svg>');
   }
   &__button--down:before,
   &__button--down:active:before {
@@ -75,16 +78,15 @@
     position: absolute;
     top:2px;
     left:0px;
-    background-image: svg-url('<svg width="13" height="15" viewBox="0 0 13 15" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M0,8.5L6.5,15L13,8.6L11.7,7L7.4,11L7.4,0L5.4,0L5.4,11L1.4,7L0,8.5Z" style="fill:#0b0c0c;"/></svg>');
+    background-image: svg-url('<svg width="14" height="14" viewBox="0 0 14 14"><path d="M6,9.172L2.414,5.586L1,7L7,13L13,7L11.586,5.586L8,9.172L8,1L6,1L6,9.172Z" style="fill:#0b0c0c;"/></svg>');
     background-color:transparent;
-    background-size:13px 15px;
+    background-size:14px;
     background-repeat: no-repeat;
-    background-position: bottom left;
-    width:13px;
-    height:13px;
+    background-position: top left;
+    width:14px;
+    height:14px;
     @include mq ($from: tablet) {
       top:3px;
-      height:15px;
     }
   }
   // Attributions

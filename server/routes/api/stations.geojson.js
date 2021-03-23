@@ -5,7 +5,7 @@ module.exports = {
   path: '/api/stations.geojson',
   options: {
     description: 'Get stations data in geojson format from service cache',
-    handler: async (request, h) => {
+    handler: async () => {
       return floodService.stationsGeojson
     },
     app: {

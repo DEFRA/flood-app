@@ -3,7 +3,7 @@ const env = process.env.NODE_ENV
 const inDev = env === 'dev' || env === 'development'
 module.exports = (env, argv) => ({
   mode: !inDev ? 'production' : 'development',
-  devtool: !inDev ? 'none' : 'source-map',
+  devtool: !inDev ? false : 'source-map',
   entry: {
     core: './server/src/js/core',
     'alerts-and-warnings': './server/src/js/pages/alerts-and-warnings',

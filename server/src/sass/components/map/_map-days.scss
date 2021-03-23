@@ -35,7 +35,7 @@
   text-align:left;
   strong {
     display: inline-block;
-    @include govuk-font($size: 19, $weight: regular);
+    @include govuk-font($size: 19, $weight: bold);
     text-decoration:underline;
     margin-bottom: 2px;
   }
@@ -50,7 +50,7 @@
     color: $govuk-text-colour;
   }
   &-container {
-    padding:15px 20% 17px 20%;
+    padding:15px 17% 17px 17%;
   }
   &:focus {
     border-top:0px;
