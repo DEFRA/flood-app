@@ -7,6 +7,7 @@ const Outlook = require('../models/outlook')
 let floods = null
 let outlook = null
 let stationsGeojson = null
+let rainfallGeojson = null
 
 module.exports = {
   // ############ Internals ################
@@ -52,6 +53,14 @@ module.exports = {
 
   set stationsGeojson (data) {
     stationsGeojson = data
+  },
+
+  get rainfallGeojson () {
+    return rainfallGeojson
+  },
+
+  set rainfallGeojson (data) {
+    rainfallGeojson = data
   },
 
   // ############### Externals ################
@@ -126,6 +135,10 @@ module.exports = {
   // DL: WebGL layers don't support z-index so source data needs to be in desired order, sortBy=atrisk added
   getStationsGeoJson () {
     return util.getJson(`${geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&sortBy=atrisk&outputFormat=application%2Fjson`)
+  },
+
+  getRainfallGeojson () {
+    return util.getJson(`${geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:rainfall_stations&outputFormat=application%2Fjson`)
   },
 
   getIsEngland (lng, lat) {

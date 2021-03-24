@@ -87,23 +87,49 @@ window.flood.maps.styles = {
     }
     const state = feature.get('state')
     const isSelected = feature.get('isSelected')
-    const isBigSymbol = resolution <= window.flood.maps.liveMaxBigZoom
+    const isSymbol = resolution <= window.flood.maps.liveMaxBigZoom
     switch (state) {
-      case 'high':
-        return isSelected ? (isBigSymbol ? styleCache.levelHighBigSelected : styleCache.levelHighSelected) : (isBigSymbol ? styleCache.levelHighBig : styleCache.levelHigh)
-      case 'error':
-        return isSelected ? (isBigSymbol ? styleCache.levelErrorBigSelected : styleCache.levelErrorSelected) : (isBigSymbol ? styleCache.levelErrorBig : styleCache.levelError)
-      default:
-        return isSelected ? (isBigSymbol ? styleCache.levelBigSelected : styleCache.levelSelected) : (isBigSymbol ? styleCache.levelBig : styleCache.level)
+      // Rivers
+      case 'river':
+        return isSelected ? (isSymbol ? styleCache.riverSelected : styleCache.measurementSelected) : (isSymbol ? styleCache.river : styleCache.measurement)
+      case 'riverHigh':
+        return isSelected ? (isSymbol ? styleCache.riverHighSelected : styleCache.measurementAlertSelected) : (isSymbol ? styleCache.riverHigh : styleCache.measurementAlert)
+      case 'riverError':
+        return isSelected ? (isSymbol ? styleCache.riverErrorSelected : styleCache.measurementErrorSelected) : (isSymbol ? styleCache.riverError : styleCache.measurementError)
+      // Tide
+      case 'tide':
+        return isSelected ? (isSymbol ? styleCache.tideSelected : styleCache.measurementSelected) : (isSymbol ? styleCache.tide : styleCache.measurement)
+      case 'tideError':
+        return isSelected ? (isSymbol ? styleCache.tideErrorSelected : styleCache.measurementErrorSelected) : (isSymbol ? styleCache.tideError : styleCache.measurementError)
+      // Ground
+      case 'groundHigh':
+        return isSelected ? (isSymbol ? styleCache.groundHighSelected : styleCache.measurementAlertSelected) : (isSymbol ? styleCache.groundHigh : styleCache.measurementAlert)
+      case 'groundError':
+        return isSelected ? (isSymbol ? styleCache.groundErrorSelected : styleCache.measurementErrorSelected) : (isSymbol ? styleCache.groundError : styleCache.measurementError)
+      case 'ground':
+        return isSelected ? (isSymbol ? styleCache.groundSelected : styleCache.measurementSelected) : (isSymbol ? styleCache.ground : styleCache.measurement)
     }
   },
 
-  impacts: (feature, resolution) => {
+  rainfall: (feature, resolution) => {
     if (feature.get('isVisible') !== 'true') {
       return
     }
+    const state = feature.get('state')
     const isSelected = feature.get('isSelected')
-    return isSelected ? styleCache.impactSelected : styleCache.impact
+    const isSymbol = resolution <= window.flood.maps.liveMaxBigZoom
+    switch (state) {
+      case 'rainHeavy':
+        return isSelected ? (isSymbol ? styleCache.rainHeavySelected : styleCache.measurementAlertSelected) : (isSymbol ? styleCache.rainHeavy : styleCache.measurementAlert)
+      case 'rainModerate':
+        return isSelected ? (isSymbol ? styleCache.rainModerateSelected : styleCache.measurementSelected) : (isSymbol ? styleCache.rainModerate : styleCache.measurement)
+      case 'rainLight':
+        return isSelected ? (isSymbol ? styleCache.rainLightSelected : styleCache.measurementSelected) : (isSymbol ? styleCache.rainLight : styleCache.measurement)
+      case 'rainError':
+        return isSelected ? (isSymbol ? styleCache.rainErrorSelected : styleCache.measurementErrorSelected) : (isSymbol ? styleCache.rainError : styleCache.measurementError)
+      case 'rain':
+        return isSelected ? (isSymbol ? styleCache.rainSelected : styleCache.measurementSelected) : (isSymbol ? styleCache.rain : styleCache.measurement)
+    }
   },
 
   //
@@ -415,20 +441,43 @@ const styleCache = {
   alertSelected: createIconStyle({ offset: [100, 200], zIndex: 10 }),
   targetArea: createIconStyle({ offset: [0, 300], zIndex: 1 }),
   targetAreaSelected: createIconStyle({ offset: [100, 300], zIndex: 10 }),
-  impact: createIconStyle({ offset: [0, 400], zIndex: 1 }),
-  impactSelected: createIconStyle({ offset: [100, 400], zIndex: 10 }),
-  levelHighBig: createIconStyle({ offset: [0, 500], zIndex: 3 }),
-  levelHighBigSelected: createIconStyle({ offset: [100, 500], zIndex: 10 }),
-  levelBig: createIconStyle({ offset: [0, 600], zIndex: 2 }),
-  levelBigSelected: createIconStyle({ offset: [100, 600], zIndex: 10 }),
-  levelErrorBig: createIconStyle({ offset: [0, 700], zIndex: 1 }),
-  levelErrorBigSelected: createIconStyle({ offset: [100, 700], zIndex: 10 }),
-  levelHigh: createIconStyle({ offset: [0, 900], zIndex: 3 }),
-  levelHighSelected: createIconStyle({ offset: [100, 900], zIndex: 10 }),
-  level: createIconStyle({ offset: [0, 1000], zIndex: 2 }),
-  levelSelected: createIconStyle({ offset: [100, 1000], zIndex: 10 }),
-  levelError: createIconStyle({ offset: [0, 1100], zIndex: 1 }),
-  levelErrorSelected: createIconStyle({ offset: [100, 1100], zIndex: 10 }),
+  // River
+  river: createIconStyle({ offset: [0, 600], zIndex: 2 }),
+  riverSelected: createIconStyle({ offset: [100, 600], zIndex: 10 }),
+  riverHigh: createIconStyle({ offset: [0, 500], zIndex: 3 }),
+  riverHighSelected: createIconStyle({ offset: [100, 500], zIndex: 10 }),
+  riverError: createIconStyle({ offset: [0, 700], zIndex: 1 }),
+  riverErrorSelected: createIconStyle({ offset: [100, 700], zIndex: 10 }),
+  // Tide
+  tide: createIconStyle({ offset: [0, 800], zIndex: 2 }),
+  tideSelected: createIconStyle({ offset: [100, 800], zIndex: 10 }),
+  tideError: createIconStyle({ offset: [0, 900], zIndex: 1 }),
+  tideErrorSelected: createIconStyle({ offset: [100, 900], zIndex: 10 }),
+  // Groundwater
+  ground: createIconStyle({ offset: [0, 1100], zIndex: 2 }),
+  groundSelected: createIconStyle({ offset: [100, 1100], zIndex: 10 }),
+  groundHigh: createIconStyle({ offset: [0, 1000], zIndex: 3 }),
+  groundHighSelected: createIconStyle({ offset: [100, 1000], zIndex: 10 }),
+  groundError: createIconStyle({ offset: [0, 1200], zIndex: 1 }),
+  groundErrorSelected: createIconStyle({ offset: [100, 1200], zIndex: 10 }),
+  // Rainfall
+  rain: createIconStyle({ offset: [0, 1600], zIndex: 3 }),
+  rainSelected: createIconStyle({ offset: [100, 1600], zIndex: 10 }),
+  rainHeavy: createIconStyle({ offset: [0, 1300], zIndex: 3 }),
+  rainHeavySelected: createIconStyle({ offset: [100, 1300], zIndex: 10 }),
+  rainModerate: createIconStyle({ offset: [0, 1400], zIndex: 3 }),
+  rainModerateSelected: createIconStyle({ offset: [100, 1400], zIndex: 10 }),
+  rainLight: createIconStyle({ offset: [0, 1500], zIndex: 3 }),
+  rainLightSelected: createIconStyle({ offset: [100, 1500], zIndex: 10 }),
+  rainError: createIconStyle({ offset: [0, 1700], zIndex: 3 }),
+  rainErrorSelected: createIconStyle({ offset: [100, 1700], zIndex: 10 }),
+  // Measurements
+  measurement: createIconStyle({ offset: [0, 1900], zIndex: 2 }),
+  measurementSelected: createIconStyle({ offset: [100, 1900], zIndex: 10 }),
+  measurementAlert: createIconStyle({ offset: [0, 1800], zIndex: 3 }),
+  measurementAlertSelected: createIconStyle({ offset: [100, 1800], zIndex: 10 }),
+  measurementError: createIconStyle({ offset: [0, 2000], zIndex: 1 }),
+  measurementErrorSelected: createIconStyle({ offset: [100, 2000], zIndex: 10 }),
   text: createTextStyle(),
   textLarge: createTextStyle({ font: 'Bold 16px GDS Transport, Arial, sans-serif', offsetY: -13, radius: 3 })
 }

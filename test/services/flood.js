@@ -282,6 +282,23 @@ lab.experiment('Flood service test', () => {
 
     Code.expect(result).to.equal('ok')
   })
+  lab.test('Test getRainfallGeojson endpoint', async () => {
+    const util = require('../../server/util')
+    sandbox.stub(config, 'geoserverUrl').value('http://server1')
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://server1/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:rainfall_stations&outputFormat=application%2Fjson')
+      .once()
+      .returns('ok')
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getRainfallGeojson()
+
+    Code.expect(result).to.equal('ok')
+  })
   lab.test('Test getIsEngland endpoint', async () => {
     const lat = 1
     const lng = 2
