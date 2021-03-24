@@ -7,6 +7,7 @@ const routes = [].concat(
   require('../routes/roadmap'),
   require('../routes/public'),
   require('../routes/api/stations.geojson'),
+  require('../routes/api/rainfall.geojson'),
   require('../routes/api/warnings.geojson'),
   require('../routes/api/places.geojson'),
   require('../routes/api/ows'),
@@ -31,8 +32,6 @@ const routes = [].concat(
 module.exports = {
   plugin: {
     name: 'router',
-    register: (server, options) => {
-      server.route(routes)
-    }
+    register: server => { server.route(routes) }
   }
 }
