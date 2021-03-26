@@ -4,7 +4,7 @@ const { floodFisUrl, bingKeyMaps } = require('../../config')
 const moment = require('moment-timezone')
 
 class ViewModel {
-  constructor ({ location, place, floods, stations, impacts, tabs, outOfDate }) {
+  constructor ({ location, place, floods, stations, impacts, tabs, outOfDate, dataError }) {
     const title = place.name
 
     Object.assign(this, {
@@ -20,7 +20,8 @@ class ViewModel {
       metaDescription: `Nearby flood alerts and warnings; latest river and sea levels and flood risk advice for residents living in the ${title} area.`,
       floodFisUrl,
       dateFormatted: 'Up to date as of ' + moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY'),
-      feedback: true
+      feedback: true,
+      dataError
     })
 
     const hasFloods = !!floods.length

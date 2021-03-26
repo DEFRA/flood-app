@@ -22,7 +22,38 @@ class Outlook {
       type: 'FeatureCollection',
       features: []
     }
+    try {
+      this.outlookRiskAreas(outlook, riskMatrix, riskBands)
+    } catch (err) {
+      console.error('Outlook FGS data error: ', err)
+      return { dataError: true }
+    }
 
+    this._geoJson.features.forEach((feature) => {
+      // Convert linestrings to polygons
+      if (feature.geometry.type === 'LineString') {
+        const buffer = turf.buffer(feature, 1, { units: 'miles' })
+        const coordinates = buffer.geometry.coordinates
+        feature.geometry.type = 'Polygon'
+        feature.geometry.coordinates = coordinates
+      }
+    })
+
+    this._full = outlook.public_forecast.english_forecast
+
+    const issueDate = new Date(outlook.issued_at)
+
+    this._days = [0, 1, 2, 3, 4].map(i => {
+      const date = new Date(issueDate)
+      return {
+        idx: i + 1,
+        level: this._riskLevels[i],
+        date: new Date(date.setDate(date.getDate() + i))
+      }
+    })
+  }
+
+  outlookRiskAreas (outlook, riskMatrix, riskBands) {
     outlook.risk_areas.forEach(riskArea => {
       riskArea.risk_area_blocks.forEach(riskAreaBlock => {
         let sources = []
@@ -87,29 +118,6 @@ class Outlook {
 
         this.generatePolyFeature(riskAreaBlock, featureName, messageGroupObj, riskLevel, impactLevel, likelihoodLevel)
       })
-    })
-
-    this._geoJson.features.forEach((feature) => {
-      // Convert linestrings to polygons
-      if (feature.geometry.type === 'LineString') {
-        const buffer = turf.buffer(feature, 1, { units: 'miles' })
-        const coordinates = buffer.geometry.coordinates
-        feature.geometry.type = 'Polygon'
-        feature.geometry.coordinates = coordinates
-      }
-    })
-
-    this._full = outlook.public_forecast.english_forecast
-
-    const issueDate = new Date(outlook.issued_at)
-
-    this._days = [0, 1, 2, 3, 4].map(i => {
-      const date = new Date(issueDate)
-      return {
-        idx: i + 1,
-        level: this._riskLevels[i],
-        date: new Date(date.setDate(date.getDate() + i))
-      }
     })
   }
 

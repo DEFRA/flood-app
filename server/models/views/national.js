@@ -25,7 +25,8 @@ class ViewModel {
       bingMaps: bingKeyMaps,
       outlookTimestamp: `${formatDate(outlook._timestampOutlook, 'h:mma')} on ${formatDate(outlook._timestampOutlook, 'D MMMM YYYY')}`,
       outlookUTC: moment(outlook._timestampOutlook).tz(tz).format(),
-      outlookOutOfDate
+      outlookOutOfDate,
+      dataError: outlook.dataError
     })
 
     // Strip out flood array as it is superflous to the view

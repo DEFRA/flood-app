@@ -37,22 +37,34 @@ module.exports = {
       return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location })
     }
 
+    let tabs = {}
+    let outOfDate = true
+    let dataError = false
+
     const outlook = await floodService.getOutlook()
-
-    const issueDate = moment(outlook.issued_at).valueOf()
-    const now = moment().tz(tz).valueOf()
-    const hours48 = 2 * 60 * 60 * 24 * 1000
-    const outOfDate = (now - issueDate) > hours48
-
-    const riskAreasCount = outlook.risk_areas ? outlook.risk_areas.length : 0
-
-    const tabs = outOfDate || riskAreasCount === 0 ? { lowForFive: true } : new OutlookTabsModel(outlook, place)
-
-    if (riskAreasCount === 0) {
-      tabs.formattedIssueDate = `${formatDate(outlook.issued_at, 'h:mma')} on ${formatDate(outlook.issued_at, 'D MMMM YYYY')}`
-      tabs.issueUTC = moment(outlook.issued_at).tz('Europe/London').format()
+    if (!outlook.issued_at) {
+      console.error(`Outlook FGS issued_at date error [${outlook.issued_at}]`)
+      dataError = true
     }
+    try {
+      const issueDate = moment(outlook.issued_at).valueOf()
 
+      const now = moment().tz(tz).valueOf()
+      const hours48 = 2 * 60 * 60 * 24 * 1000
+      outOfDate = (now - issueDate) > hours48
+
+      const riskAreasCount = outlook.risk_areas ? outlook.risk_areas.length : 0
+
+      tabs = outOfDate || riskAreasCount === 0 ? { lowForFive: true } : new OutlookTabsModel(outlook, place)
+
+      if (riskAreasCount === 0) {
+        tabs.formattedIssueDate = `${formatDate(outlook.issued_at, 'h:mma')} on ${formatDate(outlook.issued_at, 'D MMMM YYYY')}`
+        tabs.issueUTC = moment(outlook.issued_at).tz('Europe/London').format()
+      }
+    } catch (err) {
+      console.error('Outlook FGS data error: ', err)
+      dataError = true
+    }
     const [
       impacts,
       { floods },
@@ -62,7 +74,7 @@ module.exports = {
       floodService.getFloodsWithin(place.bbox2k),
       floodService.getStationsWithin(place.bbox10k)
     ])
-    const model = new ViewModel({ location, place, floods, stations, impacts, tabs, outOfDate })
+    const model = new ViewModel({ location, place, floods, stations, impacts, tabs, outOfDate, dataError })
     return h.view('location', { model })
   },
   options: {
