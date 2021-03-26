@@ -26,7 +26,8 @@ class Outlook {
       this.outlookRiskAreas(outlook, riskMatrix, riskBands)
     } catch (err) {
       console.error('Outlook FGS data error: ', err)
-      return { dataError: true }
+      this.dataError = true
+      return
     }
 
     this._geoJson.features.forEach((feature) => {
