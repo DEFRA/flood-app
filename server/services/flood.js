@@ -25,7 +25,11 @@ module.exports = {
   },
   // set cached outlook object
   set outlook (data) {
-    outlook = data && new Outlook(data)
+    try {
+      outlook = data && new Outlook(data)
+    } catch (err) {
+      console.error(`Set Outlook cached data error - [${err}]`)
+    }
   },
 
   get stationsGeojson () {

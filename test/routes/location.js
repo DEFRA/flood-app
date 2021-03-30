@@ -1272,6 +1272,7 @@ lab.experiment('Routes test - location - 2', () => {
     const util = require('../../server/util')
     sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
 
+    floodService.outlook = await floodService.getOutlook()
     const locationPlugin = {
       plugin: {
         name: 'location',

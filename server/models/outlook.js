@@ -27,7 +27,7 @@ class Outlook {
     } catch (err) {
       console.error('Outlook FGS data error: ', err)
       this.dataError = true
-      return
+      throw err
     }
 
     this._geoJson.features.forEach((feature) => {
