@@ -19,7 +19,6 @@ class OutlookPolys {
           // if linestring ( i.e. coastal ) add buffer and change geometry for use with turf
           if (poly.poly_type === 'coastal') {
             const feature = {
-              id: poly.id,
               type: 'Feature',
               properties: { polyType: 'coastal' },
               geometry: {
