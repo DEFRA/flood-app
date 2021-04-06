@@ -8,9 +8,6 @@ class Outlook {
     this._hasOutlookConcern = false
     this._outOfDate = true
 
-    // Issued date
-    this._timestampOutlook = (new Date(outlook.issued_at)).getTime()
-
     // Highest daily risk
     this._riskLevels = [0, 0, 0, 0, 0]
 
@@ -24,10 +21,14 @@ class Outlook {
     }
     try {
       this.outlookRiskAreas(outlook, riskMatrix, riskBands)
+      this.dataError = false
+
+      // Issued date
+      this._timestampOutlook = (new Date(outlook.issued_at)).getTime()
     } catch (err) {
-      console.error('Outlook FGS data error: ', err)
+      console.error('Outlook FGS data error - outlook: ', err)
       this.dataError = true
-      throw err
+      return
     }
 
     this._geoJson.features.forEach((feature) => {

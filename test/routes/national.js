@@ -72,4 +72,50 @@ lab.experiment('Routes test - national view', () => {
     Code.expect(response.payload).to.contain('No flood alerts or warnings')
     Code.expect(response.payload).to.contain('Call Floodline for advice')
   })
+  lab.test('GET /national view no outlook data', async () => {
+    // Create dummy flood data in place of cached data
+    const fakeFloodData = () => {
+      return {
+        floods: []
+      }
+    }
+
+    const fakeOutlookData = () => {
+      const outlook = {}
+      return outlook
+    }
+
+    const floodService = require('../../server/services/flood')
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+    // Fake the cached flood data
+    floodService.floods = await floodService.getFloods()
+    floodService.outlook = await floodService.getOutlook()
+
+    const locationPlugin = {
+      plugin: {
+        name: 'national',
+        register: (server, options) => {
+          server.route(require('../../server/routes/national'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('No flood alerts or warnings')
+    Code.expect(response.payload).to.contain('Call Floodline for advice')
+  })
 })

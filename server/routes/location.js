@@ -42,27 +42,31 @@ module.exports = {
     let dataError = false
 
     try {
-      const outlook = await floodService.outlook
-      if (!outlook._outlook.issued_at) {
-        console.error(`Outlook FGS issued_at date error [${outlook._outlook.issued_at}]`)
+      const cachedOutlook = await floodService.outlook
+
+      const myOutlook = JSON.parse(JSON.stringify(cachedOutlook._outlook))
+
+      if (!myOutlook.issued_at) {
+        console.error(`Outlook FGS issued_at date error [${myOutlook.issued_at}]`)
         dataError = true
       }
-      const issueDate = moment(outlook._outlook.issued_at).valueOf()
+      const issueDate = moment(myOutlook.issued_at).valueOf()
 
       const now = moment().tz(tz).valueOf()
       const hours48 = 2 * 60 * 60 * 24 * 1000
       outOfDate = (now - issueDate) > hours48
 
-      const riskAreasCount = outlook._outlook.risk_areas ? outlook._outlook.risk_areas.length : 0
+      const riskAreasCount = myOutlook.risk_areas ? myOutlook.risk_areas.length : 0
 
-      tabs = outOfDate || riskAreasCount === 0 ? { lowForFive: true } : new OutlookTabsModel(outlook._outlook, place)
+      const outlookTabsModel = new OutlookTabsModel(myOutlook, place)
+      tabs = outOfDate || riskAreasCount === 0 ? { lowForFive: true } : outlookTabsModel
 
       if (riskAreasCount === 0) {
-        tabs.formattedIssueDate = `${formatDate(outlook._outlook.issued_at, 'h:mma')} on ${formatDate(outlook._outlook.issued_at, 'D MMMM YYYY')}`
-        tabs.issueUTC = moment(outlook._outlook.issued_at).tz('Europe/London').format()
+        tabs.formattedIssueDate = `${formatDate(myOutlook.issued_at, 'h:mma')} on ${formatDate(myOutlook.issued_at, 'D MMMM YYYY')}`
+        tabs.issueUTC = moment(myOutlook.issued_at).tz('Europe/London').format()
       }
     } catch (err) {
-      console.error('Outlook FGS data error: ', err)
+      console.error('Outlook FGS data error - location: ', err)
       dataError = true
     }
     const [
