@@ -33,7 +33,7 @@ module.exports = {
     try {
       const newData = new Outlook(data)
       if (newData.dataError) {
-        console.error('Set Outlook data error encountered')
+        console.error('Set Outlook data error encountered: ', newData)
       } else {
         outlook = data && new Outlook(data)
       }

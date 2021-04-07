@@ -1296,7 +1296,7 @@ lab.experiment('Routes test - location - 2', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('<p class="govuk-body">The flood risk for the next 5 days is very low.</p>')
   })
-  lab.test('GET /location with FGS that has invalid format', async () => {
+  lab.test('GET /location with FGS that is empty', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -1348,5 +1348,204 @@ lab.experiment('Routes test - location - 2', () => {
     const response = await server.inject(options)
     // Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+  })
+  lab.test('GET /location with FGS that is valid json but incorrect format', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    const fakeFloodsData = () => {
+      return { floods: [] }
+    }
+    const fakeStationsData = () => []
+    const fakeImpactsData = () => []
+
+    const fakeOutlookData = () => {
+      const outlook = { statement: { id: '1234' } }
+      return outlook
+    }
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
+
+    const fakeGetJson = () => data.warringtonGetJson
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    floodService.outlook = await floodService.getOutlook()
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/location?q=Warrington'
+    }
+
+    const response = await server.inject(options)
+    // Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+  })
+  lab.test('GET /location with FGS that is valid json but missing issue_date and other fields', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    const fakeFloodsData = () => {
+      return { floods: [] }
+    }
+    const fakeStationsData = () => []
+    const fakeImpactsData = () => []
+
+    const fakeOutlookData = () => {
+      const outlook = {
+        id: 1830,
+        // issued_at: '2021-04-06T09:30:00Z',
+        pdf_url: 'fgs.pdf',
+        detailed_csv_url: 'fgs-statements/01830-2021-03-29_1030/detailed.csv',
+        area_of_concern_url: 'areaofconcern.jpg',
+        flood_risk_trend: { day1: 'stable', day2: 'stable', day3: 'stable', day4: 'stable', day5: 'stable' },
+        sources: [
+          { river: 'The river flood risk is VERY LOW for the next five days.' },
+          { coastal: 'The coastal/tidal flood risk is VERY LOW for the next five days.' },
+          { ground: 'The groundwater flood risk is VERY LOW for the next five days.' }
+        ],
+        headline: 'Minor river flooding is possible',
+        amendments: '',
+        public_forecast: { english_forecast: 'Good' },
+        future_forecast: '',
+        last_modified_at: '2021-03-29T09:18:29Z',
+        next_issue_due_at: '2021-03-30T09:30:00Z',
+        png_thumbnails_with_days_url: 'FGSthumbnails-with-days.png',
+        risk_areas: []
+      }
+      return outlook
+    }
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+    const fakeGetJson = () => data.warringtonGetJson
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    floodService.outlook = await floodService.getOutlook()
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/location?q=Warrington'
+    }
+
+    const response = await server.inject(options)
+    // Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+  })
+  lab.test('GET /location with FGS that is valid json but empty risk_areas', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    const fakeFloodsData = () => {
+      return { floods: [] }
+    }
+    const fakeStationsData = () => []
+    const fakeImpactsData = () => []
+
+    const fakeOutlookData = () => {
+      const outlook = {
+        id: 1830,
+        issued_at: '2021-04-06T09:30:00Z',
+        pdf_url: 'fgs.pdf',
+        detailed_csv_url: 'fgs-statements/01830-2021-03-29_1030/detailed.csv',
+        area_of_concern_url: 'areaofconcern.jpg',
+        flood_risk_trend: { day1: 'stable', day2: 'stable', day3: 'stable', day4: 'stable', day5: 'stable' },
+        sources: [
+          { river: 'The river flood risk is VERY LOW for the next five days.' },
+          { coastal: 'The coastal/tidal flood risk is VERY LOW for the next five days.' },
+          { ground: 'The groundwater flood risk is VERY LOW for the next five days.' }
+        ],
+        headline: 'Minor river flooding is possible',
+        amendments: '',
+        public_forecast: { english_forecast: 'Good' },
+        future_forecast: '',
+        last_modified_at: '2021-03-29T09:18:29Z',
+        next_issue_due_at: '2021-03-30T09:30:00Z',
+        png_thumbnails_with_days_url: 'FGSthumbnails-with-days.png',
+        risk_areas: []
+      }
+      return outlook
+    }
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+    const fakeGetJson = () => data.warringtonGetJson
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    floodService.outlook = await floodService.getOutlook()
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/location?q=Warrington'
+    }
+
+    const response = await server.inject(options)
+    // Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('The flood risk for the next 5 days is very low.')
   })
 })
