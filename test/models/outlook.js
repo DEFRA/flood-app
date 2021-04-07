@@ -422,4 +422,95 @@ lab.experiment('Outlook model test', () => {
     Code.expect(Result[0].idx).to.be.equal(1)
     Code.expect(Result[0].level).to.be.equal(0)
   })
+  lab.test('Test coastal area (linestring) converts to polygon', async () => {
+    const outlookWithCoastal = {
+      id: 1830,
+      issued_at: '2021-04-06T09:30:00Z',
+      pdf_url: 'fgs.pdf',
+      detailed_csv_url: 'detailed.csv',
+      area_of_concern_url: 'areaofconcern.jpg',
+      flood_risk_trend: { day1: 'stable', day2: 'stable', day3: 'stable', day4: 'stable', day5: 'stable' },
+      sources: [{ river: 'The river flood risk is VERY LOW' },
+        { coastal: 'The coastal/tidal flood risk is VERY LOW' },
+        { ground: 'The groundwater flood risk is VERY LOW' },
+        { surface: 'The surface water flood risk is VERY LOW' }
+      ],
+      headline: 'Minor river flooding is possible in north-west England.',
+      amendments: '',
+      future_forecast: '',
+      last_modified_at: '2021-03-29T09:18:29Z',
+      next_issue_due_at: '2021-03-30T09:30:00Z',
+      png_thumbnails_with_days_url: 'fgs-statements/01830-2021-03-29_1030/FGSthumbnails-with-days.png',
+      risk_areas: [
+        {
+          id: 5620,
+          statement_id: 1830,
+          updated_at: '2021-03-29T08:39:06Z',
+          beyond_five_days: false,
+          ordering: 1,
+          risk_area_blocks: [
+            {
+              id: 6377,
+              days: [1, 2, 3],
+              risk_area_id: 5620,
+              risk_levels: { coastal: [2, 2] },
+              additional_information: 'Minor coastal impacts possible from Monday to Wednesday.',
+              polys: [
+                {
+                  id: 8354,
+                  coordinates: [
+                    [-0.78842, 54.56071], [-0.74844, 54.53164], [-0.73943, 54.52731], [-0.7148, 54.53348], [-0.68459, 54.52018], [-0.67077, 54.50035], [-0.63395, 54.49637], [-0.58854, 54.48926], [-0.55361, 54.46704], [-0.52146, 54.44695], [-0.5327, 54.43324], [-0.52277, 54.41626], [-0.46368, 54.38917], [-0.44546, 54.36013], [-0.43267, 54.34018], [-0.41704, 54.33145], [-0.40748, 54.29391], [-0.38477, 54.28805], [-0.39653, 54.27424], [-0.36949, 54.24931], [-0.36597, 54.25389], [-0.31912, 54.23388], [-0.27708, 54.21728], [-0.26327, 54.1759], [-0.21253, 54.15757], [-0.15209, 54.14283], [-0.09374, 54.12838], [-0.07638, 54.11641], [-0.16796, 54.09833], [-0.19841, 54.0779], [-0.21192, 54.00732], [-0.18608, 53.95669], [-0.15636, 53.90467], [-0.09819, 53.84686], [0.02386, 53.73917], [0.1141, 53.66535], [0.14257, 53.62343], [0.14547, 53.60735], [0.14392, 53.60183], [0.14349, 53.60796], [0.12457, 53.62339], [0.07959, 53.64099], [0.03449, 53.64919], [-0.05409, 53.62899], [-0.11352, 53.63943], [-0.22725, 53.70847], [-0.24439, 53.73081], [-0.28674, 53.74254], [-0.4192, 53.71956], [-0.44745, 53.71385], [-0.47338, 53.71726]
+                  ],
+                  area: 0.0,
+                  label_position: [0.0159799307584763, 53.9913311426043],
+                  poly_type: 'coastal',
+                  risk_area_block_id: 6377,
+                  counties: [{ name: 'Kingston upon Hull' }, { name: 'N Yorkshire' }, { name: 'E Riding of Yorkshire' }],
+                  z_index: 0
+                }]
+            }
+          ]
+        }
+      ],
+      aoc_maps: [
+        {
+          id: 2677,
+          title: 'Specific Areas of Concern Map 1: Monday 29 to Wednesday 31 March 2021.',
+          ordering: 0,
+          caption: '',
+          ratio: [
+            { top_left: [55.53955108582219, 0.6497254874557258] },
+            { top_right: [55.53955108582219, -4.263228485360742] },
+            { bottom_right: [52.71855682694887, -4.263228485360742] },
+            { top_left: [55.53955108582219, -4.263228485360742] }],
+          statement_id: 1830,
+          polys: [
+            {
+              id: 8354,
+              coordinates: [[-0.78842, 54.56071], [-0.74844, 54.53164], [-0.73943, 54.52731], [-0.7148, 54.53348], [-0.68459, 54.52018], [-0.67077, 54.50035], [-0.63395, 54.49637], [-0.58854, 54.48926], [-0.55361, 54.46704], [-0.52146, 54.44695], [-0.5327, 54.43324], [-0.52277, 54.41626], [-0.46368, 54.38917], [-0.44546, 54.36013], [-0.43267, 54.34018], [-0.41704, 54.33145], [-0.40748, 54.29391], [-0.38477, 54.28805], [-0.39653, 54.27424], [-0.36949, 54.24931], [-0.36597, 54.25389], [-0.31912, 54.23388], [-0.27708, 54.21728], [-0.26327, 54.1759], [-0.21253, 54.15757], [-0.15209, 54.14283], [-0.09374, 54.12838], [-0.07638, 54.11641], [-0.16796, 54.09833], [-0.19841, 54.0779], [-0.21192, 54.00732], [-0.18608, 53.95669], [-0.15636, 53.90467], [-0.09819, 53.84686], [0.02386, 53.73917], [0.1141, 53.66535], [0.14257, 53.62343], [0.14547, 53.60735], [0.14392, 53.60183], [0.14349, 53.60796], [0.12457, 53.62339], [0.07959, 53.64099], [0.03449, 53.64919], [-0.05409, 53.62899], [-0.11352, 53.63943], [-0.22725, 53.70847], [-0.24439, 53.73081], [-0.28674, 53.74254], [-0.4192, 53.71956], [-0.44745, 53.71385], [-0.47338, 53.71726]],
+              area: 0.0,
+              label_position: [0.0159799307584763, 53.9913311426043],
+              poly_type: 'coastal',
+              risk_area_block_id: 6377,
+              counties: [{ name: 'Kingston upon Hull' }, { name: 'N Yorkshire' }, { name: 'E Riding of Yorkshire' }],
+              z_index: 0
+            }]
+        }],
+      public_forecast: {
+        id: 1830,
+        english_forecast: 'Local flooding is possible from rivers in parts of the north of England.',
+        welsh_forecast: 'Service unavailable.',
+        england_forecast: 'Service unavailable.',
+        wales_forecast_english: 'Local coastal flooding is possible but not expected',
+        wales_forecast_welsh: 'Mae llifogydd arfordirol lleol yn bosibl ond ni ddisgwylir.',
+        published_at: '2021-03-29T10:14:23Z'
+      }
+    }
+
+    const outlook = new Outlook(outlookWithCoastal)
+
+    const Result = await outlook
+
+    Code.expect(Result._geoJson.features[0].geometry.type).to.be.equal('Polygon')
+  })
 })
