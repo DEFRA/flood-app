@@ -37,41 +37,8 @@ module.exports = {
       return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location })
     }
 
-    let tabs = {}
-    let outOfDate = true
-    let dataError = false
+    const { tabs, outOfDate, dataError } = await createOutlookTabs(place)
 
-    const cachedOutlook = await floodService.outlook
-    if (!cachedOutlook || Object.keys(cachedOutlook).length === 0) {
-      dataError = true
-    } else {
-      try {
-        const myOutlook = JSON.parse(JSON.stringify(cachedOutlook._outlook))
-
-        if (!myOutlook.issued_at) {
-          console.error(`Outlook FGS issued_at date error [${myOutlook.issued_at}]`)
-          dataError = true
-        }
-        const issueDate = moment(myOutlook.issued_at).valueOf()
-
-        const now = moment().tz(tz).valueOf()
-        const hours48 = 2 * 60 * 60 * 24 * 1000
-        outOfDate = (now - issueDate) > hours48
-
-        const riskAreasCount = myOutlook.risk_areas ? myOutlook.risk_areas.length : 0
-
-        const outlookTabsModel = new OutlookTabsModel(myOutlook, place)
-        tabs = outOfDate || riskAreasCount === 0 ? { lowForFive: true } : outlookTabsModel
-
-        if (riskAreasCount === 0) {
-          tabs.formattedIssueDate = `${formatDate(myOutlook.issued_at, 'h:mma')} on ${formatDate(myOutlook.issued_at, 'D MMMM YYYY')}`
-          tabs.issueUTC = moment(myOutlook.issued_at).tz('Europe/London').format()
-        }
-      } catch (err) {
-        console.error('Outlook FGS data error - location: ', err)
-        dataError = true
-      }
-    }
     const [
       impacts,
       { floods },
@@ -106,4 +73,49 @@ module.exports = {
       }
     }
   }
+}
+
+const createOutlookTabs = async (place) => {
+  let tabs = {}
+  let outOfDate = true
+  let dataError = false
+  let myOutlook = {}
+  const now = moment().tz(tz).valueOf()
+  const hours48 = 2 * 60 * 60 * 24 * 1000
+  let issueDate = moment().valueOf() // Default issueDate to today
+  let cachedOutlook = {}
+
+  try {
+    cachedOutlook = await floodService.outlook
+    if (cachedOutlook && cachedOutlook._outlook) {
+      myOutlook = JSON.parse(JSON.stringify(cachedOutlook._outlook))
+    } else {
+      dataError = true
+    }
+  } catch (err) {
+    console.error(`Outlook FGS data error [${myOutlook}]`)
+    dataError = true
+  }
+
+  if (!dataError) {
+    if (!myOutlook.issued_at) {
+      console.error(`Outlook FGS issued_at date error [${myOutlook.issued_at}]`)
+      dataError = true
+    } else {
+      issueDate = moment(myOutlook.issued_at).valueOf()
+    }
+
+    outOfDate = (now - issueDate) > hours48
+
+    const riskAreasCount = myOutlook.risk_areas ? myOutlook.risk_areas.length : 0
+
+    const outlookTabsModel = new OutlookTabsModel(myOutlook, place)
+    tabs = outOfDate || riskAreasCount === 0 ? { lowForFive: true } : outlookTabsModel
+
+    if (riskAreasCount === 0) {
+      tabs.formattedIssueDate = `${formatDate(myOutlook.issued_at, 'h:mma')} on ${formatDate(myOutlook.issued_at, 'D MMMM YYYY')}`
+      tabs.issueUTC = moment(myOutlook.issued_at).tz('Europe/London').format()
+    }
+  }
+  return { tabs, outOfDate, dataError }
 }

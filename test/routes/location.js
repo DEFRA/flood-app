@@ -1363,7 +1363,7 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    // Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
   })
   lab.test('GET /location with FGS that is valid json but incorrect format', async () => {
@@ -1396,6 +1396,59 @@ lab.experiment('Routes test - location - 2', () => {
     sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
 
     floodService.outlook = await floodService.getOutlook()
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/location?q=Warrington'
+    }
+
+    const response = await server.inject(options)
+    // Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+  })
+  lab.test('GET /location with FGS that is invalid json', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    const fakeFloodsData = () => {
+      return { floods: [] }
+    }
+    const fakeStationsData = () => []
+    const fakeImpactsData = () => []
+
+    const fakeOutlookData = () => {
+      const outlook = ''
+      return outlook
+    }
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
+
+    const fakeGetJson = () => data.warringtonGetJson
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    floodService.outlook = ''
     const locationPlugin = {
       plugin: {
         name: 'location',

@@ -31,7 +31,6 @@ module.exports = {
   // set cached outlook object
   set outlook (data) {
     if (data.dataError) {
-      outlook = { dataError: true }
       console.error('Set Outlook data error encountered: ', data)
     } else {
       try {
