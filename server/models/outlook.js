@@ -3,6 +3,10 @@ const messageContent = require('./outlook-content.json')
 
 class Outlook {
   constructor (outlook) {
+    if (!outlook || Object.keys(outlook).length === 0) {
+      this.dataError = true
+      return
+    }
     this._outlook = outlook
     // Has concern areas flag
     this._hasOutlookConcern = false

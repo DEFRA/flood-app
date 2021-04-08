@@ -107,11 +107,13 @@ lab.experiment('Routes test - location - 2', () => {
     }
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
+    const fakeOutlookData = () => {}
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -154,11 +156,13 @@ lab.experiment('Routes test - location - 2', () => {
     }
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
+    const fakeOutlookData = () => {}
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
 
     const util = require('../../server/util')
     sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
@@ -359,11 +363,13 @@ lab.experiment('Routes test - location - 2', () => {
 
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
+    const fakeOutlookData = () => {}
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
 
     const fakeGetJson = () => {
       return {
@@ -636,11 +642,14 @@ lab.experiment('Routes test - location - 2', () => {
     }
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
+    const fakeOutlookData = () => {}
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
+
     const fakeGetJson = () => data.warringtonGetJson
 
     const util = require('../../server/util')
@@ -681,11 +690,13 @@ lab.experiment('Routes test - location - 2', () => {
     const fakeFloodsData = () => []
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
+    const fakeOutlookData = () => {}
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
     const fakeGetJson = () => data.scotlandGetJson
 
     const util = require('../../server/util')
@@ -857,11 +868,13 @@ lab.experiment('Routes test - location - 2', () => {
     }
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
+    const fakeOutlookData = () => {}
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -941,11 +954,13 @@ lab.experiment('Routes test - location - 2', () => {
     }
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
+    const fakeOutlookData = () => {}
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -988,11 +1003,13 @@ lab.experiment('Routes test - location - 2', () => {
     }
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
+    const fakeOutlookData = () => {}
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -1491,7 +1508,7 @@ lab.experiment('Routes test - location - 2', () => {
     const fakeOutlookData = () => {
       const outlook = {
         id: 1830,
-        issued_at: '2021-04-06T09:30:00Z',
+        issued_at: moment().utc(),
         pdf_url: 'fgs.pdf',
         detailed_csv_url: 'fgs-statements/01830-2021-03-29_1030/detailed.csv',
         area_of_concern_url: 'areaofconcern.jpg',

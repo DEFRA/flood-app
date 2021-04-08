@@ -30,15 +30,21 @@ module.exports = {
   },
   // set cached outlook object
   set outlook (data) {
-    try {
-      const newData = new Outlook(data)
-      if (newData.dataError) {
-        console.error('Set Outlook data error encountered: ', newData)
-      } else {
-        outlook = data && new Outlook(data)
+    if (data.dataError) {
+      outlook = { dataError: true }
+      console.error('Set Outlook data error encountered: ', data)
+    } else {
+      try {
+        const newData = new Outlook(data)
+        if (newData.dataError) {
+          console.error('Set Outlook data error encountered: ', newData)
+        } else {
+          outlook = data && new Outlook(data)
+        }
+      } catch (err) {
+        console.error(`Set Outlook cached data error - [${err}]`)
+        outlook = { dataError: true }
       }
-    } catch (err) {
-      console.error(`Set Outlook cached data error - [${err}]`)
     }
   },
 

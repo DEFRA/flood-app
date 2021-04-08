@@ -44,26 +44,30 @@ module.exports = {
     try {
       const cachedOutlook = await floodService.outlook
 
-      const myOutlook = JSON.parse(JSON.stringify(cachedOutlook._outlook))
-
-      if (!myOutlook.issued_at) {
-        console.error(`Outlook FGS issued_at date error [${myOutlook.issued_at}]`)
+      if (!cachedOutlook || Object.keys(cachedOutlook).length === 0) {
         dataError = true
-      }
-      const issueDate = moment(myOutlook.issued_at).valueOf()
+      } else {
+        const myOutlook = JSON.parse(JSON.stringify(cachedOutlook._outlook))
 
-      const now = moment().tz(tz).valueOf()
-      const hours48 = 2 * 60 * 60 * 24 * 1000
-      outOfDate = (now - issueDate) > hours48
+        if (!myOutlook.issued_at) {
+          console.error(`Outlook FGS issued_at date error [${myOutlook.issued_at}]`)
+          dataError = true
+        }
+        const issueDate = moment(myOutlook.issued_at).valueOf()
 
-      const riskAreasCount = myOutlook.risk_areas ? myOutlook.risk_areas.length : 0
+        const now = moment().tz(tz).valueOf()
+        const hours48 = 2 * 60 * 60 * 24 * 1000
+        outOfDate = (now - issueDate) > hours48
 
-      const outlookTabsModel = new OutlookTabsModel(myOutlook, place)
-      tabs = outOfDate || riskAreasCount === 0 ? { lowForFive: true } : outlookTabsModel
+        const riskAreasCount = myOutlook.risk_areas ? myOutlook.risk_areas.length : 0
 
-      if (riskAreasCount === 0) {
-        tabs.formattedIssueDate = `${formatDate(myOutlook.issued_at, 'h:mma')} on ${formatDate(myOutlook.issued_at, 'D MMMM YYYY')}`
-        tabs.issueUTC = moment(myOutlook.issued_at).tz('Europe/London').format()
+        const outlookTabsModel = new OutlookTabsModel(myOutlook, place)
+        tabs = outOfDate || riskAreasCount === 0 ? { lowForFive: true } : outlookTabsModel
+
+        if (riskAreasCount === 0) {
+          tabs.formattedIssueDate = `${formatDate(myOutlook.issued_at, 'h:mma')} on ${formatDate(myOutlook.issued_at, 'D MMMM YYYY')}`
+          tabs.issueUTC = moment(myOutlook.issued_at).tz('Europe/London').format()
+        }
       }
     } catch (err) {
       console.error('Outlook FGS data error - location: ', err)
