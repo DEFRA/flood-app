@@ -41,12 +41,11 @@ module.exports = {
     let outOfDate = true
     let dataError = false
 
-    try {
-      const cachedOutlook = await floodService.outlook
-
-      if (!cachedOutlook || Object.keys(cachedOutlook).length === 0) {
-        dataError = true
-      } else {
+    const cachedOutlook = await floodService.outlook
+    if (!cachedOutlook || Object.keys(cachedOutlook).length === 0) {
+      dataError = true
+    } else {
+      try {
         const myOutlook = JSON.parse(JSON.stringify(cachedOutlook._outlook))
 
         if (!myOutlook.issued_at) {
@@ -68,10 +67,10 @@ module.exports = {
           tabs.formattedIssueDate = `${formatDate(myOutlook.issued_at, 'h:mma')} on ${formatDate(myOutlook.issued_at, 'D MMMM YYYY')}`
           tabs.issueUTC = moment(myOutlook.issued_at).tz('Europe/London').format()
         }
+      } catch (err) {
+        console.error('Outlook FGS data error - location: ', err)
+        dataError = true
       }
-    } catch (err) {
-      console.error('Outlook FGS data error - location: ', err)
-      dataError = true
     }
     const [
       impacts,
