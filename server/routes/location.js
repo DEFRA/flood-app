@@ -75,7 +75,7 @@ module.exports = {
   }
 }
 
-const createOutlookTabs = async (place) => {
+const createOutlookTabs = async place => {
   let tabs = {}
   let outOfDate = true
   let dataError = false
