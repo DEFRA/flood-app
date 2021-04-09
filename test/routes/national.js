@@ -4,6 +4,7 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
+const moment = require('moment')
 
 lab.experiment('Routes test - national view', () => {
   let sandbox
@@ -25,7 +26,52 @@ lab.experiment('Routes test - national view', () => {
     await server.stop()
     await sandbox.restore()
   })
+  lab.test('GET /national view no outlook data', async () => {
+    // Create dummy flood data in place of cached data
+    const fakeFloodData = () => {
+      return {
+        floods: []
+      }
+    }
 
+    const fakeOutlookData = () => {
+      const outlook = {}
+      return outlook
+    }
+
+    const floodService = require('../../server/services/flood')
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+    // Fake the cached flood data
+    floodService.floods = await floodService.getFloods()
+    floodService.outlook = await floodService.getOutlook()
+    const locationPlugin = {
+      plugin: {
+        name: 'national',
+        register: (server, options) => {
+          server.route(require('../../server/routes/national'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('No flood alerts or warnings')
+    Code.expect(response.payload).to.contain('Call Floodline for advice')
+    Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+  })
   lab.test('GET /national view no alerts or warnings', async () => {
     // Create dummy flood data in place of cached data
     const fakeFloodData = () => {
@@ -72,55 +118,7 @@ lab.experiment('Routes test - national view', () => {
     Code.expect(response.payload).to.contain('No flood alerts or warnings')
     Code.expect(response.payload).to.contain('Call Floodline for advice')
   })
-  lab.test('GET /national view no outlook data', async () => {
-    // Create dummy flood data in place of cached data
-    const fakeFloodData = () => {
-      return {
-        floods: []
-      }
-    }
-
-    const fakeOutlookData = () => {
-      const outlook = {}
-      return outlook
-    }
-
-    const floodService = require('../../server/services/flood')
-    floodService.outlook = {}
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-
-    // Fake the cached flood data
-    floodService.floods = await floodService.getFloods()
-    floodService.outlook = await floodService.getOutlook()
-
-    const locationPlugin = {
-      plugin: {
-        name: 'national',
-        register: (server, options) => {
-          server.route(require('../../server/routes/national'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(locationPlugin)
-    await server.initialize()
-
-    const options = {
-      method: 'GET',
-      url: '/'
-    }
-
-    const response = await server.inject(options)
-
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('No flood alerts or warnings')
-    Code.expect(response.payload).to.contain('Call Floodline for advice')
-    Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
-  })
-  lab.test('GET /national view with incorrect structure', async () => {
+  lab.test('GET /national view with incorrect outlook structure', async () => {
     // Create dummy flood data in place of cached data
     const fakeFloodData = () => {
       return {
@@ -277,5 +275,94 @@ lab.experiment('Routes test - national view', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('No flood alerts or warnings')
     Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+  })
+  lab.test('GET national view', async () => {
+    const fakeFloodData = () => {
+      return {
+        floods: []
+      }
+    }
+
+    const fakeOutlookData = () => {
+      const outlook = require('../data/outlook.json')
+      return outlook.statements[0]
+    }
+
+    const floodService = require('../../server/services/flood')
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+    floodService.floods = await floodService.getFloods()
+    floodService.outlook = await floodService.getOutlook()
+
+    const locationPlugin = {
+      plugin: {
+        name: 'national',
+        register: (server, options) => {
+          server.route(require('../../server/routes/national'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('No flood alerts or warnings')
+    Code.expect(response.payload).to.contain('Call Floodline for advice')
+  })
+  lab.test('GET national view with FGS stale data warning', async () => {
+    const fakeFloodData = () => {
+      return {
+        floods: []
+      }
+    }
+
+    const fakeOutlookData = () => {
+      const outlook = require('../data/outlook.json')
+      outlook.statements[0].issued_at = moment().utc().subtract(3, 'days').format()
+      return outlook.statements[0]
+    }
+
+    const floodService = require('../../server/services/flood')
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+    floodService.floods = await floodService.getFloods()
+    floodService.outlook = await floodService.getOutlook()
+
+    const locationPlugin = {
+      plugin: {
+        name: 'national',
+        register: (server, options) => {
+          server.route(require('../../server/routes/national'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>')
+    Code.expect(response.payload).to.contain('<p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>')
   })
 })
