@@ -87,11 +87,7 @@ const createOutlookTabs = async place => {
 
   try {
     cachedOutlook = await floodService.outlook
-    if (cachedOutlook && cachedOutlook._outlook) {
-      myOutlook = JSON.parse(JSON.stringify(cachedOutlook._outlook))
-    } else {
-      dataError = true
-    }
+    myOutlook = JSON.parse(JSON.stringify(cachedOutlook._outlook))
   } catch (err) {
     console.error(`Outlook FGS data error [${myOutlook}]`)
     dataError = true

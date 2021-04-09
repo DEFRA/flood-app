@@ -1416,7 +1416,7 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    // Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
   })
   lab.test('GET /location with FGS that is invalid json', async () => {
@@ -1448,7 +1448,7 @@ lab.experiment('Routes test - location - 2', () => {
     const util = require('../../server/util')
     sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
 
-    floodService.outlook = ''
+    floodService.outlook = await floodService.getOutlook()
     const locationPlugin = {
       plugin: {
         name: 'location',
@@ -1469,7 +1469,7 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    // Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
   })
   lab.test('GET /location with FGS that is valid json but missing issue_date and other fields', async () => {
@@ -1615,7 +1615,7 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    // Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('The flood risk for the next 5 days is very low.')
   })
 })
