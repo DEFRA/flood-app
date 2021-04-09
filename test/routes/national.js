@@ -276,50 +276,6 @@ lab.experiment('Routes test - national view', () => {
     Code.expect(response.payload).to.contain('No flood alerts or warnings')
     Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
   })
-  lab.test('GET national view', async () => {
-    const fakeFloodData = () => {
-      return {
-        floods: []
-      }
-    }
-
-    const fakeOutlookData = () => {
-      const outlook = require('../data/outlook.json')
-      return outlook.statements[0]
-    }
-
-    const floodService = require('../../server/services/flood')
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-
-    floodService.floods = await floodService.getFloods()
-    floodService.outlook = await floodService.getOutlook()
-
-    const locationPlugin = {
-      plugin: {
-        name: 'national',
-        register: (server, options) => {
-          server.route(require('../../server/routes/national'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(locationPlugin)
-    await server.initialize()
-
-    const options = {
-      method: 'GET',
-      url: '/'
-    }
-
-    const response = await server.inject(options)
-
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('No flood alerts or warnings')
-    Code.expect(response.payload).to.contain('Call Floodline for advice')
-  })
   lab.test('GET national view with FGS stale data warning', async () => {
     const fakeFloodData = () => {
       return {
