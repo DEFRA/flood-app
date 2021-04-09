@@ -3,13 +3,14 @@ const messageContent = require('./outlook-content.json')
 
 class Outlook {
   constructor (outlook) {
+    if (!outlook || Object.keys(outlook).length === 0) {
+      this.dataError = true
+      return
+    }
     this._outlook = outlook
     // Has concern areas flag
     this._hasOutlookConcern = false
     this._outOfDate = true
-
-    // Issued date
-    this._timestampOutlook = (new Date(outlook.issued_at)).getTime()
 
     // Highest daily risk
     this._riskLevels = [0, 0, 0, 0, 0]
@@ -22,7 +23,43 @@ class Outlook {
       type: 'FeatureCollection',
       features: []
     }
+    try {
+      this.outlookRiskAreas(outlook, riskMatrix, riskBands)
+      this.dataError = false
 
+      // Issued date
+      this._timestampOutlook = (new Date(outlook.issued_at)).getTime()
+    } catch (err) {
+      console.error('Outlook FGS data error - outlook: ', err)
+      this.dataError = true
+      return
+    }
+
+    this._geoJson.features.forEach((feature) => {
+      // Convert linestrings to polygons
+      if (feature.geometry.type === 'LineString') {
+        const buffer = turf.buffer(feature, 1, { units: 'miles' })
+        const coordinates = buffer.geometry.coordinates
+        feature.geometry.type = 'Polygon'
+        feature.geometry.coordinates = coordinates
+      }
+    })
+
+    this._full = outlook.public_forecast.english_forecast
+
+    const issueDate = new Date(outlook.issued_at)
+
+    this._days = [0, 1, 2, 3, 4].map(i => {
+      const date = new Date(issueDate)
+      return {
+        idx: i + 1,
+        level: this._riskLevels[i],
+        date: new Date(date.setDate(date.getDate() + i))
+      }
+    })
+  }
+
+  outlookRiskAreas (outlook, riskMatrix, riskBands) {
     outlook.risk_areas.forEach(riskArea => {
       riskArea.risk_area_blocks.forEach(riskAreaBlock => {
         let sources = []
@@ -87,29 +124,6 @@ class Outlook {
 
         this.generatePolyFeature(riskAreaBlock, featureName, messageGroupObj, riskLevel, impactLevel, likelihoodLevel)
       })
-    })
-
-    this._geoJson.features.forEach((feature) => {
-      // Convert linestrings to polygons
-      if (feature.geometry.type === 'LineString') {
-        const buffer = turf.buffer(feature, 1, { units: 'miles' })
-        const coordinates = buffer.geometry.coordinates
-        feature.geometry.type = 'Polygon'
-        feature.geometry.coordinates = coordinates
-      }
-    })
-
-    this._full = outlook.public_forecast.english_forecast
-
-    const issueDate = new Date(outlook.issued_at)
-
-    this._days = [0, 1, 2, 3, 4].map(i => {
-      const date = new Date(issueDate)
-      return {
-        idx: i + 1,
-        level: this._riskLevels[i],
-        date: new Date(date.setDate(date.getDate() + i))
-      }
     })
   }
 

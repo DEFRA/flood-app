@@ -87,7 +87,7 @@
     <p><a href="/river-and-sea-levels?q={{ model.location }}">Find a river, sea or groundwater level in this area</a></p> 
     <!-- end river and sea levels -->
     <h2 class="govuk-heading-m">Regional flood forecast</h2>
-    {% if model.outOfDate %}
+    {% if model.outOfDate or model.dataError %}
     <div class="defra-service-error govuk-!-margin-bottom-3">
       <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>
       <p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>

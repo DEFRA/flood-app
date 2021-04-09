@@ -103,6 +103,21 @@ lab.experiment('Flood service test', () => {
 
     Code.expect(result).to.equal('ok')
   })
+  lab.test('Test getOutlook endpoint thrown error', async () => {
+    const util = require('../../server/util')
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://server2/flood-guidance-statement')
+      .once()
+      .throws({ statusCode: 400, error: 'Bad Request', message: 'Failed to get the flood guidance statement' })
+
+    const floodService = require('../../server/services/flood')
+    const result = await floodService.getOutlook()
+
+    Code.expect(result).to.equal({ dataError: true })
+  })
   lab.test('Test getStationById endpoint', async () => {
     const direction = 'u'
     const id = 1001

@@ -20,7 +20,7 @@ class OutlookPolys {
           if (poly.poly_type === 'coastal') {
             const feature = {
               type: 'Feature',
-              properties: {},
+              properties: { polyType: 'coastal' },
               geometry: {
                 type: 'LineString',
                 coordinates: poly.coordinates

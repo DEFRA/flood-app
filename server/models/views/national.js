@@ -5,9 +5,12 @@ const tz = 'Europe/London'
 
 class ViewModel {
   constructor (floods, outlook) {
+    const now = moment().tz(tz).valueOf()
+    if (!outlook) {
+      outlook = { _timestampOutlook: now, dataError: true }
+    }
     // Check if flood guidance statement is older than 48 hours
     const issueDate = moment(outlook._timestampOutlook).valueOf()
-    const now = moment().tz(tz).valueOf()
     const hours48 = 2 * 60 * 60 * 24 * 1000
     const outlookOutOfDate = (now - issueDate) > hours48
 
@@ -25,6 +28,7 @@ class ViewModel {
       bingMaps: bingKeyMaps,
       outlookTimestamp: `${formatDate(outlook._timestampOutlook, 'h:mma')} on ${formatDate(outlook._timestampOutlook, 'D MMMM YYYY')}`,
       outlookUTC: moment(outlook._timestampOutlook).tz(tz).format(),
+      dataError: outlook.dataError,
       outlookOutOfDate
     })
 

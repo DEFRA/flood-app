@@ -20,11 +20,30 @@ module.exports = {
   },
   // get cached outlook object
   get outlook () {
-    return outlook
+    try {
+      return outlook
+    } catch (err) {
+      console.error(`Get Outlook data error - [${err}]`)
+      return { dataError: true }
+    }
   },
   // set cached outlook object
   set outlook (data) {
-    outlook = data && new Outlook(data)
+    if (data.dataError) {
+      console.error('Set Outlook data error encountered: ', data)
+    } else {
+      try {
+        const newData = new Outlook(data)
+        if (newData.dataError) {
+          console.error('Set Outlook data error encountered: ', newData)
+        } else {
+          outlook = data && new Outlook(data)
+        }
+      } catch (err) {
+        console.error(`Set Outlook cached data error - [${err}]`)
+        outlook = { dataError: true }
+      }
+    }
   },
 
   get stationsGeojson () {
@@ -58,8 +77,13 @@ module.exports = {
   },
 
   // fetching the flood guidance statement using service layer leveraging s3
-  getOutlook () {
-    return util.getJson(`${serviceUrl}/flood-guidance-statement`)
+  async getOutlook () {
+    try {
+      return await util.getJson(`${serviceUrl}/flood-guidance-statement`)
+    } catch (err) {
+      console.error(`Get Outlook data error - [${err}]`)
+      return { dataError: true }
+    }
   },
 
   getStationById (id, direction) {
