@@ -99,6 +99,10 @@ module.exports = {
     return util.getJson(`${serviceUrl}/station/${id}/${direction}`)
   },
 
+  getStations () {
+    return util.getJson(`${serviceUrl}/stations`)
+  },
+
   getStationsWithin (bbox) {
     const xyCoordsPath = bbox.join('/')
     return util.getJson(`${serviceUrl}/stations-within/${xyCoordsPath}`)
@@ -180,5 +184,9 @@ module.exports = {
 
   getFfoiHealth () {
     return util.getJson(`${serviceUrl}/ffoi-health`)
+  },
+
+  getTargetArea (taCode) {
+    return util.getJson(`${serviceUrl}/target-area/${taCode}`)
   }
 }

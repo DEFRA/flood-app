@@ -68,7 +68,7 @@
                 <span class="defra-flood-list__group-title">
                     <a href="/river-and-sea-levels?river-id={{id}}">{{ group[0].river_name }}</a> <span class="govuk-visually-hidden">at:</span>
                 </span>
-                {# if river has more than one staion and river navigation graphic #}
+                {# if river has more than one station and river navigation graphic #}
                 {% if (group.length === 1) or (id === "Sea Levels") or (id === "Groundwater Levels") %}
                 <dl class="defra-flood-list__items defra-flood-list__items--levels">
                 {% else %}

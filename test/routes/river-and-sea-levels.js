@@ -121,7 +121,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
       }
     ]
 
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
 
     const fakeGetJson = () => {
       throw new Error('Bing error')
@@ -152,7 +152,6 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const response = await server.inject(options)
 
     Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location - River and sea levels in England - GOV.UK')
-    Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /river-and-sea-levels with levels Low, Normal, High', async () => {
@@ -598,7 +597,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
       }
     ]
 
-    sandbox.stub(floodService, 'getRiverById').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -810,10 +809,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     sandbox.stub(floodService, 'getStationsWithinTargetArea').callsFake(fakeStationsData)
 
-    const fakeGetJson = () => data.warringtonGetJson
-
-    const util = require('../../server/util')
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+    sandbox.stub(floodService, 'getTargetArea').callsFake(() => JSON.parse('{"fws_tacode":"013FWCTME1","ta_name":"River Glaze catchment including Leigh and East Wigan"}'))
 
     const riversPlugin = {
       plugin: {
@@ -840,7 +836,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('Showing levels within 5 miles of River Glaze catchment including Leigh and East Wigan')
     Code.expect(response.statusCode).to.equal(200)
   })
-  lab.test('GET /river-and-sea-levels querey returns undefined', async () => {
+  lab.test('GET /river-and-sea-levels query returns undefined', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -935,7 +931,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     ]
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
 
     const fakeGetJson = () => {
       return {
@@ -989,7 +985,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('Sankey Brook')
     Code.expect(response.statusCode).to.equal(200)
   })
-  lab.test('GET /river-and-sea-levels blank querey', async () => {
+  lab.test('GET /river-and-sea-levels blank query', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -1084,7 +1080,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     ]
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
 
     const riversPlugin = {
       plugin: {
@@ -1209,7 +1205,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
       }
     ]
 
-    sandbox.stub(floodService, 'getRiverById').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -1304,7 +1300,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
       }
     ]
 
-    sandbox.stub(floodService, 'getRiverById').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -1376,7 +1372,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     ]
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
 
     const riversPlugin = {
       plugin: {

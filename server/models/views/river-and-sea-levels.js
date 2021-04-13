@@ -3,12 +3,15 @@ const { groupBy } = require('../../util')
 const { bingKeyMaps } = require('../../config')
 
 class ViewModel {
-  constructor ({ location, place, stations, targetArea, riverId, error }) {
+  constructor ({ location, place, stations, targetArea, riverIds, referer, error }) {
     const placeName = place ? place.name : (targetArea && targetArea.ta_name ? targetArea.ta_name : '')
     const placeCentre = place ? place.center : []
     const pageTitle = ''
     const isEngland = place ? place.isEngland.is_england : null
     const placeDescription = targetArea && targetArea.ta_name ? targetArea.ta_name : ''
+
+    // no requirement for heading if mulitple rivers selected for from filter.
+    let riverId = riverIds && riverIds.length === 1 ? riverIds[0] : null
 
     Object.assign(this, {
       q: location,
@@ -20,7 +23,8 @@ class ViewModel {
       countLevels: stations.length,
       error: error ? true : null,
       riverId,
-      isEngland
+      isEngland,
+      referer: referer
     })
 
     if (error) {
