@@ -45,14 +45,14 @@ class ViewModel {
       case 1:
         if (!numWarnings && !numSevereWarnings) {
           this.severityLevel = 'alert'
-          this.alertsBanner = 'There is a flood alert in this area'
+          this.alertsBanner = 'There is a flood alert within 5 miles of this measuring station'
           this.alertsLink = `/target-area/${warningsAlertsGroups['1'][0].ta_code}`
         }
         this.isAlertLinkRendered = true
         break
       default: {
         this.severityLevel = 'alert'
-        this.alertsBanner = 'There are flood alerts in this area'
+        this.alertsBanner = 'There are flood alerts within 5 miles of this measuring station'
         this.alertsLink = `/alerts-and-warnings?station=${this.station.id}#alerts`
         this.isAlertLinkRendered = true
       }
@@ -68,14 +68,14 @@ class ViewModel {
           this.warningsLink = `/target-area/${warningsAlertsGroups['2'][0].ta_code}`
         } else {
           this.severityLevel = 'warning'
-          this.warningsBanner = 'There is a flood warning in this area'
+          this.warningsBanner = 'There is a flood warning within 5 miles of this measuring station'
           this.warningsLink = `/alerts-and-warnings?station=${this.station.id}#warnings`
         }
         this.isWarningLinkRendered = true
         break
       default: {
         this.severityLevel = 'warning'
-        this.warningsBanner = 'There are flood warnings in this area'
+        this.warningsBanner = 'There are flood warnings within 5 miles of this measuring station'
         this.warningsLink = `/alerts-and-warnings?station=${this.station.id}#warnings`
         this.isWarningLinkRendered = true
       }
@@ -91,14 +91,14 @@ class ViewModel {
           this.severeLink = `/target-area/${warningsAlertsGroups['3'][0].ta_code}`
         } else {
           this.severityLevel = 'severe'
-          this.severeBanner = 'There is a severe flood warning in this area'
+          this.severeBanner = 'There is a severe flood warning within 5 miles of this measuring station'
           this.severeLink = `/alerts-and-warnings?station=${this.station.id}#severe`
         }
         this.isSevereLinkRenedered = true
         break
       default: {
         this.severityLevel = 'severe'
-        this.severeBanner = 'There are severe flood warnings in this area'
+        this.severeBanner = 'There are severe flood warnings within 5 miles of this measuring station'
         this.severeLink = `/alerts-and-warnings?station=${this.station.id}#severe`
         this.isSevereLinkRenedered = true
       }
