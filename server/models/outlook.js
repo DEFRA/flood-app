@@ -1,5 +1,6 @@
 const turf = require('@turf/turf')
 const messageContent = require('./outlook-content.json')
+const escape = require('lodash.escape')
 
 class Outlook {
   constructor (outlook) {
@@ -45,7 +46,7 @@ class Outlook {
       }
     })
 
-    this._full = outlook.public_forecast.english_forecast
+    this._full = escape(outlook.public_forecast.english_forecast)
 
     const issueDate = new Date(outlook.issued_at)
 
