@@ -45,8 +45,7 @@ class Outlook {
       }
     })
 
-    // Remove any tags from free text
-    this._full = (outlook.public_forecast.english_forecast).replace(/(<([^>]+)>)/gi, '')
+    this._full = outlook.public_forecast.english_forecast
 
     const issueDate = new Date(outlook.issued_at)
 
