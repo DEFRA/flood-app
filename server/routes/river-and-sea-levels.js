@@ -8,7 +8,7 @@ const joiParams = joi.object({
   q: joi.string().allow('').trim().max(200),
   'river-id': joi.string(),
   'target-area': joi.string(),
-  types: joi.string().allow('ri', 'c', 'g', 'ra'),
+  types: joi.string().allow('S', 'M', 'C', 'G', 'R'),
   btn: joi.string(),
   ext: joi.string(),
   fid: joi.string(),
@@ -24,7 +24,11 @@ module.exports = [{
     const referer = request.headers.referer
     let model, place, stations, targetArea
 
+    // Convert river Ids into array
     riverIds = riverIds && riverIds.split(',')
+
+    // Map types to db station types
+    types = types && types.split(',')
 
     // if we have a location query then get the place
     if (location && !location.match(/^england$/i)) {
@@ -77,21 +81,36 @@ module.exports = [{
   method: 'POST',
   path: '/river-and-sea-levels',
   handler: async (request, h) => {
-    const { location } = request.payload
-    if (location === '') {
-      return h.redirect(`/river-and-sea-levels?q=${location}`)
+    const { q, types, 'river-id': riverIds } = request.payload
+    const params = []
+    let urlQuery = ''
+
+    q && params.push(`q=${q}`)
+    types && params.push(`types=${types}`)
+    riverIds && params.push(`river-id=${riverIds}`)
+
+    if (params.length > 0) {
+      params.forEach(val => {
+        if (urlQuery.length === 0) {
+          urlQuery += '?'
+        } else {
+          urlQuery += '&'
+        }
+        urlQuery += val
+      })
     }
-    return h.redirect(`/river-and-sea-levels?q=${encodeURIComponent(util.cleanseLocation(location))}`)
+
+    return h.redirect(`/river-and-sea-levels${urlQuery}`)
   },
   options: {
-    validate: {
-      payload: joi.object({
-        location: joi.string().allow('').trim().max(200).required()
-      }),
-      failAction: (request, h, err) => {
-        return h.view('river-and-sea-levels').takeover()
-      }
-    }
+    // validate: {
+    //   payload: joi.object({
+    //     location: joi.string().allow('').trim().max(200).required()
+    //   }),
+    //   failAction: (request, h, err) => {
+    //     return h.view('river-and-sea-levels').takeover()
+    //   }
+    // }
   }
 }
 // , {

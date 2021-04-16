@@ -24,7 +24,9 @@ class ViewModel {
       error: error ? true : null,
       riverId,
       isEngland,
-      referer: referer
+      referer: referer,
+      rivers: getRiverNames(stations),
+      types: getTypes(stations)
     })
 
     if (error) {
@@ -136,7 +138,29 @@ class ViewModel {
       placeBbox: place ? place.bbox10k : stationsBbox,
       bingMaps: bingKeyMaps
     }
+
+    // set default checkbox behaviours
+    this.checkRivers = this.types && (this.types.includes('S') || this.types.includes('M'))
+    this.checkCoastal = this.types && this.types.includes('C')
+    this.checkGround = this.types && this.types.includes('G')
+    this.checkRainfall = this.types && this.types.includes('R')
   }
+}
+
+const getRiverNames = (stations) => {
+  return stations
+    .map(a => a.river_id + '|' + a.river_name)
+    .filter((val, i, self) => self.indexOf(val) === i)
+    .map(a => {
+      return {
+        river_id: a.split('|')[0],
+        river_name: a.split('|')[1]
+      }
+    })
+}
+
+const getTypes = (stations) => {
+  return stations.map(a => a.station_type).filter((val, i, self) => self.indexOf(val) === i)
 }
 
 module.exports = ViewModel
