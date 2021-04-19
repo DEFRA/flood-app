@@ -52,8 +52,10 @@
                   <button class="defra-search__button">Search</button>
                 </div>
               </div>
-            </div>
+          </div>
+        </form>
         </div>
+        <form method="post" autocomplete="off">
         <div id="filter" class="defra-facets" role="search" aria-label="Search filters">
           <div class="defra-facets__container">
             <div class="defra-facets__header govuk-visually-hidden">
@@ -63,7 +65,7 @@
               <details class="defra-facets-details" data-module="govuk-details">
                 <summary class="defra-facets-details__summary">
                   <span class="defra-facets-details__summary-text">River name</span>
-                  <span class="defra-facets-details__select-counter">?? selected</span>
+                  <span class="defra-facets-details__select-counter govuk-visually-hidden">?? selected</span>
                 </summary>
                 <div class="defra-facets-details__text">
                   <div class="defra-facets-filter">
@@ -72,10 +74,10 @@
                   </div>
                   <fieldset class="govuk-fieldset">
                     <legend class="govuk-visually-hidden">River name</legend>
-                    <ul class="govuk-checkboxes govuk-checkboxes--small">
+                    <ul class="govuk-checkboxes govuk-checkboxes--small defra-facets-river__list">
                       {% for river in model.rivers %}
                         <li class="govuk-checkboxes__item">
-                          <input class="govuk-checkboxes__input" id="{{ river.river_id }}" value="{{ river.river_id }}" name="river-id" aria-controls="" type="checkbox" checked></input>
+                          <input class="govuk-checkboxes__input" value="{{ river.river_id }}" name="river-id" aria-controls="" type="checkbox" checked></input>
                           <label class="govuk-label govuk-checkboxes__label" for="{{ river.river_id }}">{{ river.river_name }}</label>
                         </li>
                       {% endfor %}
@@ -90,7 +92,7 @@
                 <div class="defra-facets-details__text">
                   <fieldset class="govuk-fieldset">
                     <legend class="govuk-visually-hidden">Type</legend>
-                    <ul class="govuk-checkboxes govuk-checkboxes--small">
+                    <ul class="govuk-checkboxes govuk-checkboxes--small defra-facets-types__list">
                       <li class="govuk-checkboxes__item{% if not model.checkRivers %} govuk-visually-hidden{% endif %}">
                         <input class="govuk-checkboxes__input" id="river-measurement" aria-controls="" type="checkbox" name="types" value='S,M' {% if model.checkRivers %}checked{% endif %}></input>
                         <label class="govuk-label govuk-checkboxes__label" for="river-measurement">River</label>
@@ -147,7 +149,7 @@
                     {% for station in group %}
 
                     {% if (station.status === 'Suspended') or (station.status === 'Closed' ) or (station.region === 'Wales') %}
-                    <div class="defra-flood-list__item">
+                    <div class="defra-flood-list__item defra-flood-type__{{ station.station_type }}">
                     {% else %}
                     <div class="defra-flood-list__item{% if station.state %} defra-flood-list__item--{{ station.state }}{% endif %} defra-flood-type__{{ station.station_type }}">
                     {% endif %}

@@ -1,12 +1,13 @@
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
 
 // Filter list
-window.flood.Filter = (id) => {
+window.flood.Filter = (id, list) => {
   const state = {
     isModalOpen: false
   }
 
   const container = document.getElementById(id).querySelector('.defra-facets__container')
+  const resultsContainer = document.getElementsByClassName(list)[0]
   const showFilters = document.createElement('button')
   showFilters.className = 'defra-facets__show-filters'
   showFilters.innerHTML = 'Filters'
@@ -27,6 +28,13 @@ window.flood.Filter = (id) => {
   const filterResults = container.querySelector('.defra-facets__filter-results')
   container.appendChild(showFilters)
   container.parentNode.insertBefore(showFilters, container.parentNode.firstChild)
+
+  const selectCounter = container.querySelector('.defra-facets-details__select-counter')
+  selectCounter.classList.remove('govuk-visually-hidden')
+  const levelCounter = document.querySelector('.defra-search-summary__count')
+  const filterInput = container.querySelector('.defra-facets-filter__input')
+  const riversList = container.querySelector('.defra-facets-river__list')
+  const typesList = container.querySelector('.defra-facets-types__list')
 
   // Recursively find siblings and parents and add or remove aria-hidden
   // Could become a helper flood utility for working with modals
@@ -107,6 +115,52 @@ window.flood.Filter = (id) => {
     clearAllBodyScrollLocks()
   }
 
+  const refreshHeaders = () => {
+    const headers = resultsContainer.getElementsByClassName('defra-flood-list__group')
+    let count = 0
+    Array.prototype.forEach.call(headers, (header) => {
+      const items = header.getElementsByClassName('defra-flood-list__item')
+      let visible = 0
+      Array.prototype.forEach.call(items, (item) => {
+        if (item.style.display !== 'none') {
+          visible++
+        }
+      })
+      header.style.display = visible > 0 ? '' : 'none'
+      count = count + visible
+    })
+    refreshLevelCount(count)
+  }
+
+  const refreshRiverCount = () => {
+    const inputs = riversList.getElementsByClassName('govuk-checkboxes__input')
+    let count = 0
+    Array.prototype.forEach.call(inputs, (input) => {
+      if (input.checked) {
+        count++
+      }
+    })
+    selectCounter.innerHTML = count + ' selected'
+  }
+
+  const refreshLevelCount = (count) => {
+    if (!count) {
+      const headers = resultsContainer.getElementsByClassName('defra-flood-list__group')
+      count = 0
+      Array.prototype.forEach.call(headers, (header) => {
+        if (header.style.display !== 'none') {
+          const items = header.getElementsByClassName('defra-flood-list__item')
+          Array.prototype.forEach.call(items, (item) => {
+            if (item.style.display !== 'none') {
+              count++
+            }
+          })
+        }
+      })
+    }
+    levelCounter.innerHTML = count + ' level' + ((count > 1 || count === 0) ? 's' : '')
+  }
+
   //
   // Events
   //
@@ -142,4 +196,39 @@ window.flood.Filter = (id) => {
     e.preventDefault()
     closeModal()
   })
+
+  // filter rivers
+  riversList.addEventListener('click', (e) => {
+    if (e.target.classList.contains('govuk-checkboxes__input')) {
+      resultsContainer.querySelector('[id="' + e.target.value + '"]').style.display = e.target.checked ? '' : 'none'
+    }
+    refreshRiverCount()
+    refreshLevelCount()
+  })
+
+  // filter types
+  typesList.addEventListener('click', (e) => {
+    if (e.target.classList.contains('govuk-checkboxes__input')) {
+      // Show or hide those station types
+      if (e.target.value) {
+        const types = e.target.value.split(',')
+        types.forEach(type => {
+          for (const element of resultsContainer.getElementsByClassName('defra-flood-type__' + type)) {
+            element.style.display = e.target.checked ? '' : 'none'
+          }
+        })
+      }
+    }
+    refreshHeaders()
+  })
+
+  filterInput.addEventListener('keyup', (e) => {
+    console.log(e)
+  })
+
+  //
+  // startup
+  //
+
+  refreshRiverCount()
 }

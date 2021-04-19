@@ -23,5 +23,5 @@ if (document.getElementById('map')) {
 
 // Create filter
 if (document.getElementById('filter')) {
-  window.flood.Filter('filter')
+  window.flood.Filter('filter', 'defra-flood-list')
 }
