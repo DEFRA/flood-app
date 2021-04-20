@@ -1,8 +1,5 @@
 'use strict'
 // This file represents the 5 day outlook used on the national page.
-// It uses the MapContainer
-// TODO: needs refactoring into layers and styles
-// ALSO need to fix the functionality, I don't think the tickets have been developed as of 31/01/2020
 import { View, Overlay } from 'ol'
 import { defaults as defaultInteractions } from 'ol/interaction'
 import { transform } from 'ol/proj'
