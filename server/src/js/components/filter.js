@@ -116,38 +116,13 @@ window.flood.Filter = (id, list) => {
     clearAllBodyScrollLocks()
   }
 
-  const refreshHeaders = () => {
-    let count = 0
-    let riverCount = 0
-    Array.prototype.forEach.call(riverHeaders, (header) => {
-      const items = header.getElementsByClassName('defra-flood-list__item')
-      let visible = 0
-      Array.prototype.forEach.call(items, (item) => {
-        if (item.style.display !== 'none') {
-          visible++
-        }
-      })
-      // if no visible stations hide the header and deselect the river name input
-      if (!visible) {
-        header.style.display = 'none'
-        container.querySelector('[data-id="' + header.id + '"').getElementsByTagName('input')[0].checked = false
-      } else {
-        header.style.display = ''
-        container.querySelector('[data-id="' + header.id + '"').getElementsByTagName('input')[0].checked = true
-        riverCount++
-      }
-      count = count + visible
-    })
-    refreshLevelCount(count)
-    refreshRiverCount(riverCount)
-  }
-
+  // refresh total river count in filter column
   const refreshRiverCount = (count) => {
     if (!count) {
       const inputs = riversList.getElementsByClassName('govuk-checkboxes__input')
       count = 0
       Array.prototype.forEach.call(inputs, (input) => {
-        if (input.checked && input.parentElement.style.display === '') {
+        if (input.checked/* && input.parentElement.style.display === '' */) {
           count++
         }
       })
@@ -155,6 +130,7 @@ window.flood.Filter = (id, list) => {
     selectCounter.innerHTML = count + ' selected'
   }
 
+  // Refresh total station/levels count
   const refreshLevelCount = (count) => {
     if (!count) {
       count = 0
@@ -208,46 +184,75 @@ window.flood.Filter = (id, list) => {
     closeModal()
   })
 
-  // filter rivers
+  // filter rivers by input checkbox
   riversList.addEventListener('click', (e) => {
-    if (e.target.classList.contains('govuk-checkboxes__input')) {
-      resultsContainer.querySelector('[id="' + e.target.value + '"]').style.display = e.target.checked ? '' : 'none'
-    }
     refreshRiverCount()
-    refreshLevelCount()
+    filter()
   })
 
-  // filter types
+  // filter types by input checkbox
   typesList.addEventListener('click', (e) => {
-    if (e.target.classList.contains('govuk-checkboxes__input')) {
-      // Show or hide those station types
-      if (e.target.value) {
-        const types = e.target.value.split(',')
-        types.forEach(type => {
-          for (const element of resultsContainer.getElementsByClassName('defra-flood-type__' + type)) {
-            element.style.display = e.target.checked ? '' : 'none'
-          }
-        })
-      }
-    }
-    refreshHeaders()
+    filter()
   })
 
+  // filter rivers by river query box
   filterInput.addEventListener('keyup', (e) => {
+    // filter()
     Array.prototype.forEach.call(riversList.getElementsByClassName('govuk-checkboxes__item'), (river) => {
-      if (river.getAttribute('data-river').toUpperCase().indexOf(e.target.value.toUpperCase()) > -1) {
-        river.style.display = ''
-        resultsContainer.querySelector('[id="' + river.getAttribute('data-id') + '"]').style.display = ''
-        // resultsList.getElementById(river.getAttribute('data-id')).style.display = ''
-      } else {
-        river.style.display = 'none'
-        // resultsList.getElementById(river.getAttribute('data-id')).style.display = 'none'
-        resultsContainer.querySelector('[id="' + river.getAttribute('data-id') + '"]').style.display = 'none'
+      const display = (river.getAttribute('data-river').toUpperCase().indexOf(e.target.value.toUpperCase()) > -1) ? '' : 'none'
+      // Show/hide the river checkbox
+      river.style.display = display
+    })
+  })
+
+  // move this function further up when finished
+  const filter = () => {
+    // Steps to complete filter of stations
+    let types = []
+    const riverIds = []
+
+    // Get the selected river-ids
+    Array.prototype.forEach.call(typesList.getElementsByTagName('input'), input => {
+      if (input.checked) {
+        types.push(input.value.split(','))
       }
     })
+
+    // flatten out because of 'S,M' for river station types
+    types = types.flat()
+
+    // get the selected rivers
+    const riverInputs = container.getElementsByClassName('defra-facets-river__list')[0].getElementsByTagName('input')
+    Array.prototype.forEach.call(riverInputs, river => {
+      if (river.checked) {
+        riverIds.push(river.getAttribute('value'))
+      }
+    })
+
+    // Now loop through results list and filter with values
+    Array.prototype.forEach.call(riverHeaders, (river) => {
+      let visibleChildren = 0
+      if (riverIds.includes(river.getAttribute('data-id'))) {
+        river.style.display = ''
+        Array.prototype.forEach.call(river.getElementsByClassName('defra-flood-list__item'), item => {
+          if (types.includes(item.getAttribute('data-type'))) {
+            visibleChildren++
+            item.style.display = ''
+          } else {
+            item.style.display = 'none'
+          }
+        })
+      } else {
+        river.style.display = 'none'
+      }
+      if (visibleChildren === 0) {
+        river.style.display = 'none'
+      }
+    })
+
+    // Update levels count
     refreshLevelCount()
-    refreshRiverCount()
-  })
+  }
 
   //
   // startup
