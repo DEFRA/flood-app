@@ -122,7 +122,7 @@ window.flood.Filter = (id, list) => {
       const inputs = riversList.getElementsByClassName('govuk-checkboxes__input')
       count = 0
       Array.prototype.forEach.call(inputs, (input) => {
-        if (input.checked/* && input.parentElement.style.display === '' */) {
+        if (input.checked && input.parentElement.style.display === '') {
           count++
         }
       })
@@ -197,19 +197,20 @@ window.flood.Filter = (id, list) => {
 
   // filter rivers by river query box
   filterInput.addEventListener('keyup', (e) => {
-    // filter()
     Array.prototype.forEach.call(riversList.getElementsByClassName('govuk-checkboxes__item'), (river) => {
       const display = (river.getAttribute('data-river').toUpperCase().indexOf(e.target.value.toUpperCase()) > -1) ? '' : 'none'
       // Show/hide the river checkbox
       river.style.display = display
     })
+    filter()
   })
 
   // move this function further up when finished
   const filter = () => {
     // Steps to complete filter of stations
     let types = []
-    const riverIds = []
+    let riverIds = []
+    const riverStr = filterInput.value
 
     // Get the selected river-ids
     Array.prototype.forEach.call(typesList.getElementsByTagName('input'), input => {
@@ -228,6 +229,13 @@ window.flood.Filter = (id, list) => {
         riverIds.push(river.getAttribute('value'))
       }
     })
+
+    // if we also have a river search
+    if (riverStr) {
+      riverIds = riverIds.filter(riverId => {
+        return riverId.toUpperCase().indexOf(riverStr.toUpperCase()) > -1
+      })
+    }
 
     // Now loop through results list and filter with values
     Array.prototype.forEach.call(riverHeaders, (river) => {
@@ -252,6 +260,7 @@ window.flood.Filter = (id, list) => {
 
     // Update levels count
     refreshLevelCount()
+    refreshRiverCount()
   }
 
   //
