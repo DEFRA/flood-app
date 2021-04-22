@@ -67,27 +67,28 @@ class ViewModel {
   getStationHtml (station) {
     if (station.iswales === true) {
       return ''
-    } else if (station.status === 'Suspended' || station.status === 'Closed') {
+    }
+
+    if (station.status === 'Suspended' || station.status === 'Closed') {
       return 'Data not available'
-    } else if (station.value_erred === true || station.value_erred === null) {
+    }
+
+    if (station.value_erred === true || station.value_erred === null) {
       return 'Data error'
-    } else {
-      if (moment(station.value_timestamp) && !isNaN(parseFloat(station.value))) {
-        // Valid data
-        station.value = parseFloat(Math.round(station.value * 100) / 100).toFixed(2) + 'm'
-        if (station.station_type === 'S' || station.station_type === 'M') {
-          let html = station.value + ' <time datetime="' + station.value_timestamp + '">' + station.value_time + '</time>'
-          html += station.state === 'high'
-            ? ' (<strong>high</strong>) '
-            : ' (' + station.state.charAt(0) + station.state.slice(1) + ')'
-          return html
-        } else {
-          return station.value + ' ' + ' <time datetime="' + station.value_timestamp + '">' + station.value_time + '</time>'
-        }
+    }
+
+    if (moment(station.value_timestamp) && !isNaN(parseFloat(station.value))) {
+      // Valid data
+      const value = parseFloat(Math.round(station.value * 100) / 100).toFixed(2) + 'm'
+      if (station.station_type === 'S' || station.station_type === 'M') {
+        let html = `${value} <time datetime="${station.value_timestamp}">${station.value_time}</time>`
+        html += station.state === 'high' ? ' (<strong>high</strong>) ' : ` (${station.state.charAt(0)}${station.state.slice(1)})`
+        return html
       } else {
-        return 'Data error'
+        return `${value} <time datetime="${station.value_timestamp}">${station.value_time}</time>`
       }
     }
+    return 'Data error'
   }
 
   getStationState (station) {
