@@ -99,17 +99,19 @@ class ViewModel {
       } else {
         return 'normal'
       }
+    } else {
+      return ''
     }
   }
 
   getTime (ts, today) {
     const dateDiffDays = today.diff(ts, 'days')
     if (dateDiffDays === 0) {
-      return 'at ' + moment.tz(ts, tz).format('h:mma')
+      return `at ${moment.tz(ts, tz).format('h:mma')}`
     } else if (dateDiffDays === 1) {
-      return 'at ' + moment.tz(ts, tz).format('h:mma') + ' yesterday'
+      return `at ${moment.tz(ts, tz).format('h:mma')} yesterday`
     } else {
-      return 'on ' + moment.tz(ts, tz).format('DD/MM/YYYY h:mma')
+      return `on ${moment.tz(ts, tz).format('DD/MM/YYYY h:mma')}`
     }
   }
 
