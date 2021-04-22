@@ -7,8 +7,8 @@ class ViewModel {
     Object.assign(this, {
       q: location,
       metaNoIndex: true,
-      placeName: place ? place.name : (targetArea && targetArea.ta_name ? targetArea.ta_name : ''),
-      placeDescription: targetArea && targetArea.ta_name ? targetArea.ta_name : '',
+      placeName: this.getPlaceName(place, targetArea),
+      placeDescription: this.getPlaceDescription(targetArea),
       placeCentre: place ? place.center : [],
       countLevels: stations.length,
       error: error ? true : null,
@@ -17,7 +17,7 @@ class ViewModel {
       types: this.getTypes(stations),
       taCode: targetArea && targetArea.fws_tacode,
       isEngland: place ? place.isEngland.is_england : null,
-      riverId: riverIds && riverIds.length === 1 ? riverIds[0] : null
+      riverId: this.getRiverId(riverIds)
     })
 
     const titles = this.getPageTitle(error, this.riverId, location)
@@ -109,6 +109,24 @@ class ViewModel {
     this.checkCoastal = this.typeChecked(this.types, ['C'])
     this.checkGround = this.typeChecked(this.types, ['G'])
     this.checkRainfall = this.typeChecked(this.types, ['R'])
+  }
+
+  getRiverId (riverIds) {
+    return riverIds && riverIds.length === 1 ? riverIds[0] : null
+  }
+
+  getPlaceDescription (targetArea) {
+    return targetArea && targetArea.ta_name ? targetArea.ta_name : ''
+  }
+
+  getPlaceName (place, targetArea) {
+    if (place) {
+      return place.name
+    }
+    if (targetArea && targetArea.ta_name) {
+      return targetArea.ta_name
+    }
+    return ''
   }
 
   typeChecked (types, type) {
