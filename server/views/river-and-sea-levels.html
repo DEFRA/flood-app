@@ -79,7 +79,7 @@
                     <ul class="govuk-checkboxes govuk-checkboxes--small defra-facets-river__list">
                       {% for river in model.rivers %}
                         <li class="govuk-checkboxes__item" data-river="{{ river.river_name }}" data-id="{{ river.river_id }}">
-                          <input class="govuk-checkboxes__input" value="{{ river.river_id }}" name="river-id" aria-controls="" type="checkbox" checked></input>
+                          <input class="govuk-checkboxes__input" id="{{ river.river_id }}" value="{{ river.river_id }}" name="river-id" aria-controls="" type="checkbox" checked></input>
                           <label class="govuk-label govuk-checkboxes__label" for="{{ river.river_id }}">{{ river.river_name }}</label>
                         </li>
                       {% endfor %}
