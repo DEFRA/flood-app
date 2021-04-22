@@ -1,6 +1,7 @@
 const moment = require('moment-timezone')
 const { groupBy } = require('../../util')
 const { bingKeyMaps } = require('../../config')
+const tz = 'Europe/London'
 
 class ViewModel {
   constructor ({ location, place, stations, targetArea, riverIds, referer, error }) {
@@ -17,52 +18,30 @@ class ViewModel {
       types: this.getTypes(stations),
       taCode: targetArea && targetArea.fws_tacode,
       isEngland: place ? place.isEngland.is_england : null,
-      riverId: this.getRiverId(riverIds)
+      riverId: this.getRiverId(riverIds),
+      stationsBbox: []
     })
 
     const titles = this.getPageTitle(error, this.riverId, location)
     this.pageTitle = titles.page
     this.subtitle = titles.sub
-
     const today = moment.tz().endOf('day')
-    let stationsBbox = []
 
     stations.forEach(station => {
       // Get a bounding box covering the stations on view
-      if (stationsBbox.length === 0) {
-        stationsBbox[0] = station.lon
-        stationsBbox[1] = station.lat
-        stationsBbox[2] = station.lon
-        stationsBbox[3] = station.lat
+      if (this.stationsBbox.length === 0) {
+        this.stationsBbox = [station.lon, station.lat, station.lon, station.lat]
       } else {
-        stationsBbox[0] = station.lon < stationsBbox[0] ? station.lon : stationsBbox[0]
-        stationsBbox[1] = station.lat < stationsBbox[1] ? station.lat : stationsBbox[1]
-        stationsBbox[2] = station.lon > stationsBbox[2] ? station.lon : stationsBbox[2]
-        stationsBbox[3] = station.lat > stationsBbox[3] ? station.lat : stationsBbox[3]
+        this.stationsBbox[0] = station.lon < this.stationsBbox[0] ? station.lon : this.stationsBbox[0]
+        this.stationsBbox[1] = station.lat < this.stationsBbox[1] ? station.lat : this.stationsBbox[1]
+        this.stationsBbox[2] = station.lon > this.stationsBbox[2] ? station.lon : this.stationsBbox[2]
+        this.stationsBbox[3] = station.lat > this.stationsBbox[3] ? station.lat : this.stationsBbox[3]
       }
 
-      // Create display date property from UTC
-      const tempDate = station.value_timestamp
-      const dateDiffDays = today.diff(tempDate, 'days')
-      // If dateDiffDays is zero then timestamp is today so just show time. If dateDiffDays is 1 then timestamp is 'Yesterday' plus time. Any other value
-      // show the full date/time.
-      if (dateDiffDays === 0) {
-        station.value_time = 'at ' + moment.tz(station.value_timestamp, 'Europe/London').format('h:mma')
-      } else if (dateDiffDays === 1) {
-        station.value_time = 'at ' + moment.tz(station.value_timestamp, 'Europe/London').format('h:mma') + ' yesterday'
-      } else {
-        station.value_time = 'on ' + moment.tz(station.value_timestamp, 'Europe/London').format('DD/MM/YYYY h:mma')
-      }
-      // Create state property
-      if (station.station_type !== 'C' && station.station_type !== 'G' && station.value) {
-        if (station.value >= station.percentile_5) {
-          station.state = 'high'
-        } else if (station.value < station.percentile_95) {
-          station.state = 'low'
-        } else {
-          station.state = 'normal'
-        }
-      }
+      station.value_time = this.getTime(station.value_timestamp, today)
+
+      station.state = this.getStationState(station)
+
       if (station.status === 'Suspended' || station.status === 'Closed' || (!station.value && !station.isWales)) {
         station.state = 'error'
       }
@@ -93,14 +72,14 @@ class ViewModel {
     })
 
     // add on 444m (0.004 deg) to the stations bounding box to stop stations clipping edge of viewport
-    stationsBbox = this.bboxClip(stationsBbox)
+    this.stationsBbox = this.bboxClip(this.stationsBbox)
 
     // generate object keyed by river_ids
     this.stations = groupBy(stations, 'river_id')
 
     this.export = {
       countLevels: this.countLevels,
-      placeBbox: place ? place.bbox10k : stationsBbox,
+      placeBbox: place ? place.bbox10k : this.stationsBbox,
       bingMaps: bingKeyMaps
     }
 
@@ -109,6 +88,29 @@ class ViewModel {
     this.checkCoastal = this.typeChecked(this.types, ['C'])
     this.checkGround = this.typeChecked(this.types, ['G'])
     this.checkRainfall = this.typeChecked(this.types, ['R'])
+  }
+
+  getStationState (station) {
+    if (station.station_type !== 'C' && station.station_type !== 'G' && station.value) {
+      if (station.value >= station.percentile_5) {
+        return 'high'
+      } else if (station.value < station.percentile_95) {
+        return 'low'
+      } else {
+        return 'normal'
+      }
+    }
+  }
+
+  getTime (ts, today) {
+    const dateDiffDays = today.diff(ts, 'days')
+    if (dateDiffDays === 0) {
+      return 'at ' + moment.tz(ts, tz).format('h:mma')
+    } else if (dateDiffDays === 1) {
+      return 'at ' + moment.tz(ts, tz).format('h:mma') + ' yesterday'
+    } else {
+      return 'on ' + moment.tz(ts, tz).format('DD/MM/YYYY h:mma')
+    }
   }
 
   getRiverId (riverIds) {
@@ -186,7 +188,7 @@ class ViewModel {
         titles.sub = `Showing ${riverId} levels.`
       }
     } else {
-      titles.page = `${location ? `${location} - ` : ''}River and sea levels in England`
+      titles.page = location ? `${location} - River and sea levels in England` : 'River and sea levels in England'
     }
     return titles
   }
