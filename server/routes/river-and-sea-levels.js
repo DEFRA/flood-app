@@ -134,7 +134,7 @@ module.exports = [{
   }
 }]
 
-const getParameters = (request) => {
+const getParameters = request => {
   const redirect = request.yar.get('redirect', true)
   return {
     location: redirect ? request.yar.get('q', true) : request.query.q,

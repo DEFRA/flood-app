@@ -6,16 +6,14 @@ class ViewModel {
   constructor ({ location, place, stations, targetArea, riverIds, referer, error }) {
     const placeName = place ? place.name : (targetArea && targetArea.ta_name ? targetArea.ta_name : '')
     const placeCentre = place ? place.center : []
-    const pageTitle = ''
     const isEngland = place ? place.isEngland.is_england : null
     const placeDescription = targetArea && targetArea.ta_name ? targetArea.ta_name : ''
 
     // no requirement for heading if mulitple rivers selected for from filter.
-    let riverId = riverIds && riverIds.length === 1 ? riverIds[0] : null
+    const riverId = riverIds && riverIds.length === 1 ? riverIds[0] : null
 
     Object.assign(this, {
       q: location,
-      pageTitle: pageTitle,
       metaNoIndex: true,
       placeName: placeName,
       placeDescription: placeDescription,
@@ -30,30 +28,9 @@ class ViewModel {
       isEngland
     })
 
-    if (error) {
-      this.pageTitle = 'Sorry, there is currently a problem searching a location - River and sea levels in England'
-    } else if (riverId) {
-      riverId = riverId.replace(/-/g, ' ')
-
-      riverId = riverId.toLowerCase()
-        .split(' ')
-        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-        .join(' ')
-
-      this.pageTitle = riverId + ' - ' + 'River and sea levels in England'
-
-      if (riverId === 'Sea Levels') {
-        this.subtitle = 'Showing Sea levels.'
-        this.pageTitle = 'Sea levels in England'
-      } else if (riverId === 'Groundwater Levels') {
-        this.subtitle = 'Showing Groundwater levels.'
-        this.pageTitle = 'Groundwater levels in England'
-      } else {
-        this.subtitle = 'Showing ' + riverId + ' levels.'
-      }
-    } else {
-      this.pageTitle = `${location ? location + ' - ' : ''}River and sea levels in England`
-    }
+    const titles = getPageTitle(error, riverId, location)
+    this.pageTitle = titles.page
+    this.subtitle = titles.sub
 
     const today = moment.tz().endOf('day')
     const stationsBbox = []
@@ -161,5 +138,37 @@ const getRiverNames = stations => {
 }
 
 const getTypes = stations => stations.map(a => a.station_type).filter((val, i, self) => self.indexOf(val) === i)
+
+const getPageTitle = (error, riverId, location) => {
+  const titles = {
+    page: '',
+    sub: ''
+  }
+  if (error) {
+    titles.page = 'Sorry, there is currently a problem searching a location - River and sea levels in England'
+  } else if (riverId) {
+    riverId = riverId.replace(/-/g, ' ')
+
+    riverId = riverId.toLowerCase()
+      .split(' ')
+      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+      .join(' ')
+
+    titles.page = riverId + ' - ' + 'River and sea levels in England'
+
+    if (riverId === 'Sea Levels') {
+      titles.sub = 'Showing Sea levels.'
+      titles.page = 'Sea levels in England'
+    } else if (riverId === 'Groundwater Levels') {
+      titles.sub = 'Showing Groundwater levels.'
+      titles.page = 'Groundwater levels in England'
+    } else {
+      titles.sub = 'Showing ' + riverId + ' levels.'
+    }
+  } else {
+    titles.page = `${location ? location + ' - ' : ''}River and sea levels in England`
+  }
+  return titles
+}
 
 module.exports = ViewModel
