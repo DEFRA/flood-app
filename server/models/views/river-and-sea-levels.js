@@ -22,12 +22,12 @@ class ViewModel {
       placeCentre: placeCentre,
       countLevels: stations.length,
       error: error ? true : null,
-      riverId,
-      isEngland,
       referer: referer,
       rivers: getRiverNames(stations),
       types: getTypes(stations),
-      taCode: targetArea && targetArea.fws_tacode
+      taCode: targetArea && targetArea.fws_tacode,
+      riverId,
+      isEngland
     })
 
     if (error) {
@@ -148,9 +148,9 @@ class ViewModel {
   }
 }
 
-const getRiverNames = (stations) => {
+const getRiverNames = stations => {
   return stations
-    .map(a => a.river_id + '|' + a.river_name)
+    .map(a => `${a.river_id}|${a.river_name}`)
     .filter((val, i, self) => self.indexOf(val) === i)
     .map(a => {
       return {
@@ -160,8 +160,6 @@ const getRiverNames = (stations) => {
     })
 }
 
-const getTypes = (stations) => {
-  return stations.map(a => a.station_type).filter((val, i, self) => self.indexOf(val) === i)
-}
+const getTypes = stations => stations.map(a => a.station_type).filter((val, i, self) => self.indexOf(val) === i)
 
 module.exports = ViewModel

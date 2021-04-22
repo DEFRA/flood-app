@@ -6,10 +6,11 @@ const locationService = require('../services/location')
 const util = require('../util')
 const LocationNotFoundError = require('../location-not-found-error')
 const qs = require('querystring')
+const route = 'river-and-sea-levels'
 
 module.exports = [{
   method: 'GET',
-  path: '/river-and-sea-levels',
+  path: `/${route}`,
   handler: async (request, h) => {
     let location, riverIds, taCode, types
 
@@ -49,12 +50,12 @@ module.exports = [{
           stations = await floodService.getStations()
           model = new ViewModel({ location, place, stations, targetArea, riverIds, error, referer })
         }
-        return h.view('river-and-sea-levels', { model })
+        return h.view(route, { model })
       }
       if ((typeof place === 'undefined') || (!place.isUK || place.isScotlandOrNorthernIreland)) {
         stations = []
         model = new ViewModel({ location, place, stations })
-        return h.view('river-and-sea-levels', { model, referer })
+        return h.view(route, { model, referer })
       }
     }
 
@@ -65,13 +66,15 @@ module.exports = [{
     stations = filterStations(stations, riverIds, types)
 
     // optional get ta
-    if (taCode) targetArea = await floodService.getTargetArea(taCode)
+    if (taCode) {
+      targetArea = await floodService.getTargetArea(taCode)
+    }
 
     // build model
     model = new ViewModel({ location, place, stations, targetArea, riverIds, referer })
 
     // return view
-    return h.view('river-and-sea-levels', { model })
+    return h.view(route, { model })
   },
   options: {
     validate: {
@@ -93,7 +96,7 @@ module.exports = [{
   }
 }, {
   method: 'POST',
-  path: '/river-and-sea-levels',
+  path: `/${route}`,
   handler: async (request, h) => {
     let payload = request.payload.toString()
     payload = qs.parse(payload, '&', '=', {
@@ -116,15 +119,26 @@ module.exports = [{
 
     const { q, 'target-area': taCode, types, 'river-id': riverIds } = value
 
-    // set these as can be too much data for url parameter
-    // this is only required due to non js users...
-    request.yar.set('redirect', true)
-    q && request.yar.set('q', q)
-    taCode && request.yar.set('ta-code', taCode)
-    types && request.yar.set('types', types.toString())
-    riverIds && request.yar.set('river-id', riverIds.toString())
-
-    return h.redirect('/river-and-sea-levels')
+    // if we only have a location or target area then redirect with query string
+    // other wise set session vars
+    if (!types && !riverIds) {
+      if (q) {
+        return h.redirect(`/${route}?q=${q}`)
+      } else if (taCode) {
+        return h.redirect(`/${route}?target-area=${taCode}`)
+      } else {
+        return h.redirect(`/${route}`)
+      }
+    } else {
+      // set these as can be too much data for url parameter
+      // this is only required due to non js users...
+      request.yar.set('redirect', true)
+      q && request.yar.set('q', q)
+      taCode && request.yar.set('ta-code', taCode)
+      types && request.yar.set('types', types.toString())
+      riverIds && request.yar.set('river-id', riverIds.toString())
+      return h.redirect(`/${route}`)
+    }
   },
   options: {
     payload: {
@@ -134,14 +148,22 @@ module.exports = [{
 }]
 
 const getStations = async (place, taCode) => {
-  if (place) return floodService.getStationsWithin(place.bbox10k)
-  if (taCode) return floodService.getStationsWithinTargetArea(taCode)
+  if (place) {
+    return floodService.getStationsWithin(place.bbox10k)
+  }
+  if (taCode) {
+    return floodService.getStationsWithinTargetArea(taCode)
+  }
   // if no place or ta then return all stations
   return floodService.getStations()
 }
 
 const filterStations = (stations, riverIds, types) => {
-  if (riverIds) stations = stations.filter(val => { return riverIds.includes(val.river_id) })
-  if (types) stations = stations.filter(val => { return types.includes(val.station_type) })
+  if (riverIds) {
+    stations = stations.filter(val => riverIds.includes(val.river_id))
+  }
+  if (types) {
+    stations = stations.filter(val => types.includes(val.station_type))
+  }
   return stations
 }
