@@ -4,31 +4,23 @@ const { bingKeyMaps } = require('../../config')
 
 class ViewModel {
   constructor ({ location, place, stations, targetArea, riverIds, referer, error }) {
-    const placeName = place ? place.name : (targetArea && targetArea.ta_name ? targetArea.ta_name : '')
-    const placeCentre = place ? place.center : []
-    const isEngland = place ? place.isEngland.is_england : null
-    const placeDescription = targetArea && targetArea.ta_name ? targetArea.ta_name : ''
-
-    // no requirement for heading if mulitple rivers selected for from filter.
-    const riverId = riverIds && riverIds.length === 1 ? riverIds[0] : null
-
     Object.assign(this, {
       q: location,
       metaNoIndex: true,
-      placeName: placeName,
-      placeDescription: placeDescription,
-      placeCentre: placeCentre,
+      placeName: place ? place.name : (targetArea && targetArea.ta_name ? targetArea.ta_name : ''),
+      placeDescription: targetArea && targetArea.ta_name ? targetArea.ta_name : '',
+      placeCentre: place ? place.center : [],
       countLevels: stations.length,
       error: error ? true : null,
       referer: referer,
       rivers: getRiverNames(stations),
       types: getTypes(stations),
       taCode: targetArea && targetArea.fws_tacode,
-      riverId,
-      isEngland
+      isEngland: place ? place.isEngland.is_england : null,
+      riverId: riverIds && riverIds.length === 1 ? riverIds[0] : null
     })
 
-    const titles = getPageTitle(error, riverId, location)
+    const titles = getPageTitle(error, this.riverId, location)
     this.pageTitle = titles.page
     this.subtitle = titles.sub
 
@@ -154,7 +146,7 @@ const getPageTitle = (error, riverId, location) => {
       .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
       .join(' ')
 
-    titles.page = riverId + ' - ' + 'River and sea levels in England'
+    titles.page = `${riverId} - River and sea levels in England`
 
     if (riverId === 'Sea Levels') {
       titles.sub = 'Showing Sea levels.'
@@ -163,10 +155,10 @@ const getPageTitle = (error, riverId, location) => {
       titles.sub = 'Showing Groundwater levels.'
       titles.page = 'Groundwater levels in England'
     } else {
-      titles.sub = 'Showing ' + riverId + ' levels.'
+      titles.sub = `Showing ${riverId} levels.`
     }
   } else {
-    titles.page = `${location ? location + ' - ' : ''}River and sea levels in England`
+    titles.page = `${location ? `${location} - ` : ''}River and sea levels in England`
   }
   return titles
 }
