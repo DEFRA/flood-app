@@ -56,6 +56,8 @@
         </form>
         </div>
         <form method="post" autocomplete="off">
+        <input class="defra-search__input" name="q" type="hidden" value="{{ model.q }}">
+        <input class="defra-search__input" name="target-area" type="hidden" value="{{ model.taCode }}">
         <div id="filter" class="defra-facets" role="search" aria-label="Search filters">
           <div class="defra-facets__container">
             <div class="defra-facets__header govuk-visually-hidden">
@@ -70,7 +72,7 @@
                 <div class="defra-facets-details__text">
                   <div class="defra-facets-filter">
                     <label class="govuk-visually-hidden" for="filter-river-name">Filter river name</label>
-                    <input id="filter-river-name" class="defra-facets-filter__input"></input>
+                    <input id="filter-river-name" class="defra-facets-filter__input govuk-visually-hidden"></input>
                   </div>
                   <fieldset class="govuk-fieldset">
                     <legend class="govuk-visually-hidden">River name</legend>

@@ -1,26 +1,30 @@
 const joi = require('@hapi/joi')
+const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/river-and-sea-levels')
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
 const util = require('../util')
 const LocationNotFoundError = require('../location-not-found-error')
-const joiParams = joi.object({
-  q: joi.string().allow('').trim().max(200),
-  'river-id': joi.string(),
-  'target-area': joi.string(),
-  types: joi.string().allow('S', 'M', 'C', 'G', 'R'),
-  btn: joi.string(),
-  ext: joi.string(),
-  fid: joi.string(),
-  lyr: joi.string(),
-  v: joi.string()
-})
+const qs = require('querystring')
 
 module.exports = [{
   method: 'GET',
   path: '/river-and-sea-levels',
   handler: async (request, h) => {
-    let { q: location, 'river-id': riverIds, 'target-area': taCode, types } = request.query
+    let location, riverIds, taCode, types
+
+    if (request.yar.get('redirect', true)) {
+      location = request.yar.get('q', true)
+      riverIds = request.yar.get('river-id', true)
+      taCode = request.yar.get('ta-code', true)
+      types = request.yar.get('types', true)
+    } else {
+      location = request.query.q
+      riverIds = request.query['river-id']
+      taCode = request.query['target-area']
+      types = request.query.types
+    }
+
     const referer = request.headers.referer
     let model, place, stations, targetArea
 
@@ -71,7 +75,17 @@ module.exports = [{
   },
   options: {
     validate: {
-      query: joiParams,
+      query: joi.object({
+        q: joi.string().allow('').trim().max(200),
+        'river-id': joi.string(),
+        'target-area': joi.string(),
+        types: joi.string().allow('S', 'M', 'C', 'G', 'R'),
+        btn: joi.string(),
+        ext: joi.string(),
+        fid: joi.string(),
+        lyr: joi.string(),
+        v: joi.string()
+      }),
       failAction: (request, h, err) => {
         return h.view('404').code(404).takeover()
       }
@@ -81,55 +95,43 @@ module.exports = [{
   method: 'POST',
   path: '/river-and-sea-levels',
   handler: async (request, h) => {
-    const { q, types, 'river-id': riverIds } = request.payload
-    const params = []
-    let urlQuery = ''
+    let payload = request.payload.toString()
+    payload = qs.parse(payload, '&', '=', {
+      maxKeys: 2000
+    })
 
-    q && params.push(`q=${q}`)
-    types && params.push(`types=${types}`)
-    riverIds && params.push(`river-id=${riverIds}`)
+    // validate payload due to limitations of hapi post parsing restricting to 1000 keys
+    const schema = joi.object({
+      q: joi.string().allow('').trim().max(200),
+      'target-area': joi.string().allow(''),
+      types: joi.any().allow(''),
+      'river-id': joi.any().allow('')
+    })
 
-    if (params.length > 0) {
-      params.forEach(val => {
-        if (urlQuery.length === 0) {
-          urlQuery += '?'
-        } else {
-          urlQuery += '&'
-        }
-        urlQuery += val
-      })
+    const { error, value } = schema.validate(payload)
+
+    if (error) {
+      return boom.badRequest(error)
     }
 
-    return h.redirect(`/river-and-sea-levels${urlQuery}`)
+    const { q, 'target-area': taCode, types, 'river-id': riverIds } = value
+
+    // set these as can be too much data for url parameter
+    // this is only required due to non js users...
+    request.yar.set('redirect', true)
+    q && request.yar.set('q', q)
+    taCode && request.yar.set('ta-code', taCode)
+    types && request.yar.set('types', types.toString())
+    riverIds && request.yar.set('river-id', riverIds.toString())
+
+    return h.redirect('/river-and-sea-levels')
   },
   options: {
-    // validate: {
-    //   payload: joi.object({
-    //     location: joi.string().allow('').trim().max(200).required()
-    //   }),
-    //   failAction: (request, h, err) => {
-    //     return h.view('river-and-sea-levels').takeover()
-    //   }
-    // }
+    payload: {
+      parse: false
+    }
   }
-}
-// , {
-//   method: 'POST',
-//   path: '/river-and-sea-levels.json',
-//   handler: async (request, h) => {
-//     return floodService.getStations()
-//   },
-//   options: {
-//     validate: {
-//       payload: joiParams,
-//       failAction: (request, h, err) => {
-//         // TODO: is this the correct boom func
-//         return boom.badImplementation(err)
-//       }
-//     }
-//   }
-// }
-]
+}]
 
 const getStations = async (place, taCode) => {
   if (place) return floodService.getStationsWithin(place.bbox10k)

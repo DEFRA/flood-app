@@ -26,7 +26,8 @@ class ViewModel {
       isEngland,
       referer: referer,
       rivers: getRiverNames(stations),
-      types: getTypes(stations)
+      types: getTypes(stations),
+      taCode: targetArea && targetArea.fws_tacode
     })
 
     if (error) {

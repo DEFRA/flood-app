@@ -11,9 +11,6 @@ window.flood.Filter = (id, list) => {
   const showFilters = document.createElement('button')
   showFilters.className = 'defra-facets__show-filters'
   showFilters.innerHTML = 'Filters'
-  const filtersCount = document.createElement('span')
-  filtersCount.innerHTML = ' (1)'
-  showFilters.appendChild(filtersCount)
   const header = container.querySelector('.defra-facets__header')
   const closeFilters = document.createElement('button')
   closeFilters.className = 'defra-facets__close'
@@ -33,6 +30,7 @@ window.flood.Filter = (id, list) => {
   selectCounter.classList.remove('govuk-visually-hidden')
   const levelCounter = document.querySelector('.defra-search-summary__count')
   const filterInput = container.querySelector('.defra-facets-filter__input')
+  filterInput.classList.remove('govuk-visually-hidden')
   const riversList = container.querySelector('.defra-facets-river__list')
   const typesList = container.querySelector('.defra-facets-types__list')
   const riverHeaders = resultsContainer.getElementsByClassName('defra-flood-list__group')
@@ -209,7 +207,7 @@ window.flood.Filter = (id, list) => {
   const filter = () => {
     // Steps to complete filter of stations
     let types = []
-    let riverIds = []
+    let rivers = []
     const riverStr = filterInput.value
 
     // Get the selected river-ids
@@ -226,16 +224,23 @@ window.flood.Filter = (id, list) => {
     const riverInputs = container.getElementsByClassName('defra-facets-river__list')[0].getElementsByTagName('input')
     Array.prototype.forEach.call(riverInputs, river => {
       if (river.checked) {
-        riverIds.push(river.getAttribute('value'))
+        rivers.push({
+          id: river.parentElement.getAttribute('data-id'),
+          name: river.parentElement.getAttribute('data-river')
+        })
       }
     })
 
     // if we also have a river search
     if (riverStr) {
-      riverIds = riverIds.filter(riverId => {
-        return riverId.toUpperCase().indexOf(riverStr.toUpperCase()) > -1
+      rivers = rivers.filter(river => {
+        return river.name.toUpperCase().indexOf(riverStr.toUpperCase()) > -1
       })
     }
+
+    const riverIds = rivers.map(river => {
+      return river.id
+    })
 
     // Now loop through results list and filter with values
     Array.prototype.forEach.call(riverHeaders, (river) => {
