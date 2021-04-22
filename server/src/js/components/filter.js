@@ -167,9 +167,20 @@ window.flood.Filter = (id, list) => {
     }
   })
 
-  // Close filters (mobile only)
+  // Close filters
   resetFilters.addEventListener('click', (e) => {
     e.preventDefault()
+    // clear river filter
+    filterInput.value = ''
+    // tick all river checkboxes
+    // tick all types
+    Array.prototype.forEach.call(container.getElementsByTagName('input'), input => {
+      if (input.type === 'checkbox') {
+        input.checked = true
+      }
+    })
+    filterRivers()
+    filter()
   })
 
   // Close filters (mobile only)
@@ -197,11 +208,7 @@ window.flood.Filter = (id, list) => {
 
   // filter rivers by river query box
   filterInput.addEventListener('keyup', (e) => {
-    Array.prototype.forEach.call(riversList.getElementsByClassName('govuk-checkboxes__item'), (river) => {
-      const display = (river.getAttribute('data-river').toUpperCase().indexOf(e.target.value.toUpperCase()) > -1) ? '' : 'none'
-      // Show/hide the river checkbox
-      river.style.display = display
-    })
+    filterRivers()
     filter()
   })
 
@@ -268,6 +275,14 @@ window.flood.Filter = (id, list) => {
     // Update levels count
     refreshLevelCount()
     refreshRiverCount()
+  }
+
+  const filterRivers = () => {
+    Array.prototype.forEach.call(riversList.getElementsByClassName('govuk-checkboxes__item'), (river) => {
+      const display = (river.getAttribute('data-river').toUpperCase().indexOf(filterInput.value.toUpperCase()) > -1) ? '' : 'none'
+      // Show/hide the river checkbox
+      river.style.display = display
+    })
   }
 
   //

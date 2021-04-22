@@ -137,7 +137,6 @@
 }
 .js-enabled .defra-facets {
   &__header,
-  &__reset,
   &__close,
   &__filter-results {
       @include mq ($from: tablet) {
