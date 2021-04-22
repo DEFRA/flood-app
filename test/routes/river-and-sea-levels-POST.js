@@ -28,6 +28,7 @@ lab.experiment('Routes test - river-and-sea-levels', () => {
 
     await server.register(require('@hapi/inert'))
     await server.register(require('@hapi/h2o2'))
+    await server.register(require('../../server/plugins/session'))
     await server.register(require('../../server/plugins/views'))
     await server.register(riversPlugin)
     await server.initialize()
@@ -48,9 +49,7 @@ lab.experiment('Routes test - river-and-sea-levels', () => {
     const options = {
       method: 'POST',
       url: '/river-and-sea-levels',
-      payload: {
-        location: 'Warrington'
-      }
+      payload: 'q=warrington'
     }
 
     const response = await server.inject(options)
@@ -62,21 +61,18 @@ lab.experiment('Routes test - river-and-sea-levels', () => {
       method: 'POST',
       url: '/river-and-sea-levels',
       payload: {
-        river: 'Test'
+        test: 'test'
       }
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.headers['content-type']).to.include('text/html')
+    Code.expect(response.statusCode).to.equal(400)
   })
   lab.test('POST /river-and-sea-levels with blank location', async () => {
     const options = {
       method: 'POST',
       url: '/river-and-sea-levels',
-      payload: {
-        location: ''
-      }
+      payload: 'q='
     }
 
     const response = await server.inject(options)
