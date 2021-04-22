@@ -162,7 +162,9 @@ window.flood.Filter = (id, list) => {
   // Show filters (mobile only)
   showFilters.addEventListener('click', (e) => {
     e.preventDefault()
-    openModal()
+    if (mobileMediaQuery.matches) {
+      openModal()
+    }
   })
 
   // Close filters (mobile only)
