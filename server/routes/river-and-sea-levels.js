@@ -12,20 +12,7 @@ module.exports = [{
   method: 'GET',
   path: `/${route}`,
   handler: async (request, h) => {
-    let location, riverIds, taCode, types
-
-    if (request.yar.get('redirect', true)) {
-      location = request.yar.get('q', true)
-      riverIds = request.yar.get('river-id', true)
-      taCode = request.yar.get('ta-code', true)
-      types = request.yar.get('types', true)
-    } else {
-      location = request.query.q
-      riverIds = request.query['river-id']
-      taCode = request.query['target-area']
-      types = request.query.types
-    }
-
+    let { location, riverIds, taCode, types } = getParameters(request)
     const referer = request.headers.referer
     let model, place, stations, targetArea
 
@@ -146,6 +133,16 @@ module.exports = [{
     }
   }
 }]
+
+const getParameters = (request) => {
+  const redirect = request.yar.get('redirect', true)
+  return {
+    location: redirect ? request.yar.get('q', true) : request.query.q,
+    riverIds: redirect ? request.yar.get('river-id') : request.query['river-id'],
+    taCode: redirect ? request.yar.get('ta-code', true) : request.query['target-area'],
+    types: redirect ? request.yar.get('types', true) : request.query.types
+  }
+}
 
 const getStations = async (place, taCode) => {
   if (place) {
