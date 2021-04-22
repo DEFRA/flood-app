@@ -32,10 +32,10 @@ class ViewModel {
       if (this.stationsBbox.length === 0) {
         this.stationsBbox = [station.lon, station.lat, station.lon, station.lat]
       } else {
-        this.stationsBbox[0] = station.lon < this.stationsBbox[0] ? station.lon : this.stationsBbox[0]
-        this.stationsBbox[1] = station.lat < this.stationsBbox[1] ? station.lat : this.stationsBbox[1]
-        this.stationsBbox[2] = station.lon > this.stationsBbox[2] ? station.lon : this.stationsBbox[2]
-        this.stationsBbox[3] = station.lat > this.stationsBbox[3] ? station.lat : this.stationsBbox[3]
+        this.stationsBbox[0] = Math.min(station.lon, this.stationsBbox[0])
+        this.stationsBbox[1] = Math.min(station.lat, this.stationsBbox[1])
+        this.stationsBbox[2] = Math.max(station.lon, this.stationsBbox[2])
+        this.stationsBbox[3] = Math.max(station.lat, this.stationsBbox[3])
       }
 
       station.value_time = this.getTime(station.value_timestamp, today)
@@ -78,17 +78,21 @@ class ViewModel {
     }
 
     if (moment(station.value_timestamp) && !isNaN(parseFloat(station.value))) {
-      // Valid data
-      const value = parseFloat(Math.round(station.value * 100) / 100).toFixed(2) + 'm'
-      if (station.station_type === 'S' || station.station_type === 'M') {
-        let html = `${value} <time datetime="${station.value_timestamp}">${station.value_time}</time>`
-        html += station.state === 'high' ? ' (<strong>high</strong>) ' : ` (${station.state.charAt(0)}${station.state.slice(1)})`
-        return html
-      } else {
-        return `${value} <time datetime="${station.value_timestamp}">${station.value_time}</time>`
-      }
+      return this.getValueHtml(station)
     }
     return 'Data error'
+  }
+
+  getValueHtml (station) {
+    // Valid data
+    const value = parseFloat(Math.round(station.value * 100) / 100).toFixed(2) + 'm'
+    if (station.station_type === 'S' || station.station_type === 'M') {
+      let html = `${value} <time datetime="${station.value_timestamp}">${station.value_time}</time>`
+      html += station.state === 'high' ? ' (<strong>high</strong>) ' : ` (${station.state.charAt(0)}${station.state.slice(1)})`
+      return html
+    } else {
+      return `${value} <time datetime="${station.value_timestamp}">${station.value_time}</time>`
+    }
   }
 
   getStationState (station) {
