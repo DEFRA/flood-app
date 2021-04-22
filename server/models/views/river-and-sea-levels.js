@@ -42,33 +42,7 @@ class ViewModel {
 
       station.state = this.getStationState(station)
 
-      if (station.status === 'Suspended' || station.status === 'Closed' || (!station.value && !station.isWales)) {
-        station.state = 'error'
-      }
-
-      if (station.iswales === true) {
-        station.valueHtml = ''
-      } else if (station.status === 'Suspended' || station.status === 'Closed') {
-        station.valueHtml = 'Data not available'
-      } else if (station.value_erred === true || station.value_erred === null) {
-        station.valueHtml = 'Data error'
-      } else {
-        if (moment(station.value_timestamp) && !isNaN(parseFloat(station.value))) {
-          // Valid data
-          station.value = parseFloat(Math.round(station.value * 100) / 100).toFixed(2) + 'm'
-          if (station.station_type === 'S' || station.station_type === 'M') {
-            station.valueHtml = station.value + ' <time datetime="' + station.value_timestamp + '">' + station.value_time + '</time>'
-            station.valueHtml += station.state === 'high'
-              ? ' (<strong>high</strong>) '
-              : ' (' + station.state.charAt(0) + station.state.slice(1) + ')'
-          } else {
-            station.valueHtml = station.value + ' ' + ' <time datetime="' + station.value_timestamp + '">' + station.value_time + '</time>'
-          }
-        } else {
-          // Error in data
-          station.valueHtml = 'Data error'
-        }
-      }
+      station.valueHtml = this.getStationHtml(station)
     })
 
     // add on 444m (0.004 deg) to the stations bounding box to stop stations clipping edge of viewport
@@ -90,7 +64,36 @@ class ViewModel {
     this.checkRainfall = this.typeChecked(this.types, ['R'])
   }
 
+  getStationHtml (station) {
+    if (station.iswales === true) {
+      return ''
+    } else if (station.status === 'Suspended' || station.status === 'Closed') {
+      return 'Data not available'
+    } else if (station.value_erred === true || station.value_erred === null) {
+      return 'Data error'
+    } else {
+      if (moment(station.value_timestamp) && !isNaN(parseFloat(station.value))) {
+        // Valid data
+        station.value = parseFloat(Math.round(station.value * 100) / 100).toFixed(2) + 'm'
+        if (station.station_type === 'S' || station.station_type === 'M') {
+          let html = station.value + ' <time datetime="' + station.value_timestamp + '">' + station.value_time + '</time>'
+          html += station.state === 'high'
+            ? ' (<strong>high</strong>) '
+            : ' (' + station.state.charAt(0) + station.state.slice(1) + ')'
+          return html
+        } else {
+          return station.value + ' ' + ' <time datetime="' + station.value_timestamp + '">' + station.value_time + '</time>'
+        }
+      } else {
+        return 'Data error'
+      }
+    }
+  }
+
   getStationState (station) {
+    if (station.status === 'Suspended' || station.status === 'Closed' || (!station.value && !station.isWales)) {
+      return 'error'
+    }
     if (station.station_type !== 'C' && station.station_type !== 'G' && station.value) {
       if (station.value >= station.percentile_5) {
         return 'high'
