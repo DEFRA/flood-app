@@ -13,19 +13,19 @@ class ViewModel {
       countLevels: stations.length,
       error: error ? true : null,
       referer: referer,
-      rivers: getRiverNames(stations),
-      types: getTypes(stations),
+      rivers: this.getRiverNames(stations),
+      types: this.getTypes(stations),
       taCode: targetArea && targetArea.fws_tacode,
       isEngland: place ? place.isEngland.is_england : null,
       riverId: riverIds && riverIds.length === 1 ? riverIds[0] : null
     })
 
-    const titles = getPageTitle(error, this.riverId, location)
+    const titles = this.getPageTitle(error, this.riverId, location)
     this.pageTitle = titles.page
     this.subtitle = titles.sub
 
     const today = moment.tz().endOf('day')
-    const stationsBbox = []
+    let stationsBbox = []
 
     stations.forEach(station => {
       // Get a bounding box covering the stations on view
@@ -92,13 +92,8 @@ class ViewModel {
       }
     })
 
-    if (stationsBbox.length > 0) {
-      // add on 444m (0.004 deg) to the stations bounding box to stop stations clipping edge of viewport
-      stationsBbox[0] = stationsBbox[0] - 0.004
-      stationsBbox[1] = stationsBbox[1] - 0.004
-      stationsBbox[2] = stationsBbox[2] + 0.004
-      stationsBbox[3] = stationsBbox[3] + 0.004
-    }
+    // add on 444m (0.004 deg) to the stations bounding box to stop stations clipping edge of viewport
+    stationsBbox = this.bboxClip(stationsBbox)
 
     // generate object keyed by river_ids
     this.stations = groupBy(stations, 'river_id')
@@ -109,58 +104,74 @@ class ViewModel {
       bingMaps: bingKeyMaps
     }
 
-    // set default checkbox behaviours
-    this.checkRivers = this.types && (this.types.includes('S') || this.types.includes('M'))
-    this.checkCoastal = this.types && this.types.includes('C')
-    this.checkGround = this.types && this.types.includes('G')
-    this.checkRainfall = this.types && this.types.includes('R')
+    // set default type checkbox behaviours
+    this.checkRivers = this.typeChecked(this.types, ['S', 'M'])
+    this.checkCoastal = this.typeChecked(this.types, ['C'])
+    this.checkGround = this.typeChecked(this.types, ['G'])
+    this.checkRainfall = this.typeChecked(this.types, ['R'])
   }
-}
 
-const getRiverNames = stations => {
-  return stations
-    .map(a => `${a.river_id}|${a.river_name}`)
-    .filter((val, i, self) => self.indexOf(val) === i)
-    .map(a => {
-      return {
-        river_id: a.split('|')[0],
-        river_name: a.split('|')[1]
-      }
-    })
-}
-
-const getTypes = stations => stations.map(a => a.station_type).filter((val, i, self) => self.indexOf(val) === i)
-
-const getPageTitle = (error, riverId, location) => {
-  const titles = {
-    page: '',
-    sub: ''
+  typeChecked (types, type) {
+    return this.types.some(a => type.includes(a))
   }
-  if (error) {
-    titles.page = 'Sorry, there is currently a problem searching a location - River and sea levels in England'
-  } else if (riverId) {
-    riverId = riverId.replace(/-/g, ' ')
 
-    riverId = riverId.toLowerCase()
-      .split(' ')
-      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-      .join(' ')
-
-    titles.page = `${riverId} - River and sea levels in England`
-
-    if (riverId === 'Sea Levels') {
-      titles.sub = 'Showing Sea levels.'
-      titles.page = 'Sea levels in England'
-    } else if (riverId === 'Groundwater Levels') {
-      titles.sub = 'Showing Groundwater levels.'
-      titles.page = 'Groundwater levels in England'
-    } else {
-      titles.sub = `Showing ${riverId} levels.`
+  bboxClip (bbox) {
+    if (bbox.length > 0) {
+      bbox[0] = bbox[0] - 0.004
+      bbox[1] = bbox[1] - 0.004
+      bbox[2] = bbox[2] + 0.004
+      bbox[3] = bbox[3] + 0.004
     }
-  } else {
-    titles.page = `${location ? `${location} - ` : ''}River and sea levels in England`
+    return bbox
   }
-  return titles
+
+  getRiverNames (stations) {
+    return stations
+      .map(a => `${a.river_id}|${a.river_name}`)
+      .filter((val, i, self) => self.indexOf(val) === i)
+      .map(a => {
+        return {
+          river_id: a.split('|')[0],
+          river_name: a.split('|')[1]
+        }
+      })
+  }
+
+  getTypes (stations) {
+    return stations.map(a => a.station_type).filter((val, i, self) => self.indexOf(val) === i)
+  }
+
+  getPageTitle (error, riverId, location) {
+    const titles = {
+      page: '',
+      sub: ''
+    }
+    if (error) {
+      titles.page = 'Sorry, there is currently a problem searching a location - River and sea levels in England'
+    } else if (riverId) {
+      riverId = riverId.replace(/-/g, ' ')
+
+      riverId = riverId.toLowerCase()
+        .split(' ')
+        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+        .join(' ')
+
+      titles.page = `${riverId} - River and sea levels in England`
+
+      if (riverId === 'Sea Levels') {
+        titles.sub = 'Showing Sea levels.'
+        titles.page = 'Sea levels in England'
+      } else if (riverId === 'Groundwater Levels') {
+        titles.sub = 'Showing Groundwater levels.'
+        titles.page = 'Groundwater levels in England'
+      } else {
+        titles.sub = `Showing ${riverId} levels.`
+      }
+    } else {
+      titles.page = `${location ? `${location} - ` : ''}River and sea levels in England`
+    }
+    return titles
+  }
 }
 
 module.exports = ViewModel
