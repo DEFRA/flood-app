@@ -6,12 +6,15 @@
 // It uses the MapContainer
 
 import { View, Overlay, Feature } from 'ol'
-import { transform, transformExtent } from 'ol/proj'
+import { transform, transformExtent, getPointResolution } from 'ol/proj' // Debug: getPointResolution
 import { unByKey } from 'ol/Observable'
 import { defaults as defaultInteractions } from 'ol/interaction'
-import { Point, MultiPolygon } from 'ol/geom'
+import { Point, Circle, MultiPolygon } from 'ol/geom' // Debug: Circle
 import { buffer, containsExtent, getCenter } from 'ol/extent'
 import { Vector as VectorSource } from 'ol/source'
+import { fromExtent } from 'ol/geom/Polygon' // Debug: Remove
+import { Vector as VectorLayer } from 'ol/layer' // Debug: Remove
+import { GeoJSON } from 'ol/format' // Debug: Remove
 
 const { addOrUpdateParameter, getParameterByName, forEach } = window.flood.utils
 const maps = window.flood.maps
@@ -196,6 +199,77 @@ function LiveMap (mapId, options) {
     })
   }
 
+  // Debug: remove from here
+  const _drawBuffer = (layer, newFeature) => {
+    if (getParameterByName('b')) {
+      const shape = new VectorLayer({
+        ref: 'shape',
+        source: new VectorSource({
+          format: new GeoJSON(),
+          projection: 'EPSG:3857'
+        }),
+        zIndex: 1
+      })
+      map.addLayer(shape)
+      const b = (getParameterByName('b') * 1000) / getPointResolution('EPSG:3857', 1, newFeature.getGeometry().getCoordinates())
+      if (layer.get('ref') === 'warnings') {
+        const targetAreaPolygonId = 'flood_warning_alert.' + newFeature.getId().substring(newFeature.getId().indexOf('.') + 1)
+        if (targetArea.polygonFeature && targetArea.polygonFeature.getId() === targetAreaPolygonId) {
+          const extent = buffer(targetArea.polygonFeature.getGeometry().getExtent(), b)
+          const feature = new Feature(fromExtent(extent))
+          shape.getSource().addFeature(feature)
+          _LogFeaturesInExtent(extent)
+        }
+      } else if (layer.get('ref') === 'stations') {
+        const circle = new Circle(newFeature.getGeometry().getCoordinates(), b)
+        const feature = new Feature(circle)
+        shape.getSource().addFeature(feature)
+      }
+    }
+  }
+  const _groupBy = (collection, property) => {
+    let i = 0
+    let val
+    let index
+    const values = []
+    const result = []
+    for (; i < collection.length; i++) {
+      val = collection[i][property]
+      index = values.indexOf(val)
+      if (index > -1) {
+        result[index].push(collection[i])
+      } else {
+        values.push(val)
+        result.push([collection[i]])
+      }
+    }
+    return result
+  }
+  const _LogFeaturesInExtent = (extent) => {
+    let features = []
+    console.log('Count: ' + JSON.stringify(stations.getSource().getFeaturesInExtent(extent).length))
+    stations.getSource().getFeaturesInExtent(extent).forEach((feature) => {
+      features.push({
+        id: feature.getId(),
+        river: feature.get('river'),
+        name: feature.get('name')
+      })
+    })
+    features.sort((a, b) => {
+      const x = a.river.toLowerCase()
+      const y = b.river.toLowerCase()
+      return x < y ? -1 : x > y ? 1 : 0
+    })
+    features = _groupBy(features, 'river')
+    features.forEach((river) => {
+      console.log('=== ' + river[0].river + ' ===')
+      river.forEach((station) => {
+        console.log(station.id + ' - ' + station.name)
+      })
+    })
+  }
+  // Debug: to here
+
   // Set selected feature
   const setSelectedFeature = (newFeatureId = '') => {
     selected.getSource().clear()
@@ -211,6 +285,7 @@ function LiveMap (mapId, options) {
         selected.getSource().addFeature(newFeature)
         selected.setStyle(maps.styles[layer.get('ref')]) // WebGL: layers don't use a style function
         container.showInfo('Selected feature information', newFeature.get('html'))
+        _drawBuffer(layer, newFeature) // Debug: remove
       }
       // Refresh target area polygons
       if (layer.get('ref') === 'warnings') {
