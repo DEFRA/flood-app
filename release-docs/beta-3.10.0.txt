@@ -1,0 +1,21 @@
+# Service refresh release 3.10.0 Tuesday 27 April 2021
+
+# Tickets
+
+FSR-240 - warning content
+FSR-247 - flood guidance statement
+
+# Instructions
+
+Execute the following jobs in order:
+
+LFW_{stage}_UPDATE_DATABASE
+LFW_{stage}_UPDATE_GEOSERVER_PIPELINE
+LFW_{stage}_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+After app build then also redeploy the flood-data application:
+
+LFW_{stage}_MISC_JOBS/LFW_{stage}_99_DEPLOY_FLOOD_DATA_PIPELINE
+
+
+thanks
