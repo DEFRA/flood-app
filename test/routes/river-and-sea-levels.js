@@ -1595,7 +1595,6 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.statusCode).to.equal(200)
   })
 
-  
   lab.test('GET /river-and-sea-levels set yar session params', async () => {
     const floodService = require('../../server/services/flood')
 
