@@ -7,7 +7,6 @@ const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const data = require('../data')
 
-
 lab.experiment('Test - /river-and-sea-levels', () => {
   let sandbox
   let server
@@ -1400,7 +1399,6 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('Causey Bridge')
     Code.expect(response.statusCode).to.equal(200)
   })
-  //TODO: FIX THESE TESTS
 
   lab.test('GET /river-and-sea-levels location + types', async () => {
     const floodService = require('../../server/services/flood')
