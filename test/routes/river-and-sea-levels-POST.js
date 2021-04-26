@@ -169,4 +169,21 @@ lab.experiment('Routes test - river-and-sea-levels', () => {
     Code.expect(response.headers.location).to.equal('/river-and-sea-levels')
     Code.expect(response.request.yar.get('redirect')).to.be.null()
   })
+
+  lab.test('POST /river-and-sea-levels types S,M & G', async () => {
+    const options = {
+      method: 'POST',
+      url: '/river-and-sea-levels',
+      payload: 'river-id=test'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.headers.location).to.equal('/river-and-sea-levels')
+    Code.expect(response.request.yar.get('redirect')).to.be.true()
+    Code.expect(response.request.yar.get('q')).to.be.null()
+    Code.expect(response.request.yar.get('ta-code')).to.be.null()
+    Code.expect(response.request.yar.get('types')).to.be.null()
+    Code.expect(response.request.yar.get('river-id')).to.be.equal('test')
+  })
 })
