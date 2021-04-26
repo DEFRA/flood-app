@@ -34,7 +34,7 @@ module.exports = [{
           model = new ViewModel({ location, place, stations, targetArea, riverIds, referer })
         } else {
           // If location search error show national list with error
-          stations = await floodService.getStations()
+          stations = await getStations()
           model = new ViewModel({ location, place, stations, targetArea, riverIds, error, referer })
         }
         return h.view(route, { model })
