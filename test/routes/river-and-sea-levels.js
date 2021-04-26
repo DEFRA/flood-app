@@ -7,6 +7,7 @@ const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const data = require('../data')
 
+
 lab.experiment('Test - /river-and-sea-levels', () => {
   let sandbox
   let server
@@ -1399,4 +1400,364 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('Causey Bridge')
     Code.expect(response.statusCode).to.equal(200)
   })
+  //TODO: FIX THESE TESTS
+
+  lab.test('GET /river-and-sea-levels location + types', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    // this is the entire dump of station data
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(() => data.stationsWithinWarrington)
+
+    const fakeGetJson = () => data.warringtonGetJson
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=Warrington&types=S,M'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('23 levels')
+    Code.expect(response.statusCode).to.equal(200)
+  })
+
+  lab.test('GET /river-and-sea-levels location + types for no results', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    // this is the entire dump of station data
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(() => data.stationsWithinWarrington)
+
+    const fakeGetJson = () => data.warringtonGetJson
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=Warrington&types=G'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('0 levels')
+    Code.expect(response.statusCode).to.equal(200)
+  })
+
+  lab.test('GET /river-and-sea-levels location + rivers', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    // this is the entire dump of station data
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(() => data.stationsWithinWarrington)
+
+    const fakeGetJson = () => data.warringtonGetJson
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=Warrington&river-id=baguley-brook,glaze-brook'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('2 levels')
+    Code.expect(response.statusCode).to.equal(200)
+  })
+
+  lab.test('GET /river-and-sea-levels location + rivers + type', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    // this is the entire dump of station data
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(() => data.stationsWithinWarrington)
+
+    const fakeGetJson = () => data.warringtonGetJson
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=Warrington&river-id=baguley-brook,glaze-brook&types=S,M'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('2 levels')
+    Code.expect(response.statusCode).to.equal(200)
+  })
+
+  // lab.test('GET /river-and-sea-levels Rivers', async () => {
+  //   const floodService = require('../../server/services/flood')
+
+  //   const fakeIsEngland = () => {
+  //     return { is_england: true }
+  //   }
+
+  //   const fakeStationsData = () => [
+  //     {
+  //       river_id: 'sankey-brook',
+  //       river_name: 'Sankey Brook',
+  //       navigable: true,
+  //       view_rank: 3,
+  //       rank: 1,
+  //       rloi_id: 5031,
+  //       up: null,
+  //       down: 5069,
+  //       telemetry_id: '694039',
+  //       region: 'North West',
+  //       catchment: 'Lower Mersey',
+  //       wiski_river_name: 'Sankey Brook',
+  //       agency_name: 'Causey Bridge',
+  //       external_name: 'Causey Bridge',
+  //       station_type: 'S',
+  //       status: 'Active',
+  //       qualifier: 'u',
+  //       iswales: false,
+  //       value: '0.111',
+  //       value_timestamp: '2020-02-27T14:30:00.000Z',
+  //       value_erred: false,
+  //       percentile_5: '2.5',
+  //       percentile_95: '0.209',
+  //       centroid: '0101000020E610000095683DBA03FA04C089E4A73671B64A40',
+  //       lon: -2.62207742214111,
+  //       lat: 53.4253300018109
+  //     }
+  //   ]
+
+  //   sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+  //   sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
+
+  //   const riversPlugin = {
+  //     plugin: {
+  //       name: 'rivers',
+  //       register: (server, options) => {
+  //         server.route(require('../../server/routes/river-and-sea-levels'))
+  //       }
+  //     }
+  //   }
+
+  //   await server.register(require('../../server/plugins/views'))
+  //   await server.register(require('../../server/plugins/session'))
+  //   await server.register(riversPlugin)
+
+  //   await server.initialize()
+  //   const options = {
+  //     method: 'GET',
+  //     url: '/river-and-sea-levels?q=England'
+  //   }
+
+  //   const response = await server.inject(options)
+
+  //   Code.expect(response.payload).to.contain('1 level')
+  //   Code.expect(response.payload).to.contain('Causey Bridge')
+  //   Code.expect(response.statusCode).to.equal(200)
+  // })
+
+  // lab.test('GET /river-and-sea-levels types', async () => {
+  //   const floodService = require('../../server/services/flood')
+
+  //   const fakeIsEngland = () => {
+  //     return { is_england: true }
+  //   }
+
+  //   const fakeStationsData = () => [
+  //     {
+  //       river_id: 'sankey-brook',
+  //       river_name: 'Sankey Brook',
+  //       navigable: true,
+  //       view_rank: 3,
+  //       rank: 1,
+  //       rloi_id: 5031,
+  //       up: null,
+  //       down: 5069,
+  //       telemetry_id: '694039',
+  //       region: 'North West',
+  //       catchment: 'Lower Mersey',
+  //       wiski_river_name: 'Sankey Brook',
+  //       agency_name: 'Causey Bridge',
+  //       external_name: 'Causey Bridge',
+  //       station_type: 'S',
+  //       status: 'Active',
+  //       qualifier: 'u',
+  //       iswales: false,
+  //       value: '0.111',
+  //       value_timestamp: '2020-02-27T14:30:00.000Z',
+  //       value_erred: false,
+  //       percentile_5: '2.5',
+  //       percentile_95: '0.209',
+  //       centroid: '0101000020E610000095683DBA03FA04C089E4A73671B64A40',
+  //       lon: -2.62207742214111,
+  //       lat: 53.4253300018109
+  //     }
+  //   ]
+
+  //   sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+  //   sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
+
+  //   const riversPlugin = {
+  //     plugin: {
+  //       name: 'rivers',
+  //       register: (server, options) => {
+  //         server.route(require('../../server/routes/river-and-sea-levels'))
+  //       }
+  //     }
+  //   }
+
+  //   await server.register(require('../../server/plugins/views'))
+  //   await server.register(require('../../server/plugins/session'))
+  //   await server.register(riversPlugin)
+
+  //   await server.initialize()
+  //   const options = {
+  //     method: 'GET',
+  //     url: '/river-and-sea-levels?q=England'
+  //   }
+
+  //   const response = await server.inject(options)
+
+  //   Code.expect(response.payload).to.contain('1 level')
+  //   Code.expect(response.payload).to.contain('Causey Bridge')
+  //   Code.expect(response.statusCode).to.equal(200)
+  // })
+
+  // lab.test('GET /river-and-sea-levels rivers and types', async () => {
+  //   const floodService = require('../../server/services/flood')
+
+  //   const fakeIsEngland = () => {
+  //     return { is_england: true }
+  //   }
+
+  //   const fakeStationsData = () => [
+  //     {
+  //       river_id: 'sankey-brook',
+  //       river_name: 'Sankey Brook',
+  //       navigable: true,
+  //       view_rank: 3,
+  //       rank: 1,
+  //       rloi_id: 5031,
+  //       up: null,
+  //       down: 5069,
+  //       telemetry_id: '694039',
+  //       region: 'North West',
+  //       catchment: 'Lower Mersey',
+  //       wiski_river_name: 'Sankey Brook',
+  //       agency_name: 'Causey Bridge',
+  //       external_name: 'Causey Bridge',
+  //       station_type: 'S',
+  //       status: 'Active',
+  //       qualifier: 'u',
+  //       iswales: false,
+  //       value: '0.111',
+  //       value_timestamp: '2020-02-27T14:30:00.000Z',
+  //       value_erred: false,
+  //       percentile_5: '2.5',
+  //       percentile_95: '0.209',
+  //       centroid: '0101000020E610000095683DBA03FA04C089E4A73671B64A40',
+  //       lon: -2.62207742214111,
+  //       lat: 53.4253300018109
+  //     }
+  //   ]
+
+  //   sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+  //   sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
+
+  //   const riversPlugin = {
+  //     plugin: {
+  //       name: 'rivers',
+  //       register: (server, options) => {
+  //         server.route(require('../../server/routes/river-and-sea-levels'))
+  //       }
+  //     }
+  //   }
+
+  //   await server.register(require('../../server/plugins/views'))
+  //   await server.register(require('../../server/plugins/session'))
+  //   await server.register(riversPlugin)
+
+  //   await server.initialize()
+  //   const options = {
+  //     method: 'GET',
+  //     url: '/river-and-sea-levels?q=England'
+  //   }
+
+  //   const response = await server.inject(options)
+
+  //   Code.expect(response.payload).to.contain('1 level')
+  //   Code.expect(response.payload).to.contain('Causey Bridge')
+  //   Code.expect(response.statusCode).to.equal(200)
+  // })
+
+  // TODO CAN WE TEST getParameters, getStations and filterStations directly? but they get tested indirectly anyway so doesn't matter
 })
