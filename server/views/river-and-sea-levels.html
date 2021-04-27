@@ -63,11 +63,11 @@
             <div class="defra-facets__header govuk-visually-hidden">
               <h2>Filter</h2>
             </div>
-            <div class="defra-facets__content">
-              <details class="defra-facets-details" data-module="govuk-details">
+            <div class="defra-facets__content{% if not model.showFilters %} govuk-visually-hidden{% endif %}">
+              <details class="defra-facets-details{% if not model.showRiverFilter %} govuk-visually-hidden{% endif %}" data-module="govuk-details">
                 <summary class="defra-facets-details__summary">
                   <span class="defra-facets-details__summary-text">River name</span>
-                  <span class="defra-facets-details__select-counter govuk-visually-hidden">?? selected</span>
+                  <span class="defra-facets-details__select-counter govuk-visually-hidden">0 selected</span>
                 </summary>
                 <div class="defra-facets-details__text">
                   <div class="defra-facets-filter">
@@ -87,7 +87,7 @@
                   </fieldset>
                 </div>
               </details>
-              <details class="defra-facets-details" data-module="govuk-details">
+              <details class="defra-facets-details{% if not model.showTypeFilter %} govuk-visually-hidden{% endif %}" data-module="govuk-details">
                 <summary class="defra-facets-details__summary">
                   <span class="defra-facets-details__summary-text">Type</span>
                 </summary>
@@ -116,7 +116,7 @@
                 </div>
               </details>
             </div>
-            <div class="defra-facets__footer">
+            <div class="defra-facets__footer{% if not model.showFilters %} govuk-visually-hidden{% endif %}">
               <button class="govuk-button defra-facets__filter-results" type="submit" data-module="govuk-button">
                 Filter results
               </button>

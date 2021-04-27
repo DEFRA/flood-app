@@ -62,6 +62,11 @@ class ViewModel {
     this.checkCoastal = this.typeChecked(this.types, ['C'])
     this.checkGround = this.typeChecked(this.types, ['G'])
     this.checkRainfall = this.typeChecked(this.types, ['R'])
+
+    // Show or Hide filters
+    this.showTypeFilter = (this.checkRivers || this.checkCoastal || this.checkGround || this.checkRainfall)
+    this.showRiverFilter = this.rivers && this.rivers.length > 0
+    this.showFilters = this.showTypeFilter || this.showRiverFilter
   }
 
   getStationHtml (station) {
