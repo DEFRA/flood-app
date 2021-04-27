@@ -58,12 +58,13 @@
         <form method="post" autocomplete="off">
         <input class="defra-search__input" name="q" type="hidden" value="{{ model.q }}">
         <input class="defra-search__input" name="target-area" type="hidden" value="{{ model.taCode }}">
+        {% if model.showFilters %}
         <div id="filter" class="defra-facets" role="search" aria-label="Search filters">
           <div class="defra-facets__container">
             <div class="defra-facets__header govuk-visually-hidden">
               <h2>Filter</h2>
             </div>
-            <div class="defra-facets__content{% if not model.showFilters %} govuk-visually-hidden{% endif %}">
+            <div class="defra-facets__content">
               <details class="defra-facets-details{% if not model.showRiverFilter %} govuk-visually-hidden{% endif %}" data-module="govuk-details">
                 <summary class="defra-facets-details__summary">
                   <span class="defra-facets-details__summary-text">River name</span>
@@ -95,34 +96,43 @@
                   <fieldset class="govuk-fieldset">
                     <legend class="govuk-visually-hidden">Type</legend>
                     <ul class="govuk-checkboxes govuk-checkboxes--small defra-facets-types__list">
-                      <li class="govuk-checkboxes__item{% if not model.checkRivers %} govuk-visually-hidden{% endif %}">
-                        <input class="govuk-checkboxes__input" id="river-measurement" aria-controls="" type="checkbox" name="types" value='S,M' {% if model.checkRivers %}checked{% endif %}></input>
+                      {% if model.checkRivers %} 
+                      <li class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="river-measurement" aria-controls="" type="checkbox" name="types" value="S,M" checked></input>
                         <label class="govuk-label govuk-checkboxes__label" for="river-measurement">River</label>
                       </li>
-                      <li class="govuk-checkboxes__item{% if not model.checkCoastal %} govuk-visually-hidden{% endif %}">
-                        <input class="govuk-checkboxes__input" id="sea-measurement" aria-controls="" type="checkbox" name="types" value='C' {% if model.checkCoastal %}checked{% endif %}></input>
+                      {% endif %}
+                      {% if model.checkCoastal %}
+                      <li class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="sea-measurement" aria-controls="" type="checkbox" name="types" value="C" checked></input>
                         <label class="govuk-label govuk-checkboxes__label" for="sea-measurement">Coastal</label>
                       </li>
-                      <li class="govuk-checkboxes__item{% if not model.checkGround %} govuk-visually-hidden{% endif %}">
-                        <input class="govuk-checkboxes__input" id="groundwater-measurement" aria-controls="" type="checkbox" name="types" value='G' {% if model.checkGround %}checked{% endif %}></input>
+                      {% endif %}
+                      {% if model.checkGround %}
+                      <li class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="groundwater-measurement" aria-controls="" type="checkbox" name="types" value="G" checked></input>
                         <label class="govuk-label govuk-checkboxes__label" for="groundwater-measurement">Groundwater</label>
                       </li>
-                      <li class="govuk-checkboxes__item{% if not model.checkRainfall %} govuk-visually-hidden{% endif %}">
-                        <input class="govuk-checkboxes__input" id="rainfall-measurement" aria-controls="" type="checkbox" name="types" value='R' {% if model.checkRainfall %}checked{% endif %}></input>
+                      {% endif %}
+                      {% if model.checkRainfall %}
+                      <li class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="rainfall-measurement" aria-controls="" type="checkbox" name="types" value="R" checked></input>
                         <label class="govuk-label govuk-checkboxes__label" for="rainfall-measurement">Rainfall</label>
                       </li>
+                      {% endif %}
                     </ul>
                   </fieldset>
                 </div>
               </details>
             </div>
-            <div class="defra-facets__footer{% if not model.showFilters %} govuk-visually-hidden{% endif %}">
+            <div class="defra-facets__footer">
               <button class="govuk-button defra-facets__filter-results" type="submit" data-module="govuk-button">
                 Filter results
               </button>
             </div>
           </div>
         </div>
+        {% endif %}
         </form>
 
       </div>

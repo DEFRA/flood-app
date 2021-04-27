@@ -1475,6 +1475,11 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const response = await server.inject(options)
 
     Code.expect(response.payload).to.contain('0 levels')
+    Code.expect(response.payload).to.contain('No river, sea or groundwater levels found')
+    Code.expect(response.payload).to.not.contain('id="filter"')
+    Code.expect(response.payload).to.not.contain('<label class="govuk-label govuk-checkboxes__label" for="river-measurement">')
+    Code.expect(response.payload).to.not.contain('<label class="govuk-label govuk-checkboxes__label" for="sea-measurement">')
+    Code.expect(response.payload).to.not.contain('<label class="govuk-label govuk-checkboxes__label" for="groundwater-measurement">')
     Code.expect(response.statusCode).to.equal(200)
   })
 
@@ -1553,6 +1558,13 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const response = await server.inject(options)
 
     Code.expect(response.payload).to.contain('2 levels')
+    Code.expect(response.payload).to.contain('<label class="govuk-label govuk-checkboxes__label" for="baguley-brook">')
+    Code.expect(response.payload).to.contain('<label class="govuk-label govuk-checkboxes__label" for="glaze-brook">')
+    Code.expect(response.payload).to.not.contain('<label class="govuk-label govuk-checkboxes__label" for="netherley-brook">')
+    Code.expect(response.payload).to.not.contain('<label class="govuk-label govuk-checkboxes__label" for="river-bollin">')
+    Code.expect(response.payload).to.contain('<label class="govuk-label govuk-checkboxes__label" for="river-measurement">')
+    Code.expect(response.payload).to.not.contain('<label class="govuk-label govuk-checkboxes__label" for="sea-measurement">')
+    Code.expect(response.payload).to.not.contain('<label class="govuk-label govuk-checkboxes__label" for="groundwater-measurement">')
     Code.expect(response.statusCode).to.equal(200)
   })
 
