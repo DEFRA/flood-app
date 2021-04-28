@@ -1,0 +1,185 @@
+.defra-facets-body {
+  position: fixed;
+  overflow: hidden;
+  top:0px;
+  right:0px;
+  bottom:0px;
+  left:0px;
+}
+.defra-facets {
+  &__show-filters {
+      @extend .defra-button-text;
+      font-weight: bold;
+      text-decoration: none;
+      margin-top: 10px;
+      margin-bottom: 15px;
+      @include mq ($from: tablet) {
+          display: none;
+      }
+  }
+}
+.defra-facets-details {
+  @extend .govuk-details;
+  border-bottom: 1px solid $govuk-border-colour;
+  margin-bottom: 0px;
+  &__summary {
+      @extend .govuk-details__summary;
+      position: relative;
+      display: block;
+      padding: 20px 13px 20px 48px;
+      margin-bottom: 0px;
+  }    
+  &__summary:before {
+      top: 23px;
+      left: 13px;
+      width:22px !important;
+      height:14px !important;
+      background-image: svg-url('<svg width="22" height="14" viewBox="0 0 22 14"><path d="M2,2L11,11L20,2" style="fill:none;stroke:#0b0c0c;stroke-width:2px;"/></svg>');
+      background-size: 100%;
+      margin: 0px !important;
+      clip-path: none !important;
+      border: 0px !important;
+      @include mq ($from: tablet) {
+          top: 25px;
+      }
+  }
+  &__summary-text {
+      @extend .govuk-details__summary-text;
+      text-decoration: none;
+  }
+  &__summary:hover &__summary-text {
+      text-decoration: underline;
+  }
+  &__select-counter {
+      display: block;
+      @include govuk-font($size: 14);
+      color: $govuk-text-colour;
+  }
+  &[open] &__summary:before {
+      background-image: svg-url('<svg width="22" height="14" viewBox="0 0 22 14"><path d="M2,12L11,3L20,12" style="fill:none;stroke:#000;stroke-width:2px;"/></svg>');
+  }
+  &__summary:focus {
+      outline: 0px;
+      box-shadow: none;
+      background-color: transparent;
+  }
+  &__summary:focus &__summary-text {
+      @extend .govuk-link:focus;
+      text-decoration: none;
+  }
+  ul {
+      padding: 0px 13px 5px 13px;
+      margin: 0px 0px 10px 0px;
+      max-height: 250px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch
+  }
+  ul:after {
+      display: block;
+      content: '';
+      clear: both;
+  }
+}
+.defra-facets-filter {
+  padding: 3px 13px 13px 13px;
+  position: relative;
+  &__input {
+      @extend .govuk-input;
+      padding-left: 33px;
+      background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="40" height="40"%3E%3Cpath d="M25.7 24.8L21.9 21c.7-1 1.1-2.2 1.1-3.5 0-3.6-2.9-6.5-6.5-6.5S10 13.9 10 17.5s2.9 6.5 6.5 6.5c1.6 0 3-.6 4.1-1.5l3.7 3.7 1.4-1.4zM12 17.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5-2 4.5-4.5 4.5-4.5-2-4.5-4.5z" fill="currentColor"%3E%3C/path%3E%3C/svg%3E') #fff no-repeat -5px -3px;
+  }
+}
+.defra-facets__header {
+  position: relative;
+  border-bottom: 1px solid $govuk-border-colour;
+  h2 {
+      @extend .govuk-heading-l;
+      margin-bottom: 15px;
+      line-height: 40px;
+  }
+}
+.defra-facets__close {
+  position: absolute;
+  top:0px;
+  right:0px;
+  width:40px;
+  height: 40px;
+  padding: 0px;
+  background-color: #ffffff;
+  // background-image: svg-url('<svg width="14" height="14" viewBox="0 0 14 14"><path d="M7,5.6L12.6,0L14,1.4L8.4,7L14,12.6L12.6,14L7,8.4L1.4,14L0,12.6L5.6,7L0,1.4L1.4,0L7,5.6Z" style="fill:#0b0c0c;stroke:#0b0c0c;stroke-width:0.1px"/></svg>');
+  background-image: svg-url('<svg width="18" height="18" viewBox="0 0 18 18"><path d="M9,7.6L15.603,0.997L17.003,2.397L10.4,9L17.003,15.603L15.603,17.003L9,10.4L2.377,17.023L0.977,15.623L7.6,9L0.977,2.377L2.377,0.977L9,7.6Z" style="fill:#0b0c0c;fill-rule:nonzero;stroke:#0b0c0c;stroke-width:1px;"/></svg>');
+  background-size: 18px;
+  background-position: 11px;
+  background-repeat: no-repeat;  
+  border: 0px;
+  text-indent: -5000px;
+  cursor: pointer;
+  &:hover {
+      background-color:$govuk-border-colour;
+  }
+  &:focus {
+      background-color: $govuk-focus-colour;
+      color: $govuk-text-colour;
+      outline:none;
+  }
+  &::-moz-focus-inner {
+      order: 0;
+  }
+}
+.defra-facets__reset {
+  @extend .defra-button-text;
+  text-decoration: none;
+  margin-top: 15px;
+}
+.defra-facets__footer {
+  margin-top:15px;
+  margin-bottom:15px;
+}
+.js-enabled .defra-facets {
+  &__header,
+  &__close,
+  &__filter-results {
+      @include mq ($from: tablet) {
+          display: none;
+      }
+  }
+  &__container {
+      display: none;
+      @include mq ($from: tablet) {
+          display: block;
+      }
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch
+  }
+  &__container[aria-modal="true"] {
+      display: block;
+      position: fixed;
+      padding: 15px 15px 90px 15px;
+      z-index: 1000;
+      top: 0px;
+      right: 0px;
+      bottom: 0px;
+      left: 0px;
+      background: #fff;
+      .defra-facets__header,
+      .defra-facets__reset,
+      .defra-facets__close {
+          display: block;
+      }
+  }
+}
+.js-enabled .defra-facets__footer {
+  @include mq ($until: tablet) {
+      position: fixed;
+      left: 0px;
+      bottom: 0px;
+      width: 100%;
+      height:68px;
+      padding: 15px;
+      margin :0px;
+      box-sizing: border-box;
+      background-color: white;
+      border-top: 1px solid #b1b4b6;
+      box-shadow: 0 0 5px govuk-colour('mid-grey');
+  }
+}

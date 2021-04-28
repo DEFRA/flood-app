@@ -17,6 +17,9 @@
       &:last-child {
           border:none;
       }
+      &:empty {
+          display:none
+      }
   }
   &__group-title {
       display: block;
