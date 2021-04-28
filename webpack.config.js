@@ -27,5 +27,6 @@ module.exports = (env, argv) => ({
         }
       }
     ]
-  }
+  },
+  target: ['web', 'es5']
 })

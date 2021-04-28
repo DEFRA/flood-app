@@ -1,18 +1,12 @@
 'use strict'
 // This file represents the 5 day outlook used on the national page.
-// It uses the MapContainer
-// TODO: needs refactoring into layers and styles
-// ALSO need to fix the functionality, I don't think the tickets have been developed as of 31/01/2020
-import { View, Overlay, Feature } from 'ol' // debug: remove Feature
+import { View, Overlay } from 'ol'
 import { defaults as defaultInteractions } from 'ol/interaction'
-import { transform, transformExtent } from 'ol/proj' // debug: transformExtent
-import { Point } from 'ol/geom' // debug: remove poygon
+import { transform } from 'ol/proj'
+import { Point } from 'ol/geom'
 import { getCenter } from 'ol/extent'
 import { unByKey } from 'ol/Observable'
 import { Control } from 'ol/control'
-import { fromExtent } from 'ol/geom/Polygon' // debug: remove
-import { Vector as VectorLayer } from 'ol/layer' // debug: remove
-import { Vector as VectorSource } from 'ol/source' // debug: remove
 
 const { addOrUpdateParameter, getParameterByName, forEach } = window.flood.utils
 const maps = window.flood.maps
@@ -182,15 +176,6 @@ function OutlookMap (mapId, options) {
     }
     const html = window.nunjucks.render('description-outlook.html', { model: model })
     viewportDescription.innerHTML = html
-    // ToDo: Show non-visual feature details
-    // const model = {
-    //   numFeatures: numFeatures,
-    //   numWarnings: numWarnings,
-    //   mumMeasurements: mumMeasurements,
-    //   features: features
-    // }
-    // const html = window.nunjucks.render('description-live.html', { model: model })
-    // viewportDescription.innerHTML = html
   }
 
   // Set selected feature
@@ -295,17 +280,6 @@ function OutlookMap (mapId, options) {
   // Centre map on bbox
   if (options.bbox && options.bbox.length) {
     maps.setExtentFromLonLat(map, options.bbox)
-    // debug: add bbox
-    map.addLayer(new VectorLayer({
-      ref: 'bbox',
-      source: new VectorSource({
-        projection: 'EPSG:3857',
-        features: [new Feature(fromExtent(transformExtent(options.bbox, 'EPSG:4326', 'EPSG:3857')))]
-      }),
-      style: window.flood.maps.styles.bbox,
-      visible: true,
-      zIndex: 99
-    }))
   }
 
   //

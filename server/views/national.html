@@ -71,7 +71,7 @@
       </div>
     {% else %}
       <p class="govuk-body">
-        {{ model.outlook.full | safe }}
+        {{ model.outlook.full }}
       </p>
       {% if model.outlook.hasOutlookConcern %}
       <span id="map-outlook"></span>
