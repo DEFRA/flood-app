@@ -69,22 +69,11 @@
 {% elif model.type === 'R' %}
     <div id="infoDescription">
         <p class="defra-map-info__feature">
-<<<<<<< HEAD
-            <span class="defra-map-info__type">
-                Rainfall measurement
-            </span>
-            <span class="defra-map-info__name">
-                {{ model.name }}
-            </span>
-            <span class="defra-flood-list-data__description">
-                {{ model.date }}
-=======
             <span class="defra-map-info__name">
                 Rainfall at {{ model.name }}
             </span>
             <span class="defra-flood-list-data__description">
                 Measured {{ model.date }}
->>>>>>> b5bbbf552701162997d98b8003c59e7223c7be68
             </span>
         </p>
         <!--TODO: need to add logic in somewhere for Rainfall gauge status/error state-->
@@ -98,21 +87,6 @@
         </p>
         {% else %} -->
         <dl class="defra-flood-list-data">
-<<<<<<< HEAD
-            <div class="defra-flood-list-data__column">
-                <dt class="govuk-visually-hidden">Intensity</dt>
-                <dd>
-                    <span class="defra-flood-list-data__value">
-                        {% if model.one_hr_total > 4 %}Heavy{% elif model.one_hr_total > 0.5 %}Moderate{% elif model.one_hr_total > 0 %}Light{% else %}0mm{% endif %}
-                    </span>
-                    <span class="defra-flood-list-data__description">
-                        {% if model.one_hr_total > 0 %}{{ model.one_hr_total }}mm/hr{% else %}last hour{% endif %}
-                    </span>
-                </dd>
-            </div>
-            <div class="defra-flood-list-data__column">
-                <dt class="govuk-visually-hidden">Last 6 hours</dt>
-=======
              <div class="defra-flood-list-data__column">
                 <dt class="govuk-visually-hidden">One hour</dt>
                 <dd>
@@ -122,18 +96,13 @@
             </div>
             <div class="defra-flood-list-data__column">
                 <dt class="govuk-visually-hidden">Six hours</dt>
->>>>>>> b5bbbf552701162997d98b8003c59e7223c7be68
                 <dd>
                 <span class="defra-flood-list-data__value">{{ model.six_hr_total }}mm</span>
                 <span class="defra-flood-list-data__description" aria-hidden="true">6 hours</span>
                 </dd>
             </div>
             <div class="defra-flood-list-data__column">
-<<<<<<< HEAD
-                <dt class="govuk-visually-hidden">Last 24 hours</dt>
-=======
                 <dt class="govuk-visually-hidden">Twenty four hours</dt>
->>>>>>> b5bbbf552701162997d98b8003c59e7223c7be68
                 <dd>
                 <span class="defra-flood-list-data__value">{{ model.day_total }}mm</span>
                 <span class="defra-flood-list-data__description" aria-hidden="true">24 hours</span>
