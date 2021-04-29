@@ -15,6 +15,7 @@ class ViewModel {
 
     this.station = new Station(station)
     this.station.riverNavigation = river
+    this.qualifier = this.station.qualifier
 
     /*
     var levelType = this.station.isGroundwater ? 'Groundwater' : (this.station.isCoastal ? 'Sea' : 'River')

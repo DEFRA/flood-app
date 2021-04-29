@@ -1,14 +1,8 @@
 // Line graph
-
-.column-full {
-    display:inline-block;
-    width:100%;
-}
 .defra-line-chart {
     position:relative;
-    border-bottom:1px solid $govuk-border-colour;
-    padding-top:30px;
-    padding-bottom:15px;
+    // border-bottom:1px solid $govuk-border-colour;
+    // padding-bottom:15px;
     margin:0;
 }
 .defra-line-chart-data {
@@ -32,173 +26,6 @@
     position:relative;
     margin:0;
 }
-
-/*
-.defra-line-chart-legend {
-    @include govuk-font($size: 16); 
-    @include mq ($from: desktop) {
-        position:absolute;
-        left:100%;
-        top:0;
-        width:18.5%;
-        margin-left:3.85%;
-    }
-    ul {
-        list-style:none;
-        margin: 0;
-        padding:0;
-    }
-    li {
-        @include mq ($from: tablet) {
-            display:inline-block;
-            margin-right:1.5em;
-        }
-        @include mq ($from: desktop) {
-            max-width:16em;
-            margin-right:0;
-        }
-        padding-left:1.75em;
-        padding-right:0em;
-        margin-bottom:1.5em;
-        box-sizing: border-box;
-    }
-    li:before {
-        position:relative;
-        content:' ';
-        float:left;
-        display:block;
-        width: 18px;
-        height: 4px;
-        margin-left:-1.75em;
-        border:0;
-        top:-1px;
-        left:1px;
-        @include mq ($from: tablet) {
-            top:2px;
-        }
-        background-color:$govuk-text-colour;
-    }
-    li.property:before {
-        background-color:rgba(#E3000F, 0.3);
-        height:16px;
-    }
-    li.land:before {
-        background-color:rgba(#F18700, 0.3);
-        height:16px;
-    }
-    li.normal:before {
-        background-color:rgba(#85994b, 0.3);
-        height:16px;
-    }
-    li.measured:before {
-        background-color:transparent;
-        border-bottom:$govuk-link-colour 4px solid;
-        top:1px;
-        @include mq ($from: tablet) {
-            top:3px;
-        }
-    }
-    li.forecast:before {
-        background-color:transparent;
-        border-bottom:#52585a 4px dotted;
-        top:1px;
-        @include mq ($from: tablet) {
-            top:3px;
-        }
-    }
-    li.max.max-off {
-        padding-left:0;
-    }
-    li.max.max-off:before {
-        display:none;
-    }
-    li.max:before {
-        background-color:transparent;
-        border-bottom:$govuk-text-colour 4px solid;
-        top:1px;
-        @include mq ($from: tablet) {
-            top:3px;
-        }
-    }
-    .list-graph-labels li {
-        display: inline-block;
-        @include mq ($from: tablet) {
-            display:block;
-        }
-    }
-    .data-level {
-        margin-top:0;
-        margin-bottom: em(30, 19);
-    }
-    .data-level-item-heading {
-        border-bottom:1px solid #dee0e2;
-        line-height:1.5;
-        margin-bottom:0.5em;
-        padding-left:1.5em;
-    }
-    .defra-line-chart-legend-normal-level {
-        @include mq ($from: tablet) {
-            max-width:14em;
-        }
-    }
-}
-*/
-
-.button-hide-threshold {
-    display:inline-block;
-}
-
-table.table-levels {
-    margin-bottom:1.5em;
-    thead {
-        th {
-          @include govuk-font($size: 19, $weight: bold); 
-        }
-        th:first-child {
-            width:50%;
-        }
-        .numeric {
-            padding-right:100px;
-        }
-    }
-    tbody {
-        td {
-            position:relative;
-        }
-        .numeric {
-            padding-right:100px;
-            vertical-align:top;
-        }
-        .error {
-            border:0;
-            position:absolute;
-            padding-top:inherit;
-            padding-bottom:inherit;
-            padding-left:0;
-            bottom:0;
-            right:0;
-            width:80px;
-            text-align:left;
-        }
-        .error:before {
-            background-color: $govuk-text-colour;
-            border-radius: 50%;
-            content: '!';
-            color: #fff;
-            line-height:1;
-            display:inline-block;
-            font-family: arial;
-            font-weight: bold;
-            height: 1em;
-            margin-left: 7px;
-            margin-right: 2px;
-            padding: 2px;
-            text-align: center;
-            width: 1em;
-        }
-    }
-}
-
 .defra-line-chart svg {
     position:relative;
     overflow:visible;
@@ -208,10 +35,10 @@ table.table-levels {
         height:450px;
     }
     .axis.y { 
-        @include govuk-font($size: 16, $tabular: true);
+        @include govuk-font($size: 14, $tabular: true);
     }
     .axis.x { 
-        @include govuk-font($size: 16); 
+        @include govuk-font($size: 14); 
     }
     .axis.y text,
     .axis.x text {
@@ -224,12 +51,21 @@ table.table-levels {
         stroke-width: 1;
         shape-rendering: crispEdges;
     }
+    .axis.y path {
+        visibility:hidden;
+    }
     .axis.x .tick--hidden {
         visibility: hidden;
         pointer-events: none;
     }
     .axis.x .tick line {
         visibility:hidden;
+    }
+    .axis.y .tick line {
+        stroke: rgba($govuk-text-colour, 0.1);
+    }
+    .axis.y .tick:first-of-type line {
+        stroke: $govuk-border-colour;
     }
     .grid line {
         fill: none;
@@ -240,29 +76,32 @@ table.table-levels {
     .grid path {
         visibility: hidden;
     }
-    .warning {
-        stroke: #b10e1e; 
-        stroke-width: 2;
-        shape-rendering: crispEdges;
+    .grid.x .tick:last-of-type line {
+        visibility: hidden;
     }
-    .warning-band {
-        stroke-width: 0;
-        fill: #fab8be; // 75% lightness of 30% shade (darker)
-    }
-    .alert {
-        stroke: #f47738;
-        stroke-width: 2;
-        shape-rendering: crispEdges;
-    }
-    .alert-band {
-        stroke-width: 0;
-        fill: #fbcdb6; // 85% lightness of 40% shade (darker)
-    }
-    .normal-band {
-        stroke-width: 0;
-        //fill: #b3deff; // 85% of 25% shade (darker) of #005EA5 (govuk-blue)
-        fill: rgba(#85994b, 0.2);
-    }
+    // .warning {
+    //     stroke: #b10e1e; 
+    //     stroke-width: 2;
+    //     shape-rendering: crispEdges;
+    // }
+    // .warning-band {
+    //     stroke-width: 0;
+    //     fill: #fab8be; // 75% lightness of 30% shade (darker)
+    // }
+    // .alert {
+    //     stroke: #f47738;
+    //     stroke-width: 2;
+    //     shape-rendering: crispEdges;
+    // }
+    // .alert-band {
+    //     stroke-width: 0;
+    //     fill: #fbcdb6; // 85% lightness of 40% shade (darker)
+    // }
+    // .normal-band {
+    //     stroke-width: 0;
+    //     //fill: #b3deff; // 85% of 25% shade (darker) of #005EA5 (govuk-blue)
+    //     fill: rgba(#85994b, 0.2);
+    // }
     // Observed
     .observed-line { 
         stroke: $govuk-link-colour;
@@ -302,11 +141,9 @@ table.table-levels {
     }
     // Tooltip
     .tool-tip {
-        // display:none;
         visibility: hidden;
     }
     .tool-tip--visible {
-        // display:block;
         visibility: visible;
     }
     .tool-tip-bg {
@@ -317,11 +154,9 @@ table.table-levels {
     }
     .tool-tip-text {
         @include govuk-font($size: 16);
-        // dominant-baseline:middle;
     }
     .tool-tip-text__strong {
         @include govuk-font($size: 19, $weight:bold);
-        // dominant-baseline:middle;
     }
     // Now
     .time-line {
@@ -330,7 +165,7 @@ table.table-levels {
         shape-rendering: crispEdges; 
     }
     .time-now-text {
-        @include govuk-font($size: 16, $weight: bold);
+        @include govuk-font($size: 14, $weight: bold);
     }
     // Thresholds
     .threshold__line {
@@ -360,7 +195,6 @@ table.table-levels {
         cursor: pointer;
     }
     .threshold-label {
-        // display: none;
         visibility: hidden;
         pointer-events: none;
     }
@@ -375,14 +209,6 @@ table.table-levels {
         @include govuk-font($size: 16);
         fill: $govuk-text-colour;
     }
-    /*
-    .threshold-cross {
-        stroke-width: 2;
-        stroke: $govuk-secondary-text-colour;
-        shape-rendering: auto;
-        pointer-events: none;
-    }
-    */
     .threshold.threshold--selected {
         .threshold-label {
             visibility: visible;
@@ -401,17 +227,19 @@ table.table-levels {
             stroke: $govuk-text-colour;
         }
     }
+    .threshold:not(.threshold--selected) .threshold__bg,
+    .threshold:not(.threshold--selected) .threshold__line {
+        cursor: pointer;
+    }
     // Typical/Alert
     .threshold--alert {
         .threshold__line {
-            // stroke: #F8C37F;
             stroke: $govuk-border-colour;
         }
     }
     .threshold.threshold--selected.threshold--alert,
     .threshold.threshold--mouseover.threshold--alert {
         .threshold__line {
-            // stroke: #F18700;
             stroke: $govuk-text-colour;
         }
     }

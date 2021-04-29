@@ -6,10 +6,6 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <nav class="defra-flood-nav" {% if model.referer %}id="browserBackContainer"{% endif %}>
-      {% if model.station.riverNavigation and model.station.riverNavigation.navigable %}
-        <a href="/river-and-sea-levels?river-id={{model.station.riverNavigation.river_id}}" class="defra-river-nav-link">{{ model.station.riverNavigation.river_name }}</a>
-      {% endif %}
-      <span id="map"></span>
     </nav>
   </div>
 </div>
@@ -175,6 +171,17 @@
     
   {% endif %}
 {% endif %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <nav class="defra-flood-nav govuk-!-margin-top-1">
+      <span id="map"></span>
+      {% if model.station.riverNavigation.up %}<a href="/station/{{model.station.riverNavigation.up}}" class="defra-flood-nav__link defra-flood-nav__link--upstream">Go upstream</a>{% endif %}
+      {% if model.station.riverNavigation.down %}<a href="/station/{{model.station.riverNavigation.down}}" class="defra-flood-nav__link defra-flood-nav__link--downstream">Go downstream</a>{% endif %}
+      <a href="/river-and-sea-levels?rloi-id={{model.station.id}}&d={{model.station.qualifier}}" class="defra-flood-nav__link">Check nearby measurements</a>
+    </nav>
+  </div>
+</div>
 
 {# Graph #}
 {% if model.station.isActive and model.readings %}

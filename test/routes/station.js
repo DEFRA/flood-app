@@ -156,8 +156,8 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.payload).to.contain('defra-flood-statistics__impact defra-flood-statistics__impact--normal')
     Code.expect(response.payload).to.contain('Normal')
     Code.expect(response.payload).to.contain('0.15m to 3.50m')
-    Code.expect(response.payload).to.contain('<time datetime="">1:30am</time>')
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=river-ribble" class="defra-river-nav-link">River Ribble</a>')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?rloi-id=5146&d=u" class="defra-flood-nav__link">Check nearby measurements</a>')
+    Code.expect(response.payload).to.contain('<a href="/station/5122" class="defra-flood-nav__link defra-flood-nav__link--upstream">Go upstream</a>')
   })
   lab.test('GET station/2042/downstream ', async () => {
     const floodService = require('../../server/services/flood')
@@ -283,7 +283,8 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Avon level downstream at Lilbourne - GOV.UK')
     Code.expect(response.payload).to.contain('This measuring station takes 2 measurements.')
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=river-avon-warwickshire" class="defra-river-nav-link">River Avon</a>')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?rloi-id=2042&d=d" class="defra-flood-nav__link">Check nearby measurements</a>')
+    Code.expect(response.payload).to.contain('<a href="/station/2043" class="defra-flood-nav__link defra-flood-nav__link--downstream">Go downstream</a>')
   })
   lab.test('GET station/5146 with High river level ', async () => {
     const floodService = require('../../server/services/flood')
@@ -412,7 +413,8 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.payload).to.contain('High')
     Code.expect(response.payload).to.contain('above 3.50m <span class="govuk-visually-hidden">level here</span>\n')
     Code.expect(response.payload).to.contain('<time datetime="">1:30am</time>')
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=river-ribble" class="defra-river-nav-link">River Ribble</a>')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?rloi-id=5146&d=u" class="defra-flood-nav__link">Check nearby measurements</a>')
+    Code.expect(response.payload).to.contain('<a href="/station/5122" class="defra-flood-nav__link defra-flood-nav__link--upstream">Go upstream</a>')
   })
   lab.test('GET Closed station  ', async () => {
     const floodService = require('../../server/services/flood')
@@ -631,7 +633,8 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.payload).to.contain('Low\n')
     Code.expect(response.payload).to.contain('below 0.15m <span class="govuk-visually-hidden">level here</span>\n')
     Code.expect(response.payload).to.contain('<time datetime="">1:30am</time>')
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?river-id=river-ribble" class="defra-river-nav-link">River Ribble</a>')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?rloi-id=5146&d=u" class="defra-flood-nav__link">Check nearby measurements</a>')
+    Code.expect(response.payload).to.contain('<a href="/station/5122" class="defra-flood-nav__link defra-flood-nav__link--upstream">Go upstream</a>')
   })
   lab.test('GET station/3130 Coastal ', async () => {
     const floodService = require('../../server/services/flood')

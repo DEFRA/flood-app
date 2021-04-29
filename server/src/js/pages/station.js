@@ -13,7 +13,7 @@ window.flood.utils.addBrowserBackButton()
 
 // Create LiveMap
 window.flood.maps.createLiveMap('map', {
-  btnText: '<span>View map</span>',
+  btnText: 'View map',
   btnClasses: 'defra-button-map-s',
   layers: 'mv,ri,ti,gr,rf',
   centre: JSON.parse(window.flood.model.station.coordinates).coordinates,
@@ -21,13 +21,13 @@ window.flood.maps.createLiveMap('map', {
   zoom: 14
 })
 
-const chart = document.getElementsByClassName('defra-line-chart')
+const chart = document.querySelector('.defra-line-chart')
 
-if (chart.length) {
+if (chart) {
   // If javascript is enabled make content visible to all but assitive technology
   // var figure = chart.parentNode
-  chart[0].setAttribute('aria-hidden', true)
-  chart[0].removeAttribute('hidden')
+  chart.setAttribute('aria-hidden', true)
+  chart.removeAttribute('hidden')
   // Create line chart instance
   const lineChart = window.flood.charts.createLineChart('line-chart', {
     now: new Date(),

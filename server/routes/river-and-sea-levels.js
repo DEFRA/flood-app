@@ -15,12 +15,33 @@ module.exports = [{
     let { location, riverIds, taCode, types } = getParameters(request)
     const referer = request.headers.referer
     let model, place, stations, targetArea
+    const rloiid = request.query['rloi-id']
+    const d = request.query.d
 
     // Convert river Ids into array
     riverIds = riverIds && riverIds.split(',')
 
     // Map types to db station types
     types = types && types.split(',')
+
+    if (rloiid) {
+      const id = parseInt(rloiid, 10)
+      const station = await floodService.getStationById(id, d)
+      const coordinates = JSON.parse(station.coordinates).coordinates
+
+      const x = coordinates[0]
+      const y = coordinates[1]
+
+      const stations = await floodService.getStationsByRadius(x, y)
+
+      const originalStation = {
+        external_name: station.external_name,
+        id: station.rloi_id
+      }
+
+      model = new ViewModel({ stations, originalStation })
+      return h.view('river-and-sea-levels', { model })
+    }
 
     // if we have a location query then get the place
     if (location && !location.match(/^england$/i)) {
@@ -70,6 +91,8 @@ module.exports = [{
         'river-id': joi.string(),
         'target-area': joi.string(),
         types: joi.string().allow('S', 'M', 'C', 'G', 'R'),
+        'rloi-id': joi.string(),
+        d: joi.string(),
         btn: joi.string(),
         ext: joi.string(),
         fid: joi.string(),
