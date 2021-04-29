@@ -174,7 +174,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <nav class="defra-flood-nav govuk-!-margin-top-1">
+    <nav aria-label="Related levels" class="defra-flood-nav govuk-!-margin-top-3">
       <span id="map"></span>
       {% if model.station.riverNavigation.up %}<a href="/station/{{model.station.riverNavigation.up}}" class="defra-flood-nav__link defra-flood-nav__link--upstream">Go upstream</a>{% endif %}
       {% if model.station.riverNavigation.down %}<a href="/station/{{model.station.riverNavigation.down}}" class="defra-flood-nav__link defra-flood-nav__link--downstream">Go downstream</a>{% endif %}
