@@ -5,8 +5,8 @@
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <nav class="defra-flood-nav" {% if model.referer %}id="browserBackContainer"{% endif %}>
-    </nav>
+    <div {% if model.referer %}id="browserBackContainer"{% endif %}>
+    </div>
   </div>
 </div>
 {% if model.banner %}
@@ -174,7 +174,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <nav aria-label="Related levels" class="defra-flood-nav govuk-!-margin-top-3">
+    <nav aria-label="Related levels" class="defra-flood-nav govuk-!-margin-top-3 govuk-!-margin-bottom-6">
       <span id="map"></span>
       {% if model.station.riverNavigation.up %}<a href="/station/{{model.station.riverNavigation.up}}" class="defra-flood-nav__link defra-flood-nav__link--upstream">Go upstream</a>{% endif %}
       {% if model.station.riverNavigation.down %}<a href="/station/{{model.station.riverNavigation.down}}" class="defra-flood-nav__link defra-flood-nav__link--downstream">Go downstream</a>{% endif %}
