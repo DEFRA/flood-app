@@ -32,7 +32,7 @@ module.exports = [{
       const x = coordinates[0]
       const y = coordinates[1]
 
-      const stations = await floodService.getStationsByRadius(x, y)
+      stations = await floodService.getStationsByRadius(x, y)
 
       const originalStation = {
         external_name: station.external_name,
