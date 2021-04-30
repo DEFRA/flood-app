@@ -60,7 +60,7 @@ module.exports = [{
         }
         return h.view(route, { model })
       }
-      if ((typeof place === 'undefined') || (!place.isUK || place.isScotlandOrNorthernIreland)) {
+      if ((typeof place === 'undefined') || (notinUk(place))) {
         stations = []
         model = new ViewModel({ location, place, stations })
         return h.view(route, { model, referer })
@@ -186,4 +186,7 @@ const filterStations = (stations, riverIds, types) => {
     stations = stations.filter(val => types.includes(val.station_type))
   }
   return stations
+}
+const notinUk = (place) => {
+  return !place.isUK || place.isScotlandOrNorthernIreland
 }
