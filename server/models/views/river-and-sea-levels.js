@@ -54,7 +54,7 @@ class ViewModel {
 
     this.export = {
       countLevels: this.countLevels,
-      placeBbox: place ? place.bbox10k : this.stationsBbox,
+      placeBbox: this.getPlaceBox(place),
       bingMaps: bingKeyMaps,
       originalStationId: this.getStationId(originalStation)
     }
@@ -69,6 +69,10 @@ class ViewModel {
     this.showTypeFilter = (this.checkRivers || this.checkCoastal || this.checkGround || this.checkRainfall)
     this.showRiverFilter = this.rivers && this.rivers.length > 0
     this.showFilters = this.showTypeFilter || this.showRiverFilter
+  }
+
+  getPlaceBox (place) {
+    return place ? place.bbox10k : this.stationsBbox
   }
 
   getStationId (originalStation) {
