@@ -25,21 +25,7 @@ module.exports = [{
     types = types && types.split(',')
 
     if (rloiid) {
-      const id = parseInt(rloiid, 10)
-      const station = await floodService.getStationById(id, d)
-      const coordinates = JSON.parse(station.coordinates).coordinates
-
-      const x = coordinates[0]
-      const y = coordinates[1]
-
-      stations = await floodService.getStationsByRadius(x, y)
-
-      const originalStation = {
-        external_name: station.external_name,
-        id: station.rloi_id
-      }
-
-      model = new ViewModel({ stations, originalStation })
+      ({ stations, model } = await getStationsByRadius(rloiid, d, stations, model))
       return h.view('river-and-sea-levels', { model })
     }
 
@@ -186,4 +172,23 @@ const filterStations = (stations, riverIds, types) => {
     stations = stations.filter(val => types.includes(val.station_type))
   }
   return stations
+}
+
+const getStationsByRadius = async (rloiid, d, stations, model) => {
+  const id = parseInt(rloiid, 10)
+  const station = await floodService.getStationById(id, d)
+  const coordinates = JSON.parse(station.coordinates).coordinates
+
+  const x = coordinates[0]
+  const y = coordinates[1]
+
+  stations = await floodService.getStationsByRadius(x, y)
+
+  const originalStation = {
+    external_name: station.external_name,
+    id: station.rloi_id
+  }
+
+  model = new ViewModel({ stations, originalStation })
+  return { stations, model }
 }
