@@ -187,6 +187,5 @@ const filterStations = (stations, riverIds, types) => {
   }
   return stations
 }
-const notinUk = (place) => {
-  return !place.isUK || place.isScotlandOrNorthernIreland
-}
+
+const notinUk = place => !place.isUK || place.isScotlandOrNorthernIreland
