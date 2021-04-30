@@ -56,7 +56,7 @@ class ViewModel {
       countLevels: this.countLevels,
       placeBbox: place ? place.bbox10k : this.stationsBbox,
       bingMaps: bingKeyMaps,
-      originalStationId: originalStation ? 'stations.' + originalStation.id : ''
+      originalStationId: this.getStationId(originalStation)
     }
 
     // set default type checkbox behaviours
@@ -69,6 +69,10 @@ class ViewModel {
     this.showTypeFilter = (this.checkRivers || this.checkCoastal || this.checkGround || this.checkRainfall)
     this.showRiverFilter = this.rivers && this.rivers.length > 0
     this.showFilters = this.showTypeFilter || this.showRiverFilter
+  }
+
+  getStationId (originalStation) {
+    return originalStation ? 'stations.' + originalStation.id : ''
   }
 
   getStationHtml (station) {
