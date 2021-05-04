@@ -15,7 +15,7 @@ class ViewModel {
       impacts,
       tabs,
       outOfDate,
-      location: title,
+      location: encodeURIComponent(title),
       pageTitle: `Check for flooding in ${title}`,
       metaDescription: `Nearby flood alerts and warnings; latest river and sea levels and flood risk advice for residents living in the ${title} area.`,
       floodFisUrl,
