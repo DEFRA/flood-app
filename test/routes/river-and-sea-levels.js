@@ -1641,15 +1641,22 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('2449 levels')
     Code.expect(response.statusCode).to.equal(200)
   })
-  lab.test('GET /river-and-sea-levels?rloi-id=7224&d=u ', async () => {
+  lab.test('GET /river-and-sea-levels?rloi-id=7224 test ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationsData = () => data.stationsWithinRadius
 
     const originalStation = () => data.riverStation7224
+    const cachedStation = () => data.cachedStation
 
     sandbox.stub(floodService, 'getStationsByRadius').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getStationById').callsFake(originalStation)
+    sandbox.stub(floodService, 'getStationsGeoJson').callsFake(cachedStation)
+
+    const stationsGeoJson = await floodService.getStationsGeoJson()
+    // sandbox.stub(floodService, 'stationsGeoJson').callsFake(stationsGeoJson)
+
+    console.log(stationsGeoJson)
 
     // const fakeGetJson = () => data.warringtonGetJson
 
@@ -1672,7 +1679,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?rloi-id=7224&d=u'
+      url: '/river-and-sea-levels?rloi-id=7224'
     }
 
     const response = await server.inject(options)

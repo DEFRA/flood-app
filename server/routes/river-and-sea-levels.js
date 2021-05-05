@@ -16,7 +16,6 @@ module.exports = [{
     const referer = request.headers.referer
     let model, place, stations, targetArea
     const rloiid = request.query['rloi-id']
-    const d = request.query.d
 
     // Convert river Ids into array
     riverIds = riverIds && riverIds.split(',')
@@ -25,12 +24,12 @@ module.exports = [{
     types = types && types.split(',')
 
     if (rloiid) {
-      const id = parseInt(rloiid, 10)
-      const station = await floodService.getStationById(id, d)
-      const coordinates = JSON.parse(station.coordinates).coordinates
+      const station = floodService.stationsGeojson.features.find(item => item.id === `stations.${rloiid}`)
 
-      const x = coordinates[0]
-      const y = coordinates[1]
+      console.log(station)
+
+      const x = station.geometry.coordinates[0]
+      const y = station.geometry.coordinates[1]
 
       stations = await floodService.getStationsByRadius(x, y)
 
@@ -92,7 +91,6 @@ module.exports = [{
         'target-area': joi.string(),
         types: joi.string().allow('S', 'M', 'C', 'G', 'R'),
         'rloi-id': joi.string(),
-        d: joi.string(),
         btn: joi.string(),
         ext: joi.string(),
         fid: joi.string(),
