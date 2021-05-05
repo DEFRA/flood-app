@@ -110,9 +110,9 @@ module.exports = [{
     // other wise set session vars
     if (!types && !riverIds) {
       if (q) {
-        return h.redirect(`/${route}?q=${q}`)
+        return h.redirect(`/${route}?q=${encodeURIComponent(q)}`)
       } else if (taCode) {
-        return h.redirect(`/${route}?target-area=${taCode}`)
+        return h.redirect(`/${route}?target-area=${encodeURIComponent(taCode)}`)
       } else {
         return h.redirect(`/${route}`)
       }

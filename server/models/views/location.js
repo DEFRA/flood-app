@@ -15,7 +15,7 @@ class ViewModel {
       impacts,
       tabs,
       outOfDate,
-      location: title,
+      location: encodeURIComponent(title),
       pageTitle: `Check for flooding in ${title}`,
       metaDescription: `Nearby flood alerts and warnings; latest river and sea levels and flood risk advice for residents living in the ${title} area.`,
       floodFisUrl,
@@ -105,7 +105,7 @@ class ViewModel {
       this.bannerSevereMainLink = `/target-area/${group.floods[0].ta_code}`
       this.bannerSevereMainText = `Severe flood warning for ${group.floods[0].ta_name}`
     } else {
-      this.bannerSevereMainLink = `/alerts-and-warnings?q=${location}#severe`
+      this.bannerSevereMainLink = `/alerts-and-warnings?q=${encodeURIComponent(location)}#severe`
       this.bannerSevereMainText = `${group.floods.length} severe flood warnings in this area`
     }
   }
@@ -118,7 +118,7 @@ class ViewModel {
       this.bannerMainLink = `/target-area/${group.floods[0].ta_code}`
       this.bannerMainText = `Flood warning for ${group.floods[0].ta_name}`
     } else {
-      this.bannerMainLink = `/alerts-and-warnings?q=${location}#warnings`
+      this.bannerMainLink = `/alerts-and-warnings?q=${encodeURIComponent(location)}#warnings`
       this.bannerMainText = `${group.floods.length} flood warnings in this area`
     }
   }
@@ -132,7 +132,7 @@ class ViewModel {
         this.bannerMainLink = `/target-area/${group.floods[0].ta_code}`
         this.bannerMainText = 'There is a flood alert in this area'
       } else {
-        this.bannerMainLink = `/alerts-and-warnings?q=${location}#alerts`
+        this.bannerMainLink = `/alerts-and-warnings?q=${encodeURIComponent(location)}#alerts`
         this.bannerMainText = `${group.floods.length} flood alerts in this area`
       }
     } else {
@@ -142,7 +142,7 @@ class ViewModel {
         this.alertsSummaryLinkText = '1 flood alert'
         this.alertsSummaryText = 'is'
       } else {
-        this.alertsSummaryLink = `/alerts-and-warnings?q=${location}#alerts`
+        this.alertsSummaryLink = `/alerts-and-warnings?q=${encodeURIComponent(location)}#alerts`
         this.alertsSummaryLinkText = `${group.floods.length} flood alerts`
         this.alertsSummaryText = 'are'
       }
@@ -156,7 +156,7 @@ class ViewModel {
       this.removedLinkText = '1 flood alert or warning was removed '
       this.removedText = 'in the last 24 hours.'
     } else {
-      this.removedLink = `/alerts-and-warnings?q=${location}#removed`
+      this.removedLink = `/alerts-and-warnings?q=${encodeURIComponent(location)}#removed`
       this.removedLinkText = 'Flood alerts and warnings were removed'
       this.removedText = 'in the last 24 hours.'
     }
