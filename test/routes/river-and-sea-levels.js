@@ -1653,15 +1653,9 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     sandbox.stub(floodService, 'getStationById').callsFake(originalStation)
     sandbox.stub(floodService, 'getStationsGeoJson').callsFake(cachedStation)
 
-    const stationsGeoJson = await floodService.getStationsGeoJson()
-    // sandbox.stub(floodService, 'stationsGeoJson').callsFake(stationsGeoJson)
+    // Set cached stationsGeojson
 
-    console.log(stationsGeoJson)
-
-    // const fakeGetJson = () => data.warringtonGetJson
-
-    // const util = require('../../server/util')
-    // sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+    floodService.stationsGeojson = await floodService.getStationsGeoJson()
 
     const riversPlugin = {
       plugin: {

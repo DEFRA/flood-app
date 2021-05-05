@@ -26,16 +26,14 @@ module.exports = [{
     if (rloiid) {
       const station = floodService.stationsGeojson.features.find(item => item.id === `stations.${rloiid}`)
 
-      console.log(station)
-
       const x = station.geometry.coordinates[0]
       const y = station.geometry.coordinates[1]
 
       stations = await floodService.getStationsByRadius(x, y)
 
       const originalStation = {
-        external_name: station.external_name,
-        id: station.rloi_id
+        external_name: station.properties.external_name,
+        id: rloiid
       }
 
       model = new ViewModel({ stations, originalStation })
