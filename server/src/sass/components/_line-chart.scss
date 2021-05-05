@@ -79,29 +79,6 @@
     .grid.x .tick:last-of-type line {
         visibility: hidden;
     }
-    // .warning {
-    //     stroke: #b10e1e; 
-    //     stroke-width: 2;
-    //     shape-rendering: crispEdges;
-    // }
-    // .warning-band {
-    //     stroke-width: 0;
-    //     fill: #fab8be; // 75% lightness of 30% shade (darker)
-    // }
-    // .alert {
-    //     stroke: #f47738;
-    //     stroke-width: 2;
-    //     shape-rendering: crispEdges;
-    // }
-    // .alert-band {
-    //     stroke-width: 0;
-    //     fill: #fbcdb6; // 85% lightness of 40% shade (darker)
-    // }
-    // .normal-band {
-    //     stroke-width: 0;
-    //     //fill: #b3deff; // 85% of 25% shade (darker) of #005EA5 (govuk-blue)
-    //     fill: rgba(#85994b, 0.2);
-    // }
     // Observed
     .observed-line { 
         stroke: $govuk-link-colour;

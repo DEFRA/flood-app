@@ -1641,7 +1641,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('2449 levels')
     Code.expect(response.statusCode).to.equal(200)
   })
-  lab.test('GET /river-and-sea-levels?rloi-id=7224 test ', async () => {
+  lab.test('GET /river-and-sea-levels?rloi-id=7224', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationsData = () => data.stationsWithinRadius

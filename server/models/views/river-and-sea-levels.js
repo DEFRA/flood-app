@@ -76,7 +76,7 @@ class ViewModel {
   }
 
   getStationId (originalStation) {
-    return originalStation ? 'stations.' + originalStation.id : ''
+    return originalStation ? `stations.${originalStation.id}` : ''
   }
 
   getStationHtml (station) {

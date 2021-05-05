@@ -12,10 +12,10 @@ module.exports = [{
   method: 'GET',
   path: `/${route}`,
   handler: async (request, h) => {
-    let { location, riverIds, taCode, types } = getParameters(request)
+    let { location, riverIds, taCode, types, rloiid } = getParameters(request)
     const referer = request.headers.referer
     let model, place, stations, targetArea
-    const rloiid = request.query['rloi-id']
+    // const rloiid = request.query['rloi-id']
 
     // Convert river Ids into array
     riverIds = riverIds && riverIds.split(',')
@@ -32,7 +32,7 @@ module.exports = [{
       stations = await floodService.getStationsByRadius(x, y)
 
       const originalStation = {
-        external_name: station.properties.external_name,
+        external_name: station.properties.name,
         id: rloiid
       }
 
@@ -123,7 +123,7 @@ module.exports = [{
       return boom.badRequest(error)
     }
 
-    const { q, 'target-area': taCode, types, 'river-id': riverIds } = value
+    const { q, 'target-area': taCode, types, 'river-id': riverIds, 'rloi-id': rloiid } = value
 
     // if we only have a location or target area then redirect with query string
     // other wise set session vars
@@ -132,6 +132,8 @@ module.exports = [{
         return h.redirect(`/${route}?q=${encodeURIComponent(q)}`)
       } else if (taCode) {
         return h.redirect(`/${route}?target-area=${encodeURIComponent(taCode)}`)
+      } else if (rloiid) {
+        return h.redirect(`/${route}?rloi-id=${rloiid}`)
       } else {
         return h.redirect(`/${route}`)
       }
@@ -159,6 +161,7 @@ const getParameters = request => {
     location: redirect ? request.yar.get('q', true) : request.query.q,
     riverIds: redirect ? request.yar.get('river-id') : request.query['river-id'],
     taCode: redirect ? request.yar.get('ta-code', true) : request.query['target-area'],
+    rloiid: redirect ? request.yar.get('rloi-id', true) : request.query['rloi-id'],
     types: redirect ? request.yar.get('types', true) : request.query.types
   }
 }
