@@ -122,11 +122,7 @@ module.exports = [{
     } else {
       // set these as can be too much data for url parameter
       // this is only required due to non js users...
-      request.yar.set('redirect', true)
-      q && request.yar.set('q', q)
-      taCode && request.yar.set('ta-code', taCode)
-      types && request.yar.set('types', types.toString())
-      riverIds && request.yar.set('river-id', riverIds.toString())
+      nonJavaScriptRoute(request, q, taCode, types, riverIds)
       return h.redirect(`/${route}`)
     }
   },
@@ -186,3 +182,11 @@ const filterStations = (stations, riverIds, types) => {
 }
 
 const notinUk = place => !place.isUK || place.isScotlandOrNorthernIreland
+
+const nonJavaScriptRoute = (request, q, taCode, types, riverIds) => {
+  request.yar.set('redirect', true)
+  q && request.yar.set('q', q)
+  taCode && request.yar.set('ta-code', taCode)
+  types && request.yar.set('types', types.toString())
+  riverIds && request.yar.set('river-id', riverIds.toString())
+}
