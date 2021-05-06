@@ -22,23 +22,6 @@ module.exports = [{
     // Map types to db station types
     types = types && types.split(',')
 
-    if (rloiid) {
-      const station = floodService.stationsGeojson.features.find(item => item.id === `stations.${rloiid}`)
-
-      const x = station.geometry.coordinates[0]
-      const y = station.geometry.coordinates[1]
-
-      stations = await floodService.getStationsByRadius(x, y)
-
-      const originalStation = {
-        external_name: station.properties.name,
-        id: rloiid
-      }
-
-      model = new ViewModel({ stations, originalStation })
-      return h.view('river-and-sea-levels', { model })
-    }
-
     // if we have a location query then get the place
     if (location && !location.match(/^england$/i)) {
       try {
@@ -64,7 +47,7 @@ module.exports = [{
     }
 
     // get base stations
-    stations = await getStations(place, taCode)
+    stations = await getStations(place, taCode, rloiid)
 
     // filter stations
     stations = filterStations(stations, riverIds, types)
@@ -165,12 +148,28 @@ const getParameters = request => {
   }
 }
 
-const getStations = async (place, taCode) => {
+const getStations = async (place, taCode, rloiid) => {
   if (place) {
     return floodService.getStationsWithin(place.bbox10k)
   }
   if (taCode) {
     return floodService.getStationsWithinTargetArea(taCode)
+  }
+  if (rloiid) {
+    const station = floodService.stationsGeojson.features.find(item => item.id === `stations.${rloiid}`)
+
+    const x = station.geometry.coordinates[0]
+    const y = station.geometry.coordinates[1]
+
+    const stationsWithinRad = await floodService.getStationsByRadius(x, y)
+
+    stationsWithinRad.originalStation = {
+      external_name: station.properties.name,
+      id: rloiid
+    }
+
+    // defaulted to 8km radius
+    return stationsWithinRad
   }
   // if no place or ta then return all stations
   return floodService.getStations()

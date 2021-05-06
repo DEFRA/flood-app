@@ -4,7 +4,7 @@ const { bingKeyMaps } = require('../../config')
 const tz = 'Europe/London'
 
 class ViewModel {
-  constructor ({ location, place, stations, targetArea, riverIds, referer, originalStation, error }) {
+  constructor ({ location, place, stations, targetArea, riverIds, referer, error }) {
     Object.assign(this, {
       q: location,
       metaNoIndex: true,
@@ -20,7 +20,7 @@ class ViewModel {
       isEngland: place ? place.isEngland.is_england : null,
       riverId: this.getRiverId(riverIds),
       stationsBbox: [],
-      originalStation
+      originalStation: stations.originalStation
     })
 
     const titles = this.getPageTitle(error, this.riverId, location)
@@ -56,7 +56,7 @@ class ViewModel {
       countLevels: this.countLevels,
       placeBbox: this.getPlaceBox(place),
       bingMaps: bingKeyMaps,
-      originalStationId: this.getStationId(originalStation)
+      originalStationId: this.getStationId(this.originalStation)
     }
 
     // set default type checkbox behaviours
