@@ -15,7 +15,6 @@ module.exports = [{
     let { location, riverIds, taCode, types, rloiid } = getParameters(request)
     const referer = request.headers.referer
     let model, place, stations, targetArea
-    // const rloiid = request.query['rloi-id']
 
     // Convert river Ids into array
     riverIds = riverIds && riverIds.split(',')
