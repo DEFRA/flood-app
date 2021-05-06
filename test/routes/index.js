@@ -309,4 +309,29 @@ lab.experiment('Get Routes test', () => {
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
   })
+
+  lab.test('GET /how-we-measure-river-sea-groundwater-levels', async () => {
+    const plugin = {
+      plugin: {
+        name: 'about-levels',
+        register: (server, options) => {
+          server.route(require('../../server/routes/about-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(plugin)
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/how-we-measure-river-sea-groundwater-levels'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('How we measure river, sea and groundwater levels')
+    Code.expect(response.headers['content-type']).to.include('text/html')
+  })
 })
