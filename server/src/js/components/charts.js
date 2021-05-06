@@ -33,7 +33,7 @@ function LineChart (containerId, data) {
     const filterFunction = data.plotNegativeValues ? errorFilter : errorAndNegativeFilter
     lines = data.observed.filter(filterFunction).map(l => ({ ...l, type: 'observed' })).reverse()
     dataPoint = lines[lines.length - 1] ? JSON.parse(JSON.stringify(lines[lines.length - 1])) : null
-    hasObserved = true
+    hasObserved = lines.length > 0
   }
   if (data.forecast.length) {
     lines = lines.concat(data.forecast.map(l => ({ ...l, type: 'forecast' })))
@@ -394,69 +394,73 @@ function LineChart (containerId, data) {
   let toolTipX, toolTipY, yAxis
   let thresholds = []
 
-  renderChart()
-
-  //
-  // Public methods
-  //
-
-  this.removeThreshold = (id) => {
-    removeThreshold(id)
-  }
-
-  this.addThreshold = (threshold) => {
-    addThreshold(threshold)
-  }
-
-  this.chart = chart
-
-  //
-  // Events
-  //
-
-  window.addEventListener('resize', () => {
-    const containerBoundingRect = select('#' + containerId).node().getBoundingClientRect()
-    width = Math.floor(containerBoundingRect.width) - margin.left - margin.right
-    height = Math.floor(containerBoundingRect.height) - margin.top - margin.bottom
-    xScale.range([0, width])
-    yScale.range([height, 0])
-    hideTooltip()
-    updateLocator()
+  if (hasObserved || hasForecast) {
     renderChart()
-    renderThresholds()
-  })
+    //
+    // Public methods
+    //
 
-  svgInner.on('click', (e) => {
-    if (e.target.closest('.threshold')) return
-    updateLocator()
-    showTooltip(e)
-  })
+    this.removeThreshold = (id) => {
+      removeThreshold(id)
+    }
 
-  svgInner.on('mousemove', (e) => {
-    if (e.target.closest('.threshold')) return
-    updateLocator()
-    showTooltip(e)
-  })
-
-  svgInner.on('mouseleave', (e) => {
-    hideTooltip()
-    resetLocator()
-  })
-
-  thresholdsContainer.on('click', (e) => {
-    e.stopPropagation()
-    const thresholdContainer = e.target.closest('.threshold')
-    if (e.target.closest('.threshold__remove')) {
-      removeThreshold(thresholdContainer.getAttribute('data-id'))
-    } else if (thresholdContainer) {
-      const threshold = thresholds.find((x) => { return x.id === thresholdContainer.getAttribute('data-id') })
+    this.addThreshold = (threshold) => {
       addThreshold(threshold)
     }
-  })
 
-  thresholdsContainer.on('mouseover', (e) => {
-    if (e.target.closest('.threshold')) hideTooltip()
-  })
+    this.chart = chart
+
+    //
+    // Events
+    //
+
+    window.addEventListener('resize', () => {
+      const containerBoundingRect = select('#' + containerId).node().getBoundingClientRect()
+      width = Math.floor(containerBoundingRect.width) - margin.left - margin.right
+      height = Math.floor(containerBoundingRect.height) - margin.top - margin.bottom
+      xScale.range([0, width])
+      yScale.range([height, 0])
+      hideTooltip()
+      updateLocator()
+      renderChart()
+      renderThresholds()
+    })
+
+    svgInner.on('click', (e) => {
+      if (e.target.closest('.threshold')) return
+      updateLocator()
+      showTooltip(e)
+    })
+
+    svgInner.on('mousemove', (e) => {
+      if (e.target.closest('.threshold')) return
+      updateLocator()
+      showTooltip(e)
+    })
+
+    svgInner.on('mouseleave', (e) => {
+      hideTooltip()
+      resetLocator()
+    })
+
+    thresholdsContainer.on('click', (e) => {
+      e.stopPropagation()
+      const thresholdContainer = e.target.closest('.threshold')
+      if (e.target.closest('.threshold__remove')) {
+        removeThreshold(thresholdContainer.getAttribute('data-id'))
+      } else if (thresholdContainer) {
+        const threshold = thresholds.find((x) => { return x.id === thresholdContainer.getAttribute('data-id') })
+        addThreshold(threshold)
+      }
+    })
+
+    thresholdsContainer.on('mouseover', (e) => {
+      if (e.target.closest('.threshold')) hideTooltip()
+    })
+  } else {
+    // no Values so hide chart div
+    document.getElementsByClassName('defra-line-chart')[0].style.display = 'none'
+  }
 }
 
 window.flood.charts = {
