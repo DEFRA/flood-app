@@ -38,6 +38,9 @@
       background-size: 100%;
       margin: 0px !important;
       clip-path: none !important;
+      -webkit-clip-path: none !important;
+      -moz-clip-path: none !important;
+      -ms-clip-path: none !important;
       border: 0px !important;
       @include mq ($from: tablet) {
           top: 25px;
