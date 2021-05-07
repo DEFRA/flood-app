@@ -96,6 +96,7 @@ module.exports = [{
       q: joi.string().allow('').trim().max(200),
       'target-area': joi.string().allow(''),
       types: joi.any().allow(''),
+      'rloi-id': joi.any().allow(''),
       'river-id': joi.any().allow('')
     })
 
@@ -122,7 +123,7 @@ module.exports = [{
     } else {
       // set these as can be too much data for url parameter
       // this is only required due to non js users...
-      nonJavaScriptRoute(request, q, taCode, types, riverIds)
+      nonJavaScriptRoute(request, q, taCode, types, riverIds, rloiid)
       return h.redirect(`/${route}`)
     }
   },
@@ -183,10 +184,11 @@ const filterStations = (stations, riverIds, types) => {
 
 const notinUk = place => !place.isUK || place.isScotlandOrNorthernIreland
 
-const nonJavaScriptRoute = (request, q, taCode, types, riverIds) => {
+const nonJavaScriptRoute = (request, q, taCode, types, riverIds, rloiid) => {
   request.yar.set('redirect', true)
   q && request.yar.set('q', q)
   taCode && request.yar.set('ta-code', taCode)
   types && request.yar.set('types', types.toString())
   riverIds && request.yar.set('river-id', riverIds.toString())
+  rloiid && request.yar.set('rloi-id', rloiid.toString())
 }

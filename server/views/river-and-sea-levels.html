@@ -63,6 +63,7 @@
         </div>
         <form method="post" autocomplete="off">
         <input class="defra-search__input" name="q" type="hidden" value="{{ model.q }}">
+        <input class="defra-search__input" name="rloi-id" type="hidden" value="{{ model.originalStation.id }}">
         <input class="defra-search__input" name="target-area" type="hidden" value="{{ model.taCode }}">
         {% if model.showFilters %}
         <div id="filter" class="defra-facets" role="search" aria-label="Search filters">
