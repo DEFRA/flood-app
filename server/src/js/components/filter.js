@@ -227,7 +227,8 @@ window.flood.Filter = (id, list) => {
     })
 
     // flatten out because of 'S,M' for river station types
-    types = types.flat()
+    // replaced .flat with this .reduce for ie11 compatability
+    types = types.reduce((acc, val) => acc.concat(val), [])
 
     // get the selected rivers
     const riverInputs = container.getElementsByClassName('defra-facets-river__list')[0].getElementsByTagName('input')
