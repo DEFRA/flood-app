@@ -18,10 +18,14 @@ window.flood.Filter = (id, list) => {
   header.appendChild(closeFilters)
   header.classList.remove('govuk-visually-hidden')
   const content = document.getElementById(id).querySelector('.defra-facets__content')
-  const resetFilters = document.createElement('button')
+  const resetDiv = document.createElement('div')
+  resetDiv.style.marginTop = '15px'
+  const resetFilters = document.createElement('a')
   resetFilters.className = 'defra-facets__reset'
+  resetFilters.setAttribute('role', 'button')
   resetFilters.innerHTML = 'Clear all filters'
-  content.appendChild(resetFilters)
+  resetDiv.appendChild(resetFilters)
+  content.appendChild(resetDiv)
   const filterResults = container.querySelector('.defra-facets__filter-results')
   container.appendChild(showFilters)
   container.parentNode.insertBefore(showFilters, container.parentNode.firstChild)
@@ -34,6 +38,8 @@ window.flood.Filter = (id, list) => {
   const riversList = container.querySelector('.defra-facets-river__list')
   const typesList = container.querySelector('.defra-facets-types__list')
   const riverHeaders = resultsContainer.getElementsByClassName('defra-flood-list__group')
+
+  const filterForm = document.getElementsByTagName('form')[1]
 
   // Recursively find siblings and parents and add or remove aria-hidden
   // Could become a helper flood utility for working with modals
@@ -208,8 +214,17 @@ window.flood.Filter = (id, list) => {
 
   // filter rivers by river query box
   filterInput.addEventListener('keyup', (e) => {
-    filterRivers()
-    filter()
+    e.preventDefault()
+    if (e.key !== 'Enter') {
+      filterRivers()
+      filter()
+    }
+  })
+
+  // disable onsubmit for filter form
+  filterForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+    return false
   })
 
   // move this function further up when finished
@@ -227,7 +242,8 @@ window.flood.Filter = (id, list) => {
     })
 
     // flatten out because of 'S,M' for river station types
-    types = types.flat()
+    // replaced .flat with this .reduce for ie11 compatability
+    types = types.reduce((acc, val) => acc.concat(val), [])
 
     // get the selected rivers
     const riverInputs = container.getElementsByClassName('defra-facets-river__list')[0].getElementsByTagName('input')

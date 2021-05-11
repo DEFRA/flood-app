@@ -49,13 +49,6 @@ window.flood = {
     addBrowserBackButton: () => {
       const container = document.getElementById('browserBackContainer')
       if (container) {
-        let nav
-        if (container.nodeName.toLowerCase() !== 'nav') {
-          nav = document.createElement('nav')
-          container.appendChild(nav)
-        } else {
-          nav = container
-        }
         const hyperlink = document.createElement('a')
         hyperlink.href = document.referrer
         hyperlink.href = hyperlink.pathname + hyperlink.search
@@ -65,8 +58,7 @@ window.flood = {
           e.preventDefault()
           window.history.back()
         })
-        // ie 11 prepend hack
-        nav.insertBefore(hyperlink, nav.childNodes[0])
+        container.appendChild(hyperlink)
       }
     }
   }

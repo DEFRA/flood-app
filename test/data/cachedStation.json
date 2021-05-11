@@ -1,0 +1,37 @@
+{
+  "features": [
+    {
+      "type": "Feature",
+      "id": "stations.7224",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.60409807,
+          51.34453211
+        ]
+      },
+      "geometry_name": "centroid",
+      "properties": {
+        "direction": "u",
+        "type": "S",
+        "iswales": false,
+        "atrisk": false,
+        "status": "Active",
+        "name": "Grants Bridge",
+        "river": "Addlestone Bourne",
+        "value": 0.365,
+        "value_date": "2021-05-04T14:45:00Z",
+        "percentile_5": 1.55,
+        "percentile_95": 0.326,
+        "is_ffoi": false,
+        "is_ffoi_at_risk": false,
+        "ffoi_max": null,
+        "ffoi_date": null,
+        "up": null,
+        "down": 7225,
+        "river_name": "Addlestone Bourne"
+      }
+    }
+  ]
+}
+  

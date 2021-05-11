@@ -19,7 +19,8 @@ class ViewModel {
       taCode: targetArea && targetArea.fws_tacode,
       isEngland: place ? place.isEngland.is_england : null,
       riverId: this.getRiverId(riverIds),
-      stationsBbox: []
+      stationsBbox: [],
+      originalStation: stations.originalStation
     })
 
     const titles = this.getPageTitle(error, this.riverId, location)
@@ -53,8 +54,9 @@ class ViewModel {
 
     this.export = {
       countLevels: this.countLevels,
-      placeBbox: place ? place.bbox10k : this.stationsBbox,
-      bingMaps: bingKeyMaps
+      placeBbox: this.getPlaceBox(place),
+      bingMaps: bingKeyMaps,
+      originalStationId: this.getStationId(this.originalStation)
     }
 
     // set default type checkbox behaviours
@@ -67,6 +69,14 @@ class ViewModel {
     this.showTypeFilter = (this.checkRivers || this.checkCoastal || this.checkGround || this.checkRainfall)
     this.showRiverFilter = this.rivers && this.rivers.length > 0
     this.showFilters = this.showTypeFilter || this.showRiverFilter
+  }
+
+  getPlaceBox (place) {
+    return place ? place.bbox10k : this.stationsBbox
+  }
+
+  getStationId (originalStation) {
+    return originalStation ? `stations.${originalStation.id}` : ''
   }
 
   getStationHtml (station) {

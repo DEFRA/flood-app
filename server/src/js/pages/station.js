@@ -7,27 +7,23 @@ import '../components/map/styles'
 import '../components/map/layers'
 import '../components/map/container'
 import '../components/map/live'
-
 // Add browser back button
 window.flood.utils.addBrowserBackButton()
-
 // Create LiveMap
 window.flood.maps.createLiveMap('map', {
-  btnText: '<span>View map</span>',
+  btnText: 'View map',
   btnClasses: 'defra-button-map-s',
   layers: 'mv,ri,ti,gr,rf',
   centre: JSON.parse(window.flood.model.station.coordinates).coordinates,
   selectedId: 'stations.' + window.flood.model.station.id,
   zoom: 14
 })
-
-const chart = document.getElementsByClassName('defra-line-chart')
-
-if (chart.length) {
+const chart = document.querySelector('.defra-line-chart')
+if (chart) {
   // If javascript is enabled make content visible to all but assitive technology
   // var figure = chart.parentNode
-  chart[0].setAttribute('aria-hidden', true)
-  chart[0].removeAttribute('hidden')
+  chart.setAttribute('aria-hidden', true)
+  chart.removeAttribute('hidden')
   // Create line chart instance
   const lineChart = window.flood.charts.createLineChart('line-chart', {
     now: new Date(),
@@ -60,7 +56,6 @@ if (chart.length) {
       })
     }
   }
-
   // Add threshold buttons
   Array.from(document.querySelectorAll('.defra-flood-impact-list__value')).forEach(value => {
     const button = document.createElement('button')
@@ -72,6 +67,9 @@ if (chart.length) {
         level: Number(value.getAttribute('data-level')),
         name: value.getAttribute('data-name')
       })
+      // Scroll viewport to chart
+      const offsetTop = chart.getBoundingClientRect().top + window.scrollY
+      window.scrollTo(0, offsetTop)
     })
     const action = value.querySelector('.defra-flood-impact-list__action')
     if (action) {

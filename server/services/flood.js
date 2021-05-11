@@ -188,5 +188,10 @@ module.exports = {
 
   getTargetArea (taCode) {
     return util.getJson(`${serviceUrl}/target-area/${taCode}`)
+  },
+
+  getStationsByRadius (x, y, rad) {
+    const param3 = rad ? `/${rad}` : ''
+    return util.getJson(`${serviceUrl}/stations-by-radius/${x}/${y}${param3}`)
   }
 }

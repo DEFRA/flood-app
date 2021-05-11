@@ -1641,6 +1641,46 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('2449 levels')
     Code.expect(response.statusCode).to.equal(200)
   })
+  lab.test('GET /river-and-sea-levels?rloi-id=7224', async () => {
+    const floodService = require('../../server/services/flood')
 
+    const fakeStationsData = () => data.stationsWithinRadius
+
+    const originalStation = () => data.riverStation7224
+    const cachedStation = () => data.cachedStation
+
+    sandbox.stub(floodService, 'getStationsByRadius').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getStationById').callsFake(originalStation)
+    sandbox.stub(floodService, 'getStationsGeoJson').callsFake(cachedStation)
+
+    // Set cached stationsGeojson
+
+    floodService.stationsGeojson = await floodService.getStationsGeoJson()
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?rloi-id=7224'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('9 levels')
+    Code.expect(response.payload).to.contain('Showing levels within 5 miles of Grants Bridge')
+    Code.expect(response.statusCode).to.equal(200)
+  })
   // TODO: figure out way to inject yar params to get request to test the getParameters()
 })

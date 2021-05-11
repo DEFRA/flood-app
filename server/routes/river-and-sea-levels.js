@@ -12,7 +12,7 @@ module.exports = [{
   method: 'GET',
   path: `/${route}`,
   handler: async (request, h) => {
-    let { location, riverIds, taCode, types } = getParameters(request)
+    let { location, riverIds, taCode, types, rloiid } = getParameters(request)
     const referer = request.headers.referer
     let model, place, stations, targetArea
 
@@ -39,7 +39,7 @@ module.exports = [{
         }
         return h.view(route, { model })
       }
-      if ((typeof place === 'undefined') || (!place.isUK || place.isScotlandOrNorthernIreland)) {
+      if ((typeof place === 'undefined') || (notinUk(place))) {
         stations = []
         model = new ViewModel({ location, place, stations })
         return h.view(route, { model, referer })
@@ -47,7 +47,7 @@ module.exports = [{
     }
 
     // get base stations
-    stations = await getStations(place, taCode)
+    stations = await getStations(place, taCode, rloiid)
 
     // filter stations
     stations = filterStations(stations, riverIds, types)
@@ -70,6 +70,7 @@ module.exports = [{
         'river-id': joi.string(),
         'target-area': joi.string(),
         types: joi.string().allow('S', 'M', 'C', 'G', 'R'),
+        'rloi-id': joi.string(),
         btn: joi.string(),
         ext: joi.string(),
         fid: joi.string(),
@@ -95,6 +96,7 @@ module.exports = [{
       q: joi.string().allow('').trim().max(200),
       'target-area': joi.string().allow(''),
       types: joi.any().allow(''),
+      'rloi-id': joi.any().allow(''),
       'river-id': joi.any().allow('')
     })
 
@@ -104,7 +106,7 @@ module.exports = [{
       return boom.badRequest(error)
     }
 
-    const { q, 'target-area': taCode, types, 'river-id': riverIds } = value
+    const { q, 'target-area': taCode, types, 'river-id': riverIds, 'rloi-id': rloiid } = value
 
     // if we only have a location or target area then redirect with query string
     // other wise set session vars
@@ -113,17 +115,15 @@ module.exports = [{
         return h.redirect(`/${route}?q=${encodeURIComponent(q)}`)
       } else if (taCode) {
         return h.redirect(`/${route}?target-area=${encodeURIComponent(taCode)}`)
+      } else if (rloiid) {
+        return h.redirect(`/${route}?rloi-id=${rloiid}`)
       } else {
         return h.redirect(`/${route}`)
       }
     } else {
       // set these as can be too much data for url parameter
       // this is only required due to non js users...
-      request.yar.set('redirect', true)
-      q && request.yar.set('q', q)
-      taCode && request.yar.set('ta-code', taCode)
-      types && request.yar.set('types', types.toString())
-      riverIds && request.yar.set('river-id', riverIds.toString())
+      nonJavaScriptRoute(request, q, taCode, types, riverIds, rloiid)
       return h.redirect(`/${route}`)
     }
   },
@@ -140,16 +140,33 @@ const getParameters = request => {
     location: redirect ? request.yar.get('q', true) : request.query.q,
     riverIds: redirect ? request.yar.get('river-id') : request.query['river-id'],
     taCode: redirect ? request.yar.get('ta-code', true) : request.query['target-area'],
+    rloiid: redirect ? request.yar.get('rloi-id', true) : request.query['rloi-id'],
     types: redirect ? request.yar.get('types', true) : request.query.types
   }
 }
 
-const getStations = async (place, taCode) => {
+const getStations = async (place, taCode, rloiid) => {
   if (place) {
     return floodService.getStationsWithin(place.bbox10k)
   }
   if (taCode) {
     return floodService.getStationsWithinTargetArea(taCode)
+  }
+  if (rloiid) {
+    const station = floodService.stationsGeojson.features.find(item => item.id === `stations.${rloiid}`)
+
+    const x = station.geometry.coordinates[0]
+    const y = station.geometry.coordinates[1]
+
+    const stationsWithinRad = await floodService.getStationsByRadius(x, y)
+
+    stationsWithinRad.originalStation = {
+      external_name: station.properties.name,
+      id: rloiid
+    }
+
+    // defaulted to 8km radius
+    return stationsWithinRad
   }
   // if no place or ta then return all stations
   return floodService.getStations()
@@ -163,4 +180,15 @@ const filterStations = (stations, riverIds, types) => {
     stations = stations.filter(val => types.includes(val.station_type))
   }
   return stations
+}
+
+const notinUk = place => !place.isUK || place.isScotlandOrNorthernIreland
+
+const nonJavaScriptRoute = (request, q, taCode, types, riverIds, rloiid) => {
+  request.yar.set('redirect', true)
+  q && request.yar.set('q', q)
+  taCode && request.yar.set('ta-code', taCode)
+  types && request.yar.set('types', types.toString())
+  riverIds && request.yar.set('river-id', riverIds.toString())
+  rloiid && request.yar.set('rloi-id', rloiid.toString())
 }
