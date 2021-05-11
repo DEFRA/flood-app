@@ -1,5 +1,3 @@
-import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
-
 // Filter list
 window.flood.Filter = (id, list) => {
   const state = {
@@ -101,7 +99,6 @@ window.flood.Filter = (id, list) => {
     window.addEventListener('keydown', keydown)
     window.addEventListener('keyup', keyup)
     window.addEventListener('focus', focus)
-    disableBodyScroll(document.querySelector('.defra-facets__container, .defra-facets-details ul'))
   }
 
   // Close modal on mobile devices only
@@ -117,7 +114,6 @@ window.flood.Filter = (id, list) => {
     window.removeEventListener('keydown', keydown)
     window.removeEventListener('keyup', keyup)
     window.removeEventListener('focus', focus)
-    clearAllBodyScrollLocks()
   }
 
   // refresh total river count in filter column
