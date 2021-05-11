@@ -463,4 +463,43 @@ lab.experiment('Flood service test', () => {
 
     Code.expect(result).to.equal('ok')
   })
+  lab.test('Test getStationsByRadius endpoint', async () => {
+    const util = require('../../server/util')
+
+    const x = 1
+    const y = 2
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://server2/stations-by-radius/1/2')
+      .once()
+      .returns('ok')
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getStationsByRadius(x, y)
+
+    Code.expect(result).to.equal('ok')
+  })
+  lab.test('Test getStationsByRadius endpoint with rad', async () => {
+    const util = require('../../server/util')
+
+    const x = 1
+    const y = 2
+    const rad = 8000
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://server2/stations-by-radius/1/2/8000')
+      .once()
+      .returns('ok')
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getStationsByRadius(x, y, rad)
+
+    Code.expect(result).to.equal('ok')
+  })
 })
