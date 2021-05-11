@@ -264,30 +264,6 @@ lab.experiment('Get Routes test', () => {
     Code.expect(response.payload).to.include('Privacy notice')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
-  lab.test('GET /personal-information-charter', async () => {
-    const plugin = {
-      plugin: {
-        name: 'personal-information-charter',
-        register: (server, options) => {
-          server.route(require('../../server/routes/personal-information-charter'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(plugin)
-    await server.initialize()
-
-    const options = {
-      method: 'GET',
-      url: '/personal-information-charter'
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.include('Personal information charter')
-    Code.expect(response.headers['content-type']).to.include('text/html')
-  })
 
   lab.test('GET /api/places.geojson', async () => {
     const plugin = {
