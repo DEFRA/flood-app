@@ -24,7 +24,6 @@ const routes = [].concat(
   require('../routes/cookies'),
   require('../routes/terms-and-conditions'),
   require('../routes/privacy-notice'),
-  require('../routes/personal-information-charter'),
   require('../routes/status'),
   require('../routes/stations-overview'),
   require('../routes/about-levels')
