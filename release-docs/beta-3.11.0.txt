@@ -7,7 +7,9 @@ FSR-291 - Privacy notice updates
 
 # Instructions
 
-Execute the following job:
+Execute the following jobs:
+
+LFW_{stage}_99_LOAD_FLOOD_ALERT_AREAS
 
 LFW_{stage}_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
 
