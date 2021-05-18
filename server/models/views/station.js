@@ -319,7 +319,6 @@ class ViewModel {
     }
 
     if (impacts) {
-      // const station = this.station
       impacts.forEach(function (impact) {
         thresholds.push({
           id: impact.impactid,
