@@ -68,7 +68,7 @@ if (chart) {
         name: value.getAttribute('data-name')
       })
       // Scroll viewport to chart
-      const offsetTop = chart.getBoundingClientRect().top + window.scrollY
+      const offsetTop = chart.getBoundingClientRect().top + window.pageYOffset
       window.scrollTo(0, offsetTop)
     })
     const action = value.querySelector('.defra-flood-impact-list__action')
