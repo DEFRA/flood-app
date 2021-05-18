@@ -211,14 +211,15 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <h2 class="govuk-heading-m govuk-!-margin-top-6">How levels here could affect nearby areas</h2>
+    <span id="toggle-list-display" data-toggle-list-display-type="impact"></span>
     <dl class="defra-flood-impact-list govuk-!-margin-bottom-0">
       {% for band in model.thresholds %}
-      {% for threshold in band.values %} 
-      <div class="defra-flood-impact-list__row {% if threshold.type == 'latest' %} defra-flood-impact-list__row--current {% elif threshold.isExceeded === true %} defra-flood-impact-list__row--exceeded{% endif %}">
+      <div class="defra-flood-impact-list__row {% if band.isLatest %} defra-flood-impact-list__row--current {% elif band.isExceeded %} defra-flood-impact-list__row--exceeded{% endif %}" {% if band.type === 'historical' %} data-toggle-list-display-item="impact" {% endif %}>
         <dt class="defra-flood-impact-list__key">
-          {{ threshold.value }}m
+          {{ band.level }}m
         </dt>
-        <dd class="defra-flood-impact-list__value" data-id="{{ threshold.id }}" data-level="{{ threshold.value }}" data-name="{{ threshold.shortname }}" data-normal="{% if threshold.isNormal %}true{% else %}false{% endif %}">
+        {% for threshold in band.values %} 
+        <dd class="defra-flood-impact-list__value"  {% if threshold.type === 'historical' %} data-toggle-list-display-item="impact" {% endif %} data-id="{{ threshold.id }}" data-level="{{ threshold.value }}" data-name="{{ threshold.shortname }}" data-normal="{% if threshold.isNormal %}true{% else %}false{% endif %}">
           <div class="defra-flood-impact-list__container">
             {{ threshold.description | safe }}
             {% if threshold.type != 'latest' %}
@@ -233,8 +234,8 @@
           <span class="defra-flood-impact-list__severe" title="Severe flood warning has been issued">!</span>
           {% endif %}
         </dd>
+        {% endfor %}
       </div>
-      {% endfor %}
       {% endfor %}
     </dl> 
   </div>

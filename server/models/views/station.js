@@ -241,11 +241,6 @@ class ViewModel {
     // Set Lat long
     const coordinates = JSON.parse(this.station.coordinates).coordinates
     coordinates.reverse()
-    /*
-    this.lat = coordinates[0]
-    this.long = coordinates[1]
-    this.warningsUrl = `/warnings?stationid=${this.id}`
-    */
 
     // Set pageTitle, metaDescription and metaKeywords
     let stationType
@@ -276,9 +271,7 @@ class ViewModel {
         id: 'latest',
         value: this.station.recentValue._.toFixed(2),
         description: 'Latest level',
-        shortname: '',
-        type: 'latest',
-        isExceeded: false
+        shortname: ''
       })
     }
     if (this.station.porMaxValue) {
@@ -288,75 +281,35 @@ class ViewModel {
         description: this.station.thresholdPorMaxDate
           ? 'Water reaches the highest level recorded at this measuring station (recorded on ' + this.station.thresholdPorMaxDate + ')'
           : 'Water reaches the highest level recorded at this measuring station',
-        shortname: 'Highest level on record',
-        type: '',
-        isExceeded: this.station.recentValue && !this.station.recentValue.err
-          ? this.station.recentValue._ >= this.station.porMaxValue
-          : false
+        shortname: 'Highest level on record'
       })
     }
-    // if ffoi and has alerts use them
-    if (this.ffoi && this.ffoi.warnings.FALThreshold.length) {
-      this.ffoi.warnings.FALThreshold.forEach(threshold => {
-        thresholds.push({
-          id: threshold.fwis_code,
-          value: threshold.value.toFixed(2),
-          description: `This is the top of the normal range, above this a flood alert may be issued for <a href="/target-area/${threshold.fwis_code}">${threshold.fwa_name}</a>`,
-          shortname: 'Top of normal range',
-          type: threshold.fwa_severity === 3
-            ? 'alert'
-            : 'target-area',
-          isNormal: true,
-          isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= threshold.value : false
-        })
+
+    if (this.alertThreshold) {
+      thresholds.push({
+        id: 'alertThreshold',
+        value: this.alertThreshold,
+        description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
+        shortname: 'Possible flood alerts'
       })
-      // otherwise check if it has a percentile5
-    } else if (this.station.percentile5) {
+    }
+
+    if (this.warningThreshold) {
+      thresholds.push({
+        id: 'warningThreshold',
+        value: this.warningThreshold,
+        description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
+        shortname: 'Possible flood warnings'
+      })
+    }
+
+    if (this.station.percentile5) {
       // Only push typical range if it has a percentil5
       thresholds.push({
         id: 'pc5',
         value: this.station.percentile5,
-        description: 'This is the top of the normal range, above this flooding to low lying land is possible',
-        shortname: 'Top of normal range',
-        type: '',
-        isNormal: true,
-        isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= this.station.percentile5 : false
-      })
-    }
-    // if ffoi and has warnings use them
-    if (this.ffoi && this.ffoi.warnings.FWThreshold.length) {
-      this.ffoi.warnings.FWThreshold.forEach(threshold => {
-        let type = 'target-area'
-        switch (threshold.fwa_severity) {
-          case 1:
-            type = 'severe'
-            break
-          case 2:
-            type = 'warning'
-            break
-          case 4:
-            type = 'removed'
-            break
-        }
-        thresholds.push({
-          id: threshold.fwis_code,
-          value: threshold.value.toFixed(2),
-          description: `A flood warning may be issued for <a href="/target-area/${threshold.fwis_code}">${threshold.fwa_name}</a>`,
-          shortname: 'Flood warning may be issued',
-          type: type,
-          isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= threshold.value : false
-        })
-      })
-      // otherwise check if it has a warningThreshold
-    } else if (this.warningThreshold) {
-      // Only push if it has warningThreshold
-      thresholds.push({
-        id: 'warning',
-        value: this.warningThreshold,
-        description: 'A flood warning may be issued',
-        shortname: 'Flood warning may be issued',
-        type: '',
-        isExceeded: this.station.recentValue && !this.station.recentValue.err ? this.station.recentValue._ >= this.station.warningThreshold : false
+        description: 'This is the top of the normal range.',
+        shortname: 'Top of normal range'
       })
     }
 
@@ -366,15 +319,14 @@ class ViewModel {
     }
 
     if (impacts) {
-      const station = this.station
+      // const station = this.station
       impacts.forEach(function (impact) {
         thresholds.push({
           id: impact.impactid,
           value: Number(impact.value).toFixed(2),
-          description: impact.description,
+          description: `Historical event: ${impact.description}`,
           shortname: impact.shortname,
-          type: '',
-          isExceeded: station.recentValue && !station.recentValue.err && station.recentValue._ >= impact.value
+          type: 'historical'
         })
       })
     }
@@ -393,7 +345,10 @@ class ViewModel {
     thresholds = Object.keys(thresholds).map(key => {
       return {
         level: key,
-        values: thresholds[key]
+        values: thresholds[key],
+        isLatest: thresholds[key][0].id === 'latest',
+        type: thresholds[key][0].type || '',
+        isExceeded: this.station.recentValue && !this.station.recentValue.err && this.station.recentValue._ >= key
       }
     })
     thresholds = thresholds.sort((a, b) => b.level - a.level)
@@ -402,15 +357,6 @@ class ViewModel {
     // Set remaining station properties
     this.isUpstream = this.station.direction === 'upstream'
     this.isDownstream = this.station.direction === 'downstream'
-    /*
-    this.centroidJSON = JSON.stringify(coordinates)
-    this.stationJSON = JSON.stringify(this.station)
-    this.forecast = this.ffoi || {}
-    this.forecastJSON = this.ffoi ? this.ffoi.forecastJSON : JSON.stringify({})
-    */
-
-    // Page category for feedback categorisation
-    // this.pageCategory = this.isFfoi ? 'station-ffoi' : ''
 
     // Set canonical url
     this.metaCanonical = `/station/${this.station.id}${this.station.direction === 'upstream' ? '' : '/downstream'}`
