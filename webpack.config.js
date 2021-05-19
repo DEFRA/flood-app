@@ -22,8 +22,21 @@ module.exports = (env, argv) => ({
   module: {
     rules: [
       {
+        // Default exclude removes all node_modules but d3 is now distributed es6 so include d3 (& our own src) in transpile
+        include: mPath => mPath.indexOf('server/src') > -1 || mPath.indexOf('node_modules/d3') > -1,
         use: {
-          loader: 'babel-loader'
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              [
+                '@babel/preset-env',
+                {
+                  useBuiltIns: 'usage',
+                  corejs: 2
+                }
+              ]
+            ]
+          }
         }
       }
     ]
