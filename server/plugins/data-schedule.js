@@ -31,7 +31,7 @@ module.exports = {
         await getFloods()
       })
 
-      schedule.scheduleJob('1,16,31,46 * * * *', async () => {
+      schedule.scheduleJob('3,18,33,48 * * * *', async () => {
         // Chain 15 min jobs so we don't overload
         await getStationsGeojson()
         await getRainfallGeojson()
