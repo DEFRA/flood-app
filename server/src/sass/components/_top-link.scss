@@ -1,0 +1,29 @@
+.defra-top-link {
+    @extend .govuk-link;
+    &:before {
+        content: "";
+        display: inline-block;
+        width:13px;
+        height:17px;
+        background-image: svg-url('<svg xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17"><path fill="#1d70b8" d="M6.5 0L0 6.5 1.4 8l4-4v12.7h2V4l4.3 4L13 6.4z"></path></svg>');
+        background-color:transparent;
+        background-size:13px 17px;
+        background-repeat: no-repeat;
+        background-position: top left;
+        margin-top: -5px;
+        margin-right: 10px;
+        vertical-align: middle;
+    }
+    &:hover:before {
+        background-image: svg-url('<svg xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17"><path fill="#003078" d="M6.5 0L0 6.5 1.4 8l4-4v12.7h2V4l4.3 4L13 6.4z"></path></svg>');
+    }
+    &:focus:before,
+    &:active:before {
+        background-image: svg-url('<svg xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17"><path fill="#0b0c0c" d="M6.5 0L0 6.5 1.4 8l4-4v12.7h2V4l4.3 4L13 6.4z"></path></svg>');
+    }
+    &--fixed {
+        position: fixed;
+        bottom: 40px;
+        left: auto;
+    }
+}

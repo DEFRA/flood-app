@@ -210,8 +210,14 @@
           <li><a href="https://naturalresources.wales/flooding">Natural Resources Wales</a></li>
         </ul>         
         {% endif %}
+      </div>
     </div>
-</div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <a href="#main-content" class="defra-top-link govuk-link--no-visited-state" data-ref="filter">Back to top</a>
+      </div>
+    </div>
 
 {% endblock %}
 
@@ -222,4 +228,37 @@
 </script>
 <script src="{{assetPath}}/js/templates.js"></script>
 <script src="{{assetPath}}/js/river-and-sea-levels.js"></script>
+<script>
+
+  //Get the button:
+  const mybutton = document.querySelector('.defra-top-link')
+  const offsetBottomElement = document.querySelector('.govuk-footer')
+  const offsetTopElement = document.getElementById('resetFilters') 
+
+  console.log(offsetBottomElement)
+  console.log(offsetTopElement)
+
+    const offsetTop = offsetTopElement.offsetTop
+    const offsetBottom = offsetBottomElement.offsetTop - window.innerHeight
+
+    console.log('Top : ', offsetTop)
+    console.log('Bottom : ', offsetBottom)
+
+    window.onscroll = function () {
+      scrollFunction()
+    }
+
+    function scrollFunction() {
+      console.log('scrooltop : ', document.body.scrollTop || document.documentElement.scrollTop)
+      if ((document.body.scrollTop > offsetTop && document.body.scrollTop < offsetBottom ) || (document.documentElement.scrollTop > offsetTop && document.documentElement.scrollTop < offsetBottom)) {
+        mybutton.classList.add('defra-top-link--fixed')
+      } else {
+        mybutton.classList.remove('defra-top-link--fixed')
+      }
+    }
+  
+
+   // mybutton.style.bottom = "300px"
+    
+  </script>
 {% endblock %}

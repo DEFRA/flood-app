@@ -22,6 +22,7 @@ window.flood.Filter = (id, list) => {
   resetFilters.className = 'defra-facets__reset'
   resetFilters.setAttribute('role', 'button')
   resetFilters.innerHTML = 'Clear all filters'
+  resetFilters.id = 'resetFilters'
   resetDiv.appendChild(resetFilters)
   content.appendChild(resetDiv)
   const filterResults = container.querySelector('.defra-facets__filter-results')
