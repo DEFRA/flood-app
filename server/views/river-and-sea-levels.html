@@ -228,27 +228,4 @@
 </script>
 <script src="{{assetPath}}/js/templates.js"></script>
 <script src="{{assetPath}}/js/river-and-sea-levels.js"></script>
-<script>
-
-    //Get the button:
-    const backToTop = document.querySelector('.defra-top-link')
-    const offsetBottomElement = document.querySelector('.govuk-footer')
-    const offsetTopElement = document.getElementById('resetFilters')
-
-    const offsetTop = offsetTopElement.offsetTop
-    const offsetBottom = offsetBottomElement.offsetTop - window.innerHeight
-    
-
-    window.onscroll = function () {
-      scrollFunction()
-    }
-
-    function scrollFunction() {
-      if ((document.body.scrollTop >= offsetTop && document.body.scrollTop <= offsetBottom) || (document.documentElement.scrollTop >= offsetTop && document.documentElement.scrollTop <= offsetBottom)) {
-        backToTop.classList.add('defra-top-link--fixed')
-      } else {
-        backToTop.classList.remove('defra-top-link--fixed')
-      }
-    }
-  </script>
 {% endblock %}

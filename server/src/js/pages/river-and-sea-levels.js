@@ -26,3 +26,23 @@ if (document.getElementById('map')) {
 if (document.getElementById('filter')) {
   window.flood.Filter('filter', 'defra-flood-list')
 }
+
+// Back to top button
+const backToTop = document.querySelector('.defra-top-link')
+const offsetBottomElement = document.querySelector('.govuk-footer')
+const offsetTopElement = document.getElementById('resetFilters')
+
+const offsetTop = offsetTopElement.offsetTop
+const offsetBottom = offsetBottomElement.offsetTop - window.innerHeight
+
+window.onscroll = function () {
+  scrollFunction()
+}
+
+function scrollFunction () {
+  if ((document.body.scrollTop >= offsetTop && document.body.scrollTop <= offsetBottom) || (document.documentElement.scrollTop >= offsetTop && document.documentElement.scrollTop <= offsetBottom)) {
+    backToTop.classList.add('defra-top-link--fixed')
+  } else {
+    backToTop.classList.remove('defra-top-link--fixed')
+  }
+}
