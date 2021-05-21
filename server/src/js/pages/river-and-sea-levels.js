@@ -7,6 +7,7 @@ import '../components/map/layers'
 import '../components/map/container'
 import '../components/map/live'
 import '../components/filter'
+import '../components/top-link'
 
 // Add browser back button
 window.flood.utils.addBrowserBackButton()
@@ -27,22 +28,10 @@ if (document.getElementById('filter')) {
   window.flood.Filter('filter', 'defra-flood-list')
 }
 
-// Back to top button
-const backToTop = document.querySelector('.defra-top-link')
-const offsetBottomElement = document.querySelector('.govuk-footer')
-const offsetTopElement = document.getElementById('resetFilters')
-
-const offsetTop = offsetTopElement.offsetTop
-const offsetBottom = offsetBottomElement.offsetTop - window.innerHeight
-
-window.onscroll = function () {
-  scrollFunction()
-}
-
-function scrollFunction () {
-  if ((document.body.scrollTop >= offsetTop && document.body.scrollTop <= offsetBottom) || (document.documentElement.scrollTop >= offsetTop && document.documentElement.scrollTop <= offsetBottom)) {
-    backToTop.classList.add('defra-top-link--fixed')
-  } else {
-    backToTop.classList.remove('defra-top-link--fixed')
-  }
+// Create back top link
+if (document.querySelector('.defra-top-link')) {
+  window.flood.createTopLink({
+    topElement: document.querySelector('#resetFilters'),
+    bottomElement: document.querySelector('.govuk-footer')
+  })
 }
