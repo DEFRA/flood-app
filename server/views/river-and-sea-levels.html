@@ -1,4 +1,7 @@
 {% extends 'layout.html' %}
+
+{% set bodyAttributes = {'id': 'top'} %}
+
 {% block content %}
 
 <!-- ** Prefix meta title with search term -->
@@ -210,8 +213,16 @@
           <li><a href="https://naturalresources.wales/flooding">Natural Resources Wales</a></li>
         </ul>         
         {% endif %}
+      </div>
     </div>
-</div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <div class="defra-top-link">
+          <a href="#top" class="govuk-link--no-visited-state">Back to top</a>
+        </div>
+      </div>
+    </div>
 
 {% endblock %}
 
