@@ -83,7 +83,6 @@ window.flood.Filter = (id, list) => {
   // Tabbing into web area
   const focus = (e) => {
     if (!container.contains(document.activeElement)) {
-      console.log('Out of modal')
       closeFilters.focus()
     }
   }
