@@ -110,6 +110,7 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.station.id).to.equal(9302)
     Code.expect(Result.station.river).to.equal('Groundwater Level')
     Code.expect(Result.station.hasPercentiles).to.equal(true)
+    Code.expect(Result.station.hasImpacts).to.equal(false)
   })
   lab.test('Test station viewModel plotNegativeValues should be true for groundwater station', async () => {
     const viewModel = new ViewModel(data.stationGroudwater)
