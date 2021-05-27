@@ -1,0 +1,54 @@
+# Service refresh release 3.12.0 Wednesday 2nd June 2021
+
+# Tickets
+## Release notes taken from Jira
+# Release notes - FIS Service Refresh - Version Release 5
+
+### Bug
+
+[FSR-329](https://eaflood.atlassian.net/browse/FSR-329) TA load station 8km relationship data
+
+[FSR-321](https://eaflood.atlassian.net/browse/FSR-321) Station Page - Windows 7, 8, 8.1 and 10 IE 11 does not have a chart on the station page or a view map link
+
+[FSR-318](https://eaflood.atlassian.net/browse/FSR-318) River filter, type in search string, ie "river" and hit enter key clears the filters
+
+[FSR-317](https://eaflood.atlassian.net/browse/FSR-317) filter list inoperable in IE11
+
+[FSR-316](https://eaflood.atlassian.net/browse/FSR-316) Filter list - ipad any ios, filter a river and hit 'enter' wipes the search
+
+[FSR-314](https://eaflood.atlassian.net/browse/FSR-314) Filter list on mobile chrome and safari - cosmetic issue with drop down arrows
+
+[FSR-313](https://eaflood.atlassian.net/browse/FSR-313) Bug - Station chart render issues if all negative values
+
+[FSR-311](https://eaflood.atlassian.net/browse/FSR-311) Station navigation when target station deleted
+
+### Story
+
+[FSR-292](https://eaflood.atlassian.net/browse/FSR-292) Amendments to naming convention on Rain Gauge data
+
+[FSR-283](https://eaflood.atlassian.net/browse/FSR-283) Develop / Test River/Sea/Groundwater stations - user information page
+
+[FSR-282](https://eaflood.atlassian.net/browse/FSR-282) River/Coastal/Groundwater station - development/test of amended navigation links
+
+[FSR-276](https://eaflood.atlassian.net/browse/FSR-276) River/Sea/Groundwater/Rainfall list page - addition of station type filter
+
+[FSR-271](https://eaflood.atlassian.net/browse/FSR-271) River/Sea/Groundwater/Rainfall list page - addition of river filter
+
+[FSR-149](https://eaflood.atlassian.net/browse/FSR-149) Develop/Test rain gauge tool tip function
+
+
+# Webops Instructions
+
+Execute the following jobs in order:
+
+LFW_{stage}_99_LOAD_FLOOD_ALERT_AREAS   ## The reason this needs running again is there is an update to a dataset that was missed in the TA release last week.
+
+LFW_{stage}_02_UPDATE_DATABASE
+
+LFW_{stage}_99_DEPLOY_FLOOD_DATA_PIPELINE
+
+LFW_{stage}_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Inform flood dev & test team of completion.
+
+thanks
