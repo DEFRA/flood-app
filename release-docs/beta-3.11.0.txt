@@ -1,0 +1,19 @@
+# Service refresh release 3.11.0 Wednesday 19th May 2021
+
+# Tickets
+
+FSR-224 - May 2021 target area update
+FSR-291 - Privacy notice updates
+
+# Instructions
+
+Execute the following jobs:
+
+LFW_{stage}_99_LOAD_FLOOD_ALERT_AREAS
+
+LFW_{stage}_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Inform flood dev & test team of completion.
+
+
+thanks

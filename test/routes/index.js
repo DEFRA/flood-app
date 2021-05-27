@@ -264,7 +264,7 @@ lab.experiment('Get Routes test', () => {
     Code.expect(response.payload).to.include('Privacy notice')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
-
+  
   lab.test('GET /api/places.geojson', async () => {
     const plugin = {
       plugin: {
