@@ -226,13 +226,6 @@
             <span class="defra-flood-impact-list__action"></span>
             {% endif %}
           </div>
-          {% if threshold.type === 'alert' %}
-          <span class="defra-flood-impact-list__alert" title="Flood alert has been issued">!</span>
-          {% elif threshold.type === 'warning' %}
-          <span class="defra-flood-impact-list__warning" title="Flood warning has been issued">!</span>
-          {% elif threshold.type === 'severe' %}
-          <span class="defra-flood-impact-list__severe" title="Severe flood warning has been issued">!</span>
-          {% endif %}
         </dd>
         {% endfor %}
       </div>
