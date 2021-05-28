@@ -7,6 +7,7 @@ import '../components/map/styles'
 import '../components/map/layers'
 import '../components/map/container'
 import '../components/map/live'
+import '../components/toggle-list-display'
 // Add browser back button
 window.flood.utils.addBrowserBackButton()
 // Create LiveMap
@@ -75,5 +76,14 @@ if (chart) {
     if (action) {
       action.appendChild(button)
     }
+  })
+}
+
+// Add toggle list display for imapacts
+const toggleListDisplay = document.getElementById('toggle-list-display')
+if (toggleListDisplay) {
+  window.flood.createToggleListDisplay(toggleListDisplay, {
+    type: 'impact',
+    btnText: 'historical events'
   })
 }
