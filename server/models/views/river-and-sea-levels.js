@@ -180,7 +180,15 @@ class ViewModel {
     const mins = Math.floor(duration / (1000 * 60))
     const hours = Math.floor(duration / (1000 * 60 * 60))
     const days = parseInt(Math.floor(hours / 24))
-    return (mins < 91 ? mins + ' minutes' : (hours < 48 ? hours + ' hours' : days + ' days')) + ' ago'
+    if (mins < 91) {
+      return `${mins} minutes ago`
+    } else {
+      if (hours < 48) {
+        return `${hours} hours ago`
+      } else {
+        return `${days} ago`
+      }
+    }
   }
 
   formatValue (station, val) {
