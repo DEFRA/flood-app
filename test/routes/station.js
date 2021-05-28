@@ -1006,7 +1006,6 @@ lab.experiment('Test - /station/{id}', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('<a href="/target-area/062FWF46Hertford">River Lee at Hertford and Ware</a>')
     Code.expect(response.payload).to.not.contain('The highest level in the forecast is')
     Code.expect(response.payload).to.contain('Past impacts might not happen at the same level if flood defences have been put in place since then.')
   })
@@ -1255,7 +1254,6 @@ lab.experiment('Test - /station/{id}', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('<a href="/target-area/062FWF46Hertford">River Lee at Hertford and Ware</a>')
     Code.expect(response.payload).to.contain('The highest level in our forecast is')
     Code.expect(response.payload).to.contain('<a href="/station/7332" class="defra-flood-nav__link defra-flood-nav__link--upstream">Go upstream</a>')
     Code.expect(response.payload).to.contain('<a href="/station/7357" class="defra-flood-nav__link defra-flood-nav__link--downstream">Go downstream</a>')
