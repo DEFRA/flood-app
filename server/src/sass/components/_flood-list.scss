@@ -2,9 +2,13 @@
     margin:0px;
     padding:0px;
     list-style:none;
-    & > li:not(.defra-flood-list-item):not(:first-child) {
-        border-top:2px solid $govuk-border-colour;
-        border-bottom:1px solid $govuk-border-colour;
+    & > li:not(.defra-flood-list-item){
+        border-bottom:2px solid $govuk-border-colour;
+    }
+    & > li:not(.defra-flood-list-item) {
+        &:last-child {
+            border-bottom:0px;
+        }
     }
     ul {
         list-style:none;

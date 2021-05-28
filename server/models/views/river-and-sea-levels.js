@@ -1,7 +1,6 @@
 const moment = require('moment-timezone')
 const { groupBy } = require('../../util')
 const { bingKeyMaps } = require('../../config')
-const tz = 'Europe/London'
 
 class ViewModel {
   constructor ({ location, place, stations, targetArea, riverIds, referer, error }) {
@@ -37,7 +36,7 @@ class ViewModel {
         this.stationsBbox[2] = Math.max(station.lon, this.stationsBbox[2])
         this.stationsBbox[3] = Math.max(station.lat, this.stationsBbox[3])
       }
-
+      station.displayData = this.getDisplayData(station)
       station.state = this.getStationState(station)
       station.sub = this.getStationSubText(station)
       station.val = this.formatValue(station, station.value)
@@ -104,7 +103,7 @@ class ViewModel {
   }
 
   getValueState (station) {
-    if (station.status === 'Suspended' || station.status === 'Closed' || station.value_erred === true) {
+    if (!station.displayData) {
       return 'error'
     }
     if (station.station_type === 'R') {
@@ -131,6 +130,9 @@ class ViewModel {
 
   getStationColumns (station) {
     const cols = []
+    if (!station.displayData) {
+      return cols
+    }
     if (station.station_type === 'R') {
       cols.push({
         title: 'Last hour',
@@ -165,6 +167,10 @@ class ViewModel {
     return cols
   }
 
+  getDisplayData (station) {
+    return !(station.status === 'Suspended' || station.status === 'Closed' || !station.value || station.value_erred === true || station.iswales)
+  }
+
   formatName (name) {
     return name.toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())
   }
@@ -183,7 +189,7 @@ class ViewModel {
   }
 
   getStationState (station) {
-    if (station.status === 'Suspended' || station.status === 'Closed' || (!station.value && !station.isWales)) {
+    if (!station.displayData) {
       return ''
     }
     if (station.station_type !== 'C' && station.value) {

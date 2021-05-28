@@ -157,10 +157,11 @@
         <ul class="defra-flood-list">
             {% for id, group in model.stations %}
             {% if group.length > 0 %}
+            <li>
             <span class="defra-flood-list__group-title">
               <a href="/river-and-sea-levels?river-id={{id}}">{{ group[0].river_name }}</a> <span class="govuk-visually-hidden">at:</span>
             </span>
-            <ul class="defra-flood-list__group" data-id="{{ id }}">
+            <ul class="defra-flood-list-river" data-id="{{ id }}">
                 {% for station in group %}
                 <li class="defra-flood-list-item defra-flood-list-item--{{ station.station_type }}{% if station.valueState %}-{{ station.valueState }}{% endif %}" data-river-id="{{ id }}" data-type="{{ station.station_type }}">
                   <div class="defra-flood-list__title-column">
@@ -197,6 +198,7 @@
                 </li>
                 {% endfor %}
             </ul>
+            </li>
             {% endif %}
             {% endfor %}
         </ul>
