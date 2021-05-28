@@ -168,7 +168,7 @@ class ViewModel {
   }
 
   getDisplayData (station) {
-    return !(station.status === 'Suspended' || station.status === 'Closed' || !station.value || station.value_erred === true || station.iswales)
+    return !(station.status === 'Suspended' || station.status === 'Closed' || station.value === null || station.value_erred === true || station.iswales)
   }
 
   formatName (name) {
@@ -186,7 +186,7 @@ class ViewModel {
       if (hours < 48) {
         return `${hours} hours ago`
       } else {
-        return `${days} ago`
+        return `${days} days ago`
       }
     }
   }

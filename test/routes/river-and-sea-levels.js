@@ -1636,7 +1636,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('2449 levels')
+    Code.expect(response.payload).to.contain('3393 levels')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /river-and-sea-levels?rloi-id=7224', async () => {
@@ -1680,5 +1680,126 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('Showing levels within 5 miles of Grants Bridge')
     Code.expect(response.statusCode).to.equal(200)
   })
-  // TODO: figure out way to inject yar params to get request to test the getParameters()
+  lab.test('GET /river-and-sea-levels Rainfall data', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    const fakeStationsData = () => [
+      {
+        river_id: 'rainfall-Thames',
+        river_name: 'Rainfall Thames',
+        navigable: false,
+        view_rank: 5,
+        rank: null,
+        rloi_id: null,
+        up: null,
+        down: null,
+        telemetry_id: '253861TP',
+        region: 'Thames',
+        catchment: null,
+        wiski_river_name: null,
+        agency_name: 'Worsham',
+        external_name: 'Worsham',
+        station_type: 'R',
+        status: 'Active',
+        qualifier: null,
+        iswales: false,
+        value: 0,
+        value_timestamp: '2021-05-28T10:00:00.000Z',
+        value_erred: false,
+        percentile_5: null,
+        percentile_95: null,
+        centroid: '0101000020E610000029082C882404F9BF743F936BA6E54940',
+        lon: -1.56351140205562,
+        lat: 51.7941412419304,
+        day_total: 0,
+        six_hr_total: 0,
+        one_hr_total: 0
+      },
+      {
+        river_id: 'rainfall-Thames',
+        river_name: 'Rainfall Thames',
+        navigable: false,
+        view_rank: 5,
+        rank: null,
+        rloi_id: null,
+        up: null,
+        down: null,
+        telemetry_id: '265415TP',
+        region: 'Thames',
+        catchment: null,
+        wiski_river_name: null,
+        agency_name: 'Yattendon',
+        external_name: 'Yattendon',
+        station_type: 'R',
+        status: 'Active',
+        qualifier: null,
+        iswales: false,
+        value: 0,
+        value_timestamp: '2021-05-28T10:30:00.000Z',
+        value_erred: false,
+        percentile_5: null,
+        percentile_95: null,
+        centroid: '0101000020E6100000ABC88FF60226F3BFDBF36C518BBB4940',
+        lon: -1.19678016961238,
+        lat: 51.4651891500468,
+        day_total: 0,
+        six_hr_total: 0,
+        one_hr_total: 0
+      }
+    ]
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
+
+    const fakeGetJson = () => {
+      return {
+        authenticationResultCode: 'ValidCredentials',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright',
+        resourceSets: [
+          {
+            estimatedTotal: 0,
+            resources: []
+          }
+        ],
+        statusCode: 200,
+        tatusDescription: 'OK',
+        traceId: 'trace-id'
+      }
+    }
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.payload).to.contain('<span class="defra-flood-list-data__value">0.0mm</span>')
+    Code.expect(response.payload).to.contain('<span class="defra-flood-list-data__description" aria-hidden="true">1 hour</span>')
+    Code.expect(response.payload).to.contain('<li class="defra-flood-list-item defra-flood-list-item--R" data-river-id="rainfall-Thames" data-type="R">')
+    Code.expect(response.payload).to.contain('2 levels')
+    Code.expect(response.payload).to.contain('Rainfall Thames')
+    Code.expect(response.statusCode).to.equal(200)
+  })
 })
