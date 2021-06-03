@@ -1519,6 +1519,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const response = await server.inject(options)
 
     Code.expect(response.payload).to.contain('2 levels')
+    Code.expect(response.payload).to.not.contain('<a href="#top" class="govuk-link--no-visited-state">Back to top</a>')
     Code.expect(response.statusCode).to.equal(200)
   })
 
