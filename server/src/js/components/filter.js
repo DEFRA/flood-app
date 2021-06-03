@@ -36,7 +36,7 @@ window.flood.Filter = (id, list) => {
   filterInput.classList.remove('govuk-visually-hidden')
   const riversList = container.querySelector('.defra-facets-river__list')
   const typesList = container.querySelector('.defra-facets-types__list')
-  const riverHeaders = resultsContainer.getElementsByClassName('defra-flood-list__group')
+  const riverHeaders = resultsContainer.getElementsByClassName('defra-flood-list-river')
 
   const filterForm = document.getElementsByTagName('form')[1]
 
@@ -136,7 +136,7 @@ window.flood.Filter = (id, list) => {
       count = 0
       Array.prototype.forEach.call(riverHeaders, (header) => {
         if (header.style.display !== 'none') {
-          const items = header.getElementsByClassName('defra-flood-list__item')
+          const items = header.getElementsByClassName('defra-flood-list-item')
           Array.prototype.forEach.call(items, (item) => {
             if (item.style.display !== 'none') {
               count++
@@ -268,7 +268,8 @@ window.flood.Filter = (id, list) => {
       let visibleChildren = 0
       if (riverIds.includes(river.getAttribute('data-id'))) {
         river.style.display = ''
-        Array.prototype.forEach.call(river.getElementsByClassName('defra-flood-list__item'), item => {
+        river.parentElement.style.display = ''
+        Array.prototype.forEach.call(river.getElementsByClassName('defra-flood-list-item'), item => {
           if (types.includes(item.getAttribute('data-type'))) {
             visibleChildren++
             item.style.display = ''
@@ -278,9 +279,11 @@ window.flood.Filter = (id, list) => {
         })
       } else {
         river.style.display = 'none'
+        river.parentElement.style.display = 'none'
       }
       if (visibleChildren === 0) {
         river.style.display = 'none'
+        river.parentElement.style.display = 'none'
       }
     })
 
