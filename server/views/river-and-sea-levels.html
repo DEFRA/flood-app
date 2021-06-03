@@ -221,6 +221,7 @@
       </div>
     </div>
 
+    {% if model.countLevels > 15 %}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
         <div class="defra-top-link">
@@ -228,6 +229,7 @@
         </div>
       </div>
     </div>
+    {% endif %}
 
 {% endblock %}
 
