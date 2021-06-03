@@ -1,7 +1,6 @@
 const moment = require('moment-timezone')
 const { groupBy } = require('../../util')
 const { bingKeyMaps } = require('../../config')
-const tz = 'Europe/London'
 
 class ViewModel {
   constructor ({ location, place, stations, targetArea, riverIds, referer, error }) {
@@ -26,7 +25,6 @@ class ViewModel {
     const titles = this.getPageTitle(error, this.riverId, location)
     this.pageTitle = titles.page
     this.subtitle = titles.sub
-    const today = moment.tz().endOf('day')
 
     stations.forEach(station => {
       // Get a bounding box covering the stations on view
@@ -38,12 +36,18 @@ class ViewModel {
         this.stationsBbox[2] = Math.max(station.lon, this.stationsBbox[2])
         this.stationsBbox[3] = Math.max(station.lat, this.stationsBbox[3])
       }
-
-      station.value_time = this.getTime(station.value_timestamp, today)
-
+      station.displayData = this.getDisplayData(station)
       station.state = this.getStationState(station)
-
-      station.valueHtml = this.getStationHtml(station)
+      station.sub = this.getStationSubText(station)
+      station.val = this.formatValue(station, station.value)
+      station.valueState = this.getValueState(station)
+      if (station.station_type === 'R') {
+        station.oneHourTotal = this.formatValue(station, station.one_hr_total)
+        station.sixHourTotal = this.formatValue(station, station.six_hr_total)
+        station.dayTotal = this.formatValue(station, station.day_total)
+        station.external_name = this.formatName(station.external_name)
+      }
+      station.cols = this.getStationColumns(station)
     })
 
     // add on 444m (0.004 deg) to the stations bounding box to stop stations clipping edge of viewport
@@ -79,7 +83,7 @@ class ViewModel {
     return originalStation ? `stations.${originalStation.id}` : ''
   }
 
-  getStationHtml (station) {
+  getStationSubText (station) {
     if (station.iswales === true) {
       return ''
     }
@@ -88,53 +92,124 @@ class ViewModel {
       return 'Data not available'
     }
 
-    if (station.value_erred === true || station.value_erred === null) {
+    if (station.value_erred === true) {
       return 'Data error'
     }
 
     if (moment(station.value_timestamp) && !isNaN(parseFloat(station.value))) {
-      return this.getValueHtml(station)
+      return this.formatExpiredTime(station.value_timestamp)
     }
     return 'Data error'
   }
 
-  getValueHtml (station) {
-    // Valid data
-    const value = parseFloat(Math.round(station.value * 100) / 100).toFixed(2) + 'm'
-    if (station.station_type === 'S' || station.station_type === 'M') {
-      let html = `${value} <time datetime="${station.value_timestamp}">${station.value_time}</time>`
-      html += station.state === 'high' ? ' (<strong>high</strong>) ' : ` (${station.state.charAt(0)}${station.state.slice(1)})`
-      return html
-    } else {
-      return `${value} <time datetime="${station.value_timestamp}">${station.value_time}</time>`
+  getValueState (station) {
+    if (!station.displayData) {
+      return 'error'
     }
+    if (station.station_type === 'R') {
+      switch (true) {
+        case (station.one_hr_total > 4):
+          return 'heavy'
+        case (station.one_hr_total > 0.5):
+          return 'moderate'
+        case (station.one_hr_total > 0):
+          return 'light'
+        default:
+          return ''
+      }
+    }
+    if (station.station_type === 'S' || station.station_type === 'M') {
+      if (station.value >= station.percentile_5) {
+        return 'high'
+      } else {
+        return ''
+      }
+    }
+    return ''
+  }
+
+  getStationColumns (station) {
+    const cols = []
+    if (!station.displayData) {
+      return cols
+    }
+    if (station.station_type === 'R') {
+      cols.push({
+        title: 'Last hour',
+        value: station.oneHourTotal,
+        description: '1 hour'
+      })
+      cols.push({
+        title: 'Last 6 hours',
+        value: station.sixHourTotal,
+        description: '6 hours'
+      })
+      cols.push({
+        title: 'Last 24 hours',
+        value: station.dayTotal,
+        description: '24 hours'
+      })
+      return cols
+    } else {
+      if (station.station_type !== 'C') {
+        cols.push({
+          title: 'State',
+          value: station.state,
+          description: ''
+        })
+      }
+      cols.push({
+        title: 'Height',
+        value: station.val,
+        description: ''
+      })
+    }
+    return cols
+  }
+
+  getDisplayData (station) {
+    return !(station.status === 'Suspended' || station.status === 'Closed' || station.value === null || station.value_erred === true || station.iswales)
+  }
+
+  formatName (name) {
+    return name.toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())
+  }
+
+  formatExpiredTime (date) {
+    const duration = (new Date() - new Date(date))
+    const mins = Math.floor(duration / (1000 * 60))
+    const hours = Math.floor(duration / (1000 * 60 * 60))
+    const days = parseInt(Math.floor(hours / 24))
+    if (mins < 91) {
+      return `${mins} minutes ago`
+    } else {
+      if (hours < 48) {
+        return `${hours} hours ago`
+      } else {
+        return `${days} days ago`
+      }
+    }
+  }
+
+  formatValue (station, val) {
+    const dp = station.station_type === 'R' ? 1 : 2
+    return parseFloat(Math.round(val * Math.pow(10, dp)) / (Math.pow(10, dp))).toFixed(dp) + (station.station_type === 'R' ? 'mm' : 'm')
   }
 
   getStationState (station) {
-    if (station.status === 'Suspended' || station.status === 'Closed' || (!station.value && !station.isWales)) {
-      return 'error'
+    if (!station.displayData) {
+      return ''
     }
-    if (station.station_type !== 'C' && station.station_type !== 'G' && station.value) {
+    if (station.station_type !== 'C' && station.value) {
       if (station.value >= station.percentile_5) {
-        return 'high'
+        return 'High'
       } else if (station.value < station.percentile_95) {
-        return 'low'
+        return 'Low'
       } else {
-        return 'normal'
+        return 'Normal'
       }
     } else {
       return ''
-    }
-  }
-
-  getTime (ts, today) {
-    const dateDiffDays = today.diff(ts, 'days')
-    if (dateDiffDays === 0) {
-      return `at ${moment.tz(ts, tz).format('h:mma')}`
-    } else if (dateDiffDays === 1) {
-      return `at ${moment.tz(ts, tz).format('h:mma')} yesterday`
-    } else {
-      return `on ${moment.tz(ts, tz).format('DD/MM/YYYY h:mma')}`
     }
   }
 
