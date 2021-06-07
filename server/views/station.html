@@ -221,7 +221,7 @@
           {{ band.level }}m
         </dt>
         {% for threshold in band.values %} 
-        <dd class="defra-flood-impact-list__value"  {% if threshold.type === 'historical' %} data-toggle-list-display-item="impact" {% endif %} data-id="{{ threshold.id }}" data-level="{{ threshold.value }}" data-name="{{ threshold.shortname }}" data-normal="{% if threshold.isNormal %}true{% else %}false{% endif %}">
+        <dd class="defra-flood-impact-list__value"  {% if threshold.type === 'historical' %} data-toggle-list-display-item="impact" {% endif %} data-id="{{ threshold.id }}" data-level="{{ threshold.value }}" data-name="{{ threshold.shortname }}">
           <div class="defra-flood-impact-list__container">
             {{ threshold.description | safe }}
             {% if threshold.type != 'latest' %}
