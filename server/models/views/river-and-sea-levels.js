@@ -108,18 +108,18 @@ class ViewModel {
     }
     if (station.station_type === 'R') {
       switch (true) {
-        case (station.one_hr_total > 4):
+        case (parseFloat(station.one_hr_total) > 4):
           return 'heavy'
-        case (station.one_hr_total > 0.5):
+        case (parseFloat(station.one_hr_total) > 0.5):
           return 'moderate'
-        case (station.one_hr_total > 0):
+        case (parseFloat(station.one_hr_total) > 0):
           return 'light'
         default:
           return ''
       }
     }
     if (station.station_type === 'S' || station.station_type === 'M') {
-      if (station.value >= station.percentile_5) {
+      if (parseFloat(station.value) >= parseFloat(station.percentile_5)) {
         return 'high'
       } else {
         return ''
@@ -201,9 +201,9 @@ class ViewModel {
       return ''
     }
     if (station.station_type !== 'C' && station.value) {
-      if (station.value >= station.percentile_5) {
+      if (parseFloat(station.value) >= parseFloat(station.percentile_5)) {
         return 'High'
-      } else if (station.value < station.percentile_95) {
+      } else if (parseFloat(station.value) < parseFloat(station.percentile_95)) {
         return 'Low'
       } else {
         return 'Normal'
