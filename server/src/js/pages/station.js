@@ -32,51 +32,53 @@ if (chart) {
     forecast: window.flood.model.ffoi && !window.flood.model.forecastOutOfDate ? window.flood.model.ffoi.processedValues : [],
     plotNegativeValues: window.flood.model.station.plotNegativeValues
   })
-  if (window.flood.utils.getParameterByName('t')) {
-    // Find threshold in model
-    const thresholdId = window.flood.utils.getParameterByName('t')
-    let matchedThresholds = []
-    window.flood.model.thresholds.forEach(function (threshold) {
-      matchedThresholds = matchedThresholds.concat(threshold.values.filter(function (value) {
-        return (value.id.toString() === thresholdId)
-      }))
-    })
-    const threshold = matchedThresholds[0]
-    lineChart.addThreshold({
-      id: threshold.id,
-      level: threshold.value,
-      name: threshold.shortname
-    })
-  } else {
-    const typical = document.querySelector('.defra-flood-impact-list__value[data-id="pc5"]:last-child')
-    if (typical) {
-      lineChart.addThreshold({
-        id: typical.getAttribute('data-id'),
-        level: Number(typical.getAttribute('data-level')),
-        name: typical.getAttribute('data-name')
+  if (Object.keys(lineChart).length) {
+    if (window.flood.utils.getParameterByName('t')) {
+      // Find threshold in model
+      const thresholdId = window.flood.utils.getParameterByName('t')
+      let matchedThresholds = []
+      window.flood.model.thresholds.forEach(function (threshold) {
+        matchedThresholds = matchedThresholds.concat(threshold.values.filter(function (value) {
+          return (value.id.toString() === thresholdId)
+        }))
       })
+      const threshold = matchedThresholds[0]
+      lineChart.addThreshold({
+        id: threshold.id,
+        level: threshold.value,
+        name: threshold.shortname
+      })
+    } else {
+      const typical = document.querySelector('.defra-flood-impact-list__value[data-id="pc5"]:last-child')
+      if (typical) {
+        lineChart.addThreshold({
+          id: typical.getAttribute('data-id'),
+          level: Number(typical.getAttribute('data-level')),
+          name: typical.getAttribute('data-name')
+        })
+      }
     }
+    // Add threshold buttons
+    Array.from(document.querySelectorAll('.defra-flood-impact-list__value')).forEach(value => {
+      const button = document.createElement('button')
+      button.innerHTML = 'Show on chart'
+      button.className = 'defra-button-text-s'
+      button.addEventListener('click', function (e) {
+        lineChart.addThreshold({
+          id: value.getAttribute('data-id'),
+          level: Number(value.getAttribute('data-level')),
+          name: value.getAttribute('data-name')
+        })
+        // Scroll viewport to chart
+        const offsetTop = chart.getBoundingClientRect().top + window.pageYOffset
+        window.scrollTo(0, offsetTop)
+      })
+      const action = value.querySelector('.defra-flood-impact-list__action')
+      if (action) {
+        action.appendChild(button)
+      }
+    })
   }
-  // Add threshold buttons
-  Array.from(document.querySelectorAll('.defra-flood-impact-list__value')).forEach(value => {
-    const button = document.createElement('button')
-    button.innerHTML = 'Show on chart'
-    button.className = 'defra-button-text-s'
-    button.addEventListener('click', function (e) {
-      lineChart.addThreshold({
-        id: value.getAttribute('data-id'),
-        level: Number(value.getAttribute('data-level')),
-        name: value.getAttribute('data-name')
-      })
-      // Scroll viewport to chart
-      const offsetTop = chart.getBoundingClientRect().top + window.pageYOffset
-      window.scrollTo(0, offsetTop)
-    })
-    const action = value.querySelector('.defra-flood-impact-list__action')
-    if (action) {
-      action.appendChild(button)
-    }
-  })
 }
 
 // Add toggle list display for imapacts
