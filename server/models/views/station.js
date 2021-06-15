@@ -253,16 +253,8 @@ class ViewModel {
       stationType = 'River'
     }
 
-    if (this.station.type === 'g') {
-      this.pageTitle = `Groundwater level at ${stationLocation}`
-      this.postTitle = `Latest groundwater level information for ${this.station.name} borehole`
-    } else if (this.station.type === 'c') {
-      this.pageTitle = `Sea level at ${stationLocation}`
-      this.postTitle = `Latest tidal level information for the ${this.station.river} at ${this.station.name}`
-    } else {
-      this.pageTitle = `${this.station.river} level ${this.station.isMulti ? this.station.direction + ' ' : ''}at ${stationLocation}`
-      this.postTitle = 'Latest river level information for the ' + this.station.river + ' at ' + this.station.name + (this.station.isMulti ? ' (' + this.station.direction + ')' : '')
-    }
+    this.pagePostTitle(stationLocation)
+
     this.metaDescription = `Check the latest recorded ${stationType.toLowerCase()} level${forecast ? ',' : ' and'} recent 5-day trend ${forecast ? ' and 36 hour forecast' : ''} at ${stationLocation}`
     this.metaKeywords = `${stationType} level, ${this.station.name}${this.station.isRiver ? ', ' + this.station.river : ''}${forecast ? ', forecast level' : ''}, flood risk, flood map, gov.uk`
 
@@ -363,6 +355,19 @@ class ViewModel {
     // Set canonical url
     this.metaCanonical = `/station/${this.station.id}${this.station.direction === 'upstream' ? '' : '/downstream'}`
     this.liveServiceUrl = `/station/${this.station.id}${this.station.direction === 'downstream' ? '?direction=d' : ''}`
+  }
+
+  pagePostTitle (stationLocation) {
+    if (this.station.type === 'g') {
+      this.pageTitle = `Groundwater level at ${stationLocation}`
+      this.postTitle = `Latest groundwater level information for ${this.station.name} borehole`
+    } else if (this.station.type === 'c') {
+      this.pageTitle = `Sea level at ${stationLocation}`
+      this.postTitle = `Latest tidal level information for the ${this.station.river} at ${this.station.name}`
+    } else {
+      this.pageTitle = `${this.station.river} level ${this.station.isMulti ? this.station.direction + ' ' : ''}at ${stationLocation}`
+      this.postTitle = 'Latest river level information for the ' + this.station.river + ' at ' + this.station.name + (this.station.isMulti ? ' (' + this.station.direction + ')' : '')
+    }
   }
 }
 
