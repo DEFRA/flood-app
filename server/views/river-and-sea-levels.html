@@ -15,7 +15,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl">
-            River and sea levels
+          River, sea, groundwater and rainfall levels
         </h1>
         {% if model.subtitle %}
          <p class="govuk-!-margin-bottom-8"> {{ model.subtitle }} <a href="/river-and-sea-levels"> Show all levels</a></p>
@@ -157,42 +157,47 @@
         <ul class="defra-flood-list">
             {% for id, group in model.stations %}
             {% if group.length > 0 %}
-            <li class="defra-flood-list__group" data-id="{{ id }}">
-                <span class="defra-flood-list__group-title">
-                    <a href="/river-and-sea-levels?river-id={{id}}">{{ group[0].river_name }}</a> <span class="govuk-visually-hidden">at:</span>
-                </span>
-                {# if river has more than one station and river navigation graphic #}
-                {% if (group.length === 1) or (id === "Sea Levels") or (id === "Groundwater Levels") %}
-                <dl class="defra-flood-list__items defra-flood-list__items--levels">
-                {% else %}
-                <dl class="defra-flood-list__items defra-flood-list__items--levels defra-flood-list__items--has-relation">
-                {% endif %}
-
-                    {% for station in group %}
-
-                    {% if (station.status === 'Suspended') or (station.status === 'Closed' ) or (station.region === 'Wales') %}
-                    <div class="defra-flood-list__item" data-river-id="{{ id }}" data-type="{{ station.station_type }}">
-                    {% else %}
-                    <div class="defra-flood-list__item{% if station.state %} defra-flood-list__item--{{ station.state }}{% endif %}" data-river-id="{{ id }}" data-type="{{ station.station_type }}">
-                    {% endif %}
-                        
-                        <dt class="defra-flood-list__item-title">
-                            <a href="/station/{{station.rloi_id}}{% if station.qualifier == 'd' %}/downstream{% endif %}">
-                                {{ station.external_name }}
-                                {% if station.iswales === true %}
-                                (Natural Resources Wales)
-                                {% endif %}
-                                {% if station.qualifier == 'd' %}
-                                (downstream)
-                                {% endif %}
-                            </a>
-                        </dt>
-                        <dd class="defra-flood-list__item-desc">
-                            {{ station.valueHtml | safe }}
+            <li>
+            <span class="defra-flood-list__group-title">
+              <a href="/river-and-sea-levels?river-id={{id}}">{{ group[0].river_name }}</a> <span class="govuk-visually-hidden">at:</span>
+            </span>
+            <ul class="defra-flood-list-river" data-id="{{ id }}">
+                {% for station in group %}
+                <li class="defra-flood-list-item defra-flood-list-item--{{ station.station_type }}{% if station.valueState %}-{{ station.valueState }}{% endif %}" data-river-id="{{ id }}" data-type="{{ station.station_type }}">
+                  <div class="defra-flood-list__title-column">
+                    <span class="defra-flood-list-item__title">
+                      {% if station.station_type === 'R' %}
+                        {{ station.external_name }}
+                      {% else %}
+                      <a href="/station/{{station.rloi_id}}{% if station.qualifier == 'd' %}/downstream{% endif %}">
+                        {{ station.external_name }}
+                        {% if station.iswales === true %}
+                        (Natural Resources Wales)
+                        {% endif %}
+                        {% if station.qualifier == 'd' %}
+                        (downstream)
+                        {% endif %}
+                      </a>
+                      {% endif %}
+                      <span class="defra-flood-list-data__description">{{ station.sub }}</span>
+                    </span>
+                  </div>
+                  <div class="defra-flood-list__data-column">
+                    <dl class="defra-flood-list-data">
+                      {% for col in station.cols %}
+                      <div class="defra-flood-list-data__column">
+                        <dt class="govuk-visually-hidden">{{ col.title }}</dt>
+                        <dd>
+                          <span class="defra-flood-list-data__value">{{ col.value }}</span>
+                          <span class="defra-flood-list-data__description" aria-hidden="true">{{ col.description }}</span>
                         </dd>
-                    </div>
-                    {% endfor %}
-                </dl>
+                      </div>
+                      {% endfor %}
+                    </dl>
+                  </div>
+                </li>
+                {% endfor %}
+            </ul>
             </li>
             {% endif %}
             {% endfor %}
@@ -216,6 +221,7 @@
       </div>
     </div>
 
+    {% if model.countLevels > 15 %}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
         <div class="defra-top-link">
@@ -223,6 +229,7 @@
         </div>
       </div>
     </div>
+    {% endif %}
 
 {% endblock %}
 

@@ -1,4 +1,4 @@
-const moment = require('moment')
+const moment = require('moment-timezone')
 const severity = require('../severity')
 const util = require('../../util')
 
@@ -40,7 +40,7 @@ function Forecast (data, isCoastal, latestObserved) {
       } else if (moment(value.ts).isSame(tomorrow, 'd')) {
         dateWhen = ' tomorrow'
       }
-      value.formattedTimestamp = moment(value.ts).format('h:mma') + dateWhen
+      value.formattedTimestamp = moment(value.ts).tz('Europe/London').format('h:mma') + dateWhen
       if (value.ts.isBefore(this.forecastStart) || value.ts.isAfter(this.truncateDate)) {
         return
       }
