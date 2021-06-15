@@ -292,25 +292,7 @@
     <p class="govuk-text govuk-!-margin-bottom-6">
       <a href="/how-we-measure-river-sea-groundwater-levels">How we measure river, sea and groundwater levels</a>
     </p>
-
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-m govuk-!-margin-top-6">Share this page</h2>
-        <ul class="defra-social">
-          <li class="defra-social__channel">
-            <a class="defra-social__link defra-social__link--facebook" href="https://www.facebook.com/sharer/sharer.php?u={{fullUrl | urlencode}}{% if model.postTitle %}&title={{model.postTitle}}{% endif %}">Facebook</a>
-          </li>
-          <li class="defra-social__channel">
-            <a class="defra-social__link defra-social__link--twitter"  href="https://twitter.com/intent/tweet?original_referer&amp;text=Important%20flood%20risk%20information%20%E2%80%93%20please%20retweet%20&url={{fullUrl | urlencode}}">Twitter</a>
-          </li>
-          <li class="defra-social__channel">
-            <a class="defra-social__link defra-social__link--email"  href="mailto:?subject=I%20want%20to%20share%20this%20government%20flood%20risk%20information%20with%20you&amp;body=I%20thought%20this%20flood%20risk%20information%20from%20the%20government%20would%20interest%20you.%0D%0A%0D%0A{{fullUrl | urlencode}}%0D%0A%0D%0APlease%20forward%20it%20to%20anyone%20else%20you%20think%20might%20find%20it%20useful.">Email</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-
+    {% include "partials/social.html" %}
   </div>  
 </div>  
 
