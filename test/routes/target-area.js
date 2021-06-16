@@ -110,8 +110,8 @@ lab.experiment('Target-area tests', () => {
     }
 
     const response = await server.inject(options)
-
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('<h2 class="govuk-heading-m govuk-!-margin-top-6">Share this page</h2>')
     Code.expect(response.payload).to.contain('Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water')
   })
   lab.test('GET target-area 011WAFDW  blank situation text', async () => {
