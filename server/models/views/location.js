@@ -21,7 +21,8 @@ class ViewModel {
       floodFisUrl,
       dateFormatted: 'Up to date as of ' + moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY'),
       feedback: true,
-      dataError
+      dataError,
+      isDummyData: floods.isDummyData
     })
 
     const hasFloods = !!floods.length

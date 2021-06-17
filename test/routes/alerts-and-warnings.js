@@ -250,16 +250,19 @@ lab.experiment('Test - /alerts-warnings', () => {
   lab.test('GET /alerts-and-warnings Bing returns error', async () => {
     const floodService = require('../../server/services/flood')
 
-    const fakeFloodsData = () => data.floodsByPostCode
-
-    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-
     const fakeGetJson = () => {
       throw new Error('Bing error')
     }
 
+    const fakeFloodsData = () => {
+      return {
+        floods: []
+      }
+    }
+
     const util = require('../../server/util')
     sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodsData)
 
     const warningsPlugin = {
       plugin: {
@@ -320,9 +323,6 @@ lab.experiment('Test - /alerts-warnings', () => {
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
-    // Fake the cached flood data
-    floodService.floods = await floodService.getFloods()
-
     const warningsPlugin = {
       plugin: {
         name: 'warnings',
@@ -350,12 +350,16 @@ lab.experiment('Test - /alerts-warnings', () => {
   lab.test('GET /alerts-and-warnings ', async () => {
     const floodService = require('../../server/services/flood')
 
-    const fakeFloodsData = () => []
+    const fakeFloodsData = () => {
+      return {
+        floods: []
+      }
+    }
 
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
 
-    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
 

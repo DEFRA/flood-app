@@ -12,7 +12,8 @@ class ViewModel {
       placeCentre: place ? place.center : [],
       timestamp: Date.now(),
       error: error ? true : null,
-      isEngland: place ? place.isEngland.is_england : null
+      isEngland: place ? place.isEngland.is_england : null,
+      isDummyData: floods ? floods.isDummyData : false
     })
 
     if (error) {

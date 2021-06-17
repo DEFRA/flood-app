@@ -24,7 +24,7 @@ module.exports = [{
       model = new ViewModel({ location, place, floods, station })
       return h.view('alerts-and-warnings', { model })
     } else if (typeof location === 'undefined' || location === '' || location.match(/^england$/i)) {
-      const floods = floodService.floods
+      const floods = new Floods(await floodService.getFloods())
       model = new ViewModel({ location, place, floods, station })
       return h.view('alerts-and-warnings', { model })
     } else {
@@ -36,7 +36,7 @@ module.exports = [{
           // No location found so display zero results
           model = new ViewModel({ location, place, floods, station })
         } else {
-          const floods = floodService.floods
+          const floods = new Floods(await floodService.getFloods())
           model = new ViewModel({ location, place, floods, station, error })
         }
         return h.view('alerts-and-warnings', { model })

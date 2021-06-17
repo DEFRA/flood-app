@@ -52,9 +52,6 @@ lab.experiment('Routes test - national view', () => {
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
-    // Fake the cached flood data
-    floodService.floods = await floodService.getFloods()
-
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
@@ -88,9 +85,6 @@ lab.experiment('Routes test - national view', () => {
     const floodService = require('../../server/services/flood')
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-
-    // Fake the cached flood data
-    floodService.floods = await floodService.getFloods()
 
     const locationPlugin = {
       plugin: {
@@ -134,9 +128,6 @@ lab.experiment('Routes test - national view', () => {
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
-    // Fake the cached flood data
-    floodService.floods = await floodService.getFloods()
-
     const locationPlugin = {
       plugin: {
         name: 'national',
@@ -178,9 +169,6 @@ lab.experiment('Routes test - national view', () => {
     const floodService = require('../../server/services/flood')
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-
-    // Fake the cached flood data
-    floodService.floods = await floodService.getFloods()
 
     const locationPlugin = {
       plugin: {
@@ -244,9 +232,6 @@ lab.experiment('Routes test - national view', () => {
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
-    // Fake the cached flood data
-    floodService.floods = await floodService.getFloods()
-
     const locationPlugin = {
       plugin: {
         name: 'national',
@@ -288,8 +273,6 @@ lab.experiment('Routes test - national view', () => {
     const floodService = require('../../server/services/flood')
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-
-    floodService.floods = await floodService.getFloods()
 
     const locationPlugin = {
       plugin: {

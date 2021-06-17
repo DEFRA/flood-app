@@ -3,11 +3,7 @@ const { serviceUrl, geoserverUrl } = require('../config')
 
 // cached flood data
 const Floods = require('../models/floods')
-// const Outlook = require('../models/outlook')
 let floods = null
-// let outlook = null
-// let stationsGeojson = null
-// let rainfallGeojson = null
 
 module.exports = {
   // ############ Internals ################

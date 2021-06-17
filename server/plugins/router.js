@@ -24,10 +24,16 @@ const routes = [].concat(
   require('../routes/cookies'),
   require('../routes/terms-and-conditions'),
   require('../routes/privacy-notice'),
-  require('../routes/status'),
   require('../routes/stations-overview'),
   require('../routes/about-levels')
 )
+
+// Non production end points
+if (process.env.NODE_ENV !== 'production') {
+  routes.push(
+    require('../routes/status')
+  )
+}
 
 module.exports = {
   plugin: {

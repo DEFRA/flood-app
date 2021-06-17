@@ -1,4 +1,5 @@
 const floodService = require('../../services/flood')
+const FloodsModel = require('../../models/floods')
 
 module.exports = {
   method: 'GET',
@@ -6,7 +7,8 @@ module.exports = {
   options: {
     description: 'Get warnings data in geojson format',
     handler: async () => {
-      return floodService.floods.geojson
+      const floods = new FloodsModel(await floodService.getFloods())
+      return floods.geojson
     },
     app: {
       useErrorPages: false
