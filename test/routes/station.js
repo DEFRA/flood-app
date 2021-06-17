@@ -158,6 +158,7 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.payload).to.contain('0.15m to 3.50m')
     Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?rloi-id=5146" class="defra-flood-nav__link">Check nearby measurements</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5122" class="defra-flood-nav__link defra-flood-nav__link--upstream">Go upstream</a>')
+    Code.expect(response.payload).to.contain('<h2 class="govuk-heading-m govuk-!-margin-top-6">Share this page</h2>')
   })
   lab.test('GET station/2042/downstream ', async () => {
     const floodService = require('../../server/services/flood')

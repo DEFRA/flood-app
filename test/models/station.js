@@ -32,6 +32,7 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.banner).to.equal(0)
     Code.expect(Result.pageTitle).to.equal('River Adur level at Beeding Bridge')
     Code.expect(Result.dataOverHourOld).to.equal(true)
+    Code.expect(Result.postTitle).to.equal('Latest river level information for the River Adur at Beeding Bridge ')
   })
   lab.test('Test station viewModel dataOverHourOld to be false', async () => {
     const stationData = data.stationRiver
