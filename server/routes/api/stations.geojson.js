@@ -6,7 +6,7 @@ module.exports = {
   options: {
     description: 'Get stations data in geojson format from service cache',
     handler: async () => {
-      return floodService.stationsGeojson
+      return await floodService.getStationsGeoJson()
     },
     app: {
       useErrorPages: false

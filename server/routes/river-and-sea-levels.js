@@ -153,15 +153,16 @@ const getStations = async (place, taCode, rloiid) => {
     return floodService.getStationsWithinTargetArea(taCode)
   }
   if (rloiid) {
-    const station = floodService.stationsGeojson.features.find(item => item.id === `stations.${rloiid}`)
+    const station = await floodService.getStationById(rloiid, 'u')
+    const coordinates = JSON.parse(station.coordinates)
 
-    const x = station.geometry.coordinates[0]
-    const y = station.geometry.coordinates[1]
+    const x = coordinates.coordinates[0]
+    const y = coordinates.coordinates[1]
 
     const stationsWithinRad = await floodService.getStationsByRadius(x, y)
 
     stationsWithinRad.originalStation = {
-      external_name: station.properties.name,
+      external_name: station.external_name,
       id: rloiid
     }
 

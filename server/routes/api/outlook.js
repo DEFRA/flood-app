@@ -1,4 +1,5 @@
 const floodService = require('../../services/flood')
+const OutlookModel = require('../../models/outlook')
 
 module.exports = {
   method: 'GET',
@@ -6,7 +7,8 @@ module.exports = {
   options: {
     description: 'Get outlook geojson data from cache',
     handler: async () => {
-      return floodService.outlook.geoJson
+      const { geoJson } = new OutlookModel(await floodService.getOutlook())
+      return geoJson
     },
     app: {
       useErrorPages: false

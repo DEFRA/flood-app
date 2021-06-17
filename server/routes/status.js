@@ -1,5 +1,6 @@
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
+const OutlookModel = require('../models/outlook')
 
 module.exports = {
   method: 'GET',
@@ -69,14 +70,22 @@ module.exports = {
       ffoi = null
     }
 
+    // outlook
+    let outlook
+    try {
+      outlook = new OutlookModel(await floodService.getOutlook())
+    } catch (err) {
+      outlook = null
+    }
+
     const model = {
       now: new Date(),
       pageTitle: 'Status',
       fwisDate: new Date(parseInt(floodService.floods.timestamp) * 1000),
       fwisAgeMinutes: parseInt((new Date() - new Date(parseInt(floodService.floods.timestamp) * 1000)) / (1000 * 60)),
       fwisCount: floodService.floods.floods.length || 0,
-      outlookTimestamp: new Date(floodService.outlook.timestampOutlook),
-      outlookAgeHours: parseInt((new Date() - new Date(floodService.outlook.timestampOutlook)) / (1000 * 60 * 60)),
+      outlookTimestamp: new Date(outlook.timestampOutlook),
+      outlookAgeHours: parseInt((new Date() - new Date(outlook.timestampOutlook)) / (1000 * 60 * 60)),
       locationService: place ? 'Successful' : 'Failed',
       locationServicems: locationEnd - locationStart,
       service: service ? 'Successful' : 'Failed',

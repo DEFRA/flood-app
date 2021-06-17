@@ -322,7 +322,6 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     // Fake the cached flood data
     floodService.floods = await floodService.getFloods()
-    floodService.outlook = await floodService.getOutlook()
 
     const warningsPlugin = {
       plugin: {

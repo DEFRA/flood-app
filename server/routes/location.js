@@ -79,38 +79,36 @@ const createOutlookTabs = async place => {
   let tabs = {}
   let outOfDate = true
   let dataError = false
-  let myOutlook = {}
   const now = moment().tz(tz).valueOf()
   const hours48 = 2 * 60 * 60 * 24 * 1000
   let issueDate = moment().valueOf() // Default issueDate to today
-  let cachedOutlook = {}
+  let outlook = {}
 
   try {
-    cachedOutlook = await floodService.outlook
-    myOutlook = JSON.parse(JSON.stringify(cachedOutlook._outlook))
+    outlook = await floodService.getOutlook()
   } catch (err) {
-    console.error(`Outlook FGS data error [${myOutlook}]`)
+    console.error('Outlook FGS data error')
     dataError = true
   }
 
-  if (!dataError) {
-    if (!myOutlook.issued_at) {
-      console.error(`Outlook FGS issued_at date error [${myOutlook.issued_at}]`)
+  if (outlook && Object.keys(outlook).length > 0 && !dataError) {
+    if (!outlook.issued_at) {
+      console.error(`Outlook FGS issued_at date error [${outlook.issued_at}]`)
       dataError = true
     } else {
-      issueDate = moment(myOutlook.issued_at).valueOf()
-    }
+      issueDate = moment(outlook.issued_at).valueOf()
 
-    outOfDate = (now - issueDate) > hours48
+      outOfDate = (now - issueDate) > hours48
 
-    const riskAreasCount = myOutlook.risk_areas ? myOutlook.risk_areas.length : 0
+      const riskAreasCount = outlook.risk_areas ? outlook.risk_areas.length : 0
 
-    const outlookTabsModel = new OutlookTabsModel(myOutlook, place)
-    tabs = outOfDate || riskAreasCount === 0 ? { lowForFive: true } : outlookTabsModel
+      const outlookTabsModel = new OutlookTabsModel(outlook, place)
+      tabs = outOfDate || riskAreasCount === 0 ? { lowForFive: true } : outlookTabsModel
 
-    if (riskAreasCount === 0) {
-      tabs.formattedIssueDate = `${formatDate(myOutlook.issued_at, 'h:mma')} on ${formatDate(myOutlook.issued_at, 'D MMMM YYYY')}`
-      tabs.issueUTC = moment(myOutlook.issued_at).tz('Europe/London').format()
+      if (riskAreasCount === 0) {
+        tabs.formattedIssueDate = `${formatDate(outlook.issued_at, 'h:mma')} on ${formatDate(outlook.issued_at, 'D MMMM YYYY')}`
+        tabs.issueUTC = moment(outlook.issued_at).tz('Europe/London').format()
+      }
     }
   }
   return { tabs, outOfDate, dataError }

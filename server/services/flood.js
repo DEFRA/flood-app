@@ -3,11 +3,11 @@ const { serviceUrl, geoserverUrl } = require('../config')
 
 // cached flood data
 const Floods = require('../models/floods')
-const Outlook = require('../models/outlook')
+// const Outlook = require('../models/outlook')
 let floods = null
-let outlook = null
-let stationsGeojson = null
-let rainfallGeojson = null
+// let outlook = null
+// let stationsGeojson = null
+// let rainfallGeojson = null
 
 module.exports = {
   // ############ Internals ################
@@ -18,49 +18,6 @@ module.exports = {
   // set the cached floods object
   set floods (data) {
     floods = data && new Floods(data)
-  },
-  // get cached outlook object
-  get outlook () {
-    try {
-      return outlook
-    } catch (err) {
-      console.error(`Get Outlook data error - [${err}]`)
-      return { dataError: true }
-    }
-  },
-  // set cached outlook object
-  set outlook (data) {
-    if (data.dataError) {
-      console.error('Set Outlook data error encountered: ', data)
-    } else {
-      try {
-        const newData = new Outlook(data)
-        if (newData.dataError) {
-          console.error('Set Outlook data error encountered: ', newData)
-        } else {
-          outlook = data && new Outlook(data)
-        }
-      } catch (err) {
-        console.error(`Set Outlook cached data error - [${err}]`)
-        outlook = { dataError: true }
-      }
-    }
-  },
-
-  get stationsGeojson () {
-    return stationsGeojson
-  },
-
-  set stationsGeojson (data) {
-    stationsGeojson = data
-  },
-
-  get rainfallGeojson () {
-    return rainfallGeojson
-  },
-
-  set rainfallGeojson (data) {
-    rainfallGeojson = data
   },
 
   // ############### Externals ################
@@ -86,13 +43,8 @@ module.exports = {
   },
 
   // fetching the flood guidance statement using service layer leveraging s3
-  async getOutlook () {
-    try {
-      return await util.getJson(`${serviceUrl}/flood-guidance-statement`)
-    } catch (err) {
-      console.error(`Get Outlook data error - [${err}]`)
-      return { dataError: true }
-    }
+  getOutlook () {
+    return util.getJson(`${serviceUrl}/flood-guidance-statement`)
   },
 
   getStationById (id, direction) {
