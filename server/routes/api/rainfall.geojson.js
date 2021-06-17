@@ -1,11 +1,9 @@
-const floodService = require('../../services/flood')
-
 module.exports = {
   method: 'GET',
   path: '/api/rainfall.geojson',
   options: {
     description: 'Get rainfall data in geojson format from service cache',
-    handler: async () => floodService.rainfallGeojson,
+    handler: request => request.server.methods.flood.getRainfallGeojson(),
     app: {
       useErrorPages: false
     }

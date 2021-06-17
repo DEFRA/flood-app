@@ -1,7 +1,6 @@
 const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/river-and-sea-levels')
-const floodService = require('../services/flood')
 const locationService = require('../services/location')
 const util = require('../util')
 const LocationNotFoundError = require('../location-not-found-error')
@@ -28,13 +27,14 @@ module.exports = [{
         place = await locationService.find(util.cleanseLocation(location))
       } catch (error) {
         console.error(`Location search error: [${error.name}] [${error.message}]`)
+        console.error(error)
         if (error instanceof LocationNotFoundError) {
           // No location found so display zero results
           stations = []
           model = new ViewModel({ location, place, stations, targetArea, riverIds, referer })
         } else {
           // If location search error show national list with error
-          stations = await getStations()
+          stations = await getStations(request)
           model = new ViewModel({ location, place, stations, targetArea, riverIds, error, referer })
         }
         return h.view(route, { model })
@@ -47,14 +47,14 @@ module.exports = [{
     }
 
     // get base stations
-    stations = await getStations(place, taCode, rloiid)
+    stations = await getStations(request, place, taCode, rloiid)
 
     // filter stations
     stations = filterStations(stations, riverIds, types)
 
     // optional get ta
     if (taCode) {
-      targetArea = await floodService.getTargetArea(taCode)
+      targetArea = await request.server.methods.flood.getTargetArea(taCode)
     }
 
     // build model
@@ -145,23 +145,24 @@ const getParameters = request => {
   }
 }
 
-const getStations = async (place, taCode, rloiid) => {
+const getStations = async (request, place, taCode, rloiid) => {
   if (place) {
-    return floodService.getStationsWithin(place.bbox10k)
+    return request.server.methods.flood.getStationsWithin(place.bbox10k)
   }
   if (taCode) {
-    return floodService.getStationsWithinTargetArea(taCode)
+    return request.server.methods.flood.getStationsWithinTargetArea(taCode)
   }
   if (rloiid) {
-    const station = floodService.stationsGeojson.features.find(item => item.id === `stations.${rloiid}`)
+    const station = await request.server.methods.flood.getStationById(rloiid, 'u')
+    const coordinates = JSON.parse(station.coordinates)
 
-    const x = station.geometry.coordinates[0]
-    const y = station.geometry.coordinates[1]
+    const x = coordinates.coordinates[0]
+    const y = coordinates.coordinates[1]
 
-    const stationsWithinRad = await floodService.getStationsByRadius(x, y)
+    const stationsWithinRad = await request.server.methods.flood.getStationsByRadius(x, y, 8000)
 
     stationsWithinRad.originalStation = {
-      external_name: station.properties.name,
+      external_name: station.external_name,
       id: rloiid
     }
 
@@ -169,7 +170,7 @@ const getStations = async (place, taCode, rloiid) => {
     return stationsWithinRad
   }
   // if no place or ta then return all stations
-  return floodService.getStations()
+  return request.server.methods.flood.getStations()
 }
 
 const filterStations = (stations, riverIds, types) => {

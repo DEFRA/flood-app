@@ -29,6 +29,7 @@ class ViewModel {
       outlookTimestamp: `${formatDate(outlook._timestampOutlook, 'h:mma')} on ${formatDate(outlook._timestampOutlook, 'D MMMM YYYY')}`,
       outlookUTC: moment(outlook._timestampOutlook).tz(tz).format(),
       dataError: outlook.dataError,
+      isDummyData: floods.isDummyData,
       outlookOutOfDate
     })
 
