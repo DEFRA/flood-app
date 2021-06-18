@@ -5,9 +5,7 @@ module.exports = {
   path: '/api/rainfall.geojson',
   options: {
     description: 'Get rainfall data in geojson format from service cache',
-    handler: async () => {
-      return await floodService.getRainfallGeojson()
-    },
+    handler: () => floodService.getRainfallGeojson(),
     app: {
       useErrorPages: false
     }

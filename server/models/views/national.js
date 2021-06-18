@@ -29,8 +29,8 @@ class ViewModel {
       outlookTimestamp: `${formatDate(outlook._timestampOutlook, 'h:mma')} on ${formatDate(outlook._timestampOutlook, 'D MMMM YYYY')}`,
       outlookUTC: moment(outlook._timestampOutlook).tz(tz).format(),
       dataError: outlook.dataError,
-      outlookOutOfDate,
-      isDummyData: floods.isDummyData
+      isDummyData: floods.isDummyData,
+      outlookOutOfDate
     })
 
     // Strip out flood array as it is superflous to the view
