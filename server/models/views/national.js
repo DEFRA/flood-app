@@ -23,7 +23,7 @@ class ViewModel {
       highestSeverityId: floods.highestSeverityId,
       dateFormatted: `${moment().tz(tz).format('h:mma')} on ${moment().tz(tz).format('D MMMM YYYY')}`,
       dateUTC: moment().tz(tz).format(),
-      feedback: true,
+      feedback: false,
       hasWarningsRemoved: floods._groups[3].name === 4 && floods._groups[3].count > 0,
       bingMaps: bingKeyMaps,
       outlookTimestamp: `${formatDate(outlook._timestampOutlook, 'h:mma')} on ${formatDate(outlook._timestampOutlook, 'D MMMM YYYY')}`,
