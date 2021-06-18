@@ -9,7 +9,13 @@ module.exports = {
   handler: async (request, h) => {
     const floods = new FloodsModel(await floodService.getFloods())
 
-    const outlook = new OutlookModel(await floodService.getOutlook())
+    let outlook = {}
+    try {
+      outlook = new OutlookModel(await floodService.getOutlook())
+    } catch (err) {
+      console.error(err)
+      outlook.dataError = true
+    }
 
     const model = new ViewModel(floods, outlook)
 
