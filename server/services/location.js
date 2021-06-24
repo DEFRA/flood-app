@@ -8,7 +8,14 @@ const LocationNotFoundError = require('../location-not-found-error')
 async function find (location) {
   const query = encodeURIComponent(location)
   const url = util.format(bingUrl, query, bingKeyLocation)
-  const bingData = await getJson(url, true)
+
+  let bingData
+  try {
+    bingData = await getJson(url, true)
+  } catch (err) {
+    console.error(err)
+    throw err
+  }
 
   // At this point we expect to have received a 200 status code from location search api call
   // but check status code within payload to ensure valid.
