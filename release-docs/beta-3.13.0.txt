@@ -1,0 +1,51 @@
+# Service refresh release 3.13.0 Wednesday 30th June 2021
+
+# Tickets
+
+https://eaflood.atlassian.net/projects/FSR/versions/15446/tab/release-report-all-issues
+
+## Release notes taken from Jira
+
+# Release notes - FIS Service Refresh - Version Release 6
+
+### Bug
+
+[FSR-362](https://eaflood.atlassian.net/browse/FSR-362) No icon next to a rainfall station on list page
+
+[FSR-358](https://eaflood.atlassian.net/browse/FSR-358) Station page - Impacts and link for show historical events not displayed when no graph
+
+[FSR-354](https://eaflood.atlassian.net/browse/FSR-354) Station list river state incorrect
+
+[FSR-349](https://eaflood.atlassian.net/browse/FSR-349) Stations Graph - Top of normal range line not showing by default on graph
+
+### Story
+
+[FSR-348](https://eaflood.atlassian.net/browse/FSR-348) Remove "Back to Top" link when there are less than 15 stations
+
+[FSR-324](https://eaflood.atlassian.net/browse/FSR-324) Bug - forecast station timings do not match
+
+[FSR-299](https://eaflood.atlassian.net/browse/FSR-299) Development/Test: Load revised impacts into Beta service
+
+[FSR-298](https://eaflood.atlassian.net/browse/FSR-298) Development/Test: Amend content on Impacts to highlight historical nature
+
+[FSR-297](https://eaflood.atlassian.net/browse/FSR-297) Development/Test: Displaying of threshold data on Beta service
+
+[FSR-274](https://eaflood.atlassian.net/browse/FSR-274) Development/Test: Station list pages - addition of icons on station list page
+
+[FSR-200](https://eaflood.atlassian.net/browse/FSR-200) Development/test: share page function
+
+[FSR-198](https://eaflood.atlassian.net/browse/FSR-198) Development/Test: Shortcut to go back to the top of the station list where lots of data presented
+
+# Webops Instructions
+
+Execute the following jobs in order:
+
+LFW_{stage}_02_UPDATE_DATABASE
+
+LFW_{stage}_99_DEPLOY_FLOOD_DATA_PIPELINE
+
+LFW_{stage}_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Inform flood dev & test team of completion.
+
+thanks
