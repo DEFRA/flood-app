@@ -205,6 +205,7 @@
 </div>
 
 {% endif %}
+<a href="/station-csv/{{model.station.id}}{% if model.station.qualifier == 'd' %}/downstream{% endif %}" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-4">Download height data CSV (27KB)</a>
 
 {# Impacts and thresholds #}
 {% if model.thresholds.length > 0 %}

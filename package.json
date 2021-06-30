@@ -57,6 +57,7 @@
     "geojson": "0.5.0",
     "govuk-frontend": "^3.11.0",
     "jquery": "^3.6.0",
+    "json2csv": "^5.0.6",
     "lodash.isequal": "^4.5.0",
     "moment-timezone": "^0.5.33",
     "node-sass": "^5.0.0",
