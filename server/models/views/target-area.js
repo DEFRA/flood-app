@@ -62,7 +62,7 @@ class ViewModel {
       parentAreaAlert: parentAreaAlert,
       areaDescription: areaDescription,
       targetArea: area.code,
-      feedback: true,
+      feedback: false,
       mapTitle,
       bingMaps: bingKeyMaps
     }, options)
