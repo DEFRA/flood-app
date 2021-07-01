@@ -25,13 +25,12 @@ module.exports = {
       const forecast = values.SetofValues[0].Value
 
       const forecastData = forecast.map(item => {
-        const date = moment(item.$.date + ' ' + item.$.time).format('YYYY-MM-DDTHH:mm') +'Z'
+        const date = moment(item.$.date + ' ' + item.$.time).format('YYYY-MM-DDTHH:mm') + 'Z'
         return { ts: date, _: item._ }
       })
       // forecastData = this.forecastData
       this.telemetry.push(...forecastData)
     }
-    
 
     const csvString = [
       [
