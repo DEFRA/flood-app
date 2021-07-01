@@ -19,18 +19,19 @@ module.exports = {
 
     this.telemetry = telemetry
 
+    // Forecast station
     if (thresholds.length) {
-      // Forecast station
       const values = await floodService.getStationForecastData(station.wiski_id)
       const forecast = values.SetofValues[0].Value
 
       const forecastData = forecast.map(item => {
         const date = moment(item.$.date + ' ' + item.$.time).format('YYYY-MM-DDTHH:mm') + 'Z'
-        return { ts: date, _: item._ }
+        return { ts: date, _: item._ , err: ''}
       })
-      // forecastData = this.forecastData
       this.telemetry.push(...forecastData)
     }
+
+    this.telemetry.sort((a, b) => a.ts > b.ts && 1 || -1)
 
     const csvString = [
       [
@@ -44,6 +45,7 @@ module.exports = {
     ]
       .map(e => e.join(','))
       .join('\n')
+
     const response = h.response(csvString)
     response.type('text/csv')
     response.header('Content-disposition', 'attachment; filename=station-' + id + '.csv')
