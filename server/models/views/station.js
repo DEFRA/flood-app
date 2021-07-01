@@ -333,17 +333,6 @@ class ViewModel {
       })
     }
 
-        // create csv of telemetry
-
-        const telem = this.telemetry
-
-        telem.shift()
-    
-        const csvData = telem.map(item => {
-          return { Timestamp: item.ts, Level: item._ }
-        })
-
-
     // Group and sort thresholds
     thresholds = thresholds.reduce(
       (result, item) => ({
