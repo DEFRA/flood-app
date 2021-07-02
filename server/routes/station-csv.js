@@ -48,7 +48,7 @@ module.exports = {
 
     const response = h.response(csvString)
     response.type('text/csv')
-    response.header('Content-disposition', 'attachment; filename=station-' + id + '.csv')
+    response.header('Content-disposition', 'attachment; filename=station-' + id + '-height-data.csv')
     return response
   }
 }

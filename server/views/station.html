@@ -192,20 +192,20 @@
       <figcaption class="govuk-heading-m govuk-!-margin-bottom-7">Height over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
         <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
         {% if model.isFfoi and not model.forecastOutOfDate %}
-        <p class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0"> {{ model.forecastDetails }}</p>
+        <p class="govuk-body-s govuk-!-margin-top-0 govuk-!-margin-bottom-2"> {{ model.forecastDetails }}</p>
         {% endif %}
         {% if model.dataOverHourOld %}
-        <p class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0">We take measurements more often as the risk of flooding increases.</p>
+        <p class="govuk-body-s govuk-!-margin-top-0 govuk-!-margin-bottom-2">We take measurements more often as the risk of flooding increases.</p>
         {% endif %}
         {% if model.station.isRiver and model.hasNegativeValues %}
-        <p class="govuk-body-s govuk-!-margin-top-2 govuk-!-margin-bottom-0">Levels that are very low or below zero are normal for some stations.</p>
+        <p class="govuk-body-s govuk-!-margin-top-0 govuk-!-margin-bottom-2">Levels that are very low or below zero are normal for some stations.</p>
         {% endif %}
     </figure>
   </div>
 </div>
 
+<a href="/station-csv/{{model.station.id}}{% if model.station.qualifier == 'd' %}/downstream{% endif %}" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-2">Download height data CSV</a>
 {% endif %}
-<a href="/station-csv/{{model.station.id}}{% if model.station.qualifier == 'd' %}/downstream{% endif %}" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-4">Download height data CSV (27KB)</a>
 
 {# Impacts and thresholds #}
 {% if model.thresholds.length > 0 %}
