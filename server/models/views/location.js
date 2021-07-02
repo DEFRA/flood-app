@@ -20,7 +20,7 @@ class ViewModel {
       metaDescription: `Nearby flood alerts and warnings; latest river and sea levels and flood risk advice for residents living in the ${title} area.`,
       floodFisUrl,
       dateFormatted: 'Up to date as of ' + moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY'),
-      feedback: true,
+      feedback: false,
       dataError
     })
 
