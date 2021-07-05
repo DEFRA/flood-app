@@ -20,11 +20,15 @@ module.exports = {
             return h.view('404').code(404)
           }
 
+          // gets captured in pm2 log file
           request.log('error', {
             statusCode: statusCode,
             data: response.data,
             situation: response.message
           })
+
+          // gets captured in pm2 error file
+          console.error(response)
 
           // 400 && params input is joi error
           if (statusCode === 400 && response.message === 'Invalid request params input') {
