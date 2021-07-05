@@ -193,5 +193,9 @@ module.exports = {
   getStationsByRadius (x, y, rad) {
     const param3 = rad ? `/${rad}` : ''
     return util.getJson(`${serviceUrl}/stations-by-radius/${x}/${y}${param3}`)
+  },
+
+  getError () {
+    return util.getJson(`${serviceUrl}/error`)
   }
 }
