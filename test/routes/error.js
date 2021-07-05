@@ -4,6 +4,8 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
+const errorPages = require('../../server/plugins/error-pages')
+const boom = require('@hapi/boom')
 
 lab.experiment('Error route test', () => {
   let sandbox
@@ -27,7 +29,7 @@ lab.experiment('Error route test', () => {
 
   lab.test('GET /error', async () => {
     const getError = () => {
-      return JSON.parse('{"statusCode":400,"error":"Bad Request","message":"Test Error"}')
+      return boom.badRequest('test error')
     }
 
     const floodService = require('../../server/services/flood')
@@ -42,6 +44,8 @@ lab.experiment('Error route test', () => {
       }
     }
     await server.register(route)
+    await server.register(require('../../server/plugins/views'))
+    await server.register(errorPages)
     await server.initialize()
 
     const options = {
@@ -50,7 +54,7 @@ lab.experiment('Error route test', () => {
     }
 
     const response = await server.inject(options)
-
-    Code.expect(response.statusCode).to.equal(500)
+    Code.expect(response.statusCode).to.equal(400)
+    Code.expect(response.payload).to.contain('Sorry, there is a problem with the service')
   })
 })

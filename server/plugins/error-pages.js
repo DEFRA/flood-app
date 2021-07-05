@@ -26,8 +26,8 @@ module.exports = {
             situation: response.message
           })
 
-          // Normally a joi request query param validation error
-          if (statusCode === 400) {
+          // 400 && params input is joi error
+          if (statusCode === 400 && response.message === 'Invalid request params input') {
             return h.view('404').code(404)
           }
 
