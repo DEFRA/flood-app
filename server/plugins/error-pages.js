@@ -20,10 +20,9 @@ module.exports = {
             return h.view('404').code(404)
           }
 
-          // gets captured in pm2 log file
+          // gets captured in pm2 log file, details sent to error file below
           request.log('error', {
             statusCode: statusCode,
-            data: response.data,
             situation: response.message
           })
 
