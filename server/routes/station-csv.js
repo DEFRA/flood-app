@@ -26,12 +26,17 @@ module.exports = {
 
       const forecastData = forecast.map(item => {
         const date = moment(item.$.date + ' ' + item.$.time).format('YYYY-MM-DDTHH:mm') + 'Z'
-        return { ts: date, _: item._ , err: ''}
+        return { ts: date, _: item._, err: '' }
       })
       this.telemetry.push(...forecastData)
     }
 
-    this.telemetry.sort((a, b) => a.ts > b.ts && 1 || -1)
+    this.telemetry.sort(function (a, b) {
+      const dateA = a.ts.toLowerCase(); const dateB = b.ts.toLowerCase()
+      if (dateA < dateB) { return -1 }
+      if (dateA > dateB) { return 1 }
+      return 0
+    })
 
     const csvString = [
       [
