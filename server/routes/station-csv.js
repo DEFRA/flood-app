@@ -32,9 +32,14 @@ module.exports = {
     }
 
     this.telemetry.sort(function (a, b) {
-      const dateA = a.ts.toLowerCase(); const dateB = b.ts.toLowerCase()
-      if (dateA < dateB) { return -1 }
-      if (dateA > dateB) { return 1 }
+      const dateA = a.ts.toLowerCase()
+      const dateB = b.ts.toLowerCase()
+      if (dateA < dateB) {
+        return -1
+      }
+      if (dateA > dateB) {
+        return 1
+      }
       return 0
     })
 
