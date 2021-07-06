@@ -20,6 +20,8 @@ module.exports = {
           if (request.response.source.context) {
             request.response.source.context.fullUrl = encodeURI(fullUrl)
             request.response.source.context.isDummyData = floodService.floods.isDummyData
+            request.response.source.context.isCookieAccepted = request.state.is_cookie_accepted
+            request.response.source.context.isCookiePrefsSet = request.state.is_cookie_prefs_set
             request.response.source.context.isMockExternalHttp = mockExternalHttp
             if (request.response.source.context.model) {
               request.response.source.context.model.referer = requestHeadersReferer

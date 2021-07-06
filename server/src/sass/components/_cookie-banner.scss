@@ -20,3 +20,60 @@
     display: none !important;
   }
 }
+
+.defra-cookie-banner {
+  background-color: govuk-colour('light-grey');
+  padding:20px 0px;
+  &__button-set {
+    margin-bottom:5px;
+  }
+}
+
+.defra-cookie-banner__message {
+  position:relative;
+  margin: 0;
+}
+
+.defra-cookie-banner__confirmation {
+  @extend .defra-cookie-banner__message;
+  padding:5px 0px;
+  p {
+    @include mq ($from: tablet) {
+      max-width: 85%;
+      margin-bottom:0px;
+    }
+  }
+}
+
+.defra-cookie-banner__button-accept,
+.defra-cookie-banner__button-set {
+  @extend .govuk-button;
+  margin-bottom:10px;
+  @include mq ($from: tablet) {
+    margin-bottom:10px;
+    width:40%;
+  }
+}
+
+.defra-cookie-banner__button-accept {
+  margin-bottom:15px;
+  @include mq ($from: tablet) {
+    margin-bottom:10px;
+    margin-right:20px;
+  }
+}
+
+.defra-cookie-banner__button-hide {
+  @extend .defra-button-text;
+  @include mq ($from: tablet) {
+    position:absolute;
+    top:5px;
+    right:0px;
+  }
+}
+
+@include govuk-media-query($media-type: print) {
+  .defra-cookie-banner {
+    display: none !important;
+  }
+}
