@@ -158,46 +158,46 @@
             {% for id, group in model.stations %}
             {% if group.length > 0 %}
             <li>
-            <span class="defra-flood-list__group-title">
-              <a href="/river-and-sea-levels?river-id={{id}}">{{ group[0].river_name }}</a> <span class="govuk-visually-hidden">at:</span>
-            </span>
-            <ul class="defra-flood-list-river" data-id="{{ id }}">
-                {% for station in group %}
-                <li class="defra-flood-list-item defra-flood-list-item--{{ station.station_type }}{% if station.valueState %}-{{ station.valueState }}{% endif %}" data-river-id="{{ id }}" data-type="{{ station.station_type }}">
-                  <div class="defra-flood-list__title-column">
-                    <span class="defra-flood-list-item__title">
-                      {% if station.station_type === 'R' %}
-                        {{ station.external_name }}
-                      {% else %}
-                      <a href="/station/{{station.rloi_id}}{% if station.qualifier == 'd' %}/downstream{% endif %}">
-                        {{ station.external_name }}
-                        {% if station.iswales === true %}
-                        (Natural Resources Wales)
+              <h3 class="defra-flood-list__group-title">
+                <a href="/river-and-sea-levels?river-id={{id}}">{{ group[0].river_name }}</a> <span class="govuk-visually-hidden">at:</span>
+              </h3>
+              <ul class="defra-flood-list-river" data-id="{{ id }}">
+                  {% for station in group %}
+                  <li class="defra-flood-list-item defra-flood-list-item--{{ station.station_type }}{% if station.valueState %}-{{ station.valueState }}{% endif %}" data-river-id="{{ id }}" data-type="{{ station.station_type }}">
+                    <div class="defra-flood-list__title-column">
+                      <span class="defra-flood-list-item__title">
+                        {% if station.station_type === 'R' %}
+                          {{ station.external_name }}
+                        {% else %}
+                        <a href="/station/{{station.rloi_id}}{% if station.qualifier == 'd' %}/downstream{% endif %}">
+                          {{ station.external_name }}
+                          {% if station.iswales === true %}
+                          (Natural Resources Wales)
+                          {% endif %}
+                          {% if station.qualifier == 'd' %}
+                          (downstream)
+                          {% endif %}
+                        </a>
                         {% endif %}
-                        {% if station.qualifier == 'd' %}
-                        (downstream)
-                        {% endif %}
-                      </a>
-                      {% endif %}
-                      <span class="defra-flood-list-data__description">{{ station.sub }}</span>
-                    </span>
-                  </div>
-                  <div class="defra-flood-list__data-column">
-                    <dl class="defra-flood-list-data">
-                      {% for col in station.cols %}
-                      <div class="defra-flood-list-data__column">
-                        <dt class="govuk-visually-hidden">{{ col.title }}</dt>
-                        <dd>
-                          <span class="defra-flood-list-data__value">{{ col.value }}</span>
-                          <span class="defra-flood-list-data__description" aria-hidden="true">{{ col.description }}</span>
-                        </dd>
-                      </div>
-                      {% endfor %}
-                    </dl>
-                  </div>
-                </li>
-                {% endfor %}
-            </ul>
+                        <span class="defra-flood-list-data__description">{{ station.sub }}</span>
+                      </span>
+                    </div>
+                    <div class="defra-flood-list__data-column">
+                      <dl class="defra-flood-list-data">
+                        {% for col in station.cols %}
+                        <div class="defra-flood-list-data__column">
+                          <dt class="govuk-visually-hidden">{{ col.title }}</dt>
+                          <dd>
+                            <span class="defra-flood-list-data__value">{{ col.value }}</span>
+                            <span class="defra-flood-list-data__description" aria-hidden="true">{{ col.description }}</span>
+                          </dd>
+                        </div>
+                        {% endfor %}
+                      </dl>
+                    </div>
+                  </li>
+                  {% endfor %}
+              </ul>
             </li>
             {% endif %}
             {% endfor %}
