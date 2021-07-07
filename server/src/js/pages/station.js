@@ -61,7 +61,7 @@ if (chart) {
     // Add threshold buttons
     Array.from(document.querySelectorAll('.defra-flood-impact-list__value')).forEach(value => {
       const button = document.createElement('button')
-      button.innerHTML = 'Show on chart'
+      button.innerHTML = 'Show on chart<span class="govuk-visually-hidden"> (Visual only)</span>'
       button.className = 'defra-button-text-s'
       button.addEventListener('click', function (e) {
         lineChart.addThreshold({
