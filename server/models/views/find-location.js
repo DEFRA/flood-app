@@ -19,6 +19,11 @@ class ViewModel {
 
     this.locationInput = {
       label: {
+        text: 'Where do you want to check?',
+        classes: 'govuk-label--l',
+        isPageHeading: true
+      },
+      hint: {
         text: 'Town, city or postcode in England'
       },
       id: 'location',
