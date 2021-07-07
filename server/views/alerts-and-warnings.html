@@ -65,10 +65,10 @@
             {% for group in model.floods %}
                 {% if group.count > 0 %}
                 <li id="{{ group.severity.pluralisedHash }}" class="defra-flood-list__group">
-                    <span class="defra-flood-list__group-title">
+                    <h3 class="defra-flood-list__group-title">
                         {{ group.count }} {% if group.count != 1 %}{{ group.severity.pluralisedTitle | lower }}{% else %}{{ group.severity.title | lower }}{% endif %}
-                        <span>{{ group.severity.subTitle }}</span>
-                    </span>
+                    </h3>
+                    <p>{{ group.severity.subTitle }}</p>
                     <ul class="defra-flood-list__items defra-flood-list__items--warnings">
                     {% for item in group.floods %}
                         {{ item.html | safe }}
