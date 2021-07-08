@@ -20,7 +20,11 @@
         display: none;
     }
     .govuk-tabs__title {
-        @include defra-visually-hidden();
+        display: none;
+        @include mq ($from: tablet) {
+            display: block;
+            @include defra-visually-hidden();
+        }
     }
     border-bottom:1px solid $govuk-border-colour;
     margin-bottom:10px;
