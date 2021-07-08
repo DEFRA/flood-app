@@ -42,11 +42,13 @@
 
         <p>Today there's a {{ model.tabs.dailyRisk[0] | lower }} risk of flooding.</p>
 
-            {% for messageId, sources in model.tabs.tab1 %}
-            {% if loop.first %}<p>{% endif %}
-                {% include "partials/outlook-region-messages.html" %}
-            {% if loop.last %}</p>{% endif %}
-            {% endfor %}
+        {% for messageId, sources in model.tabs.tab1 %}
+        {% if messageId !== '1-i2-l2' %}
+        {% if loop.first %}<p>{% endif %}
+            {% include "partials/outlook-region-messages.html" %}
+        {% if loop.last %}</p>{% endif %}
+        {% endif %}
+        {% endfor %}
 
         {% else %}
 
