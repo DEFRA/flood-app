@@ -83,10 +83,11 @@
                 <div class="defra-facets-details__text">
                   <div class="defra-facets-filter">
                     <label class="govuk-visually-hidden" for="filter-river-name">Filter river name</label>
-                    <input id="filter-river-name" class="defra-facets-filter__input govuk-visually-hidden"></input>
+                    <span class="govuk-visually-hidden" id="filter-river-name-hint">Updates on key press</span>
+                    <input id="filter-river-name" class="defra-facets-filter__input govuk-visually-hidden" aria-describedby="filter-river-name-hint"></input>
                   </div>
                   <fieldset class="govuk-fieldset">
-                    <legend class="govuk-visually-hidden">River name</legend>
+                    <legend class="govuk-visually-hidden">River name<span class="govuk-visually-hidden"> (Updates on select)</span></legend>
                     <ul class="govuk-checkboxes govuk-checkboxes--small defra-facets-river__list">
                       {% for river in model.rivers %}
                         <li class="govuk-checkboxes__item" data-river="{{ river.river_name }}" data-id="{{ river.river_id }}">
@@ -104,7 +105,7 @@
                 </summary>
                 <div class="defra-facets-details__text">
                   <fieldset class="govuk-fieldset">
-                    <legend class="govuk-visually-hidden">Type</legend>
+                    <legend class="govuk-visually-hidden">Type<span class="govuk-visually-hidden"> (Updates on select)</span></legend>
                     <ul class="govuk-checkboxes govuk-checkboxes--small defra-facets-types__list">
                       {% if model.checkRivers %} 
                       <li class="govuk-checkboxes__item">
@@ -150,7 +151,7 @@
 
     <div class="govuk-grid-column-two-thirds">
         <div class="defra-search-summary" id="searchSummary">
-            <h2 class="defra-search-summary__count">{{ model.countLevels }} level{% if model.countLevels != 1 %}s{% endif %}</h2>
+            <h2 class="defra-search-summary__count" aria-live="polite">{{ model.countLevels }} level{% if model.countLevels != 1 %}s{% endif %}</h2>
             <span id="map"></span>
         </div>
         {% if model.countLevels %}
