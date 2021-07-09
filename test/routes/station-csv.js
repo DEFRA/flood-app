@@ -137,7 +137,7 @@ lab.experiment('Routes test - station-csv', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.result).to.equal('Timestamp,Level\n2020-03-13T01:30Z,1.354\n2021-07-06T09:30Z,0.796')
+    Code.expect(response.result).to.equal('Timestamp,Height (m),Type(observed/forecast)\n2020-03-13T01:30Z,1.354,observed\n2021-07-06T09:30Z,0.796,forecast')
     Code.expect(response.headers['content-type']).to.include('text/csv')
   })
   lab.test('GET /station-csv/5146', async () => {
@@ -210,7 +210,7 @@ lab.experiment('Routes test - station-csv', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.result).to.equal('Timestamp,Level\n2020-03-13T01:30Z,1.354')
+    Code.expect(response.result).to.equal('Timestamp,Height (m)\n2020-03-13T01:30Z,1.354')
     Code.expect(response.headers['content-type']).to.include('text/csv')
   })
   lab.test('GET /station-csv/7022/downstream downstream station', async () => {
@@ -283,7 +283,7 @@ lab.experiment('Routes test - station-csv', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.result).to.equal('Timestamp,Level\n2020-03-13T01:30Z,1.354')
+    Code.expect(response.result).to.equal('Timestamp,Height (m)\n2020-03-13T01:30Z,1.354')
     Code.expect(response.headers['content-type']).to.include('text/csv')
   })
 })

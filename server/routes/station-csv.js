@@ -12,12 +12,18 @@ module.exports = {
 
     const station = await floodService.getStationById(id, direction)
 
+    const stationName = station.external_name.replace(/\s/g, '-')
+
     const [telemetry, thresholds] = await Promise.all([
       floodService.getStationTelemetry(id, direction),
       floodService.getStationForecastThresholds(id)
     ])
 
     this.telemetry = telemetry
+
+    this.telemetry.forEach(function (item) {
+      item.type = 'observed'
+    })
 
     // Forecast station
     if (thresholds.length) {
@@ -26,11 +32,10 @@ module.exports = {
 
       const forecastData = forecast.map(item => {
         const date = moment(item.$.date + ' ' + item.$.time).format('YYYY-MM-DDTHH:mm') + 'Z'
-        return { ts: date, _: item._, err: '' }
+        return { ts: date, _: item._, type: 'forecast' }
       })
       this.telemetry.push(...forecastData)
     }
-
     this.telemetry.sort(function (a, b) {
       const dateA = a.ts.toLowerCase()
       const dateB = b.ts.toLowerCase()
@@ -43,22 +48,39 @@ module.exports = {
       return 0
     })
 
-    const csvString = [
-      [
-        'Timestamp',
-        'Level'
-      ],
-      ...this.telemetry.map(item => [
-        item.ts,
-        item._
-      ])
-    ]
-      .map(e => e.join(','))
-      .join('\n')
+    if (thresholds.length) {
+      this.csvString = [
+        [
+          'Timestamp',
+          'Height (m)',
+          'Type(observed/forecast)'
+        ],
+        ...this.telemetry.map(item => [
+          item.ts,
+          item._,
+          item.type
+        ])
+      ]
+        .map(e => e.join(','))
+        .join('\n')
+    } else {
+      this.csvString = [
+        [
+          'Timestamp',
+          'Height (m)'
+        ],
+        ...this.telemetry.map(item => [
+          item.ts,
+          item._
+        ])
+      ]
+        .map(e => e.join(','))
+        .join('\n')
+    }
 
-    const response = h.response(csvString)
+    const response = h.response(this.csvString)
     response.type('text/csv')
-    response.header('Content-disposition', 'attachment; filename=station-' + id + '-height-data.csv')
+    response.header('Content-disposition', 'attachment; filename=' + stationName + '-height-data.csv')
     return response
   }
 }
