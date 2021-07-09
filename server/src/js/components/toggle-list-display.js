@@ -13,9 +13,6 @@ const ToggleListDisplay = (container, options) => {
   container.appendChild(button)
 
   const toggleDisplay = () => {
-    // Toggle Button
-    button.innerText = `${isExpanded ? 'Hide' : 'Show'} ${options.btnText}`
-    button.setAttribute('aria-expanded', isExpanded)
     // Toggle list
     forEach(items, (item) => {
       item.style.display = isExpanded ? 'block' : 'none'
