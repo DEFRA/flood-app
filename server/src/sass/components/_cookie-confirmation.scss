@@ -1,0 +1,7 @@
+.defra-cookie-settings__confirmation {
+    @extend .govuk-error-summary;
+    border-color: govuk-colour('green');
+    p:last-child {
+        margin-bottom: 0px;
+    }
+}

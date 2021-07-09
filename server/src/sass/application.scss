@@ -32,6 +32,7 @@ $govuk-breakpoints: (
 
 // Components
 @import "components/cookie-banner";
+@import "components/cookie-confirmation";
 @import "components/flood-status";
 @import "components/flood-impact-list";
 @import "components/facets";

@@ -216,6 +216,30 @@ lab.experiment('Get Routes test', () => {
     Code.expect(response.payload).to.include('cookies')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
+  lab.test('GET /cookie-preferences', async () => {
+    const plugin = {
+      plugin: {
+        name: 'cookie-preferences',
+        register: (server, options) => {
+          server.route(require('../../server/routes/cookie-preferences'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(plugin)
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/cookie-preferences'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('Set your cookie preferences')
+    Code.expect(response.headers['content-type']).to.include('text/html')
+  })
   lab.test('GET /terms-and-conditions', async () => {
     const plugin = {
       plugin: {
