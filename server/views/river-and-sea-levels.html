@@ -170,7 +170,7 @@
                       {% if station.station_type === 'R' %}
                         {{ station.external_name }}
                       {% else %}
-                      <a href="/station/{{ station.rloi_id | urlencode }}{% if station.qualifier == 'd' %}/downstream{% endif %}">
+                      <a href="/station/{{ station.rloi_id }}{% if station.qualifier == 'd' %}/downstream{% endif %}">
                         {{ station.external_name }}
                         {% if station.iswales === true %}
                         (Natural Resources Wales)
