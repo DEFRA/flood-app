@@ -63,11 +63,13 @@
 
         <p>On {{ model.tabs.dayName[1] }} the risk of flooding {{ model.tabs.trend[1] }} {{ model.tabs.dailyRisk[1] | lower }}.</p>
 
-            {% for messageId, sources in model.tabs.tab2 %}
-                {% if loop.first %}<p>{% endif %}
-                    {% include "partials/outlook-region-messages.html" %}
-                {% if loop.last %}</p>{% endif %}
-            {% endfor %}
+        {% for messageId, sources in model.tabs.tab2 %}
+        {% if messageId !== '1-i2-l2' %}
+        {% if loop.first %}<p>{% endif %}
+        {% include "partials/outlook-region-messages.html" %}
+        {% if loop.last %}</p>{% endif %}
+        {% endif %}
+        {% endfor %}
 
         {% else %}
 
@@ -84,12 +86,14 @@
         {% set dayNum = loop.index + 2 %}
 
         <p> On {{ model.tabs.dayName[dayNum - 1] }} the risk of flooding {{ model.tabs.trend[dayNum - 1]}} {{ model.tabs.dailyRisk[dayNum - 1] | lower }}.</p>
-            {% for messageId, sources in day %}
-            {% if loop.first %}<p>{% endif %}
-                {% include "partials/outlook-region-messages.html" %}
-            {% if loop.last %}</p>{% endif %}
-            {% endfor %}
-
+            
+        {% for messageId, sources in day %}
+        {% if messageId !== '1-i2-l2' %}
+        {% if loop.first %}<p>{% endif %}
+        {% include "partials/outlook-region-messages.html" %}
+        {% if loop.last %}</p>{% endif %}
+        {% endif %}
+        {% endfor %}
         {% endfor %}
 
         {% else %}
