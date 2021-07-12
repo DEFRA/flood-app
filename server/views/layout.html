@@ -67,7 +67,7 @@
 {% endblock %}
 
 {% block header %}
-{% if not isCookiePrefsSet %}
+{% if not seenCookieMessage %}
 {%  include "partials/cookie-banner.html" %}
 {% endif %}
 
@@ -116,7 +116,7 @@
 
 {% block bodyEnd %}
   {# Google Analytics #}
-  {% if gaAccId and isCookieAccepted %}
+  {% if gaAccId and setCookieUsage %}
     <script type="text/javascript">
       var analyticsAccount = '{{gaAccId}}'
 

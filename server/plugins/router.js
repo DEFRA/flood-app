@@ -22,7 +22,6 @@ const routes = [].concat(
   require('../routes/alerts-and-warnings'),
   require('../routes/river-and-sea-levels'),
   require('../routes/cookies'),
-  require('../routes/cookie-preferences'),
   require('../routes/terms-and-conditions'),
   require('../routes/privacy-notice'),
   require('../routes/status'),
