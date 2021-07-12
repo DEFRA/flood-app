@@ -31,7 +31,9 @@ module.exports = {
       const forecast = values.SetofValues[0].Value
 
       const forecastData = forecast.map(item => {
-        const date = moment(item.$.date + ' ' + item.$.time).format('YYYY-MM-DDTHH:mm') + 'Z'
+        const itemDate = item.$.date
+        const itemTime = item.$.time
+        const date = moment(`${itemDate} ${itemTime}`).format('YYYY-MM-DDTHH:mm') + 'Z'
         return { ts: date, _: item._, type: 'forecast' }
       })
       this.telemetry.push(...forecastData)
@@ -80,7 +82,7 @@ module.exports = {
 
     const response = h.response(this.csvString)
     response.type('text/csv')
-    response.header('Content-disposition', 'attachment; filename=' + stationName + '-height-data.csv')
+    response.header('Content-disposition', `attachment; filename=${stationName}-height-data.csv`)
     return response
   }
 }
