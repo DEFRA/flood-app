@@ -26,7 +26,9 @@ const routes = [].concat(
   require('../routes/privacy-notice'),
   require('../routes/status'),
   require('../routes/stations-overview'),
-  require('../routes/about-levels')
+  require('../routes/about-levels'),
+  require('../routes/error'),
+  require('../routes/station-csv')
 )
 
 module.exports = {
