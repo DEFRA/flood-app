@@ -27,7 +27,8 @@ const routes = [].concat(
   require('../routes/status'),
   require('../routes/stations-overview'),
   require('../routes/about-levels'),
-  require('../routes/error')
+  require('../routes/error'),
+  require('../routes/station-csv')
 )
 
 module.exports = {
