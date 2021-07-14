@@ -36,8 +36,14 @@ module.exports = {
         const date = moment(`${itemDate} ${itemTime}`).format('YYYY-MM-DDTHH:mm') + 'Z'
         return { ts: date, _: item._, type: 'forecast' }
       })
-      this.telemetry.push(...forecastData)
+
+      // Truncate forecast data to be 36 hours from forecast creation
+      const endate = moment(forecastData[0].ts).add(36, 'hours')
+      const filteredArray = forecastData.filter(obj => moment(obj.ts) < endate)
+
+      this.telemetry.push(...filteredArray)
     }
+
     this.telemetry.sort(function (a, b) {
       const dateA = a.ts.toLowerCase()
       const dateB = b.ts.toLowerCase()
