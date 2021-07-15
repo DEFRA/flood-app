@@ -17,6 +17,7 @@ lab.experiment('Routes test - location - 2', () => {
     delete require.cache[require.resolve('../../server/services/location.js')]
     delete require.cache[require.resolve('../../server/routes/location.js')]
     delete require.cache[require.resolve('../../server/services/flood.js')]
+    delete require.cache[require.resolve('../../server/services/server-methods.js')]
 
     sandbox = await sinon.createSandbox()
     server = Hapi.server({
@@ -40,6 +41,9 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
 
@@ -84,6 +88,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/session'))
     await server.register(require('../../server/plugins/views'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -107,13 +114,13 @@ lab.experiment('Routes test - location - 2', () => {
     }
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
-    const fakeOutlookData = () => {}
+    const fakeOutlookData = () => []
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -132,6 +139,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -156,13 +166,13 @@ lab.experiment('Routes test - location - 2', () => {
     }
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
-    const fakeOutlookData = () => {}
+    const fakeOutlookData = () => { }
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
     const util = require('../../server/util')
     sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
@@ -179,6 +189,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -211,6 +224,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -276,6 +292,7 @@ lab.experiment('Routes test - location - 2', () => {
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(() => { })
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -294,6 +311,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -332,10 +352,10 @@ lab.experiment('Routes test - location - 2', () => {
             severity_changed: '2020-01-22T15:22:28.240Z',
             situation_changed: '2020-01-22T15:22:28.240Z',
             situation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ex sapien, luctus quis neque sit amet, rutrum semper odio. Mauris metus elit, semper in libero sed, vulputate placerat ante. In bibendum in libero in placerat. Aenean et ante nulla. Nullam tempus leo vitae mattis aliquam. Etiam tempus dignissim efficitur. Nam luctus tempus risus sit amet porttitor. Integer quis dapibus arcu, eu eleifend arcu. Vestibulum non nunc elit. Donec facilisis lorem tristique ultricies dapibus. Sed eleifend sit amet nibh ut tincidunt.\n' +
-            '\n' +
-            'Quisque nec ultrices risus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque viverra, tortor sit amet condimentum laoreet, lorem ante dictum ante, nec hendrerit nisl lacus sit amet diam. Praesent ut ornare lorem. Quisque placerat sollicitudin enim, sit amet laoreet enim consectetur in. Praesent nec nunc a ligula cursus cursus.\n' +
-            '\n' +
-            'Proin a dictum mauris, eget pulvinar augue. Pellentesque non lectus nibh. Pellentesque convallis ultricies enim, vel lacinia metus rhoncus vitae. Donec at porta tellus. In hac habitasse platea dictumst. Vestibulum mollis mollis nibh, sit amet maximus sem suscipit eu. Etiam elementum sed nulla quis tincidunt.'
+              '\n' +
+              'Quisque nec ultrices risus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque viverra, tortor sit amet condimentum laoreet, lorem ante dictum ante, nec hendrerit nisl lacus sit amet diam. Praesent ut ornare lorem. Quisque placerat sollicitudin enim, sit amet laoreet enim consectetur in. Praesent nec nunc a ligula cursus cursus.\n' +
+              '\n' +
+              'Proin a dictum mauris, eget pulvinar augue. Pellentesque non lectus nibh. Pellentesque convallis ultricies enim, vel lacinia metus rhoncus vitae. Donec at porta tellus. In hac habitasse platea dictumst. Vestibulum mollis mollis nibh, sit amet maximus sem suscipit eu. Etiam elementum sed nulla quis tincidunt.'
           },
           {
             ta_code: '122WAF938',
@@ -352,10 +372,10 @@ lab.experiment('Routes test - location - 2', () => {
             severity_changed: '2020-01-22T15:22:28.240Z',
             situation_changed: '2020-01-22T15:22:28.240Z',
             situation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ex sapien, luctus quis neque sit amet, rutrum semper odio. Mauris metus elit, semper in libero sed, vulputate placerat ante. In bibendum in libero in placerat. Aenean et ante nulla. Nullam tempus leo vitae mattis aliquam. Etiam tempus dignissim efficitur. Nam luctus tempus risus sit amet porttitor. Integer quis dapibus arcu, eu eleifend arcu. Vestibulum non nunc elit. Donec facilisis lorem tristique ultricies dapibus. Sed eleifend sit amet nibh ut tincidunt.\n' +
-            '\n' +
-            'Quisque nec ultrices risus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque viverra, tortor sit amet condimentum laoreet, lorem ante dictum ante, nec hendrerit nisl lacus sit amet diam. Praesent ut ornare lorem. Quisque placerat sollicitudin enim, sit amet laoreet enim consectetur in. Praesent nec nunc a ligula cursus cursus.\n' +
-            '\n' +
-            'Proin a dictum mauris, eget pulvinar augue. Pellentesque non lectus nibh. Pellentesque convallis ultricies enim, vel lacinia metus rhoncus vitae. Donec at porta tellus. In hac habitasse platea dictumst. Vestibulum mollis mollis nibh, sit amet maximus sem suscipit eu. Etiam elementum sed nulla quis tincidunt.'
+              '\n' +
+              'Quisque nec ultrices risus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque viverra, tortor sit amet condimentum laoreet, lorem ante dictum ante, nec hendrerit nisl lacus sit amet diam. Praesent ut ornare lorem. Quisque placerat sollicitudin enim, sit amet laoreet enim consectetur in. Praesent nec nunc a ligula cursus cursus.\n' +
+              '\n' +
+              'Proin a dictum mauris, eget pulvinar augue. Pellentesque non lectus nibh. Pellentesque convallis ultricies enim, vel lacinia metus rhoncus vitae. Donec at porta tellus. In hac habitasse platea dictumst. Vestibulum mollis mollis nibh, sit amet maximus sem suscipit eu. Etiam elementum sed nulla quis tincidunt.'
           }
         ]
       }
@@ -363,13 +383,13 @@ lab.experiment('Routes test - location - 2', () => {
 
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
-    const fakeOutlookData = () => {}
+    const fakeOutlookData = () => { }
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
     const fakeGetJson = () => {
       return {
@@ -432,6 +452,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -462,6 +485,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -530,6 +556,7 @@ lab.experiment('Routes test - location - 2', () => {
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(() => { })
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -548,6 +575,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -598,13 +628,13 @@ lab.experiment('Routes test - location - 2', () => {
     }
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
-    const fakeOutlookData = () => {}
+    const fakeOutlookData = () => { }
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -623,6 +653,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -646,13 +679,13 @@ lab.experiment('Routes test - location - 2', () => {
     const fakeFloodsData = () => []
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
-    const fakeOutlookData = () => {}
+    const fakeOutlookData = () => { }
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
     const fakeGetJson = () => data.scotlandGetJson
 
     const util = require('../../server/util')
@@ -670,6 +703,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -698,6 +734,7 @@ lab.experiment('Routes test - location - 2', () => {
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(() => { })
     const fakeGetJson = () => data.warringtonGetJson
 
     const util = require('../../server/util')
@@ -715,6 +752,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -824,13 +864,13 @@ lab.experiment('Routes test - location - 2', () => {
     }
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
-    const fakeOutlookData = () => {}
+    const fakeOutlookData = () => { }
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -849,6 +889,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -910,13 +953,13 @@ lab.experiment('Routes test - location - 2', () => {
     }
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
-    const fakeOutlookData = () => {}
+    const fakeOutlookData = () => { }
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -935,6 +978,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -959,13 +1005,13 @@ lab.experiment('Routes test - location - 2', () => {
     }
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
-    const fakeOutlookData = () => {}
+    const fakeOutlookData = () => { }
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -984,6 +1030,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -1051,6 +1100,7 @@ lab.experiment('Routes test - location - 2', () => {
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(() => { })
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -1069,6 +1119,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -1213,6 +1266,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -1266,6 +1322,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -1292,14 +1351,14 @@ lab.experiment('Routes test - location - 2', () => {
 
     const fakeOutlookData = () => {
       const outlook = { statement: { id: '1234' } }
-      return outlook
+      return outlook.statement
     }
 
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -1319,6 +1378,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -1352,7 +1414,7 @@ lab.experiment('Routes test - location - 2', () => {
     sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'outlook').callsFake(fakeOutlookData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
@@ -1372,6 +1434,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -1445,6 +1510,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -1518,6 +1586,9 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {

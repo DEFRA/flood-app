@@ -55,6 +55,7 @@ DEFRA employees can find examples of environment variables stored in our private
 | FLOOD_APP_SESSION_PASSWORD | cookie password | yes | | |
 | FLOOD_APP_REDIS_HOST | redis cache host | no | | |  |
 | FLOOD_APP_REDIS_PORT | redis cache port | no | | |  |
+| FLOOD_APP_REDIS_PASSWORD | redis cache password | no | | | |
 | FLOOD_APP_LOCAL_CACHE | to cache or not | no | false | |  |
 | FLOOD_APP_GA_OPT_ID | google opt id | no | | |  |
 

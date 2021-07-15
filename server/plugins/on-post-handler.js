@@ -33,7 +33,7 @@ module.exports = {
           } else {
             request.response.source.context = {
               fullUrl: encodeURI(fullUrl),
-              isDummyData: floodService.floods.isDummyData,
+              isDummyData: false,
               isMockExternalHttp: floodService.mockExternalHttp,
               model: {
                 referer: requestHeadersReferer

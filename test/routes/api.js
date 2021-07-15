@@ -11,6 +11,7 @@ lab.experiment('API routes test', () => {
 
   lab.beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
+    delete require.cache[require.resolve('../../server/services/server-methods.js')]
 
     sandbox = await sinon.createSandbox()
 
@@ -47,6 +48,9 @@ lab.experiment('API routes test', () => {
 
     await server.register(require('../../server/plugins/session'))
     await server.register(route)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
     await server.initialize()
 
     const options = {
@@ -82,6 +86,9 @@ lab.experiment('API routes test', () => {
 
     await server.register(require('../../server/plugins/session'))
     await server.register(route)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
     await server.initialize()
 
     const options = {

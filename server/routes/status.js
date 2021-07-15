@@ -1,5 +1,7 @@
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
+const OutlookModel = require('../models/outlook')
+const FloodsModel = require('../models/floods')
 
 module.exports = {
   method: 'GET',
@@ -13,6 +15,7 @@ module.exports = {
       locationEnd = new Date()
     } catch (err) {
       console.error(`Location search error: [${err.name}] [${err.message}]`)
+      console.error(err)
       place = null
       locationEnd = new Date()
     }
@@ -69,14 +72,30 @@ module.exports = {
       ffoi = null
     }
 
+    // outlook
+    let outlook
+    try {
+      outlook = new OutlookModel(await floodService.getOutlook())
+    } catch (err) {
+      outlook = null
+    }
+
+    // floods
+    let floods
+    try {
+      floods = new FloodsModel(await floodService.getFloods())
+    } catch (err) {
+      floods = null
+    }
+
     const model = {
       now: new Date(),
       pageTitle: 'Status',
-      fwisDate: new Date(parseInt(floodService.floods.timestamp) * 1000),
-      fwisAgeMinutes: parseInt((new Date() - new Date(parseInt(floodService.floods.timestamp) * 1000)) / (1000 * 60)),
-      fwisCount: floodService.floods.floods.length || 0,
-      outlookTimestamp: new Date(floodService.outlook.timestampOutlook),
-      outlookAgeHours: parseInt((new Date() - new Date(floodService.outlook.timestampOutlook)) / (1000 * 60 * 60)),
+      fwisDate: new Date(parseInt(floods.timestamp) * 1000),
+      fwisAgeMinutes: parseInt((new Date() - new Date(parseInt(floods.timestamp) * 1000)) / (1000 * 60)),
+      fwisCount: floods.floods.length || 0,
+      outlookTimestamp: new Date(outlook.timestampOutlook),
+      outlookAgeHours: parseInt((new Date() - new Date(outlook.timestampOutlook)) / (1000 * 60 * 60)),
       locationService: place ? 'Successful' : 'Failed',
       locationServicems: locationEnd - locationStart,
       service: service ? 'Successful' : 'Failed',

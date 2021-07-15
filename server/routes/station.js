@@ -1,6 +1,5 @@
 const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
-const floodService = require('../services/flood')
 const ViewModel = require('../models/views/station')
 const additionalWelshStations = [4162, 4170, 4173, 4174, 4176]
 const { nrwStationUrl } = require('../config')
@@ -20,7 +19,7 @@ module.exports = {
       return h.redirect(nrwStationUrl + id)
     }
 
-    const station = await floodService.getStationById(id, direction)
+    const station = await request.server.methods.flood.getStationById(id, direction)
 
     // If upstream param is specified redirect route of station
     if (request.params.direction === 'upstream') {
@@ -39,11 +38,11 @@ module.exports = {
 
     // batching all the service calls together, greatly improves page performance
     const [telemetry, thresholds, impacts, warningsAlerts, river] = await Promise.all([
-      floodService.getStationTelemetry(id, direction),
-      floodService.getStationForecastThresholds(id),
-      floodService.getImpactData(station.rloi_id),
-      floodService.getWarningsAlertsWithinStationBuffer(station.rloi_id),
-      floodService.getRiverStationByStationId(id)
+      request.server.methods.flood.getStationTelemetry(id, direction),
+      request.server.methods.flood.getStationForecastThresholds(id),
+      request.server.methods.flood.getImpactData(station.rloi_id),
+      request.server.methods.flood.getWarningsAlertsWithinStationBuffer(station.rloi_id),
+      request.server.methods.flood.getRiverStationByStationId(id)
     ])
 
     if (station.status === 'Closed') {
@@ -55,7 +54,7 @@ module.exports = {
     // Check if it's a forecast station
     if (thresholds.length) {
       // Forecast station
-      const values = await floodService.getStationForecastData(station.wiski_id)
+      const values = await request.server.methods.flood.getStationForecastData(station.wiski_id)
       const forecast = { thresholds, values }
       const model = new ViewModel({ station, telemetry, forecast, impacts, river, warningsAlerts })
       return h.view('station', { model })

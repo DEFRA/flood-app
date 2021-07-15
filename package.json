@@ -18,7 +18,7 @@
     "build:css": "build/build-css",
     "build": "build/build",
     "lint": "standard",
-    "unit-test": "lab --verbose -c -r console -o stdout -r lcov -o coverage/lcov.info",
+    "unit-test": "FLOOD_APP_LOCAL_CACHE=true && lab --verbose -c -r console -o stdout -r lcov -o coverage/lcov.info",
     "test": "npm run lint && npm run unit-test",
     "postinstall": "npm run build"
   },
@@ -30,6 +30,7 @@
     "@babel/plugin-transform-runtime": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
     "@hapi/boom": "^9.1.2",
+    "@hapi/catbox-redis": "^6.0.2",
     "@hapi/code": "^8.0.3",
     "@hapi/good": "^9.0.1",
     "@hapi/good-console": "^9.0.1",
