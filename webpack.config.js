@@ -6,6 +6,7 @@ module.exports = (env, argv) => ({
   devtool: !inDev ? false : 'source-map',
   entry: {
     core: './server/src/js/core',
+    cookies: './server/src/js/cookies',
     'alerts-and-warnings': './server/src/js/pages/alerts-and-warnings',
     impacts: './server/src/js/pages/impacts',
     national: './server/src/js/pages/national',
