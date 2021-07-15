@@ -126,7 +126,42 @@ lab.experiment('Routes test - station-csv', () => {
           date: '2021-07-06',
           time: '08:34:02'
         },
-        SetofValues: [{ $: [{ parameter: 'Water Level', qualifier: 'Stage', dataType: 'Instantaneous', units: 'm', period: '15 min', characteristic: 'Forecast', startDate: '2021-07-06', startTime: '09:30:00', endDate: '2021-07-08', endTime: '09:45:00' }], Value: [{ _: '0.796', $: { date: '2021-07-06', time: '09:30:00', flag1: '1' } }] }]
+        SetofValues: [{
+          $: [{
+            parameter: 'Water Level',
+            qualifier: 'Stage',
+            dataType: 'Instantaneous',
+            units: 'm',
+            period: '15 min',
+            characteristic: 'Forecast',
+            startDate: '2021-07-06',
+            startTime: '09:30:00',
+            endDate: '2021-07-08',
+            endTime: '09:45:00'
+          }],
+          Value: [{
+            _: '0.796',
+            $: {
+              date: '2021-07-06',
+              time: '09:30:00',
+              flag1: '1'
+            }
+          }, {
+            _: '0.796',
+            $: {
+              date: '2021-07-06',
+              time: '09:45:00',
+              flag1: '1'
+            }
+          }, {
+            _: '0.796',
+            $: {
+              date: '2021-07-09',
+              time: '09:45:00',
+              flag1: '1'
+            }
+          }]
+        }]
       }
     }
 
@@ -136,8 +171,10 @@ lab.experiment('Routes test - station-csv', () => {
     sandbox.stub(floodService, 'getStationForecastData').callsFake(fakeForecastData)
 
     const response = await server.inject(options)
+
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.result).to.equal('Timestamp,Height (m),Type(observed/forecast)\n2020-03-13T01:30Z,1.354,observed\n2021-07-06T09:30Z,0.796,forecast')
+    Code.expect(response.result).to.equal('Timestamp (UTC),Height (m),Type(observed/forecast)\n2020-03-13T01:30:00Z,1.354,observed\n2021-07-06T09:30:00Z,0.796,forecast\n2021-07-06T09:45:00Z,0.796,forecast')
+    Code.expect(response.result).to.not.contain('n2021-07-09T09:45:00Z,0.796,forecast')
     Code.expect(response.headers['content-type']).to.include('text/csv')
   })
   lab.test('GET /station-csv/5146', async () => {
@@ -210,7 +247,7 @@ lab.experiment('Routes test - station-csv', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.result).to.equal('Timestamp,Height (m)\n2020-03-13T01:30Z,1.354')
+    Code.expect(response.result).to.equal('Timestamp (UTC),Height (m)\n2020-03-13T01:30:00Z,1.354')
     Code.expect(response.headers['content-type']).to.include('text/csv')
   })
   lab.test('GET /station-csv/7022/downstream downstream station', async () => {
@@ -283,7 +320,7 @@ lab.experiment('Routes test - station-csv', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.result).to.equal('Timestamp,Height (m)\n2020-03-13T01:30Z,1.354')
+    Code.expect(response.result).to.equal('Timestamp (UTC),Height (m)\n2020-03-13T01:30:00Z,1.354')
     Code.expect(response.headers['content-type']).to.include('text/csv')
   })
 })

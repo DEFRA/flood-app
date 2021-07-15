@@ -23,11 +23,13 @@ module.exports = {
 
     this.telemetry.forEach(function (item) {
       item.type = 'observed'
+      item.ts = moment.utc(item.ts).format()
     })
 
     // Forecast station
     if (thresholds.length) {
       const values = await floodService.getStationForecastData(station.wiski_id)
+
       const forecast = values.SetofValues[0].Value
 
       const forecastData = forecast.map(item => {
@@ -38,15 +40,27 @@ module.exports = {
       })
 
       // Truncate forecast data to be 36 hours from forecast creation
-      const endate = moment(forecastData[0].ts).add(36, 'hours')
-      const filteredArray = forecastData.filter(obj => moment(obj.ts) < endate)
+      this.date = moment(values.forecast_date)
+      this.forecastStart = moment(forecastData[0].ts)
 
-      this.telemetry.push(...filteredArray)
+      this.truncateDate = moment(this.forecastStart).add(36, 'hours')
+
+      forecastData.forEach(function (value) {
+        value.ts = moment(value.ts)
+
+        if (value.ts.isBefore(this.forecastStart) || value.ts.isAfter(this.truncateDate)) {
+          return
+        }
+
+        value.ts = moment.utc(value.ts).format()
+
+        this.telemetry.push(value)
+      }, this)
     }
 
     this.telemetry.sort(function (a, b) {
-      const dateA = a.ts.toLowerCase()
-      const dateB = b.ts.toLowerCase()
+      const dateA = a.ts
+      const dateB = b.ts
       if (dateA < dateB) {
         return -1
       }
@@ -59,7 +73,7 @@ module.exports = {
     if (thresholds.length) {
       this.csvString = [
         [
-          'Timestamp',
+          'Timestamp (UTC)',
           'Height (m)',
           'Type(observed/forecast)'
         ],
@@ -74,7 +88,7 @@ module.exports = {
     } else {
       this.csvString = [
         [
-          'Timestamp',
+          'Timestamp (UTC)',
           'Height (m)'
         ],
         ...this.telemetry.map(item => [
