@@ -40,10 +40,9 @@ module.exports = {
       })
 
       // Truncate forecast data to be 36 hours from forecast creation
-      this.date = moment(values.forecast_date)
-      this.forecastStart = moment(forecastData[0].ts)
+      const forecastStart = this.telemetry[0].ts
 
-      this.truncateDate = moment(this.forecastStart).add(36, 'hours')
+      this.truncateDate = moment(forecastStart).add(36, 'hours')
 
       forecastData.forEach(function (value) {
         value.ts = moment(value.ts)
@@ -51,7 +50,6 @@ module.exports = {
         if (value.ts.isBefore(this.forecastStart) || value.ts.isAfter(this.truncateDate)) {
           return
         }
-
         value.ts = moment.utc(value.ts).format()
 
         this.telemetry.push(value)
