@@ -56,17 +56,7 @@ module.exports = {
       }, this)
     }
 
-    this.telemetry.sort(function (a, b) {
-      const dateA = a.ts
-      const dateB = b.ts
-      if (dateA < dateB) {
-        return -1
-      }
-      if (dateA > dateB) {
-        return 1
-      }
-      return 0
-    })
+    this.telemetry.sort(sortTelemetry())
 
     if (thresholds.length) {
       this.csvString = [
@@ -102,5 +92,18 @@ module.exports = {
     response.type('text/csv')
     response.header('Content-disposition', `attachment; filename=${stationName}-height-data.csv`)
     return response
+  }
+}
+function sortTelemetry () {
+  return (a, b) => {
+    const dateA = a.ts
+    const dateB = b.ts
+    if (dateA < dateB) {
+      return -1
+    }
+    if (dateA > dateB) {
+      return 1
+    }
+    return 0
   }
 }
