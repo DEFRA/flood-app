@@ -3,18 +3,16 @@ const description = 'The Environment Agency uses cookies to collect data about h
 module.exports = {
   method: 'GET',
   path: '/cookies',
-  options: {
-    description: 'Cookies - Flood information service - GOV.UK',
-    handler: {
-      view: {
-        template: 'cookies',
-        context: {
-          pageTitle: 'Cookies - Flood information service - GOV.UK',
-          heading: 'Flood information service',
-          metaDescription: description,
-          ogDescription: description
-        }
-      }
+  handler: async (request, h) => {
+    let analyticsCookiesSet = false
+    if (request.state._ga && request.state._gat && request.state._gid) {
+      analyticsCookiesSet = true
     }
+    return h.view('cookies', {
+      pageTitle: 'Cookies - Flood information service - GOV.UK',
+      heading: 'Flood information service',
+      metaDescription: description,
+      analyticsCookiesSet: analyticsCookiesSet
+    })
   }
 }
