@@ -3,12 +3,7 @@
 {% set liveServiceText = 'go to the current version of this page' %}
 {% set liveServicePath = model.liveServiceUrl %}
 {% block content %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <div {% if model.referer %}id="browserBackContainer"{% endif %}>
-    </div>
-  </div>
-</div>
+
 {% if model.banner %}
 <div class="defra-flood-status govuk-!-margin-bottom-3">
   <div class="defra-flood-status-item defra-flood-status-item--{{ model.severityLevel }}">

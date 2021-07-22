@@ -8,8 +8,7 @@ import '../components/map/layers'
 import '../components/map/container'
 import '../components/map/live'
 import '../components/toggle-list-display'
-// Add browser back button
-window.flood.utils.addBrowserBackButton()
+
 // Create LiveMap
 window.flood.maps.createLiveMap('map', {
   btnText: 'View map',
