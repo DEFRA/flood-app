@@ -68,7 +68,14 @@ window.flood = {
     setCookie: (name, value, days) => {
       const d = new Date()
       d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
-      document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + document.domain
+      // Set sub domain
+      let host = document.domain
+      if (host.split('.').length > 1) {
+        const domainParts = host.split('.')
+        domainParts.shift()
+        host = '.' + domainParts.join('.')
+      }
+      document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + host
     }
   }
 }
