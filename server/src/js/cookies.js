@@ -20,9 +20,7 @@ if (cookieButtons) {
     e.preventDefault()
     window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
     window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
-    window.flood.utils.setCookie('_ga', 'true', 1)
-    window.flood.utils.setCookie('_gid', 'true', 1)
-    window.flood.utils.setCookie('_gat', 'true', 1)
+    window.flood.utils.setAnalyticsCookies()
 
     document.getElementById('cookie-message').style.display = 'none'
     document.getElementById('cookie-confirmation-type').innerText = 'accepted'
@@ -51,9 +49,7 @@ if (saveButton) {
     window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
     if (useCookies[0].checked) {
       window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
-      window.flood.utils.setCookie('_ga', 'true', 1)
-      window.flood.utils.setCookie('_gat', 'true', 1)
-      window.flood.utils.setCookie('_gid', 'true', 1)
+      window.flood.utils.setAnalyticsCookies()
     } else {
       window.flood.utils.setCookie('set_cookie_usage', '', -1)
       window.flood.utils.setCookie('_ga', '', -1)

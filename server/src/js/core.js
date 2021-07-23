@@ -69,6 +69,19 @@ window.flood = {
       const d = new Date()
       d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
       document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + document.domain
+    },
+    setAnalyticsCookies: () => {
+      const script = document.createElement('script')
+      script.src = '/assets/js/google-analytics.js'
+      document.body.appendChild(script)
+
+      script.addEventListener('load', () => {
+        const analyticsAccount = process.env.GA_ID || ''
+        const analyticsOptId = process.env.GA_OPT_ID || ''
+        ga('create', analyticsAccount, { cookieDomain: document.domain })
+        ga('require', analyticsOptId)
+        ga('send', 'pageview')
+      })
     }
   }
 }
