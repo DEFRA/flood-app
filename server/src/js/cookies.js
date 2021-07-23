@@ -18,8 +18,8 @@ if (cookieButtons) {
 
   acceptButton.addEventListener('click', function (e) {
     e.preventDefault()
-    window.flood.utils.setCookie('set_cookie_usage', 'true', 7)
-    window.flood.utils.setCookie('seen_cookie_message', 'true', 7)
+    window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
+    window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
     window.flood.utils.setCookie('_ga', 'true', 1)
     window.flood.utils.setCookie('_gid', 'true', 1)
     window.flood.utils.setCookie('_gat', 'true', 1)
@@ -30,7 +30,7 @@ if (cookieButtons) {
   })
   settingsButton.addEventListener('click', function (e) {
     e.preventDefault()
-    window.flood.utils.setCookie('seen_cookie_message', 'true', 7)
+    window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
     window.location.href = settingsButton.getAttribute('href')
   })
 
@@ -48,9 +48,9 @@ if (saveButton) {
   saveButton.addEventListener('click', function (e) {
     e.preventDefault()
     const useCookies = document.querySelectorAll('input[name="sign-in"]')
-    window.flood.utils.setCookie('seen_cookie_message', 'true', 7)
+    window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
     if (useCookies[0].checked) {
-      window.flood.utils.setCookie('set_cookie_usage', 'true', 7)
+      window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
       window.flood.utils.setCookie('_ga', 'true', 1)
       window.flood.utils.setCookie('_gat', 'true', 1)
       window.flood.utils.setCookie('_gid', 'true', 1)
