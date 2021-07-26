@@ -8,7 +8,6 @@ module.exports = (env, argv) => ({
   entry: {
     core: './server/src/js/core',
     cookies: './server/src/js/cookies',
-    'google-analytics': './server/src/js/google-analytics',
     'alerts-and-warnings': './server/src/js/pages/alerts-and-warnings',
     impacts: './server/src/js/pages/impacts',
     national: './server/src/js/pages/national',

@@ -71,17 +71,23 @@ window.flood = {
       document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + document.domain
     },
     setAnalyticsCookies: () => {
-      const script = document.createElement('script')
-      script.src = '/assets/js/google-analytics.js'
-      document.body.appendChild(script)
-
-      script.addEventListener('load', () => {
-        const analyticsAccount = process.env.GA_ID || ''
-        const analyticsOptId = process.env.GA_OPT_ID || ''
-        ga('create', analyticsAccount, { cookieDomain: document.domain })
-        ga('require', analyticsOptId)
-        ga('send', 'pageview')
-      })
+      ((i, s, o, g, r, a, m) => {
+        i.GoogleAnalyticsObject = r
+        i[r] = i[r] || function () {
+          (i[r].q = i[r].q || []).push(arguments)
+        }
+        i[r].l = 1 * new Date()
+        a = s.createElement(o)
+        m = s.getElementsByTagName(o)[0]
+        a.async = 1
+        a.src = g
+        m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga')
+      const analyticsAccount = process.env.GA_ID || ''
+      const analyticsOptId = process.env.GA_OPT_ID || ''
+      window.ga('create', analyticsAccount, { cookieDomain: document.domain })
+      window.ga('require', analyticsOptId)
+      window.ga('send', 'pageview')
     }
   }
 }
