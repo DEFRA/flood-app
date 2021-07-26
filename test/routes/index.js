@@ -216,6 +216,7 @@ lab.experiment('Get Routes test', () => {
     Code.expect(response.payload).to.include('cookies')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
+
   lab.test('GET /terms-and-conditions', async () => {
     const plugin = {
       plugin: {

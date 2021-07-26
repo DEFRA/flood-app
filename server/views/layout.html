@@ -2,6 +2,7 @@
 {% from "phase-banner/macro.njk" import govukPhaseBanner %}
 {% from "footer/macro.njk" import govukFooter %}
 {% from "warning-text/macro.njk" import govukWarningText %}
+{% from "cookie-banner/macro.njk" import govukCookieBanner %}
 
 {% set metaTitle = (pageTitle or model.pageTitle or 'Check for flooding') + ' - GOV.UK' %}
 {% set metaDescription = model.metaDescription | default('Check your risk of flooding: get current flood warnings, river and sea levels, check the 5-day forecast or use flood risk maps') %}
@@ -66,6 +67,10 @@
 {% endblock %}
 
 {% block header %}
+{% if not seenCookieMessage %}
+{%  include "partials/cookie-banner.html" %}
+{% endif %}
+
   {{ govukHeader({
     homepageUrl: "https://www.gov.uk/",
     serviceName: serviceName,
@@ -110,7 +115,7 @@
 
 {% block bodyEnd %}
   {# Google Analytics #}
-  {% if gaAccId %}
+  {% if gaAccId and setCookieUsage %}
     <script type="text/javascript">
       var analyticsAccount = '{{gaAccId}}'
 
@@ -130,6 +135,7 @@
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script src="{{ assetPath }}/js/all.js"></script>
   <script src="{{ assetPath }}/js/core.js"></script>
+  <script src="{{ assetPath }}/js/cookies.js"></script>
   <script>window.GOVUKFrontend.initAll()</script>
 {% endblock %}
 

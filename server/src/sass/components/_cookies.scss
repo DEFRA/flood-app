@@ -1,0 +1,90 @@
+.defra-cookie-banner {
+  background-color: govuk-colour('light-grey');
+  padding:20px 0px;
+}
+
+.defra-cookie-banner__message {
+  position:relative;
+  margin: 0;
+}
+
+.defra-cookie-banner__button-group {
+  @include mq ($from: tablet) {
+    display: flex;
+    align-items: baseline;
+  }
+}
+
+.defra-cookie-banner__confirmation {
+  @extend .defra-cookie-banner__message;
+  padding:5px 0px;
+  p {
+    @include mq ($from: tablet) {
+      max-width: 85%;
+      margin-bottom:0px;
+    }
+  }
+}
+
+.defra-cookie-banner__button-accept,
+.defra-cookie-banner__button-reject {
+  @extend .govuk-button;
+  display: inline-block;
+  margin-bottom:10px;
+  @include mq ($from: tablet) {
+    margin-bottom:10px;
+    margin-right: 15px;
+  }
+}
+
+.defra-cookie-banner__button-set {
+  @include govuk-font($size: 19, $line-height: 1);
+  margin-top:5px;
+}
+
+.defra-cookie-banner__button-accept {
+  margin-bottom:15px;
+  @include mq ($from: tablet) {
+    margin-bottom:10px;
+  }
+}
+
+.defra-cookie-banner__button-hide {
+  @extend .defra-button-text;
+  @include mq ($from: tablet) {
+    position:absolute;
+    top:5px;
+    right:0px;
+  }
+}
+
+@include govuk-media-query($media-type: print) {
+  .defra-cookie-banner {
+    display: none !important;
+  }
+}
+
+// Notification
+.defra-cookie-notification {
+  @extend .govuk-error-summary;
+  border-color: govuk-colour('green');
+  padding: 0px;
+  &__header {
+    background-color: govuk-colour('green');
+    padding: 2px 20px 5px;
+  }
+  &__title {
+    @extend .govuk-heading-s;
+    margin: 0px;
+    color: white;
+  }
+  &__content {
+    padding: 20px;
+  }
+  &__heading {
+    @include govuk-font($size: 24, $weight: bold);
+  }
+  & p:last-child {
+      margin-bottom: 0px;
+  }
+}
