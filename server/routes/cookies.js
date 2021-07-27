@@ -4,10 +4,9 @@ module.exports = {
   method: 'GET',
   path: '/cookies',
   handler: async (request, h) => {
-    let analyticsCookiesSet = false
-    if (request.state._ga && request.state._gat && request.state._gid) {
-      analyticsCookiesSet = true
-    }
+    const analyticsCookiesSet = Object.keys(request.state).some((key) => {
+      return /^_ga$|^_gid$|^_gat_gtag_./g.test(key)
+    })
     return h.view('cookies', {
       pageTitle: 'Cookies - Flood information service - GOV.UK',
       heading: 'Flood information service',

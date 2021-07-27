@@ -70,6 +70,15 @@ window.flood = {
       d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
       document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + document.domain
     },
+    setGTagAnalyticsCookies: () => {
+      import(/* webpackIgnore: true */ `https://www.googletagmanager.com/gtag/js?id=${process.env.GA_ID}`).then(() => {
+        window.dataLayer = window.dataLayer || []
+        function gtag () { window.dataLayer.push(arguments) }
+        gtag('js', new Date())
+        gtag('config', process.env.GA_ID)
+      }
+      )
+    },
     setAnalyticsCookies: () => {
       ((i, s, o, g, r, a, m) => {
         i.GoogleAnalyticsObject = r
