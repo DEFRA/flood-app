@@ -85,7 +85,7 @@ window.flood = {
       })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga')
       const analyticsAccount = process.env.GA_ID || ''
       const analyticsOptId = process.env.GA_OPT_ID || ''
-      window.ga('create', analyticsAccount, 'auto')
+      window.ga('create', analyticsAccount, { cookieDomain: document.domain })
       if (analyticsOptId) {
         window.ga('require', analyticsOptId)
       }
