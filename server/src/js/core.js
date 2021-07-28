@@ -71,6 +71,7 @@ window.flood = {
       document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + document.domain
     },
     setGTagAnalyticsCookies: () => {
+      console.log('Process Env GAID: ', process.env.GA_ID)
       import(/* webpackIgnore: true */ `https://www.googletagmanager.com/gtag/js?id=${process.env.GA_ID}`).then(() => {
         window.dataLayer = window.dataLayer || []
         function gtag () { window.dataLayer.push(arguments) }
