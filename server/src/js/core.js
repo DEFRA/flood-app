@@ -75,7 +75,7 @@ window.flood = {
         window.dataLayer = window.dataLayer || []
         function gtag () { window.dataLayer.push(arguments) }
         gtag('js', new Date())
-        gtag('config', process.env.GA_ID, { cookieDomain: document.domain })
+        gtag('config', process.env.GA_ID, { cookie_domain: document.domain })
       }
       )
     },
