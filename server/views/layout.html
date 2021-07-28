@@ -124,7 +124,7 @@
         function gtag() { window.dataLayer.push(arguments); }
         gtag('js', new Date());
 
-        gtag('config', '{{gaAccId}}');
+        gtag('config', '{{gaAccId}}', { cookieDomain: document.domain });
     </script>
   {% endif %}
 

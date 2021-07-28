@@ -2,7 +2,6 @@ const path = require('path')
 const env = process.env.NODE_ENV
 const inDev = env === 'dev' || env === 'development'
 const webpack = require('webpack')
-console.log('DEBUG: process.env: ', process.env.FLOOD_APP_GA_ID)
 module.exports = (env, argv) => ({
   mode: !inDev ? 'production' : 'development',
   devtool: !inDev ? false : 'source-map',
