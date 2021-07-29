@@ -10,33 +10,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h2 id="what-the-flood-warnings-mean" class="govuk-heading-m">What the flood warnings mean</h2>
-        <p class="govuk-text govuk-!-margin-bottom-1">We issue 3 levels of flood warning:</p>
-        <h3 class="govuk-heading-s">
-            <img class="defra-flood-heading-image" src="/assets/images/symbol-flood-alert.svg" width="46" height="46" alt="Flood alert symbol"/>
-            Flood alert - Prepare
-        </h3>
-        <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-1">
-            <li>prepare a bag that includes medicines and insurance documents</li>
-            <li>check flood warnings</li>
-        </ul>
-        <h3 class="govuk-heading-s">
-            <img class="defra-flood-heading-image" src="/assets/images/symbol-flood-warning.svg" width="46" height="46" alt="Flood warning symbol"/>
-            Flood warning - Act
-        </h3>
-        <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-1">
-            <li>turn off gas, water and electricity</li>
-            <li>move things upstairs or to safety</li>
-            <li>move family, pets and car to safety</li>
-        </ul>
-        <h3 class="govuk-heading-s">
-            <img class="defra-flood-heading-image" src="/assets/images/symbol-flood-warning-severe.svg" width="46" height="46" alt="Severe flood warning symbol"/>
-            Severe flood warning - Survive
-        </h3>
-        <ul class="govuk-list govuk-list--bullet">
-            <li>call 999 if in immediate danger</li>
-            <li>follow advice from emergency services</li>
-            <li>keep yourself and your family safe</li>
-        </ul>
+        {% include "partials/three-levels-releated-content.html" %}
         <p class="govuk-text">All floods are different and you should take advice from the emergency services and your local authority if you’re in a flood.</p>
         <h2 id="what-to-do-if-you-get-a-flood-alert" class="govuk-heading-m">What to do if you get a flood alert</h2>
         <p class="govuk-text">A flood alert means you need to prepare: flooding is possible.</p>
@@ -71,7 +45,7 @@
         </ul>
     </div>
     <div class="govuk-grid-column-one-third">
-        <aside class="defra-related-items" role="complementary">
+        <div class="defra-related-items">
             <h2 class="govuk-heading-s" id="subsection-title">
                 Related content
             </h2>
@@ -94,7 +68,7 @@
                     </li>
                 </ul>
             </nav>
-        </aside>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -7,9 +7,6 @@ import '../components/map/layers'
 import '../components/map/container'
 import '../components/map/live'
 
-// Add browser back button
-window.flood.utils.addBrowserBackButton()
-
 // Create LiveMap
 window.flood.maps.createLiveMap('map', {
   btnText: `View map of the flood ${window.flood.model.area.code.slice(4, 5).toLowerCase() === 'w' ? 'warning' : 'alert'} area`,

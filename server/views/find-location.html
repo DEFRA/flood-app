@@ -5,32 +5,16 @@
 
 {% block content %}
 
-{% if model.referer %}
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-full" id="browserBackContainer"></div>
-</div>
-{% endif %}
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-
-    {% if model.locationInput.errorMessage %}
-    {{ govukErrorSummary(model.errorSummary) }}
-    {% endif %}
-
-    <h1 class="govuk-heading-l">Where do you want to check?</h1>
     <form method="post">
+      {% if model.locationInput.errorMessage %}
+      {{ govukErrorSummary(model.errorSummary) }}
+      {% endif %}
       {{ govukInput(model.locationInput) }}
       <button type="submit" class="govuk-button">Continue</button>
     </form>
-      <p>
-        <a href="/">See all flooding in England</a>
-      </p>
+    <p><a href="/">See all flooding in England</a></p>
   </div>
 </div>
-{% endblock %}
-
-{% block bodyEnd %}
-{{ super() }}
-<script src="{{assetPath}}/js/find-location.js"></script>
 {% endblock %}

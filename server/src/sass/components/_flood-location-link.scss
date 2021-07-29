@@ -1,0 +1,8 @@
+.defra-flood-location-link {
+    @extend .govuk-back-link;
+    padding-left: 0px;
+    &:before {
+        border: 0px;
+        display: none;
+    }
+}

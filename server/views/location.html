@@ -1,14 +1,27 @@
 {% extends 'layout.html' %}
 
-{% block content %}
+{% block beforeContent %}
+
+<div class="govuk-phase-banner">
+  <p class="govuk-phase-banner__content">
+    <strong class="govuk-tag govuk-phase-banner__content__tag">
+      beta
+    </strong>
+    <span class="govuk-phase-banner__text">
+      This is a new service – <a class="govuk-link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965">leave feedback</a> to help us improve it, or <a class="govuk-link" href="{{floodFisUrl}}{{liveServicePath}}">{{liveServiceText}}</a>
+    </span>
+  </p>
+</div>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <nav class="defra-flood-nav">
-      <a href="/find-location" class="defra-flood-nav__link">Check another location</a>
-    </nav>
+  <div class="govuk-grid-column-full">
+    <a href="/find-location" class="defra-flood-location-link">Check another location</a>
   </div>
 </div>
+
+{% endblock %}
+
+{% block content %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
