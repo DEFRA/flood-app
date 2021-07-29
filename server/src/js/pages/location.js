@@ -8,9 +8,6 @@ import '../components/map/container'
 import '../components/map/live'
 import '../components/map/outlook'
 
-// Add browser back button
-window.flood.utils.addBrowserBackButton()
-
 // Create LiveMap
 if (document.getElementById('map')) {
   window.flood.maps.createLiveMap('map', {
