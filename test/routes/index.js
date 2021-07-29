@@ -311,4 +311,28 @@ lab.experiment('Get Routes test', () => {
     Code.expect(response.payload).to.include('How we measure river, sea and groundwater levels')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
+  lab.test('GET /accessibility-statement', async () => {
+    const plugin = {
+      plugin: {
+        name: 'accessibility-statement',
+        register: (server, options) => {
+          server.route(require('../../server/routes/accessibility-statement'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(plugin)
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/accessibility-statement'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('<h1 class="govuk-heading-xl">Accessibility statement for Check for flooding</h1>')
+    Code.expect(response.headers['content-type']).to.include('text/html')
+  })
 })
