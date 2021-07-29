@@ -1,4 +1,5 @@
 cp -r server/src/images server/dist/images
 cp server/src/robots.txt server/dist/robots.txt
+cp server/src/pdf/dac-accessibility-report-for-check-for-flooding-09-20.pdf server/dist/dac-accessibility-report-for-check-for-flooding-09-20.pdf
 cp node_modules/govuk-frontend/govuk/all.js server/dist/js/all.js
 node_modules/.bin/uglifyjs server/dist/js/all.js --output server/dist/js/all.js
