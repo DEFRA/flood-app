@@ -1,0 +1,39 @@
+# Service refresh release 3.13.0 Tuesday 10th August 2021
+
+# Tickets
+
+https://eaflood.atlassian.net/projects/FSR/versions/15493/tab/release-report-all-issues
+
+
+## Release notes taken from Jira
+
+# Release notes - FIS Service Refresh - Version Release 7
+
+### Bug
+
+[FSR-397] (https://eaflood.atlassian.net/browse/FSR-397) Prod issue - share links not working in live as expected
+
+### Story
+
+[FSR-310] (https://eaflood.atlassian.net/browse/FSR-310) Amendments to surveys on Beta service
+
+[FSR-332] (https://eaflood.atlassian.net/browse/FSR-332) Ability to download .csv output for river/sea/groundwater page
+
+[FSR-333] (https://eaflood.atlassian.net/browse/FSR-333) Accessibility amendments following from DAC review
+
+[FSR-334] (https://eaflood.atlassian.net/browse/FSR-334) Amendments to river/coastal/groundwater station page to meet accessibility
+
+[FSR-335] (https://eaflood.atlassian.net/browse/FSR-335) Amendments to river/sea/groundwater list page to meet accessibility
+
+[FSR-352] (https://eaflood.atlassian.net/browse/FSR-352) Amendments to navigation links on Beta service
+
+[FSR-353] (https://eaflood.atlassian.net/browse/FSR-353) Amendment to Outlook regional view
+
+[FSR-399] (https://eaflood.atlassian.net/browse/FSR-399) Accessibility - removing back button logic from the Beta
+
+
+# Webops Instructions
+
+Execute job: LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Confirm with developers that deployment was successful.
