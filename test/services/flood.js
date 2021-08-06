@@ -502,4 +502,19 @@ lab.experiment('Flood service test', () => {
 
     Code.expect(result).to.equal('ok')
   })
+  lab.test('Test getError', async () => {
+    const util = require('../../server/util')
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://server2/error')
+      .once()
+      .returns('ok')
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getError()
+
+    Code.expect(result).to.equal('ok')
+  })
 })
