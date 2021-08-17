@@ -1,0 +1,17 @@
+# Service refresh release 3.15.0 Wednesday 18th August 2021
+
+# Tickets
+
+FS-96/FS-97/FSR-406 - Aug 2021 target area update
+
+# Instructions
+
+Execute the following jobs:
+
+LFW_{stage}_99_LOAD_FLOOD_ALERT_AREAS
+
+LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+This updates the application (no changes, only the version number in the source)
+
+Inform flood dev & test team of completion.
