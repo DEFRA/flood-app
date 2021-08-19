@@ -23,8 +23,8 @@
         </div>
         <div class="defra-cookie-notification__content">
           <p class="defra-cookie-notification__heading">You’ve set your cookie preferences.</p>
-          {% if model.referer %}
-          <p><a href="{{ model.referer | safe }}">Go back to the page you were looking at</a></p>
+          {% if referer %}
+          <p><a href="{{ referer | safe }}">Go back to the page you were looking at</a></p>
           {% endif %}
         </div>
       </div>

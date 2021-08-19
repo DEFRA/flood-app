@@ -69,38 +69,6 @@
 {% block header %}
 
 {%  include "partials/cookie-banner.html" %}
-<script nonce={{nonce}} type="text/javascript">
-    function removeCookieMessage() {
-        const elem = document.getElementById('cookie-banner')
-        if (elem.parentNode) {
-            elem.parentNode.removeChild(elem)
-        }
-    }
-    function addCookieMessage() {
-        const elem = document.createElement('cookie-banner')
-        if (elem.parentNode) {
-            elem.parentNode.removeChild(elem)
-        }
-    }
-    (function () {
-        'use strict'
-        const seen_cookie_message = /(^|\;)\s*seen_cookie_message=/.test(document.cookie)
-        if (seen_cookie_message) {
-            removeCookieMessage()
-        } else {
-            document.getElementById('cookie-buttons').addEventListener('click', function() {
-                const expiry = new Date()
-                expiry.setDate(expiry.getDate() + 30)
-                document.cookie = 'seen_cookie_message=true; expires=' + expiry.toUTCString() + '; path=/;'
-                removeCookieMessage()
-            })
-        }
-    })()
-</script>
-
-{#% if not seenCookieMessage %#}
-{#%  include "partials/cookie-banner.html" %#}
-{#% endif %#}
 
   {{ govukHeader({
     homepageUrl: "https://www.gov.uk/",
@@ -162,7 +130,6 @@
 
   <script src="{{ assetPath }}/js/all.js"></script>
   <script src="{{ assetPath }}/js/core.js"></script>
-  <script src="{{ assetPath }}/js/cookies.js"></script>
   <script>window.GOVUKFrontend.initAll()</script>
 {% endblock %}
 

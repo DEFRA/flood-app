@@ -11,7 +11,8 @@ module.exports = {
       pageTitle: 'Cookies - Flood information service - GOV.UK',
       heading: 'Flood information service',
       metaDescription: description,
-      analyticsCookiesSet: analyticsCookiesSet
+      analyticsCookiesSet: analyticsCookiesSet,
+      referer: request.headers.referer || ''
     })
   }
 }
