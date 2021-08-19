@@ -46,21 +46,6 @@ window.flood = {
       const v = window.location.search.match(new RegExp('(?:[?&]' + name + '=)([^&]+)'))
       return v ? v[1] : null
     },
-    addBrowserBackButton: () => {
-      const container = document.getElementById('browserBackContainer')
-      if (container) {
-        const hyperlink = document.createElement('a')
-        hyperlink.href = document.referrer
-        hyperlink.href = hyperlink.pathname + hyperlink.search
-        hyperlink.innerText = 'Back'
-        hyperlink.className = 'govuk-back-link govuk-!-margin-bottom-7 govuk-!-margin-right-2'
-        hyperlink.addEventListener('click', function (e) {
-          e.preventDefault()
-          window.history.back()
-        })
-        container.appendChild(hyperlink)
-      }
-    },
     getCookie: (name) => {
       const v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)')
       return v ? v[2] : null
