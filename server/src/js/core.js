@@ -95,7 +95,7 @@ if (elem) {
       elem.parentNode.removeChild(elem)
     }
   }
-  const seenCookieMessage = /(^|\;)\s*seen_cookie_message=/.test(document.cookie)
+  const seenCookieMessage = /(^|;)\s*seen_cookie_message=/.test(document.cookie)
   if (seenCookieMessage) {
     removeCookieMessage()
   } else {
