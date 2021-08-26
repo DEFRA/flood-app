@@ -4,9 +4,7 @@ module.exports = {
   method: 'GET',
   path: '/cookies',
   handler: async (request, h) => {
-    const analyticsCookiesSet = Object.keys(request.state).some((key) => {
-      return /^_ga$|^_gid$|^_gat_gtag_./g.test(key)
-    })
+    const analyticsCookiesSet = Object.keys(request.state).some(key => /^_ga$|^_gid$|^_gat_gtag_./g.test(key))
     return h.view('cookies', {
       pageTitle: 'Cookies - Flood information service - GOV.UK',
       heading: 'Flood information service',
