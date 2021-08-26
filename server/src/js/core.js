@@ -68,22 +68,15 @@ window.flood = {
 }
 
 const elem = document.getElementById('cookie-banner')
+
+// Check not on cookie settings page
 if (elem) {
-  const removeCookieMessage = () => {
-    if (elem.parentNode) {
-      elem.parentNode.removeChild(elem)
-    }
-  }
   const seenCookieMessage = /(^|;)\s*seen_cookie_message=/.test(document.cookie)
+  // Remove banner if seen and avoid flicker
   if (seenCookieMessage) {
-    removeCookieMessage()
+    elem.parentNode.removeChild(elem)
   } else {
     elem.style.display = 'block'
-    document.getElementById('cookie-buttons').addEventListener('click', function () {
-      const expiry = new Date()
-      expiry.setDate(expiry.getDate() + 30)
-      document.cookie = 'seen_cookie_message=true; expires=' + expiry.toUTCString() + '; path=/;'
-    })
   }
 }
 
@@ -105,6 +98,7 @@ if (cookieButtons) {
   acceptButton.innerText = 'Accept analytics cookies'
   cookieButtons.insertBefore(acceptButton, cookieButtons.childNodes[0])
 
+  // First button in banner
   acceptButton.addEventListener('click', function (e) {
     e.preventDefault()
     window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
@@ -115,6 +109,8 @@ if (cookieButtons) {
     document.getElementById('cookie-confirmation-type').innerText = 'accepted'
     document.getElementById('cookie-confirmation').removeAttribute('style')
   })
+
+  // Second button in banner
   settingsButton.addEventListener('click', function (e) {
     e.preventDefault()
     window.flood.utils.setCookie('seen_cookie_message', 'true', 30)

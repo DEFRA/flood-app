@@ -113,18 +113,6 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  {# Google Analytics #}
-  {% if gaAccId and setCookieUsage %}
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{gaAccId}}"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { window.dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', '{{gaAccId}}', { cookie_domain: document.domain });
-    </script>
-  {% endif %}
 
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
 
