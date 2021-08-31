@@ -23,8 +23,8 @@
         </div>
         <div class="defra-cookie-notification__content">
           <p class="defra-cookie-notification__heading">You’ve set your cookie preferences.</p>
-          {% if model.referer %}
-          <p><a href="{{ model.referer | safe }}">Go back to the page you were looking at</a></p>
+          {% if referer %}
+          <p><a href="{{ referer | safe }}">Go back to the page you were looking at</a></p>
           {% endif %}
         </div>
       </div>
@@ -52,12 +52,12 @@
           <tr class="govuk-table__row">
             <td class="govuk-table__cell" style="word-break: break-all">set_cookie_usage</td>
             <td class="govuk-table__cell">Remembers your cookie consent settings</td>
-            <td class="govuk-table__cell">7 days</td>
+            <td class="govuk-table__cell">30 days</td>
           </tr>
           <tr class="govuk-table__row">
             <td class="govuk-table__cell" style="word-break: break-all">seen_cookie_message</td>
             <td class="govuk-table__cell">Stops your browser showing the cookie banner after you’ve set your preferences</td>
-            <td class="govuk-table__cell">7 days</td>
+            <td class="govuk-table__cell">30 days</td>
           </tr>
         </tbody>
       </table>
@@ -92,9 +92,9 @@
             <td class="govuk-table__cell">24 hours</td>
           </tr>
           <tr class="govuk-table__row">
-            <td class="govuk-table__cell" style="word-break: break-all">_gat</td>
+            <td class="govuk-table__cell" style="word-break: break-all">_gat_gtag</td>
             <td class="govuk-table__cell">This randomly generated number is used to reduce the number of requests made.</td>
-            <td class="govuk-table__cell">10 minutes</td>
+            <td class="govuk-table__cell">1 minute</td>
           </tr>
         </tbody>
       </table>
@@ -114,13 +114,13 @@
             </legend>
             <div class="govuk-radios govuk-radios--inline">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="sign-in" name="sign-in" type="radio" value="government-gateway" aria-describedby="sign-in-item-hint">
+                <input class="govuk-radios__input" id="sign-in" name="sign-in" type="radio" value="government-gateway" aria-describedby="sign-in-item-hint" {{ "checked" if analyticsCookiesSet }}>
                 <label class="govuk-label govuk-radios__label" for="sign-in">
                   Yes
                 </label>
               </div>
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="sign-in-2" name="sign-in" type="radio" value="govuk-verify" aria-describedby="sign-in-2-item-hint" checked>
+                <input class="govuk-radios__input" id="sign-in-2" name="sign-in" type="radio" value="govuk-verify" aria-describedby="sign-in-2-item-hint" {{ "checked" if not analyticsCookiesSet }}>
                 <label class="govuk-label govuk-radios__label" for="sign-in-2">
                   No
                 </label>

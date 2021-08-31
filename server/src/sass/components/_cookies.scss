@@ -3,6 +3,10 @@
   padding:20px 0px;
 }
 
+.js-enabled .defra-cookie-banner {
+  display: none;
+}
+
 .defra-cookie-banner__message {
   position:relative;
   margin: 0;
