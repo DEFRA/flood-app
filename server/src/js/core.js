@@ -53,7 +53,100 @@ window.flood = {
     setCookie: (name, value, days) => {
       const d = new Date()
       d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
-      document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString()
+      document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + document.domain
+    },
+    setGTagAnalyticsCookies: () => {
+      import(/* webpackIgnore: true */ `https://www.googletagmanager.com/gtag/js?id=${process.env.GA_ID}`).then(() => {
+        window.dataLayer = window.dataLayer || []
+        function gtag () { window.dataLayer.push(arguments) }
+        gtag('js', new Date())
+        gtag('config', process.env.GA_ID, { cookie_domain: document.domain })
+      }
+      )
     }
   }
+}
+
+const elem = document.getElementById('cookie-banner')
+
+// Check not on cookie settings page
+if (elem) {
+  const seenCookieMessage = /(^|;)\s*seen_cookie_message=/.test(document.cookie)
+  // Remove banner if seen and avoid flicker
+  if (seenCookieMessage) {
+    elem.parentNode.removeChild(elem)
+  } else {
+    elem.style.display = 'block'
+  }
+}
+
+const cookieButtons = document.getElementById('cookie-buttons')
+// JS/Non-JS content - We may already havea helper on live for this
+const nonJsElements = document.getElementsByClassName('defra-no-js')
+Array.prototype.forEach.call(nonJsElements, function (element) {
+  element.style.display = 'none'
+})
+const jsElements = document.getElementsByClassName('defra-js')
+Array.prototype.forEach.call(jsElements, function (element) {
+  element.removeAttribute('style')
+})
+
+if (cookieButtons) {
+  const settingsButton = document.getElementById('cookie-settings')
+  const acceptButton = document.createElement('button')
+  acceptButton.className = 'defra-cookie-banner__button-accept'
+  acceptButton.innerText = 'Accept analytics cookies'
+  cookieButtons.insertBefore(acceptButton, cookieButtons.childNodes[0])
+
+  // First button in banner
+  acceptButton.addEventListener('click', function (e) {
+    e.preventDefault()
+    window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
+    window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
+    window.flood.utils.setGTagAnalyticsCookies()
+
+    document.getElementById('cookie-message').style.display = 'none'
+    document.getElementById('cookie-confirmation-type').innerText = 'accepted'
+    document.getElementById('cookie-confirmation').removeAttribute('style')
+  })
+
+  // Second button in banner
+  settingsButton.addEventListener('click', function (e) {
+    e.preventDefault()
+    window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
+    window.location.href = settingsButton.getAttribute('href')
+  })
+
+  const hideButton = document.getElementById('cookie-hide')
+
+  hideButton.addEventListener('click', function (e) {
+    e.preventDefault()
+    document.getElementById('cookie-banner').style.display = 'none'
+  })
+}
+
+const saveButton = document.getElementById('cookies-save')
+
+if (saveButton) {
+  saveButton.addEventListener('click', function (e) {
+    e.preventDefault()
+    const useCookies = document.querySelectorAll('input[name="sign-in"]')
+    window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
+    if (useCookies[0].checked) {
+      window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
+      window.flood.utils.setGTagAnalyticsCookies()
+    } else {
+      window.flood.utils.setCookie('set_cookie_usage', '', -1)
+      window.flood.utils.setCookie('_ga', '', -1)
+      // Get cookie name
+      const gtagCookie = document.cookie.match('(^|;) ?(_gat_gtag.*)=([^;]*)(;|$)')
+      if (gtagCookie && gtagCookie[2]) {
+        window.flood.utils.setCookie(gtagCookie[2], '', -1)
+      }
+      window.flood.utils.setCookie('_gid', '', -1)
+    }
+    const alert = document.getElementById('cookie-notification')
+    alert.removeAttribute('style')
+    alert.focus()
+  })
 }
