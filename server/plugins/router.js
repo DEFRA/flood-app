@@ -4,7 +4,6 @@ const routes = [].concat(
   require('../routes/national'),
   require('../routes/target-area'),
   require('../routes/station'),
-  require('../routes/roadmap'),
   require('../routes/public'),
   require('../routes/api/stations.geojson'),
   require('../routes/api/rainfall.geojson'),
@@ -26,7 +25,8 @@ const routes = [].concat(
   require('../routes/stations-overview'),
   require('../routes/about-levels'),
   require('../routes/error'),
-  require('../routes/station-csv')
+  require('../routes/station-csv'),
+  require('../routes/accessibility-statement')
 )
 
 // Non production end points

@@ -7,9 +7,6 @@ import '../components/map/layers'
 import '../components/map/container'
 import '../components/map/live'
 
-// Add browser back button
-window.flood.utils.addBrowserBackButton()
-
 if (document.getElementById('map')) {
 // Create LiveMap
   window.flood.maps.createLiveMap('map', {

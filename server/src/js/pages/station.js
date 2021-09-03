@@ -8,8 +8,7 @@ import '../components/map/layers'
 import '../components/map/container'
 import '../components/map/live'
 import '../components/toggle-list-display'
-// Add browser back button
-window.flood.utils.addBrowserBackButton()
+
 // Create LiveMap
 window.flood.maps.createLiveMap('map', {
   btnText: 'View map',
@@ -61,7 +60,7 @@ if (chart) {
     // Add threshold buttons
     Array.from(document.querySelectorAll('.defra-flood-impact-list__value')).forEach(value => {
       const button = document.createElement('button')
-      button.innerHTML = 'Show on chart'
+      button.innerHTML = 'Show on chart<span class="govuk-visually-hidden"> (Visual only)</span>'
       button.className = 'defra-button-text-s'
       button.addEventListener('click', function (e) {
         lineChart.addThreshold({
