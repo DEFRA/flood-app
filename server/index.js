@@ -43,7 +43,6 @@ async function createServer () {
   await server.register(require('./plugins/error-pages'))
   await server.register(require('./plugins/on-post-handler'))
   await server.register(require('./plugins/session'))
-  // await server.register(require('blipp'))
   await server.register(require('./plugins/logging'))
 
   registerServerMethods(server)
