@@ -12,7 +12,9 @@ lab.experiment('Routes test - national view', () => {
 
   lab.beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
+    delete require.cache[require.resolve('../../server/services/server-methods.js')]
     delete require.cache[require.resolve('../../server/util.js')]
+    delete require.cache[require.resolve('../../server/routes/national.js')]
 
     sandbox = await sinon.createSandbox()
 
@@ -26,26 +28,8 @@ lab.experiment('Routes test - national view', () => {
     await server.stop()
     await sandbox.restore()
   })
+
   lab.test('GET /national view no outlook data', async () => {
-    // Create dummy flood data in place of cached data
-    const fakeFloodData = () => {
-      return {
-        floods: []
-      }
-    }
-
-    const fakeOutlookData = () => {
-      const outlook = {}
-      return outlook
-    }
-
-    const floodService = require('../../server/services/flood')
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-
-    // Fake the cached flood data
-    floodService.floods = await floodService.getFloods()
-    floodService.outlook = await floodService.getOutlook()
     const locationPlugin = {
       plugin: {
         name: 'national',
@@ -54,10 +38,27 @@ lab.experiment('Routes test - national view', () => {
         }
       }
     }
+    const floodService = require('../../server/services/flood')
+    // Create dummy flood data in place of cached data
+    const fakeFloodData = () => {
+      return {
+        floods: []
+      }
+    }
+
+    const fakeOutlookData = () => {
+      return {}
+    }
+
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
     await server.initialize()
 
     const options = {
@@ -89,10 +90,6 @@ lab.experiment('Routes test - national view', () => {
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
-    // Fake the cached flood data
-    floodService.floods = await floodService.getFloods()
-    floodService.outlook = await floodService.getOutlook()
-
     const locationPlugin = {
       plugin: {
         name: 'national',
@@ -105,6 +102,9 @@ lab.experiment('Routes test - national view', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
     await server.initialize()
 
     const options = {
@@ -135,10 +135,6 @@ lab.experiment('Routes test - national view', () => {
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
-    // Fake the cached flood data
-    floodService.floods = await floodService.getFloods()
-    floodService.outlook = await floodService.getOutlook()
-
     const locationPlugin = {
       plugin: {
         name: 'national',
@@ -151,6 +147,9 @@ lab.experiment('Routes test - national view', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
     await server.initialize()
 
     const options = {
@@ -181,10 +180,6 @@ lab.experiment('Routes test - national view', () => {
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
-    // Fake the cached flood data
-    floodService.floods = await floodService.getFloods()
-    floodService.outlook = await floodService.getOutlook()
-
     const locationPlugin = {
       plugin: {
         name: 'national',
@@ -197,6 +192,9 @@ lab.experiment('Routes test - national view', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
     await server.initialize()
 
     const options = {
@@ -247,10 +245,6 @@ lab.experiment('Routes test - national view', () => {
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
-    // Fake the cached flood data
-    floodService.floods = await floodService.getFloods()
-    floodService.outlook = await floodService.getOutlook()
-
     const locationPlugin = {
       plugin: {
         name: 'national',
@@ -263,6 +257,9 @@ lab.experiment('Routes test - national view', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
     await server.initialize()
 
     const options = {
@@ -293,9 +290,6 @@ lab.experiment('Routes test - national view', () => {
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
-    floodService.floods = await floodService.getFloods()
-    floodService.outlook = await floodService.getOutlook()
-
     const locationPlugin = {
       plugin: {
         name: 'national',
@@ -308,6 +302,11 @@ lab.experiment('Routes test - national view', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(locationPlugin)
+
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
     await server.initialize()
 
     const options = {

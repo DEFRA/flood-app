@@ -10,7 +10,6 @@ const routes = [].concat(
   require('../routes/api/warnings.geojson'),
   require('../routes/api/places.geojson'),
   require('../routes/api/ows'),
-  require('../routes/api/impacts'),
   require('../routes/api/outlook'),
   require('../routes/start-page'),
   require('../routes/sms-auto-opt-in-info'),
@@ -23,13 +22,19 @@ const routes = [].concat(
   require('../routes/cookies'),
   require('../routes/terms-and-conditions'),
   require('../routes/privacy-notice'),
-  require('../routes/status'),
   require('../routes/stations-overview'),
   require('../routes/about-levels'),
   require('../routes/error'),
   require('../routes/station-csv'),
   require('../routes/accessibility-statement')
 )
+
+// Non production end points
+if (process.env.NODE_ENV !== 'production') {
+  routes.push(
+    require('../routes/status')
+  )
+}
 
 module.exports = {
   plugin: {

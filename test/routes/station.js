@@ -17,6 +17,7 @@ lab.experiment('Test - /station/{id}', () => {
     delete require.cache[require.resolve('../../server/util.js')]
     delete require.cache[require.resolve('../../server/services/location.js')]
     delete require.cache[require.resolve('../../server/services/flood.js')]
+    delete require.cache[require.resolve('../../server/services/server-methods.js')]
     delete require.cache[require.resolve('../../server/routes/location.js')]
     delete require.cache[require.resolve('../../server/routes/station.js')]
     sandbox = await sinon.createSandbox()
@@ -142,6 +143,9 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -273,6 +277,9 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -400,6 +407,9 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -495,6 +505,9 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -621,6 +634,9 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -753,6 +769,9 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -998,6 +1017,9 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -1248,6 +1270,9 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -1379,6 +1404,9 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -1456,6 +1484,10 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
 
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
     await server.initialize()
     const options = {
       method: 'GET',
@@ -1530,6 +1562,10 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
+
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {

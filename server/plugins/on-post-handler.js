@@ -19,7 +19,7 @@ module.exports = {
 
           if (request.response.source.context) {
             request.response.source.context.fullUrl = encodeURI(fullUrl)
-            request.response.source.context.isDummyData = floodService.floods.isDummyData
+            request.response.source.context.isDummyData = request.response.source.context.model && request.response.source.context.model.isDummyData
             request.response.source.context.setCookieUsage = request.state.set_cookie_usage
             request.response.source.context.seenCookieMessage = request.state.seen_cookie_message
             request.response.source.context.isMockExternalHttp = mockExternalHttp
@@ -33,7 +33,7 @@ module.exports = {
           } else {
             request.response.source.context = {
               fullUrl: encodeURI(fullUrl),
-              isDummyData: floodService.floods.isDummyData,
+              isDummyData: false,
               isMockExternalHttp: floodService.mockExternalHttp,
               model: {
                 referer: requestHeadersReferer

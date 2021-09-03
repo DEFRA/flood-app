@@ -3,7 +3,7 @@ const messageContent = require('./outlook-content.json')
 
 class Outlook {
   constructor (outlook) {
-    if (!outlook || Object.keys(outlook).length === 0) {
+    if (!outlook || Object.keys(outlook).length === 0 || this.dataError) {
       this.dataError = true
       return
     }
