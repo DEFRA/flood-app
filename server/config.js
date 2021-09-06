@@ -24,7 +24,11 @@ const schema = joi.object({
   floodRiskUrl: joi.string().default(`http://localhost:${defaultPort}`),
   sessionPassword: joi.string(),
   mockExternalHttp: joi.boolean().default(false),
-  floodFisUrl: joi.string().default(`http://localhost:${defaultPort}`)
+  floodFisUrl: joi.string().default(`http://localhost:${defaultPort}`),
+  localCache: joi.boolean().default(true),
+  redisHost: joi.string().default(''),
+  redisPort: joi.number().default(6379),
+  redisPassword: joi.string().default('')
 })
 
 // Build config
@@ -47,7 +51,11 @@ const config = {
   floodRiskUrl: process.env.FLOOD_RISK_URL,
   sessionPassword: process.env.FLOOD_APP_SESSION_PASSWORD,
   mockExternalHttp: process.env.FLOOD_APP_MOCK_EXTERNAL_HTTP,
-  floodFisUrl: process.env.FLOOD_APP_FIS_URL
+  floodFisUrl: process.env.FLOOD_APP_FIS_URL,
+  localCache: process.env.FLOOD_APP_LOCAL_CACHE,
+  redisHost: process.env.FLOOD_APP_REDIS_HOST,
+  redisPort: process.env.FLOOD_APP_REDIS_PORT,
+  redisPassword: process.env.FLOOD_APP_REDIS_PASSWORD
 }
 
 // Validate config

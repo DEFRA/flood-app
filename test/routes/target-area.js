@@ -12,6 +12,7 @@ lab.experiment('Target-area tests', () => {
 
   lab.beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
+    delete require.cache[require.resolve('../../server/services/server-methods.js')]
     delete require.cache[require.resolve('../../server/routes/target-area.js')]
     sandbox = await sinon.createSandbox()
     server = Hapi.server({
@@ -102,6 +103,9 @@ lab.experiment('Target-area tests', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(targetAreaPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {
@@ -168,6 +172,9 @@ lab.experiment('Target-area tests', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(targetAreaPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
 
     await server.initialize()
     const options = {

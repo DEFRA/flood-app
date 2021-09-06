@@ -1,14 +1,13 @@
 const joi = require('@hapi/joi')
 const ViewModel = require('../models/views/target-area')
-const floodService = require('../services/flood')
 
 module.exports = {
   method: 'GET',
   path: '/target-area/{code}',
   handler: async (request, h) => {
     const { code } = request.params
-    const { floods } = await floodService.getFloods()
-    const area = await floodService.getFloodArea(code)
+    const { floods } = await request.server.methods.flood.getFloods()
+    const area = await request.server.methods.flood.getFloodArea(code)
     const flood = floods.find(n => n.ta_code === code)
     const parentFlood = floods.find(n => n.ta_code === area.parent)
     const model = new ViewModel({ area, flood, parentFlood })
