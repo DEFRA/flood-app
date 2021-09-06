@@ -131,4 +131,22 @@ lab.experiment('Outlook model test', () => {
     Code.expect(Result.bannerMainLink).to.equal('/target-area/011TESTC6KC')
     Code.expect(Result.bannerSub).to.equal('Flooding is expected')
   })
+  lab.test('Test no warnings and no high stations', async () => {
+    const noFlooding = data.noFlooding
+    const viewModel = new ViewModel(noFlooding)
+
+    const Result = await viewModel
+
+    Code.expect(Result.floods.length).to.equal(0)
+    Code.expect(Result.hasHighLevels).to.be.false()
+  })
+  lab.test('Test no warnings and high stations', async () => {
+    const noFlooding = data.noFloodingAndHighLevels
+    const viewModel = new ViewModel(noFlooding)
+
+    const Result = await viewModel
+
+    Code.expect(Result.floods.length).to.equal(0)
+    Code.expect(Result.hasHighLevels).to.be.true()
+  })
 })
