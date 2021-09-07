@@ -59,7 +59,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('No river, sea or groundwater levels found')
+    Code.expect(response.payload).to.contain('No river, sea, groundwater or rainfall levels found')
     Code.expect(response.payload).to.contain('0 levels')
     Code.expect(response.statusCode).to.equal(200)
   })
@@ -1531,7 +1531,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const response = await server.inject(options)
 
     Code.expect(response.payload).to.contain('0 levels')
-    Code.expect(response.payload).to.contain('No river, sea or groundwater levels found')
+    Code.expect(response.payload).to.contain('No river, sea, groundwater or rainfall levels found')
     Code.expect(response.payload).to.not.contain('id="filter"')
     Code.expect(response.payload).to.not.contain('<label class="govuk-label govuk-checkboxes__label" for="river-measurement">')
     Code.expect(response.payload).to.not.contain('<label class="govuk-label govuk-checkboxes__label" for="sea-measurement">')
