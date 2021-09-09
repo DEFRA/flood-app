@@ -1,0 +1,30 @@
+# Service refresh release 4.0.0 Friday 10th September 2021
+
+# Tickets
+
+FSR-401 - cookies
+FSR-402 - cookies
+FSR-403 - accessibility statement
+FSR-422 - content
+FSR-424 - content
+FSR-425 - content
+FSR-423 - content
+
+FSR-419 - Performance tuning enancements
+FSR-420 - Elasticache introduction to service
+
+# Instructions
+
+!Important: First off the password configuration variable for the production instances of elasticache need adding to config files after this has been provisioned in their flood-app.profile in gitlab, see commit 490a0a35
+
+Once elasticache deployed and password updated in configuration, proceed with the following jobs:
+
+LFW_{stage}_02_UPDATE_DATABASE - Please ensure job completes successfully, there have been some issues running this job in last week that required manual cleanup on dev/test.
+
+MISC/LFW_{stage}_99_DEPLOY_FLOOD_DATA_PIPELINE
+
+LFW_{stage}_03_UPDATE_GEOSERVER_PIPELINE - No code changes to geoserver, but configuration now points at readonly aurora endpoint
+
+LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Hand over to flood dev/test for manual smoke test prior to switchover.
