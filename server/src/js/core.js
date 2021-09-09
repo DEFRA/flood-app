@@ -130,7 +130,7 @@ const saveButton = document.getElementById('cookies-save')
 if (saveButton) {
   saveButton.addEventListener('click', function (e) {
     e.preventDefault()
-    const useCookies = document.querySelectorAll('input[name="sign-in"]')
+    const useCookies = document.querySelectorAll('input[name="accept-analytics"]')
     window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
     if (useCookies[0].checked) {
       window.flood.utils.setCookie('set_cookie_usage', 'true', 30)

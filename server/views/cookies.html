@@ -114,14 +114,14 @@
             </legend>
             <div class="govuk-radios govuk-radios--inline">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="sign-in" name="sign-in" type="radio" value="government-gateway" aria-describedby="sign-in-item-hint" {{ "checked" if analyticsCookiesSet }}>
-                <label class="govuk-label govuk-radios__label" for="sign-in">
+                <input class="govuk-radios__input" id="accept-analytics-yes" name="accept-analytics" type="radio" {{ "checked" if analyticsCookiesSet }}>
+                <label class="govuk-label govuk-radios__label" for="accept-analytics-yes">
                   Yes
                 </label>
               </div>
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="sign-in-2" name="sign-in" type="radio" value="govuk-verify" aria-describedby="sign-in-2-item-hint" {{ "checked" if not analyticsCookiesSet }}>
-                <label class="govuk-label govuk-radios__label" for="sign-in-2">
+                <input class="govuk-radios__input" id="accept-analytics-no" name="accept-analytics" type="radio" {{ "checked" if not analyticsCookiesSet }}>
+                <label class="govuk-label govuk-radios__label" for="accept-analytics-no">
                   No
                 </label>
               </div>
