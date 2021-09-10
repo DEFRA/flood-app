@@ -86,6 +86,8 @@
       <p>This service tells you your risk of flooding from rivers, the sea and groundwater. <a href="https://www.gov.uk/find-local-council">Contact your local council about surface water flooding</a> (also known as flash flooding).</p>
     {% endif %}
 
+    <p><a href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
+
     {% if model.hasActiveFloods %}
       <span id="map"></span>
     {% endif %}
@@ -99,7 +101,7 @@
     <p>Most measuring stations are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
     <p><a href="/river-and-sea-levels?q={{ model.location }}">Find a river, sea, groundwater or rainfall level in this area</a></p> 
     <!-- end river and sea levels -->
-    <h2 class="govuk-heading-m">Regional flood forecast</h2>
+    <h2 class="govuk-heading-m">Flood forecast for the next 5 days</h2>
     {% if model.outOfDate or model.dataError %}
     <div class="defra-service-error govuk-!-margin-bottom-3">
       <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>
@@ -108,7 +110,6 @@
     {% else %}
       {% include "partials/outlook-region.html" %}
     {% endif %}
-    <p><a href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
     {% include "partials/context-footer.html" %}
 
   </div>

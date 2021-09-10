@@ -11,7 +11,7 @@ class ViewModel {
       titleText: 'There is a problem',
       errorList: [
         {
-          text: 'Enter a real town, city or postcode',
+          text: 'Enter a town, city or postcode',
           href: '#location'
         }
       ]
