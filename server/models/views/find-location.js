@@ -43,7 +43,7 @@ class ViewModel {
     }
 
     if (err.errorMessage || err.message) {
-      this.locationInput.errorMessage = { text: 'Enter a real town, city or postcode' }
+      this.locationInput.errorMessage = { text: 'Enter a town, city or postcode' }
       this.locationInput.value = location
     }
   }
