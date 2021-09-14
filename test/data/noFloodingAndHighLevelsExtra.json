@@ -1,0 +1,132 @@
+{
+  "place": {
+    "name": "Warrington",
+    "center": [
+      -2.5893499851226807,
+      53.39387130737305
+    ],
+    "bbox": [
+      -2.5353000164031982,
+      53.420841217041016,
+      -2.6395580768585205,
+      53.36753845214844
+    ],
+    "address": "Warrington, Warrington",
+    "isEngland": {
+      "is_england": true
+    }
+  },
+  "floods": [],
+  "stations": [
+    {
+      "rloi_id": 5050,
+      "telemetry_id": "694063",
+      "region": "North West",
+      "catchment": "Lower Mersey",
+      "wiski_river_name": "River Mersey",
+      "agency_name": "Fiddlers Ferry",
+      "external_name": "Fiddlers Ferry",
+      "station_type": "S",
+      "status": "Active",
+      "qualifier": "u",
+      "iswales": false,
+      "value": null,
+      "value_timestamp": "2019-08-27T04:30:00.000Z",
+      "value_erred": false,
+      "percentile_5": "11",
+      "percentile_95": "2.611"
+    },
+    {
+      "rloi_id": 5050,
+      "telemetry_id": "694063",
+      "region": "North West",
+      "catchment": "Lower Mersey",
+      "wiski_river_name": "River Mersey",
+      "agency_name": "Fiddlers Ferry",
+      "external_name": "Fiddlers Ferry",
+      "station_type": "S",
+      "status": "Active",
+      "qualifier": "u",
+      "iswales": false,
+      "value": "13.0",
+      "value_timestamp": "2019-08-27T04:30:00.000Z",
+      "value_erred": false,
+      "percentile_5": "11",
+      "percentile_95": "2.611"
+    },
+    {
+      "rloi_id": 5149,
+      "telemetry_id": "693976",
+      "region": "North West",
+      "catchment": "Lower Mersey",
+      "wiski_river_name": "River Mersey",
+      "agency_name": "Westy",
+      "external_name": "Westy",
+      "station_type": "C",
+      "status": "Active",
+      "qualifier": "u",
+      "iswales": false,
+      "value": "3.704",
+      "value_timestamp": "2019-08-27T04:30:00.000Z",
+      "value_erred": false,
+      "percentile_5": "4.14",
+      "percentile_95": "3.548"
+    },
+    {
+      "rloi_id": 5149,
+      "telemetry_id": "693976",
+      "region": "North West",
+      "catchment": "Lower Mersey",
+      "wiski_river_name": "River Mersey",
+      "agency_name": "Westy",
+      "external_name": "Westy",
+      "station_type": "G",
+      "status": "Active",
+      "qualifier": "u",
+      "iswales": false,
+      "value": "3.704",
+      "value_timestamp": "2019-08-27T04:30:00.000Z",
+      "value_erred": false,
+      "percentile_5": "4.14",
+      "percentile_95": "3.548"
+    },
+    {
+      "rloi_id": 5149,
+      "telemetry_id": "693976",
+      "region": "North West",
+      "catchment": "Lower Mersey",
+      "wiski_river_name": "River Mersey",
+      "agency_name": "Westy",
+      "external_name": "Westy",
+      "station_type": "M",
+      "status": "Active",
+      "qualifier": "u",
+      "iswales": false,
+      "value": "3.704",
+      "value_timestamp": "2019-08-27T04:30:00.000Z",
+      "value_erred": false,
+      "percentile_5": "4.14",
+      "percentile_95": "3.548"
+    },
+    {
+      "rloi_id": 5149,
+      "telemetry_id": "693976",
+      "region": "North West",
+      "catchment": "Lower Mersey",
+      "wiski_river_name": "River Mersey",
+      "agency_name": "Westy",
+      "external_name": "Westy",
+      "station_type": "M",
+      "status": "Suspended",
+      "qualifier": "u",
+      "iswales": false,
+      "value": "3.704",
+      "value_timestamp": "2019-08-27T04:30:00.000Z",
+      "value_erred": false,
+      "percentile_5": "4.14",
+      "percentile_95": "3.548"
+    }
+  ],
+  "impacts": [],
+  "tabs": {}
+}

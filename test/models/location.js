@@ -158,4 +158,13 @@ lab.experiment('Outlook model test', () => {
     Code.expect(Result.floods.length).to.equal(0)
     Code.expect(Result.hasHighLevels).to.be.false()
   })
+  lab.test('Test no warnings and high with variety of station types', async () => {
+    const noFlooding = data.noFloodingAndHighLevelsExtra
+    const viewModel = new ViewModel(noFlooding)
+
+    const Result = await viewModel
+
+    Code.expect(Result.floods.length).to.equal(0)
+    Code.expect(Result.hasHighLevels).to.be.true()
+  })
 })

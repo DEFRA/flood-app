@@ -8,7 +8,7 @@
       beta
     </strong>
     <span class="govuk-phase-banner__text">
-      This is a new service – <a class="govuk-link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965">leave feedback</a> to help us improve it, or <a class="govuk-link" href="{{floodFisUrl}}{{liveServicePath}}">{{liveServiceText}}</a>
+      This is a new service – your <a class="govuk-link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965">feedback</a> will help us improve it.
     </span>
   </p>
 </div>
@@ -86,6 +86,8 @@
       <p>This service tells you your risk of flooding from rivers, the sea and groundwater. <a href="https://www.gov.uk/find-local-council">Contact your local council about surface water flooding</a> (also known as flash flooding).</p>
     {% endif %}
 
+    <p><a href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
+
     {% if model.hasActiveFloods %}
       <span id="map"></span>
     {% endif %}
@@ -95,11 +97,11 @@
     </p>
 
     <!-- River and sea levels -->
-    <h2 class="govuk-heading-m">Check river, sea and groundwater levels</h2>
+    <h2 class="govuk-heading-m">Latest river, sea, groundwater and rainfall levels</h2>
     <p>Most measuring stations are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
-    <p><a href="/river-and-sea-levels?q={{ model.location }}">Find a river, sea or groundwater level in this area</a></p> 
+    <p><a href="/river-and-sea-levels?q={{ model.location }}">Find a river, sea, groundwater or rainfall level in this area</a></p> 
     <!-- end river and sea levels -->
-    <h2 class="govuk-heading-m">Regional flood forecast</h2>
+    <h2 class="govuk-heading-m">Flood forecast for the next 5 days</h2>
     {% if model.outOfDate or model.dataError %}
     <div class="defra-service-error govuk-!-margin-bottom-3">
       <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>
@@ -108,7 +110,6 @@
     {% else %}
       {% include "partials/outlook-region.html" %}
     {% endif %}
-    <p><a href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
     {% include "partials/context-footer.html" %}
 
   </div>
