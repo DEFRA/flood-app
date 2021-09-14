@@ -71,10 +71,7 @@ class ViewModel {
     let hasHighLevels = false
     for (const s in stations) {
       if (
-        stations[s].station_type !== 'C' &&
-        stations[s].station_type !== 'G' &&
-        stations[s].value &&
-        stations[s].status.toLowerCase() === 'active' &&
+        stations[s].station_type !== 'C' && stations[s].station_type !== 'G' && stations[s].value && stations[s].status.toLowerCase() === 'active' &&
         parseFloat(stations[s].value) > parseFloat(stations[s].percentile_5)
       ) {
         hasHighLevels = true
