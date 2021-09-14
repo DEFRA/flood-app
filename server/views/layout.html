@@ -5,7 +5,7 @@
 {% from "cookie-banner/macro.njk" import govukCookieBanner %}
 
 {% set metaTitle = (pageTitle or model.pageTitle or 'Check for flooding') + ' - GOV.UK' %}
-{% set metaDescription = model.metaDescription | default('Check your risk of flooding: get current flood warnings, river and sea levels, check the 5-day forecast or use flood risk maps') %}
+{% set metaDescription = model.metaDescription | default('') %}
 {% set metaKeywords = model.metaKeywords | default('flooding, flood risk, flood map, flood warnings, flood alerts, river levels, advice, guiance, gov.uk, england') %}
 {% set metaCanonical = model.metaCanonical %}
 {% set metaNoIndex = model.metaNoIndex %}
@@ -24,8 +24,8 @@
   <meta property="og:url" content="{{fullUrl}}" />
   <meta property="og:title" content="{{metaTitle}}" />
   <meta property="og:description" content="{{metaDescription}}" />
-  <meta property="keywords" content="{{metaKeywords}}" />
-  <meta property="description" content="{{metaDescription}}" />
+  <meta name="keywords" content="{{metaKeywords}}" />
+  <meta name="description" content="{{metaDescription}}" />
   <meta name="google-site-verification" content="HjuKUejT64a0rBdUxxtbnIKNB4_cZ3X3hlXOxk4_OX8" />
   {#% if metaNoIndex %#}
   <meta name="robots" content="noindex" />
