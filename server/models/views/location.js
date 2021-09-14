@@ -70,10 +70,14 @@ class ViewModel {
     // Count stations that are 'high'
     let hasHighLevels = false
     for (const s in stations) {
-      if (stations[s].station_type !== 'C' && stations[s].station_type !== 'G' && stations[s].value && stations[s].status.toLowerCase() === 'active') {
-        if (parseFloat(stations[s].value) > parseFloat(stations[s].percentile_5)) {
-          hasHighLevels = true
-        }
+      if (
+        stations[s].station_type !== 'C' &&
+        stations[s].station_type !== 'G' &&
+        stations[s].value &&
+        stations[s].status.toLowerCase() === 'active' &&
+        parseFloat(stations[s].value) > parseFloat(stations[s].percentile_5)
+      ) {
+        hasHighLevels = true
       }
     }
     this.hasHighLevels = hasHighLevels
