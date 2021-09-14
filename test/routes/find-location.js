@@ -78,7 +78,7 @@ lab.experiment('Routes test - find-location', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.include('Enter a real town, city or postcode')
+    Code.expect(response.payload).to.include('Enter a town, city or postcode')
   })
   lab.test('POST- England, display national page', async () => {
     const options = {

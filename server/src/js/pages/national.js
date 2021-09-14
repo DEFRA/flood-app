@@ -20,7 +20,7 @@ if (document.getElementById('map-live')) {
 // Create Outlook Map
 if (document.getElementById('map-outlook')) {
   window.flood.maps.createOutlookMap('map-outlook', {
-    btnText: 'View map showing areas of concern',
+    btnText: 'View map showing flood risk areas',
     btnClasses: 'defra-button-map',
     days: window.flood.model.outlook.days
   })

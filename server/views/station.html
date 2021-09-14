@@ -53,7 +53,7 @@
     <div class="govuk-grid-column-full">
       <div class="defra-service-error govuk-!-margin-bottom-2">
         <h2 class="defra-service-error__title" id="error-summary-title">
-          This measuring station is currently offline
+          This measuring station is offline
         </h2>
         <p class="govuk-body govuk-!-margin-bottom-0">
           {% if model.station.statusReason %}
@@ -61,7 +61,7 @@
           {% else %}
             We are working to get it back online.
           {% endif %} 
-          You can <a href="/river-and-sea-levels">check another river or sea level</a>.
+          You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a>.
         </p>
       </div>
     </div>
@@ -77,7 +77,7 @@
           This measuring station is closed
         </h2>
         <p class="govuk-body govuk-!-margin-bottom-0">
-          No data is available. You can <a href="/river-and-sea-levels">check another river or sea level</a>.
+          No data is available. You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a>.
         </p>
       </div>
     </div>
@@ -87,9 +87,9 @@
 
 {% if model.isFfoi and model.forecastOutOfDate %}
   <div class="defra-service-error govuk-!-margin-bottom-8">
-    <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is a problem with the forecast data</h2>
+    <h2 class="defra-service-error__title" id="error-summary-title">There's a problem with the forecast data</h2>
     <p class="govuk-body govuk-!-margin-bottom-0">
-      The forecast data is missing or more than 24 hours old.
+      The forecast data is missing or more than 24 hours old. Try again later.
     </p>
   </div>
 {% endif %}
@@ -101,7 +101,7 @@
         <div class="govuk-grid-column-full">
           {% if model.outOfDate === true %}
             <div class="defra-service-error govuk-!-margin-bottom-8">
-              <h2 class="defra-service-error__title" id="error-summary-title">Sorry, this data feed was interrupted</h2>
+              <h2 class="defra-service-error__title" id="error-summary-title">This data feed was interrupted</h2>
               <p class="govuk-body govuk-!-margin-bottom-0">
                 Normal service resumed at {{ model.station.formattedStatusTime }} on {{ model.station.formattedStatusDate }}.
               </p>
@@ -147,7 +147,7 @@
         <div class="govuk-grid-column-full">
           <div class="defra-service-error govuk-!-margin-bottom-3">
             <h2 class="defra-service-error__title" id="error-summary-title">
-              Sorry, there is a problem with the latest measurement
+              There's a problem with the latest measurement
             </h2>
             <p class="govuk-body govuk-!-margin-bottom-0">
               The latest measurement is unreliable. This could be due to a fault with the measuring equipment.
@@ -160,8 +160,8 @@
   {% else %}
     
   <div class="defra-service-error govuk-!-margin-bottom-3">
-    <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>
-    <p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>
+    <h2 class="defra-service-error__title" id="error-summary-title">There's a problem with the data</h2>
+    <p class="govuk-body govuk-!-margin-bottom-0">There's no recent data. Try again later.</p>
   </div>
     
   {% endif %}
@@ -171,9 +171,9 @@
   <div class="govuk-grid-column-full">
     <nav aria-label="Related levels" class="defra-flood-nav govuk-!-margin-top-3 govuk-!-margin-bottom-6">
       <span id="map"></span>
-      {% if model.station.riverNavigation.up %}<a href="/station/{{model.station.riverNavigation.up}}" class="defra-flood-nav__link defra-flood-nav__link--upstream">Go upstream</a>{% endif %}
-      {% if model.station.riverNavigation.down %}<a href="/station/{{model.station.riverNavigation.down}}" class="defra-flood-nav__link defra-flood-nav__link--downstream">Go downstream</a>{% endif %}
-      <a href="/river-and-sea-levels?rloi-id={{model.station.id}}" class="defra-flood-nav__link">Check nearby measurements</a>
+      {% if model.station.riverNavigation.up %}<a href="/station/{{model.station.riverNavigation.up}}" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>{% endif %}
+      {% if model.station.riverNavigation.down %}<a href="/station/{{model.station.riverNavigation.down}}" class="defra-flood-nav__link defra-flood-nav__link--downstream">Downstream</a>{% endif %}
+      <a href="/river-and-sea-levels?rloi-id={{model.station.id}}" class="defra-flood-nav__link">Nearby levels</a>
     </nav>
   </div>
 </div>
@@ -184,7 +184,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <figure class="defra-line-chart" aria-hidden="true" hidden>
-      <figcaption class="govuk-heading-m govuk-!-margin-bottom-7">Height over the last 5 days {% if model.isFfoi %}and the 36 hour forecast{% endif %}</figcaption>
+      <figcaption class="govuk-heading-m govuk-!-margin-bottom-7">Height over the last 5 days {% if model.isFfoi %}and upto the 36 hour forecast{% endif %}</figcaption>
         <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
         {% if model.isFfoi and not model.forecastOutOfDate %}
         <p class="govuk-body-s govuk-!-margin-top-0 govuk-!-margin-bottom-2"> {{ model.forecastDetails }}</p>
@@ -199,7 +199,7 @@
   </div>
 </div>
 
-<a href="/station-csv/{{model.station.id}}{% if model.station.qualifier == 'd' %}/downstream{% endif %}" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-2">Download height data CSV (~{% if model.isFfoi %}16{% else %}12{% endif %}Kb)</a>
+<a href="/station-csv/{{model.station.id}}{% if model.station.qualifier == 'd' %}/downstream{% endif %}" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-2">Download height data CSV (-{% if model.isFfoi %}16{% else %}12{% endif %}KB)</a>
 {% endif %}
 
 {# Impacts and thresholds #}
@@ -238,7 +238,7 @@
     <p class="govuk-body-s govuk-!-margin-top-3 govuk-!-margin-bottom-0">Past impacts might not happen at the same level if flood defences have been put in place since then.</p>
   {% endif %}
 {% endif %}
-
+<p>No two flood events are the same. Flooding might not happen again at the same historical levels if, for example, flood defences are now in place</p>
 {# Station Details #}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">

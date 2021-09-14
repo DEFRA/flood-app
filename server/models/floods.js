@@ -20,7 +20,7 @@ class Floods {
                         <dl class="defra-flood-list__item-meta">
                             <div>
                           <dt>
-                              ${item.id === 4 ? 'Removed' : 'Updated'}
+                              ${item.id === 4 ? 'Removed' : 'Updated'} at
                           </dt>
                           <dd>
                               <time datetime="${flood.situation_changed}">${moment.tz(flood.situation_changed, 'Europe/London').format('h:mma')} on ${moment(flood.situation_changed).tz('Europe/London').format('D MMMM YYYY')}</time>
