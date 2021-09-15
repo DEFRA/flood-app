@@ -16,7 +16,8 @@ class ViewModel {
 
     Object.assign(this, {
       pageTitle: 'Flood warnings in England',
-      metaDescription: 'Check the latest flood risk situation for england and the 5-day flood forecast.',
+      metaDescription:
+        'View current flood warnings and alerts for England and the national flood forecast for the next 5 days. Also check river, sea, groundwater and rainfall levels.',
       metaKeywords: 'flooding, flood risk, flood map, flood warnings, flood alerts, river and sea levels, 5-day flood forecast, gov.uk, england',
       metaCanonical: '/national',
       hasActiveFloods: floods.hasActiveFloods,

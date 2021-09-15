@@ -46,7 +46,7 @@ class ViewModel {
     }
 
     const pageTitle = (severityLevel && severityLevel.isActive ? severityLevel.title + ' for ' + area.name : `${area.name} flood ${type} area`)
-    const metaDescription = `Advice and guidance for residents living in the flood risk area: ${area.description}.`
+    const metaDescription = `Flooding information and advice for the area: ${area.description}.`
     const metaCanonical = `/target-area/${area.code}`
 
     Object.assign(this, {
