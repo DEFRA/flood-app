@@ -1579,7 +1579,7 @@ lab.experiment('Test - /station/{id}', () => {
   lab.test('GET station/5146 with status date showing time data interupted', async () => {
     const floodService = require('../../server/services/flood')
 
-    var dateInterupted = new Date();
+    const dateInterupted = new Date()
     dateInterupted.setDate(dateInterupted.getDate() - 2)
 
     const fakeStationData = () => {

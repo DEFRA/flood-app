@@ -281,7 +281,7 @@ class ViewModel {
       if (riverId === 'Sea Levels') {
         titles.sub = 'Showing Sea levels.'
         titles.page = 'Sea levels in England'
-      } else if (riverId === 'Groundwater Levels') {                 
+      } else if (riverId === 'Groundwater Levels') {
         titles.sub = 'Showing Groundwater levels.'
         titles.page = 'Groundwater levels in England'
       } else {
