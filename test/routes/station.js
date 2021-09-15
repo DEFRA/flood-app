@@ -1032,7 +1032,6 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.not.contain('The highest level in the forecast is')
     Code.expect(response.payload).to.not.contain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
-    Code.expect(response.payload).to.contain('Past impacts might not happen at the same level if flood defences have been put in place since then.')
     Code.expect(response.payload).to.contain('<a href="/station-csv/7333" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-2">Download height data CSV (-16KB)</a>')
   })
   lab.test('GET station/7333 ffoi with max value ', async () => {

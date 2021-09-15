@@ -311,7 +311,7 @@ class ViewModel {
       thresholds.push({
         id: 'pc5',
         value: this.station.percentile5,
-        description: 'This is the top of the normal range.',
+        description: 'This is the top of the normal range',
         shortname: 'Top of normal range'
       })
     }
