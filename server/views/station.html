@@ -113,7 +113,7 @@
             {# if station has hasPercentiles, this should exclude Coastal #}
               {% if model.station.hasPercentiles and not model.station.isCoastal  %}
               <div class="defra-flood-statistics__row"> 
-                <dt class="defra-flood-statistics__key">Status</dt>
+                <dt class="defra-flood-statistics__key">State</dt>
                 <dd class="defra-flood-statistics__value">
                   <strong class="defra-flood-statistics__impact defra-flood-statistics__impact{% if model.station.state === 'Normal' %}--normal{% elif model.station.state === 'High' %}--high{% endif %}">
                     {{ model.station.state }}
@@ -234,11 +234,8 @@
     </dl> 
   </div>
 </div>
-  {% if model.station.hasImpacts %}
-    <p class="govuk-body-s govuk-!-margin-top-3 govuk-!-margin-bottom-0">Past impacts might not happen at the same level if flood defences have been put in place since then.</p>
-  {% endif %}
 {% endif %}
-<p>No two flood events are the same. Flooding might not happen again at the same historical levels if, for example, flood defences are now in place</p>
+<p>No two flood events are the same. Flooding might not happen again at the same historical levels if, for example, flood defences are now in place.</p>
 {# Station Details #}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
