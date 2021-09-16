@@ -8,6 +8,7 @@ const routes = [].concat(
   require('../routes/api/stations.geojson'),
   require('../routes/api/rainfall.geojson'),
   require('../routes/api/warnings.geojson'),
+  require('../routes/api/warnings'),
   require('../routes/api/places.geojson'),
   require('../routes/api/ows'),
   require('../routes/api/outlook'),
