@@ -1036,7 +1036,6 @@ lab.experiment('Test - /station/{id}', () => {
   })
   lab.test('GET station/7333 ffoi with max value ', async () => {
     const floodService = require('../../server/services/flood')
-
     const fakeStationData = () => {
       return {
         actual_ngr: 'TL2998009950',
