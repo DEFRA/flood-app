@@ -8,9 +8,7 @@ module.exports = (floods, isLocalised) => {
   return text.replace('$counts', counts)
 }
 
-const getText = (all, isLocalised) => {
-  return `There ${all === 1 ? 'is' : 'are'} currently $counts in force${isLocalised ? ' at this location' : ''}.`
-}
+const getText = (all, isLocalised) => `There ${all === 1 ? 'is' : 'are'} currently $counts in force${isLocalised ? ' at this location' : ''}.`
 
 const getCounts = (all, severeWarnings, warnings, alerts) => {
   let counts = ''
@@ -18,20 +16,24 @@ const getCounts = (all, severeWarnings, warnings, alerts) => {
     counts = 'no flood warnings or alerts'
   } else {
     if (severeWarnings > 0) {
-      counts += `${severeWarnings === 1 ? 'one' : severeWarnings} severe flood warning${severeWarnings > 1 ? 's' : ''}`
+      counts += getSevereWarnings(severeWarnings)
     }
     if (warnings > 0) {
       if (counts.length > 0) {
         counts += `${alerts > 0 ? ', ' : ' and '}`
       }
-      counts += `${warnings === 1 ? 'one' : warnings} flood warning${warnings > 1 ? 's' : ''}`
+      counts += getWarnings(warnings)
     }
     if (alerts > 0) {
       if (counts.length > 0) {
         counts += ' and '
       }
-      counts += `${alerts === 1 ? 'one' : alerts} flood alert${alerts > 1 ? 's' : ''}`
+      counts += getAlerts(alerts)
     }
   }
   return counts
 }
+
+const getSevereWarnings = (severeWarnings) => `${severeWarnings === 1 ? 'one' : severeWarnings} severe flood warning${severeWarnings > 1 ? 's' : ''}`
+const getWarnings = (warnings) => `${warnings === 1 ? 'one' : warnings} flood warning${warnings > 1 ? 's' : ''}`
+const getAlerts = (alerts) => `${alerts === 1 ? 'one' : alerts} flood alert${alerts > 1 ? 's' : ''}`
