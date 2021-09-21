@@ -52,7 +52,7 @@ module.exports = {
     }
 
     // Check if it's a forecast station
-    if (thresholds.length) {
+    if (thresholds.length && station.status !== 'Suspended') {
       // Forecast station
       const values = await request.server.methods.flood.getStationForecastData(station.wiski_id)
       const forecast = { thresholds, values }
