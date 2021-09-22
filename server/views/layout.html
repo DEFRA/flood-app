@@ -5,10 +5,8 @@
 {% from "cookie-banner/macro.njk" import govukCookieBanner %}
 
 {% set metaTitle = (pageTitle or model.pageTitle or 'Check for flooding') + ' - GOV.UK' %}
-{% set metaDescription = model.metaDescription | default('') %}
-{% set metaKeywords = model.metaKeywords | default('flooding, flood risk, flood map, flood warnings, flood alerts, river levels, advice, guiance, gov.uk, england') %}
+{% set metaDescription = model.metaDescription | default('Check your risk of flooding. View the latest flood warnings and alerts, get a flood forecast for the next 5 days, and check the latest river, sea, groundwater and rainfall levels.') %}
 {% set metaCanonical = model.metaCanonical %}
-{% set metaNoIndex = model.metaNoIndex %}
 {% set metaFeedback = model.feedback %}
 {% set liveServiceText = ( liveServiceText or 'use the current service') %}
 {% set liveServicePath = ( liveServicePath or '/warnings') %}
@@ -19,51 +17,23 @@
 
 {% block head %}
   <!-- <meta http-equiv="refresh" content="900"/> -->
+  <meta charset="utf-8">
   <meta property="fb:app_id" content="{{fbAppId}}" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="{{fullUrl}}" />
   <meta property="og:title" content="{{metaTitle}}" />
   <meta property="og:description" content="{{metaDescription}}" />
-  <meta name="keywords" content="{{metaKeywords}}" />
   <meta name="description" content="{{metaDescription}}" />
   <meta name="google-site-verification" content="HjuKUejT64a0rBdUxxtbnIKNB4_cZ3X3hlXOxk4_OX8" />
-  {#% if metaNoIndex %#}
-  <meta name="robots" content="noindex" />
-  {#% endif %#}
   <!-- Stage: {{ env }} {{ stage }} -->
   <!-- Application version: {{ appVersion }} -->
 
-  <!--[if !IE 8]><!-->
   <link href="{{ assetPath }}/stylesheets/application.css" rel="stylesheet" />
-  <!--<![endif]-->
 
-  {# For Internet Explorer 8, you need to compile specific stylesheet #}
-  {# see https://github.com/alphagov/govuk-frontend/blob/master/docs/installation/supporting-internet-explorer-8.md #}
-  <!--[if IE 8]>
-    <link href="{{ assetPath }}/govuk-frontend/all-ie8.css" rel="stylesheet" />
-  <![endif]-->
   {% if metaCanonical %}
-    <link rel="canonical" href="{{ metaCanonical }}"/>
+    <link rel="canonical" href="{{fullUrl}}"/>
   {% endif %}
-  <!--
-  <script src="//cdn.polyfill.io/v2/polyfill.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-  -->
-  <!-- Hotjar Tracking Code for https://flood-private-beta.aws.defra.cloud/warnings -->
-  <!-- <script>
-    (function (h, o, t, j, a, r) {
-      h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) }
-        ;
-      h._hjSettings =
   
-        { hjid: 1036786, hjsv: 6 }
-        ;
-      a = o.getElementsByTagName('head')[0];
-      r = o.createElement('script'); r.async = 1;
-      r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
-      a.appendChild(r);
-    })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
-  </script> -->
 {% endblock %}
 
 {% block header %}

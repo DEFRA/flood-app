@@ -6,7 +6,6 @@ class ViewModel {
       q: location,
       map: station ? 'map-station' : 'map',
       station: station || null,
-      metaNoIndex: true,
       placeName: place ? place.name : '',
       placeBbox: place ? place.bbox2k : [],
       placeCentre: place ? place.center : [],

@@ -242,7 +242,7 @@ class ViewModel {
     const coordinates = JSON.parse(this.station.coordinates).coordinates
     coordinates.reverse()
 
-    // Set pageTitle, metaDescription and metaKeywords
+    // Set pageTitle, metaDescription
     let stationType
     const stationLocation = this.station.name
     if (this.station.type === 'c') {
@@ -264,7 +264,6 @@ class ViewModel {
       this.postTitle = `Latest river level information for the ${this.station.river} at ${this.station.name} ${this.station.isMulti ? this.station.direction : ''}`
     }
     this.metaDescription = `Check the latest recorded ${stationType.toLowerCase()} level and recent 5-day trend at ${stationLocation}`
-    this.metaKeywords = `${stationType} level, ${this.station.name}${this.station.isRiver ? ', ' + this.station.river : ''}${forecast ? ', forecast level' : ''}, flood risk, flood map, gov.uk`
 
     // Thresholds
     let thresholds = []

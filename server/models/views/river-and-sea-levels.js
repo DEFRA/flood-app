@@ -6,7 +6,6 @@ class ViewModel {
   constructor ({ location, place, stations, targetArea, riverIds, referer, error }) {
     Object.assign(this, {
       q: location,
-      metaNoIndex: true,
       placeName: this.getPlaceName(place, targetArea),
       placeDescription: this.getPlaceDescription(targetArea),
       placeCentre: place ? place.center : [],
