@@ -6,7 +6,7 @@ module.exports = {
     cookieOptions: {
       password: config.sessionPassword,
       isSecure: config.siteUrl.substring(0, 5) === 'https',
-      isHttpOnly: false
+      isHttpOnly: true
     },
     maxCookieSize: 1024
   }
