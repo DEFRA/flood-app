@@ -1,6 +1,6 @@
 const severity = require('../severity')
 const { groupBy } = require('../../util')
-const { floodFisUrl, bingKeyMaps } = require('../../config')
+const { floodFisUrl, bingKeyMaps, floodRiskUrl } = require('../../config')
 const moment = require('moment-timezone')
 
 class ViewModel {
@@ -13,6 +13,7 @@ class ViewModel {
       placeBbox: place ? place.bbox2k : [],
       floods,
       impacts,
+      floodRiskUrl,
       tabs,
       outOfDate,
       location: encodeURIComponent(title),
