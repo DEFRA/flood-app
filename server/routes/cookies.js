@@ -6,7 +6,16 @@ module.exports = {
   path: '/cookies',
   handler: async (request, h) => {
     const analyticsCookiesSet = Object.keys(request.state).some(key => /^_ga$|^_gid$|^_gat_gtag_./g.test(key))
-    const requestHeadersReferer = request.headers.referer && request.headers.referer.startsWith(siteUrl) ? request.headers.referer : ''
+    let requestHeadersReferer = request.headers.referer && request.headers.referer.startsWith(siteUrl) ? encodeURI(request.headers.referer) : ''
+
+    if (requestHeadersReferer) {
+      // Attempt to ensure valid path structure
+      const urlStringArr = requestHeadersReferer.split(siteUrl)
+      if (urlStringArr[1] && !urlStringArr[1].startsWith('/') && !siteUrl.endsWith('/')) {
+        requestHeadersReferer = ''
+      }
+    }
+
     return h.view('cookies', {
       pageTitle: 'Cookies - Flood information service - GOV.UK',
       heading: 'Flood information service',
