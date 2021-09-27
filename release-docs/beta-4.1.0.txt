@@ -1,0 +1,27 @@
+# Service refresh release 4.1.0 Wednesday 29 September 2021
+
+# Release
+
+https://eaflood.atlassian.net/projects/FSR/versions/15655/tab/release-report-all-issues
+
+# Tickets
+
+FSR-400 - content
+FSR-432 - LTFRI warnings API
+FSR-146 - Meta data description
+FSR-371 - Remove links to live service
+FSR-428 - broken ARIA fix
+FSR-440 - message fix for suspended forecast station
+FSR-429 - station list level fix
+FSR-444 - security test session cookie to httponly
+
+
+# Instructions
+
+Please note release also includes scaling and auto scaling policy off the back of performance testing that was held back due to security testing.
+
+Straight forward application build and deploy.
+
+LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
