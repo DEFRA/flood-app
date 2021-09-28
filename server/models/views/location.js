@@ -18,7 +18,8 @@ class ViewModel {
       outOfDate,
       location: encodeURIComponent(title),
       pageTitle: `Check for flooding in ${title}`,
-      metaDescription: `View current flood warnings and alerts for the ${title} area, and the regional flood forecast for the next 5 days. Also check local river, sea, groundwater and rainfall levels.`,
+      metaDescription: `View current flood warnings and alerts for the ${title} area,` +
+        ' and the regional flood forecast for the next 5 days. Also check local river, sea, groundwater and rainfall levels.',
       floodFisUrl,
       dateFormatted: 'Up to date as of ' + moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY'),
       feedback: false,
@@ -27,7 +28,6 @@ class ViewModel {
 
     const hasFloods = !!floods.length
 
-    // Floods
     if (hasFloods) {
       const activeFloods = floods.filter(flood => flood.severity_value < 4)
       const inactiveFloods = floods.filter(flood => flood.severity_value === 4)
