@@ -42,8 +42,7 @@ class ViewModel {
       const grouped = groupBy(floods, 'severity_value')
       const groups = severity.map(item => {
         return {
-          severity: item,
-          floods: grouped[item.id]
+          severity: item, floods: grouped[item.id]
         }
       }).filter(item => {
         return !!item.floods // filters out any without a floods array
