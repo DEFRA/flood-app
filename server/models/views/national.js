@@ -1,6 +1,6 @@
 const moment = require('moment-timezone')
 const formatDate = require('../../util').formatDate
-const { bingKeyMaps } = require('../../config')
+const { bingKeyMaps, floodRiskUrl } = require('../../config')
 const tz = 'Europe/London'
 
 class ViewModel {
@@ -30,7 +30,8 @@ class ViewModel {
       outlookUTC: moment(outlook._timestampOutlook).tz(tz).format(),
       dataError: outlook.dataError,
       isDummyData: floods.isDummyData,
-      outlookOutOfDate
+      outlookOutOfDate,
+      floodRiskUrl
     })
 
     // Strip out flood array as it is superflous to the view

@@ -271,8 +271,6 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    console.log(response.payload)
-
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.not.contain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is offline</h2>')
   })
