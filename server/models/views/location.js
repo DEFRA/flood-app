@@ -1,6 +1,6 @@
 const severity = require('../severity')
 const { groupBy } = require('../../util')
-const { floodFisUrl, bingKeyMaps } = require('../../config')
+const { floodFisUrl, bingKeyMaps, floodRiskUrl } = require('../../config')
 const moment = require('moment-timezone')
 
 class ViewModel {
@@ -13,6 +13,7 @@ class ViewModel {
       placeBbox: place ? place.bbox2k : [],
       floods,
       impacts,
+      floodRiskUrl,
       tabs,
       outOfDate,
       location: encodeURIComponent(title),
@@ -27,7 +28,6 @@ class ViewModel {
 
     const hasFloods = !!floods.length
 
-    // Floods
     if (hasFloods) {
       const activeFloods = floods.filter(flood => flood.severity_value < 4)
       const inactiveFloods = floods.filter(flood => flood.severity_value === 4)
@@ -42,8 +42,7 @@ class ViewModel {
       const grouped = groupBy(floods, 'severity_value')
       const groups = severity.map(item => {
         return {
-          severity: item,
-          floods: grouped[item.id]
+          severity: item, floods: grouped[item.id]
         }
       }).filter(item => {
         return !!item.floods // filters out any without a floods array
