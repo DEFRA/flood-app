@@ -1,0 +1,33 @@
+# Check for flooding live release Wednesday 13th October 2021
+
+# Release
+
+https://eaflood.atlassian.net/projects/FSR/versions/15658/tab/release-report-all-issues
+
+# Tickets
+
+FSR-144 - SEO
+FSR-434 - RFC
+FSR-447 - XSS vulnerability 
+FSR-145 - Redirects
+FSR-433 - LTFRI link update
+FSR-451 - Accessibility statement
+FSR-456 - google site verification code
+FSR-457 - dependency update
+
+# Instructions
+
+This is the release for beta to live switchover for check for flooding service, including all the various webops tasks required for scaling, policies and redirects.
+
+For peace of mind all build jobs to be completed in following order.
+
+serverless data job: LFW_{stage}_99_DEPLOY_FLOOD_DATA_PIPELINE
+
+Followed by full app build:
+
+LFW_{stage}_02_UPDATE_DATABASE
+LFW_{stage}_03_UPDATE_GEOSERVER_PIPELINE
+LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
+
