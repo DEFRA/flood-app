@@ -1,6 +1,9 @@
 'use strict'
 // "flood" represents the global namespace for
 // client-side javascript across all our pages
+import 'core-js/modules/es6.promise'
+import 'core-js/modules/es6.array.iterator'
+
 window.flood = {
   utils: {
     xhr: (url, callback) => {
@@ -56,18 +59,21 @@ window.flood = {
       document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + document.domain
     },
     setGTagAnalyticsCookies: () => {
-      import(/* webpackIgnore: true */ `https://www.googletagmanager.com/gtag/js?id=${process.env.GA_ID}`).then(() => {
+      const script = document.createElement('script')
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.GA_ID}`
+      script.onload = () => {
         window.dataLayer = window.dataLayer || []
         function gtag () { window.dataLayer.push(arguments) }
         gtag('js', new Date())
         gtag('config', process.env.GA_ID, { cookie_domain: document.domain })
       }
-      )
+      document.body.appendChild(script)
     }
   }
 }
 
 const elem = document.getElementById('cookie-banner')
+let calledGTag = false
 
 // Check not on cookie settings page
 if (elem) {
@@ -103,11 +109,11 @@ if (cookieButtons) {
     e.preventDefault()
     window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
     window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
+    calledGTag = true
     window.flood.utils.setGTagAnalyticsCookies()
 
     document.getElementById('cookie-message').style.display = 'none'
     document.getElementById('cookie-confirmation-type').innerText = 'accepted'
-    document.getElementById('cookie-confirmation').removeAttribute('style')
   })
 
   // Second button in banner
@@ -134,6 +140,7 @@ if (saveButton) {
     window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
     if (useCookies[0].checked) {
       window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
+      calledGTag = true
       window.flood.utils.setGTagAnalyticsCookies()
     } else {
       window.flood.utils.setCookie('set_cookie_usage', '', -1)
@@ -149,4 +156,12 @@ if (saveButton) {
     alert.removeAttribute('style')
     alert.focus()
   })
+}
+
+if (!calledGTag) {
+  // finally make Gtag page view if not before and cookie allows
+  if (window.flood.utils.getCookie('set_cookie_usage')) {
+    calledGTag = true
+    window.flood.utils.setGTagAnalyticsCookies()
+  }
 }
