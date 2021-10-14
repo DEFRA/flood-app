@@ -1,0 +1,17 @@
+# Check for flooding Emergency RFC 5.1.0 15 October 2021
+
+
+# Tickets
+
+FSR-460 - IE-11 and analytics bug fix.
+
+# Instructions
+
+!important, ensure all changes from 5.0.0 and live switchover have been applied to the green environment.
+
+Straight forward application build for release
+
+LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
+
