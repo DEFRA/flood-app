@@ -76,9 +76,7 @@
     .grid path {
         visibility: hidden;
     }
-    .grid.x .tick:last-of-type line {
-        visibility: hidden;
-    }
+
     // Observed
     .observed-line { 
         stroke: $govuk-link-colour;
