@@ -43,9 +43,7 @@ lab.experiment('Get Routes test', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.include('Check if a location in England is at risk of flooding now')
-    Code.expect(response.headers['content-type']).to.include('text/html')
+    Code.expect(response.statusCode).to.equal(301)
   })
 
   lab.test('GET /sms-auto-opt-in-info', async () => {
