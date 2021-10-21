@@ -423,6 +423,20 @@ function LiveMap (mapId, options) {
       model.state = feature.get('state')
       model.name = capitalise(model.station_name)
     }
+
+    // format rainfall
+    if (model.one_hr_total){
+      model.one_hr_total = Math.round(model.one_hr_total * 10) / 10
+    }
+
+    if (model.six_hr_total){
+      model.six_hr_total = Math.round(model.six_hr_total * 10) / 10
+    }
+
+    if (model.day_total){
+      model.day_total = Math.round(model.day_total * 10) / 10
+    }
+
     const html = window.nunjucks.render('info-live.html', { model: model })
     feature.set('html', html)
   }
