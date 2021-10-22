@@ -12,7 +12,7 @@ module.exports = {
   method: 'GET',
   path: '/location',
   handler: async (request, h) => {
-    const { q: location } = request.query
+    const location = request.query.q || request.query.location
 
     let place
 
@@ -54,7 +54,8 @@ module.exports = {
   options: {
     validate: {
       query: joi.object({
-        q: joi.string().trim().max(200).required(),
+        q: joi.string().trim().max(200),
+        location: joi.string().trim().max(200),
         cz: joi.string(),
         l: joi.string(),
         btn: joi.string(),
@@ -62,13 +63,14 @@ module.exports = {
         fid: joi.string(),
         lyr: joi.string(),
         v: joi.string()
-      }),
-      failAction: (request, h, err) => {
+      }).or('q', 'location'), // q or location must be present in request.query
+      failAction: (request, h) => {
         console.error('Location search error: Invalid or no string input.')
-        if (!request.query.q) {
+        const location = request.query.q || request.query.location
+        if (!location) {
           return h.redirect('/find-location').takeover()
         } else {
-          return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: request.query.q }).takeover()
+          return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location }).takeover()
         }
       }
     }
