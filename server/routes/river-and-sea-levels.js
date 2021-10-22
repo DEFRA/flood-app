@@ -67,6 +67,7 @@ module.exports = [{
     validate: {
       query: joi.object({
         q: joi.string().allow('').trim().max(200),
+        location: joi.string().allow('').trim().max(200),
         'river-id': joi.string(),
         'target-area': joi.string(),
         types: joi.string().allow('S', 'M', 'C', 'G', 'R'),
@@ -137,7 +138,7 @@ module.exports = [{
 const getParameters = request => {
   const redirect = request.yar.get('redirect', true)
   return {
-    location: redirect ? request.yar.get('q', true) : request.query.q,
+    location: redirect ? request.yar.get('q', true) : request.query.q || request.query.location,
     riverIds: redirect ? request.yar.get('river-id') : request.query['river-id'],
     taCode: redirect ? request.yar.get('ta-code', true) : request.query['target-area'],
     rloiid: redirect ? request.yar.get('rloi-id', true) : request.query['rloi-id'],
