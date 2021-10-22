@@ -68,7 +68,7 @@ module.exports = {
         console.error('Location search error: Invalid or no string input.')
         const location = request.query.q || request.query.location
         if (!location) {
-          return h.redirect('/find-location').takeover()
+          return h.redirect('/').takeover()
         } else {
           return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location }).takeover()
         }

@@ -52,7 +52,7 @@ lab.experiment('Routes test - location - 2', () => {
       url: '/location'
     }
     const response = await server.inject(options)
-    Code.expect(response.headers.location).to.equal('/find-location')
+    Code.expect(response.headers.location).to.equal('/')
     Code.expect(response.payload).to.equal('')
   })
   lab.test('GET /location with query parameters giving undefined location', async () => {
@@ -334,7 +334,7 @@ lab.experiment('Routes test - location - 2', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers.location).to.equal('/find-location')
+    Code.expect(response.headers.location).to.equal('/')
   })
   lab.test('GET /location with query parameters check for 1 alert 1 nlif', async () => {
     const floodService = require('../../server/services/flood')
