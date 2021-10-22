@@ -29,11 +29,7 @@ class ViewModel {
       id: 'location',
       name: 'location',
       attributes: {
-        autocomplete: 'off',
-        autocorrect: 'off',
-        autocapitalize: 'off',
-        maxlength: 200,
-        spellcheck: 'false'
+        maxlength: 200
       },
       classes: 'govuk-!-width-one-half'
     }
