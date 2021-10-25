@@ -1,0 +1,15 @@
+# Check for flooding Emergency RFC 5.1.1 26 October 2021
+
+
+# Tickets
+
+FSR-464 - Outlook map polygons render issues bug fix.
+
+# Instructions
+
+Straight forward application build for release
+
+LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
+
