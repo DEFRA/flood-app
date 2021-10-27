@@ -29,7 +29,8 @@ class ViewModel {
       id: 'location',
       name: 'location',
       attributes: {
-        maxlength: 200
+        maxlength: 200,
+        spellcheck: 'false'
       },
       classes: 'govuk-!-width-one-half'
     }
