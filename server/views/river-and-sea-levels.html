@@ -47,7 +47,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-third">
     <div class="govuk-form-group defra-search">
-      <form method="post" autocomplete="off">
+      <form method="post">
         <div class="govuk-form-group">
           <label class="govuk-label" for="location">Search a location</label>
             <div class="defra-search">
@@ -59,7 +59,7 @@
         </div>
       </form>
     </div>
-    <form method="post" autocomplete="off">
+    <form method="post">
     <input class="defra-search__input" name="q" type="hidden" value="{{ model.q }}">
     <input class="defra-search__input" name="rloi-id" type="hidden" value="{{ model.originalStation.id }}">
     <input class="defra-search__input" name="target-area" type="hidden" value="{{ model.taCode }}">
