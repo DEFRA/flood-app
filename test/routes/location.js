@@ -52,7 +52,7 @@ lab.experiment('Routes test - location - 2', () => {
       url: '/location'
     }
     const response = await server.inject(options)
-    Code.expect(response.headers.location).to.equal('/find-location')
+    Code.expect(response.headers.location).to.equal('/')
     Code.expect(response.payload).to.equal('')
   })
   lab.test('GET /location with query parameters giving undefined location', async () => {
@@ -96,6 +96,53 @@ lab.experiment('Routes test - location - 2', () => {
     const options = {
       method: 'GET',
       url: '/location?q=xxxxxx'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('We couldn\'t find')
+  })
+  lab.test('GET /location with query parameters giving undefined location parameter set as location', async () => {
+    const fakeGetJson = () => {
+      return {
+        authenticationResultCode: 'ValidCredentials',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright',
+        resourceSets: [
+          {
+            estimatedTotal: 0,
+            resources: []
+          }
+        ],
+        statusCode: 200,
+        tatusDescription: 'OK',
+        traceId: 'trace-id'
+      }
+    }
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/views'))
+    await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/location?location=xxxxxx'
     }
 
     const response = await server.inject(options)
@@ -147,6 +194,56 @@ lab.experiment('Routes test - location - 2', () => {
     const options = {
       method: 'GET',
       url: '/location?q=Warrington'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+  })
+  lab.test('GET /location with query parameters giving defined location query paramter set as location', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    const fakeFloodsData = () => {
+      return { floods: [] }
+    }
+    const fakeStationsData = () => []
+    const fakeImpactsData = () => []
+    const fakeOutlookData = () => []
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+    const fakeGetJson = () => data.warringtonGetJson
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/location?location=Warrington'
     }
 
     const response = await server.inject(options)
@@ -237,7 +334,7 @@ lab.experiment('Routes test - location - 2', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers.location).to.equal('/find-location')
+    Code.expect(response.headers.location).to.equal('/')
   })
   lab.test('GET /location with query parameters check for 1 alert 1 nlif', async () => {
     const floodService = require('../../server/services/flood')
@@ -1599,5 +1696,76 @@ lab.experiment('Routes test - location - 2', () => {
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('The flood risk for the next 5 days is very low.')
+  })
+
+  lab.test('GET /location joi validation error, ok location but bad other', async () => {
+    const fakeGetJson = () => {
+      throw new Error('test error')
+    }
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/location?q=warringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdf'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('Error: Find location - Check for flooding')
+  })
+  lab.test('GET /location joi validation error, ok location but bad other', async () => {
+    const fakeGetJson = () => {
+      throw new Error('test error')
+    }
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/location?location=warringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdf'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('Error: Find location - Check for flooding')
   })
 })
