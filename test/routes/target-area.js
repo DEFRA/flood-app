@@ -187,4 +187,73 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('We\'ll update this page when there\'s a flood alert in the area, which means flooding to low lying land is possible.')
   })
+  lab.test('GET target-area with unknown parameter e.g. facebook click id', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeFloodData = () => {
+      return {
+        floods: [
+          {
+            ta_id: 229,
+            ta_code: '011WAFDW',
+            ta_name: 'Upper River Derwent, Stonethwaite Beck and Derwent Water',
+            ta_description: 'The Upper Derwent from Seathwaite to Derwent Water',
+            situation: '',
+            quick_dial: 141029,
+            situation_changed: '2020-08-05T18:23:00.000Z',
+            severity_changed: '2020-08-05T18:23:00.000Z',
+            message_received: '2020-08-05T18:23:33.836Z',
+            severity_value: 1,
+            severity: 'Flood alert',
+            geometry: '{"type":"Point","coordinates":[-3.14775299277944,54.5601419091569]}'
+          }
+        ]
+      }
+    }
+
+    const fakeFloodArea = () => {
+      return {
+        id: 11473,
+        area: 'Cumbria and Lancashire',
+        code: '011WAFDW',
+        name: 'Upper River Derwent, Stonethwaite Beck and Derwent Water',
+        description: 'The Upper Derwent from Seathwaite to Derwent Water',
+        localauthorityname: 'Cumbria',
+        quickdialnumber: '141029',
+        riverorsea: 'Derwent, Stonethwaite Beck',
+        geom: '{"type":"MultiPolygon","coordinates":[]}',
+        centroid: '{"type":"Point","coordinates":[-3.14775299277944,54.5601419091569]}'
+      }
+    }
+
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+
+    const targetAreaPlugin = {
+      plugin: {
+        name: 'target',
+        register: (server, options) => {
+          server.route(require('../../server/routes/target-area'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(targetAreaPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/target-area/011WAFDW?q=000000000000000&fbclid=\'7890789078&*()&*)&)&*\''
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('We\'ll update this page when there\'s a flood alert in the area, which means flooding to low lying land is possible.')
+  })
 })

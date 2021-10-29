@@ -65,7 +65,10 @@ module.exports = [{
         fid: joi.string(),
         lyr: joi.string(),
         v: joi.string()
-      })
+      }),
+      options: {
+        allowUnknown: true
+      }
     }
   }
 }, {

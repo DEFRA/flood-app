@@ -72,6 +72,9 @@ module.exports = {
         } else {
           return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location }).takeover()
         }
+      },
+      options: {
+        allowUnknown: true
       }
     }
   }

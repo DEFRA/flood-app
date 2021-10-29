@@ -442,4 +442,41 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.payload).to.contain('Showing alerts and warnings within 5 miles of Beeding Bridge.')
     Code.expect(response.statusCode).to.equal(200)
   })
+  lab.test('GET /alerts-and-warnings with unknown parameter e.g. facebook click id ', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationById = () => data.fakeGetStationById
+
+    const fakeAlertsWithinBuffer = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationById)
+    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeAlertsWithinBuffer)
+
+    const warningsPlugin = {
+      plugin: {
+        name: 'warnings',
+        register: (server, options) => {
+          server.route(require('../../server/routes/alerts-and-warnings'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(warningsPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings?station=1001&fbclid=76896789uyuioyuioy&&&'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('Showing alerts and warnings within 5 miles of Beeding Bridge.')
+    Code.expect(response.statusCode).to.equal(200)
+  })
 })

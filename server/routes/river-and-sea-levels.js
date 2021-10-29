@@ -80,6 +80,9 @@ module.exports = [{
       }),
       failAction: (request, h, err) => {
         return h.view('404').code(404).takeover()
+      },
+      options: {
+        allowUnknown: true
       }
     }
   }

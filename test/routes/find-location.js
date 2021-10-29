@@ -55,6 +55,18 @@ lab.experiment('Routes test - find-location', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
+  lab.test('GET /find-location with unknown querystring parameter e.g. facebook click id', async () => {
+    const options = {
+      method: 'GET',
+      url: '/find-location?q=LEEDS&fbclid=21hjkhhj&*(&*(&&&&'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.headers['content-type']).to.include('text/html')
+    Code.expect(response.payload).to.include('Where do you want to check')
+  })
   lab.test('POST- payload of warrington', async () => {
     const options = {
       method: 'POST',
