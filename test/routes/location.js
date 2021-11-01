@@ -22,7 +22,15 @@ lab.experiment('Routes test - location - 2', () => {
     sandbox = await sinon.createSandbox()
     server = Hapi.server({
       port: 3000,
-      host: 'localhost'
+      host: 'localhost',
+      routes: {
+        validate: {
+          options: {
+            abortEarly: false,
+            stripUnknown: true
+          }
+        }
+      }
     })
   })
 
@@ -194,6 +202,56 @@ lab.experiment('Routes test - location - 2', () => {
     const options = {
       method: 'GET',
       url: '/location?q=Warrington'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+  })
+  lab.test('GET /location with query parameters known and unknown e.g. facebook click id', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    const fakeFloodsData = () => {
+      return { floods: [] }
+    }
+    const fakeStationsData = () => []
+    const fakeImpactsData = () => []
+    const fakeOutlookData = () => []
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+    const fakeGetJson = () => data.warringtonGetJson
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/location?q=Warrington&fbclid=*()*()*890890890'
     }
 
     const response = await server.inject(options)
