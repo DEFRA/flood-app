@@ -21,7 +21,15 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     sandbox = await sinon.createSandbox()
     server = Hapi.server({
       port: 3000,
-      host: 'localhost'
+      host: 'localhost',
+      routes: {
+        validate: {
+          options: {
+            abortEarly: false,
+            stripUnknown: true
+          }
+        }
+      }
     })
   })
 
@@ -1152,38 +1160,6 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('Sankey Brook')
     Code.expect(response.statusCode).to.equal(200)
   })
-  lab.test('GET river-and-sea-levels fail joi validation" ', async () => {
-    const fakeGetJson = () => data.nonLocationGetJson
-
-    const util = require('../../server/util')
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
-
-    const riversPlugin = {
-      plugin: {
-        name: 'rivers',
-        register: (server, options) => {
-          server.route(require('../../server/routes/river-and-sea-levels'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(riversPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/river-and-sea-levels?testFail=Test'
-    }
-
-    const response = await server.inject(options)
-
-    Code.expect(response.statusCode).to.equal(404)
-  })
   lab.test('GET /river-and-sea-levels?river-id=Sea%20Levels ', async () => {
     const floodService = require('../../server/services/flood')
 
@@ -1973,6 +1949,104 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('<li class="defra-flood-list-item defra-flood-list-item--S" data-river-id="sankey-brook" data-type="S">')
     Code.expect(response.payload).to.contain('Normal</span>')
     Code.expect(response.payload).to.not.contain('High</span>')
+    Code.expect(response.statusCode).to.equal(200)
+  })
+  lab.test('GET /river-and-sea-levels with unknown parameter e.g. facebook click id', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationsData = () => [
+      {
+        river_id: 'Sea Levels',
+        river_name: 'Sea Levels',
+        navigable: false,
+        view_rank: 1,
+        rank: null,
+        rloi_id: 5067,
+        up: null,
+        down: null,
+        telemetry_id: 'E73439',
+        region: 'Anglian',
+        catchment: 'England - West Coast',
+        wiski_river_name: 'Tide',
+        agency_name: 'Heysham',
+        external_name: 'Heysham',
+        station_type: 'C',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '3.063',
+        value_timestamp: '2020-10-02T12:45:00.000Z',
+        value_erred: false,
+        percentile_5: null,
+        percentile_95: null,
+        centroid: '0101000020E6100000C97993B4B15C07C0376E1A6612044B40',
+        lon: -2.92026082110462,
+        lat: 54.0318114880615
+      },
+      {
+        river_id: 'Sea Levels',
+        river_name: 'Sea Levels',
+        navigable: false,
+        view_rank: 1,
+        rank: null,
+        rloi_id: 3062,
+        up: null,
+        down: null,
+        telemetry_id: 'E72539',
+        region: 'Anglian',
+        catchment: 'England - South Coast',
+        wiski_river_name: 'Tide',
+        agency_name: 'Hinkley Point',
+        external_name: 'Hinkley Point',
+        station_type: 'C',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '-3.91',
+        value_timestamp: '2020-10-02T12:45:00.000Z',
+        value_erred: false,
+        percentile_5: null,
+        percentile_95: null,
+        centroid: '0101000020E61000002C5F78ACF80C09C052D11D3FF59A4940',
+        lon: -3.13133368246408,
+        lat: 51.2106093307108
+      }
+    ]
+
+    sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
+
+    const fakeGetJson = () => data.warringtonGetJson
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?river-id=Sea%20Levels&fbclid=&*()EERTYERYErytertyeryertye'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('2 levels')
+    Code.expect(response.payload).to.contain('Showing Sea levels. <a href="/river-and-sea-levels"> Show all levels</a>')
+    Code.expect(response.payload).to.contain('Sea levels in England - GOV.UK')
     Code.expect(response.statusCode).to.equal(200)
   })
 })
