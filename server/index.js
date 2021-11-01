@@ -26,7 +26,8 @@ async function createServer () {
     routes: {
       validate: {
         options: {
-          abortEarly: false
+          abortEarly: false,
+          stripUnknown: true
         }
       },
       cors: true,

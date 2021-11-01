@@ -22,7 +22,15 @@ lab.experiment('Routes test - location - 2', () => {
     sandbox = await sinon.createSandbox()
     server = Hapi.server({
       port: 3000,
-      host: 'localhost'
+      host: 'localhost',
+      routes: {
+        validate: {
+          options: {
+            abortEarly: false,
+            stripUnknown: true
+          }
+        }
+      }
     })
   })
 
