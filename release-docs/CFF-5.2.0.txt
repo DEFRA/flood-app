@@ -1,0 +1,27 @@
+# Check for flooding 5.2.0 Thursday 4th November 2021
+
+# Release
+
+https://eaflood.atlassian.net/projects/FSR/versions/15734/tab/release-report-all-issues
+
+# Tickets
+
+FSR-473 - Redirects for river-and-sea-levels and /warnings
+FSR-474 - Chart not showing last daily vertical grid line
+FSR-469 - Redicrect to gov.uk check for flooding start page for /start-page
+FSR-468 - Removal of auto complete restriction for search boxes
+FSR-478 - Bug fix for unknown parameters causing service errors (eg from facebook share link)
+
+# Instructions
+
+!Important for webops
+
+This release involves an update to the flood-warning-information.service.gov.uk nginx redirect rules for /river-and-sea-levels and /warnings
+
+Other than the redirects it is a straight forward application build for release
+
+LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
+
+Thanks
