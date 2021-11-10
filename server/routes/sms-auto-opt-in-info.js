@@ -6,8 +6,7 @@ module.exports = {
       view: {
         template: 'sms-auto-opt-in-info',
         context: {
-          pageTitle: 'This phone number has been automatically opted-in to receive flood warnings',
-          heading: 'Flood information service'
+          pageTitle: 'This phone number has been automatically opted-in to receive flood warnings'
         }
       }
     }

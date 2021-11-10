@@ -2,13 +2,12 @@ module.exports = {
   method: 'GET',
   path: '/accessibility-statement',
   options: {
-    description: 'Accessibility Statement - Flood information service - GOV.UK',
+    description: 'Accessibility statement',
     handler: {
       view: {
         template: 'accessibility-statement',
         context: {
-          pageTitle: 'Accessibility Statement - Flood information service - GOV.UK',
-          heading: 'Flood information service'
+          pageTitle: 'Accessibility statement - Check for flooding'
         }
       }
     }

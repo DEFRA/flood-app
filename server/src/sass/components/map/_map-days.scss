@@ -29,6 +29,7 @@
   cursor:pointer;
   background-color: white;
   box-sizing: border-box;
+  color: $govuk-text-colour;
   &::-moz-focus-inner {
     border: 0;
   }
@@ -69,12 +70,6 @@
     -webkit-box-shadow: 0 -2px $govuk-focus-colour,0 4px $govuk-focus-text-colour;
     box-shadow: 0 -2px $govuk-focus-colour,0 4px $govuk-focus-text-colour;
     text-decoration: none;
-  }
-}
-.defra-map-days__month {
-  display:none;
-  @include mq ($from: tablet) {
-    display: inline;
   }
 }
 .defra-map-days__icon {
