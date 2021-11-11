@@ -4,12 +4,12 @@ module.exports = {
   method: 'GET',
   path: '/privacy-notice',
   options: {
-    description: 'Privacy notice - Flood information service - GOV.UK',
+    description: 'Privacy notice',
     handler: {
       view: {
         template: 'privacy-notice',
         context: {
-          pageTitle: 'Privacy notice - Flood information service - GOV.UK',
+          pageTitle: 'Privacy notice - Check for flooding',
           metaDescription: description,
           ogDescription: description
         }

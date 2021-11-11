@@ -17,8 +17,7 @@ module.exports = {
     }
 
     return h.view('cookies', {
-      pageTitle: 'Cookies - Flood information service - GOV.UK',
-      heading: 'Flood information service',
+      pageTitle: 'Cookies - Check for flooding',
       metaDescription: description,
       analyticsCookiesSet: analyticsCookiesSet,
       referer: requestHeadersReferer

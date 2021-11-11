@@ -7,8 +7,7 @@ module.exports = {
       view: {
         template: 'what-happens-after-a-flood',
         context: {
-          pageTitle: 'What happens after a flood',
-          heading: 'Flood information service'
+          pageTitle: 'What happens after a flood - Check for flooding'
         }
       }
     }
