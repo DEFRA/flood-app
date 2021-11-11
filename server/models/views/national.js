@@ -15,7 +15,7 @@ class ViewModel {
     const outlookOutOfDate = (now - issueDate) > hours48
 
     Object.assign(this, {
-      pageTitle: 'Flood warnings in England',
+      pageTitle: 'Check for flooding in England',
       metaDescription:
         'View current flood warnings and alerts for England and the national flood forecast for the next 5 days. Also check river, sea, groundwater and rainfall levels.',
       metaCanonical: '/',
