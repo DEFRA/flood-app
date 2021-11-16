@@ -1,5 +1,10 @@
 {% extends 'layout.html' %}
 
+{% block head %}
+{{ super() }}
+<meta name="robots" content="noindex" />
+{% endblock %}
+
 {% block content %}
 <style>
   .govuk-width-container {
