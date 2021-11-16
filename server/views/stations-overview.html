@@ -27,6 +27,16 @@
           <td class="govuk-table__cell">
             {% if name === 'rloi_id' %}
             <a href="/station/{{ value }}{% if station.direction === 'd' %}/downstream{% endif%}" target="_blank">{{ value }}</a>
+            {% elif name === 'error' %}
+              {% if value %}
+                yes
+              {% else %}
+                {% if value === false %}
+                  no
+                {% else %}
+                  n/a
+                {% endif %}
+              {% endif %}
             {% else %}
               {{ value }}
             {% endif %}
