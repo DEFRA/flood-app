@@ -1,10 +1,24 @@
 import $ from 'jquery'
 import 'datatables.net-dt'
+import 'datatables.net-buttons'
+import 'datatables.net-buttons/js/buttons.html5.js'
 window.jQuery = $
 window.$ = $
 
 $(document).ready(function () {
   $('#stations-overview').DataTable({
+    dom: 'lBfrtip',
+    buttons: [{
+      extend: 'csv',
+      text: 'Export as csv',
+      filename: 'stations',
+      exportOptions: {
+        modifier: {
+          search: 'none'
+        }
+      }
+    }],
+    // paging: true,
     initComplete: function () {
       this.api().columns().every(function () {
         const column = this
@@ -44,6 +58,11 @@ $(document).ready(function () {
       $('#stations-overview').removeClass('off-screen')
       // After processing adjust body to match table
       $('body').width($('table').width() + 30)
+
+      // wrap top controls
+      $('.dataTables_length, .dt-buttons, .dataTables_filter').wrapAll('<div class="top-controls" />')
+      // wrap bottom controls
+      $('.dataTables_info, .dataTables_paginate').wrapAll('<div class="bottom-controls" />')
     }
   })
 })
