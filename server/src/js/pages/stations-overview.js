@@ -37,7 +37,7 @@ $(document).ready(function () {
           'percentile_95'
         ]
         if (noSelect.indexOf(column.header().innerHTML) === -1) {
-          const select = $('<select><option value="">' + column.header().innerHTML + '</option></select>')
+          const select = $('<select><option value="" style="font-weight:800">' + column.header().innerHTML + '</option></select>')
             .appendTo($(column.header()).empty())
             .on('change', function () {
               const val = $.fn.dataTable.util.escapeRegex(
