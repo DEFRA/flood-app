@@ -11,14 +11,21 @@ $(document).ready(function () {
     buttons: [{
       extend: 'csv',
       text: 'Export as csv',
-      filename: 'stations',
+      filename: 'stations-overview-' + new Date().toISOString(),
       exportOptions: {
         modifier: {
           search: 'none'
+        },
+        format: {
+          header: (data, row, column, node) => {
+            if (data.indexOf('<select>') > -1) {
+              data = data.match(/(?<=">)(.*?)(?=<\/option>)/g)[0] || data
+            }
+            return data
+          }
         }
       }
     }],
-    // paging: true,
     initComplete: function () {
       this.api().columns().every(function () {
         const column = this
