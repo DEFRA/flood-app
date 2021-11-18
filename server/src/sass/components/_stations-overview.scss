@@ -1,0 +1,31 @@
+ #stations-overview_wrapper {
+  .top-controls,
+  .bottom-controls {
+    overflow: auto;
+  }
+  .dataTables_length,
+  .dt-buttons {
+    text-align: left !important;
+  }
+  .dt-buttons,
+  .dataTables_length,
+  .dataTables_filter {
+    padding-right: 10px;
+  }
+
+  .dataTables_length {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .dataTables_filter {
+    padding-top: 5px;
+  }
+
+  .dataTables_paginate,
+  .dataTables_filter {
+    float: left !important;
+  }
+  .dataTables_info {
+    float: right !important;
+  }
+}
