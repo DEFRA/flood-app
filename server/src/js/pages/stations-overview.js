@@ -19,7 +19,7 @@ $(document).ready(function () {
         format: {
           header: (data, row, column, node) => {
             if (data.indexOf('<select>') > -1) {
-              data = data.match(/(?<=">)(.*?)(?=<\/option>)/g)[0] || data
+              data = data.substring(data.indexOf('">') + 2, data.indexOf('</option>')) || data
             }
             return data
           }
