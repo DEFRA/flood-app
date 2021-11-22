@@ -32,6 +32,9 @@
     @include defra-visually-hidden;
   }
 }
+.defra-map-html {
+  height: 100vh;
+}
 .defra-map-body {
   position: fixed;
   overflow: hidden;
@@ -39,6 +42,9 @@
   right:0px;
   bottom:0px;
   left:0px;
+}
+.defra-map-visibility-hidden {
+  visibility: hidden;
 }
 .defra-map-viewport {
   -webkit-touch-callout: none;

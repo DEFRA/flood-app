@@ -38,6 +38,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   // Disable body scrolling and hide non-map elements
   document.title = options.title
   document.body.classList.add('defra-map-body')
+  document.documentElement.classList.add('defra-map-html')
 
   // Create the map container element
   const containerElement = document.createElement('div')
@@ -256,6 +257,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
       document.title = options.originalTitle
       // Unlock body scroll
       document.body.classList.remove('defra-map-body')
+      document.documentElement.classList.remove('defra-map-html')
       clearAllBodyScrollLocks()
       // Remove map and return focus
       containerElement.parentNode.removeChild(containerElement)
@@ -436,9 +438,11 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
 
   // Mouse or touch interaction
   containerElement.addEventListener('pointerdown', (e) => {
-    infoElement.blur()
-    keyElement.blur()
     viewport.removeAttribute('keyboard-focus')
+    // Address OpenLayers performance bug when viewport has focus?
+    if (document.activeElement === viewport) {
+      exitMapButtonElement.focus()
+    }
   })
 
   // Disable pinch and double tap zoom
