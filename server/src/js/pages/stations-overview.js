@@ -1,10 +1,31 @@
 import $ from 'jquery'
 import 'datatables.net-dt'
+import 'datatables.net-buttons'
+import 'datatables.net-buttons/js/buttons.html5.js'
 window.jQuery = $
 window.$ = $
 
 $(document).ready(function () {
   $('#stations-overview').DataTable({
+    dom: 'lBfrtip',
+    buttons: [{
+      extend: 'csv',
+      text: 'Export as csv',
+      filename: 'stations-overview-' + new Date().toISOString(),
+      exportOptions: {
+        modifier: {
+          search: 'none'
+        },
+        format: {
+          header: (data, row, column, node) => {
+            if (data.indexOf('<select>') > -1) {
+              data = data.substring(data.indexOf('">') + 2, data.indexOf('</option>')) || data
+            }
+            return data
+          }
+        }
+      }
+    }],
     initComplete: function () {
       this.api().columns().every(function () {
         const column = this
@@ -23,7 +44,7 @@ $(document).ready(function () {
           'percentile_95'
         ]
         if (noSelect.indexOf(column.header().innerHTML) === -1) {
-          const select = $('<select><option value="">' + column.header().innerHTML + '</option></select>')
+          const select = $('<select><option value="" style="font-weight:800">' + column.header().innerHTML + '</option></select>')
             .appendTo($(column.header()).empty())
             .on('change', function () {
               const val = $.fn.dataTable.util.escapeRegex(
@@ -44,6 +65,11 @@ $(document).ready(function () {
       $('#stations-overview').removeClass('off-screen')
       // After processing adjust body to match table
       $('body').width($('table').width() + 30)
+
+      // wrap top controls
+      $('.dataTables_length, .dt-buttons, .dataTables_filter').wrapAll('<div class="top-controls" />')
+      // wrap bottom controls
+      $('.dataTables_info, .dataTables_paginate').wrapAll('<div class="bottom-controls" />')
     }
   })
 })
