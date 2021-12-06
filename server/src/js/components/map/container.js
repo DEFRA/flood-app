@@ -153,7 +153,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   // Create attribution control
   const attributtionElement = document.createElement('button')
   attributtionElement.className = 'defra-map-attribution'
-  attributtionElement.innerHTML = '<span class="govuk-visually-hidden">List attributions</span>'
+  attributtionElement.innerHTML = '<span class="govuk-visually-hidden">Copyright information</span>'
   const attributionButton = new Control({
     element: attributtionElement,
     target: controlsBottomElement

@@ -21,7 +21,7 @@ window.flood.Filter = (id, list) => {
   const resetFilters = document.createElement('a')
   resetFilters.className = 'defra-facets__reset'
   resetFilters.setAttribute('role', 'button')
-  resetFilters.innerHTML = 'Clear all filters'
+  resetFilters.innerHTML = 'Reset all filters'
   resetFilters.id = 'resetFilters'
   resetDiv.appendChild(resetFilters)
   content.appendChild(resetDiv)
