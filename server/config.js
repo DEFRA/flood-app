@@ -27,7 +27,11 @@ const schema = joi.object({
   localCache: joi.boolean().default(true),
   redisHost: joi.string().default(''),
   redisPort: joi.number().default(6379),
-  redisPassword: joi.string().default('')
+  redisPassword: joi.string().default(''),
+  rateLimitEnabled: joi.boolean().default(false),
+  rateLimitRequests: joi.number().integer().when('rateLimitEnabled', { is: true, then: joi.required() }),
+  rateLimitExpiresIn: joi.number().integer().when('rateLimitEnabled', { is: true, then: joi.required() }),
+  rateLimitWhitelist: joi.array().items(joi.string().required()).default([])
 })
 
 // Build config
@@ -53,7 +57,11 @@ const config = {
   localCache: process.env.FLOOD_APP_LOCAL_CACHE,
   redisHost: process.env.FLOOD_APP_REDIS_HOST,
   redisPort: process.env.FLOOD_APP_REDIS_PORT,
-  redisPassword: process.env.FLOOD_APP_REDIS_PASSWORD
+  redisPassword: process.env.FLOOD_APP_REDIS_PASSWORD,
+  rateLimitEnabled: process.env.FLOOD_APP_RATE_LIMIT_ENABLED,
+  rateLimitRequests: process.env.FLOOD_APP_RATE_LIMIT_REQUESTS,
+  rateLimitExpiresIn: process.env.FLOOD_APP_RATE_LIMIT_EXPIRES_IN,
+  rateLimitWhitelist: process.env.FLOOD_APP_RATE_LIMIT_WHITELIST.split(':')
 }
 
 // Validate config
