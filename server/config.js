@@ -31,7 +31,7 @@ const schema = joi.object({
   rateLimitEnabled: joi.boolean().default(false),
   rateLimitRequests: joi.number().integer().when('rateLimitEnabled', { is: true, then: joi.required() }),
   rateLimitExpiresIn: joi.number().integer().when('rateLimitEnabled', { is: true, then: joi.required() }),
-  rateLimitWhitelist: joi.array().items(joi.string().required()).default([])
+  rateLimitWhitelist: joi.array().items(joi.string()).default([])
 })
 
 // Build config
@@ -61,7 +61,7 @@ const config = {
   rateLimitEnabled: process.env.FLOOD_APP_RATE_LIMIT_ENABLED,
   rateLimitRequests: process.env.FLOOD_APP_RATE_LIMIT_REQUESTS,
   rateLimitExpiresIn: process.env.FLOOD_APP_RATE_LIMIT_EXPIRES_IN,
-  rateLimitWhitelist: process.env.FLOOD_APP_RATE_LIMIT_WHITELIST.split(':')
+  rateLimitWhitelist: process.env.FLOOD_APP_RATE_LIMIT_WHITELIST ? process.env.FLOOD_APP_RATE_LIMIT_WHITELIST.split(':') : []
 }
 
 // Validate config
