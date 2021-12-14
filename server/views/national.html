@@ -49,7 +49,7 @@
       {% endfor %}
     </div>
     {% if model.hasActiveFloods %}
-      <span id="map-live"></span>
+      <span onClick="ga('send', 'event', { eventCategory: 'national-map', eventAction: 'click'});" id="map-live"></span>
     {% endif %}
     <p class="defra-flood-meta {% if model.hasActiveFloods or model.hasWarningsRemoved %} defra-flood-meta--border govuk-!-margin-top-3{% endif %}  govuk-!-margin-bottom-6">
       Updated at <time datetime="{{model.dateUTC}}">{{model.dateFormatted}}</time>
