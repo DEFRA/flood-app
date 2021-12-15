@@ -21,8 +21,9 @@ lab.experiment('rate-limit plugin test', () => {
     sandbox.stub(config, 'rateLimitEnabled').value(true)
     sandbox.stub(config, 'rateLimitExpiresIn').value(1)
     sandbox.stub(config, 'rateLimitRequests').value(1)
-    sandbox.stub(config, 'rateLimitWhitelist').value(['1.1.1.1'])
+    sandbox.stub(config, 'rateLimitWhitelist').value(['1.1.1.1', '2.2.2.2'])
     await server.register(require('../../server/plugins/rate-limit'))
+    await server.register(require('../../server/plugins/error-pages'))
     await server.initialize()
   })
 
@@ -31,7 +32,7 @@ lab.experiment('rate-limit plugin test', () => {
     await sandbox.res
   })
 
-  lab.test('Plugin rate-limit successfully loads', async () => {
+  lab.test('Plugin rate-limit successfully loads local cache true', async () => {
   })
 
   lab.test('GET station page exceeding rate-limit ', async () => {
@@ -120,12 +121,11 @@ lab.experiment('rate-limit plugin test', () => {
       url: '/station/5146'
     }
 
-    let response = await server.inject(options)
-
+    const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
 
-    response = await server.inject(options)
+    const response2 = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(429)
+    Code.expect(response2.statusCode).to.equal(429)
   })
 })
