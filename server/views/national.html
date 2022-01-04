@@ -49,19 +49,19 @@
       {% endfor %}
     </div>
     {% if model.hasActiveFloods %}
-      <span onClick="ga('send', 'event', { eventCategory: 'national-map', eventAction: 'click'});" id="map-live"></span>
+      <span id="map-live"></span>
     {% endif %}
     <p class="defra-flood-meta {% if model.hasActiveFloods or model.hasWarningsRemoved %} defra-flood-meta--border govuk-!-margin-top-3{% endif %}  govuk-!-margin-bottom-6">
       Updated at <time datetime="{{model.dateUTC}}">{{model.dateFormatted}}</time>
     </p> 
 
-    <a href="/find-location" class="defra-button-start govuk-!-margin-bottom-7" data-module="govuk-button" role="button"">
+    <a data-journey-click="national:button:check-flooding-near-you" href="/find-location" class="defra-button-start govuk-!-margin-bottom-7" data-module="govuk-button" role="button">
       Check for flooding near you
     </a>
 
     <h2 class="govuk-heading-m">Latest river, sea, groundwater and rainfall levels</h2>
     <p>There are around 3,500 measuring stations and most are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
-    <p><a href="/river-and-sea-levels">Find a river, sea, groundwater or rainfall level</a></p>
+    <p><a data-journey-click="national:link:river-sea-rain-list" href="/river-and-sea-levels">Find a river, sea, groundwater or rainfall level</a></p>
 
     <h2 class="govuk-heading-m govuk-!-margin-top-2" id="outlook">Flood forecast for the next 5 days</h2>
     {% if model.outlookOutOfDate or model.dataError %}

@@ -66,6 +66,10 @@ window.flood = {
         function gtag () { window.dataLayer.push(arguments) }
         gtag('js', new Date())
         gtag('config', process.env.GA_ID, { cookie_domain: document.domain })
+                                                          
+        $(function() {
+          GOVUK.performance.stageprompt.setupForGoogleAnalytics()
+        })
       }
       document.body.appendChild(script)
     }
