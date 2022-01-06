@@ -3,6 +3,10 @@
 // client-side javascript across all our pages
 import 'core-js/modules/es6.promise'
 import 'core-js/modules/es6.array.iterator'
+import $ from 'jquery'
+window.jQuery = $
+window.$ = $
+// import './stageprompt'
 
 window.flood = {
   utils: {
@@ -66,12 +70,35 @@ window.flood = {
         function gtag () { window.dataLayer.push(arguments) }
         gtag('js', new Date())
         gtag('config', process.env.GA_ID, { cookie_domain: document.domain })
-                                                          
-        $(function() {
-          GOVUK.performance.stageprompt.setupForGoogleAnalytics()
-        })
       }
       document.body.appendChild(script)
+    },
+    setGoogleAnalyticsEvent: () => {
+      const splitAction = (action) => {
+        const parts = action.split(':')
+
+        if (parts.length <= 3) {
+          return parts
+        }
+        return [parts.shift(), parts.shift(), parts.join(':')]
+      }
+      const setup = () => {
+        const journeyHelpers = $('[data-journey-click]')
+        journeyHelpers.on('click', function (event) {
+          const dataParts = splitAction($(this).data('journey-click'))
+          function gtag () { window.dataLayer.push(arguments) }
+          gtag('event', dataParts[1], {
+            event_category: dataParts[0],
+            event_label: dataParts[2],
+            // transport_type: 'beacon',
+            event_callback: () => {
+              // document.location = '/find-location'
+            }
+          })
+        })
+      }
+
+      setup()
     }
   }
 }
@@ -169,3 +196,4 @@ if (!calledGTag) {
     window.flood.utils.setGTagAnalyticsCookies()
   }
 }
+window.flood.utils.setGoogleAnalyticsEvent()
