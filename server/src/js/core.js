@@ -6,7 +6,6 @@ import 'core-js/modules/es6.array.iterator'
 import $ from 'jquery'
 window.jQuery = $
 window.$ = $
-// import './stageprompt'
 
 window.flood = {
   utils: {
