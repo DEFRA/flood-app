@@ -3,12 +3,11 @@
 //   'use strict'
 //   const $ = global.jQuery
 //   const GOVUK = global.GOVUK || {}
-  
-//   GOVUK.performance = GOVUK.performance || {}  
-  
+
+//   GOVUK.performance = GOVUK.performance || {}
+
 //   GOVUK.performance.stageprompt = (function () {
-    
-    
+
 //     const splitAction = (action) => {
 //       console.log('action :', action)
 //       const parts = action.split(':')
@@ -19,14 +18,14 @@
 //       }
 //       return [parts.shift(), parts.shift(), parts.join(':')]
 //     }
-    
+
 //     const setup = (analyticsCallback) => {
 //       console.log('AC : ', analyticsCallback)
 //       const journeyStage = window.$('[data-journey]').attr('data-journey', 1)
 //       const journeyHelpers = window.$('[data-journey-click]', 1)
 //       console.log('journeyStage :', journeyStage)
 //       console.log('journeyHelpers :', journeyHelpers)
-      
+
 //       if (journeyStage) {
 //         // console.log('journeyStage ')
 //         analyticsCallback.apply(null, splitAction(journeyStage))
@@ -47,7 +46,7 @@
 //       setupForGoogleAnalytics
 //     }
 //   }())
-  
+
 //   GOVUK.performance.sendGoogleAnalyticsEvent = function (category, event, label) {
 //     if (window.ga && typeof window.ga === 'function') {
 //       window.ga('send', 'event', category, event, label, {
@@ -84,27 +83,27 @@
 //
 //     <a class="help-button" href="#" data-journey-click="stage:help:info">See more info...</a>
 
-;(function (global) {
+(function (global) {
   'use strict'
 
-  var $ = global.jQuery
-  var GOVUK = global.GOVUK || {}
+  const $ = global.jQuery
+  const GOVUK = global.GOVUK || {}
 
   GOVUK.performance = GOVUK.performance || {}
 
   GOVUK.performance.stageprompt = (function () {
-    var setup, setupForGoogleAnalytics, splitAction
+    const splitAction = (action) => {
+      const parts = action.split(':')
 
-    splitAction = function (action) {
-      var parts = action.split(':')
-      if (parts.length <= 3) return parts
+      if (parts.length <= 3) {
+        return parts
+      }
       return [parts.shift(), parts.shift(), parts.join(':')]
     }
 
-    setup = function (analyticsCallback) {
-      var journeyStage = $('[data-journey]').attr('data-journey')
-      var journeyHelpers = $('[data-journey-click]')
-      
+    const setup = (analyticsCallback) => {
+      const journeyStage = $('[data-journey]').attr('data-journey')
+      const journeyHelpers = $('[data-journey-click]')
       if (journeyStage) {
         analyticsCallback.apply(null, splitAction(journeyStage))
       }
@@ -114,7 +113,7 @@
       })
     }
 
-    setupForGoogleAnalytics = function () {
+    const setupForGoogleAnalytics = () => {
       setup(GOVUK.performance.sendGoogleAnalyticsEvent)
     }
 
@@ -126,7 +125,7 @@
 
   GOVUK.performance.sendGoogleAnalyticsEvent = function (category, event, label) {
     if (window.gtag && typeof window.gtag === 'function') {
-      window.gtag('event', event, {'event_category':category ,'event_label':label, value: 1})
+      window.gtag('event', event, { event_category: category, event_label: label, value: 1 })
     } else {
       global.window._gaq.push(['_trackEvent', category, event, label, undefined, true])
     }
