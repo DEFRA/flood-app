@@ -13,6 +13,8 @@ if (document.getElementById('map-live')) {
   window.flood.maps.createLiveMap('map-live', {
     btnText: 'View map of flood warnings and alerts',
     btnClasses: 'defra-button-map',
+    dataButton: 'National:Map-View:View-national-warning-map',
+    dataAerial: 'National-Map:Map-interaction:View-satelite-basemap',
     layers: 'mv,ts,tw,ta'
   })
 }

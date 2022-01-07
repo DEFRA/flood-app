@@ -3,9 +3,6 @@
 // client-side javascript across all our pages
 import 'core-js/modules/es6.promise'
 import 'core-js/modules/es6.array.iterator'
-import $ from 'jquery'
-window.jQuery = $
-window.$ = $
 
 window.flood = {
   utils: {
@@ -82,22 +79,26 @@ window.flood = {
         return [parts.shift(), parts.shift(), parts.join(':')]
       }
       const setup = () => {
-        const journeyHelpers = $('[data-journey-click]')
-        journeyHelpers.on('click', function (event) {
-          const dataParts = splitAction($(this).data('journey-click'))
-          function gtag () { window.dataLayer.push(arguments) }
-          gtag('event', dataParts[1], {
-            event_category: dataParts[0],
-            event_label: dataParts[2],
-            // transport_type: 'beacon',
-            event_callback: () => {
-              // document.location = '/find-location'
+        document.addEventListener('click', (e) => {
+            const dataJourneyClick = e.target.getAttribute('data-journey-click')
+            console.log('DJC : ', dataJourneyClick)
+            console.log('eTarget : ', e.target)
+            if (dataJourneyClick) {
+                const dataParts = splitAction(dataJourneyClick)
+                console.log(dataParts)
+    
+                function gtag() {
+                    window.dataLayer.push(arguments)
+                }
+                gtag('event', dataParts[1], {
+                    event_category: dataParts[0],
+                    event_label: dataParts[2],
+                    event_callback: () => {}
+                })
             }
-          })
         })
-      }
-
-      setup()
+    }
+    setup()
     }
   }
 }
