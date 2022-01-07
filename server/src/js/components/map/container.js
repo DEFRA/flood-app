@@ -205,7 +205,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   keyContainer.appendChild(closeKeyButton)
   const keyContent = document.createElement('div')
   keyContent.className = 'defra-map-key__content'
-  keyContent.innerHTML = window.nunjucks.render(options.keyTemplate, {data: options.data})
+  keyContent.innerHTML = window.nunjucks.render(options.keyTemplate, { data: options.data })
   keyContainer.appendChild(keyContent)
   keyElement.appendChild(keyContainer)
   containerElement.appendChild(keyElement)

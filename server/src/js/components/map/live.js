@@ -715,7 +715,7 @@ maps.createLiveMap = (mapId, options = {}) => {
   button.innerHTML += '<span class="govuk-visually-hidden">(Visual only)</span>'
   button.className = options.btnClasses || 'defra-button-map'
   if (options.dataButton) {
-    button.setAttribute ('data-journey-click', options.dataButton)
+    button.setAttribute('data-journey-click', options.dataButton)
   }
   btnContainer.parentNode.replaceChild(button, btnContainer)
 
