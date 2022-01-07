@@ -82,10 +82,7 @@ function LiveMap (mapId, options) {
     title: options.title,
     heading: options.heading,
     keyTemplate: 'key-live.html',
-    data: {
-      button: options.dataButton,
-      aerial: options.dataAerial
-    },
+    data: options.data,
     isBack: options.isBack
   }
 

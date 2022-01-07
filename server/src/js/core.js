@@ -70,35 +70,22 @@ window.flood = {
       document.body.appendChild(script)
     },
     setGoogleAnalyticsEvent: () => {
-      const splitAction = (action) => {
-        const parts = action.split(':')
-
-        if (parts.length <= 3) {
-          return parts
+      const gaEvent = (e) => {
+        const dataJourneyClick = e.target.getAttribute('data-journey-click')
+        if (dataJourneyClick) {
+          const dataParts = dataJourneyClick.split(':')
+          function gtag () {
+            window.dataLayer.push(arguments)
+          }
+          gtag('event', dataParts[1], {
+            event_category: dataParts[0],
+            event_label: dataParts[2],
+            event_callback: () => { }
+          })
         }
-        return [parts.shift(), parts.shift(), parts.join(':')]
       }
-      const setup = () => {
-        document.addEventListener('click', (e) => {
-            const dataJourneyClick = e.target.getAttribute('data-journey-click')
-            console.log('DJC : ', dataJourneyClick)
-            console.log('eTarget : ', e.target)
-            if (dataJourneyClick) {
-                const dataParts = splitAction(dataJourneyClick)
-                console.log(dataParts)
-    
-                function gtag() {
-                    window.dataLayer.push(arguments)
-                }
-                gtag('event', dataParts[1], {
-                    event_category: dataParts[0],
-                    event_label: dataParts[2],
-                    event_callback: () => {}
-                })
-            }
-        })
-    }
-    setup()
+      document.addEventListener('change', gaEvent)
+      document.addEventListener('click', gaEvent)
     }
   }
 }
