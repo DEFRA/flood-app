@@ -77,7 +77,8 @@ window.flood = {
           function gtag () {
             window.dataLayer.push(arguments)
           }
-          if (categoryGA, eventGA, labelGA){
+          const conditionsArray = [categoryGA, eventGA, labelGA]
+          if (conditionsArray.indexOf(false) === -1) {
             gtag('event', eventGA, {
               event_category: categoryGA,
               event_label: labelGA,
