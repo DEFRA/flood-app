@@ -73,15 +73,17 @@ window.flood = {
       const gaEvent = (e) => {
         const dataJourneyClick = e.target.getAttribute('data-journey-click')
         if (dataJourneyClick) {
-          const dataParts = dataJourneyClick.split(':')
+          const [categoryGA, eventGA, labelGA] = dataJourneyClick.split(':')
           function gtag () {
             window.dataLayer.push(arguments)
           }
-          gtag('event', dataParts[1], {
-            event_category: dataParts[0],
-            event_label: dataParts[2],
-            event_callback: () => { }
-          })
+          if (categoryGA, eventGA, labelGA){
+            gtag('event', eventGA, {
+              event_category: categoryGA,
+              event_label: labelGA,
+              event_callback: () => { }
+            })
+          }
         }
       }
       document.addEventListener('change', gaEvent)
