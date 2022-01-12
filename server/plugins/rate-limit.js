@@ -4,10 +4,10 @@ const rateLimit =
 {
   plugin: require('hapi-rate-limit'),
   options: {
-    enabled: false, // Enabled on a per-route basis
+    enabled: true, // Set to 'false' if enabled on a per-route basis
     userPathLimit: config.rateLimitRequests,
     userPathCache: {
-      expiresIn: config.rateLimitExpiresIn * 60 * 1000
+      expiresIn: config.rateLimitExpiresIn * 1000 // Expiry time in seconds
     },
     pathLimit: false,
     userLimit: false,
