@@ -68,6 +68,27 @@ window.flood = {
         gtag('config', process.env.GA_ID, { cookie_domain: document.domain })
       }
       document.body.appendChild(script)
+    },
+    setGoogleAnalyticsEvent: () => {
+      const gaEvent = (e) => {
+        const dataJourneyClick = e.target.getAttribute('data-journey-click')
+        if (dataJourneyClick) {
+          const [categoryGA, eventGA, labelGA] = dataJourneyClick.split(':')
+          function gtag () {
+            window.dataLayer.push(arguments)
+          }
+          const conditionsArray = [categoryGA, eventGA, labelGA]
+          if (conditionsArray.indexOf(false) === -1) {
+            gtag('event', eventGA, {
+              event_category: categoryGA,
+              event_label: labelGA,
+              event_callback: () => { }
+            })
+          }
+        }
+      }
+      document.addEventListener('change', gaEvent)
+      document.addEventListener('click', gaEvent)
     }
   }
 }
@@ -165,3 +186,4 @@ if (!calledGTag) {
     window.flood.utils.setGTagAnalyticsCookies()
   }
 }
+window.flood.utils.setGoogleAnalyticsEvent()
