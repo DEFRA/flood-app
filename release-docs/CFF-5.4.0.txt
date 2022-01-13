@@ -1,0 +1,19 @@
+# Check for flooding 5.4.0 16 December 2021
+
+#release
+
+https://eaflood.atlassian.net/projects/FSR/versions/15807/tab/release-report-all-issues
+
+# Tickets
+
+FSR-518 - accessibility fixes and statement update
+
+# Instructions
+
+Straight forward application build for release
+
+LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
+
+Thanks.

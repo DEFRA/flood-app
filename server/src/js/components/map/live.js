@@ -82,6 +82,7 @@ function LiveMap (mapId, options) {
     title: options.title,
     heading: options.heading,
     keyTemplate: 'key-live.html',
+    data: options.data,
     isBack: options.isBack
   }
 
@@ -713,6 +714,9 @@ maps.createLiveMap = (mapId, options = {}) => {
   button.innerHTML = options.btnText || 'View map'
   button.innerHTML += '<span class="govuk-visually-hidden">(Visual only)</span>'
   button.className = options.btnClasses || 'defra-button-map'
+  if (options.data.button) {
+    button.setAttribute('data-journey-click', options.data.button)
+  }
   btnContainer.parentNode.replaceChild(button, btnContainer)
 
   // Detect keyboard interaction
