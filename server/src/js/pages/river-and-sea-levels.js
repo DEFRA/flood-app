@@ -16,6 +16,10 @@ if (document.getElementById('map')) {
     btnClasses: 'defra-button-map-s',
     layers: 'mv,ri,ti,gr,rf',
     extent: window.flood.model.placeBbox,
+    data: {
+      button: 'River-list:Map-View:View-Live-warning-map',
+      aerial: 'River-list-Map:Map-interaction:View-satelite-basemap'
+    },
     selectedId: window.flood.model.originalStationId
   })
 }
