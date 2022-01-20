@@ -7,7 +7,7 @@ const Code = require('@hapi/code')
 const sinon = require('sinon')
 const config = require('../../server/config')
 
-lab.experiment('rate-limit plugin test', () => {
+lab.experiment('rate-limit plugin disabled test', () => {
   let sandbox
   let server
 
@@ -18,11 +18,10 @@ lab.experiment('rate-limit plugin test', () => {
       host: 'localhost'
     })
     sandbox.stub(config, 'localCache').value('true')
-    sandbox.stub(config, 'rateLimitEnabled').value(true)
+    sandbox.stub(config, 'rateLimitEnabled').value(false)
     sandbox.stub(config, 'rateLimitExpiresIn').value(1)
     sandbox.stub(config, 'rateLimitRequests').value(1)
     sandbox.stub(config, 'rateLimitWhitelist').value(['1.1.1.1', '2.2.2.2'])
-    await server.register(require('../../server/plugins/rate-limit'))
     await server.register(require('../../server/plugins/error-pages'))
     await server.initialize()
   })
@@ -32,10 +31,7 @@ lab.experiment('rate-limit plugin test', () => {
     await sandbox.res
   })
 
-  lab.test('Plugin rate-limit successfully loads local cache true', async () => {
-  })
-
-  lab.test('GET station page exceeding rate-limit ', async () => {
+  lab.test('GET station page with no rate-limit ', async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
     const floodService = require('../../server/services/flood')
 
@@ -127,6 +123,6 @@ lab.experiment('rate-limit plugin test', () => {
 
     const response2 = await server.inject(options)
 
-    Code.expect(response2.statusCode).to.equal(429)
+    Code.expect(response2.statusCode).to.equal(200)
   })
 })
