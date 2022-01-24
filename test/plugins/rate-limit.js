@@ -17,7 +17,7 @@ lab.experiment('rate-limit plugin test', () => {
       port: 3000,
       host: 'localhost'
     })
-    sandbox.stub(config, 'localCache').value('true')
+    sandbox.stub(config, 'localCache').value(true)
     sandbox.stub(config, 'rateLimitEnabled').value(true)
     sandbox.stub(config, 'rateLimitExpiresIn').value(1)
     sandbox.stub(config, 'rateLimitRequests').value(1)
