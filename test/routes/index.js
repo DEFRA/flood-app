@@ -333,4 +333,28 @@ lab.experiment('Get Routes test', () => {
     Code.expect(response.payload).to.include('<h1 class="govuk-heading-xl">Accessibility statement for Check for flooding</h1>')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
+  lab.test('GET /rainfall-station', async () => {
+    const plugin = {
+      plugin: {
+        name: 'rainfall-station',
+        register: (server, options) => {
+          server.route(require('../../server/routes/rainfall-station'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(plugin)
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/rainfall-station'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('<h1 class="govuk-heading-xl govuk-!-margin-bottom-1">Rainfall at Abbeytown</h1>')
+    Code.expect(response.headers['content-type']).to.include('text/html')
+  })
 })
