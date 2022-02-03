@@ -27,7 +27,8 @@ const routes = [].concat(
   require('../routes/about-levels'),
   require('../routes/error'),
   require('../routes/station-csv'),
-  require('../routes/accessibility-statement')
+  require('../routes/accessibility-statement'),
+  require('../routes/rainfall-station')
 )
 
 // Non production end points
