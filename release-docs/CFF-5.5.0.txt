@@ -1,0 +1,33 @@
+# Check for flooding 5.5.0 Tuesday 25 Jan 2022
+
+#release
+
+This is a software update release, see this document for updates included:
+https://docs.google.com/spreadsheets/d/1APb7oSuzTKFCMu8JznH6sVJVbmwy-1oHzMGz62G_ImY/edit#gid=386307082
+
+# Tickets
+
+FSR - 515 https://eaflood.atlassian.net/browse/FSR-515
+
+# Instructions
+
+This is a non standard release that requires the following software updates:
+Nodejs applications to v16
+Nodejs serverless to v14
+Postgres/postgis/aurora update to 13.4 & 3.1.4
+Tomcat to v9
+Geoserver to 2.20.0
+
+Execute following jobs:
+
+LFW_{stage}_99_DEPLOY_FLOOD_DATA_PIPELINE
+
+LFW_{stage}_02_UPDATE_DATABASE
+
+LFW_{stage}_03_UPDATE_GEOSERVER_PIPELINE
+
+LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
+
+Thanks.
