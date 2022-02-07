@@ -16,8 +16,9 @@ class ViewModel {
     if (this.telemetry.length) {
       const now = moment().tz(tz).format()
       const fiveDaysAgo = moment().subtract(5, 'days').format()
-      
       const latestDateTime = this.telemetry[0].value_timestamp
+      this.latestDayFormatted = moment(latestDateTime).tz(tz).format('Do MMMM')
+      this.latestTimeFormatted = moment(latestDateTime).tz(tz).format('h:ma')
       const dataStartDateTime = fiveDaysAgo
       const rangeStartDateTime = fiveDaysAgo
       const dataEndDateTime = now
@@ -28,11 +29,12 @@ class ViewModel {
       this.period = this.telemetry[0].period
 
       const values = this.telemetry.map(data => {
-        return { 
+        return {
           dateTime: data.value_timestamp,
-          value: data.value }
+          value: data.value
+        }
       })
-      
+
       values.sort((a, b) => b.dateTime - a.dateTime)
 
       this.telemetryRainfall = {
@@ -49,7 +51,6 @@ class ViewModel {
           values
         }
       }
-
     }
   }
 }
