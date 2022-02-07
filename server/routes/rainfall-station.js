@@ -11,14 +11,20 @@ module.exports = {
     const { id } = request.params
 
     const rainfallStation = await request.server.methods.flood.getRainfallByStation(id)
+    const rainfallStationTotal = await request.server.methods.flood.getRainfallStationTotals(id)
+
+    console.log(rainfallStationTotal)
 
     // Null rainfallStation, but in this case service should return a 404 error so i don't think this ever gets hit, defensive programming though
     if (!rainfallStation) {
       return boom.notFound('No rainfall station found')
     }
+    if (!rainfallStationTotal) {
+      return boom.notFound('No rainfall station totals found')
+    }
 
     // Non-forecast Station
-    const model = new ViewModel(rainfallStation)
+    const model = new ViewModel(rainfallStation, rainfallStationTotal)
     return h.view('rainfall-station', { model })
   },
   options: {

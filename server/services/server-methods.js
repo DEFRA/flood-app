@@ -203,4 +203,12 @@ module.exports = server => {
       generateTimeout: 10 * 1000 // 10 seconds
     }
   })
+
+  server.method('flood.getRainfallStationTotals', floodServices.getRainfallStationTotals, {
+    cache: {
+      cache: cacheType,
+      expiresIn: 15 * 60 * 1000, // 15 minutes
+      generateTimeout: 10 * 1000 // 10 seconds
+    }
+  })
 }

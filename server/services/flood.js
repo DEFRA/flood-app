@@ -63,6 +63,10 @@ module.exports = {
     return util.getJson(`${serviceUrl}/rainfall-station/${id}`)
   },
 
+  getRainfallStationTotals (id) {
+    return util.getJson(`${serviceUrl}/rainfall-station-totals/${id}`)
+  },
+
   // direction is either 'u' or 'd'
   getStationTelemetry (id, direction) {
     return util.getJson(`${serviceUrl}/station/${id}/${direction}/telemetry`)
