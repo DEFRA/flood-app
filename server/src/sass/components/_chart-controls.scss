@@ -1,120 +1,119 @@
 .defra-chart-controls {
+  position: relative;
+  z-index: 1;
+}
+.defra-chart-segmented-control {
+  margin: auto;
+  &__segment {
+    display: inline-block;
     position: relative;
-    z-index: 1;
+    text-align: center;
+    margin-right: 15px;
   }
-  .defra-chart-segmented-control {
-    margin: auto;
-    &__segment {
-      display: inline-block;
-      position: relative;
-      text-align: center;
-      margin-right: 15px;
-    }
-    input {
-      position: absolute;
-      opacity: 0;
-      margin: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-    }
-    label {
-      cursor: pointer;
-      display: block;
-      @include govuk-font($size: 16);
-      padding: 5px 0;
-      border-bottom: 5px solid transparent;
-      position: relative;
-      outline: 3px solid transparent;
-      color: govuk-colour('blue');
-    }
-    input:hover + label {
-      color: $govuk-link-hover-colour;
-    }
-    input:checked + label {
-      border-bottom: 5px solid govuk-colour('blue');
-    }
-    input:focus + label {
-      border-bottom: 5px solid govuk-colour('black');
-      background-color: $govuk-focus-colour;
-      color: govuk-colour('black');
-    }
+  input {
+    position: absolute;
+    opacity: 0;
+    margin: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
   }
-  .defra-chart-pagination {
+  label {
+    cursor: pointer;
     display: block;
-    padding-bottom: 15px;
-    border-bottom: 1px solid $govuk-border-colour;
-    &__button {
-      border: 0px;
-      background-color: white;
-      margin: 0px;
-      padding: 0px;
-      width: auto;
-      outline: 3px solid transparent;
-      color: $govuk-link-colour;
-      cursor: pointer;
-      touch-action: manipulation;
-      @include govuk-font($size: 16);
-      .defra-chart-pagination__text {
-        pointer-events: none;
-      }
-      &[aria-disabled="true"],
-      &[aria-disabled="true"]:after,
-      &[aria-disabled="true"]:before {
-        color: govuk-colour('mid-grey');
-      }
-      &--back {
-        margin-right: 10px;
-      }
-      @include mq ($from: tablet) {
-        margin-top: 5px;
-      }
+    @include govuk-font($size: 16);
+    padding: 5px 0;
+    border-bottom: 5px solid transparent;
+    position: relative;
+    outline: 3px solid transparent;
+    color: govuk-colour('blue');
+  }
+  input:hover + label {
+    color: $govuk-link-hover-colour;
+  }
+  input:checked + label {
+    border-bottom: 5px solid govuk-colour('blue');
+  }
+  input:focus + label {
+    border-bottom: 5px solid govuk-colour('black');
+    background-color: $govuk-focus-colour;
+    color: govuk-colour('black');
+  }
+}
+.defra-chart-pagination {
+  display: block;
+  padding-bottom: 15px;
+  border-bottom: 1px solid $govuk-border-colour;
+  &__button {
+    border: 0px;
+    background-color: white;
+    margin: 0px;
+    padding: 0px;
+    width: auto;
+    outline: 3px solid transparent;
+    color: $govuk-link-colour;
+    cursor: pointer;
+    touch-action: manipulation;
+    @include govuk-font($size: 16);
+    .defra-chart-pagination__text {
+      pointer-events: none;
     }
-    &__button[aria-disabled="true"] {
-      cursor: not-allowed;
+    &[aria-disabled="true"],
+    &[aria-disabled="true"]:after,
+    &[aria-disabled="true"]:before {
+      color: govuk-colour('mid-grey');
     }
-    &__button:hover:not([aria-disabled="true"]) {
-      color: $govuk-link-hover-colour;
-      &:after, &:before {
-        color: $govuk-link-hover-colour;
-      }
+    &--back {
+      margin-right: 10px;
     }
-    &__button--forward:after,
-    &__button--back:before {
-      display: inline-block;
-      content: '';
-      border-width: 0 2px 2px 0;
-      width: 8px;
-      height: 8px;
-      border-style: solid;
-      color: $govuk-link-colour;
-      margin-right: 2px;
-      margin-left: 2px;
-    }
-    &__button--forward:after {
-      -webkit-transform: rotate(-45deg);
-      -ms-transform: rotate(-45deg);
-      transform: rotate(-45deg);
-    }
-    &__button--back:before {
-      -webkit-transform: rotate(135deg);
-      -ms-transform: rotate(135deg);
-      transform: rotate(135deg);
-    }
-    &__button:focus:not([aria-disabled="true"]) {
-      color: $govuk-focus-text-colour;
-      background-color: $govuk-focus-colour;
-      box-shadow: 0 -2px $govuk-focus-colour, 0 4px govuk-colour('black');
-      &:after, &:before {
-        color: $govuk-focus-text-colour;
-      }
-    }
-    &__button:focus[aria-disabled="true"] {
-      box-shadow: 0px 0px 0px 2px govuk-colour('black'), 0px 0px 0px 5px $govuk-focus-colour;
+    @include mq ($from: tablet) {
+      margin-top: 5px;
     }
   }
-  
+  &__button[aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+  &__button:hover:not([aria-disabled="true"]) {
+    color: $govuk-link-hover-colour;
+    &:after, &:before {
+      color: $govuk-link-hover-colour;
+    }
+  }
+  &__button--forward:after,
+  &__button--back:before {
+    display: inline-block;
+    content: '';
+    border-width: 0 2px 2px 0;
+    width: 8px;
+    height: 8px;
+    border-style: solid;
+    color: $govuk-link-colour;
+    margin-right: 2px;
+    margin-left: 2px;
+  }
+  &__button--forward:after {
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+  &__button--back:before {
+    -webkit-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    transform: rotate(135deg);
+  }
+  &__button:focus:not([aria-disabled="true"]) {
+    color: $govuk-focus-text-colour;
+    background-color: $govuk-focus-colour;
+    box-shadow: 0 -2px $govuk-focus-colour, 0 4px govuk-colour('black');
+    &:after, &:before {
+      color: $govuk-focus-text-colour;
+    }
+  }
+  &__button:focus[aria-disabled="true"] {
+    box-shadow: 0px 0px 0px 2px govuk-colour('black'), 0px 0px 0px 5px $govuk-focus-colour;
+  }
+}

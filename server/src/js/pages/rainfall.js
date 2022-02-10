@@ -1,0 +1,36 @@
+'use strict'
+import 'elm-pep'
+import '../components/bar-chart'
+import '../components/nunjucks'
+import '../components/map/maps'
+import '../components/map/styles'
+import '../components/map/layers'
+import '../components/map/container'
+import '../components/map/live'
+import '../components/toggletip'
+
+// Create LiveMap
+if (document.getElementById('map')) {
+  console.log(window.flood)
+  window.flood.maps.createLiveMap('map', {
+    btnText: 'View map',
+    btnClasses: 'defra-link-icon-s',
+    btnType: 'link',
+    layers: 'mv,rf',
+    // centre: window.flood.model.centroid,0.8074515304839753, 52.103262968744666
+    centre: [0.8074515304839753, 52.103262968744666],
+    zoom: 14,
+    selectedId: `rainfall_stations.${window.flood.model.id}`
+  })
+}
+
+// Create bar chart
+if (document.getElementById('bar-chart')) {
+  console.log('Inside')
+  window.flood.charts.createBarChart('bar-chart', window.flood.model.stationId, window.flood.model.telemetry)
+}
+
+// Add toggletips
+if (document.querySelectorAll('.defra-toggletip')) {
+  window.flood.createToggletips()
+}
