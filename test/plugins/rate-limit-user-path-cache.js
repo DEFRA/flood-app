@@ -25,6 +25,7 @@ lab.experiment('rate-limit no local cache', () => {
 
   lab.test('test setting userPathCache', () => {
     const rateLimit = require('../../server/plugins/rate-limit.js')
-    Code.expect(rateLimit.options.userPathCache.cache).to.equal('redis_cache')
+    // Code.expect(rateLimit.options.userPathCache.cache).to.equal('redis_cache')
+    Code.expect(rateLimit.options.userCache.cache).to.equal('redis_cache')
   })
 })
