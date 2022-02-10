@@ -13,8 +13,7 @@ import '../components/toggletip'
 if (document.getElementById('map')) {
   window.flood.maps.createLiveMap('map', {
     btnText: 'View map',
-    btnClasses: 'defra-link-icon-s',
-    btnType: 'link',
+    btnClasses: 'defra-button-map-s govuk-!-margin-right-1',
     layers: 'mv,rf',
     // centre: window.flood.model.centroid,0.8074515304839753, 52.103262968744666
     centre: [0.8074515304839753, 52.103262968744666],

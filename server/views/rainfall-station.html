@@ -76,8 +76,7 @@
   <div class="govuk-grid-column-full">
     <h2 class="govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-4">Rainfall over the last 5 days in millimetres</h2>
     <div id="bar-chart" class="defra-bar-chart"></div>
-    <a href="" class="defra-link-icon-s govuk-!-margin-bottom-2 govuk-!-margin-top-4">
-      <svg width="13" height="20" viewBox="0 0 13 20"><rect x="0" y="1.5" width="10.5" height="14.5" style="fill: currentColor"/><path d="M2,18.5L13,18.5L13,3.5L11.5,3.5L11.5,17.009L2,17.009L2,18.5Z" style="fill: currentColor"/></svg>
+    <a href="" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-2">
       Download rainfall for the last 5 days CSV (123KB)
     </a>
   </div>
@@ -99,7 +98,7 @@
   window.flood.model = {
     id: {{ model.id | dump | safe }},
     centroid: {{ model.centroid | dump | safe }},
-    bingApiKey: {{ model.bingMaps | dump | safe }},
+    bingMaps: {{ model.bingMaps | dump | safe }},
     stationId: {{ model.stationId | dump | safe }},
     telemetry: {{ model.telemetryRainfall | dump | safe }}
   }
