@@ -110,8 +110,6 @@ lab.experiment('Test - /rainfall-station', () => {
 
     const response = await server.inject(options)
 
-    console.log(response.payload)
-
     Code.expect(response.payload).to.contain('15.00mm')
     Code.expect(response.payload).to.contain('55.00mm')
     Code.expect(response.payload).to.contain('65.27mm')

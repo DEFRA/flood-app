@@ -11,7 +11,6 @@ import '../components/toggletip'
 
 // Create LiveMap
 if (document.getElementById('map')) {
-  console.log(window.flood)
   window.flood.maps.createLiveMap('map', {
     btnText: 'View map',
     btnClasses: 'defra-link-icon-s',
@@ -26,7 +25,6 @@ if (document.getElementById('map')) {
 
 // Create bar chart
 if (document.getElementById('bar-chart')) {
-  console.log('Inside')
   window.flood.charts.createBarChart('bar-chart', window.flood.model.stationId, window.flood.model.telemetry)
 }
 

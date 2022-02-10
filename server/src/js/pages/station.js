@@ -18,7 +18,7 @@ window.flood.maps.createLiveMap('map', {
   selectedId: 'stations.' + window.flood.model.station.id,
   zoom: 14
 })
-console.log(window.flood.model.station)
+
 const chart = document.querySelector('.defra-line-chart')
 if (chart) {
   // If javascript is enabled make content visible to all but assitive technology
