@@ -313,7 +313,6 @@ function BarChart (containerId, stationId, data) {
     for (let i = 0; i < bands.length; i++) {
       if (pageDurationDays <= bands[i].days) {
         period = bands[i].period
-        console.log('period', period)
         dataPage = dataCache[period].values
         latestDateTime = dataCache[period].latestDateTime
         break
@@ -379,8 +378,6 @@ function BarChart (containerId, stationId, data) {
 
   const initChart = () => {
     // Get page data
-    console.log('start: ',pageStart)
-    console.log('End: ', pageEnd)
     getDataPage(pageStart, pageEnd)
     // Render bars and chart
     renderChart()
@@ -512,7 +509,7 @@ function BarChart (containerId, stationId, data) {
   pageEnd = pageEnd.toISOString().replace(/.\d+Z$/g, 'Z')
 
   // XMLHttpRequest to get data if hasn't already been passed through
-  let dataCache = data
+  const dataCache = data
   initChart()
   // if (dataCache) {
   //   initChart()
