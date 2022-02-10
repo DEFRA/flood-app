@@ -1,134 +1,133 @@
 // Bar graph
 .defra-bar-chart {
-    &__caption {
-      display:block;
-      @extend .govuk-body;
-      margin-bottom:30px;
-      @include mq ($from: tablet) {
-        margin-bottom:40px;
-      }
-      margin-right:0px;
-      text-align:left;
+  &__caption {
+    display:block;
+    @extend .govuk-body;
+    margin-bottom:30px;
+    @include mq ($from: tablet) {
+      margin-bottom:40px;
     }
-    &__container {
-      position:relative;
-      margin:0;
-      outline: 0px;
-    }
+    margin-right:0px;
+    text-align:left;
   }
-  .defra-bar-chart svg {
+  &__container {
     position:relative;
-    overflow:visible;
-    height:300px;
-    width:100%;
-    @include mq ($from: desktop) {
-      height:450px;
-    }
-    .axis.y { 
-      @include govuk-font($size: 14, $tabular: true);
-    }
-    .axis.x { 
-      @include govuk-font($size: 14); 
-    }
-    .axis.y text,
-    .axis.x text {
-      fill: $govuk-secondary-text-colour;
-    }
-    .axis.y .tick line,
-    .axis.y path,
-    .grid.y path.domain { 
-      display: none;
-    }
-    .axis path,
-    .axis line {
-      fill: none;
-      stroke: $govuk-border-colour;
-      stroke-width: 1;
-      shape-rendering: crispEdges;
-    }
-    .bar {
-      pointer-events: none;
-      outline: 0px;
-      text {
-        font-size: 0;
-      }
-    }
-    .bar__fill {
-      fill: govuk-colour('blue');
-    }
-    .bar__fill {
-      fill: govuk-colour('blue');
-    }
-    .bar--selected .bar__fill {
-      fill: govuk-colour('dark-blue');
-    }
-    .bar--incomplete .bar__fill {
-      fill: govuk-colour('mid-grey');
-    }
-    .grid {
-      pointer-events: none;
-    }
-    .grid line {
-      fill: none;
-      stroke: #E6E6E6;
-      stroke-width: 1;
-      shape-rendering: crispEdges;
-    }
-    .latest-line {
-      pointer-events: none;
-      stroke-width: 1;
-      stroke: govuk-colour('dark-grey');
-      stroke-dasharray: 3 3;
-      shape-rendering: crispEdges;
-    }
-    .bar--selected .latest-line {
-      stroke: govuk-colour('black');
-    }
-    // Locator line
-    .locator {
-      visibility: hidden;
-      &--visible {
-        visibility: visible;
-        pointer-events: none;
-      }
-      &__background {
-        visibility: hidden;
-      }
-      &__background--visible {
-        visibility: visible;
-        fill: $govuk-focus-colour;
-      }
-      &__line {
-        visibility: hidden;
-        stroke-width: 1;
-        stroke: govuk-colour('mid-grey');
-        shape-rendering: crispEdges;
-      }
-      &__line--visible {
-        visibility: visible;
-      }
-    }
-    // Tooltip
-    .tooltip {
-      visibility: hidden;
-    }
-    .tooltip--visible {
-        visibility: visible;
-    }
-    .tooltip-bg {
-        fill:white;
-        stroke-width: 1;
-        stroke: $govuk-secondary-text-colour;
-        shape-rendering: geometricPrecision;
-    }
-    .tooltip-text {
-        @include govuk-font($size: 16);
-    }
-    .tooltip-text__strong {
-        @include govuk-font($size: 19, $weight:bold);
-    }
-    .tooltip-text__small {
-      @include govuk-font($size: 14);
+    margin:0;
+    outline: 0px;
+  }
+}
+.defra-bar-chart svg {
+  position:relative;
+  overflow:visible;
+  height:300px;
+  width:100%;
+  @include mq ($from: desktop) {
+    height:450px;
+  }
+  .axis.y { 
+    @include govuk-font($size: 14, $tabular: true);
+  }
+  .axis.x { 
+    @include govuk-font($size: 14); 
+  }
+  .axis.y text,
+  .axis.x text {
+    fill: $govuk-secondary-text-colour;
+  }
+  .axis.y .tick line,
+  .axis.y path,
+  .grid.y path.domain { 
+    display: none;
+  }
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: $govuk-border-colour;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+  }
+  .bar {
+    pointer-events: none;
+    outline: 0px;
+    text {
+      font-size: 0;
     }
   }
-  
+  .bar__fill {
+    fill: govuk-colour('blue');
+  }
+  .bar__fill {
+    fill: govuk-colour('blue');
+  }
+  .bar--selected .bar__fill {
+    fill: govuk-colour('dark-blue');
+  }
+  .bar--incomplete .bar__fill {
+    fill: govuk-colour('mid-grey');
+  }
+  .grid {
+    pointer-events: none;
+  }
+  .grid line {
+    fill: none;
+    stroke: #E6E6E6;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+  }
+  .latest-line {
+    pointer-events: none;
+    stroke-width: 1;
+    stroke: govuk-colour('dark-grey');
+    stroke-dasharray: 3 3;
+    shape-rendering: crispEdges;
+  }
+  .bar--selected .latest-line {
+    stroke: govuk-colour('black');
+  }
+  // Locator line
+  .locator {
+    visibility: hidden;
+    &--visible {
+      visibility: visible;
+      pointer-events: none;
+    }
+    &__background {
+      visibility: hidden;
+    }
+    &__background--visible {
+      visibility: visible;
+      fill: $govuk-focus-colour;
+    }
+    &__line {
+      visibility: hidden;
+      stroke-width: 1;
+      stroke: govuk-colour('mid-grey');
+      shape-rendering: crispEdges;
+    }
+    &__line--visible {
+      visibility: visible;
+    }
+  }
+  // Tooltip
+  .tooltip {
+    visibility: hidden;
+  }
+  .tooltip--visible {
+      visibility: visible;
+  }
+  .tooltip-bg {
+      fill:white;
+      stroke-width: 1;
+      stroke: $govuk-secondary-text-colour;
+      shape-rendering: geometricPrecision;
+  }
+  .tooltip-text {
+      @include govuk-font($size: 16);
+  }
+  .tooltip-text__strong {
+      @include govuk-font($size: 19, $weight:bold);
+  }
+  .tooltip-text__small {
+    @include govuk-font($size: 14);
+  }
+}
