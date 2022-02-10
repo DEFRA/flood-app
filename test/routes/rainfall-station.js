@@ -5,9 +5,9 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
-const data = require('../data')
+// const data = require('../data')
 
-lab.experiment('Test - /rainfal-station', () => {
+lab.experiment('Test - /rainfall-station', () => {
   let sandbox
   let server
 
@@ -38,6 +38,7 @@ lab.experiment('Test - /rainfal-station', () => {
     await sandbox.restore()
   })
   lab.test('GET /rainfall-station', async () => {
+<<<<<<< HEAD
     // const floodService = require('../../server/services/flood')
 
 
@@ -136,6 +137,55 @@ lab.experiment('Test - /rainfal-station', () => {
 
     // const util = require('../../server/util')
     // sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+=======
+    const floodService = require('../../server/services/flood')
+
+    const fakeRainfallStationsData = () => [
+      {
+        period: '15 min',
+        value: '0',
+        value_timestamp: '2022-02-08T09:15:00.000Z'
+      },
+      {
+        period: '15 min',
+        value: '0.32',
+        value_timestamp: '2022-02-08T09:00:00.000Z'
+      },
+      {
+        period: '15 min',
+        value: '0.27',
+        value_timestamp: '2022-02-08T08:45:00.000Z'
+      },
+      {
+        period: '15 min',
+        value: '0.55',
+        value_timestamp: '2022-02-08T08:30:00.000Z'
+      }
+    ]
+
+    const fakeStationTotalsData = () => [
+      {
+        telemetry_station_id: '950',
+        station_reference: 'E24195',
+        region: 'Anglian',
+        station_name: 'LAVENHAM',
+        centroid: '0101000020E610000010159197A4D6E93FB7D290B8370Q3T30',
+        data_type: 'Total',
+        period: '15 min',
+        units: 'mm',
+        telemetry_value_parent_id: '96504866',
+        value: '0',
+        value_timestamp: '2022-02-08T09:15:00.000Z',
+        day_total: '15.00',
+        six_hr_total: '55.00',
+        one_hr_total: '65.27',
+        type: 'R'
+      }
+    ]
+
+    sandbox.stub(floodService, 'getRainfallByStation').callsFake(fakeRainfallStationsData)
+    sandbox.stub(floodService, 'getRainfallStationTotals').callsFake(fakeStationTotalsData)
+>>>>>>> 8fc66b79f2b752b31756377273efc0f71d19644f
 
     const rainfallPlugin = {
       plugin: {
@@ -159,6 +209,7 @@ lab.experiment('Test - /rainfal-station', () => {
       url: '/rainfall-station/E24195'
     }
 
+<<<<<<< HEAD
     console.log('TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT')
 
     const response = await server.inject(options)
@@ -172,6 +223,16 @@ lab.experiment('Test - /rainfal-station', () => {
     // Code.expect(response.payload).to.contain('3 levels')
     // Code.expect(response.payload).to.contain('River Mersey')
     // Code.expect(response.payload).to.contain('Sankey Brook')
+=======
+    const response = await server.inject(options)
+
+    console.log(response.payload)
+
+    Code.expect(response.payload).to.contain('15.00mm')
+    Code.expect(response.payload).to.contain('55.00mm')
+    Code.expect(response.payload).to.contain('65.27mm')
+    Code.expect(response.payload).to.contain('Lavenham')
+>>>>>>> 8fc66b79f2b752b31756377273efc0f71d19644f
     Code.expect(response.statusCode).to.equal(200)
   })
 })
