@@ -517,4 +517,36 @@ lab.experiment('Flood service test', () => {
 
     Code.expect(result).to.equal('ok')
   })
+  lab.test('Test getRainfallByStation', async () => {
+    const util = require('../../server/util')
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://server2/rainfall-station/E24195')
+      .once()
+      .returns('ok')
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getRainfallByStation('E24195')
+
+    Code.expect(result).to.equal('ok')
+  })
+  lab.test('Test getRainfallStationTotals', async () => {
+    const util = require('../../server/util')
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://server2/rainfall-station-totals/E24195')
+      .once()
+      .returns('ok')
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getRainfallStationTotals('E24195')
+
+    Code.expect(result).to.equal('ok')
+  })
 })

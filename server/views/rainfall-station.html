@@ -86,11 +86,10 @@
 <script>
   window.flood = {
     model: {
-      id: {{ model.station.id | dump | safe }},
+      id: {{ model.rainfallStation.station_reference | dump | safe }},
       centroid: {{ model.station.centroid | dump | safe }},
       bingApiKey: {{ model.bingApiKey | dump | safe }},
-      stationId: {{ model.station.ref | dump | safe }},
-      telemetry: {{ model.telemetry | dump | safe }}
+      telemetry: {{ model.telemetryRainfall | dump | safe }}
     }
   }
 </script>
