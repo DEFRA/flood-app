@@ -35,21 +35,23 @@ class ViewModel {
 
       const intervals = valueDuration === 15 ? 480 : 120
 
-      // Extend telemetry upto latest interval, could be 15 or 60 minute intervals
-      while (this.telemetry.length < intervals) {
-        const nextDateTime = moment(this.telemetry[0].value_timestamp).add(valueDuration, 'minutes').toDate()
-        this.telemetry.unshift({
-          value_timestamp: nextDateTime,
-          value: 0
-        })
-      }
-
+      // Remove unecessary properties
       const values = this.telemetry.map(data => {
         return {
           dateTime: data.value_timestamp,
-          value: data.value
+          value: Number(data.value) // Check this!!!
+          // value: Math.round(Number(data.value) * 10) / 10
         }
       })
+
+      // Extend telemetry upto latest interval, could be 15 or 60 minute intervals
+      while (values.length < intervals) {
+        const nextDateTime = moment(values[0].dateTime).add(valueDuration, 'minutes').toDate()
+        values.unshift({
+          dateTime: nextDateTime,
+          value: 0
+        })
+      }
 
       // If hourly requested and raw telemetry is in minutes then batch data into hourly totals
       const hours = []

@@ -90,7 +90,9 @@ function BarChart (containerId, stationId, data) {
       .attr('x', 0)
       .attr('y', (d) => { return yScale(d.value) })
       .attr('width', xScale.bandwidth())
-      .attr('height', (d) => { return height - yScale(d.value) })
+      .attr('height', (d) => {
+        return height - yScale(d.value)
+      })
 
     // Draw latest reading line
     const xLatest = Math.round(xScale.bandwidth() / 2)
