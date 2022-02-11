@@ -83,8 +83,8 @@ lab.experiment('Test - /rainfall-station', () => {
       }
     ]
 
-    sandbox.stub(floodService, 'getRainfallByStation').callsFake(fakeRainfallStationsData)
-    sandbox.stub(floodService, 'getRainfallStationTotals').callsFake(fakeStationTotalsData)
+    sandbox.stub(floodService, 'getRainfallStationTelemetry').callsFake(fakeRainfallStationsData)
+    sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeStationTotalsData)
 
     const rainfallPlugin = {
       plugin: {
