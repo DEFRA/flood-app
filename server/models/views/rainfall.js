@@ -3,19 +3,19 @@ const tz = 'Europe/London'
 const config = require('../../config')
 
 class ViewModel {
-  constructor (rainfallStation, rainfallStationTotal) {
+  constructor (rainfallStationTelemetry, rainfallStation) {
     Object.assign(this, {
       pageTitle: 'Check for flooding in England',
       metaDescription: 'View current flood warnings and alerts for England and the national flood forecast for the next 5 days. Also check river, sea, groundwater and rainfall levels.',
       metaCanonical: '/',
-      stationName: rainfallStationTotal[0].station_name.replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase()),
-      telemetry: rainfallStation || [],
+      stationName: rainfallStation[0].station_name.replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase()),
+      telemetry: rainfallStationTelemetry || [],
       bingMaps: config.bingKeyMaps,
-      stationId: rainfallStationTotal[0].station_reference,
-      centroid: rainfallStationTotal[0].centroid,
-      region: rainfallStationTotal[0].region
+      stationId: rainfallStation[0].station_reference,
+      centroid: [rainfallStation[0].lon, rainfallStation[0].lat],
+      region: rainfallStation[0].region
     })
-
+    console.log(rainfallStation)
     if (this.telemetry.length) {
       const now = moment().tz(tz).format()
       const fiveDaysAgo = moment().subtract(5, 'days').format()
@@ -26,9 +26,9 @@ class ViewModel {
       const rangeStartDateTime = fiveDaysAgo
       const dataEndDateTime = now
       const rangeEndDateTime = now
-      const latest1hr = rainfallStationTotal[0].one_hr_total
-      const latest6hr = rainfallStationTotal[0].six_hr_total
-      const latest24hr = rainfallStationTotal[0].day_total
+      const latest1hr = rainfallStation[0].one_hr_total
+      const latest6hr = rainfallStation[0].six_hr_total
+      const latest24hr = rainfallStation[0].day_total
       const valueDuration = this.telemetry[0].period === '15 min' ? 15 : 45
       this.id = this.stationId + '.' + this.region
       const latestHourDateTime = moment(latestDateTime).add(45, 'minutes').minutes(0).seconds(0).milliseconds(0).toDate()

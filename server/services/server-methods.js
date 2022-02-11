@@ -196,7 +196,7 @@ module.exports = server => {
     }
   })
 
-  server.method('flood.getRainfallByStation', floodServices.getRainfallByStation, {
+  server.method('flood.getRainfallStationTelemetry', floodServices.getRainfallStationTelemetry, {
     cache: {
       cache: cacheType,
       expiresIn: 15 * 60 * 1000, // 15 minutes
@@ -204,7 +204,7 @@ module.exports = server => {
     }
   })
 
-  server.method('flood.getRainfallStationTotals', floodServices.getRainfallStationTotals, {
+  server.method('flood.getRainfallStation', floodServices.getRainfallStation, {
     cache: {
       cache: cacheType,
       expiresIn: 15 * 60 * 1000, // 15 minutes

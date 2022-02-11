@@ -517,7 +517,23 @@ lab.experiment('Flood service test', () => {
 
     Code.expect(result).to.equal('ok')
   })
-  lab.test('Test getRainfallByStation', async () => {
+  lab.test('Test getRainfallStationTelemetry', async () => {
+    const util = require('../../server/util')
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://server2/rainfall-station-telemetry/E24195')
+      .once()
+      .returns('ok')
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getRainfallStationTelemetry('E24195')
+
+    Code.expect(result).to.equal('ok')
+  })
+  lab.test('Test getRainfallStation', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -529,23 +545,7 @@ lab.experiment('Flood service test', () => {
 
     const floodService = require('../../server/services/flood')
 
-    const result = await floodService.getRainfallByStation('E24195')
-
-    Code.expect(result).to.equal('ok')
-  })
-  lab.test('Test getRainfallStationTotals', async () => {
-    const util = require('../../server/util')
-
-    sandbox
-      .mock(util)
-      .expects('getJson')
-      .withArgs('http://server2/rainfall-station-totals/E24195')
-      .once()
-      .returns('ok')
-
-    const floodService = require('../../server/services/flood')
-
-    const result = await floodService.getRainfallStationTotals('E24195')
+    const result = await floodService.getRainfallStation('E24195')
 
     Code.expect(result).to.equal('ok')
   })

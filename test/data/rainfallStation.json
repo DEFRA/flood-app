@@ -17,7 +17,9 @@
        "day_total": "20.00",
        "six_hr_total": "15.23",
        "one_hr_total": "3.21",
-       "type": "R"
+       "type": "R",
+       "lat": 56.103262968744666,
+       "lon": 2.8074515304839753
     },
     {
         "telemetry_station_id": "950",
@@ -37,6 +39,8 @@
         "day_total": "55.00",
         "six_hr_total": "22.00",
         "one_hr_total": "5.02",
-        "type": "R"
+        "type": "R",
+        "lat": 52.103262968744666,
+        "lon": 1.8074515304839753
     }
  ]

@@ -19,10 +19,10 @@ lab.experiment('Rainfall model test', () => {
   })
 
   lab.test('Test Rainfall viewModel puts stationName as Title Case', async () => {
-    const rainfallData = data.rainfall
-    const rainfallTotalsData = data.rainfallTotals.filter(function (rainfallTotal) { return rainfallTotal.station_reference === 'E24195' })
-    const viewModel = new ViewModel(rainfallData, rainfallTotalsData)
-
+    const rainfallTelemetryData = data.rainfallStationTelemetry
+    const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'E24195' })
+    const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
+    console.log(viewModel)
     const Result = viewModel
 
     Code.expect(Result.stationName).to.equal('Lavenham')
@@ -30,9 +30,9 @@ lab.experiment('Rainfall model test', () => {
     Code.expect(Result.telemetryRainfall.latest1hr).to.equal('3.21')
   })
   lab.test('Test Rainfall viewModel puts stationName as Title Case with multiple words in string', async () => {
-    const rainfallData = data.rainfall
-    const rainfallTotalsData = data.rainfallTotals.filter(function (rainfallTotal) { return rainfallTotal.station_reference === 'N24195' })
-    const viewModel = new ViewModel(rainfallData, rainfallTotalsData)
+    const rainfallTelemetryData = data.rainfallStationTelemetry
+    const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'N24195' })
+    const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
 
     const Result = viewModel
 
@@ -41,9 +41,10 @@ lab.experiment('Rainfall model test', () => {
     Code.expect(Result.telemetryRainfall.latest1hr).to.equal('5.02')
   })
   lab.test('Test Rainfall viewModel returns telemetryRainfall data', async () => {
-    const rainfallData = data.rainfall
-    const rainfallTotalsData = data.rainfallTotals.filter(function (rainfallTotal) { return rainfallTotal.station_reference === 'E24195' })
-    const viewModel = new ViewModel(rainfallData, rainfallTotalsData)
+    const rainfallTelemetryData = data.rainfallStationTelemetry
+    const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'E24195' })
+    const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
+
     const Result = viewModel
 
     Code.expect(Result.telemetryRainfall.latestDateTime).to.equal('2022-02-09T09:15:00.000Z')
@@ -56,22 +57,23 @@ lab.experiment('Rainfall model test', () => {
     Code.expect(Result.telemetryRainfall.minutes.values.length).to.greaterThan(0)
   })
   lab.test('Test dates are formatted correctly for the view', async () => {
-    const rainfallData = data.rainfall
-    const rainfallTotalsData = data.rainfallTotals.filter(function (rainfallTotal) { return rainfallTotal.station_reference === 'E24195' })
-    const viewModel = new ViewModel(rainfallData, rainfallTotalsData)
+    const rainfallTelemetryData = data.rainfallStationTelemetry
+    const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'E24195' })
+    const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
 
     const Result = viewModel
 
     Code.expect(Result.latestDayFormatted).to.equal('9th February')
     Code.expect(Result.latestTimeFormatted).to.equal('9:15am')
   })
-  lab.test('Test Rainfall viewModel returns correct time period', async () => {
-    const rainfallData = data.rainfall
-    const rainfallTotalsData = data.rainfallTotals.filter(function (rainfallTotal) { return rainfallTotal.station_reference === 'E24195' })
-    const viewModel = new ViewModel(rainfallData, rainfallTotalsData)
-
+  lab.test('Test lat/long are populated in centroid', async () => {
+    const rainfallTelemetryData = data.rainfallStationTelemetry
+    const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'E24195' })
+    const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
+    console.log(viewModel)
     const Result = viewModel
 
-    Code.expect(Result.period).to.equal('15 min')
+    Code.expect(Result.centroid[0]).to.equal(2.8074515304839753)
+    Code.expect(Result.centroid[1]).to.equal(56.103262968744666)
   })
 })

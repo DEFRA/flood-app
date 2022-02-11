@@ -15,8 +15,7 @@ if (document.getElementById('map')) {
     btnText: 'View map',
     btnClasses: 'defra-button-map-s govuk-!-margin-right-1',
     layers: 'mv,rf',
-    // centre: window.flood.model.centroid,0.8074515304839753, 52.103262968744666
-    centre: [0.8074515304839753, 52.103262968744666],
+    centre: window.flood.model.centroid,
     zoom: 14,
     selectedId: `rainfall_stations.${window.flood.model.id}`
   })
