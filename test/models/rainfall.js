@@ -70,7 +70,6 @@ lab.experiment('Rainfall model test', () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
     const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'E24195' })
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
-    console.log(viewModel)
     const Result = viewModel
 
     Code.expect(Result.centroid[0]).to.equal(2.8074515304839753)
