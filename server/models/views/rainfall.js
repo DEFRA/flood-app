@@ -15,13 +15,12 @@ class ViewModel {
       centroid: [rainfallStation[0].lon, rainfallStation[0].lat],
       region: rainfallStation[0].region
     })
-    console.log(rainfallStation)
     if (this.telemetry.length) {
       const now = moment().tz(tz).format()
       const fiveDaysAgo = moment().subtract(5, 'days').format()
       const latestDateTime = this.telemetry[0].value_timestamp
       this.latestDayFormatted = moment(latestDateTime).tz(tz).format('Do MMMM')
-      this.latestTimeFormatted = moment(latestDateTime).tz(tz).format('h:ma')
+      this.latestTimeFormatted = moment(latestDateTime).tz(tz).format('h:mma')
       const dataStartDateTime = fiveDaysAgo
       const rangeStartDateTime = fiveDaysAgo
       const dataEndDateTime = now
