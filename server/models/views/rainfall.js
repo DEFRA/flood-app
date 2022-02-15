@@ -15,6 +15,7 @@ class ViewModel {
       centroid: [rainfallStation[0].lon, rainfallStation[0].lat],
       region: rainfallStation[0].region
     })
+
     if (this.telemetry.length) {
       const now = moment().tz(tz).format()
       const fiveDaysAgo = moment().subtract(5, 'days').format()
