@@ -26,7 +26,7 @@ lab.experiment('Rainfall model test', () => {
 
     Code.expect(Result.stationName).to.equal('Lavenham')
     Code.expect(Result.telemetry.length).to.greaterThan(0)
-    Code.expect(Result.telemetryRainfall.latest1hr).to.equal('3.21')
+    Code.expect(Result.telemetryRainfall.latest1hr).to.equal('3.2')
   })
   lab.test('Test Rainfall viewModel puts stationName as Title Case with multiple words in string', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
@@ -37,7 +37,7 @@ lab.experiment('Rainfall model test', () => {
 
     Code.expect(Result.stationName).to.equal('Newcastle Upon Tyne')
     Code.expect(Result.telemetry.length).to.greaterThan(0)
-    Code.expect(Result.telemetryRainfall.latest1hr).to.equal('5.02')
+    Code.expect(Result.telemetryRainfall.latest1hr).to.equal('5.0')
   })
   lab.test('Test Rainfall viewModel returns telemetryRainfall data', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
@@ -49,9 +49,9 @@ lab.experiment('Rainfall model test', () => {
     Code.expect(Result.telemetryRainfall.latestDateTime).to.equal('2022-02-09T09:15:00.000Z')
     Code.expect(Result.telemetryRainfall.dataStartDateTime).to.equal(moment().subtract(5, 'days').format())
     Code.expect(Result.telemetryRainfall.rangeStartDateTime).to.equal(moment().subtract(5, 'days').format())
-    Code.expect(Result.telemetryRainfall.latest1hr).to.equal('3.21')
-    Code.expect(Result.telemetryRainfall.latest6hr).to.equal('15.23')
-    Code.expect(Result.telemetryRainfall.latest24hr).to.equal('20.00')
+    Code.expect(Result.telemetryRainfall.latest1hr).to.equal('3.2')
+    Code.expect(Result.telemetryRainfall.latest6hr).to.equal('15.2')
+    Code.expect(Result.telemetryRainfall.latest24hr).to.equal('20.0')
     Code.expect(Result.telemetryRainfall.minutes.latestDateTime).to.equal('2022-02-09T09:15:00.000Z')
     Code.expect(Result.telemetryRainfall.minutes.values.length).to.greaterThan(0)
   })
@@ -84,8 +84,8 @@ lab.experiment('Rainfall model test', () => {
     Code.expect(Result.telemetryRainfall.latestDateTime).to.equal('2022-02-15T09:00:00.000Z')
     Code.expect(Result.telemetryRainfall.dataStartDateTime).to.equal(moment().subtract(5, 'days').format())
     Code.expect(Result.telemetryRainfall.rangeStartDateTime).to.equal(moment().subtract(5, 'days').format())
-    Code.expect(Result.telemetryRainfall.latest1hr).to.equal('0')
-    Code.expect(Result.telemetryRainfall.latest6hr).to.equal('0')
+    Code.expect(Result.telemetryRainfall.latest1hr).to.equal('0.0')
+    Code.expect(Result.telemetryRainfall.latest6hr).to.equal('0.0')
     Code.expect(Result.telemetryRainfall.latest24hr).to.equal('1.1')
     Code.expect(Result.telemetryRainfall.minutes.latestDateTime).to.equal('2022-02-15T09:00:00.000Z')
     Code.expect(Result.telemetryRainfall.minutes.values.length).to.greaterThan(0)
