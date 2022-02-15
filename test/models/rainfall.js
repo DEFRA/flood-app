@@ -22,7 +22,6 @@ lab.experiment('Rainfall model test', () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
     const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'E24195' })
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
-    console.log(viewModel)
     const Result = viewModel
 
     Code.expect(Result.stationName).to.equal('Lavenham')
@@ -74,5 +73,21 @@ lab.experiment('Rainfall model test', () => {
 
     Code.expect(Result.centroid[0]).to.equal(2.8074515304839753)
     Code.expect(Result.centroid[1]).to.equal(56.103262968744666)
+  })
+  lab.test('Test Rainfall viewModel returns telemetryRainfall data with station using 1hr periods', async () => {
+    const rainfallTelemetryData = data.rainfallStationhrTelemetry
+    const rainfallStationData = data.hrRainfallStation
+    const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
+
+    const Result = viewModel
+
+    Code.expect(Result.telemetryRainfall.latestDateTime).to.equal('2022-02-15T09:00:00.000Z')
+    Code.expect(Result.telemetryRainfall.dataStartDateTime).to.equal(moment().subtract(5, 'days').format())
+    Code.expect(Result.telemetryRainfall.rangeStartDateTime).to.equal(moment().subtract(5, 'days').format())
+    Code.expect(Result.telemetryRainfall.latest1hr).to.equal('0')
+    Code.expect(Result.telemetryRainfall.latest6hr).to.equal('0')
+    Code.expect(Result.telemetryRainfall.latest24hr).to.equal('1.1')
+    Code.expect(Result.telemetryRainfall.minutes.latestDateTime).to.equal('2022-02-15T09:00:00.000Z')
+    Code.expect(Result.telemetryRainfall.minutes.values.length).to.greaterThan(0)
   })
 })
