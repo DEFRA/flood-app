@@ -31,7 +31,7 @@ class ViewModel {
       const latest6hr = formatValue(rainfallStation[0].six_hr_total)
       const latest24hr = formatValue(rainfallStation[0].day_total)
       const valueDuration = this.telemetry[0].period === '15 min' ? 15 : 45
-      this.id = `${this.stationId}` + '.' + `${this.region}`
+      this.id = `${this.stationId}.${this.region}`
       const latestHourDateTime = moment(latestDateTime).add(45, 'minutes').minutes(0).seconds(0).milliseconds(0).toDate()
 
       const intervals = valueDuration === 15 ? 480 : 120
