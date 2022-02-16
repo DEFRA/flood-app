@@ -31,7 +31,7 @@ class ViewModel {
       const latest6hr = formatValue(rainfallStation[0].six_hr_total)
       const latest24hr = formatValue(rainfallStation[0].day_total)
       const valueDuration = this.telemetry[0].period === '15 min' ? 15 : 45
-      this.id = this.stationId + '.' + this.region
+      this.id = `${this.stationId}` + '.' + `${this.region}`
       const latestHourDateTime = moment(latestDateTime).add(45, 'minutes').minutes(0).seconds(0).milliseconds(0).toDate()
 
       const intervals = valueDuration === 15 ? 480 : 120
@@ -57,19 +57,7 @@ class ViewModel {
       // If hourly requested and raw telemetry is in minutes then batch data into hourly totals
       const hours = []
       if (valueDuration === 15) {
-        let batchTotal = 0
-        values.forEach(item => {
-          const minutes = moment(item.dateTime).minutes()
-          batchTotal += item.value
-          if (minutes === 15) {
-            const batchDateTime = moment(item.dateTime).add(45, 'minutes').toDate()
-            hours.push({
-              dateTime: batchDateTime,
-              value: Math.round(batchTotal * 100) / 100
-            })
-            batchTotal = 0
-          }
-        })
+        batchData(values, hours)
       }
 
       const duration = valueDuration === 45 ? values : hours
@@ -94,6 +82,22 @@ class ViewModel {
           values: duration
         }
       }
+    }
+
+    function batchData (values, hours) {
+      let batchTotal = 0
+      values.forEach(item => {
+        const minutes = moment(item.dateTime).minutes()
+        batchTotal += item.value
+        if (minutes === 15) {
+          const batchDateTime = moment(item.dateTime).add(45, 'minutes').toDate()
+          hours.push({
+            dateTime: batchDateTime,
+            value: Math.round(batchTotal * 100) / 100
+          })
+          batchTotal = 0
+        }
+      })
     }
   }
 }
