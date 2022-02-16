@@ -1,8 +1,6 @@
 const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/rainfall')
-// const additionalWelshStations = [4162, 4170, 4173, 4174, 4176]
-// const { nrwStationUrl } = require('../config')
 
 module.exports = {
   method: 'GET',

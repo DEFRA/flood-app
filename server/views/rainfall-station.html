@@ -9,7 +9,6 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">
       Rainfall at {{ model.stationName }} gauge
-    <!-- <span class="govuk-caption-m">Measured {{ model.timeElapsed }}</span> -->
   </div>
 </div>
 
@@ -37,7 +36,6 @@
           </dt>
           <dd class="defra-flood-statistics__value">
             {{ model.telemetryRainfall.latest1hr }}mm
-            <!--<span class="defra-flood-statistics__value-detail">upto {{ model.time }}</span>-->
           </dd>
         </div>
         <div class="defra-flood-statistics__column-one-third"> 
@@ -46,7 +44,6 @@
           </dt>
           <dd class="defra-flood-statistics__value">
             {{ model.telemetryRainfall.latest6hr }}mm
-            <!--<span class="defra-flood-statistics__value-detail">upto {{ model.time }}</span>-->
           </dd>
         </div>
         <div class="defra-flood-statistics__column-one-third"> 
@@ -55,22 +52,12 @@
           </dt>
           <dd class="defra-flood-statistics__value">
             {{ model.telemetryRainfall.latest24hr }}mm
-            <!--<span class="defra-flood-statistics__value-detail">upto {{ model.time }}</span>-->
           </dd>
         </div>
       </dl>
     </div>
   </div>
 </div>
-<!-- <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <h2 class="govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-4">Rainfall over the last 5 days in millimetres</h2>
-    <div id="bar-chart" class="defra-bar-chart"></div>
-    <a href="" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-2">
-      Download rainfall for the last 5 days CSV (123KB)
-    </a>
-  </div>
-</div> -->
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
