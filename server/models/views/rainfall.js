@@ -37,13 +37,7 @@ class ViewModel {
       const intervals = valueDuration === 15 ? 480 : 120
 
       // Remove unecessary properties
-      const values = this.telemetry.map(data => {
-        return {
-          dateTime: data.value_timestamp,
-          value: Number(formatValue(data.value)) // Check this!!!
-          // value: Math.round(Number(data.value) * 10) / 10
-        }
-      })
+      const values = removeRedundantValues()
 
       // Extend telemetry upto latest interval, could be 15 or 60 minute intervals
       while (values.length < intervals) {
@@ -82,6 +76,15 @@ class ViewModel {
           values: duration
         }
       }
+    }
+
+    function removeRedundantValues () {
+      return this.telemetry.map(data => {
+        return {
+          dateTime: data.value_timestamp,
+          value: Number(formatValue(data.value))
+        }
+      })
     }
 
     function batchData (values, hours) {
