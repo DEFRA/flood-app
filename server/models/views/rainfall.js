@@ -37,7 +37,12 @@ class ViewModel {
       const intervals = valueDuration === 15 ? 480 : 120
 
       // Remove unecessary properties
-      const values = removeRedundantValues()
+      const values = this.telemetry.map(data => {
+        return {
+          dateTime: data.value_timestamp,
+          value: Number(formatValue(data.value))
+        }
+      })
 
       // Extend telemetry upto latest interval, could be 15 or 60 minute intervals
       while (values.length < intervals) {
@@ -77,32 +82,23 @@ class ViewModel {
         }
       }
     }
-
-    function removeRedundantValues () {
-      return this.telemetry.map(data => {
-        return {
-          dateTime: data.value_timestamp,
-          value: Number(formatValue(data.value))
-        }
-      })
-    }
-
-    function batchData (values, hours) {
-      let batchTotal = 0
-      values.forEach(item => {
-        const minutes = moment(item.dateTime).minutes()
-        batchTotal += item.value
-        if (minutes === 15) {
-          const batchDateTime = moment(item.dateTime).add(45, 'minutes').toDate()
-          hours.push({
-            dateTime: batchDateTime,
-            value: Math.round(batchTotal * 100) / 100
-          })
-          batchTotal = 0
-        }
-      })
-    }
   }
+}
+
+function batchData (values, hours) {
+  let batchTotal = 0
+  values.forEach(item => {
+    const minutes = moment(item.dateTime).minutes()
+    batchTotal += item.value
+    if (minutes === 15) {
+      const batchDateTime = moment(item.dateTime).add(45, 'minutes').toDate()
+      hours.push({
+        dateTime: batchDateTime,
+        value: Math.round(batchTotal * 100) / 100
+      })
+      batchTotal = 0
+    }
+  })
 }
 
 function formatValue (val) {
