@@ -65,6 +65,15 @@ lab.experiment('Rainfall model test', () => {
     Code.expect(Result.latestDayFormatted).to.equal('9th February')
     Code.expect(Result.latestTimeFormatted).to.equal('9:15am')
   })
+  lab.test('Test station id constructed correctly', async () => {
+    const rainfallTelemetryData = data.rainfallStationTelemetry
+    const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'E24195' })
+    const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
+
+    const Result = viewModel
+
+    Code.expect(Result.id).to.equal('E24195.Anglian')
+  })
   lab.test('Test lat/long are populated in centroid', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
     const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'E24195' })
