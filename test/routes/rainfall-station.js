@@ -40,7 +40,7 @@ lab.experiment('Test - /rainfall-station', () => {
   lab.test('GET /rainfall-station', async () => {
     const floodService = require('../../server/services/flood')
 
-    const fakeRainfallStationsData = () => [
+    const fakeRainfallStationTelemetryData = () => [
       {
         period: '15 min',
         value: '0',
@@ -63,7 +63,7 @@ lab.experiment('Test - /rainfall-station', () => {
       }
     ]
 
-    const fakeStationTotalsData = () => [
+    const fakeRainfallStationData = () => [
       {
         telemetry_station_id: '950',
         station_reference: 'E24195',
@@ -83,8 +83,8 @@ lab.experiment('Test - /rainfall-station', () => {
       }
     ]
 
-    sandbox.stub(floodService, 'getRainfallStationTelemetry').callsFake(fakeRainfallStationsData)
-    sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeStationTotalsData)
+    sandbox.stub(floodService, 'getRainfallStationTelemetry').callsFake(fakeRainfallStationTelemetryData)
+    sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeRainfallStationData)
 
     const rainfallPlugin = {
       plugin: {

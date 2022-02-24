@@ -19,7 +19,6 @@ module.exports = {
       return boom.notFound('No rainfall station totals found')
     }
 
-    // Non-forecast Station
     const model = new ViewModel(rainfallStationTelemetry, rainfallStation)
     return h.view('rainfall-station', { model })
   },

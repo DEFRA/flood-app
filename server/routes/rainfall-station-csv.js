@@ -1,0 +1,45 @@
+const floodService = require('../services/flood')
+const moment = require('moment-timezone')
+
+module.exports = {
+  method: 'GET',
+  path: '/rainfall-station-csv/{id}',
+  handler: async (request, h) => {
+    const { id } = request.params
+
+    const [rainfallStation, rainfallStationTelemetry] = await Promise.all([
+      floodService.getRainfallStation(id),
+      floodService.getRainfallStationTelemetry(id)
+    ])
+
+    const stationName = rainfallStation[0].station_name.replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase())
+
+    this.telemetry = rainfallStationTelemetry
+
+    this.telemetry.forEach(function (item) {
+      item.ts = moment.utc(item.value_timestamp).format()
+    })
+
+    this.telemetry.sort(function (a, b) {
+      return new Date(a.ts) - new Date(b.ts)
+    })
+
+    this.csvString = [
+      [
+        'Timestamp (UTC)',
+        'Rainfall (mm)'
+      ],
+      ...this.telemetry.map(item => [
+        item.ts,
+        item.value
+      ])
+    ]
+      .map(e => e.join(','))
+      .join('\n')
+
+    const response = h.response(this.csvString)
+    response.type('text/csv')
+    response.header('Content-disposition', `attachment; filename=${stationName}-rainfall-data.csv`)
+    return response
+  }
+}

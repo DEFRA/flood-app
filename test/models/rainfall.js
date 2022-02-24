@@ -99,4 +99,17 @@ lab.experiment('Rainfall model test', () => {
     Code.expect(Result.telemetryRainfall.minutes.latestDateTime).to.equal('2022-02-15T09:00:00.000Z')
     Code.expect(Result.telemetryRainfall.minutes.values.length).to.greaterThan(0)
   })
+  lab.test('Test metadata and social details returned correctly', async () => {
+    const rainfallTelemetryData = data.rainfallStationTelemetry
+    const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'E24195' })
+    const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
+
+    console.log(viewModel)
+
+    const Result = viewModel
+
+    Code.expect(Result.pageTitle).to.equal('Rainfall at Lavenham gauge')
+    Code.expect(Result.postTitle).to.equal('Latest rainfall information at Lavenham gauge')
+    Code.expect(Result.metaDescription).to.equal('Check the latest recorded rainfall at Lavenham gauge')
+  })
 })
