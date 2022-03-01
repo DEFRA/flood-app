@@ -13,10 +13,10 @@ module.exports = {
 
     // Null rainfallStationTelemetry, but in this case service should return a 404 error so i don't think this ever gets hit, defensive programming though
     if (!rainfallStationTelemetry) {
-      return boom.notFound('No rainfall station found')
+      return boom.notFound('No rainfall station telemetry data found')
     }
     if (!rainfallStation) {
-      return boom.notFound('No rainfall station totals found')
+      return boom.notFound('No rainfall station data found')
     }
 
     const model = new ViewModel(rainfallStationTelemetry, rainfallStation)
