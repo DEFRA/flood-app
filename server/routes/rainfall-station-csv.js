@@ -1,5 +1,6 @@
 const floodService = require('../services/flood')
 const moment = require('moment-timezone')
+const util = require('../../server/util')
 
 module.exports = {
   method: 'GET',
@@ -18,6 +19,7 @@ module.exports = {
 
     this.telemetry.forEach(function (item) {
       item.ts = moment.utc(item.value_timestamp).format()
+      item.value = util.formatValue(item.value)
     })
 
     this.telemetry.sort(function (a, b) {
