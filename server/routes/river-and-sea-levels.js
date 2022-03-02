@@ -78,7 +78,7 @@ module.exports = [{
         lyr: joi.string(),
         v: joi.string()
       }),
-      failAction: (request, h, err) => {
+      failAction: (request, h, _err) => {
         return h.view('404').code(404).takeover()
       }
     }
