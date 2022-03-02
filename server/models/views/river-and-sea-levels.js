@@ -230,7 +230,7 @@ class ViewModel {
     return ''
   }
 
-  typeChecked (types, type) {
+  typeChecked (_types, type) {
     return this.types.some(a => type.includes(a))
   }
 
