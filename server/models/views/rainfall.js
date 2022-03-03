@@ -37,24 +37,15 @@ class ViewModel {
       this.id = `${this.stationId}.${this.region}`
       const latestHourDateTime = moment(latestDateTime).add(45, 'minutes').minutes(0).seconds(0).milliseconds(0).toDate()
 
-      const intervals = valueDuration === 15 ? 480 : 120
-
       // Remove unecessary properties
-      const values = this.telemetry.map(data => {
+      let values = this.telemetry.map(data => {
         return {
           dateTime: data.value_timestamp,
           value: Number(util.formatValue(data.value))
         }
       })
 
-      // Extend telemetry upto latest interval, could be 15 or 60 minute intervals
-      while (values.length < intervals) {
-        const nextDateTime = moment(values[0].dateTime).add(valueDuration, 'minutes').toDate()
-        values.unshift({
-          dateTime: nextDateTime,
-          value: 0
-        })
-      }
+      values = util.rainfallTelemetryPadOut(values, valueDuration)
 
       // If hourly requested and raw telemetry is in minutes then batch data into hourly totals
       const hours = []

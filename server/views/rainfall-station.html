@@ -93,7 +93,7 @@
     </div>
   </div>
 </div>
-
+{% if model.outOfDate === '' %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <h2 class="govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-4">Rainfall over the last 5 days in millimetres</h2>
@@ -101,6 +101,7 @@
       <a href="/rainfall-station-csv/{{model.stationId}}" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-2">Download rainfall for the last 5 days CSV (123KB)</a>
   </div>
 </div>
+{% endif %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
