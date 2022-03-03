@@ -15,11 +15,13 @@ module.exports = {
 
     const stationName = rainfallStation[0].station_name.replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase())
 
-    this.telemetry = rainfallStationTelemetry
+    const valueDuration = rainfallStationTelemetry[0].period === '15 min' ? 15 : 45
+
+    this.telemetry = util.rainfallTelemetryPadOut(rainfallStationTelemetry, valueDuration)
 
     this.telemetry.forEach(function (item) {
       item.ts = moment.utc(item.value_timestamp).format()
-      item.value = util.formatValue(item.value)
+      item.value = Number(util.formatValue(item.value))
     })
 
     this.telemetry.sort(function (a, b) {

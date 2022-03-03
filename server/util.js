@@ -80,6 +80,19 @@ function dateDiff (date1, date2) {
   return moment(date1).diff(moment(date2), 'days')
 }
 
+function rainfallTelemetryPadOut (values, valueDuration) {
+  // Extend telemetry upto latest interval, could be 15 or 60 minute intervals
+  const intervals = valueDuration === 15 ? 480 : 120
+  while (values.length < intervals) {
+    const nextDateTime = moment(values[0].dateTime).add(valueDuration, 'minutes').toDate()
+    values.unshift({
+      dateTime: nextDateTime,
+      value: 0
+    })
+  }
+  return values
+}
+
 module.exports = {
   get,
   post,
@@ -92,5 +105,6 @@ module.exports = {
   cleanseLocation,
   addBufferToBbox,
   formatValue,
-  dateDiff
+  dateDiff,
+  rainfallTelemetryPadOut
 }
