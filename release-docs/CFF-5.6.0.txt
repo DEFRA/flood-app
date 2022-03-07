@@ -1,0 +1,30 @@
+# Check for flooding 5.6.0 Wednesday 2nd March 2022
+
+# Release
+
+5.6.0
+
+# Tickets
+
+FSR-530 - Target Area Update - 2 March 2022 (https://eaflood.atlassian.net/browse/FSR-530)
+
+# Instructions
+
+!Important for webops
+
+This release updates target areas and the relase versions only in the CFF flood-app and flood-service.
+
+Steps
+
+1. Update LFW_{STAGE}_99_LOAD_FLOOD_ALERT_AREAS jenkins job with the following properties update for the updated database name for production:
+
+DB_NAME=floodprdg
+###### OR ########
+DB_NAME=floodprdb
+
+## NOTE if above property update not made this job will fail.
+
+2 - Execute LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
+
