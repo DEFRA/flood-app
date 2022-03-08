@@ -13,6 +13,7 @@ class ViewModel {
       metaDescription: 'Check the latest recorded rainfall at ' + stationName + ' gauge',
       metaCanonical: '/',
       telemetry: rainfallStationTelemetry || [],
+      floodRiskUrl: config.floodRiskUrl,
       bingMaps: config.bingKeyMaps,
       stationId: rainfallStation[0].station_reference,
       centroid: [rainfallStation[0].lon, rainfallStation[0].lat],

@@ -104,8 +104,6 @@ lab.experiment('Rainfall model test', () => {
     const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'E24195' })
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
 
-    console.log(viewModel)
-
     const Result = viewModel
 
     Code.expect(Result.pageTitle).to.equal('Rainfall at Lavenham gauge')
