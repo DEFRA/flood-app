@@ -112,27 +112,23 @@
             <dl class="defra-flood-statistics__list">
             {# if station has hasPercentiles, this should exclude Coastal #}
               {% if model.station.hasPercentiles and not model.station.isCoastal  %}
-              <div class="defra-flood-statistics__row"> 
+              <div class="defra-flood-statistics__column-one-third"> 
                 <dt class="defra-flood-statistics__key">State</dt>
                 <dd class="defra-flood-statistics__value">
-                  <strong class="defra-flood-statistics__impact defra-flood-statistics__impact{% if model.station.state === 'Normal' %}--normal{% elif model.station.state === 'High' %}--high{% endif %}">
                     {{ model.station.state }}
-                  </strong>
-                    {{ model.station.stateInformation}} <span class="govuk-visually-hidden">level here</span>
+                    <span class="defra-flood-statistics__value-detail">{{ model.station.stateInformation}}</span>
                 </dd>
               </div>
               {% endif %}
-              <div class="defra-flood-statistics__row">
+              <div class="defra-flood-statistics__column-one-third">
                 <dt class="defra-flood-statistics__key">Height</dt>
                 <dd class="defra-flood-statistics__value">
-                  <strong class="defra-flood-statistics__impact">
                   {% if model.station.isRiver and model.recentValueBelowZero %}
                     &le; 0m
                   {% else %}
                     {{ (model.station.recentValue._).toFixed(2) }}m
                   {% endif %}
-                  </strong>
-                    at <time datetime="">{{ model.station.recentValue.formattedTime }}</time> {{ model.station.recentValue.dateWhen }}
+                   <span class="defra-flood-statistics__value-detail"> at <time datetime="">{{ model.station.recentValue.formattedTime }}</time> {{ model.station.recentValue.dateWhen }}</span>
                 </dd>
               </div>
             </dl>

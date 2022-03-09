@@ -6,7 +6,7 @@ const FloodsModel = require('../models/floods')
 module.exports = {
   method: 'GET',
   path: '/status',
-  handler: async (request, h) => {
+  handler: async (_request, h) => {
     // test location services
     let place, locationStart, locationEnd
     try {

@@ -14,7 +14,8 @@ module.exports = (env, argv) => ({
     station: './server/src/js/pages/station',
     'stations-overview': './server/src/js/pages/stations-overview',
     'target-area': './server/src/js/pages/target-area',
-    location: './server/src/js/pages/location'
+    location: './server/src/js/pages/location',
+    rainfall: './server/src/js/pages/rainfall'
   },
   output: {
     path: path.resolve(__dirname, 'server/dist/js')
@@ -23,7 +24,7 @@ module.exports = (env, argv) => ({
     rules: [
       {
         // Default exclude removes all node_modules but d3 is now distributed es6 so include d3 (& our own src) in transpile
-        include: mPath => mPath.indexOf('server/src') > -1 || mPath.indexOf('node_modules/d3') > -1,
+        include: mPath => mPath.indexOf('server/src') > -1 || mPath.indexOf('node_modules/d3') > -1 || mPath.indexOf('node_modules/internmap') > -1,
         use: {
           loader: 'babel-loader',
           options: {

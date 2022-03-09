@@ -83,7 +83,7 @@ module.exports = [{
       payload: joi.object({
         location: joi.string().allow('').trim().max(200).required()
       }),
-      failAction: (request, h, err) => {
+      failAction: (request, h, _err) => {
         return h.view('alerts-and-warnings').takeover()
       }
     }
