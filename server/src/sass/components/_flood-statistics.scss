@@ -1,5 +1,6 @@
 .defra-flood-statistics {
-    border-bottom:1px solid $govuk-border-colour;
+    border-top: 1px solid $govuk-border-colour;
+    border-bottom: 1px solid $govuk-border-colour;
     &__list {
         margin:0;
         @include mq ($from: tablet) {
@@ -12,33 +13,50 @@
         display:block;
         clear:both;
     }
-    &__row {
+    &__column-one-quarter {
+        width:50%;
+        box-sizing: border-box;
+        padding-right: 10px;
+        float:left;
         @include mq ($from: tablet) {
+            padding: 0px 15px;
             width:33.33%;
-            box-sizing: border-box;
-            padding:0 15px;
-            float:left;
         }
-        @include govuk-responsive-padding(5, 'bottom');
+    }
+    &__column-one-third {
+        width:33.33%;
+        box-sizing: border-box;
+        padding-right: 10px;
+        float:left;
+        @include mq ($from: tablet) {
+            padding: 0px 15px;
+        }
     }
     &__key {
-        border-top: 1px solid $govuk-border-colour;
-        @include govuk-responsive-padding(4, 'top');
+        // @include govuk-font($size: 19, $weight: bold);
         @include govuk-font($size: 19);
+        padding-top: 20px;
+        margin-bottom: 5px;
     }
     &__value {
-        @include govuk-font($size: 16);
+        @include govuk-font($size: 36);
+        // color: govuk-colour('blue');
         margin:0;
-    }
-    &__impact {
-        @include govuk-font($size: 36, $weight: bold);
-        @include govuk-responsive-margin(1, 'bottom');
         display: block;
+        box-sizing: border-box;
+        padding-bottom: 20px;
     }
-    &__impact--normal {
-        color: govuk-colour('green');
+    &__value::first-letter {
+        margin-left: -0.075em;
+    }       
+    &__data-tip:focus {
+        border-bottom: 0px;
+        margin-bottom: 0px;
     }
-    &__impact--high {
-        color: govuk-colour('red');
+    &__value-detail {
+        @include govuk-font($size: 16);
+        color: $govuk-text-colour;
+        margin-top: 5px;
+        display: block;
     }
 }
