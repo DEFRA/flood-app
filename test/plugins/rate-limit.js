@@ -37,6 +37,7 @@ lab.experiment('rate-limit plugin test', () => {
 
   lab.test('GET station page exceeding rate-limit ', async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
+    delete require.cache[require.resolve('../../server/routes/station.js')]
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {

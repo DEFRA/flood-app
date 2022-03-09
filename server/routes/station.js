@@ -2,7 +2,7 @@ const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/station')
 const additionalWelshStations = [4162, 4170, 4173, 4174, 4176]
-const { nrwStationUrl } = require('../config')
+const { nrwStationUrl, rateLimitEnabled } = require('../config')
 
 module.exports = {
   method: 'GET',
@@ -65,6 +65,11 @@ module.exports = {
     }
   },
   options: {
+    plugins: {
+      'hapi-rate-limit': {
+        enabled: rateLimitEnabled
+      }
+    },
     validate: {
       params: joi.object({
         id: joi.number().required(),
