@@ -420,6 +420,7 @@ function LiveMap (mapId, options) {
       model.state = feature.get('state')
     }
     if (feature.getId().startsWith('rainfall')) {
+      model.id = feature.getId().toString().split('.')[1]
       model.date = formatExpiredTime(model.value_timestamp)
       model.state = feature.get('state')
       model.name = capitalise(model.station_name)

@@ -3,11 +3,7 @@ const moment = require('moment-timezone')
 const config = require('../../config')
 const Station = require('./station-data')
 const Forecast = require('./station-forecast')
-const { groupBy } = require('../../util')
-
-function dateDiff (date1, date2) {
-  return moment(date1).diff(moment(date2), 'days')
-}
+const util = require('../../util')
 
 class ViewModel {
   constructor (options) {
@@ -30,7 +26,7 @@ class ViewModel {
     })
     // Group warnings/alerts by severity level
 
-    const warningsAlertsGroups = groupBy(warningsAlerts, 'severity_value')
+    const warningsAlertsGroups = util.groupBy(warningsAlerts, 'severity_value')
     const numAlerts = warningsAlertsGroups['1'] ? warningsAlertsGroups['1'].length : 0
     const numWarnings = warningsAlertsGroups['2'] ? warningsAlertsGroups['2'].length : 0
     const numSevereWarnings = warningsAlertsGroups['3'] ? warningsAlertsGroups['3'].length : 0
@@ -119,7 +115,7 @@ class ViewModel {
     this.catchments = []
     this.date = new Date()
     this.status = this.station.status
-    this.outOfDate = dateDiff(Date.now(), this.station.statusDate) <= 5
+    this.outOfDate = util.dateDiff(Date.now(), this.station.statusDate) <= 5
     this.porMaxValueIsProvisional = false
     this.station.floodingIsPossible = false
     this.station.hasPercentiles = true

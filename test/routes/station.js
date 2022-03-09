@@ -400,7 +400,6 @@ lab.experiment('Test - /station/{id}', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('defra-flood-statistics__impact defra-flood-statistics__impact--normal')
     Code.expect(response.payload).to.contain('Normal')
     Code.expect(response.payload).to.contain('0.15m to 3.50m')
     Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?rloi-id=5146" class="defra-flood-nav__link">Nearby levels</a>')
@@ -664,9 +663,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('defra-flood-statistics__impact defra-flood-statistics__impact--high')
     Code.expect(response.payload).to.contain('High')
-    Code.expect(response.payload).to.contain('above 3.50m <span class="govuk-visually-hidden">level here</span>\n')
     Code.expect(response.payload).to.contain('<time datetime="">1:30am</time>')
     Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?rloi-id=5146" class="defra-flood-nav__link">Nearby levels</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5122" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>')
@@ -891,9 +888,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('defra-flood-statistics__impact defra-flood-statistics__impact')
     Code.expect(response.payload).to.contain('Low\n')
-    Code.expect(response.payload).to.contain('below 0.15m <span class="govuk-visually-hidden">level here</span>\n')
     Code.expect(response.payload).to.contain('<time datetime="">1:30am</time>')
     Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?rloi-id=5146" class="defra-flood-nav__link">Nearby levels</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5122" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>')
@@ -1026,7 +1021,6 @@ lab.experiment('Test - /station/{id}', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('Sea level at Bude - GOV.UK')
-    Code.expect(response.payload).not.to.contain('defra-flood-statistics__impact defra-flood-statistics__impact')
     Code.expect(response.payload).to.contain('at <time datetime="">6:00am</time>')
     Code.expect(response.payload).to.contain('3.59m')
   })

@@ -162,7 +162,9 @@
                   <div class="defra-flood-list__title-column">
                     <span class="defra-flood-list-item__title">
                       {% if station.station_type === 'R' %}
+                      <a href="/rainfall-station/{{ station.telemetry_id }}">
                         {{ station.external_name }}
+                      </a>
                       {% else %}
                       <a href="/station/{{ station.rloi_id }}{% if station.qualifier == 'd' %}/downstream{% endif %}">
                         {{ station.external_name }}

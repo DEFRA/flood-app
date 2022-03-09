@@ -72,6 +72,27 @@ function addBufferToBbox (bbox, m) {
   return turf.bbox(turf.buffer(turf.bboxPolygon(bbox), m, { units: 'meters' }))
 }
 
+function formatValue (val) {
+  return parseFloat(Math.round(val * Math.pow(10, 1)) / (Math.pow(10, 1))).toFixed(1)
+}
+
+function dateDiff (date1, date2) {
+  return moment(date1).diff(moment(date2), 'days')
+}
+
+function rainfallTelemetryPadOut (values, valueDuration) {
+  // Extend telemetry upto latest interval, could be 15 or 60 minute intervals
+  const intervals = valueDuration === 15 ? 480 : 120
+  while (values.length < intervals) {
+    const nextDateTime = moment(values[0].dateTime).add(valueDuration, 'minutes').toDate()
+    values.unshift({
+      dateTime: nextDateTime,
+      value: 0
+    })
+  }
+  return values
+}
+
 module.exports = {
   get,
   post,
@@ -82,5 +103,8 @@ module.exports = {
   toFixed,
   groupBy,
   cleanseLocation,
-  addBufferToBbox
+  addBufferToBbox,
+  formatValue,
+  dateDiff,
+  rainfallTelemetryPadOut
 }
