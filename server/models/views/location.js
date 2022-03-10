@@ -34,41 +34,7 @@ class ViewModel {
     const hasFloods = !!floods.length
 
     if (hasFloods) {
-      const activeFloods = floods.filter(flood => flood.severity_value < 4)
-      const inactiveFloods = floods.filter(flood => flood.severity_value === 4)
-      const severeWarnings = floods.filter(flood => flood.severity_value === 3)
-      const warnings = floods.filter(flood => flood.severity_value === 2)
-
-      this.hasFloods = hasFloods
-      this.hasActiveFloods = !!activeFloods.length
-      this.hasInactiveFloods = !!inactiveFloods.length
-
-      // Group and order floods by most severe
-      const grouped = groupBy(floods, 'severity_value')
-      const groups = severity.map(item => {
-        return {
-          severity: item, floods: grouped[item.id]
-        }
-      }).filter(item => {
-        return !!item.floods // filters out any without a floods array
-      })
-
-      groups.forEach((group, i) => {
-        switch (group.severity.hash) {
-          case 'severe':
-            this.groupSevere(group, location)
-            break
-          case 'warning':
-            this.groupWarning(group, location)
-            break
-          case 'alert':
-            this.groupAlert(warnings, severeWarnings, group, location)
-            break
-          case 'removed':
-            this.groupRemoved(group, location)
-            break
-        }
-      })
+      this.groupAndOrder(floods, hasFloods, location)
     }
 
     // Count stations that are 'high'
@@ -102,6 +68,44 @@ class ViewModel {
       outlookDays: tabs.days,
       bingMaps: bingKeyMaps
     }
+  }
+
+  groupAndOrder(floods, hasFloods, location) {
+    const activeFloods = floods.filter(flood => flood.severity_value < 4)
+    const inactiveFloods = floods.filter(flood => flood.severity_value === 4)
+    const severeWarnings = floods.filter(flood => flood.severity_value === 3)
+    const warnings = floods.filter(flood => flood.severity_value === 2)
+
+    this.hasFloods = hasFloods
+    this.hasActiveFloods = !!activeFloods.length
+    this.hasInactiveFloods = !!inactiveFloods.length
+
+    // Group and order floods by most severe
+    const grouped = groupBy(floods, 'severity_value')
+    const groups = severity.map(item => {
+      return {
+        severity: item, floods: grouped[item.id]
+      }
+    }).filter(item => {
+      return !!item.floods // filters out any without a floods array
+    })
+
+    groups.forEach((group, i) => {
+      switch (group.severity.hash) {
+        case 'severe':
+          this.groupSevere(group, location)
+          break
+        case 'warning':
+          this.groupWarning(group, location)
+          break
+        case 'alert':
+          this.groupAlert(warnings, severeWarnings, group, location)
+          break
+        case 'removed':
+          this.groupRemoved(group, location)
+          break
+      }
+    })
   }
 
   groupSevere (group, location) {
