@@ -70,7 +70,7 @@ class ViewModel {
     }
   }
 
-  groupAndOrder(floods, hasFloods, location) {
+  groupAndOrder (floods, hasFloods, location) {
     const activeFloods = floods.filter(flood => flood.severity_value < 4)
     const inactiveFloods = floods.filter(flood => flood.severity_value === 4)
     const severeWarnings = floods.filter(flood => flood.severity_value === 3)
