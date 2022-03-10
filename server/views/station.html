@@ -38,9 +38,9 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         {% if model.station.isDownstream %}
-        <p class="govuk-!-margin-bottom-8">This measuring station takes 2 measurements. You're viewing the downstream level. <a href="/station/{{ model.station.id }}">View the upstream level.</a></p>
+        <p class="govuk-!-margin-bottom-8">This measuring station takes 2 measurements. You're viewing the downstream level. <a data-journey-click="Station:Station navigation:Station - Upstream" href="/station/{{ model.station.id }}">View the upstream level.</a></p>
         {% else %}
-        <p class="govuk-!-margin-bottom-8">This measuring station takes 2 measurements. You're viewing the upstream level. <a href="/station/{{ model.station.id }}/downstream">View the downstream level.</a></p>
+        <p class="govuk-!-margin-bottom-8">This measuring station takes 2 measurements. You're viewing the upstream level. <a data-journey-click="Station:Station navigation:Station - Downstream" href="/station/{{ model.station.id }}/downstream">View the downstream level.</a></p>
         {% endif %}
       </div>
   </div>
@@ -169,7 +169,7 @@
       <span id="map"></span>
       {% if model.station.riverNavigation.up %}<a href="/station/{{model.station.riverNavigation.up}}" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>{% endif %}
       {% if model.station.riverNavigation.down %}<a href="/station/{{model.station.riverNavigation.down}}" class="defra-flood-nav__link defra-flood-nav__link--downstream">Downstream</a>{% endif %}
-      <a href="/river-and-sea-levels?rloi-id={{model.station.id}}" class="defra-flood-nav__link">Nearby levels</a>
+      <a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels?rloi-id={{model.station.id}}" class="defra-flood-nav__link">Nearby levels</a>
     </nav>
   </div>
 </div>
@@ -195,7 +195,7 @@
   </div>
 </div>
 
-<a href="/station-csv/{{model.station.id}}{% if model.station.qualifier == 'd' %}/downstream{% endif %}" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-2">Download height data CSV ({% if model.isFfoi %}16{% else %}12{% endif %}KB)</a>
+<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/{{model.station.id}}{% if model.station.qualifier == 'd' %}/downstream{% endif %}" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-2">Download height data CSV ({% if model.isFfoi %}16{% else %}12{% endif %}KB)</a>
 {% endif %}
 
 {# Impacts and thresholds #}

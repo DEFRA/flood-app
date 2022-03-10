@@ -65,7 +65,15 @@ class ViewModel {
       feedback: false,
       mapTitle,
       floodRiskUrl,
-      bingMaps: bingKeyMaps
+      bingMaps: bingKeyMaps,
+      planAhead: 'Location-Target-Area:Related-content:Plan-ahead-for-flooding',
+      whatToDO: 'Location-Target-Area:Related-content:What-to-do-in-a-flood',
+      recoverAfter: 'Location-Target-Area:Related-content:Recover-after-a-flood',
+      longTerm: 'Location-Target-Area:Related-content:Check-long-term-risk',
+      reportFlood: 'Location-Target-Area:Related-content:Report-a-flood',
+      twitterEvent: 'Target Area:Share Page:TA - Share to Twitter',
+      facebookEvent: 'Target Area:Share Page:TA - Share to Facebook',
+      emailEvent: 'Target Area:Share Page:TA - Share to email'
     }, options)
   }
 }

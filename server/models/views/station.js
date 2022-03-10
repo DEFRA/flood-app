@@ -12,6 +12,10 @@ class ViewModel {
     this.station = new Station(station)
     this.station.riverNavigation = river
 
+    this.twitterEvent = 'Station:Share Page:Station - Share to Twitter'
+    this.facebookEvent = 'Station:Share Page:Station - Share to Facebook'
+    this.emailEvent = 'Station:Share Page:Station - Share to email'
+
     /*
     var levelType = this.station.isGroundwater ? 'Groundwater' : (this.station.isCoastal ? 'Sea' : 'River')
 

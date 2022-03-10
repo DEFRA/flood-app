@@ -14,6 +14,9 @@ window.flood.maps.createLiveMap('map', {
   btnText: 'View map',
   btnClasses: 'defra-button-map-s',
   layers: 'mv,ri,ti,gr,rf',
+  data: {
+    button: 'Station:Map View:Station - View map'
+  },
   centre: JSON.parse(window.flood.model.station.coordinates).coordinates,
   selectedId: 'stations.' + window.flood.model.station.id,
   zoom: 14

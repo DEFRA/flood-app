@@ -23,7 +23,12 @@ class ViewModel {
       floodFisUrl,
       dateFormatted: 'Up to date as of ' + moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY'),
       feedback: false,
-      dataError
+      dataError,
+      planAhead: 'Location:Related-content:Plan-ahead-for-flooding',
+      whatToDO: 'Location:Related-content:What-to-do-in-a-flood',
+      recoverAfter: 'Location:Related-content:Recover-after-a-flood',
+      longTerm: 'Location:Related-content:Check-long-term-risk',
+      reportFlood: 'Location:Related-content:Report-a-flood'
     })
 
     const hasFloods = !!floods.length

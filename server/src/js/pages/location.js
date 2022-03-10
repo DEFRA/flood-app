@@ -13,6 +13,9 @@ if (document.getElementById('map')) {
   window.flood.maps.createLiveMap('map', {
     btnText: 'View map of flood warning and alert areas',
     btnClasses: 'defra-button-map',
+    data: {
+      button: 'Location:Map view:Location - View national warning map'
+    },
     layers: 'mv,ts,tw,ta',
     extent: window.flood.model.placeBbox
   })
@@ -23,6 +26,9 @@ if (document.getElementById('map-outlook')) {
   window.flood.maps.createOutlookMap('map-outlook', {
     btnText: 'View map showing flood risk areas',
     btnClasses: 'defra-button-map govuk-!-margin-bottom-4',
+    data: {
+      button: 'Location:Map view:View outlook map'
+    },
     days: window.flood.model.outlookDays,
     bbox: window.flood.model.placeBbox
   })
