@@ -77,7 +77,7 @@ window.flood = {
           function gtag () {
             // if cookies accepted then push
             if (window.flood.utils.getCookie('set_cookie_usage')) {
-            window.dataLayer.push(arguments)
+              window.dataLayer.push(arguments)
             }
           }
           const conditionsArray = [categoryGA, eventGA, labelGA]
