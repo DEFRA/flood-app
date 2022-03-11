@@ -273,6 +273,8 @@ function BarChart (containerId, stationId, data) {
     pageBack.setAttribute('data-start', previousStart)
     pageBack.setAttribute('data-end', previousEnd)
     pageForward.setAttribute('aria-disabled', !(nextStart && nextEnd))
+    pageBack.setAttribute('data-journey-click', 'Rainfall:Chart Interaction:Rainfall - Previous 24hrs')
+    pageForward.setAttribute('data-journey-click', 'Rainfall:Chart Interaction:Rainfall - Next 24hrs')
     pageBack.setAttribute('aria-disabled', !(previousStart && previousEnd))
     pageForwardText.innerText = `Next ${durationHours > 1 ? durationHours : duration} ${durationHours > 1 ? 'hours' : 'minutes'}`
     pageBackText.innerText = `Previous ${durationHours > 1 ? durationHours : duration} ${durationHours > 1 ? 'hours' : 'minutes'}`

@@ -36,7 +36,7 @@
             </span>
             <span class="govuk-visually-hidden">at</span>
             <span class="defra-map-info__name">
-                <a href="/station/{{ model.id }}">
+                <a data-journey-click="Map:Map interaction:Map - Open station from tooltip" href="/station/{{ model.id }}">
                     {{ model.name }}{% if model.type === 'S' or model.type === 'M' %}, {{ model.river }}{% endif %}
                     {% if model.iswales %}(Natural Resources Wales){% endif %}
                 </a>
@@ -70,7 +70,7 @@
     <div id="infoDescription">
         <p class="defra-map-info__feature">
             <span class="defra-map-info__name">
-                <a href="/rainfall-station/{{ model.id }}">Rainfall at {{ model.name }}</a>
+                <a data-journey-click="Map:Map interaction:Map - Open station from tooltip" href="/rainfall-station/{{ model.id }}">Rainfall at {{ model.name }}</a>
             </span>
             <span class="defra-flood-list-data__description">
                 Measured {{ model.date }}
