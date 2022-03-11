@@ -100,9 +100,9 @@ function lastDataRefresh (lastDate) {
   const days = util.dateDiff(Date.now(), lastDate)
 
   if (days > 1 && days < 6) {
-    return 'offline'
-  } else if (days > 5 && days < 31) {
     return 'problem'
+  } else if (days > 5 && days < 31) {
+    return 'offline'
   } else if (days > 30) {
     return 'closed'
   } else {
