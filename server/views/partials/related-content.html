@@ -5,26 +5,26 @@
   <nav role="navigation" aria-labelledby="subsection-title">
     <ul class="govuk-list govuk-!-font-size-16">
       <li>
-        <a data-journey-click="Location-Target-Area:Related-content:Plan-ahead-for-flooding" class="govuk-link" href="/plan-ahead-for-flooding">
+        <a data-journey-click="{% if model.planAhead %}{{ model.planAhead }}{% endif %}" class="govuk-link" href="/plan-ahead-for-flooding">
           How to plan ahead for flooding
         </a>
       </li>
       <li>
-        <a data-journey-click="Location-Target-Area:Related-content:What-to-do-in-a-flood" class="govuk-link" href="/what-to-do-in-a-flood">
+        <a data-journey-click="{% if model.whatToDo %}{{ model.whatToDO }}{% endif %}" class="govuk-link" href="/what-to-do-in-a-flood">
           What to do in a flood
         </a>
       </li>
       <li>
-        <a data-journey-click="Location-Target-Area:Related-content:Recover-after-a-flood" class="govuk-link" href="/recovering-after-a-flood">
+        <a data-journey-click="{% if model.recoverAfter %}{{ model.recoverAfter }}{% endif %}" class="govuk-link" href="/recovering-after-a-flood">
           How to recover after a flood
         </a>
       </li>
       <li>
-        <a data-journey-click="Location-Target-Area:Related-content:Check-long-term-risk" class="govuk-link" href={{model.floodRiskUrl}}>
+        <a data-journey-click="{% if model.longTerm %}{{ model.longTerm }}{% endif %}" class="govuk-link" href={{model.floodRiskUrl}}>
           Check your long term flood risk
         </a>
       <li>
-        <a data-journey-click="Location-Target-Area:Related-content:Report-a-flood" class="govuk-link" href="https://www.gov.uk/report-flood-cause">
+        <a data-journey-click="{% if model.reportFlood %}{{ model.reportFlood }}{% endif %}"  class="govuk-link" href="https://www.gov.uk/report-flood-cause">
           Report a flood
         </a>
       </li>

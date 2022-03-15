@@ -51,8 +51,7 @@
   <div class="govuk-grid-column-full">
     <nav aria-label="Related levels" class="govuk-!-margin-top-0">
       <span id="map"></span>
-      <a class="defra-link-s" href="/river-sea-groundwater-rainfall-levels?place={{ model.nearby }}">
-        <a href="/river-and-sea-levels?location={{model.stationName | urlize }}" class="defra-flood-nav__link">Nearby levels</a>
+        <a data-journey-click="Rainfall:Station navigation:Rainfall - Nearby levels" href="/river-and-sea-levels?location={{model.stationName | urlize }}" class="defra-flood-nav__link">Nearby levels</a>
       </a>
     </nav>
   </div>
@@ -98,7 +97,7 @@
   <div class="govuk-grid-column-full">
     <h2 class="govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-4">Rainfall over the last 5 days in millimetres</h2>
     <div id="bar-chart" class="defra-bar-chart"></div>
-      <a href="/rainfall-station-csv/{{model.stationId}}" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-2">Download rainfall for the last 5 days CSV (123KB)</a>
+      <a data-journey-click="Rainfall:Station data:Rainfall - Download csv" href="/rainfall-station-csv/{{model.stationId}}" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-2">Download rainfall for the last 5 days CSV (123KB)</a>
   </div>
 </div>
 {% endif %}

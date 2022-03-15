@@ -75,7 +75,10 @@ window.flood = {
         if (dataJourneyClick) {
           const [categoryGA, eventGA, labelGA] = dataJourneyClick.split(':')
           function gtag () {
-            window.dataLayer.push(arguments)
+            // if cookies accepted then push
+            if (window.flood.utils.getCookie('set_cookie_usage')) {
+              window.dataLayer.push(arguments)
+            }
           }
           const conditionsArray = [categoryGA, eventGA, labelGA]
           if (conditionsArray.indexOf(false) === -1) {
