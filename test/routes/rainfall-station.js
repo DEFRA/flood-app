@@ -117,7 +117,7 @@ lab.experiment('Test - /rainfall-station', () => {
     Code.expect(response.statusCode).to.equal(200)
   })
 
-  lab.test('GET /rainfall-station produces offline error', async () => {
+  lab.test('GET /rainfall-station produces problem error', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeRainfallStationTelemetryData = () => [
@@ -175,9 +175,9 @@ lab.experiment('Test - /rainfall-station', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is offline</h2>')
+    Code.expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">There\'s a problem with the latest measurement</h2>')
   })
-  lab.test('GET /rainfall-station produces problem error', async () => {
+  lab.test('GET /rainfall-station produces offline error', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeRainfallStationTelemetryData = () => [
@@ -235,7 +235,7 @@ lab.experiment('Test - /rainfall-station', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">There\'s a problem with the latest measurement</h2>')
+    Code.expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is offline</h2>')
   })
 
   lab.test('GET /rainfall-station produces closed error', async () => {

@@ -17,7 +17,15 @@ class ViewModel {
       bingMaps: config.bingKeyMaps,
       stationId: rainfallStation[0].station_reference,
       centroid: [rainfallStation[0].lon, rainfallStation[0].lat],
-      region: rainfallStation[0].region
+      region: rainfallStation[0].region,
+      planAhead: 'Rainfall:Related-content:Plan-ahead-for-flooding',
+      whatToDO: 'Rainfall:Related-content:What-to-do-in-a-flood',
+      recoverAfter: 'Rainfall:Related-content:Recover-after-a-flood',
+      longTerm: 'Rainfall:Related-content:Check-long-term-risk',
+      reportFlood: 'Rainfall:Related-content:Report-a-flood',
+      twitterEvent: 'Rainfall:Share Page:Rainfall - Share to Twitter',
+      facebookEvent: 'Rainfall:Share Page:Rainfall - Share to Facebook',
+      emailEvent: 'Rainfall:Share Page:Rainfall - Share to email'
     })
 
     if (this.telemetry.length) {
@@ -100,9 +108,9 @@ function lastDataRefresh (lastDate) {
   const days = util.dateDiff(Date.now(), lastDate)
 
   if (days > 1 && days < 6) {
-    return 'offline'
-  } else if (days > 5 && days < 31) {
     return 'problem'
+  } else if (days > 5 && days < 31) {
+    return 'offline'
   } else if (days > 30) {
     return 'closed'
   } else {

@@ -14,6 +14,9 @@ if (document.getElementById('map')) {
   window.flood.maps.createLiveMap('map', {
     btnText: 'View map',
     btnClasses: 'defra-button-map-s govuk-!-margin-right-1',
+    data: {
+      button: 'Rainfall:Map View:Rainfall - View map'
+    },
     layers: 'mv,rf',
     centre: window.flood.model.centroid,
     zoom: 14,
