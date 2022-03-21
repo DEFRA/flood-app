@@ -57,10 +57,8 @@ class ViewModel {
       values = util.rainfallTelemetryPadOut(values, valueDuration)
 
       // If hourly requested and raw telemetry is in minutes then batch data into hourly totals
+
       const hours = []
-      if (valueDuration === 15) {
-        batchData(values, hours)
-      }
 
       const duration = valueDuration === 45 ? values : hours
 
@@ -75,13 +73,17 @@ class ViewModel {
         latest1hr,
         latest6hr,
         latest24hr,
-        minutes: {
-          latestDateTime,
-          values
-        },
         hours: {
           latestDateTime: latestHourDateTime,
           values: duration
+        }
+      }
+
+      if (valueDuration === 15) {
+        batchData(values, hours)
+        this.telemetryRainfall.minutes = {
+          latestDateTime,
+          values
         }
       }
     }

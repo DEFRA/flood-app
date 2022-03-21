@@ -53,7 +53,7 @@ const toggletips = () => {
     currentButton = null
     const toggletips = document.querySelectorAll('.defra-toggletip--open')
     if (toggletips.length) {
-      toggletips.forEach(toggletip => {
+      forEach(toggletips, (toggletip) => {
         toggletip.classList.remove('defra-toggletip--open')
         toggletip.classList.remove('defra-toggletip--bottom')
         toggletip.classList.remove('defra-toggletip--keyboard-focus')
