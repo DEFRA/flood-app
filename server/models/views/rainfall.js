@@ -19,7 +19,7 @@ class ViewModel {
       centroid: [rainfallStation[0].lon, rainfallStation[0].lat],
       region: rainfallStation[0].region,
       planAhead: 'Rainfall:Related-content:Plan-ahead-for-flooding',
-      whatToDO: 'Rainfall:Related-content:What-to-do-in-a-flood',
+      whatToDo: 'Rainfall:Related-content:What-to-do-in-a-flood',
       recoverAfter: 'Rainfall:Related-content:Recover-after-a-flood',
       longTerm: 'Rainfall:Related-content:Check-long-term-risk',
       reportFlood: 'Rainfall:Related-content:Report-a-flood',
