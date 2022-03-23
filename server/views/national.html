@@ -29,7 +29,7 @@
         <span class="defra-flood-status-item__icon"></span>
         <div class="defra-flood-status-item__text">
           <strong>
-            <a href="/alerts-and-warnings{% if group.severity.id === model.highestSeverityId %}{% else %}#{{ group.severity.pluralisedHash }}{% endif %}">
+            <a data-journey-click="National:View Warnings:National-View-{{ group.severity.hash }}" href="/alerts-and-warnings{% if group.severity.id === model.highestSeverityId %}{% else %}#{{ group.severity.pluralisedHash }}{% endif %}">
               {{ group.title | lower }}
             </a>
           </strong>
@@ -42,7 +42,7 @@
       </div>
       {% else %}
       <p class="defra-flood-status__text">
-        <a href="/alerts-and-warnings#{{ group.severity.pluralisedHash }}">{{ group.title | lower }}</a> {{ group.severity.subTitle }}
+        <a data-journey-click="National:View Warnings:National - View removed warnings" href="/alerts-and-warnings#{{ group.severity.pluralisedHash }}">{{ group.title | lower }}</a> {{ group.severity.subTitle }}
       </p>
       {% endif %}
       {% endif %}
@@ -55,7 +55,7 @@
       Updated at <time datetime="{{model.dateUTC}}">{{model.dateFormatted}}</time>
     </p> 
 
-    <a href="/find-location" class="defra-button-start govuk-!-margin-bottom-7" data-module="govuk-button" role="button">
+    <a data-journey-click="National:Location search:National - Location search" href="/find-location" class="defra-button-start govuk-!-margin-bottom-7" data-module="govuk-button" role="button">
       Check for flooding near you
     </a>
 

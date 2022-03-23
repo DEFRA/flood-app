@@ -7,7 +7,7 @@
     </h2>
     <ul class="govuk-tabs__list">
         <li class="govuk-tabs__list-item">
-            <a class="govuk-tabs__tab" href="#today">
+            <a data-journey-click="Location:5day forecast:5DF - Navigate tabs" class="govuk-tabs__tab" href="#today">
                 <span class="defra-flood-tabs__label">Today</span>
             </a>
             {% if model.tabs.dailyRiskAsNum[0] > 2 %}
@@ -16,7 +16,7 @@
             <span class="defra-flood-tabs__label-risk">{{ model.tabs.dailyRisk[0] }} risk</span>
         </li>
         <li class="govuk-tabs__list-item">
-            <a class="govuk-tabs__tab" href="#tomorrow">
+            <a data-journey-click="Location:5day forecast:5DF - Navigate tabs" class="govuk-tabs__tab" href="#tomorrow">
                 <span class="defra-flood-tabs__label">Tomorrow</span>
             </a>
             {% if model.tabs.dailyRiskAsNum[1] > 2 %}
@@ -25,7 +25,7 @@
             <span class="defra-flood-tabs__label-risk">{{ model.tabs.dailyRisk[1] }} risk</span>
         </li>
         <li class="govuk-tabs__list-item">
-            <a class="govuk-tabs__tab" href="#outlook">
+            <a data-journey-click="Location:5day forecast:5DF - Navigate tabs" class="govuk-tabs__tab" href="#outlook">
                 <span class="defra-flood-tabs__label">Outlook</span>
             </a>
             {% if model.tabs.dailyRiskOutlookMax > 2 %}
