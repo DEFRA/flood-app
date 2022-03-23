@@ -8,6 +8,7 @@ import { select, pointer } from 'd3-selection'
 import { max } from 'd3-array'
 import { timeMinute } from 'd3-time'
 // const { xhr } = window.flood.utils
+const { forEach } = window.flood.utils
 
 function BarChart (containerId, stationId, data) {
   const renderChart = () => {
@@ -246,7 +247,7 @@ function BarChart (containerId, stationId, data) {
       numBands += Object.getOwnPropertyDescriptor(dataCache, bands[i].period) ? 1 : 0
     }
     // Determin which controls to display
-    segmentedControl.querySelectorAll('.defra-chart-segmented-control input').forEach(input => {
+    forEach(segmentedControl.querySelectorAll('.defra-chart-segmented-control input'), input => {
       const isBand = period === input.getAttribute('data-period')
       const band = bands.find(x => x.period === input.getAttribute('data-period'))
       input.checked = isBand
@@ -332,7 +333,7 @@ function BarChart (containerId, stationId, data) {
       return date.getTime() > (pageStart.getTime() + valueDuration) && date.getTime() <= (pageEnd.getTime() + valueDuration)
     })
     // Add latest and valid properties to items
-    dataPage.forEach(item => {
+    forEach(dataPage, item => {
       item.isLatest = (new Date(item.dateTime)).getTime() === (new Date(latestDateTime)).getTime()
       item.isValid = (new Date(item.dateTime)).getTime() <= (new Date(latestDateTime)).getTime()
     })

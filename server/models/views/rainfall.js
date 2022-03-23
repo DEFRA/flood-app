@@ -19,7 +19,7 @@ class ViewModel {
       centroid: [rainfallStation[0].lon, rainfallStation[0].lat],
       region: rainfallStation[0].region,
       planAhead: 'Rainfall:Related-content:Plan-ahead-for-flooding',
-      whatToDO: 'Rainfall:Related-content:What-to-do-in-a-flood',
+      whatToDo: 'Rainfall:Related-content:What-to-do-in-a-flood',
       recoverAfter: 'Rainfall:Related-content:Recover-after-a-flood',
       longTerm: 'Rainfall:Related-content:Check-long-term-risk',
       reportFlood: 'Rainfall:Related-content:Report-a-flood',
@@ -57,10 +57,8 @@ class ViewModel {
       values = util.rainfallTelemetryPadOut(values, valueDuration)
 
       // If hourly requested and raw telemetry is in minutes then batch data into hourly totals
+
       const hours = []
-      if (valueDuration === 15) {
-        batchData(values, hours)
-      }
 
       const duration = valueDuration === 45 ? values : hours
 
@@ -75,13 +73,17 @@ class ViewModel {
         latest1hr,
         latest6hr,
         latest24hr,
-        minutes: {
-          latestDateTime,
-          values
-        },
         hours: {
           latestDateTime: latestHourDateTime,
           values: duration
+        }
+      }
+
+      if (valueDuration === 15) {
+        batchData(values, hours)
+        this.telemetryRainfall.minutes = {
+          latestDateTime,
+          values
         }
       }
     }

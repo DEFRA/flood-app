@@ -96,8 +96,7 @@ lab.experiment('Rainfall model test', () => {
     Code.expect(Result.telemetryRainfall.latest1hr).to.equal('0.0')
     Code.expect(Result.telemetryRainfall.latest6hr).to.equal('0.0')
     Code.expect(Result.telemetryRainfall.latest24hr).to.equal('1.1')
-    Code.expect(Result.telemetryRainfall.minutes.latestDateTime).to.equal('2022-02-15T09:00:00.000Z')
-    Code.expect(Result.telemetryRainfall.minutes.values.length).to.greaterThan(0)
+    Code.expect(Result.telemetryRainfall).to.not.contain(Result.telemetryRainfall.minutes)
   })
   lab.test('Test metadata and social details returned correctly', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
