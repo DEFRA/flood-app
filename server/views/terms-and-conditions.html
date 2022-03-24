@@ -108,6 +108,13 @@
     <p>Doing this once won’t mean we automatically waive the right on any other occasion.</p>
     <p>If any of these terms and conditions are held to be invalid, unenforceable or illegal for any reason, the remaining terms and conditions will still apply.</p>
 
+    <h2 id="rate-limiting" class="govuk-heading-m">Rate limiting</h2>
+    <p>We apply rate limiting to Check for flooding to ensure a resilient service.</p>
+    <h3 class="govuk-heading-s">Per application rates</h3>
+    <p>You can make up to 500 requests within a 1 minute period. If you exceed this limit, you’ll receive a 429 Too Many Requests HTTP status code for each request made in the remainder of the 1 minute window. Your rate limit will reset to its maximum value of 500 requests at the end of the period.</p>
+    <h3 class="govuk-heading-s">Open data</h3>
+    <p>The data used in this service is available via the <a href="https://environment.data.gov.uk/flood-monitoring/doc/reference">Environment Agency real time flood monitoring API.</a></p>
+
     <h2 class="govuk-heading-m">Changes to these terms and conditions</h2>
     <p>Please check these terms and conditions regularly. We can update them at any time without notice.</p>
     <p>You’ll agree to any changes if you continue to use the service after the terms and conditions have been updated.</p>
