@@ -6,12 +6,13 @@ const util = require('../util')
 const LocationNotFoundError = require('../location-not-found-error')
 const qs = require('querystring')
 const route = 'river-and-sea-levels'
+const rainfallIdString = 'rainfall-id'
 
 module.exports = [{
   method: 'GET',
   path: `/${route}`,
   handler: async (request, h) => {
-    let { location, riverIds, taCode, types, rloiid } = getParameters(request)
+    let { location, riverIds, taCode, types, rloiid, rainfallid } = getParameters(request)
     const referer = request.headers.referer
     let model, place, stations, targetArea
 
@@ -47,7 +48,7 @@ module.exports = [{
     }
 
     // get base stations
-    stations = await getStations(request, place, taCode, rloiid)
+    stations = await getStations(request, place, taCode, rloiid, rainfallid)
 
     // filter stations
     stations = filterStations(stations, riverIds, types)
@@ -72,6 +73,7 @@ module.exports = [{
         'target-area': joi.string(),
         types: joi.string().allow('S', 'M', 'C', 'G', 'R'),
         'rloi-id': joi.string(),
+        'rainfall-id': joi.string(),
         btn: joi.string(),
         ext: joi.string(),
         fid: joi.string(),
@@ -98,6 +100,7 @@ module.exports = [{
       'target-area': joi.string().allow(''),
       types: joi.any().allow(''),
       'rloi-id': joi.any().allow(''),
+      'rainfall-id': joi.any().allow(''),
       'river-id': joi.any().allow('')
     })
 
@@ -107,7 +110,7 @@ module.exports = [{
       return boom.badRequest(error)
     }
 
-    const { q, 'target-area': taCode, types, 'river-id': riverIds, 'rloi-id': rloiid } = value
+    const { q, 'target-area': taCode, types, 'river-id': riverIds, 'rloi-id': rloiid, 'rainfall-id': rainfallStationId } = value
 
     // if we only have a location or target area then redirect with query string
     // other wise set session vars
@@ -118,6 +121,8 @@ module.exports = [{
         return h.redirect(`/${route}?target-area=${encodeURIComponent(taCode)}`)
       } else if (rloiid) {
         return h.redirect(`/${route}?rloi-id=${rloiid}`)
+      } else if (rainfallStationId) {
+        return h.redirect(`/${route}?rainfall-id=${rainfallStationId}`)
       } else {
         return h.redirect(`/${route}`)
       }
@@ -142,11 +147,12 @@ const getParameters = request => {
     riverIds: redirect ? request.yar.get('river-id') : request.query['river-id'],
     taCode: redirect ? request.yar.get('ta-code', true) : request.query['target-area'],
     rloiid: redirect ? request.yar.get('rloi-id', true) : request.query['rloi-id'],
+    rainfallid: redirect ? request.yar.get(rainfallIdString, true) : request.query[rainfallIdString],
     types: redirect ? request.yar.get('types', true) : request.query.types
   }
 }
 
-const getStations = async (request, place, taCode, rloiid) => {
+const getStations = async (request, place, taCode, rloiid, rainfallid) => {
   if (place) {
     return request.server.methods.flood.getStationsWithin(place.bbox10k)
   }
@@ -170,6 +176,22 @@ const getStations = async (request, place, taCode, rloiid) => {
     // defaulted to 8km radius
     return stationsWithinRad
   }
+  if (rainfallid) {
+    const rainfallStation = await request.server.methods.flood.getRainfallStation(rainfallid)
+
+    const x = rainfallStation[0].lon
+    const y = rainfallStation[0].lat
+
+    const stationsWithinRad = await request.server.methods.flood.getStationsByRadius(x, y, 8000)
+
+    stationsWithinRad.originalStation = {
+      external_name: rainfallStation[0].station_name.replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase()),
+      id: rainfallid
+    }
+
+    // defaulted to 8km radius
+    return stationsWithinRad
+  }
   // if no place or ta then return all stations
   return request.server.methods.flood.getStations()
 }
@@ -186,11 +208,12 @@ const filterStations = (stations, riverIds, types) => {
 
 const notinUk = place => !place.isUK || place.isScotlandOrNorthernIreland
 
-const nonJavaScriptRoute = (request, q, taCode, types, riverIds, rloiid) => {
+const nonJavaScriptRoute = (request, q, taCode, types, riverIds, rloiid, rainfallid) => {
   request.yar.set('redirect', true)
   q && request.yar.set('q', q)
   taCode && request.yar.set('ta-code', taCode)
   types && request.yar.set('types', types.toString())
   riverIds && request.yar.set('river-id', riverIds.toString())
   rloiid && request.yar.set('rloi-id', rloiid.toString())
+  rainfallid && request.yar.set(rainfallIdString, rainfallid.toString())
 }

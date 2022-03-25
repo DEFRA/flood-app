@@ -80,8 +80,8 @@ lab.experiment('Rainfall model test', () => {
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
     const Result = viewModel
 
-    Code.expect(Result.centroid[0]).to.equal(2.8074515304839753)
-    Code.expect(Result.centroid[1]).to.equal(56.103262968744666)
+    Code.expect(Result.centroid[0]).to.equal(-0.60409807)
+    Code.expect(Result.centroid[1]).to.equal(51.34453211)
   })
   lab.test('Test Rainfall viewModel returns telemetryRainfall data with station using 1hr periods', async () => {
     const rainfallTelemetryData = data.rainfallStationhrTelemetry
