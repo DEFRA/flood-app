@@ -10,6 +10,11 @@ module.exports = [{
   method: 'GET',
   path: '/assets/{path*}',
   options: {
+    plugins: {
+      'hapi-rate-limit': {
+        enabled: false
+      }
+    },
     handler: {
       directory: {
         path: [

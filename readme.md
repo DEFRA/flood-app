@@ -58,6 +58,9 @@ DEFRA employees can find examples of environment variables stored in our private
 | FLOOD_APP_REDIS_PASSWORD | redis cache password | no | | | |
 | FLOOD_APP_LOCAL_CACHE | to cache or not | no | false | |  |
 | FLOOD_APP_GA_OPT_ID | google opt id | no | | |  |
-
+| FLOOD_APP_RATE_LIMIT_ENABLED | rate limit  | no | false | | If set to true then all rate limit envvars need to be valid |
+| FLOOD_APP_RATE_LIMIT_REQUESTS | rate limit  | no | | Number of total requests that can be made on a given path per user per period. Set to false to disable limiting requests per path per user. |  |
+| FLOOD_APP_RATE_LIMIT_EXPIRES_IN | rate limit  | no | | Time (in milliseconds) of period for number of total requests |  |
+| FLOOD_APP_RATE_LIMIT_WHITELIST | rate limit white-listed ip addresses | no | | Colon separated list of IPs to bypass rate limiting e.g. '1.1.1.1:2.2.2.2' |  |
 
 
