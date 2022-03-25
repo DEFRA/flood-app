@@ -184,7 +184,7 @@ const getStations = async (request, place, taCode, rloiid, rainfallid) => {
     const stationsWithinRad = await request.server.methods.flood.getStationsByRadius(x, y, 8000)
 
     stationsWithinRad.originalStation = {
-      external_name: rainfallStation.stationName,
+      external_name: rainfallStation[0].station_name.replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase()),
       id: rainfallid
     }
 
