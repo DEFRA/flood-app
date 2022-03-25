@@ -2096,4 +2096,51 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('Showing levels within 5 miles of Lavenham')
     Code.expect(response.statusCode).to.equal(200)
   })
+  lab.test('GET /river-and-sea-levels?rainfall-id=GKHLETOY%%', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationsData = () => data.stationsWithinRadius
+
+    const originalStation = () => data.rainfallStation.filter(function (rainfallStation) {
+      return rainfallStation.station_reference === 'GKHLETOY%%'
+    })
+
+    const cachedStation = () => data.cachedRainfallStation
+
+    sandbox.stub(floodService, 'getStationsByRadius').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getRainfallStation').callsFake(originalStation)
+    sandbox.stub(floodService, 'getStationsGeoJson').callsFake(cachedStation)
+
+    // Set cached stationsGeojson
+
+    floodService.stationsGeojson = await floodService.getStationsGeoJson()
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?rainfall-id=GKHLETOY%%'
+    }
+
+    const response = await server.inject(options)
+
+    console.log(response.payload)
+
+    Code.expect(response.statusCode).to.equal(500)
+  })
 })
