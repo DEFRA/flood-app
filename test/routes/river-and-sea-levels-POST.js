@@ -199,4 +199,16 @@ lab.experiment('Routes test - river-and-sea-levels', () => {
     Code.expect(response.headers.location).to.equal('/river-and-sea-levels?rloi-id=5050')
     Code.expect(response.request.yar.get('redirect')).to.be.null()
   })
+  lab.test('POST /river-and-sea-levels with rainfall-id', async () => {
+    const options = {
+      method: 'POST',
+      url: '/river-and-sea-levels',
+      payload: 'rainfall-id=5051'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.headers.location).to.equal('/river-and-sea-levels?rainfall-id=5051')
+    Code.expect(response.request.yar.get('redirect')).to.be.null()
+  })
 })
