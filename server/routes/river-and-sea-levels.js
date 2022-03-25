@@ -6,6 +6,7 @@ const util = require('../util')
 const LocationNotFoundError = require('../location-not-found-error')
 const qs = require('querystring')
 const route = 'river-and-sea-levels'
+const rainfallIdString = 'rainfall-id'
 
 module.exports = [{
   method: 'GET',
@@ -146,7 +147,7 @@ const getParameters = request => {
     riverIds: redirect ? request.yar.get('river-id') : request.query['river-id'],
     taCode: redirect ? request.yar.get('ta-code', true) : request.query['target-area'],
     rloiid: redirect ? request.yar.get('rloi-id', true) : request.query['rloi-id'],
-    rainfallid: redirect ? request.yar.get('rainfall-id', true) : request.query['rainfall-id'],
+    rainfallid: redirect ? request.yar.get(rainfallIdString, true) : request.query[rainfallIdString],
     types: redirect ? request.yar.get('types', true) : request.query.types
   }
 }
@@ -214,5 +215,5 @@ const nonJavaScriptRoute = (request, q, taCode, types, riverIds, rloiid, rainfal
   types && request.yar.set('types', types.toString())
   riverIds && request.yar.set('river-id', riverIds.toString())
   rloiid && request.yar.set('rloi-id', rloiid.toString())
-  rainfallid && request.yar.set('rainfall-id', rainfallid.toString())
+  rainfallid && request.yar.set(rainfallIdString, rainfallid.toString())
 }
