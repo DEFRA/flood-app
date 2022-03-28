@@ -61,6 +61,9 @@ $govuk-breakpoints: (
 @import "components/toggle-list-display";
 @import "components/social";
 @import "components/stations-overview";
+@import "components/chart-controls";
+@import "components/toggletip";
+
 
 // Utilities
 @import "utilities/details";

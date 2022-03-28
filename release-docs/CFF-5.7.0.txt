@@ -1,0 +1,40 @@
+# Check for flooding 5.7.0 Tuesday 29th March 2022
+
+# Release
+
+5.7.0
+
+# Tickets
+
+FSR-493 Qualtrics Referrer Issue
+
+FSR-486 Rate limiting and response code for bot scraping
+
+FSR-302 Development/Test: Rain gauge station page
+
+FSR-538 Rainfall - nearby levels
+
+FSR-537 Rainfall - download csv functionality
+
+FSR-533 Create flood-app rainfall gauge detail page. Consume data from new flood-service endpoint created in FSR-532.
+
+FSR-532 Create new flood-service endpoint to deliver rainfall data for a given rain gauge between two dates. Initially this will be 5 days worth of rainfall data.
+
+FSR-535 Event tagging - Phase 2
+
+FSR-531 Add rate limiting to terms and conditions page
+
+FSR-528 Update Terms and Conditions page
+
+FSR-520 Design and Content - Adding terms for rate limiting to T&C page
+
+# Instructions
+
+Straight forward application build for release
+
+LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
+
+Thanks.
+

@@ -822,7 +822,7 @@ lab.experiment('Routes test - location - 2', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('Some flooding is possible')
     Code.expect(response.payload).to.contain('There is a flood alert in this area')
-    Code.expect(response.payload).to.contain('<a href="/target-area/053WAF117BED">1 flood alert or warning was removed </a> in the last 24 hours.')
+    Code.expect(response.payload).to.contain('<a data-journey-click="Location :View Warnings:Location - View removed warnings" href="/target-area/053WAF117BED">1 flood alert or warning was removed </a> in the last 24 hours.')
   })
   lab.test('GET /location query not in England', async () => {
     const floodService = require('../../server/services/flood')

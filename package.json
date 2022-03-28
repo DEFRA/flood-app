@@ -1,6 +1,6 @@
 {
   "name": "flood-app",
-  "version": "5.6.0",
+  "version": "5.7.0",
   "description": "Flood risk app",
   "main": "index.js",
   "repository": "github:defra/flood-app",
@@ -44,6 +44,7 @@
     "@hapi/vision": "^6.1.0",
     "@hapi/wreck": "^17.1.0",
     "@hapi/yar": "^10.1.1",
+    "hapi-rate-limit": "5.0.1",
     "@turf/polygon-smooth": "^6.5.0",
     "@turf/turf": "^6.5.0",
     "accessible-autocomplete": "2.0.3",

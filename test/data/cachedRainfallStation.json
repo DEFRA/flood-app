@@ -1,0 +1,24 @@
+[
+    {
+       "telemetry_station_id":"912",
+       "station_reference":"E27601",
+       "region":"Anglian",
+       "station_name":"EASTHAVEN BARRIER",
+       "ngr":"TQ7480084300",
+       "easting":574800,
+       "northing":184300,
+       "centroid":"0101000020E6100000A9324274F298E03FCC026A09E9C34940",
+       "data_type":"Total",
+       "period":"15 min",
+       "units":"mm",
+       "telemetry_value_parent_id":"105675541",
+       "value":"0",
+       "value_timestamp":"2022-03-25T04:30:00.000Z",
+       "day_total":"0",
+       "six_hr_total":"0",
+       "one_hr_total":"0",
+       "type":"R",
+       "lat":51.34453211,
+       "lon": -0.60409807
+    }
+ ]

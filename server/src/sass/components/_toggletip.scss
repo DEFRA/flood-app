@@ -1,0 +1,94 @@
+.defra-toggletip {
+    display: inline-block;
+    position: relative;
+      width: 30px;
+      height: 30px;
+      z-index: 1;
+      vertical-align: top;
+      margin-top: -5px;
+      @include mq ($from: tablet) {
+          margin-top: -2px;
+      }
+      @include govuk-font($size: 16);
+      &--open {
+          z-index: 99;
+      }
+      &__button {
+          position: absolute;
+          width: 30px;
+          height: 30px;
+          background-color: white;
+          outline: 3px solid transparent;
+          border: 0px;
+          text-align: center;
+          color: $govuk-text-colour;
+          cursor: pointer;
+          span {
+              pointer-events: none;
+              position: absolute;
+              top: 5px;
+              left: 5px;
+              width: 18px;
+              height: 18px;
+              line-height: 18px;
+              font-weight: 900;
+              border-radius: 100%;
+              border: 1px solid govuk-colour('black');
+              font-size: 12px;
+          }
+          &:hover, &:focus {
+              color: govuk-colour('black');
+          }
+          &:hover span {
+              box-shadow: 0 0 0 5px govuk-colour('mid-grey');
+          }
+          &:focus span {
+              box-shadow: 0 0 0 1px govuk-colour('black'), 0 0 0 5px $govuk-focus-colour;
+          }
+      }
+      &__info {
+          position:absolute;
+          width:0px;
+          overflow: hidden;
+          box-sizing: border-box;
+          visibility: hidden;
+          top: auto;
+          bottom: 100%;
+          left: 0px;
+          margin-bottom: 10px;
+          padding: 7.5px 10px;
+          text-align: left;
+          background: govuk-colour('black');
+          color: white;
+      }
+      &__arrow {
+          position: absolute;
+          z-index: 1;
+          width: 8px;
+          height: 8px;
+          left: 50%;
+          bottom: auto;
+          top: 100%;
+          margin: -4px 0px 0px -4px;
+          background: govuk-colour('black');
+          -webkit-transform: rotate(135deg);
+          -moz-transform: rotate(135deg);
+          -o-transform: rotate(135deg);
+          transform: rotate(135deg);
+      }
+      &--bottom &__info {
+          bottom: auto;
+          top: 100%;
+          margin-top: 10px;
+      }
+      &--bottom &__arrow {
+          bottom: 100%;
+          top: auto;
+          margin: 0px 0px -4px -4px;
+      }
+      &--open &__info {
+          visibility: visible;
+          width:200px;
+          overflow: visible;
+      }
+  }

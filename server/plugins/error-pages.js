@@ -19,6 +19,16 @@ module.exports = {
           if (statusCode === 404) {
             return h.view('404').code(404)
           }
+          // In the event of 429 (rate limit exceeded)
+          // return the `429` view
+          if (statusCode === 429) {
+            request.log('error', {
+              statusCode: statusCode,
+              path: request.path,
+              situation: response.message
+            })
+            return h.view('429').code(429)
+          }
 
           // gets captured in pm2 log file, details sent to error file below
           request.log('error', {

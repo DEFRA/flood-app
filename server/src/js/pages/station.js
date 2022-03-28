@@ -14,10 +14,14 @@ window.flood.maps.createLiveMap('map', {
   btnText: 'View map',
   btnClasses: 'defra-button-map-s',
   layers: 'mv,ri,ti,gr,rf',
+  data: {
+    button: 'Station:Map View:Station - View map'
+  },
   centre: JSON.parse(window.flood.model.station.coordinates).coordinates,
   selectedId: 'stations.' + window.flood.model.station.id,
   zoom: 14
 })
+
 const chart = document.querySelector('.defra-line-chart')
 if (chart) {
   // If javascript is enabled make content visible to all but assitive technology
@@ -61,6 +65,7 @@ if (chart) {
     Array.from(document.querySelectorAll('.defra-flood-impact-list__value')).forEach(value => {
       const button = document.createElement('button')
       button.innerHTML = 'Show on chart<span class="govuk-visually-hidden"> (Visual only)</span>'
+      button.setAttribute('data-journey-click', 'Station:Chart interaction:Station - show on chart')
       button.className = 'defra-button-text-s'
       button.addEventListener('click', function (e) {
         lineChart.addThreshold({

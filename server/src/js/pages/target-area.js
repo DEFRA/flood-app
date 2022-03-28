@@ -11,6 +11,9 @@ import '../components/map/live'
 window.flood.maps.createLiveMap('map', {
   btnText: `View map of the flood ${window.flood.model.area.code.slice(4, 5).toLowerCase() === 'w' ? 'warning' : 'alert'} area`,
   btnClasses: 'defra-button-map govuk-!-margin-bottom-6',
+  data: {
+    button: 'Target Area:Map view:TA - Map view'
+  },
   layers: 'mv,ts,tw,ta',
   targetArea: {
     id: window.flood.model.area.code,

@@ -8,7 +8,7 @@
       beta
     </strong>
     <span class="govuk-phase-banner__text">
-      This is a new service – your <a class="govuk-link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965">feedback</a> will help us to improve it.
+      This is a new service – your <a class="govuk-link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965?Source={{fullUrl}}">feedback</a> will help us to improve it.
     </span>
   </p>
 </div>
@@ -43,7 +43,7 @@
           </span>
           <div class="defra-flood-status-item__text">
             <strong>
-              <a href="{{ model.bannerSevereMainLink }}">{{ model.bannerSevereMainText }}</a>
+              <a data-journey-click="Location :View Warnings:Location - View severe flood warnings" href="{{ model.bannerSevereMainLink }}">{{ model.bannerSevereMainText }}</a>
             </strong>
             <span class="defra-flood-status-item__text-secondary">{{ model.bannerSevereSub }}</span>
           </div>
@@ -56,7 +56,7 @@
           </span>
           <div class="defra-flood-status-item__text">
             <strong>
-              <a href="{{ model.bannerMainLink }}">{{ model.bannerMainText }}</a>
+              <a data-journey-click="Location :View Warnings:Location - View {{model.severity}}" href="{{ model.bannerMainLink }}">{{ model.bannerMainText }}</a>
             </strong>
             <span class="defra-flood-status-item__text-secondary">{{ model.bannerSub }}</span>
           </div>
@@ -74,19 +74,19 @@
     {% if model.hasFloods %}
       {% if model.alerts  %}
       <p class="govuk-body">
-        <a href="{{ model.alertsSummaryLink }}">{{ model.alertsSummaryLinkText }}</a> {{ model.alertsSummaryText }} also in the wider area, where some flooding is possible. 
+        <a data-journey-click="Location :View Warnings:Location - View flood alerts" href="{{ model.alertsSummaryLink }}">{{ model.alertsSummaryLinkText }}</a> {{ model.alertsSummaryText }} also in the wider area, where some flooding is possible. 
       </p>
       {% endif %}
       {% if model.removed  %}
       <p class="govuk-body">
-        <a href="{{ model.removedLink }}">{{ model.removedLinkText }}</a> {{ model.removedText }}
+        <a data-journey-click="Location :View Warnings:Location - View removed warnings" href="{{ model.removedLink }}">{{ model.removedLinkText }}</a> {{ model.removedText }}
       </p>
       {% endif %}
     {% else %}
-      <p>This service tells you your risk of flooding from rivers, the sea and groundwater. <a href="https://www.gov.uk/find-local-council">Contact your local council about surface water flooding</a> (also known as flash flooding).</p>
+      <p>This service tells you your risk of flooding from rivers, the sea and groundwater. <a data-journey-click="Location:Surface water:Location - Contact local council"        href="https://www.gov.uk/find-local-council">Contact your local council about surface water flooding</a> (also known as flash flooding).</p>
     {% endif %}
 
-    <p><a href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
+    <p><a data-journey-click="Location:Get warnings:Location - Get warnings" href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
 
     {% if model.hasActiveFloods %}
       <span id="map"></span>
@@ -99,7 +99,7 @@
     <!-- River and sea levels -->
     <h2 class="govuk-heading-m">Latest river, sea, groundwater and rainfall levels</h2>
     <p>There are around 3,500 measuring stations, and most are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
-    <p><a href="/river-and-sea-levels?q={{ model.location }}">Find a river, sea, groundwater or rainfall level in this area</a></p> 
+    <p><a data-journey-click="Location:Station list:Location - View station list" href="/river-and-sea-levels?q={{ model.location }}">Find a river, sea, groundwater or rainfall level in this area</a></p> 
     <!-- end river and sea levels -->
     <h2 class="govuk-heading-m">Flood forecast for the next 5 days</h2>
     {% if model.outOfDate or model.dataError %}

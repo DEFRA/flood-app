@@ -69,7 +69,7 @@
         beta
       </strong>
       <span class="govuk-phase-banner__text">
-        This is a new service – your <a class="govuk-link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965">feedback</a> will help us to improve it.
+        This is a new service – your <a class="govuk-link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965?Source={{fullUrl}}">feedback</a> will help us to improve it.
       </span>
     </p>
   </div>
@@ -83,9 +83,9 @@
 
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
 
-  <script src="{{ assetPath }}/js/all.js"></script>
-  <script src="{{ assetPath }}/js/core.js"></script>
-  <script>window.GOVUKFrontend.initAll()</script>
+    <script src="{{ assetPath }}/js/all.js"></script>
+    <script>window.GOVUKFrontend.initAll()</script>
+    <script src="{{ assetPath }}/js/core.js"></script>
 {% endblock %}
 
 {% block footer %}

@@ -1,0 +1,22 @@
+[{
+    "telemetry_station_id": "735",
+    "station_reference": "E5732",
+    "region": "Anglian",
+    "station_name": "METOFF WATTISHAM",
+    "ngr": "TM0254251410",
+    "easting": 602542,
+    "northing": 251410,
+    "centroid": "0101000020E6100000472AD9056CA2EE3FFDB01141DB0F4A40",
+    "data_type": "Total",
+    "period": "1 h",
+    "units": "mm",
+    "telemetry_value_parent_id": "97927280",
+    "value": "0",
+    "value_timestamp": "2022-02-15T09:00:00.000Z",
+    "day_total": "1.1",
+    "six_hr_total": "0",
+    "one_hr_total": "0",
+    "type": "R",
+    "lat": 52.12387860645138,
+    "lon": 0.9573268999313961
+  }]

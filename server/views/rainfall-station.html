@@ -1,0 +1,128 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">
+      Rainfall at {{ model.stationName }} gauge
+  </div>
+</div>
+
+{# Latest Status #}
+{% if model.outOfDate === 'offline' %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <div class="defra-service-error govuk-!-margin-bottom-8">
+      <h2 class="defra-service-error__title" id="error-summary-title">This measuring station is offline</h2>
+      <p class="govuk-body govuk-!-margin-bottom-0">
+        We are working to get it back online. You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a>.
+      </p>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% if model.outOfDate === 'problem' %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <div class="defra-service-error govuk-!-margin-bottom-8">
+      <h2 class="defra-service-error__title" id="error-summary-title">There's a problem with the latest measurement</h2>
+      <p class="govuk-body govuk-!-margin-bottom-0">
+        The latest measurement is unreliable. This could be due to a fault with the measuring equipment.
+      </p>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% if model.outOfDate === 'closed' %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <div class="defra-service-error govuk-!-margin-bottom-8">
+      <h2 class="defra-service-error__title" id="error-summary-title">This measuring station is closed</h2>
+      <p class="govuk-body govuk-!-margin-bottom-0">
+        No data is available. You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a>.
+      </p>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <nav aria-label="Related levels" class="govuk-!-margin-top-0">
+      <span id="map"></span>
+        <a data-journey-click="Rainfall:Station navigation:Rainfall - Nearby levels" href="/river-and-sea-levels?rainfall-id={{model.stationId }}" class="defra-flood-nav__link">Nearby levels</a>
+      </a>
+    </nav>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <div class="defra-flood-statistics govuk-!-margin-top-2">
+      <p class="govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-0">
+        Recent rainfall up to {{ model.latestTimeFormatted }}, {{ model.latestDayFormatted }}<span class="defra-toggletip" data-label="More information" data-toggletip-content="We get readings more often as the risk of flooding increases"></span>
+      </p>
+      <dl class="defra-flood-statistics__list" aria-label="Recent totals">
+        <div class="defra-flood-statistics__column-one-third"> 
+          <dt class="defra-flood-statistics__key">
+            1 hour
+          </dt>
+          <dd class="defra-flood-statistics__value">
+            {{ model.telemetryRainfall.latest1hr }}mm
+          </dd>
+        </div>
+        <div class="defra-flood-statistics__column-one-third"> 
+          <dt class="defra-flood-statistics__key">
+            6 hours
+          </dt>
+          <dd class="defra-flood-statistics__value">
+            {{ model.telemetryRainfall.latest6hr }}mm
+          </dd>
+        </div>
+        <div class="defra-flood-statistics__column-one-third"> 
+          <dt class="defra-flood-statistics__key">
+            24 hours
+          </dt>
+          <dd class="defra-flood-statistics__value">
+            {{ model.telemetryRainfall.latest24hr }}mm
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</div>
+{% if model.outOfDate === '' %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h2 class="govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-4">Rainfall over the last 5 days in millimetres</h2>
+    <div id="bar-chart" class="defra-bar-chart"></div>
+      <a data-journey-click="Rainfall:Station data:Rainfall - Download csv" href="/rainfall-station-csv/{{model.stationId}}" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-2">Download rainfall for the last 5 days CSV (12KB)</a>
+  </div>
+</div>
+{% endif %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    {% include "partials/social.html" %}
+    {% include "partials/context-footer.html" %}
+    {% include "partials/related-content.html" %}
+  </div>
+</div>
+
+{% endblock %}
+
+{% block bodyEnd %}
+{{ super() }}
+<script>
+  window.flood.model = {
+    id: {{ model.id | dump | safe }},
+    centroid: {{ model.centroid | dump | safe }},
+    bingMaps: {{ model.bingMaps | dump | safe }},
+    stationId: {{ model.stationId | dump | safe }},
+    telemetry: {{ model.telemetryRainfall | dump | safe }}
+  }
+</script>
+<script src="{{assetPath}}/js/templates.js"></script>
+<script src="{{assetPath}}/js/rainfall.js"></script>
+{% endblock %}
