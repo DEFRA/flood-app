@@ -80,6 +80,17 @@ function dateDiff (date1, date2) {
   return moment(date1).diff(moment(date2), 'days')
 }
 
+function formatRainfallTelemetry (telemetry, valueDuration) {
+  let values = telemetry.map(data => {
+    return {
+      dateTime: data.value_timestamp,
+      value: Number(formatValue(data.value))
+    }
+  })
+  values = rainfallTelemetryPadOut(values, valueDuration)
+  return values
+}
+
 function rainfallTelemetryPadOut (values, valueDuration) {
   // Extend telemetry upto latest interval, could be 15 or 60 minute intervals
   const intervals = valueDuration === 15 ? 480 : 120
@@ -106,5 +117,6 @@ module.exports = {
   addBufferToBbox,
   formatValue,
   dateDiff,
+  formatRainfallTelemetry,
   rainfallTelemetryPadOut
 }
