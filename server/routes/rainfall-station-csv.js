@@ -17,14 +17,14 @@ module.exports = {
 
     const valueDuration = rainfallStationTelemetry[0].period === '15 min' ? 15 : 45
 
-    this.telemetry = util.rainfallTelemetryPadOut(rainfallStationTelemetry, valueDuration)
+    const values = util.formatRainfallTelemetry(rainfallStationTelemetry, valueDuration)
 
-    this.telemetry.forEach(function (item) {
-      item.ts = moment.utc(item.value_timestamp).format()
+    values.forEach(function (item) {
+      item.ts = moment.utc(item.dateTime).format()
       item.value = Number(util.formatValue(item.value))
     })
 
-    this.telemetry.sort(function (a, b) {
+    values.sort(function (a, b) {
       return new Date(a.ts) - new Date(b.ts)
     })
 
@@ -33,7 +33,7 @@ module.exports = {
         'Timestamp (UTC)',
         'Rainfall (mm)'
       ],
-      ...this.telemetry.map(item => [
+      ...values.map(item => [
         item.ts,
         item.value
       ])
