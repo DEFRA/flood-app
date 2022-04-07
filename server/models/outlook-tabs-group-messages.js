@@ -46,6 +46,9 @@ class OutlookTabsGroupMessages {
 
     for (const [messageId, array] of Object.entries(groupByUniqueArrayObj)) {
       let sourcesArr = array.map(element => expandedSource[element.source] || element.source)
+
+      sourcesArr[0] = sourcesArr[0].charAt(0).toUpperCase() + sourcesArr[0].slice(1)
+
       if (sourcesArr.length > 1) {
         const lastSource = sourcesArr.pop()
         sourcesArr = `${sourcesArr.slice(0).join(', ')} and ${lastSource}`
