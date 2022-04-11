@@ -342,7 +342,7 @@ lab.experiment('outlookTabs model test', () => {
     Code.expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
   })
   lab.test('Test Capitalise source 3-i4-l2', async () => {
-    const outlook = data.fgsOverflow
+    const outlook = data.fgs3i4l2
 
     outlook.issued_at = moment().utc()
 
@@ -372,7 +372,6 @@ lab.experiment('outlookTabs model test', () => {
     const expectedOutlookTab3 = '[{}]'
 
     const viewModel = new OutlookTabsModel(outlook, place)
-    console.log(viewModel.tab3)
 
     Code.expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
     Code.expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
