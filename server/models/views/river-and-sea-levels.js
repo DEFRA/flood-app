@@ -177,10 +177,7 @@ class ViewModel {
   formatExpiredTime (date) {
     const formattedTime = moment(date).tz('Europe/London').format('h:mma')
     const formattedDate = moment(date).tz('Europe/London').format('D MMMM')
-
-    const subTitle = `Updated ${formattedTime}, ${formattedDate}`
-
-    return subTitle
+    return `Updated ${formattedTime}, ${formattedDate}`
   }
 
   formatValue (station, val) {
