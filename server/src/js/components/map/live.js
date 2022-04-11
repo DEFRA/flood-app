@@ -364,11 +364,11 @@ function LiveMap (mapId, options) {
 
   // Format expired time
   const formatExpiredTime = (date) => {
-  const formattedExpiredTime = moment(date).tz('Europe/London').format('h:mma')
-  const formattedExpiredDate = moment(date).tz('Europe/London').format('D MMMM')
-  const subTitle = `Recent rainfall up to ${formattedExpiredTime}, ${formattedExpiredDate}`
+    const formattedExpiredTime = moment(date).tz('Europe/London').format('h:mma')
+    const formattedExpiredDate = moment(date).tz('Europe/London').format('D MMMM')
+    const subTitle = `Recent rainfall up to ${formattedExpiredTime}, ${formattedExpiredDate}`
 
-  return subTitle
+    return subTitle
   }
 
   // Time format function
