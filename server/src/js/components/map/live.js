@@ -366,9 +366,8 @@ function LiveMap (mapId, options) {
   const formatExpiredTime = (date) => {
     const formattedExpiredTime = moment(date).tz('Europe/London').format('h:mma')
     const formattedExpiredDate = moment(date).tz('Europe/London').format('D MMMM')
-    const subTitle = `Recent rainfall up to ${formattedExpiredTime}, ${formattedExpiredDate}`
 
-    return subTitle
+    return `Recent rainfall up to ${formattedExpiredTime}, ${formattedExpiredDate}`
   }
 
   // Time format function
