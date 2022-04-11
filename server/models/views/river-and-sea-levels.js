@@ -176,7 +176,7 @@ class ViewModel {
 
   formatExpiredTime (date) {
     const formattedTime = moment(date).tz('Europe/London').format('h:mma')
-    const formattedDate = moment(date).tz('Europe/London').format('DD MMMM')
+    const formattedDate = moment(date).tz('Europe/London').format('D MMMM')
 
     const subTitle = `Updated ${formattedTime}, ${formattedDate}`
 

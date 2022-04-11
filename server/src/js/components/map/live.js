@@ -12,6 +12,7 @@ import { defaults as defaultInteractions } from 'ol/interaction'
 import { Point, MultiPolygon } from 'ol/geom'
 import { buffer, containsExtent, getCenter } from 'ol/extent'
 import { Vector as VectorSource } from 'ol/source'
+import moment from 'moment-timezone'
 
 const { addOrUpdateParameter, getParameterByName, forEach } = window.flood.utils
 const maps = window.flood.maps
@@ -363,11 +364,11 @@ function LiveMap (mapId, options) {
 
   // Format expired time
   const formatExpiredTime = (date) => {
-    const duration = (new Date() - new Date(date)) // milliseconds between now & Christmas
-    const mins = Math.floor(duration / (1000 * 60)) // minutes
-    const hours = Math.floor(duration / (1000 * 60 * 60)) // hours
-    const days = parseInt(Math.floor(hours / 24)) // days
-    return (mins < 91 ? mins + ' minutes' : (hours < 48 ? hours + ' hours' : days + ' days')) + ' ago'
+  const formattedExpiredTime = moment(date).tz('Europe/London').format('h:mma')
+  const formattedExpiredDate = moment(date).tz('Europe/London').format('D MMMM')
+  const subTitle = `Recent rainfall up to ${formattedExpiredTime}, ${formattedExpiredDate}`
+
+  return subTitle
   }
 
   // Time format function
