@@ -12,7 +12,7 @@ Running flood-db: https://github.com/DEFRA/flood-db
 Running flood-gis: https://github.com/DEFRA/flood-gis
 Running flood-service: https://github.com/DEFRA/flood-service
 
-Node.js v12.x.x
+Node.js v16.x.x
 
 ### Testing the application
 ```
