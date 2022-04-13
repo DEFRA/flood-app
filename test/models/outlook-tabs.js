@@ -14,9 +14,9 @@ lab.experiment('outlookTabs model test', () => {
 
     const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true, isScotlandOrNorthernIreland: false }
 
-    const expectedOutlookTab1 = '{"3-i3-l4":["Overflowing rivers"],"1-i2-l2":["Runoff from rainfall or blocked drains"]}'
-    const expectedOutlookTab2 = '{"3-i3-l4":["Overflowing rivers"],"1-i2-l2":["Runoff from rainfall or blocked drains"]}'
-    const expectedOutlookTab3 = '[{"3-i3-l4":["Overflowing rivers"],"1-i2-l2":["Runoff from rainfall or blocked drains"]},{"2-i2-l4":["Overflowing rivers"],"1-i2-l2":["Runoff from rainfall or blocked drains"]}]'
+    const expectedOutlookTab1 = '{"3-i3-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]}'
+    const expectedOutlookTab2 = '{"3-i3-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]}'
+    const expectedOutlookTab3 = '[{"3-i3-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]},{"2-i2-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]}]'
 
     console.log(new OutlookTabsModel(outlook, place))
     const viewModel = new OutlookTabsModel(outlook, place)
@@ -30,8 +30,8 @@ lab.experiment('outlookTabs model test', () => {
 
     const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true, isScotlandOrNorthernIreland: false }
 
-    const expectedOutlookTab1 = '{"2-i2-l4":"Runoff from rainfall or blocked drains and overflowing rivers","1-i2-l2":["High tides or large waves"]}'
-    const expectedOutlookTab2 = '{"1-i2-l2":"Runoff from rainfall or blocked drains, overflowing rivers and high tides or large waves"}'
+    const expectedOutlookTab1 = '{"2-i2-l4":"runoff from rainfall or blocked drains and overflowing rivers","1-i2-l2":["high tides or large waves"]}'
+    const expectedOutlookTab2 = '{"1-i2-l2":"runoff from rainfall or blocked drains, overflowing rivers and high tides or large waves"}'
     const expectedOutlookTab3 = '[{}]'
 
     const viewModel = new OutlookTabsModel(outlook, place)
@@ -79,7 +79,7 @@ lab.experiment('outlookTabs model test', () => {
 
     const expectedOutlookTab1 = '{}'
     const expectedOutlookTab2 = '{}'
-    const expectedOutlookTab3 = '[{"1-i2-l2":"Runoff from rainfall or blocked drains and overflowing rivers"}]'
+    const expectedOutlookTab3 = '[{"1-i2-l2":"runoff from rainfall or blocked drains and overflowing rivers"}]'
 
     const lowForFive = true
 
@@ -281,7 +281,7 @@ lab.experiment('outlookTabs model test', () => {
 
     outlook.issued_at = moment().utc().subtract(1, 'days').format()
 
-    const tab1 = '{"1-i2-l2":["Overflowing rivers"]}'
+    const tab1 = '{"1-i2-l2":["overflowing rivers"]}'
 
     const place = {
       name: 'Derby, Derby City',
