@@ -123,8 +123,6 @@ Array.prototype.forEach.call(jsElements, function (element) {
 
 if (cookieButtons) {
   const settingsButton = document.getElementById('cookie-settings')
-
-  // Accept button
   const acceptButton = document.createElement('button')
   const rejectButton = document.createElement('button')
 
