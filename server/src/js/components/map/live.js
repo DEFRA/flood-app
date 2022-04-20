@@ -156,16 +156,7 @@ function LiveMap (mapId, options) {
         }
       } else if (props.type === 'R') {
         // Rainfall
-        state = 'rain'
-        if (props.one_hr_total) {
-          if (props.one_hr_total > 4) {
-            state = 'rainHeavy'
-          } else if (props.one_hr_total > 0.5) {
-            state = 'rainModerate'
-          } else if (props.one_hr_total > 0) {
-            state = 'rainLight'
-          }
-        }
+        state = props.day_total && props.day_total > 0 ? 'rain' : 'rainDry'
       }
       // WebGl: Feature properties must be strings or numbers
       feature.set('state', state)
