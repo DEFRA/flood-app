@@ -124,11 +124,14 @@ Array.prototype.forEach.call(jsElements, function (element) {
 if (cookieButtons) {
   const settingsButton = document.getElementById('cookie-settings')
   const acceptButton = document.createElement('button')
+  const rejectButton = document.createElement('button')
+
+  // Accept button
   acceptButton.className = 'defra-cookie-banner__button-accept'
   acceptButton.innerText = 'Accept analytics cookies'
   cookieButtons.insertBefore(acceptButton, cookieButtons.childNodes[0])
 
-  // First button in banner
+  // First button in banner (Accept)
   acceptButton.addEventListener('click', function (e) {
     e.preventDefault()
     window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
@@ -138,9 +141,25 @@ if (cookieButtons) {
 
     document.getElementById('cookie-message').style.display = 'none'
     document.getElementById('cookie-confirmation-type').innerText = 'accepted'
+    document.getElementById('cookie-confirmation').style.display = ''
   })
 
-  // Second button in banner
+  // Reject Button
+  rejectButton.className = 'defra-cookie-banner__button-reject'
+  rejectButton.innerText = 'Reject analytics cookies'
+  cookieButtons.insertBefore(rejectButton, cookieButtons.childNodes[1])
+
+  // Second button in banner (Reject)
+  rejectButton.addEventListener('click', function (e) {
+    e.preventDefault()
+    window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
+
+    document.getElementById('cookie-message').style.display = 'none'
+    document.getElementById('cookie-confirmation-type').innerText = 'rejected'
+    document.getElementById('cookie-confirmation').style.display = ''
+  })
+
+  // Third button in banner (Settings)
   settingsButton.addEventListener('click', function (e) {
     e.preventDefault()
     window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
