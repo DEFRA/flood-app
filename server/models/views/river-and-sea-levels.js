@@ -40,15 +40,20 @@ class ViewModel {
       station.sub = this.getStationSubText(station)
       station.val = this.formatValue(station, station.value)
       station.valueState = this.getValueState(station)
+      // Need to work out .valueState - if it has rained set to 'rain' - if it has not rained set to 'rainDry' - if error do nothing
+      
       if (station.station_type === 'R') {
+
+        station.valueState = station.valueState ? 'wet' : station.valueState
         station.oneHourTotal = this.formatValue(station, station.one_hr_total)
         station.sixHourTotal = this.formatValue(station, station.six_hr_total)
         station.dayTotal = this.formatValue(station, station.day_total)
         station.external_name = this.formatName(station.external_name)
       }
+    
       station.cols = this.getStationColumns(station)
     })
-
+  
     // add on 444m (0.004 deg) to the stations bounding box to stop stations clipping edge of viewport
     this.stationsBbox = this.bboxClip(this.stationsBbox)
 
