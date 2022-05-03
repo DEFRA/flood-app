@@ -162,7 +162,6 @@ if (cookieButtons) {
   // Third button in banner (Settings)
   settingsButton.addEventListener('click', function (e) {
     e.preventDefault()
-    window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
     window.location.href = settingsButton.getAttribute('href')
   })
 
