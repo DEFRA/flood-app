@@ -16,13 +16,14 @@ lab.experiment('river-and-sea-levels model test', () => {
   lab.afterEach(async () => {
     await sandbox.restore()
   })
-  lab.test('Test river-and-sea-level viewModel payload cheshire ', async () => {
+  lab.test('Test river-and-sea-level viewModel payload cheshire & rain icons display correct in list', async () => {
     const stationsData = data.riverAndSeaLevelData
     const viewModel = new ViewModel(stationsData)
 
     const Result = viewModel
-
     Code.expect(Result.pageTitle).to.equal('cheshire - River and sea levels in England')
-    Code.expect(Result.countLevels).to.equal(74)
+    Code.expect(Result.countLevels).to.equal(76)
+    Code.expect(Result.stations['rainfall-North-West'][0].valueState).to.equal('wet')
+    Code.expect(Result.stations['rainfall-North-West'][1].valueState).to.equal('')
   })
 })
