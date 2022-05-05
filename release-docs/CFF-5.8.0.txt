@@ -1,0 +1,32 @@
+# Check for flooding 5.8.0 Wednesday 11th May 2022
+
+# Release
+
+5.8.0
+
+# Tickets
+
+# Bug
+
+FSR-571 Apply and test fix for csv download on rainfall pages
+
+# Task
+
+FSR-572 Update npm  dependencies for CFF flood-app and flood service git repositories
+
+FSR-542 Update tool tips and station list to show time of latest reading
+
+FSR-540 Investigation into Capitalization issue with FGS
+
+FSR-539 Update flood outlook tooltip for coastal risk
+
+# Instructions
+
+Straight forward application build for release
+
+LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
+
+Thanks.
+
