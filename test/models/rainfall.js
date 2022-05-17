@@ -46,9 +46,11 @@ lab.experiment('Rainfall model test', () => {
 
     const Result = viewModel
 
+    const todayYearMonDay = moment().subtract(5, 'days').format('YYYY-MM-DD')
+
     Code.expect(Result.telemetryRainfall.latestDateTime).to.equal('2022-02-09T09:15:00.000Z')
-    Code.expect(Result.telemetryRainfall.dataStartDateTime).to.equal(moment().subtract(5, 'days').format())
-    Code.expect(Result.telemetryRainfall.rangeStartDateTime).to.equal(moment().subtract(5, 'days').format())
+    Code.expect(Result.telemetryRainfall.dataStartDateTime).to.contain(todayYearMonDay)
+    Code.expect(Result.telemetryRainfall.rangeStartDateTime).to.contain(todayYearMonDay)
     Code.expect(Result.telemetryRainfall.latest1hr).to.equal('3.2')
     Code.expect(Result.telemetryRainfall.latest6hr).to.equal('15.2')
     Code.expect(Result.telemetryRainfall.latest24hr).to.equal('20.0')
