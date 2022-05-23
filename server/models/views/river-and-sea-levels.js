@@ -44,6 +44,7 @@ class ViewModel {
         station.oneHourTotal = this.formatValue(station, station.one_hr_total)
         station.sixHourTotal = this.formatValue(station, station.six_hr_total)
         station.dayTotal = this.formatValue(station, station.day_total)
+        station.valueState = parseFloat(station.dayTotal) > 0 ? 'wet' : station.valueState
         station.external_name = this.formatName(station.external_name)
       }
       station.cols = this.getStationColumns(station)
