@@ -1385,9 +1385,9 @@ lab.experiment('Routes test - location - 2', () => {
         aoc_maps: [],
         public_forecast: {
           id: 1823,
-          english_forecast: 'The forecast flood risk across England and Wales for today and the next four days is very low.',
+          england_forecast: 'The forecast flood risk across England and Wales for today and the next four days is very low.',
           welsh_forecast: 'Service unavailable',
-          england_forecast: 'Service unavailable',
+          english_forecast: 'Service unavailable',
           wales_forecast_english: 'The forecast flood risk across Wales for today and the next four days is very low.',
           wales_forecast_welsh: "Rhagwelir fod y perygl llifogydd ar draws Cymru ar gyfer heddiw a'r pedwar diwrnod nesaf yn isel iawn.",
           published_at: '2021-03-22T10:06:15Z'
@@ -1707,7 +1707,7 @@ lab.experiment('Routes test - location - 2', () => {
         ],
         headline: 'Minor river flooding is possible',
         amendments: '',
-        public_forecast: { english_forecast: 'Good' },
+        public_forecast: { england_forecast: 'Good' },
         future_forecast: '',
         last_modified_at: '2021-03-29T09:18:29Z',
         next_issue_due_at: '2021-03-30T09:30:00Z',

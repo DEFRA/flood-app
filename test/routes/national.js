@@ -231,7 +231,7 @@ lab.experiment('Routes test - national view', () => {
         ],
         headline: 'Minor river flooding is possible',
         amendments: '',
-        public_forecast: { english_forecast: 'Good' },
+        public_forecast: { england_forecast: 'Good' },
         future_forecast: '',
         last_modified_at: '2021-03-29T09:18:29Z',
         next_issue_due_at: '2021-03-30T09:30:00Z',
