@@ -1,0 +1,28 @@
+# Check for flooding 5.10.0 Wednesday 22nd June 2022
+
+# Release
+
+5.10.0
+
+https://eaflood.atlassian.net/projects/FSR/versions/15908/tab/release-report-all-issues
+
+# Tickets
+
+# Bug
+
+FSR-579 Rainfall totals not corresponding to values in the rainfall graphs
+
+# Task
+
+FSR-585 Changes to FGS API
+
+# Instructions
+
+Straight forward application build for release
+
+LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
+
+Thanks.
+
