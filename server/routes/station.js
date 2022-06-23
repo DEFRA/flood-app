@@ -16,7 +16,7 @@ module.exports = {
 
     // Welsh stations
     if (additionalWelshStations.indexOf(id) > -1) {
-      return h.redirect(nrwStationUrl + id)
+      return h.redirect(nrwStationUrl + id + '?parameterType=1')
     }
 
     const station = await request.server.methods.flood.getStationById(id, direction)
