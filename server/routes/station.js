@@ -15,7 +15,7 @@ module.exports = {
     direction = direction === 'downstream' ? 'd' : 'u'
 
     // Welsh stations
-    const nrwParameter = "?parameterType=1"
+    const nrwParameter = '?parameterType=1'
     if (additionalWelshStations.indexOf(id) > -1) {
       return h.redirect(`${nrwStationUrl}${id}${nrwParameter}`)
     }
