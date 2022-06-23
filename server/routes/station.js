@@ -34,7 +34,7 @@ module.exports = {
 
     // Welsh stations
     if ((station.region || '').toLowerCase() === 'wales') {
-      return h.redirect(nrwStationUrl + id)
+      return h.redirect(`${nrwStationUrl}${id}${nrwParameter}`)
     }
 
     // batching all the service calls together, greatly improves page performance
