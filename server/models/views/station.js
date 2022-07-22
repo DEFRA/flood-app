@@ -3,11 +3,12 @@ const moment = require('moment-timezone')
 const config = require('../../config')
 const Station = require('./station-data')
 const Forecast = require('./station-forecast')
+const ImtdThresholds = require('./station-imtd-thresholds')
 const util = require('../../util')
 
 class ViewModel {
   constructor (options) {
-    const { station, telemetry, forecast, impacts, river, warningsAlerts } = options
+    const { station, telemetry, forecast, imtdThresholds, impacts, river, warningsAlerts } = options
 
     this.station = new Station(station)
     this.station.riverNavigation = river
@@ -180,6 +181,7 @@ class ViewModel {
         this.isFfoi = thresholds.length > 0
         if (this.isFfoi) {
           this.ffoi = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
+          this.imtdThresholds = new ImtdThresholds(imtdThresholds, this.station.isCoastal, this.station.recentValue)
           this.hasForecast = this.ffoi.hasForecastData
           this.alertThreshold = this.ffoi.alertThreshold || this.station.percentile5
           this.warningThreshold = this.ffoi.warningThreshold || null
@@ -194,6 +196,9 @@ class ViewModel {
         }
 
         this.phase = this.isFfoi ? 'beta' : false
+      } else {
+        // Get IMTD values for thresholds for non forecast stations
+        this.imtdThresholds = new ImtdThresholds(imtdThresholds, this.station.isCoastal, this.station.recentValue)
       }
 
       // River level and forecast message
@@ -291,6 +296,17 @@ class ViewModel {
       thresholds.push({
         id: 'alertThreshold',
         value: this.alertThreshold,
+        valueImtd: imtdThresholds.thresholdsImtd[1] || 'n/a',
+        description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
+        shortname: 'Possible flood alerts'
+      })
+    } else {
+      // New thresholds for non forecast data
+      this.alertThreshold = parseFloat(imtdThresholds.thresholdsImtd[1]).toFixed(2)
+      thresholds.push({
+        id: 'alertThreshold',
+        value: this.alertThreshold,
+        valueImtd: imtdThresholds.thresholdsImtd[1] || 'n/a',
         description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
         shortname: 'Possible flood alerts'
       })
@@ -300,6 +316,17 @@ class ViewModel {
       thresholds.push({
         id: 'warningThreshold',
         value: this.warningThreshold,
+        valueImtd: imtdThresholds.thresholdsImtd[0] || 'n/a',
+        description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
+        shortname: 'Possible flood warnings'
+      })
+    } else {
+      // New thresholds for non forecast data
+      this.warningThreshold = parseFloat(imtdThresholds.thresholdsImtd[0]).toFixed(2)
+      thresholds.push({
+        id: 'warningThreshold',
+        value: this.warningThreshold,
+        valueImtd: imtdThresholds.thresholdsImtd[0] || 'n/a',
         description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
         shortname: 'Possible flood warnings'
       })
