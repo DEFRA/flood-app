@@ -3,7 +3,6 @@ const moment = require('moment-timezone')
 const config = require('../../config')
 const Station = require('./station-data')
 const Forecast = require('./station-forecast')
-const ImtdThresholds = require('./station-imtd-thresholds')
 const util = require('../../util')
 
 class ViewModel {
@@ -181,7 +180,6 @@ class ViewModel {
         this.isFfoi = thresholds.length > 0
         if (this.isFfoi) {
           this.ffoi = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
-          this.imtdThresholds = new ImtdThresholds(imtdThresholds, this.station.isCoastal, this.station.recentValue)
           this.hasForecast = this.ffoi.hasForecastData
           this.alertThreshold = this.ffoi.alertThreshold || this.station.percentile5
           this.warningThreshold = this.ffoi.warningThreshold || null
@@ -196,9 +194,6 @@ class ViewModel {
         }
 
         this.phase = this.isFfoi ? 'beta' : false
-      } else {
-        // Get IMTD values for thresholds for non forecast stations
-        this.imtdThresholds = new ImtdThresholds(imtdThresholds, this.station.isCoastal, this.station.recentValue)
       }
 
       // River level and forecast message
