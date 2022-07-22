@@ -83,5 +83,18 @@
             "centroid":"0101000020E6100000893AA31F375496BFB3A4EA31CFAB4940",
             "lon":-0.0218056309757295,
             "lat":51.3422605891914},
-        "warningsAlerts":[]
+        "warningsAlerts":[],
+        "imtdThresholds": {
+            "thresholdsImtd": [],
+            "values": {
+                "$": {
+                    "stationReference": "750832",
+                    "stationName": "Greta Bridge",
+                    "key": "fwfidata/ENT_7024/NWFSNWTS20220722110400000.XML",
+                    "date": "2022-07-22",
+                    "time": "11:04:20"
+                  },
+                "SetofValues": []
+            }
+        }
 }
