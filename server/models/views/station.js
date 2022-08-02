@@ -297,14 +297,16 @@ class ViewModel {
       })
     } else {
       // New thresholds for non forecast data
-      this.alertThreshold = parseFloat(imtdThresholds.thresholdsImtd[1]).toFixed(2)
-      thresholds.push({
-        id: 'alertThreshold',
-        value: this.alertThreshold,
-        valueImtd: imtdThresholds.thresholdsImtd[1] || 'n/a',
-        description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
-        shortname: 'Possible flood alerts'
-      })
+      if (imtdThresholds.thresholdsImtd[1] !== null) {
+        this.alertThreshold = parseFloat(imtdThresholds.thresholdsImtd[1]).toFixed(2)
+        thresholds.push({
+          id: 'alertThreshold',
+          value: this.alertThreshold,
+          valueImtd: imtdThresholds.thresholdsImtd[1] || 'n/a',
+          description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
+          shortname: 'Possible flood alerts'
+        })
+      }
     }
 
     if (this.warningThreshold) {
@@ -317,14 +319,16 @@ class ViewModel {
       })
     } else {
       // New thresholds for non forecast data
-      this.warningThreshold = parseFloat(imtdThresholds.thresholdsImtd[0]).toFixed(2)
-      thresholds.push({
-        id: 'warningThreshold',
-        value: this.warningThreshold,
-        valueImtd: imtdThresholds.thresholdsImtd[0] || 'n/a',
-        description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
-        shortname: 'Possible flood warnings'
-      })
+      if (imtdThresholds.thresholdsImtd[1] !== null) {
+        this.warningThreshold = parseFloat(imtdThresholds.thresholdsImtd[0]).toFixed(2)
+        thresholds.push({
+          id: 'warningThreshold',
+          value: this.warningThreshold,
+          valueImtd: imtdThresholds.thresholdsImtd[0] || 'n/a',
+          description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
+          shortname: 'Possible flood warnings'
+        })
+      }
     }
 
     if (this.station.percentile5) {
