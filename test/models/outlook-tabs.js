@@ -18,7 +18,6 @@ lab.experiment('outlookTabs model test', () => {
     const expectedOutlookTab2 = '{"3-i3-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]}'
     const expectedOutlookTab3 = '[{"3-i3-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]},{"2-i2-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]}]'
 
-    console.log(new OutlookTabsModel(outlook, place))
     const viewModel = new OutlookTabsModel(outlook, place)
 
     Code.expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
