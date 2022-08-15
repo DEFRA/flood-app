@@ -236,4 +236,78 @@ lab.experiment('Routes test - station-csv', () => {
     Code.expect(response.result).to.equal('Timestamp (UTC),Height (m)\n2020-03-13T01:30:00Z,1.354')
     Code.expect(response.headers['content-type']).to.include('text/csv')
   })
+  lab.test('GET /station-csv/5110 external name has special character that needs substituting', async () => {
+    const options = {
+      method: 'GET',
+      url: '/station-csv/5110'
+    }
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationData = () => {
+      return {
+        rloi_id: 5110,
+        station_type: 'S',
+        qualifier: 'u',
+        telemetry_context_id: '55655529',
+        telemetry_id: '725139',
+        wiski_id: '725139',
+        post_process: false,
+        subtract: null,
+        region: 'North West',
+        area: 'Cumbria and Lancashire',
+        catchment: 'Lune and Wyre',
+        display_region: 'North West',
+        display_area: '',
+        display_catchment: '',
+        agency_name: 'Pilling (Broadfleet Br)',
+        external_name: 'Pilling, Broadfleet',
+        location_info: 'Pilling',
+        x_coord_actual: 340646,
+        y_coord_actual: 448819,
+        actual_ngr: '',
+        x_coord_display: 340646,
+        y_coord_display: 448819,
+        site_max: '3',
+        wiski_river_name: 'Broad Fleet',
+        date_open: '1991-01-01T00:00:00.000Z',
+        stage_datum: '2.93',
+        period_of_record: 'to date',
+        por_max_value: '2.509',
+        date_por_max: '2019-09-30T02:30:00.000Z',
+        highest_level: '2.157',
+        date_highest_level: '2012-09-28T13:30:00.000Z',
+        por_min_value: '0.04',
+        date_por_min: '2007-02-08T13:15:00.000Z',
+        percentile_5: '2.754',
+        percentile_95: '0.244',
+        comments: '',
+        status: 'Active',
+        status_reason: '',
+        status_date: null,
+        coordinates: '{"type":"Point","coordinates":[-2.905483527,53.932075754]}',
+        geography: '0101000020E61000004666B5256E3E07C0473720424EF74A40',
+        centroid: '0101000020E61000004666B5256E3E07C0473720424EF74A40'
+      }
+    }
+
+    const fakeTelemetryData = () => [
+      {
+        ts: '2020-03-13T01:30Z',
+        _: 1.354,
+        err: false
+      }
+    ]
+
+    const fakeThresholdsData = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+
+    const response = await server.inject(options)
+    Code.expect(response.headers['content-disposition']).to.equal('attachment; filename=Pilling-Broadfleet-height-data.csv')
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.result).to.equal('Timestamp (UTC),Height (m)\n2020-03-13T01:30:00Z,1.354')
+    Code.expect(response.headers['content-type']).to.include('text/csv')
+  })
 })
