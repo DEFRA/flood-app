@@ -12,7 +12,7 @@ module.exports = {
 
     const station = await floodService.getStationById(id, direction)
 
-    const stationName = station.external_name.replace(/\s/g, '-')
+    const stationName = station.external_name.replace(/[^a-zA-Z0-9]+/g, '-')
 
     const [telemetry, thresholds] = await Promise.all([
       floodService.getStationTelemetry(id, direction),
