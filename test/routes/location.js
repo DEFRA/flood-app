@@ -7,6 +7,7 @@ const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const data = require('../data')
 const moment = require('moment')
+const LocationSearchError = require('../../server/location-search-error')
 
 lab.experiment('Routes test - location - 2', () => {
   let sandbox
@@ -619,41 +620,6 @@ lab.experiment('Routes test - location - 2', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
-  })
-  lab.test('GET /location with failing location services', async () => {
-    const fakeGetJson = () => {
-      throw new Error('test error')
-    }
-
-    const util = require('../../server/util')
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
-
-    const locationPlugin = {
-      plugin: {
-        name: 'location',
-        register: (server, options) => {
-          server.route(require('../../server/routes/location'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(locationPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/location?q=warrington'
-    }
-
-    const response = await server.inject(options)
-
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('Sorry, there is a problem with the service')
   })
   lab.test('GET /location with query parameters check for no warnings', async () => {
     const floodService = require('../../server/services/flood')
@@ -1825,5 +1791,39 @@ lab.experiment('Routes test - location - 2', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('Error: Find location - Check for flooding')
+  })
+  lab.test('GET /location with no response from Bing', async () => {
+    const fakeGetJson = () => {
+      throw new LocationSearchError('Missing or corrupt contents from location search')
+    }
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/views'))
+    await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/location?q=liverpool'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('<h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Sorry, there is a problem with the search</h1>')
   })
 })
