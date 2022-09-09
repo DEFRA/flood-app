@@ -181,8 +181,8 @@ class ViewModel {
         if (this.isFfoi) {
           this.ffoi = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
           this.hasForecast = this.ffoi.hasForecastData
-          this.alertThreshold = this.ffoi.alertThreshold || this.station.percentile5
-          this.warningThreshold = this.ffoi.warningThreshold || null
+          // this.alertThreshold = this.ffoi.alertThreshold || this.station.percentile5
+          // this.warningThreshold = this.ffoi.warningThreshold || null
 
           const highestPoint = this.ffoi.maxValue || null
           if (highestPoint !== null) {
@@ -287,7 +287,8 @@ class ViewModel {
       })
     }
 
-    if (this.alertThreshold) {
+    if (imtdThresholds.thresholdsImtd[1] !== null) {
+      this.alertThreshold = parseFloat(imtdThresholds.thresholdsImtd[1]).toFixed(2)
       thresholds.push({
         id: 'alertThreshold',
         value: this.alertThreshold,
@@ -295,21 +296,10 @@ class ViewModel {
         description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
         shortname: 'Possible flood alerts'
       })
-    } else {
-      // New thresholds for non forecast data
-      if (imtdThresholds.thresholdsImtd[1] !== null) {
-        this.alertThreshold = parseFloat(imtdThresholds.thresholdsImtd[1]).toFixed(2)
-        thresholds.push({
-          id: 'alertThreshold',
-          value: this.alertThreshold,
-          valueImtd: imtdThresholds.thresholdsImtd[1] || 'n/a',
-          description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
-          shortname: 'Possible flood alerts'
-        })
-      }
     }
 
-    if (this.warningThreshold) {
+    if (imtdThresholds.thresholdsImtd[1] !== null) {
+      this.warningThreshold = parseFloat(imtdThresholds.thresholdsImtd[0]).toFixed(2)
       thresholds.push({
         id: 'warningThreshold',
         value: this.warningThreshold,
@@ -317,19 +307,8 @@ class ViewModel {
         description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
         shortname: 'Possible flood warnings'
       })
-    } else {
-      // New thresholds for non forecast data
-      if (imtdThresholds.thresholdsImtd[1] !== null) {
-        this.warningThreshold = parseFloat(imtdThresholds.thresholdsImtd[0]).toFixed(2)
-        thresholds.push({
-          id: 'warningThreshold',
-          value: this.warningThreshold,
-          valueImtd: imtdThresholds.thresholdsImtd[0] || 'n/a',
-          description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
-          shortname: 'Possible flood warnings'
-        })
-      }
     }
+    // }
 
     if (this.station.percentile5) {
       // Only push typical range if it has a percentil5

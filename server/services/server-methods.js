@@ -123,6 +123,14 @@ module.exports = server => {
     }
   })
 
+  server.method('flood.getStationThreshold', floodServices.getStationThreshold, {
+    cache: {
+      cache: cacheType,
+      expiresIn: 1 * 60 * 1000, // 1 minute
+      generateTimeout: 10 * 1000 // 10 seconds
+    }
+  })
+
   server.method('flood.getStationForecastData', floodServices.getStationForecastData, {
     cache: {
       cache: cacheType,
