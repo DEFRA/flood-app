@@ -181,8 +181,6 @@ class ViewModel {
         if (this.isFfoi) {
           this.ffoi = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
           this.hasForecast = this.ffoi.hasForecastData
-          // this.alertThreshold = this.ffoi.alertThreshold || this.station.percentile5
-          // this.warningThreshold = this.ffoi.warningThreshold || null
 
           const highestPoint = this.ffoi.maxValue || null
           if (highestPoint !== null) {
