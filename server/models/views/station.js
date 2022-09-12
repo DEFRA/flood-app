@@ -296,7 +296,7 @@ class ViewModel {
       })
     }
 
-    if (imtdThresholds.thresholdsImtd[1] !== null) {
+    if (imtdThresholds.thresholdsImtd[0] !== null) {
       this.warningThreshold = parseFloat(imtdThresholds.thresholdsImtd[0]).toFixed(2)
       thresholds.push({
         id: 'warningThreshold',

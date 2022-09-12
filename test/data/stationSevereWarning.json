@@ -99,7 +99,7 @@
             "geometry":"{\"type\":\"Point\",\"coordinates\":[-3.03674273776571,53.8811798090409]}"}
         ],
         "imtdThresholds": {
-            "thresholdsImtd": [],
+            "thresholdsImtd": [ "44.1", "43.91" ],
             "values": {
                 "$": {
                     "stationReference": "750832",
