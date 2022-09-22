@@ -562,6 +562,7 @@ function LiveMap (mapId, options) {
     viewportDescription.innerHTML = ''
     // Tasks dependent on a time delay
     timer = setTimeout(() => {
+      if (!container.map) return
       // Show overlays for visible features
       showOverlays()
       // Update url (history state) to reflect new extent
@@ -672,7 +673,7 @@ function LiveMap (mapId, options) {
 
   // River level navigation
   containerElement.addEventListener('click', (e) => {
-    if (e.target.classList.contains('defra-map-info__button')) {
+    if (e.target.classList.contains('defra-button-secondary')) {
       const newFeatureId = e.target.getAttribute('data-id')
       const feature = stations.getSource().getFeatureById(newFeatureId)
       setSelectedFeature(newFeatureId)
@@ -699,16 +700,24 @@ maps.createLiveMap = (mapId, options = {}) => {
     window.history.replaceState(data, title, uri)
   }
 
+  // Build default uri
+  let uri = window.location.href
+  uri = addOrUpdateParameter(uri, 'v', mapId)
+  uri = addOrUpdateParameter(uri, 'lyr', options.layers || '')
+  uri = addOrUpdateParameter(uri, 'ext', options.extent || '')
+  uri = addOrUpdateParameter(uri, 'fid', options.selectedId || '')
+
   // Create map button
   const btnContainer = document.getElementById(mapId)
-  const button = document.createElement('button')
-  button.id = mapId + '-btn'
-  button.innerHTML = options.btnText || 'View map'
-  button.innerHTML += '<span class="govuk-visually-hidden">(Visual only)</span>'
-  button.className = options.btnClasses || 'defra-button-map'
-  if (options.data && options.data.button) {
-    button.setAttribute('data-journey-click', options.data.button)
+  const button = document.createElement('a')
+  button.setAttribute('href', uri)
+  if (options.btnType !== 'link') {
+    button.setAttribute('role', 'button')
+    button.setAttribute('data-module', 'govuk-button')
   }
+  button.id = mapId + '-btn'
+  button.innerHTML = `<svg width="15" height="20" viewBox="0 0 15 20" focusable="false"><path d="M15,7.5c0.009,3.778 -4.229,9.665 -7.5,12.5c-3.271,-2.835 -7.509,-8.722 -7.5,-12.5c0,-4.142 3.358,-7.5 7.5,-7.5c4.142,0 7.5,3.358 7.5,7.5Zm-7.5,5.461c3.016,0 5.461,-2.445 5.461,-5.461c0,-3.016 -2.445,-5.461 -5.461,-5.461c-3.016,0 -5.461,2.445 -5.461,5.461c0,3.016 2.445,5.461 5.461,5.461Z" fill="currentColor"/></svg><span>${options.btnText || 'View map'}</span><span class="govuk-visually-hidden">(Visual only)</span>`
+  button.className = options.btnClasses || (options.btnType === 'link' ? 'defra-link-icon-s' : 'defra-button-secondary defra-button-secondary--icon')
   btnContainer.parentNode.replaceChild(button, btnContainer)
 
   // Detect keyboard interaction
@@ -736,6 +745,7 @@ maps.createLiveMap = (mapId, options = {}) => {
   // Create map on button press
   button.addEventListener('click', (e) => {
     // Advance history
+    e.preventDefault()
     const data = { v: mapId, isBack: true }
     const title = options.title // document.title
     let uri = window.location.href

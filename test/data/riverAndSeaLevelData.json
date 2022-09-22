@@ -2111,7 +2111,7 @@
       "qualifier": null,
       "iswales": false,
       "value": "0",
-      "value_timestamp": "2022-05-04T12: 15: 00.000Z",
+      "value_timestamp": "2022-05-04T12:15:00.000Z",
       "value_erred": false,
       "percentile_5": null,
       "percentile_95": null,
@@ -2143,7 +2143,7 @@
       "qualifier": null,
       "iswales": false,
       "value": "0",
-      "value_timestamp": "2022-05-04T12: 15: 00.000Z",
+      "value_timestamp": "2022-05-04T12:15:00.000Z",
       "value_erred": false,
       "percentile_5": null,
       "percentile_95": null,
@@ -2155,5 +2155,72 @@
       "one_hr_total": "0",
       "id": "3032"
     }
-  ]
-}
+  ],  
+  "rivers": [
+      {
+        "river_id":"river-itchen-hampshire",
+        "display":"River Itchen (Hampshire)"
+     },
+     {
+        "river_id":"river-lavant-sussex",
+        "display":"River Lavant (Sussex)"
+     },
+     {
+        "river_id":"river-dun-hampshire",
+        "display":"River Dun (Hampshire)"
+     },
+     {
+        "river_id":"river-dove-north-yorkshire",
+        "display":"River Dove (North Yorkshire)"
+     },
+     {
+        "river_id":"river-derwent-yorkshire",
+        "display":"River Derwent (Yorkshire)"
+     },
+     {
+        "river_id":"river-itchen-warwickshire",
+        "display":"River Itchen (Warwickshire)"
+     },
+     {
+        "river_id":"river-esk-cumbria-north",
+        "display":"River Esk (North Cumbria)"
+     },
+     {
+        "river_id":"river-lavant-hampshire",
+        "display":"River Lavant (Hampshire)"
+     },
+     {
+        "river_id":"river-dun-berkshire",
+        "display":"River Dun (Berkshire)"
+     },
+     {
+        "river_id":"river-derwent-northumberland",
+        "display":"River Derwent (Northumberland)"
+     },
+     {
+        "river_id":"river-greta-cumbria",
+        "display":"River Greta (Cumbria)"
+     },
+     {
+        "river_id":"river-derwent-derbyshire",
+        "display":"River Derwent (Derbyshire)"
+     },
+     {
+        "river_id":"river-esk-yorkshire",
+        "display":"River Esk (Yorkshire)"
+     },
+     {
+        "river_id":"river-leven-cumbria",
+        "display":"River Leven (Cumbria)"
+     },
+     {
+        "river_id":"river-leven-yorkshire",
+        "display":"River Leven (Cumbria)"
+     },
+     {
+        "river_id":"river-stour-worcestershire",
+        "display":"River Stour (Worcestershire)"
+     }
+    ]
+  }
+  

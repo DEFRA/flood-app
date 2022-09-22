@@ -1,286 +1,209 @@
+const turf = require('@turf/turf')
 const moment = require('moment-timezone')
-const { groupBy } = require('../../util')
-const { bingKeyMaps } = require('../../config')
+const { bingKeyMaps, floodRiskUrl } = require('../../config')
 
 class ViewModel {
-  constructor ({ location, place, stations, targetArea, riverIds, referer, error }) {
-    Object.assign(this, {
-      q: location,
-      placeName: this.getPlaceName(place, targetArea),
-      placeDescription: this.getPlaceDescription(targetArea),
-      placeCentre: place ? place.center : [],
-      countLevels: stations.length,
-      error: error ? true : null,
-      referer: referer,
-      rivers: this.getRiverNames(stations),
-      types: this.getTypes(stations),
-      taCode: targetArea && targetArea.fws_tacode,
-      isEngland: place ? place.isEngland.is_england : null,
-      riverId: this.getRiverId(riverIds),
-      stationsBbox: [],
-      originalStation: stations.originalStation
-    })
+  constructor ({ location, place, stations, referer, queryGroup, rivers, rloiid, rainfallid, originalStation, taCode, error }) {
+    this.error = !!error
+    let bbox
 
-    const titles = this.getPageTitle(error, this.riverId, location)
-    this.pageTitle = titles.page
-    this.subtitle = titles.sub
-
-    stations.forEach(station => {
-      // Get a bounding box covering the stations on view
-      if (this.stationsBbox.length === 0) {
-        this.stationsBbox = [station.lon, station.lat, station.lon, station.lat]
-      } else {
-        this.stationsBbox[0] = Math.min(station.lon, this.stationsBbox[0])
-        this.stationsBbox[1] = Math.min(station.lat, this.stationsBbox[1])
-        this.stationsBbox[2] = Math.max(station.lon, this.stationsBbox[2])
-        this.stationsBbox[3] = Math.max(station.lat, this.stationsBbox[3])
-      }
-      station.displayData = this.getDisplayData(station)
-      station.state = this.getStationState(station)
-      station.sub = this.getStationSubText(station)
-      station.val = this.formatValue(station, station.value)
-      station.valueState = this.getValueState(station)
-      if (station.station_type === 'R') {
-        station.oneHourTotal = this.formatValue(station, station.one_hr_total)
-        station.sixHourTotal = this.formatValue(station, station.six_hr_total)
-        station.dayTotal = this.formatValue(station, station.day_total)
-        station.valueState = parseFloat(station.dayTotal) > 0 ? 'wet' : station.valueState
-        station.external_name = this.formatName(station.external_name)
-      }
-      station.cols = this.getStationColumns(station)
-    })
-
-    // add on 444m (0.004 deg) to the stations bounding box to stop stations clipping edge of viewport
-    this.stationsBbox = this.bboxClip(this.stationsBbox)
-
-    // generate object keyed by river_ids
-    this.stations = groupBy(stations, 'river_id')
-
-    this.export = {
-      countLevels: this.countLevels,
-      placeBbox: this.getPlaceBox(place),
-      bingMaps: bingKeyMaps,
-      originalStationId: this.getStationId(this.originalStation)
-    }
-
-    // set default type checkbox behaviours
-    this.checkRivers = this.typeChecked(this.types, ['S', 'M'])
-    this.checkCoastal = this.typeChecked(this.types, ['C'])
-    this.checkGround = this.typeChecked(this.types, ['G'])
-    this.checkRainfall = this.typeChecked(this.types, ['R'])
-
-    // Show or Hide filters
-    this.showTypeFilter = (this.checkRivers || this.checkCoastal || this.checkGround || this.checkRainfall)
-    this.showRiverFilter = this.rivers && this.rivers.length > 0
-    this.showFilters = this.showTypeFilter || this.showRiverFilter
-  }
-
-  getPlaceBox (place) {
-    return place ? place.bbox10k : this.stationsBbox
-  }
-
-  getStationId (originalStation) {
-    return originalStation ? `stations.${originalStation.id}` : ''
-  }
-
-  getStationSubText (station) {
-    if (station.iswales === true) {
-      return ''
-    }
-
-    if (station.status === 'Suspended' || station.status === 'Closed') {
-      return 'Data not available'
-    }
-
-    if (station.value_erred === true) {
-      return 'Data error'
-    }
-
-    if (moment(station.value_timestamp) && !isNaN(parseFloat(station.value))) {
-      return this.formatExpiredTime(station.value_timestamp)
-    }
-    return 'Data error'
-  }
-
-  getValueState (station) {
-    if (!station.displayData) {
-      return 'error'
-    }
-    if (station.station_type === 'R') {
-      switch (true) {
-        case (parseFloat(station.one_hr_total) > 4):
-          return 'heavy'
-        case (parseFloat(station.one_hr_total) > 0.5):
-          return 'moderate'
-        case (parseFloat(station.one_hr_total) > 0):
-          return 'light'
-        default:
-          return ''
-      }
-    }
-    if (station.station_type === 'S' || station.station_type === 'M') {
-      if (parseFloat(station.value) >= parseFloat(station.percentile_5)) {
-        return 'high'
-      } else {
-        return ''
-      }
-    }
-    return ''
-  }
-
-  getStationColumns (station) {
-    const cols = []
-    if (!station.displayData) {
-      return cols
-    }
-    if (station.station_type === 'R') {
-      cols.push({
-        title: 'Last hour',
-        value: station.oneHourTotal,
-        description: '1 hour'
+    if (stations) {
+      ({ originalStation, bbox } = this.mapProperties(rloiid, originalStation, stations, bbox, rainfallid, taCode))
+      stations.forEach(station => {
+        this.stationProperties(station, place, stations, originalStation)
       })
-      cols.push({
-        title: 'Last 6 hours',
-        value: station.sixHourTotal,
-        description: '6 hours'
-      })
-      cols.push({
-        title: 'Last 24 hours',
-        value: station.dayTotal,
-        description: '24 hours'
-      })
-      return cols
-    } else {
-      if (station.station_type !== 'C') {
-        cols.push({
-          title: 'State',
-          value: station.state,
-          description: ''
+      stations.sort((a, b) => a.distance - b.distance)
+
+      const { filters, activeFilter } = this.setFilters(stations, queryGroup)
+
+      stations.forEach(station => {
+        Object.keys(station).forEach(key => {
+          if (station[key] === null) {
+            delete station[key]
+          }
         })
-      }
-      cols.push({
-        title: 'Height',
-        value: station.val,
-        description: ''
       })
+
+      this.stations = stations
+      this.filters = filters
+      this.queryGroup = activeFilter.type
     }
-    return cols
+
+    this.q = location || originalStation?.external_name || this.getRiverName(stations)
+    this.originalStationId = originalStation?.rloi_id
+    this.placeName = place ? place.name : null
+    this.placeCentre = place ? place.center : []
+    this.isEngland = place ? place.isEngland.is_england : true
+    this.export = {
+      placeBox: rloiid || rainfallid || taCode ? bbox : this.getPlaceBox(place, stations),
+      bingMaps: bingKeyMaps
+    }
+    this.referer = referer
+    this.rivers = rivers
+    this.floodRiskUrl = floodRiskUrl
+    this.isMultilpleMatch = this.checkMultipleMatch(rivers, stations)
+
+    if (this.placeName) {
+      this.pageTitle = `${this.placeName} - Find river, sea, groundwater and rainfall levels`
+      this.metaDescription = `Find river, sea, groundwater and rainfall levels in ${this.placeName}. Check the last updated height and state recorded by the gauges.`
+    } else {
+      this.pageTitle = 'Find river, sea, groundwater and rainfall levels'
+      this.metaDescription = 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
+    }
+  }
+
+  setFilters (stations, queryGroup) {
+    const filters = ['river', 'sea', 'rainfall', 'groundwater'].map(item => ({
+      type: item,
+      count: stations.filter(station => station.group_type === item).length
+    }))
+
+    const activeFilter = filters.find(x => x.type === queryGroup) || filters.find(x => x.count > 0) || filters[0]
+    return { filters, activeFilter }
+  }
+
+  mapProperties (rloiid, originalStation, stations, bbox, rainfallid, taCode) {
+    if (rloiid) {
+      originalStation = stations.find(station => JSON.stringify(station.rloi_id) === rloiid)
+      const center = this.createCenter(stations)
+      originalStation.center = center.geometry
+      bbox = this.createBbox(stations)
+    }
+    if (rainfallid) {
+      originalStation = stations.find(station => station.telemetry_id === rainfallid)
+      const center = this.createCenter(stations)
+      originalStation.center = center.geometry
+      bbox = this.createBbox(stations)
+    }
+    if (taCode) {
+      bbox = this.createBbox(stations)
+    }
+    return { originalStation, bbox }
+  }
+
+  createCenter (stations) {
+    const points = stations.map(station => [Number(station.lat), Number(station.lon)])
+    const features = turf.points(points)
+    return turf.center(features)
+  }
+
+  createBbox (stations) {
+    const lons = stations.map(s => Number(s.lon))
+    const lats = stations.map(s => Number(s.lat))
+
+    return lons.length && lats.length ? [Math.min(...lons), Math.min(...lats), Math.max(...lons), Math.max(...lats)] : []
+  }
+
+  stationProperties (station, place, stations, originalStation) {
+    station.external_name = this.formatName(station.external_name)
+    station.displayData = this.getDisplayData(station)
+    station.latestDatetime = station.status === 'Active' ? this.formattedTime(station) : null
+    station.formattedValue = station.status === 'Active' ? this.formatValue(station, station.value) : null
+    station.state = this.getStationState(station)
+
+    this.stationGroup(station)
+
+    if (!originalStation) {
+      const coords = stations.map(s => [Number(s.lat), Number(s.lon)])
+
+      const features = turf.points(coords)
+
+      this.center = turf.center(features)
+    }
+
+    const originCenter = originalStation ? originalStation.center.coordinates : this.center.geometry.coordinates
+
+    const distance = place ? this.calcDistance(station, place.center) : this.calcDistance(station, originCenter)
+    station.distance = distance
+  }
+
+  stationGroup (station) {
+    if ((station.station_type === 'S') || (station.station_type === 'M') || (station.station_type === 'C' && station.river_id !== 'Sea Levels')) {
+      station.group_type = 'river'
+    } else if (station.station_type === 'C') {
+      station.group_type = 'sea'
+    } else if (station.station_type === 'G') {
+      station.group_type = 'groundwater'
+    } else {
+      station.group_type = 'rainfall'
+    }
   }
 
   getDisplayData (station) {
     return !(station.status === 'Suspended' || station.status === 'Closed' || station.value === null || station.value_erred === true || station.iswales)
   }
 
-  formatName (name) {
-    return name.toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())
+  getRiverName (stations) {
+    if (stations) {
+      return stations[0].river_name
+    }
   }
 
-  formatExpiredTime (date) {
-    const formattedTime = moment(date).tz('Europe/London').format('h:mma')
-    const formattedDate = moment(date).tz('Europe/London').format('D MMMM')
-    return `Updated ${formattedTime}, ${formattedDate}`
+  calcDistance (station, place) {
+    const from = turf.point([station.lon, station.lat])
+    const to = turf.point(place)
+    const options = { units: 'meters' }
+
+    return turf.distance(from, to, options)
+  }
+
+  formattedTime (station) {
+    if (!station.displayData) {
+      return null
+    } else if (station.value_timestamp) {
+      const formattedTime = moment(station.value_timestamp).tz('Europe/London').format('h:mma')
+      const formattedDate = moment(station.value_timestamp).tz('Europe/London').format('D MMMM')
+
+      return `Updated ${formattedTime}, ${formattedDate} `
+    }
+    return null
   }
 
   formatValue (station, val) {
-    const dp = station.station_type === 'R' ? 1 : 2
-    return parseFloat(Math.round(val * Math.pow(10, dp)) / (Math.pow(10, dp))).toFixed(dp) + (station.station_type === 'R' ? 'mm' : 'm')
+    if (!station.displayData) {
+      return null
+    } else {
+      const dp = station.station_type === 'R' ? 1 : 2
+      return parseFloat(Math.round(val * Math.pow(10, dp)) / (Math.pow(10, dp))).toFixed(dp) + (station.station_type === 'R' ? 'mm' : 'm')
+    }
   }
 
   getStationState (station) {
     if (!station.displayData) {
-      return ''
+      return null
     }
     if (station.station_type !== 'C' && station.value) {
       if (parseFloat(station.value) >= parseFloat(station.percentile_5)) {
-        return 'High'
+        return 'HIGH'
       } else if (parseFloat(station.value) < parseFloat(station.percentile_95)) {
-        return 'Low'
+        return 'LOW'
       } else {
-        return 'Normal'
+        return 'NORMAL'
       }
     } else {
-      return ''
+      return null
     }
   }
 
-  getRiverId (riverIds) {
-    return riverIds && riverIds.length === 1 ? riverIds[0] : null
+  formatName (name) {
+    return name.toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())
   }
 
-  getPlaceDescription (targetArea) {
-    return targetArea && targetArea.ta_name ? targetArea.ta_name : ''
-  }
-
-  getPlaceName (place, targetArea) {
-    if (place) {
-      return place.name
+  getPlaceBox (place, stations) {
+    let placeBox = []
+    if (place && this.isEngland) {
+      placeBox = place.bbox10k
+    } else if (stations) {
+      placeBox = this.stationsBbox
     }
-    if (targetArea && targetArea.ta_name) {
-      return targetArea.ta_name
+    return placeBox
+  }
+
+  checkMultipleMatch (rivers, stations) {
+    if (rivers?.length) {
+      return true
     }
-    return ''
-  }
-
-  typeChecked (_types, type) {
-    return this.types.some(a => type.includes(a))
-  }
-
-  bboxClip (bbox) {
-    if (bbox.length > 0) {
-      bbox[0] = bbox[0] - 0.004
-      bbox[1] = bbox[1] - 0.004
-      bbox[2] = bbox[2] + 0.004
-      bbox[3] = bbox[3] + 0.004
-    }
-    return bbox
-  }
-
-  getRiverNames (stations) {
-    return stations
-      .map(a => `${a.river_id}|${a.river_name}`)
-      .filter((val, i, self) => self.indexOf(val) === i)
-      .map(a => {
-        return {
-          river_id: a.split('|')[0],
-          river_name: a.split('|')[1]
-        }
-      })
-  }
-
-  getTypes (stations) {
-    return stations.map(a => a.station_type).filter((val, i, self) => self.indexOf(val) === i)
-  }
-
-  getPageTitle (error, riverId, location) {
-    const titles = {
-      page: '',
-      sub: ''
-    }
-    if (error) {
-      titles.page = 'Sorry, there is currently a problem searching a location - River and sea levels in England'
-    } else if (riverId) {
-      riverId = riverId.replace(/-/g, ' ')
-
-      riverId = riverId.toLowerCase()
-        .split(' ')
-        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-        .join(' ')
-
-      titles.page = `${riverId} - River and sea levels in England`
-
-      if (riverId === 'Sea Levels') {
-        titles.sub = 'Showing Sea levels.'
-        titles.page = 'Sea levels in England'
-      } else if (riverId === 'Groundwater Levels') {
-        titles.sub = 'Showing Groundwater levels.'
-        titles.page = 'Groundwater levels in England'
-      } else {
-        titles.sub = `Showing ${riverId} levels.`
-      }
-    } else {
-      titles.page = location ? `${location} - River and sea levels in England` : 'River and sea levels in England'
-    }
-    return titles
+    return false
   }
 }
 

@@ -1,6 +1,12 @@
 const moment = require('moment-timezone')
 const severity = require('../models/severity')
 const { groupBy } = require('../util')
+const fs = require('fs')
+const path = require('path')
+const itemIdThree = fs.readFileSync(path.resolve(__dirname, 'svgData/svgDataThree.txt'), 'utf8')
+const itemIdTwo = fs.readFileSync(path.resolve(__dirname, 'svgData/svgDataTwo.txt'), 'utf8')
+const itemIdOne = fs.readFileSync(path.resolve(__dirname, 'svgData/svgDataOne.txt'), 'utf8')
+const svgDefault = fs.readFileSync(path.resolve(__dirname, 'svgData/svgDefault.txt'), 'utf8')
 
 class Floods {
   constructor (data, national = true) {
@@ -13,21 +19,8 @@ class Floods {
       floods = !floods
         ? floods
         : floods.map(flood => {
-          flood.html = `<li class="defra-flood-list__item defra-flood-list__item--${item.hash}">
-                        <span class="defra-flood-list__item-title">
-                            <a href="/target-area/${flood.ta_code}">${flood.ta_name}</a>
-                        </span>
-                        <dl class="defra-flood-list__item-meta">
-                            <div>
-                          <dt>
-                              ${item.id === 4 ? 'Removed' : 'Updated'} at
-                          </dt>
-                          <dd>
-                              <time datetime="${flood.situation_changed}">${moment.tz(flood.situation_changed, 'Europe/London').format('h:mma')} on ${moment(flood.situation_changed).tz('Europe/London').format('D MMMM YYYY')}</time>
-                          </dd>
-                            </div>
-                        </dl>
-                      </li>`
+          const svgInner = svgMarkup(item)
+          createHtml(flood, item, svgInner)
           return flood
         })
       return {
@@ -77,6 +70,20 @@ class Floods {
       this._hasActiveFloods = false
       this._highestSeverityId = 5
     }
+
+    function svgMarkup (item) {
+      let svgInner
+      if (item.id === 3) {
+        svgInner = `${itemIdThree}`
+      } else if (item.id === 2) {
+        svgInner = `${itemIdTwo}`
+      } else if (item.id === 1) {
+        svgInner = `${itemIdOne}`
+      } else {
+        svgInner = `${svgDefault}`
+      }
+      return svgInner
+    }
   }
 
   get floods () {
@@ -112,3 +119,20 @@ class Floods {
   }
 }
 module.exports = Floods
+function createHtml (flood, item, svgInner) {
+  flood.html = `
+            <li class="defra-flood-warnings-list-item">
+              <div class="defra-flood-warnings-list-item__icon">
+                <svg role="img" focusable="false" width="38" height="38" viewBox="0 0 38 38" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.41421">
+                  <title>${item.title}</title>
+                  ${svgInner}
+                </svg>
+              </div>
+              <div class="defra-flood-warnings-list-item__description">
+                <a href="/target-area/${flood.ta_code}" class="defra-flood-warnings-list-item__title">${flood.ta_name}</a>
+                <span class="defra-flood-warnings-list-item__meta">${item.id === 4 ? 'Removed at' : 'Updated'} 
+                <time datetime="${flood.situation_changed}">${moment.tz(flood.situation_changed, 'Europe/London').format('h:mma')} on 
+                ${moment(flood.situation_changed).tz('Europe/London').format('D MMMM YYYY')}</time></span>
+              </div>
+            </li>`
+}

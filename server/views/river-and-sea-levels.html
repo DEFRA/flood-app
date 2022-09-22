@@ -1,7 +1,4 @@
 {% extends 'layout.html' %}
-
-{% set bodyAttributes = {'id': 'top'} %}
-
 {% block content %}
 
 <!-- ** Prefix meta title with search term -->
@@ -11,223 +8,167 @@
     <h1 class="govuk-heading-xl">
       River, sea, groundwater and rainfall levels
     </h1>
-    {% if model.subtitle %}
-    <p class="govuk-!-margin-bottom-8"> {{ model.subtitle }} <a href="/river-and-sea-levels"> Show all levels</a></p>
-    {% endif %}
-  </div>
-</div>
 
-{% if model.error %}
+    {% if model.error %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <div class="defra-service-error govuk-!-margin-bottom-7">
       <h2 class="defra-service-error__title" id="error-summary-title">
-        There's currently a problem searching a location
+        Sorry, there is a problem with the search
       </h2>
-      <p>Try again later, or use the list to find a level.</p>
+      <p>Try again later, or contact Floodline.</p>
+      {% include "partials/context-footer.html" %}
     </div>
   </div>
 </div>
 {% endif %}
 
-{% if model.placeDescription %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <p>Showing levels within 5 miles of {{ model.placeDescription }}. <a href="/river-and-sea-levels">Show all levels</a></p>
-  </div>
-</div>
-{% endif %}
-{% if model.originalStation %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <p>Showing levels within 5 miles of {{ model.originalStation.external_name }}. <a href="/river-and-sea-levels">Show all levels</a></p>
-  </div>
-</div>
-{% endif %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-one-third">
-    <div class="govuk-form-group defra-search">
+    <div class="defra-search govuk-form-group govuk-!-margin-bottom-2">
       <form method="post">
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="location">Search a location</label>
-            <div class="defra-search">
-              <input class="defra-search__input" id="location" name="q" type="search" spellcheck="false" value="{{ model.q }}">
-              <div class="defra-search__submit-container">
-                <button class="defra-search__button">Search</button>
-              </div>
-            </div>
+        <label class="govuk-label defra-search__label" for="location">Search river, town or postcode </label>
+        <div class="defra-search__container">
+          <input class="defra-search__input" id="location" name="location" type="search" spellcheck="false" value="{{ model.q }}">
+          <div class="defra-search__submit-container">
+            <button class="defra-search__button">
+              <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="0" y="0" width="50" height="50" style="fill:none;"/><path d="M12.316,14.791c-1.242,0.79 -2.716,1.248 -4.296,1.248c-4.426,0 -8.02,-3.593 -8.02,-8.019c0,-4.426 3.594,-8.02 8.02,-8.02c4.426,0 8.019,3.594 8.019,8.02c0,1.58 -0.458,3.054 -1.248,4.296l5.209,5.209l-2.475,2.475l-5.209,-5.209Zm-4.296,-12.771c3.311,0 6,2.688 6,6c0,3.311 -2.689,6 -6,6c-3.312,0 -6,-2.689 -6,-6c0,-3.312 2.688,-6 6,-6Z" style="fill:currentColor;"/></svg>
+              <span class="govuk-visually-hidden">Search</span>
+            </button>
+          </div>
         </div>
       </form>
     </div>
-    <form method="post">
-    <input class="defra-search__input" name="q" type="hidden" value="{{ model.q }}">
-    <input class="defra-search__input" name="rloi-id" type="hidden" value="{{ model.originalStation.id }}">
-    <input class="defra-search__input" name="target-area" type="hidden" value="{{ model.taCode }}">
-    {% if model.showFilters %}
-    <div id="filter" class="defra-facets" role="search" aria-label="Search filters">
-      <div class="defra-facets__container">
-        <div class="defra-facets__header govuk-visually-hidden">
-          <h2>Filter</h2>
-        </div>
-        <div class="defra-facets__content">
-          <details class="defra-facets-details{% if not model.showRiverFilter %} govuk-visually-hidden{% endif %}" data-module="govuk-details">
-            <summary class="defra-facets-details__summary">
-              <span class="defra-facets-details__summary-text">River name</span>
-              <span class="defra-facets-details__select-counter govuk-visually-hidden">0 selected</span>
-            </summary>
-            <div class="defra-facets-details__text">
-              <div class="defra-facets-filter">
-                <label class="govuk-visually-hidden" for="filter-river-name">Filter river name</label>
-                <span class="govuk-visually-hidden" id="filter-river-name-hint">Updates on key press</span>
-                <input id="filter-river-name" class="defra-facets-filter__input govuk-visually-hidden" aria-describedby="filter-river-name-hint" />
-              </div>
-              <fieldset class="govuk-fieldset">
-                <legend class="govuk-visually-hidden">River name<span class="govuk-visually-hidden"> (Updates on select)</span></legend>
-                <ul class="govuk-checkboxes govuk-checkboxes--small defra-facets-river__list">
-                  {% for river in model.rivers %}
-                    <li class="govuk-checkboxes__item" data-river="{{ river.river_name }}" data-id="{{ river.river_id }}">
-                      <input class="govuk-checkboxes__input" id="{{ river.river_id | urlencode }}" value="{{ river.river_id }}" name="river-id" aria-controls="search-results" type="checkbox" checked />
-                      <label class="govuk-label govuk-checkboxes__label" for="{{ river.river_id | urlencode }}">{{ river.river_name }}</label>
-                    </li>
-                  {% endfor %}
-                </ul>
-              </fieldset>
-            </div>
-          </details>
-          <details class="defra-facets-details{% if not model.showTypeFilter %} govuk-visually-hidden{% endif %}" data-module="govuk-details">
-            <summary class="defra-facets-details__summary">
-              <span class="defra-facets-details__summary-text">Type</span>
-            </summary>
-            <div class="defra-facets-details__text">
-              <fieldset class="govuk-fieldset">
-                <legend class="govuk-visually-hidden">Type<span class="govuk-visually-hidden"> (Updates on select)</span></legend>
-                <ul class="govuk-checkboxes govuk-checkboxes--small defra-facets-types__list">
-                  {% if model.checkRivers %} 
-                  <li class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="river-measurement" aria-controls="search-results" type="checkbox" name="types" value="S,M" checked />
-                    <label class="govuk-label govuk-checkboxes__label" for="river-measurement">River</label>
-                  </li>
-                  {% endif %}
-                  {% if model.checkCoastal %}
-                  <li class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="sea-measurement" aria-controls="search-results" type="checkbox" name="types" value="C" checked />
-                    <label class="govuk-label govuk-checkboxes__label" for="sea-measurement">Coastal</label>
-                  </li>
-                  {% endif %}
-                  {% if model.checkGround %}
-                  <li class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="groundwater-measurement" aria-controls="search-results" type="checkbox" name="types" value="G" checked />
-                    <label class="govuk-label govuk-checkboxes__label" for="groundwater-measurement">Groundwater</label>
-                  </li>
-                  {% endif %}
-                  {% if model.checkRainfall %}
-                  <li class="govuk-checkboxes__item">
-                    <input class="govuk-checkboxes__input" id="rainfall-measurement" aria-controls="search-results" type="checkbox" name="types" value="R" checked />
-                    <label class="govuk-label govuk-checkboxes__label" for="rainfall-measurement">Rainfall</label>
-                  </li>
-                  {% endif %}
-                </ul>
-              </fieldset>
-            </div>
-          </details>
-        </div>
-        <div class="defra-facets__footer">
-          <button class="govuk-button defra-facets__filter-results" type="submit" data-module="govuk-button">
-            Filter results
-          </button>
-        </div>
-      </div>
-    </div>
+    {% if not model.stations | length or model.isMultilpleMatch %}
+    <span id="map"></span>
     {% endif %}
-    </form>
-  </div>
-
-  <div class="govuk-grid-column-two-thirds">
-    <div id="search-results">
-      <div class="defra-search-summary" id="searchSummary">
-          <h2 class="defra-search-summary__count" aria-live="polite">{{ model.countLevels }} level{% if model.countLevels != 1 %}s{% endif %}</h2>
-          <span id="map"></span>
-      </div>
-      {% if model.countLevels %}
-      <ul class="defra-flood-list">
-          {% for id, group in model.stations %}
-          {% if group.length > 0 %}
-          <li>
-            <h3 class="defra-flood-list__group-title">
-              <a href="/river-and-sea-levels?river-id={{ id | urlencode }}">{{ group[0].river_name }}</a>
-            </h3>
-            <ul class="defra-flood-list-river" data-id="{{ id }}">
-                {% for station in group %}
-                <li class="defra-flood-list-item defra-flood-list-item--{{ station.station_type }}{% if station.valueState %}-{{ station.valueState }}{% endif %}" data-river-id="{{ id }}" data-type="{{ station.station_type }}">
-                  <div class="defra-flood-list__title-column">
-                    <span class="defra-flood-list-item__title">
-                      {% if station.station_type === 'R' %}
-                      <a href="/rainfall-station/{{ station.telemetry_id }}">
-                        {{ station.external_name }}
-                      </a>
-                      {% else %}
-                      <a href="/station/{{ station.rloi_id }}{% if station.qualifier == 'd' %}/downstream{% endif %}">
-                        {{ station.external_name }}
-                        {% if station.iswales === true %}
-                        (Natural Resources Wales)
-                        {% endif %}
-                        {% if station.qualifier == 'd' %}
-                        (downstream)
-                        {% endif %}
-                      </a>
-                      {% endif %}
-                      <span class="defra-flood-list-data__description">{{ station.sub }}</span>
-                    </span>
-                  </div>
-                  <div class="defra-flood-list__data-column">
-                    <dl class="defra-flood-list-data">
-                      {% for col in station.cols %}
-                      <div class="defra-flood-list-data__column">
-                        <dt class="govuk-visually-hidden">{{ col.title }}</dt>
-                        <dd>
-                          <span class="defra-flood-list-data__value">{{ col.value }}</span>
-                          <span class="defra-flood-list-data__description" aria-hidden="true">{{ col.description }}</span>
-                        </dd>
-                      </div>
-                      {% endfor %}
-                    </dl>
-                  </div>
-                </li>
-                {% endfor %}
-            </ul>
-          </li>
-          {% endif %}
-          {% endfor %}
-      </ul>
-      {% else %}
-      <h2 class="govuk-heading-s govuk-!-margin-top-4">
-      No river, sea, groundwater or rainfall levels found
-      </h2>
-      <p class="govuk-body">If you searched a place in England, you should:</p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>check the spelling</li>
-        <li>enter a broader location</li>
-      </ul>
-      <p class="govuk-body">If you searched a place outside England, you should visit:</p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li><a href="https://www.sepa.org.uk/environment/water/flooding/">Scottish Environment Protection Agency</a></li>
-        <li><a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">Northern Ireland Direct</a></li>
-        <li><a href="https://naturalresources.wales/flooding">Natural Resources Wales</a></li>
-      </ul>         
-      {% endif %}
-    </div>
   </div>
 </div>
 
-{% if model.countLevels > 15 %}
+{% if not model.error %}
+{% if model.q and not model.stations | length and model.q and not model.rivers | length or model.isEngland === false %}
+
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <div class="defra-top-link">
-      <a href="#top" class="govuk-link--no-visited-state">Back to top</a>
+    <h2 class="govuk-heading-m govuk-!-margin-top-7">
+      No results for '{{ model.q }}'
+    </h2>
+    <p class="govuk-body">If you searched a river or place in England, you should:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>check the spelling</li>
+      <li>enter a broader location</li>
+    </ul>
+    <p class="govuk-body">If you searched a place outside England, you should visit:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li><a href="https://www.sepa.org.uk/environment/water/flooding/">Scottish Environment Protection Agency</a></li>
+      <li><a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">Northern Ireland Direct</a></li>
+      <li><a href="https://naturalresources.wales/flooding">Natural Resources Wales</a></li>
+    </ul>         
+  </div>
+</div>
+
+{% else %}
+{% if model.isMultilpleMatch %}
+<div class="govuk-grid-row">
+	<div class="govuk-grid-column-two-thirds">
+		<h2 class="govuk-heading-m govuk-!-margin-top-8">Locations matching '{{ model.q }}'</h2>
+		<p>More than one match was found for your location. Choose the correct location from the following options:</p>
+		{% if model.rivers.length %}
+		<h3 class="govuk-heading-s">Rivers</h3>
+		{% endif %}
+		{% if model.rivers.length %}
+		<ul class="govuk-list">
+			{% for river in model.rivers %}
+			<li><a href="/river-and-sea-levels?riverId={{ river.river_id }}">{{ river.qualified_name | toMarked(model.q) | safe}}</a></li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+    {% if model.stations.length %}
+    <h3 class="govuk-heading-s">Levels near</h3>
+    {% endif %}
+    {% if model.stations.length %}
+		<ul class="govuk-list">
+			<li><a href="/river-and-sea-levels?q={{model.placeName}}">{{ model.placeName | toMarked(model.q) | safe }}</a></li>
+		</ul>
+		{% endif %}
+		<p>Alternatively try searching again</p>
+	</div>
+</div>
+{% else %}
+
+ 
+{% if model.stations | length %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <div class="defra-navbar defra-navbar--border defra-navbar--search-categories">
+      <div class="defra-navbar__inner">
+        <span id="map"></span>
+        <div class="defra-navbar__group">
+          <ul class="defra-navbar__list" id="filter" data-controls="results">
+            {% for filter in model.filters %}
+            <li class="defra-navbar__item{% if filter.type == model.queryGroup %} defra-navbar__item--selected{% endif %}">
+              <a href="/river-and-sea-levels?q={{ model.q }}&group={{ filter.type }}" data-group-type="{{ filter.type }}">{{ filter.type | capitalize }} ({{ filter.count }})</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
 {% endif %}
+
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <table class="defra-flood-levels-table" role="table" aria-labelledby="flood-table-caption" id="results">
+      <caption id="flood-table-caption" class="govuk-visually-hidden">
+        Results for {{ model.q }}, showing <span>{{ model.queryGroup }}</span> levels
+      </caption>
+      <thead class="govuk-visually-hidden" role="rowgroup">
+        {%- set hideHeader -%}
+        {% if model.queryGroup == 'rainfall' %}style="display:none"{% endif %}
+        {%- endset -%}
+        {%- set hideRainfallHeader -%}
+        {% if model.queryGroup != 'rainfall' %}style="display:none"{% endif %}
+        {%- endset -%}
+        {% if model.stations %}
+        <tr role="row" {{ hideRainfallHeader | safe }} data-group-type="rainfall">
+          <th scope="col" role="columnheader">Gauge</th>
+          <th scope="col" role="columnheader">1 hour</th>
+          <th scope="col" role="columnheader">6 hours</th>
+          <th scope="col" role="columnheader">24 hours</th>
+        </tr>
+        <tr role="row" {{ hideHeader | safe }} data-group-type="river,sea,groundwater">
+          <th scope="col" role="columnheader">Gauge</th>
+          <th scope="col" role="columnheader">Height</th>
+          <th scope="col" role="columnheader">State</th>
+        </tr>
+      </thead>
+      <tbody class="defra-flood-levels-table__body" role="rowgroup">
+      {% for item in model.stations %}
+      {% include "partials/level-row.html" %}
+      {% endfor %}
+      </tbody>
+      {% endif %}
+    </table>
+  </div>
+</div>
+
+{% endif %}
+{% endif %}
+{% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {% if not model.error %}
+      {% include "partials/context-footer.html" %}
+      {% endif %}
+      {% include "partials/related-content.html" %}
+    </div>
+  </div>
+
 
 {% endblock %}
 

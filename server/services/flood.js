@@ -133,6 +133,10 @@ module.exports = {
     return util.getJson(`${serviceUrl}/target-area/${taCode}`)
   },
 
+  getRiverByName (location) {
+    return util.getJson(`${serviceUrl}/river-name/${location}`)
+  },
+
   getStationsByRadius (x, y, rad = 8000) {
     const param3 = rad ? `/${rad}` : ''
     return util.getJson(`${serviceUrl}/stations-by-radius/${x}/${y}${param3}`)
