@@ -15,7 +15,7 @@
       {% elif item.group_type == 'sea' %}
       Sea level at
       {% endif %}
-      {{ item.external_name}}{% if item.station_type == 'M'  %}- {% if item.isDownstage %}Downstream{% else %}Upstream{% endif %}{% endif %}
+      {{ item.external_name}}{% if item.group_type === 'groundwater'%} borehole{% endif %}{% if item.station_type == 'M'  %}- {% if item.isDownstage %}Downstream{% else %}Upstream{% endif %}{% endif %}
       {% if item.iswales %}<span class="defra-flood-levels-table-subtitle"><span>(Natural Resources Wales)</span>{% endif %}
     </a>
     {% endif %}
