@@ -1,114 +1,136 @@
+<!-- Warnings/target areas -->
 {% if model.ta_name %}
-    <div id="infoDescription">
-        <p class="defra-map-info__feature">
-            <span class="defra-map-info__type">
-            {% if model.severity_value  %}
-                {% if model.severity_value === 3 %}
-                Severe flood warning
-                {% elif model.severity_value === 2 %}
-                Flood warning
-                {% elif model.severity_value === 1 %}
-                Flood alert
+<div id="infoDescription">
+    <strong class="defra-map-info__name defra-map-info__name--emphasis">
+        {% if model.severity_value  %}
+            {% if model.severity_value === 3 %}
+            Severe flood warning
+            {% elif model.severity_value === 2 %}
+            Flood warning
+            {% elif model.severity_value === 1 %}
+            Flood alert
+            {% else %}
+                {% if model.ta_code.charAt(4).toLowerCase() === 'w' %}
+                Flood warning removed
                 {% else %}
-                    {% if model.ta_code.charAt(4).toLowerCase() === 'w' %}
-                    Flood warning removed
-                    {% else %}
-                    Flood alert removed
-                    {% endif %}
+                Flood alert removed
                 {% endif %}
-            {% elif model.ta_code.charAt(4).toLowerCase() === 'w' %}
-            Flood warning (inactive)
-            {% else %}
-            Flood alert (inactive)
             {% endif %}
-            </span>
-            <span class="govuk-visually-hidden">for</span>
-            <span class="defra-map-info__name">
-                <a href="/target-area/{{ model.id }}">{{ model.ta_name }}</a>
-            </span>
-        </p>
-    </div>
+        {% elif model.ta_code.charAt(4).toLowerCase() === 'w' %}
+        Flood warning (inactive)
+        {% else %}
+        Flood alert (inactive)
+        {% endif %}
+    </strong>
+    <p class="defra-map-info__description">
+        <a href="/target-area/{{ model.id }}">{{ model.ta_name }}</a>
+    </p>
+</div>
+<!-- River, sea and groundwater levels -->
 {% elif model.type === 'S' or model.type === 'M' or model.type === 'G' or model.type === 'C' %}
-    <div id="infoDescription">
-        <p class="defra-map-info__feature">
-            <span class="defra-map-info__type">
-                {% if model.type === 'C' %}Sea level measurement{% elif model.type === 'G' %}Groundwater measurement{% else %}River level measurement{% endif %}
-            </span>
-            <span class="govuk-visually-hidden">at</span>
-            <span class="defra-map-info__name">
-                <a data-journey-click="Map:Map interaction:Map - Open station from tooltip" href="/station/{{ model.id }}">
-                    {{ model.name }}{% if model.type === 'S' or model.type === 'M' %}, {{ model.river }}{% endif %}
-                    {% if model.iswales %}(Natural Resources Wales){% endif %}
-                </a>
-            </span>
-        </p>
-        <p class="defra-map-info__meta">
-            <span class="govuk-visually-hidden">Latest measurement: </span>
-            {% if model.status === 'Closed' or model.status === 'Suspended' %}
-                Closed or temporarily out of service
-            {% elif model.value %}
-                {{ model.value | round(2) }}m at {{ model.date }}
-                {% if model.value and model.type !== 'C' and model.status !== 'Closed' and model.status !== 'Suspended' and not model.iswales %}
-                    {% if model.atrisk %}(high){% elif model.value < model.percentile_95 %}(low){% else %}(normal){% endif %}
-                {% endif %}
-            {% else %}
-                There is a problem with the latest measurement
-            {% endif %}
-        </p>
-    </div>
-    {% if model.up %}
-        <button class="defra-map-info__button defra-map-info__button--up" data-id="stations.{{ model.up }}" aria-controls="viewport infoDescription">
+<div id="infoDescription">
+    <strong class="defra-map-info__name">
+        <a data-journey-click="Map:Map interaction:Map - Open station from tooltip" href="/station/{{ model.id }}">
+            {% if model.type === 'C' %}Tide{% elif model.type === 'G' %}Groundwater{% else %}{{ model.river }}{% endif %} at
+            {{ model.name }}
+            {% if model.iswales %} (Natural Resources Wales){% endif %}
+        </a>
+    </strong>
+    {% if model.status === 'Closed' or model.status === 'Suspended' %}
+    <p class="defra-map-info__error">
+        Closed or temporarily out of service
+    </p>
+    {% elif not model.value %}
+    <p class="defra-map-info__error">
+        Data not available
+    </p>
+    {% else %}
+    <dl class="defra-flood-data-list">
+        <div class="defra-flood-data-list__column">
+            <dt class="govuk-visually-hidden">Height</dt>
+            <dd>
+                <span class="defra-flood-data-list__description">Height</span>
+                <span class="defra-flood-data-list__value">{{ model.value | round(2) }}m</span>
+            </dd>
+        </div>
+        {% if model.value and model.type !== 'C' and model.status !== 'Closed' and model.status !== 'Suspended' and not model.iswales %}
+        <div class="defra-flood-data-list__column">
+            <dt class="govuk-visually-hidden">State</dt>
+            <dd>
+                <span class="defra-flood-data-list__description">State</span>
+                <span class="defra-flood-data-list__value">
+                    {% if model.atrisk %}
+                    High
+                    {% elif model.value < model.percentile_95 %}
+                    Low
+                    {% else %}
+                    Normal
+                    {% endif %}
+                </span>
+            </dd>
+        </div>
+        {% endif %}
+    {% endif %}
+    </dl>
+    {% if model.status !== 'Closed' and model.status !== 'Suspended' and model.value %}
+    <p class="defra-map-info__meta">Latest reading: {{ model.date }}</p>
+    {% endif %}
+    {% if model.up or model.down %}
+    <div class="defra-map-info__buttons">
+        {% if model.up %}
+        <button class="defra-button-secondary defra-button-secondary--icon" data-id="stations.{{ model.up }}" aria-controls="viewport infoDescription">
+            <svg width="16" height="16" viewBox="0 0 16 16"><path d="M8,6.4l0,9.6" style="fill:none;stroke:currentColor;stroke-width:2px;"></path><path d="M8,0l4,6.4l-8,0l4,-6.4Z"></path></svg>
             <span class="govuk-visually-hidden">Select next</span> Upstream  <span class="govuk-visually-hidden">measurement</span>
         </button>
-    {% endif %}
-    {% if model.down %}
-        <button class="defra-map-info__button defra-map-info__button--down" data-id="stations.{{ model.down }}" aria-controls="viewport infoDescription">
+        {% endif %}
+        {% if model.down %}
+        <button class="defra-button-secondary defra-button-secondary--icon" data-id="stations.{{ model.down }}" aria-controls="viewport infoDescription">
+            <svg width="16" height="16" viewBox="0 0 16 16"><path d="M8,9.6l-0,-9.6" style="fill:none;stroke:currentColor;stroke-width:2px;"/><path d="M8,16l-4,-6.4l8,0l-4,6.4Z"/></svg>
             <span class="govuk-visually-hidden">Select next</span> Downstream <span class="govuk-visually-hidden">measurement</span>
         </button>
+        {% endif %}
+    </div>
     {% endif %}
+</div>
+<!-- Rainfall levels -->
 {% elif model.type === 'R' %}
-    <div id="infoDescription">
-        <p class="defra-map-info__feature">
-            <span class="defra-map-info__name">
-                <a data-journey-click="Map:Map interaction:Map - Open station from tooltip" href="/rainfall-station/{{ model.id }}">Rainfall at {{ model.name }}</a>
-            </span>
-        </p>
-        <!--TODO: need to add logic in somewhere for Rainfall gauge status/error state-->
-        <!-- {% if model.status === 'Closed' or model.status === 'Suspended' %}
-        <p class="defra-flood-list-item__error">
-            Closed or temporarily out of service
-        </p>
-        {% elif model.isError %}
-        <p class="defra-flood-list-item__error">
-            Data not available
-        </p>
-        {% else %} -->
-        <dl class="defra-flood-list-data">
-             <div class="defra-flood-list-data__column">
-                <dt class="govuk-visually-hidden">One hour</dt>
-                <dd>
-                <span class="defra-flood-list-data__description" aria-hidden="true">1 hour</span>
-                <span class="defra-flood-list-data__value">{{ model.one_hr_total }}mm</span>
-                </dd>
-            </div>
-            <div class="defra-flood-list-data__column">
-                <dt class="govuk-visually-hidden">Six hours</dt>
-                <dd>
-                <span class="defra-flood-list-data__description" aria-hidden="true">6 hours</span>
-                <span class="defra-flood-list-data__value">{{ model.six_hr_total }}mm</span>
-                </dd>
-            </div>
-            <div class="defra-flood-list-data__column">
-                <dt class="govuk-visually-hidden">Twenty four hours</dt>
-                <dd>
-                <span class="defra-flood-list-data__description" aria-hidden="true">24 hours</span>
-                <span class="defra-flood-list-data__value">{{ model.day_total }}mm</span>
-                </dd>
-            </div>
-            <span class="defra-flood-list-data__description">
-                {{ model.date }}
-            </span>
-        </dl>
-        <!-- {% endif %} -->
-  </div>
+<div id="infoDescription">
+    <strong class="defra-map-info__name">
+        <a href="/rainfall-station/{{ model.id }}">Rainfall at {{ model.name }}</a>
+    </strong>
+    {% if model.status === 'Closed' or model.status === 'Suspended' %}
+    <p class="defra-map-info__error">
+        Closed or temporarily out of service
+    </p>
+    {% elif model.isError %}
+    <p class="defra-map-info__error">
+        Data not available
+    </p>
+    {% else %}
+    <dl class="defra-flood-data-list">
+        <div class="defra-flood-data-list__column">
+            <dt class="govuk-visually-hidden">Intensity</dt>
+            <dd>
+                <span class="defra-flood-data-list__description">1 hour</span>
+                <span class="defra-flood-data-list__value">{{ model.one_hr_total }}mm</span>
+            </dd>
+        </div>
+        <div class="defra-flood-data-list__column">
+            <dt class="govuk-visually-hidden">last 6 hrs</dt>
+            <dd>
+                <span class="defra-flood-data-list__description" aria-hidden="true"> 6 hours</span>
+                <span class="defra-flood-data-list__value">{{ model.six_hr_total }}mm</span>
+            </dd>
+        </div>
+        <div class="defra-flood-data-list__column">
+            <dt class="govuk-visually-hidden">last 24 hrs</dt>
+            <dd>
+                <span class="defra-flood-data-list__description" aria-hidden="true">24 hours</span>
+                <span class="defra-flood-data-list__value">{{ model.day_total }}mm</span>
+            </dd>
+        </div>
+    </dl>
+    {% endif %}
+    <p class="defra-map-info__meta">{{ model.date }}</p>
+</div>
 {% endif %}

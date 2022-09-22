@@ -85,8 +85,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('No alerts or warnings found')
-    Code.expect(response.payload).to.contain('0 results')
+    Code.expect(response.payload).to.contain('No alerts or warnings')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /alerts-and-warnings TYPO or non location "afdv vdaf adfv  fda" ', async () => {
@@ -116,8 +115,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('No alerts or warnings found')
-    Code.expect(response.payload).to.contain('0 results')
+    Code.expect(response.payload).to.contain('No alerts or warnings')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /alerts-and-warnings with query parameters of Kinghorn, Scotland', async () => {
@@ -204,14 +202,13 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('6 results')
     Code.expect(response.payload).to.contain('1 flood warning')
     Code.expect(response.payload).to.contain('1 severe flood warning')
     Code.expect(response.payload).to.contain('3 flood alerts')
     Code.expect(response.payload).to.contain('1 flood warning removed')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFGL">River Glaze catchment including Leigh and East Wigan</a>')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013FWFCH29">Wider area at risk from Sankey Brook at Dallam</a>')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFDI">River Ditton catchment including areas around Huyton-with-Roby and Widnes</a>')
+    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFGL" class="defra-flood-warnings-list-item__title">River Glaze catchment including Leigh and East Wigan</a>')
+    Code.expect(response.payload).to.contain('<a href="/target-area/013FWFCH29" class="defra-flood-warnings-list-item__title">Wider area at risk from Sankey Brook at Dallam</a>')
+    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFDI" class="defra-flood-warnings-list-item__title">River Ditton catchment including areas around Huyton-with-Roby and Widnes</a>')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /alerts-and-warnings with query parameters of WA4 1HT', async () => {
@@ -260,9 +257,8 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('4 results')
     Code.expect(response.payload).to.contain('4 flood alerts')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFLM">Lower River Mersey including Warrington, Runcorn and Lymm areas</a>')
+    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFLM" class="defra-flood-warnings-list-item__title">Lower River Mersey including Warrington, Runcorn and Lymm areas</a>')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /alerts-and-warnings Bing returns error', async () => {
@@ -369,7 +365,7 @@ lab.experiment('Test - /alerts-warnings', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('1 result')
+    Code.expect(response.payload).to.contain('1 flood warning')
   })
   lab.test('GET /alerts-and-warnings ', async () => {
     const floodService = require('../../server/services/flood')
@@ -410,7 +406,7 @@ lab.experiment('Test - /alerts-warnings', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.payload).to.contain('No alerts or warnings found')
+    Code.expect(response.payload).to.contain('No flood alerts or warnings')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /alerts-and-warnings?station=1001 ', async () => {
@@ -447,7 +443,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('Showing alerts and warnings within 5 miles of Beeding Bridge.')
+    Code.expect(response.payload).to.contain('Beeding Bridge - flood alerts and warnings - GOV.UK')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /alerts-and-warnings with unknown parameter e.g. facebook click id ', async () => {
@@ -484,7 +480,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('Showing alerts and warnings within 5 miles of Beeding Bridge.')
+    Code.expect(response.payload).to.contain('Beeding Bridge - flood alerts and warnings - GOV.UK')
     Code.expect(response.statusCode).to.equal(200)
   })
 })

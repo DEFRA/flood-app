@@ -5,7 +5,7 @@
   bottom:0;
   left:0;
   right:0;
-  background-color:white;
+  background-color:#b1c7ee;
   canvas { // Open layers bug fix
     display: block !important;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
@@ -27,7 +27,6 @@
     outline: 3px solid $govuk-focus-colour;
     z-index: 99;
   }
-  background-color: #b1c7ee;
   &__title {
     @include defra-visually-hidden;
   }

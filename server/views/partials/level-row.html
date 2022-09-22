@@ -1,0 +1,76 @@
+{%- set display -%}
+{% if model.queryGroup != item.group_type %}style="display:none"{% endif %}
+{%- endset -%}
+
+<tr class="defra-flood-levels-table__row" role="row" data-group-type="{{ item.group_type }}" {{ display | safe }}>
+
+  <!-- Location -->
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--location{% if item.group_type === 'rainfall' %}-rainfall{% endif %}" role="rowheader">
+    {% if item.group_type === 'rainfall' %}
+    <a href="/rainfall-station/{{ item.telemetry_id | urlencode }}">{{ item.external_name | safe }} raingauge</a>
+    {% else %}
+    <a href="/station/{{ item.rloi_id }}">
+      {% if item.group_type == 'river' %}
+      {{ item.river_name }} at
+      {% elif item.group_type == 'sea' %}
+      Sea level at
+      {% endif %}
+      {{ item.external_name}}{% if item.station_type == 'M'  %}- {% if item.isDownstage %}Downstream{% else %}Upstream{% endif %}{% endif %}
+      {% if item.iswales %}<span class="defra-flood-levels-table-subtitle"><span>(Natural Resources Wales)</span>{% endif %}
+    </a>
+    {% endif %}
+    <span class="defra-flood-levels-table-meta">
+      {% if item.latestDatetime %}
+      {{ item.latestDatetime }}
+      {% else %}
+      Data not available
+      {% endif %}
+    </span>
+  </td>
+
+  <!-- Rainfall -->
+  {% if item.group_type == 'rainfall' %}
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" role="cell">
+    {{ item.one_hr_total }}mm
+    <span class="defra-flood-levels-table-meta">last hour</span>
+  </td>
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" role="cell">
+    {{ item.six_hr_total }}mm
+    <span class="defra-flood-levels-table-meta">last 6hrs</span>
+  </td>
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" role="cell">
+    {{ item.day_total }}mm
+    <span class="defra-flood-levels-table-meta">last 24hrs</span>
+  </td>
+
+  <!-- Sea or tide -->
+  {% elif item.type == 'tide' %}
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--height" role="cell">
+    {% if item.formattedValue %}
+    <span class="defra-flood-levels-table-numeric">{{ item.formattedValue }}</span>
+    {% else %}
+    <span class="defra-flood-levels-table-na">n/a</a>
+    {% endif %}
+  </td>
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--state" role="cell">
+    <span class="defra-flood-levels-table-na">n/a</a>
+  </td>
+
+  <!-- River or groundwater -->
+  {% else %}
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--height" role="cell">
+    {% if item.formattedValue %}
+    <span class="defra-flood-levels-table-numeric">{{ item.formattedValue }}</span>
+    {% else %}
+    <span class="defra-flood-levels-table-na">n/a</a>
+    {% endif %}
+  </td>
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--state" role="cell">
+    {% if item.state %}
+    <span class="defra-flood-levels-table-state defra-flood-levels-table-state--{% if item.state == 'HIGH' %}blue{% else %}grey{% endif %}">{{ item.state }}</span>
+    {% else %}
+    <span class="defra-flood-levels-table-na">n/a</span>
+    {% endif %}
+  </td>
+  {% endif %}
+</tr>

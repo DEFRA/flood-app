@@ -201,6 +201,22 @@ lab.experiment('Flood service test', () => {
 
     Code.expect(result).to.equal('ok')
   })
+  lab.test('Test getRiverByName', async () => {
+    const util = require('../../server/util')
+
+    sandbox
+      .mock(util)
+      .expects('getJson')
+      .withArgs('http://server2/river-name/tyne')
+      .once()
+      .returns('ok')
+
+    const floodService = require('../../server/services/flood')
+
+    const result = await floodService.getRiverByName('tyne')
+
+    Code.expect(result).to.equal('ok')
+  })
   lab.test('Test getRiverStationByStationId', async () => {
     const util = require('../../server/util')
 

@@ -1,10 +1,11 @@
 .defra-flood-meta {
     @include govuk-font($size: 16);
     color:$govuk-text-colour;
-    @include govuk-responsive-margin(4, 'bottom');
     position:relative;
+    margin-top: 20px;
     &--border {
-        padding-top:15px;
+        padding-top:5px;
         border-top:1px solid $govuk-border-colour;
+        margin-top: 25px;
     }
 }

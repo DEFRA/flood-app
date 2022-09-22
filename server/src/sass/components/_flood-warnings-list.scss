@@ -1,0 +1,89 @@
+.defra-flood-warnings-list {
+    position: relative;
+    z-index: 0;
+    background-color: transparent;
+    margin:30px 0 0 0;
+    padding:0px;
+    list-style:none;
+    @include mq ($from: tablet) {
+        margin-top: 50px;
+    }
+    &:after {
+        content: '';
+        display:block;
+        z-index: 1;
+        width:100%;
+        // border-bottom:1px solid govuk-colour('black');
+    }
+    // & > li {
+    //     border-top:1px solid $govuk-border-colour;
+    // }
+    ul {
+        list-style:none;
+        padding: 0px;
+    }
+    &__category {
+        position: relative;
+        margin: -1px 0px 0px;
+        border: 0px;
+    }
+    &__category-title {
+        display: block;
+        margin-top: 20px;
+        margin-bottom: 5px;
+        @include govuk-font($size: 24, $weight: bold);
+        & + p {
+            @include govuk-font($size: 19);
+            margin-top: -5px;
+            margin-bottom: 0px;
+        }
+    }
+    &__items {
+        margin: 10px 0px 0px;
+    }
+    &__category:last-child &__items &-item:last-child &-item__icon,
+    &__category:last-child &__items &-item:last-child &-item__description {
+        border-bottom: 0px;
+    }
+}
+.defra-flood-warnings-list-item {
+    position: relative;
+    &__icon {
+        display: table-cell;
+        padding: 10px 10px 10px 0px;
+        width: 38px;
+        vertical-align: middle;
+        border-top:1px solid govuk-tint($govuk-border-colour, 50);
+        svg {
+            vertical-align: middle;
+        }
+    }
+    &__description {
+        display: table-cell;
+        padding: 10px 0px;
+        width: 100%;
+        vertical-align: middle;
+        border-top:1px solid govuk-tint($govuk-border-colour, 50);
+        @include govuk-font($size: 19, $weight: bold);
+    }
+    &:last-child &__icon,
+    &:last-child &__description {
+        border-bottom:1px solid govuk-tint($govuk-border-colour, 50);
+    }
+    &__title {
+        position:relative;
+        display: block;
+        @include govuk-font($size: 19, $weight: bold);
+        @include mq ($from: tablet) {
+            max-width: 66%;
+        }
+    }
+    &__meta {
+        display:block;
+        @include govuk-font($size: 16);
+        color: $govuk-secondary-text-colour;
+        @include mq ($from: tablet) {
+            max-width: 66%;
+        }
+    }
+}

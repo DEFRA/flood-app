@@ -1,0 +1,112 @@
+.defra-flood-levels-table {
+    @extend .govuk-table;
+    position: relative;
+    margin-top: -1px;
+    margin-bottom: 0px;
+    @include mq ($until: tablet) {
+      display: block;
+    }
+    &__body {
+      @include mq ($until: tablet) {
+        display: block;
+      }
+    }
+    &__row {
+      border-top: 1px solid govuk-tint($govuk-border-colour, 50);
+      @include mq ($until: tablet) {
+        display: block;
+        overflow: auto;
+      }
+    }
+    &__row--hidden {
+      display:none;
+    }
+    &__cell {
+      @extend .govuk-table__cell;
+      border-bottom: 0px;
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 0px;
+      padding-right: 0px;
+      @include mq ($until: tablet) {
+        border: 0px;
+        float: left;
+      }
+      a:not(:hover) {
+        text-decoration: none;
+      }
+    }
+    &__cell--location {
+      @include govuk-font($size: 19, $weight: bold);
+      width: 50%;
+      padding-right:20px;
+      @include mq ($until: tablet) {
+        padding-right: 0px;
+        display: block;
+        width: 100%;
+      }
+    }
+    &__cell--location-rainfall {
+      @include govuk-font($size: 19, $weight: bold);
+      width: 40%;
+      padding-right:20px;
+      @include mq ($until: tablet) {
+        padding-right: 0px;
+        display: block;
+        width: 100%;
+      }
+    }
+    &__cell--height {
+      width: 20%;
+      @include mq ($until: tablet) {
+        padding-top:0px;
+        width: 70%;
+      }
+    }
+    &__cell--state {
+      width: 10%;
+      @include mq ($until: tablet) {
+        padding-top:0px;
+        width: 30%;
+      }
+    }
+    &__cell--rainfall {
+      width: 20%;
+      @include mq ($until: tablet) {
+        padding-top: 0px;
+        width: 33.33%;
+        min-width: 4em;
+      }
+    }
+    &-meta {
+      display: block;
+      @include govuk-font($size: 16);
+      color: $govuk-secondary-text-colour;
+    }
+    &-subtitle {
+      display: block;
+      @include govuk-font($size: 16);
+    }
+    &-na {
+      @include govuk-font($size: 16);
+    }
+    &-numeric {
+      @include govuk-font($size: 19, $tabular: true);
+      display: inline-block;
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+    &-state {
+      position: relative;
+      @include govuk-font($size: 19, $weight: normal);
+      text-transform: uppercase;
+      // color: $govuk-secondary-text-colour;
+      background-color: govuk-colour('light-grey');
+      display: inline-block;
+      padding: 4px 8px;
+      &--blue {
+        color: govuk-colour('dark-blue');
+        background-color: govuk-tint(govuk-colour('blue'), 80);
+      }
+    }
+  }

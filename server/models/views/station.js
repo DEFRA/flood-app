@@ -16,14 +16,6 @@ class ViewModel {
     this.facebookEvent = 'Station:Share Page:Station - Share to Facebook'
     this.emailEvent = 'Station:Share Page:Station - Share to email'
 
-    /*
-    var levelType = this.station.isGroundwater ? 'Groundwater' : (this.station.isCoastal ? 'Sea' : 'River')
-
-    Object.assign(this, {
-      pageTitle: `${levelType} level at ${station.name}`
-    })
-    */
-
     Object.assign(this, {
       feedback: false,
       bingMaps: config.bingKeyMaps

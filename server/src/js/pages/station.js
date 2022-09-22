@@ -12,7 +12,7 @@ import '../components/toggle-list-display'
 // Create LiveMap
 window.flood.maps.createLiveMap('map', {
   btnText: 'View map',
-  btnClasses: 'defra-button-map-s',
+  btnClasses: 'defra-link-icon-s',
   layers: 'mv,ri,ti,gr,rf',
   data: {
     button: 'Station:Map View:Station - View map'
@@ -85,7 +85,7 @@ if (chart) {
   }
 }
 
-// Add toggle list display for imapacts
+// Add toggle list display for impacts
 const toggleListDisplay = document.getElementById('toggle-list-display')
 if (toggleListDisplay) {
   window.flood.createToggleListDisplay(toggleListDisplay, {
