@@ -162,8 +162,6 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    console.log(response.payload)
-
     Code.expect(response.payload).to.contain('No results for \'WA4 1HT\'')
     Code.expect(response.payload).to.contain('<p><strong>Call Floodline for advice</strong></p>\n')
     Code.expect(response.statusCode).to.equal(200)
