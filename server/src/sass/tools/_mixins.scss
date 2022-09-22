@@ -83,3 +83,21 @@
     str-length($search)), $search, $replace),
     $string);
 }
+
+// Map specific mixins
+@mixin focus($glow: 8px, $strong: 5px, $background: 2px, $inset: 0px) {
+    position:absolute;
+    content:'';
+    left:5px;
+    right:5px;
+    top:5px;
+    bottom:5px;
+    box-shadow:
+        0px 0px 0px $background white,
+        inset 0px 0px 0px $inset govuk-colour('black'),
+        0px 0px 0px $strong govuk-colour('black'),
+        0px 0px 0px $glow $govuk-focus-colour;
+    outline: 3px solid transparent;
+    pointer-events: none;
+    z-index: 99;
+}

@@ -76,6 +76,11 @@ function formatValue (val) {
   return parseFloat(Math.round(val * Math.pow(10, 1)) / (Math.pow(10, 1))).toFixed(1)
 }
 
+function toMarked (string, find) {
+  const reg = new RegExp('(' + find + ')', 'gi')
+  return string.replace(reg, '<mark>$1</mark>')
+}
+
 function dateDiff (date1, date2) {
   return moment(date1).diff(moment(date2), 'days')
 }
@@ -116,6 +121,7 @@ module.exports = {
   cleanseLocation,
   addBufferToBbox,
   formatValue,
+  toMarked,
   dateDiff,
   formatRainfallTelemetry,
   rainfallTelemetryPadOut

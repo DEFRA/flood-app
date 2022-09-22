@@ -4,7 +4,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-7">
+    <h1 class="govuk-heading-xl">
       Check for flooding in England
     </h1>
   </div>
@@ -51,8 +51,7 @@
     {% if model.hasActiveFloods %}
       <span id="map-live"></span>
     {% endif %}
-    <p class="defra-flood-meta {% if model.hasActiveFloods or model.hasWarningsRemoved %} defra-flood-meta--border govuk-!-margin-top-3{% endif %}  govuk-!-margin-bottom-6">
-      Updated at <time datetime="{{model.dateUTC}}">{{model.dateFormatted}}</time>
+    <p class="defra-flood-meta {% if model.hasActiveFloods or model.hasWarningsRemoved %} defra-flood-meta--border govuk-!-margin-top-3{% endif %} govuk-!-margin-top-0 govuk-!-margin-bottom-6">      Updated at <time datetime="{{model.dateUTC}}">{{model.dateFormatted}}</time>
     </p> 
 
     <a data-journey-click="National:Location search:National - Location search" href="/find-location" class="defra-button-start govuk-!-margin-bottom-7" data-module="govuk-button" role="button">

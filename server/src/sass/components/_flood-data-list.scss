@@ -1,0 +1,37 @@
+// Data items
+.defra-flood-data-list {
+    margin: 10px 0px 0px;
+    @include govuk-font($size: 16);
+    width: 100%;
+    &__column {
+        display: block;
+        dd {
+            margin: 0px;
+        }
+        float:left;
+        width: 33.33%;
+    }
+    &__column-full {
+        display: block;
+        dd {
+            margin: 0px;
+        }
+        float:left;
+    }
+    &__value {
+        display: block;
+        position: relative;
+        @include govuk-font($size: 19);
+    }
+    &__description {
+        display: block;
+        @include govuk-font($size: 14);
+        color: $govuk-secondary-text-colour;
+    }
+    &:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+  }
+  
