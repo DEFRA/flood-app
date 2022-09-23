@@ -1335,9 +1335,39 @@ lab.experiment('Test - /river-and-sea-levels', () => {
   lab.test('GET /river-and-sea-levels?q=tyne returns river list', async () => {
     const floodService = require('../../server/services/flood')
 
-    const fakeStationsData = () => data.stationsWithinRadius
+    const fakeStationsData = () => []
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+    const fakeRiversData = () => [
+      {
+        river_id: 'river-tyne',
+        display: 'River Tyne'
+      }]
 
-    sandbox.stub(floodService, 'getStationsWithinTargetArea').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+
+    const fakeGetJson = () => {
+      return {
+        authenticationResultCode: 'ValidCredentials',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright',
+        resourceSets: [
+          {
+            estimatedTotal: 0,
+            resources: []
+          }
+        ],
+        statusCode: 200,
+        tatusDescription: 'OK',
+        traceId: 'trace-id'
+      }
+    }
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
 
     const riversPlugin = {
       plugin: {
@@ -1370,10 +1400,17 @@ lab.experiment('Test - /river-and-sea-levels', () => {
   })
   lab.test('GET /river-and-sea-levels?q=tyne test search words marked', async () => {
     const floodService = require('../../server/services/flood')
+    const locationService = require('../../server/services/location')
 
-    const fakeStationsData = () => data.stationsWithinRadius
+    const fakeStationsData = () => []
+    const fakeRiversData = () => [
+      {
+        river_id: 'river-tyne',
+        display: 'River Tyne'
+      }]
 
-    sandbox.stub(floodService, 'getStationsWithinTargetArea').callsFake(fakeStationsData)
+    sandbox.stub(locationService, 'find').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
 
     const riversPlugin = {
       plugin: {
@@ -1406,8 +1443,10 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationsData = () => data.stationsWithinRadius
+    const fakeRiversData = () => data.riversData
 
     sandbox.stub(floodService, 'getStationsWithinTargetArea').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
 
     const riversPlugin = {
       plugin: {
