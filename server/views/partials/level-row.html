@@ -3,19 +3,18 @@
 {%- endset -%}
 
 <tr class="defra-flood-levels-table__row" role="row" data-group-type="{{ item.group_type }}" {{ display | safe }}>
-
   <!-- Location -->
   <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--location{% if item.group_type === 'rainfall' %}-rainfall{% endif %}" role="rowheader">
     {% if item.group_type === 'rainfall' %}
     <a href="/rainfall-station/{{ item.telemetry_id | urlencode }}">{{ item.external_name | safe }} raingauge</a>
     {% else %}
-    <a href="/station/{{ item.rloi_id }}">
+    <a href="/station/{{ item.rloi_id }}{% if item.qualifier == 'd' %}/downstream{% endif %}">
       {% if item.group_type == 'river' %}
       {{ item.river_name }} at
       {% elif item.group_type == 'sea' %}
       Sea level at
       {% endif %}
-      {{ item.external_name}}{% if item.group_type === 'groundwater'%} borehole{% endif %}{% if item.station_type == 'M'  %}- {% if item.isDownstage %}Downstream{% else %}Upstream{% endif %}{% endif %}
+      {{ item.external_name}}{% if item.group_type === 'groundwater'%} borehole{% endif %}{% if item.station_type == 'M'  %}{% if item.qualifier == 'd' %} - Downstream{% endif %}{% endif %}
       {% if item.iswales %}<span class="defra-flood-levels-table-subtitle"><span>(Natural Resources Wales)</span>{% endif %}
     </a>
     {% endif %}
