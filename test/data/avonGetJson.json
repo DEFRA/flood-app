@@ -1,0 +1,59 @@
+{
+    "authenticationResultCode": "ValidCredentials",
+    "brandLogoUri": "http://dev.virtualearth.net/Branding/logo_powered_by.png",
+    "copyright": "Copyright",
+    "resourceSets": [
+       {
+          "estimatedTotal": 1,
+          "resources": [
+             {
+                "__type": "Location:http://schemas.microsoft.com/search/local/ws/rest/v1",
+                "bbox": [
+                    52.16256332397461,
+                    -1.7445210218429565,
+                    52.216796875,
+                    -1.63857901096344
+                ],
+                "name": "Stratford-upon-Avon, Warwickshire",
+                "point": {
+                   "type": "Point",
+                   "coordinates": [
+                    52.19157028,
+                    -1.70698905 
+                   ]
+                },
+                "address": {
+                   "adminDistrict": "England",
+                   "adminDistrict2": "Warwickshire",
+                   "countryRegion": "United Kingdom",
+                   "formattedAddress": "Stratford-upon-Avon, Warwickshire",
+                   "locality": "Stratford-upon-Avon",
+                   "countryRegionIso2": "GB"
+                },
+                "confidence": "High",
+                "entityType": "PopulatedPlace",
+                "geocodePoints": [
+                   {
+                      "type": "Point",
+                      "coordinates": [
+                        52.19157028,
+                        -1.70698905
+                      ],
+                      "calculationMethod": "Rooftop",
+                      "usageTypes": [
+                         "Display"
+                      ]
+                   }
+                ],
+                "matchCodes": [
+                   "Good"
+                ]
+             }
+          ]
+       }
+    ],
+    "statusCode": 200,
+    "tatusDescription": "OK",
+    "traceId": "trace-id"
+  }
+  
