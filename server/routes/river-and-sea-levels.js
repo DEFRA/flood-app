@@ -55,7 +55,7 @@ module.exports = [{
     }
 
     // blank-sucessful
-    model = new ViewModel({ location, place, stations, referer, queryType, queryGroup, rloiid, rainfallid, originalStation, taCode, rivers })
+    model = new ViewModel({ location, place, stations, referer, queryType, queryGroup, rloiid, rainfallid, originalStation, taCode, rivers, riverid })
     if (riverid) {
       model.stations.reverse()
     }
