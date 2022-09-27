@@ -3,12 +3,12 @@ const moment = require('moment-timezone')
 const { bingKeyMaps, floodRiskUrl } = require('../../config')
 
 class ViewModel {
-  constructor ({ location, place, stations, referer, queryGroup, rivers, rloiid, rainfallid, originalStation, taCode, error }) {
+  constructor ({ location, place, stations, referer, queryGroup, rivers, rloiid, rainfallid, originalStation, taCode, riverid, error }) {
     this.error = !!error
     let bbox
 
     if (stations) {
-      ({ originalStation, bbox } = this.mapProperties(rloiid, originalStation, stations, bbox, rainfallid, taCode))
+      ({ originalStation, bbox } = this.mapProperties(rloiid, originalStation, stations, bbox, rainfallid, taCode, riverid))
       stations.forEach(station => {
         this.stationProperties(station, place, stations, originalStation)
       })
@@ -35,7 +35,7 @@ class ViewModel {
     this.placeCentre = place ? place.center : []
     this.isEngland = place ? place.isEngland.is_england : true
     this.export = {
-      placeBox: rloiid || rainfallid || taCode ? bbox : this.getPlaceBox(place, stations),
+      placeBox: bbox || this.getPlaceBox(place, stations),
       bingMaps: bingKeyMaps
     }
     this.referer = referer
@@ -62,7 +62,7 @@ class ViewModel {
     return { filters, activeFilter }
   }
 
-  mapProperties (rloiid, originalStation, stations, bbox, rainfallid, taCode) {
+  mapProperties (rloiid, originalStation, stations, bbox, rainfallid, taCode, riverid) {
     if (rloiid) {
       originalStation = stations.find(station => JSON.stringify(station.rloi_id) === rloiid)
       const center = this.createCenter(stations)
@@ -76,6 +76,9 @@ class ViewModel {
       bbox = this.createBbox(stations)
     }
     if (taCode) {
+      bbox = this.createBbox(stations)
+    }
+    if (riverid) {
       bbox = this.createBbox(stations)
     }
     return { originalStation, bbox }
