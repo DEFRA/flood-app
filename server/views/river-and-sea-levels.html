@@ -44,7 +44,7 @@
 </div>
 
 {% if not model.error %}
-{% if model.q and not model.stations | length and model.q and not model.rivers | length or model.isEngland === false %}
+{% if model.q and not model.stations | length and model.q and not model.rivers | length or model.isEngland === false and not model.rivers  %}
 
 
 <div class="govuk-grid-row">
@@ -78,7 +78,7 @@
 		{% if model.rivers.length %}
 		<ul class="govuk-list">
 			{% for river in model.rivers %}
-			<li><a href="/river-and-sea-levels?riverId={{ river.river_id }}">{{ river.qualified_name | toMarked(model.q) | safe}}</a></li>
+			<li><a href="/river-and-sea-levels?riverId={{ river.river_id }}&riverName={{ river.qualified_name }}">{{ river.qualified_name | toMarked(model.q) | safe}}</a></li>
 			{% endfor %}
 		</ul>
 		{% endif %}
