@@ -15,6 +15,7 @@ module.exports = [{
     const rloiid = request.query['rloi-id']
     const rainfallid = request.query['rainfall-id']
     const riverid = request.query.riverId
+    const riverName = request.query.riverName
     const queryType = request.query.searchType
     const queryGroup = request.query.group
     const referer = request.headers.referer
@@ -51,14 +52,11 @@ module.exports = [{
     } else if (taCode) {
       stations = await getStations(request, place, rloiid, originalStation, rainfallid, taCode)
     } else if (riverid) {
-      stations = await getStations(request, place, rloiid, originalStation, rainfallid, taCode, riverid)
+      stations = await getStations(request, place, rloiid, originalStation, rainfallid, taCode, riverid, riverName)
     }
 
     // blank-sucessful
     model = new ViewModel({ location, place, stations, referer, queryType, queryGroup, rloiid, rainfallid, originalStation, taCode, rivers, riverid })
-    if (riverid) {
-      model.stations.reverse()
-    }
     return h.view(route, { model })
   },
   options: {
@@ -70,7 +68,8 @@ module.exports = [{
         'rloi-id': joi.string(),
         'rainfall-id': joi.string(),
         'target-area': joi.string(),
-        riverId: joi.string()
+        riverId: joi.string(),
+        riverName: joi.string()
       }),
       failAction: (_request, h) => {
         console.error('River and Sea levels search error: Invalid or no string input.')
@@ -100,7 +99,7 @@ module.exports = [{
   }
 }]
 
-const getStations = async (request, place, rloiid, originalStation, rainfallid, taCode, riverid) => {
+const getStations = async (request, place, rloiid, originalStation, rainfallid, taCode, riverid, riverName) => {
   if (rloiid) {
     const station = originalStation
     const coordinates = JSON.parse(station.coordinates)
@@ -119,7 +118,7 @@ const getStations = async (request, place, rloiid, originalStation, rainfallid, 
   } else if (taCode) {
     return request.server.methods.flood.getStationsWithinTargetArea(taCode)
   } else if (riverid) {
-    return request.server.methods.flood.getRiverById(riverid)
+    return request.server.methods.flood.getRiverByIdOrWiskiName(riverid, riverName)
   } else {
     return request.server.methods.flood.getStationsWithin(place.bbox10k)
   }
