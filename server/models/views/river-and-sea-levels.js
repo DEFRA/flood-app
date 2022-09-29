@@ -43,7 +43,7 @@ class ViewModel {
     this.floodRiskUrl = floodRiskUrl
     this.isMultilpleMatch = this.checkMultipleMatch(rivers, stations)
 
-    if (this.placeName) {
+    if (this.placeName && this.isEngland) {
       this.pageTitle = `${this.placeName} - Find river, sea, groundwater and rainfall levels`
       this.metaDescription = `Find river, sea, groundwater and rainfall levels in ${this.placeName}. Check the last updated height and state recorded by the gauges.`
     } else {
@@ -140,6 +140,7 @@ class ViewModel {
     if (stations) {
       return stations[0].river_name
     }
+    return ''
   }
 
   calcDistance (station, place) {
@@ -202,11 +203,10 @@ class ViewModel {
     return placeBox
   }
 
-  checkMultipleMatch (rivers, stations) {
+  checkMultipleMatch (rivers, _stations) {
     if (rivers?.length) {
       return true
     }
-    return false
   }
 }
 
