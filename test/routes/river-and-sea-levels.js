@@ -585,10 +585,13 @@ lab.experiment('Test - /river-and-sea-levels', () => {
       }
     ]
 
+    const fakeRiversData = () => []
+
+    sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
 
-    const fakeGetJson = () => data.welshpoolGetJson
+    const fakeGetJson = () => data.welshLocationGetJson
 
     const util = require('../../server/util')
     sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
