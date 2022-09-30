@@ -1,0 +1,58 @@
+{
+    "authenticationResultCode": "ValidCredentials",
+    "brandLogoUri": "http://dev.virtualearth.net/Branding/logo_powered_by.png",
+    "copyright": "Copyright",
+    "resourceSets": [
+       {
+          "estimatedTotal": 1,
+          "resources": [
+             {
+                "__type": "Location:http://schemas.microsoft.com/search/local/ws/rest/v1",
+                "bbox": [
+                    52.649559020996094,
+                    -3.1608500480651855,
+                    52.670799255371094,
+                    -3.129309892654419
+                ],
+                "name": "Welshpool, Powys",
+                "point": {
+                   "type": "Point",
+                   "coordinates": [
+                    52.65924072265625,
+                    -3.1463699340820312
+                   ]
+                },
+                "address": {
+                   "adminDistrict": "Wales",
+                   "adminDistrict2": "Powys",
+                   "countryRegion": "United Kingdom",
+                   "formattedAddress": "Welshpool, Powys",
+                   "locality": "Welshpool",
+                   "countryRegionIso2": "GB"
+                },
+                "confidence": "High",
+                "entityType": "PopulatedPlace",
+                "geocodePoints": [
+                   {
+                      "type": "Point",
+                      "coordinates": [
+                        52.65924072265625,
+                        -3.1463699340820312
+                      ],
+                      "calculationMethod": "Rooftop",
+                      "usageTypes": [
+                         "Display"
+                      ]
+                   }
+                ],
+                "matchCodes": [
+                   "Good"
+                ]
+             }
+          ]
+       }
+    ],
+    "statusCode": 200,
+    "tatusDescription": "OK",
+    "traceId": "trace-id"
+  }

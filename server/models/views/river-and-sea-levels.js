@@ -6,8 +6,9 @@ class ViewModel {
   constructor ({ location, place, stations, referer, queryGroup, rivers, rloiid, rainfallid, originalStation, taCode, riverid, error }) {
     this.error = !!error
     let bbox
+    this.isEngland = place ? place.isEngland.is_england : true
 
-    if (stations) {
+    if (stations && this.isEngland) {
       ({ originalStation, bbox } = this.mapProperties(rloiid, originalStation, stations, bbox, rainfallid, taCode, riverid))
       stations.forEach(station => {
         this.stationProperties(station, place, stations, originalStation)
@@ -24,7 +25,7 @@ class ViewModel {
         })
       })
 
-      this.stations = stations
+      this.stations = this.isEngland ? stations : []
       this.filters = filters
       this.queryGroup = activeFilter.type
     }
@@ -33,7 +34,6 @@ class ViewModel {
     this.originalStationId = originalStation?.rloi_id
     this.placeName = place ? place.name : null
     this.placeCentre = place ? place.center : []
-    this.isEngland = place ? place.isEngland.is_england : true
     this.export = {
       placeBox: bbox || this.getPlaceBox(place, stations),
       bingMaps: bingKeyMaps
