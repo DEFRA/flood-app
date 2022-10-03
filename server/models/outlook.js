@@ -45,7 +45,8 @@ class Outlook {
       }
     })
 
-    this._full = outlook.public_forecast.england_forecast
+    // multiple new lines should be treated as one
+    this._full = outlook.public_forecast.england_forecast.replace(/\n+/g, '\n')
 
     const issueDate = new Date(outlook.issued_at)
 
