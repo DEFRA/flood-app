@@ -139,10 +139,15 @@ lab.experiment('Outlook model test', () => {
 
     Code.expect(Result).to.be.equal(riskLevelsOutput)
   })
-  lab.test('Check outlook full', async () => {
+  lab.test('Check outlook full changes multiple new lines to single', async () => {
     const Result = await outlook.full
 
-    const fullOutput = 'Local flooding from surface water and rivers is possible but not expected in places across much of the north of England on Friday due to widespread rain and heavy showers. Local flooding from rivers is possible, and flooding from surface water possible but not expected, across Wales and much of central and southern England on Friday.\nFurther local flooding from surface water and rivers is possible but not expected on Saturday and Sunday in parts of northern England due to heavy, thundery showers.\nLocal minor river and surface water flooding impacts are possible but not expected in parts of the north of England on Monday.\n\nProperties may flood and there may be travel disruption.'
+    const fullOutput = [
+      'Local flooding from surface water and rivers is possible but not expected in places across much of the north of England on Friday due to widespread rain and heavy showers. Local flooding from rivers is possible, and flooding from surface water possible but not expected, across Wales and much of central and southern England on Friday.',
+      'Further local flooding from surface water and rivers is possible but not expected on Saturday and Sunday in parts of northern England due to heavy, thundery showers.',
+      'Local minor river and surface water flooding impacts are possible but not expected in parts of the north of England on Monday.',
+      'Properties may flood and there may be travel disruption.'
+    ]
 
     Code.expect(Result).to.be.equal(fullOutput)
   })

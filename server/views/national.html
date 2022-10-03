@@ -70,9 +70,11 @@
         <p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>
       </div>
     {% else %}
-      <p class="govuk-body">
-        {{ model.outlook.full }}
-      </p>
+      {% for line in model.outlook.full %}
+        <p class="govuk-body">
+          {{ line }}
+        </p>
+      {% endfor %}
       {% if model.outlook.hasOutlookConcern %}
       <span id="map-outlook"></span>
       {% endif %}

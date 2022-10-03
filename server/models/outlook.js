@@ -46,6 +46,9 @@ class Outlook {
     })
 
     this._full = outlook.public_forecast.england_forecast
+      .split(/(\n)+/)
+      // forecast contains repeated '\n', treat these as a single '\n'
+      .filter(e => !e.match('^\n$'))
 
     const issueDate = new Date(outlook.issued_at)
 
