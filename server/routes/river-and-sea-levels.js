@@ -118,7 +118,7 @@ const getStations = async (request, place, rloiid, originalStation, rainfallid, 
   } else if (taCode) {
     return request.server.methods.flood.getStationsWithinTargetArea(taCode)
   } else if (riverid) {
-    return request.server.methods.flood.getRiverByIdOrWiskiName(riverid, riverName)
+    return request.server.methods.flood.getRiverById(riverid)
   } else {
     return request.server.methods.flood.getStationsWithin(place.bbox10k)
   }
