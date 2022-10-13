@@ -77,7 +77,7 @@ function formatValue (val) {
 }
 
 function toMarked (string, find) {
-  const reg = new RegExp('(' + find + ')', 'gi')
+  const reg = new RegExp(`(${find})`, 'gi')
   return string.replace(reg, '<mark>$1</mark>')
 }
 
