@@ -37,7 +37,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.stop()
     await sandbox.restore()
   })
-  lab.test('GET river-and-sea-levels TYPO or non location "afdv vdaf adfv  fda" ', async () => {
+  lab.test('GET /river-and-sea-levels TYPO or non location "afdv vdaf adfv  fda" ', async () => {
     const floodService = require('../../server/services/flood')
     const fakeGetJson = () => data.nonLocationGetJson
 
@@ -74,7 +74,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('No results for \'wefwe we fwef str\'')
     Code.expect(response.statusCode).to.equal(200)
   })
-  lab.test('GET /alerts-and-warnings with query parameters of Kinghorn, Scotland', async () => {
+  lab.test('GET /river-and-see-levels with query parameters of Kinghorn, Scotland', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
