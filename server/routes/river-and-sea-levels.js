@@ -15,7 +15,6 @@ module.exports = [{
     const rloiid = request.query['rloi-id']
     const rainfallid = request.query['rainfall-id']
     const riverid = request.query.riverId
-    const riverName = request.query.riverName
     const queryType = request.query.searchType
     const queryGroup = request.query.group
     const referer = request.headers.referer
@@ -52,7 +51,7 @@ module.exports = [{
     } else if (taCode) {
       stations = await getStations(request, place, rloiid, originalStation, rainfallid, taCode)
     } else if (riverid) {
-      stations = await getStations(request, place, rloiid, originalStation, rainfallid, taCode, riverid, riverName)
+      stations = await getStations(request, place, rloiid, originalStation, rainfallid, taCode, riverid)
     }
 
     // blank-sucessful
@@ -68,8 +67,7 @@ module.exports = [{
         'rloi-id': joi.string(),
         'rainfall-id': joi.string(),
         'target-area': joi.string(),
-        riverId: joi.string(),
-        riverName: joi.string()
+        riverId: joi.string()
       }),
       failAction: (_request, h) => {
         console.error('River and Sea levels search error: Invalid or no string input.')
@@ -99,7 +97,7 @@ module.exports = [{
   }
 }]
 
-const getStations = async (request, place, rloiid, originalStation, rainfallid, taCode, riverid, riverName) => {
+const getStations = async (request, place, rloiid, originalStation, rainfallid, taCode, riverid) => {
   if (rloiid) {
     const station = originalStation
     const coordinates = JSON.parse(station.coordinates)
