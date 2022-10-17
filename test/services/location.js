@@ -332,100 +332,6 @@ lab.experiment('location service test', () => {
     Code.expect(result.name).to.equal('LocationSearchError')
     Code.expect(result.message).to.equal('Missing or corrupt contents from location search')
   })
-  lab.test('Bing call returns multiple resources', async () => {
-    const util = require('../../server/util')
-
-    const fakeLocationData = () => {
-      return {
-        authenticationResultCode: 'ValidCredentials 6',
-        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
-        copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
-        resourceSets: [
-          {
-            estimatedTotal: 2,
-            resources: [
-              {
-                __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [53.36753845214843, -2.639558076858520, 53.42084121704101, -2.535300016403198],
-                name: 'First location in resource array',
-                point: {
-                  type: 'Point',
-                  coordinates: [53.393871307373047, -2.5893499851226807]
-                },
-                address: {
-                  addressLine: 'Test address line',
-                  adminDistrict: 'England',
-                  adminDistrict2: 'Warrington',
-                  countryRegion: 'United Kingdom',
-                  formattedAddress: 'Warrington, Warrington',
-                  locality: 'Warrington',
-                  countryRegionIso2: 'GB'
-                },
-                confidence: 'High',
-                entityType: 'PopulatedPlace',
-                geocodePoints: [
-                  {
-                    type: 'Point',
-                    coordinates: [53.393871307373047, -2.5893499851226807],
-                    calculationMethod: 'Rooftop',
-                    usageTypes: ['Display']
-                  }
-                ],
-                matchCodes: ['Good']
-              },
-              {
-                __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [53.36753845214844, -2.639558076858524, 53.42084121704104, -2.535300016403194],
-                name: 'Test address',
-                point: {
-                  type: 'Point',
-                  coordinates: [53.39387130737304, -2.589349985122684]
-                },
-                address: {
-                  addressLine: 'Test address line',
-                  adminDistrict: 'England',
-                  adminDistrict2: 'Warrington',
-                  countryRegion: 'United Kingdom',
-                  formattedAddress: 'Warrington, Warrington',
-                  locality: 'Warrington',
-                  countryRegionIso2: 'GB'
-                },
-                confidence: 'High',
-                entityType: 'PopulatedPlace',
-                geocodePoints: [
-                  {
-                    type: 'Point',
-                    coordinates: [53.39387130737304, -2.589349985122684],
-                    calculationMethod: 'Rooftop',
-                    usageTypes: ['Display']
-                  }
-                ],
-                matchCodes: ['Good']
-              }
-            ]
-          }
-        ],
-        statusCode: 200,
-        statusDescription: 'OK',
-        traceId: 'b755f46d8f4e48a88e6e8a76c94aa775|DU00000D65|7.7.0.0|Ref A: 2D76360D146B4861AB917B06CE6569DE Ref B: DB3EDGE1113 Ref C: 2019-08-01T11:08:17Z'
-      }
-    }
-
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
-    sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
-
-    const location = require('../../server/services/location')
-
-    const result = await location.find('').then((resolvedValue) => {
-      return resolvedValue
-    }, (error) => {
-      return error
-    })
-
-    Code.expect(result).to.be.a.object()
-    Code.expect(result.Error).to.be.undefined()
-    Code.expect(result.name).to.equal('First location in resource array')
-  })
   lab.test('remove the duplicate city/town name in locality', async () => {
     const util = require('../../server/util')
 
@@ -826,5 +732,153 @@ lab.experiment('location service test', () => {
 
     Code.expect(result).to.be.a.object()
     Code.expect(result.address).to.equal('London SW1A 2AA')
+  })
+  lab.experiment('Location name', () => {
+    lab.test('Should be local name when the location is of type PopulatedPlace', async () => {
+      const util = require('../../server/util')
+
+      const fakeLocationData = () => {
+        return {
+          authenticationResultCode: 'ValidCredentials',
+          brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+          copyright: 'Copyright © 2022 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
+          resourceSets: [
+            {
+              estimatedTotal: 1,
+              resources: [
+                {
+                  __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+                  bbox: [
+                    54.019561767578125,
+                    -1.556141972541809,
+                    54.04982376098633,
+                    -1.5211490392684937
+                  ],
+                  name: 'Nidd, Harrogate, North Yorkshire',
+                  point: {
+                    type: 'Point',
+                    coordinates: [
+                      54.04291534,
+                      -1.54233003
+                    ]
+                  },
+                  address: {
+                    adminDistrict: 'England',
+                    adminDistrict2: 'North Yorkshire',
+                    countryRegion: 'United Kingdom',
+                    formattedAddress: 'Nidd, Harrogate, North Yorkshire',
+                    locality: 'Nidd',
+                    countryRegionIso2: 'GB'
+                  },
+                  confidence: 'High',
+                  entityType: 'PopulatedPlace',
+                  geocodePoints: [
+                    {
+                      type: 'Point',
+                      coordinates: [
+                        54.04291534,
+                        -1.54233003
+                      ],
+                      calculationMethod: 'Rooftop',
+                      usageTypes: [
+                        'Display'
+                      ]
+                    }
+                  ],
+                  matchCodes: [
+                    'Ambiguous'
+                  ]
+                }
+              ]
+            }
+          ],
+          statusCode: 200,
+          statusDescription: 'OK',
+          traceId: '36507ee29c7c448c98f9344f8bbfe030|DU0000277E|0.0.0.1|Ref A: A77983DF3F5F4371AC92EF5FA9C8BC51 Ref B: DB3EDGE2507 Ref C: 2022-10-17T15:29:57Z'
+        }
+      }
+
+      sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
+      sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
+
+      const location = require('../../server/services/location')
+
+      const result = await location.find('').then((resolvedValue) => {
+        return resolvedValue
+      }, (error) => {
+        return error
+      })
+
+      Code.expect(result).to.be.a.object()
+      Code.expect(result.Error).to.be.undefined()
+      Code.expect(result.name).to.equal('Nidd')
+      Code.expect(result.address).to.equal('Nidd, Harrogate, North Yorkshire')
+    })
+    lab.test('Should be full name when the location is not of type PopulatedPlace', async () => {
+      const util = require('../../server/util')
+
+      const fakeLocationData = () => {
+        return {
+          authenticationResultCode: 'ValidCredentials',
+          brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+          copyright: 'Copyright © 2022 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
+          resourceSets: [
+            {
+              estimatedTotal: 1,
+              resources: [
+                {
+                  __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+                  bbox: [
+                    51.01221466064453,
+                    -1.076861023902893,
+                    51.53178405761719,
+                    0.2668609917163849
+                  ],
+                  name: 'Surrey',
+                  point: { type: 'Point', coordinates: [51.23641968, -0.57029098] },
+                  address: {
+                    adminDistrict: 'England',
+                    adminDistrict2: 'Surrey',
+                    countryRegion: 'United Kingdom',
+                    formattedAddress: 'Surrey',
+                    countryRegionIso2: 'GB'
+                  },
+                  confidence: 'High',
+                  entityType: 'AdminDivision2',
+                  geocodePoints: [
+                    {
+                      type: 'Point',
+                      coordinates: [51.23641968, -0.57029098],
+                      calculationMethod: 'Rooftop',
+                      usageTypes: ['Display']
+                    }
+                  ],
+                  matchCodes: ['Good']
+                }
+              ]
+            }
+          ],
+          statusCode: 200,
+          statusDescription: 'OK',
+          traceId: 'a48ffc83bc8a48358339d74b8e9c611e|DU0000274B|0.0.0.1|Ref A: 579C16D23F584B96B21473585991BF94 Ref B: DB3EDGE3113 Ref C: 2022-10-17T16:59:49Z'
+        }
+      }
+
+      sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
+      sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
+
+      const location = require('../../server/services/location')
+
+      const result = await location.find('').then((resolvedValue) => {
+        return resolvedValue
+      }, (error) => {
+        return error
+      })
+
+      Code.expect(result).to.be.a.object()
+      Code.expect(result.Error).to.be.undefined()
+      Code.expect(result.name).to.equal('Surrey')
+      Code.expect(result.address).to.equal('Surrey')
+    })
   })
 })
