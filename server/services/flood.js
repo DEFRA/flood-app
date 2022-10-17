@@ -55,10 +55,6 @@ module.exports = {
     return util.getJson(`${serviceUrl}/river/${id}`)
   },
 
-  getRiverByIdOrWiskiName (id, name) {
-    return util.getJson(`${serviceUrl}/river-by-riverid-or-wiskiname/${id}/${name}`)
-  },
-
   getRiverStationByStationId (id) {
     return util.getJson(`${serviceUrl}/river-station-by-station-id/${id}`)
   },
