@@ -99,14 +99,6 @@ module.exports = server => {
     }
   })
 
-  server.method('flood.getRiverByIdOrWiskiName', floodServices.getRiverByIdOrWiskiName, {
-    cache: {
-      cache: cacheType,
-      expiresIn: 1 * 60 * 1000, // 1 minute
-      generateTimeout: 10 * 1000 // 10 seconds
-    }
-  })
-
   server.method('flood.getRiverStationByStationId', floodServices.getRiverStationByStationId, {
     cache: {
       cache: cacheType,
