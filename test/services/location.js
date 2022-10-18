@@ -277,6 +277,25 @@ lab.experiment('location service test', () => {
     Code.expect(result.name).to.equal('LocationNotFoundError')
     Code.expect(result.message).to.equal('Location search returned no results')
   })
+  lab.test('Check for Bing call returning null response', async () => {
+    const util = require('../../server/util')
+
+    const fakeLocationData = () => { }
+
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
+
+    const location = require('../../server/services/location')
+
+    const result = await location.find('Preston').then((resolvedValue) => {
+      return resolvedValue
+    }, (error) => {
+      return error
+    })
+
+    Code.expect(result.name).to.equal('LocationSearchError')
+    Code.expect(result.message).to.equal('Missing or corrupt contents from location search')
+  })
 
   lab.test('Check for Bing call returning invalid query', async () => {
     const util = require('../../server/util')
