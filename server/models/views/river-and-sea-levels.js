@@ -34,6 +34,7 @@ class ViewModel {
     this.originalStationId = originalStation?.rloi_id
     this.placeName = place ? place.name : null
     this.placeCentre = place ? place.center : []
+    this.placeAddress = place ? place.address : null
     this.export = {
       placeBox: bbox || this.getPlaceBox(place, stations),
       bingMaps: bingKeyMaps
