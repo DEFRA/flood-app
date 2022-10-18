@@ -109,7 +109,7 @@ function rainfallTelemetryPadOut (values, valueDuration) {
   return values
 }
 
-function formatName (name = '', addressLine) {
+function formatName (name = '', addressLine = undefined) {
   // Note: We assume Bing is consitent in it's capitalisation of terms so we don't lower case them
   // (i.e. 'Durham, durham' will not occur in the real world)
 
@@ -119,7 +119,7 @@ function formatName (name = '', addressLine) {
     .filter(part => !(addressLine && part === addressLine))
   // remove repeated words
     .filter((part, index, allParts) => part !== allParts[index + 1])
-    .filter((part) => part !== 'United Kingdom')
+    .filter(part => part !== 'United Kingdom')
     .join(', ')
 }
 
