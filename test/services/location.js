@@ -329,7 +329,39 @@ lab.experiment('location service test', () => {
 
     const result = await Code.expect(rejects()).to.reject()
     Code.expect(result.name).to.equal('LocationSearchError')
-    Code.expect(result.message).to.contain('Location search returned status: 400')
+    Code.expect(result.message).to.equal('Location search returned status: 400, message: Bad Request')
+  })
+  lab.test('Check for Bing call returning invalid query with no status code returned', async () => {
+    const util = require('../../server/util')
+
+    const fakeLocationData = () => {
+      return {
+        authenticationResultCode: 'ValidCredentials 5',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright © 201 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
+        errorDetails: [
+          'One or more parameters are not valid.',
+          'query: This parameter is missing or invalid.'
+        ],
+        resourceSets: [],
+        traceId: '909b39c32124486fa830b95324d23d79|DU00000D6B|7.7.0.0'
+      }
+    }
+
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
+
+    const location = require('../../server/services/location')
+
+    const rejects = async () => {
+      await location.find('').then((resolvedValue) => {
+        return resolvedValue
+      })
+    }
+
+    const result = await Code.expect(rejects()).to.reject()
+    Code.expect(result.name).to.equal('LocationSearchError')
+    Code.expect(result.message).to.equal('Location search returned status: unknown, message: not set')
   })
   lab.test('Invalid data returned from third party location search', async () => {
     const util = require('../../server/util')

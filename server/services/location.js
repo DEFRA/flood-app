@@ -26,7 +26,7 @@ async function find (location) {
 
   // Check for OK status returned
   if (bingData.statusCode !== 200) {
-    throw new LocationSearchError(`Location search returned status: ${bingData.statusCode || 'unknown'}, message: ${bingData.description || 'not set'}`)
+    throw new LocationSearchError(`Location search returned status: ${bingData.statusCode || 'unknown'}, message: ${bingData.statusDescription || 'not set'}`)
   }
 
   // Check that the json is relevant
