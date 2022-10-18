@@ -87,7 +87,7 @@
     {% endif %}
     {% if model.stations.length %}
 		<ul class="govuk-list">
-			<li><a href="/river-and-sea-levels?q={{model.placeName}}">{{ model.placeName | toMarked(model.q) | safe }}</a></li>
+			<li><a href="/river-and-sea-levels?q={{model.placeAddress}}">{{ model.placeAddress | toMarked(model.q) | safe }}</a></li>
 		</ul>
 		{% endif %}
 		<p>Alternatively try searching again</p>
