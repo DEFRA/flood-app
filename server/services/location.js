@@ -1,5 +1,5 @@
 const { bingKeyLocation, bingUrl } = require('../config')
-const { getJson, addBufferToBbox } = require('../util')
+const { getJson, addBufferToBbox, formatName } = require('../util')
 const floodServices = require('./flood')
 const util = require('util')
 const LocationSearchError = require('../location-search-error')
@@ -54,33 +54,15 @@ async function find (location) {
   } = data
 
   let name = data.entityType === 'PopulatedPlace' ? data.address.locality : data.name
+  name = formatName(name, data.address.addressLine)
 
   // Reverse as Bing returns as [y (lat), x (long)]
   bbox.reverse()
   center.reverse()
 
-  // Strip the "U.K" part of the address
-  name = name.replace(', United Kingdom', '')
-
-  // Temporary addition to remove the duplicate city/town name
-  if (name.split(',').length === 2) {
-    const parts = name.toLowerCase().split(',')
-    if (parts[0].trim() === parts[1].trim()) {
-      name = name.substr(0, name.indexOf(','))
-    }
-  }
-
   const isUK = data.address.countryRegionIso2 === 'GB'
   const isScotlandOrNorthernIreland = isUK &&
   (data.address.adminDistrict === 'Northern Ireland' || data.address.adminDistrict === 'Scotland')
-
-  // Strip out addressLine to make address name returned more ambiguous as we're not giving property specific information
-  if (data.address.addressLine && name.indexOf(data.address.addressLine) > -1) {
-    name = name.replace(data.address.addressLine, '')
-    if (name.slice(0, 2) === ', ') {
-      name = name.slice(2, name.length)
-    }
-  }
 
   const isEngland = await floodServices.getIsEngland(center[0], center[1])
 

@@ -109,6 +109,20 @@ function rainfallTelemetryPadOut (values, valueDuration) {
   return values
 }
 
+function formatName (name = '', addressLine = undefined) {
+  // Note: We assume Bing is consitent in it's capitalisation of terms so we don't lower case them
+  // (i.e. 'Durham, durham' will not occur in the real world)
+
+  return name
+    .split(/,\s*/)
+  // Strip out addressLine to make name returned more ambiguous as we're not giving property specific information
+    .filter(part => !(addressLine && part === addressLine))
+  // remove repeated words
+    .filter((part, index, allParts) => part !== allParts[index + 1])
+    .filter(part => part !== 'United Kingdom')
+    .join(', ')
+}
+
 module.exports = {
   get,
   post,
@@ -121,6 +135,7 @@ module.exports = {
   cleanseLocation,
   addBufferToBbox,
   formatValue,
+  formatName,
   toMarked,
   dateDiff,
   formatRainfallTelemetry,
