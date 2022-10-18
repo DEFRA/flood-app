@@ -47,17 +47,13 @@ async function find (location) {
     throw new LocationNotFoundError('Location search returned low confidence results or only country region')
   }
 
-  let {
-    name,
+  const {
     bbox,
     address: { formattedAddress: address },
     point: { coordinates: center }
   } = data
 
-  // Replace name if only one item in result set and entityType is a populated place
-  if (data.entityType === 'PopulatedPlace') {
-    name = set.resources.length > 1 ? data.name : data.address.locality
-  }
+  let name = data.entityType === 'PopulatedPlace' ? data.address.locality : data.name
 
   // Reverse as Bing returns as [y (lat), x (long)]
   bbox.reverse()
