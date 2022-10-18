@@ -880,5 +880,73 @@ lab.experiment('location service test', () => {
       Code.expect(result.name).to.equal('Surrey')
       Code.expect(result.address).to.equal('Surrey')
     })
+    lab.test('Should remove location name from address', async () => {
+      const util = require('../../server/util')
+
+      const fakeLocationData = () => {
+        return {
+          authenticationResultCode: 'ValidCredentials',
+          brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+          copyright: 'Copyright © 2022 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
+          resourceSets: [
+            {
+              estimatedTotal: 1,
+              resources: [
+                {
+                  __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+                  bbox: [
+                    50.927121183043326,
+                    -1.4106113633013098,
+                    50.93484661818468,
+                    -1.39426923563231
+                  ],
+                  name: 'Richard Taunton Place, Southampton Test, Southampton, SO17 1',
+                  point: { type: 'Point', coordinates: [50.9309839, -1.4024403] },
+                  address: {
+                    addressLine: 'Richard Taunton Place',
+                    adminDistrict: 'England',
+                    adminDistrict2: 'Southampton',
+                    countryRegion: 'United Kingdom',
+                    formattedAddress: 'Richard Taunton Place, Southampton Test, Southampton, SO17 1',
+                    locality: 'Southampton',
+                    postalCode: 'SO17 1',
+                    countryRegionIso2: 'GB'
+                  },
+                  confidence: 'Medium',
+                  entityType: 'RoadBlock',
+                  geocodePoints: [
+                    {
+                      type: 'Point',
+                      coordinates: [50.9309839, -1.4024403],
+                      calculationMethod: 'Interpolation',
+                      usageTypes: ['Display']
+                    }
+                  ],
+                  matchCodes: ['UpHierarchy']
+                }
+              ]
+            }
+          ],
+          statusCode: 200,
+          statusDescription: 'OK',
+          traceId: 'c29dd05c394b483eb55bd92fee1c2275|DU00002749|0.0.0.1|Ref A: BB7F66F3C3214CACA66A7614B0393AD1 Ref B: DB3EDGE2121 Ref C: 2022-10-18T10:19:08Z'
+        }
+      }
+
+      sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
+      sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
+
+      const location = require('../../server/services/location')
+
+      const result = await location.find('').then((resolvedValue) => {
+        return resolvedValue
+      }, (error) => {
+        return error
+      })
+
+      Code.expect(result).to.be.a.object()
+      Code.expect(result.Error).to.be.undefined()
+      Code.expect(result.name).to.equal('Southampton Test, Southampton, SO17 1')
+    })
   })
 })
