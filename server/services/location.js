@@ -42,9 +42,8 @@ async function find (location) {
 
   const data = set.resources[0]
 
-  // Determine the confidence level of the result and return if it's not acceptable.
-  if (data.confidence.toLowerCase() === 'low' || data.entityType.toLowerCase() === 'countryregion') {
-    throw new LocationNotFoundError('Location search returned low confidence results or only country region')
+  if (data.confidence.toLowerCase() === 'low') {
+    throw new LocationNotFoundError('Location search returned only low confidence results')
   }
 
   const {
