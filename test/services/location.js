@@ -162,49 +162,70 @@ lab.experiment('location service test', () => {
     })
 
     Code.expect(result.name).to.equal('LocationNotFoundError')
-    Code.expect(result.message).to.equal('Location search returned low confidence results or only country region')
+    Code.expect(result.message).to.equal('Location search returned only low confidence results')
   })
 
-  lab.test('Check for Bing call returning medium confidence and hence no results', async () => {
+  lab.test('Check for Bing call returning medium confidence results', async () => {
     const util = require('../../server/util')
 
     const fakeLocationData = () => {
       return {
-        authenticationResultCode: 'ValidCredentials 3',
-        brandLogoUri: 'brand-logo-uri',
-        copyright: 'Copyright ',
+        authenticationResultCode: 'ValidCredentials',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright © 2022 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
         resourceSets: [
           {
             estimatedTotal: 1,
             resources: [
               {
                 __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [49.957805633544922, -18.279674530029297, 60.782192230224609, 12.539674758911133],
-                name: 'United Kingdom',
-                point: { type: 'Point', coordinates: [53.9438362121582, -2.5505640506744385] },
+                bbox: [
+                  54.019561767578125,
+                  -1.556141972541809,
+                  54.04982376098633,
+                  -1.5211490392684937
+                ],
+                name: 'Nidd, Harrogate, North Yorkshire',
+                point: {
+                  type: 'Point',
+                  coordinates: [
+                    54.04291534,
+                    -1.54233003
+                  ]
+                },
                 address: {
+                  adminDistrict: 'England',
+                  adminDistrict2: 'North Yorkshire',
                   countryRegion: 'United Kingdom',
-                  formattedAddress: 'United Kingdom',
+                  formattedAddress: 'Nidd, Harrogate, North Yorkshire',
+                  locality: 'Nidd',
                   countryRegionIso2: 'GB'
                 },
                 confidence: 'Medium',
-                entityType: 'CountryRegion',
+                entityType: 'PopulatedPlace',
                 geocodePoints: [
                   {
                     type: 'Point',
-                    coordinates: [53.9438362121582, -2.5505640506744385],
+                    coordinates: [
+                      54.04291534,
+                      -1.54233003
+                    ],
                     calculationMethod: 'Rooftop',
-                    usageTypes: ['Display']
+                    usageTypes: [
+                      'Display'
+                    ]
                   }
                 ],
-                matchCodes: ['UpHierarchy']
+                matchCodes: [
+                  'Ambiguous'
+                ]
               }
             ]
           }
         ],
         statusCode: 200,
         statusDescription: 'OK',
-        traceId: 'trace-id'
+        traceId: '36507ee29c7c448c98f9344f8bbfe030|DU0000277E|0.0.0.1|Ref A: A77983DF3F5F4371AC92EF5FA9C8BC51 Ref B: DB3EDGE2507 Ref C: 2022-10-17T15:29:57Z'
       }
     }
 
@@ -219,8 +240,7 @@ lab.experiment('location service test', () => {
       return error
     })
 
-    Code.expect(result.name).to.equal('LocationNotFoundError')
-    Code.expect(result.message).to.equal('Location search returned low confidence results or only country region')
+    Code.expect(result.name).to.equal('Nidd')
   })
 
   lab.test('Check for Bing call returning no data resources and hence no results', async () => {
@@ -257,6 +277,25 @@ lab.experiment('location service test', () => {
     Code.expect(result.name).to.equal('LocationNotFoundError')
     Code.expect(result.message).to.equal('Location search returned no results')
   })
+  lab.test('Check for Bing call returning null response', async () => {
+    const util = require('../../server/util')
+
+    const fakeLocationData = () => { }
+
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
+
+    const location = require('../../server/services/location')
+
+    const result = await location.find('Preston').then((resolvedValue) => {
+      return resolvedValue
+    }, (error) => {
+      return error
+    })
+
+    Code.expect(result.name).to.equal('LocationSearchError')
+    Code.expect(result.message).to.equal('Missing or corrupt contents from location search')
+  })
 
   lab.test('Check for Bing call returning invalid query', async () => {
     const util = require('../../server/util')
@@ -290,7 +329,39 @@ lab.experiment('location service test', () => {
 
     const result = await Code.expect(rejects()).to.reject()
     Code.expect(result.name).to.equal('LocationSearchError')
-    Code.expect(result.message).to.contain('Location search returned status: 400')
+    Code.expect(result.message).to.equal('Location search returned status: 400, message: Bad Request')
+  })
+  lab.test('Check for Bing call returning invalid query with no status code returned', async () => {
+    const util = require('../../server/util')
+
+    const fakeLocationData = () => {
+      return {
+        authenticationResultCode: 'ValidCredentials 5',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright © 201 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
+        errorDetails: [
+          'One or more parameters are not valid.',
+          'query: This parameter is missing or invalid.'
+        ],
+        resourceSets: [],
+        traceId: '909b39c32124486fa830b95324d23d79|DU00000D6B|7.7.0.0'
+      }
+    }
+
+    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
+
+    const location = require('../../server/services/location')
+
+    const rejects = async () => {
+      await location.find('').then((resolvedValue) => {
+        return resolvedValue
+      })
+    }
+
+    const result = await Code.expect(rejects()).to.reject()
+    Code.expect(result.name).to.equal('LocationSearchError')
+    Code.expect(result.message).to.equal('Location search returned status: unknown, message: not set')
   })
   lab.test('Invalid data returned from third party location search', async () => {
     const util = require('../../server/util')
