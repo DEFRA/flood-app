@@ -42,7 +42,7 @@ class ViewModel {
     this.referer = referer
     this.rivers = rivers
     this.floodRiskUrl = floodRiskUrl
-    this.isMultilpleMatch = !!rivers?.length
+    this.isMultilpleMatch = rivers?.length > 0
 
     if (this.placeName && this.isEngland) {
       this.pageTitle = `${this.placeName} - Find river, sea, groundwater and rainfall levels`
