@@ -34,9 +34,10 @@ module.exports = [{
     let rivers = []
     let place, stations, originalStation, model
 
-    // if we have a location query then get the place
     if (location && !location.match(/^england$/i)) {
-      place = await findPlace(util.cleanseLocation(location))
+      if (includeTypes.includes('place')) {
+        place = await findPlace(util.cleanseLocation(location))
+      }
       if (includeTypes.includes('river')) {
         rivers = await request.server.methods.flood.getRiverByName(location)
       }
