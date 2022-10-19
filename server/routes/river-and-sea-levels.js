@@ -14,6 +14,7 @@ module.exports = [{
     const taCode = request.query['target-area']
     const rloiid = request.query['rloi-id']
     const rainfallid = request.query['rainfall-id']
+    const includeTypes = (request.query.includeTypes ?? 'place,river').split(',')
     const riverid = request.query.riverId
     const queryType = request.query.searchType
     const queryGroup = request.query.group
@@ -33,7 +34,9 @@ module.exports = [{
         console.error(`Location search error: [${error.name}] [${error.message}]`)
         console.error(error)
       }
-      rivers = await request.server.methods.flood.getRiverByName(location)
+      if (includeTypes.includes('river')) {
+        rivers = await request.server.methods.flood.getRiverByName(location)
+      }
     }
 
     if (locationError && rivers.length === 0) {
@@ -64,6 +67,7 @@ module.exports = [{
         q: joi.string().trim().max(200),
         group: joi.string().trim().max(11),
         searchType: joi.string().trim().max(11),
+        includeTypes: joi.string(),
         'rloi-id': joi.string(),
         'rainfall-id': joi.string(),
         'target-area': joi.string(),
