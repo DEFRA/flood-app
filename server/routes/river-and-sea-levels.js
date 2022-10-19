@@ -6,6 +6,18 @@ const locationService = require('../services/location')
 const util = require('../util')
 const route = 'river-and-sea-levels'
 
+async function findPlace (location) {
+  let place
+  try {
+    place = await locationService.find(util.cleanseLocation(location))
+    place = notinUk(place) ? undefined : place
+  } catch (error) {
+    console.error(`Location search error: [${error.name}] [${error.message}]`)
+    console.error(error)
+  }
+  return place
+}
+
 module.exports = [{
   method: 'GET',
   path: `/${route}`,
@@ -20,26 +32,17 @@ module.exports = [{
     const queryGroup = request.query.group
     const referer = request.headers.referer
     let rivers = []
-    let place, stations, originalStation, locationError, model
+    let place, stations, originalStation, model
 
     // if we have a location query then get the place
     if (location && !location.match(/^england$/i)) {
-      try {
-        place = await locationService.find(util.cleanseLocation(location))
-        if (notinUk(place)) {
-          locationError = true
-        }
-      } catch (error) {
-        locationError = true
-        console.error(`Location search error: [${error.name}] [${error.message}]`)
-        console.error(error)
-      }
+      place = await findPlace(util.cleanseLocation(location))
       if (includeTypes.includes('river')) {
         rivers = await request.server.methods.flood.getRiverByName(location)
       }
     }
 
-    if (locationError && rivers.length === 0) {
+    if (location && !place && rivers.length === 0) {
       model = new ViewModel({ location, place, stations })
       return h.view(route, { model, referer })
     }
