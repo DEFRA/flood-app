@@ -6,18 +6,6 @@ const locationService = require('../services/location')
 const util = require('../util')
 const route = 'river-and-sea-levels'
 
-async function findPlace (location) {
-  let place
-  try {
-    place = await locationService.find(util.cleanseLocation(location))
-    place = notinUk(place) ? undefined : place
-  } catch (error) {
-    console.error(`Location search error: [${error.name}] [${error.message}]`)
-    console.error(error)
-  }
-  return place
-}
-
 module.exports = [{
   method: 'GET',
   path: `/${route}`,
@@ -129,4 +117,17 @@ const getStations = async (request, place, rloiid, originalStation, rainfallid, 
     return request.server.methods.flood.getStationsWithin(place.bbox10k)
   }
 }
+
 const notinUk = place => !place.isUK || place.isScotlandOrNorthernIreland
+
+async function findPlace (location) {
+  let place
+  try {
+    place = await locationService.find(util.cleanseLocation(location))
+    place = notinUk(place) ? undefined : place
+  } catch (error) {
+    console.error(`Location search error: [${error.name}] [${error.message}]`)
+    console.error(error)
+  }
+  return place
+}
