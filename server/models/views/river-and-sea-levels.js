@@ -44,9 +44,9 @@ class ViewModel {
     this.floodRiskUrl = floodRiskUrl
     this.isMultilpleMatch = rivers?.length > 0
 
-    if (targetArea){
+    if (targetArea) {
       this.distStatement = `Showing levels within 5 miles of ${targetArea.ta_name}.`
-    } else if (rloiid){
+    } else if (rloiid) {
       this.distStatement = `Showing levels within 5 miles of ${this.q}.`
     }
 
