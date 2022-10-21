@@ -288,7 +288,7 @@ class ViewModel {
     if (imtdThresholds.thresholdsImtd[1] !== null) {
       // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
       if (this.station.stageDatum > 0) {
-        imtdThresholds.thresholdsImtd[1] = imtdThresholds.thresholdsImtd[1] - this.station.stageDatum;
+        imtdThresholds.thresholdsImtd[1] = imtdThresholds.thresholdsImtd[1] - this.station.stageDatum
       }
       this.alertThreshold = parseFloat(imtdThresholds.thresholdsImtd[1]).toFixed(2)
       thresholds.push({
@@ -303,7 +303,7 @@ class ViewModel {
     if (imtdThresholds.thresholdsImtd[0] !== null) {
       // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
       if (this.station.stageDatum > 0) {
-        imtdThresholds.thresholdsImtd[0] = imtdThresholds.thresholdsImtd[0] - this.station.stageDatum;
+        imtdThresholds.thresholdsImtd[0] = imtdThresholds.thresholdsImtd[0] - this.station.stageDatum
       }
       this.warningThreshold = parseFloat(imtdThresholds.thresholdsImtd[0]).toFixed(2)
       thresholds.push({
