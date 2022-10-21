@@ -932,6 +932,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     Code.expect(response.payload).to.contain('River (9)')
     Code.expect(response.payload).to.contain('Grants Bridge')
+    Code.expect(response.payload).to.contain('Showing levels within 5 miles of Grants Bridge.')
     Code.expect(response.statusCode).to.equal(200)
   })
 
@@ -1303,7 +1304,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
   lab.test('GET /river-and-sea-levels?target-area=011FWFNC6KC', async () => {
     const floodService = require('../../server/services/flood')
 
-    const fakeStationsData = () => data.stationsWithinRadius
+    const fakeStationsData = () => data.stationsWithinTa
 
     sandbox.stub(floodService, 'getStationsWithinTargetArea').callsFake(fakeStationsData)
 
@@ -1331,8 +1332,8 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('River (9)')
-    Code.expect(response.payload).to.contain('Grants Bridge')
+    Code.expect(response.payload).to.contain('River (8)')
+    Code.expect(response.payload).to.contain('Showing levels within 5 miles of Keswick Campsite.')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /river-and-sea-levels?q=tyne returns river list', async () => {
