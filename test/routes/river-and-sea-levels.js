@@ -1306,7 +1306,10 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const fakeStationsData = () => data.stationsWithinTa
 
+    const fakeTargetAreaData = () => data.getTA
+
     sandbox.stub(floodService, 'getStationsWithinTargetArea').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getTargetArea').callsFake(fakeTargetAreaData)
 
     const riversPlugin = {
       plugin: {
