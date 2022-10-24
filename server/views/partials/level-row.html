@@ -6,7 +6,7 @@
   <!-- Location -->
   <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--location{% if item.group_type === 'rainfall' %}-rainfall{% endif %}" role="rowheader">
     {% if item.group_type === 'rainfall' %}
-    <a href="/rainfall-station/{{ item.telemetry_id | urlencode }}">{{ item.external_name | safe }} raingauge</a>
+    <a href="/rainfall-station/{{ item.telemetry_id | urlencode }}">{{ item.external_name | safe }} rain gauge</a>
     {% else %}
     <a href="/station/{{ item.rloi_id }}{% if item.qualifier == 'd' %}/downstream{% endif %}">
       {% if item.group_type == 'river' %}
