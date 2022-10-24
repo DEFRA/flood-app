@@ -3,13 +3,13 @@ const moment = require('moment-timezone')
 const { bingKeyMaps, floodRiskUrl } = require('../../config')
 
 class ViewModel {
-  constructor ({ location, place, stations, referer, queryGroup, rivers, rloiid, rainfallid, originalStation, taCode, riverid, error }) {
+  constructor ({ location, place, stations, referer, queryGroup, rivers, rloiid, rainfallid, originalStation, targetArea, riverid, error }) {
     this.error = !!error
     let bbox
     this.isEngland = place ? place.isEngland.is_england : true
 
     if (stations && this.isEngland) {
-      ({ originalStation, bbox } = this.mapProperties(rloiid, originalStation, stations, bbox, rainfallid, taCode, riverid))
+      ({ originalStation, bbox } = this.mapProperties(rloiid, originalStation, stations, bbox, rainfallid, targetArea, riverid))
       stations.forEach(station => {
         this.stationProperties(station, place, stations, originalStation)
       })
@@ -44,6 +44,12 @@ class ViewModel {
     this.floodRiskUrl = floodRiskUrl
     this.isMultilpleMatch = rivers?.length > 0
 
+    if (targetArea) {
+      this.distStatement = `Showing levels within 5 miles of ${targetArea.ta_name}.`
+    } else if (rloiid) {
+      this.distStatement = `Showing levels within 5 miles of ${this.q}.`
+    }
+
     if (this.placeName && this.isEngland) {
       this.pageTitle = `${this.placeName} - Find river, sea, groundwater and rainfall levels`
       this.metaDescription = `Find river, sea, groundwater and rainfall levels in ${this.placeName}. Check the last updated height and state recorded by the gauges.`
@@ -63,7 +69,7 @@ class ViewModel {
     return { filters, activeFilter }
   }
 
-  mapProperties (rloiid, originalStation, stations, bbox, rainfallid, taCode, riverid) {
+  mapProperties (rloiid, originalStation, stations, bbox, rainfallid, targetArea, riverid) {
     if (rloiid) {
       originalStation = stations.find(station => JSON.stringify(station.rloi_id) === rloiid)
       const center = this.createCenter(stations)
@@ -76,7 +82,7 @@ class ViewModel {
       originalStation.center = center.geometry
       bbox = this.createBbox(stations)
     }
-    if (taCode) {
+    if (targetArea) {
       bbox = this.createBbox(stations)
     }
     if (riverid) {
