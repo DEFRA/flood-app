@@ -76,7 +76,7 @@
 		<h3 class="govuk-heading-s">Rivers</h3>
 		{% endif %}
 		{% if model.rivers.length %}
-		<ul class="govuk-list">
+		<ul class="govuk-list" id="rivers-list">
 			{% for river in model.rivers %}
 			<li><a href="/river-and-sea-levels?riverId={{ river.river_id }}">{{ river.qualified_name | toMarked(model.q) | safe}}</a></li>
 			{% endfor %}
@@ -86,7 +86,7 @@
     <h3 class="govuk-heading-s">Levels near</h3>
     {% endif %}
     {% if model.stations.length %}
-		<ul class="govuk-list">
+		<ul class="govuk-list" id="places-list">
 			<li><a href="/river-and-sea-levels?q={{model.placeAddress}}&includeTypes=place">{{ model.placeAddress | toMarked(model.q) | safe }}</a></li>
 		</ul>
 		{% endif %}

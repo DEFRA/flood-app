@@ -6,6 +6,7 @@ const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const data = require('../data')
+const { parse } = require('node-html-parser')
 
 lab.experiment('Test - /river-and-sea-levels', () => {
   let sandbox
@@ -1773,9 +1774,16 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.not.contain('Levels near')
-    Code.expect(response.payload).to.contain('Tetbury <mark>Avon</mark>')
-    Code.expect(response.payload).to.contain('More than one match was found for your location.')
     Code.expect(response.statusCode).to.equal(200)
+
+    const root = parse(response.payload)
+    const riverList = root
+      .querySelectorAll('ul.govuk-list#rivers-list li a')
+      .map(a => { return { text: a.textContent, href: a.attributes.href } })
+    Code.expect(riverList.length, 'Number of matching rivers').to.equal(8)
+    Code.expect(riverList, 'River list').to.include({ text: 'Tetbury Avon', href: '/river-and-sea-levels?riverId=tetbury-avon' })
+
+    const placesList = root.querySelectorAll('ul.govuk-list#places-list li a')
+    Code.expect(placesList.length, 'Number of matching places').to.equal(0)
   })
 })
