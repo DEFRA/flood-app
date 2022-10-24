@@ -20,7 +20,7 @@ module.exports = [{
     const queryGroup = request.query.group
     const referer = request.headers.referer
     let rivers = []
-    let place, stations, originalStation, model
+    let place, stations, originalStation, model, targetArea
 
     if (location && !location.match(/^england$/i)) {
       if (includeTypes.includes('place')) {
@@ -45,12 +45,13 @@ module.exports = [{
       stations = await getStations(request, place, rloiid, originalStation, rainfallid)
     } else if (taCode) {
       stations = await getStations(request, place, rloiid, originalStation, rainfallid, taCode)
+      targetArea = await request.server.methods.flood.getTargetArea(taCode)
     } else if (riverid) {
       stations = await getStations(request, place, rloiid, originalStation, rainfallid, taCode, riverid)
     }
 
     // blank-sucessful
-    model = new ViewModel({ location, place, stations, referer, queryType, queryGroup, rloiid, rainfallid, originalStation, taCode, rivers, riverid })
+    model = new ViewModel({ location, place, stations, referer, queryType, queryGroup, rloiid, rainfallid, originalStation, targetArea, rivers, riverid })
     return h.view(route, { model })
   },
   options: {
