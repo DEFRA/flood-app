@@ -101,7 +101,7 @@ module.exports = [{
       payload: joi.object({
         location: joi.string().required()
       }),
-      failAction: (_request, h, _err) => h.redirect('river-and-sea-levels').takeover()
+      failAction: (_request, h, _err) => h.redirect(`/${route}/location`).takeover()
     }
   }
 }]
