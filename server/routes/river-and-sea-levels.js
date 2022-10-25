@@ -8,20 +8,15 @@ const route = 'river-and-sea-levels'
 
 module.exports = [{
   method: 'GET',
-  path: `/${route}`,
+  path: `/${route}/location`,
   handler: async (request, h) => {
     const location = request.query.q
-    const taCode = request.query['target-area']
-    const rloiid = request.query['rloi-id']
-    const rainfallid = request.query['rainfall-id']
-    const includeTypes = (request.query.includeTypes ?? 'place,river').split(',')
-    const riverid = request.query.riverId
-    const queryType = request.query.searchType
-    const queryGroup = request.query.group
     const referer = request.headers.referer
-    let rivers = []
-    let place, stations, originalStation, model, targetArea
+    const includeTypes = (request.query.includeTypes ?? 'place,river').split(',')
+    const queryGroup = request.query.group
 
+    let rivers = []
+    let place
     if (location && !location.match(/^england$/i)) {
       if (includeTypes.includes('place')) {
         place = await findPlace(util.cleanseLocation(location))
@@ -30,15 +25,32 @@ module.exports = [{
         rivers = await request.server.methods.flood.getRiverByName(location)
       }
     }
+    if (!place && rivers.length === 0) {
+      const noResultsModel = new ViewModel({ location, place })
+      return h.view(route, { model: noResultsModel, referer })
+    }
+    const stations = place ? await getStations(request, place) : undefined
+    const model = new ViewModel({ location, place, stations, referer, rivers, queryGroup })
+    return h.view(route, { model })
+  }
+}, {
+  method: 'GET',
+  path: `/${route}`,
+  handler: async (request, h) => {
+    const location = request.query.q
+    const taCode = request.query['target-area']
+    const rloiid = request.query['rloi-id']
+    const rainfallid = request.query['rainfall-id']
+    const riverid = request.query.riverId
+    const queryType = request.query.searchType
+    const queryGroup = request.query.group
+    let place, stations, originalStation, targetArea
 
-    if (location && !place && rivers.length === 0) {
-      model = new ViewModel({ location, place, stations })
-      return h.view(route, { model, referer })
+    if (location) {
+      return h.redirect(`/${route}/location?q=${request.query.q}`).takeover()
     }
 
-    if (place) {
-      stations = await getStations(request, place)
-    } else if (rloiid) {
+    if (rloiid) {
       originalStation = await request.server.methods.flood.getStationById(rloiid, 'u')
       stations = await getStations(request, place, rloiid, originalStation)
     } else if (rainfallid) {
@@ -51,7 +63,7 @@ module.exports = [{
     }
 
     // blank-sucessful
-    model = new ViewModel({ location, place, stations, referer, queryType, queryGroup, rloiid, rainfallid, originalStation, targetArea, rivers, riverid })
+    const model = new ViewModel({ location, place, stations, queryType, queryGroup, rloiid, rainfallid, originalStation, targetArea, riverid })
     return h.view(route, { model })
   },
   options: {
@@ -75,13 +87,13 @@ module.exports = [{
   }
 }, {
   method: 'POST',
-  path: `/${route}`,
+  path: `/${route}/location`,
   handler: async (request, h) => {
     const { location } = request.payload
     if (!location) {
-      return h.redirect(route).takeover()
+      return h.redirect(`/${route}/location`).takeover()
     } else {
-      return h.redirect(`/river-and-sea-levels?q=${encodeURIComponent(location)}`)
+      return h.redirect(`/${route}/location?q=${encodeURIComponent(location)}`).takeover()
     }
   },
   options: {

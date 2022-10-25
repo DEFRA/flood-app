@@ -67,7 +67,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=wefwe%20we%20fwef%20str'
+      url: '/river-and-sea-levels/location?q=wefwe%20we%20fwef%20str'
     }
 
     const response = await server.inject(options)
@@ -113,7 +113,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=Kinghorn'
+      url: '/river-and-sea-levels/location?q=Kinghorn'
     }
 
     const response = await server.inject(options)
@@ -158,7 +158,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=WA4%201HT'
+      url: '/river-and-sea-levels/location?q=WA4%201HT'
     }
 
     const response = await server.inject(options)
@@ -288,7 +288,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=Warrington'
+      url: '/river-and-sea-levels/location?q=Warrington'
     }
 
     const response = await server.inject(options)
@@ -363,7 +363,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=Warrington'
+      url: '/river-and-sea-levels/location?q=Warrington'
     }
 
     const response = await server.inject(options)
@@ -437,7 +437,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=Warrington'
+      url: '/river-and-sea-levels/location?q=Warrington'
     }
 
     const response = await server.inject(options)
@@ -511,7 +511,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=Warrington'
+      url: '/river-and-sea-levels/location?q=Warrington'
     }
 
     const response = await server.inject(options)
@@ -616,7 +616,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=welshpool'
+      url: '/river-and-sea-levels/location?q=welshpool'
     }
 
     const response = await server.inject(options)
@@ -689,13 +689,13 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=Warrington'
+      url: '/river-and-sea-levels/location?q=Warrington'
     }
 
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=Warrington&group=river" data-group-type="river">River (1)</a>')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels/location?q=Warrington&group=river" data-group-type="river">River (1)</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5149">')
     Code.expect(response.payload).to.contain('River Mersey at')
   })
@@ -764,13 +764,13 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=Warrington'
+      url: '/river-and-sea-levels/location?q=Warrington'
     }
 
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=Warrington&group=river" data-group-type="river">River (1)</a>')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels/location?q=Warrington&group=river" data-group-type="river">River (1)</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5149">')
     Code.expect(response.payload).to.contain('River Mersey at')
   })
@@ -843,14 +843,14 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=Warrington'
+      url: '/river-and-sea-levels/location?q=Warrington'
     }
 
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=Warrington&group=river" data-group-type="river">River (0)</a>')
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=Warrington&group=sea" data-group-type="sea">Sea (1)</a>')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels/location?q=Warrington&group=river" data-group-type="river">River (0)</a>')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels/location?q=Warrington&group=sea" data-group-type="sea">Sea (1)</a>')
   })
   lab.test('GET /river-and-sea-levels England query', async () => {
     const floodService = require('../../server/services/flood')
@@ -883,7 +883,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=England'
+      url: '/river-and-sea-levels/location?q=England'
     }
 
     const response = await server.inject(options)
@@ -1001,16 +1001,16 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=Warrington'
+      url: '/river-and-sea-levels/location?q=Warrington'
     }
 
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=Warrington&group=river" data-group-type="river">River (0)</a>')
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=Warrington&group=sea" data-group-type="sea">Sea (0)</a>')
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=Warrington&group=rainfall" data-group-type="rainfall">Rainfall (0)</a>')
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=Warrington&group=groundwater" data-group-type="groundwater">Groundwater (1)</a>')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels/location?q=Warrington&group=river" data-group-type="river">River (0)</a>')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels/location?q=Warrington&group=sea" data-group-type="sea">Sea (0)</a>')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels/location?q=Warrington&group=rainfall" data-group-type="rainfall">Rainfall (0)</a>')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels/location?q=Warrington&group=groundwater" data-group-type="groundwater">Groundwater (1)</a>')
   })
   lab.test('GET /river-and-sea-levels only rainfall stations', async () => {
     const floodService = require('../../server/services/flood')
@@ -1111,15 +1111,15 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=Warrington'
+      url: '/river-and-sea-levels/location?q=Warrington'
     }
 
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=Warrington&group=river" data-group-type="river">River (0)</a>')
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=Warrington&group=sea" data-group-type="sea">Sea (0)</a>')
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=Warrington&group=rainfall" data-group-type="rainfall">Rainfall (2)</a>')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels/location?q=Warrington&group=river" data-group-type="river">River (0)</a>')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels/location?q=Warrington&group=sea" data-group-type="sea">Sea (0)</a>')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels/location?q=Warrington&group=rainfall" data-group-type="rainfall">Rainfall (2)</a>')
   })
   lab.test('GET /river-and-sea-levels Test funny latest value', async () => {
     // This test is off https://eaflood.atlassian.net/browse/FSR-354
@@ -1340,7 +1340,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('Showing levels within 5 miles of Keswick Campsite.')
     Code.expect(response.statusCode).to.equal(200)
   })
-  lab.test('GET /river-and-sea-levels?q=tyne returns river list', async () => {
+  lab.test('GET /river-and-sea-levels/location?q=tyne returns river list', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationsData = () => []
@@ -1392,7 +1392,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=tyne'
+      url: '/river-and-sea-levels/location?q=tyne'
     }
 
     const response = await server.inject(options)
@@ -1403,7 +1403,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('More than one match was found for your location.')
     Code.expect(response.statusCode).to.equal(200)
   })
-  lab.test('GET /river-and-sea-levels?q=avon returns multiple choice page', async () => {
+  lab.test('GET /river-and-sea-levels/location?q=avon returns multiple choice page', async () => {
     const floodService = require('../../server/services/flood')
     const fakeStationsData = () => [{
       river_id: 'river-alne',
@@ -1519,7 +1519,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=avon'
+      url: '/river-and-sea-levels/location?q=avon'
     }
 
     const response = await server.inject(options)
@@ -1529,7 +1529,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('More than one match was found for your location.')
     Code.expect(response.statusCode).to.equal(200)
   })
-  lab.test('GET /river-and-sea-levels?q=avon&includeTypes=place returns only the place', async () => {
+  lab.test('GET /river-and-sea-levels/location?q=avon&includeTypes=place returns only the place', async () => {
     const floodService = require('../../server/services/flood')
     const fakeStationsData = () => [{
       river_id: 'river-alne',
@@ -1645,7 +1645,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=avon&includeTypes=place'
+      url: '/river-and-sea-levels/location?q=avon&includeTypes=place'
     }
 
     const response = await server.inject(options)
@@ -1653,7 +1653,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.match(/River Alne at[\s\n]+Henley River/)
     Code.expect(response.statusCode).to.equal(200)
   })
-  lab.test('GET /river-and-sea-levels?q=avon&includeTypes=river returns only the rivers', async () => {
+  lab.test('GET /river-and-sea-levels/location?q=avon&includeTypes=river returns only the rivers', async () => {
     const floodService = require('../../server/services/flood')
     const fakeStationsData = () => [{
       river_id: 'river-alne',
@@ -1769,7 +1769,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?q=avon&includeTypes=river'
+      url: '/river-and-sea-levels/location?q=avon&includeTypes=river'
     }
 
     const response = await server.inject(options)
