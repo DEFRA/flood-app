@@ -11,18 +11,18 @@
     {% if model.distStatement %}<p class="govuk-body">{{ model.distStatement }}</p>{% endif %} 
 
     {% if model.error %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <div class="defra-service-error govuk-!-margin-bottom-7">
-      <h2 class="defra-service-error__title" id="error-summary-title">
-        Sorry, there is a problem with the search
-      </h2>
-      <p>Try again later, or contact Floodline.</p>
-      {% include "partials/context-footer.html" %}
-    </div>
-  </div>
-</div>
-{% endif %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <div class="defra-service-error govuk-!-margin-bottom-7">
+            <h2 class="defra-service-error__title" id="error-summary-title">
+              Sorry, there is a problem with the search
+            </h2>
+            <p>Try again later, or contact Floodline.</p>
+            {% include "partials/context-footer.html" %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
 
     <div class="defra-search govuk-form-group govuk-!-margin-bottom-2">
       <form method="post" action="/river-and-sea-levels/location">
@@ -39,134 +39,126 @@
       </form>
     </div>
     {% if not model.stations | length or model.isMultilpleMatch %}
-    <span id="map"></span>
+      <span id="map"></span>
     {% endif %}
   </div>
 </div>
 
 {% if not model.error %}
-{% if model.q and not model.stations | length and model.q and not model.rivers | length or model.isEngland === false and not model.rivers  %}
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <h2 class="govuk-heading-m govuk-!-margin-top-7">
-      No results for '{{ model.q }}'
-    </h2>
-    <p class="govuk-body">If you searched a river or place in England, you should:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>check the spelling</li>
-      <li>enter a broader location</li>
-    </ul>
-    <p class="govuk-body">If you searched a place outside England, you should visit:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li><a href="https://www.sepa.org.uk/environment/water/flooding/">Scottish Environment Protection Agency</a></li>
-      <li><a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">Northern Ireland Direct</a></li>
-      <li><a href="https://naturalresources.wales/flooding">Natural Resources Wales</a></li>
-    </ul>         
-  </div>
-</div>
-
-{% else %}
-{% if model.isMultilpleMatch %}
-<div class="govuk-grid-row">
-	<div class="govuk-grid-column-two-thirds">
-		<h2 class="govuk-heading-m govuk-!-margin-top-8">Locations matching '{{ model.q }}'</h2>
-		<p>More than one match was found for your location. Choose the correct location from the following options:</p>
-		{% if model.rivers.length %}
-		<h3 class="govuk-heading-s">Rivers</h3>
-		{% endif %}
-		{% if model.rivers.length %}
-		<ul class="govuk-list" id="rivers-list">
-			{% for river in model.rivers %}
-			<li><a href="/river-and-sea-levels?riverId={{ river.river_id }}">{{ river.qualified_name | toMarked(model.q) | safe}}</a></li>
-			{% endfor %}
-		</ul>
-		{% endif %}
-    {% if model.stations.length %}
-    <h3 class="govuk-heading-s">Levels near</h3>
-    {% endif %}
-    {% if model.stations.length %}
-		<ul class="govuk-list" id="places-list">
-			<li><a href="/river-and-sea-levels/location?q={{model.placeAddress}}&includeTypes=place">{{ model.placeAddress | toMarked(model.q) | safe }}</a></li>
-		</ul>
-		{% endif %}
-		<p>Alternatively try searching again</p>
-	</div>
-</div>
-{% else %}
-
-{% if model.stations | length %}
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <div class="defra-navbar defra-navbar--border defra-navbar--search-categories">
-      <div class="defra-navbar__inner">
-        <span id="map"></span>
-        <div class="defra-navbar__group">
-          <ul class="defra-navbar__list" id="filter" data-controls="results">
-            {% for filter in model.filters %}
-            <li class="defra-navbar__item{% if filter.type == model.queryGroup %} defra-navbar__item--selected{% endif %}">
-              <a href="/river-and-sea-levels/location?q={{ model.q }}&group={{ filter.type }}" data-group-type="{{ filter.type }}">{{ filter.type | capitalize }} ({{ filter.count }})</a>
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
+  {% if model.q and not model.stations | length and model.q and not model.rivers | length or model.isEngland === false and not model.rivers  %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-m govuk-!-margin-top-7">
+          No results for '{{ model.q }}'
+        </h2>
+        <p class="govuk-body">If you searched a river or place in England, you should:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>check the spelling</li>
+          <li>enter a broader location</li>
+        </ul>
+        <p class="govuk-body">If you searched a place outside England, you should visit:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li><a href="https://www.sepa.org.uk/environment/water/flooding/">Scottish Environment Protection Agency</a></li>
+          <li><a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">Northern Ireland Direct</a></li>
+          <li><a href="https://naturalresources.wales/flooding">Natural Resources Wales</a></li>
+        </ul>
       </div>
     </div>
-  </div>
-</div>
-
+  {% else %}
+    {% if model.isMultilpleMatch %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <h2 class="govuk-heading-m govuk-!-margin-top-8">Locations matching '{{ model.q }}'</h2>
+          <p>More than one match was found for your location. Choose the correct location from the following options:</p>
+          {% if model.rivers.length %}
+          <h3 class="govuk-heading-s">Rivers</h3>
+          {% endif %}
+          {% if model.rivers.length %}
+          <ul class="govuk-list" id="rivers-list">
+            {% for river in model.rivers %}
+            <li><a href="/river-and-sea-levels?riverId={{ river.river_id }}">{{ river.qualified_name | toMarked(model.q) | safe}}</a></li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          {% if model.stations.length %}
+          <h3 class="govuk-heading-s">Levels near</h3>
+          {% endif %}
+          {% if model.stations.length %}
+          <ul class="govuk-list" id="places-list">
+            <li><a href="/river-and-sea-levels/location?q={{model.placeAddress}}&includeTypes=place">{{ model.placeAddress | toMarked(model.q) | safe }}</a></li>
+          </ul>
+          {% endif %}
+          <p>Alternatively try searching again</p>
+        </div>
+      </div>
+    {% else %}
+      {% if model.stations | length %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <div class="defra-navbar defra-navbar--border defra-navbar--search-categories">
+              <div class="defra-navbar__inner">
+                <span id="map"></span>
+                <div class="defra-navbar__group">
+                  <ul class="defra-navbar__list" id="filter" data-controls="results">
+                    {% for filter in model.filters %}
+                    <li class="defra-navbar__item{% if filter.type == model.queryGroup %} defra-navbar__item--selected{% endif %}">
+                      <a href="/river-and-sea-levels/location?q={{ model.q }}&group={{ filter.type }}" data-group-type="{{ filter.type }}">{{ filter.type | capitalize }} ({{ filter.count }})</a>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <table class="defra-flood-levels-table" role="table" aria-labelledby="flood-table-caption" id="results">
+            <caption id="flood-table-caption" class="govuk-visually-hidden">
+              Results for {{ model.q }}, showing <span>{{ model.queryGroup }}</span> levels
+            </caption>
+            <thead class="govuk-visually-hidden" role="rowgroup">
+              {%- set hideHeader -%}
+              {% if model.queryGroup == 'rainfall' %}style="display:none"{% endif %}
+              {%- endset -%}
+              {%- set hideRainfallHeader -%}
+              {% if model.queryGroup != 'rainfall' %}style="display:none"{% endif %}
+              {%- endset -%}
+              {% if model.stations %}
+              <tr role="row" {{ hideRainfallHeader | safe }} data-group-type="rainfall">
+                <th scope="col" role="columnheader">Gauge</th>
+                <th scope="col" role="columnheader">1 hour</th>
+                <th scope="col" role="columnheader">6 hours</th>
+                <th scope="col" role="columnheader">24 hours</th>
+              </tr>
+              <tr role="row" {{ hideHeader | safe }} data-group-type="river,sea,groundwater">
+                <th scope="col" role="columnheader">Gauge</th>
+                <th scope="col" role="columnheader">Height</th>
+                <th scope="col" role="columnheader">State</th>
+              </tr>
+            </thead>
+            <tbody class="defra-flood-levels-table__body" role="rowgroup">
+            {% for item in model.stations %}
+            {% include "partials/level-row.html" %}
+            {% endfor %}
+            </tbody>
+            {% endif %}
+          </table>
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
 {% endif %}
-
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <table class="defra-flood-levels-table" role="table" aria-labelledby="flood-table-caption" id="results">
-      <caption id="flood-table-caption" class="govuk-visually-hidden">
-        Results for {{ model.q }}, showing <span>{{ model.queryGroup }}</span> levels
-      </caption>
-      <thead class="govuk-visually-hidden" role="rowgroup">
-        {%- set hideHeader -%}
-        {% if model.queryGroup == 'rainfall' %}style="display:none"{% endif %}
-        {%- endset -%}
-        {%- set hideRainfallHeader -%}
-        {% if model.queryGroup != 'rainfall' %}style="display:none"{% endif %}
-        {%- endset -%}
-        {% if model.stations %}
-        <tr role="row" {{ hideRainfallHeader | safe }} data-group-type="rainfall">
-          <th scope="col" role="columnheader">Gauge</th>
-          <th scope="col" role="columnheader">1 hour</th>
-          <th scope="col" role="columnheader">6 hours</th>
-          <th scope="col" role="columnheader">24 hours</th>
-        </tr>
-        <tr role="row" {{ hideHeader | safe }} data-group-type="river,sea,groundwater">
-          <th scope="col" role="columnheader">Gauge</th>
-          <th scope="col" role="columnheader">Height</th>
-          <th scope="col" role="columnheader">State</th>
-        </tr>
-      </thead>
-      <tbody class="defra-flood-levels-table__body" role="rowgroup">
-      {% for item in model.stations %}
-      {% include "partials/level-row.html" %}
-      {% endfor %}
-      </tbody>
-      {% endif %}
-    </table>
+    {% if not model.error %}
+    {% include "partials/context-footer.html" %}
+    {% endif %}
+    {% include "partials/related-content.html" %}
   </div>
 </div>
-
-{% endif %}
-{% endif %}
-{% endif %}
-
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      {% if not model.error %}
-      {% include "partials/context-footer.html" %}
-      {% endif %}
-      {% include "partials/related-content.html" %}
-    </div>
-  </div>
 
 
 {% endblock %}
