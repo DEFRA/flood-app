@@ -47,7 +47,7 @@ module.exports = [{
     let place, stations, originalStation, targetArea
 
     if (location) {
-      return h.redirect(`/${route}/location?q=${request.query.q}`).takeover()
+      return h.redirect(`/${route}/location?q=${request.query.q}`)
     }
 
     if (rloiid) {
