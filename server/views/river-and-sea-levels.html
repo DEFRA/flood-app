@@ -111,42 +111,42 @@
             </div>
           </div>
         </div>
-      {% endif %}
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-          <table class="defra-flood-levels-table" role="table" aria-labelledby="flood-table-caption" id="results">
-            <caption id="flood-table-caption" class="govuk-visually-hidden">
-              Results for {{ model.q }}, showing <span>{{ model.queryGroup }}</span> levels
-            </caption>
-            <thead class="govuk-visually-hidden" role="rowgroup">
-              {%- set hideHeader -%}
-              {% if model.queryGroup == 'rainfall' %}style="display:none"{% endif %}
-              {%- endset -%}
-              {%- set hideRainfallHeader -%}
-              {% if model.queryGroup != 'rainfall' %}style="display:none"{% endif %}
-              {%- endset -%}
-              {% if model.stations %}
-              <tr role="row" {{ hideRainfallHeader | safe }} data-group-type="rainfall">
-                <th scope="col" role="columnheader">Gauge</th>
-                <th scope="col" role="columnheader">1 hour</th>
-                <th scope="col" role="columnheader">6 hours</th>
-                <th scope="col" role="columnheader">24 hours</th>
-              </tr>
-              <tr role="row" {{ hideHeader | safe }} data-group-type="river,sea,groundwater">
-                <th scope="col" role="columnheader">Gauge</th>
-                <th scope="col" role="columnheader">Height</th>
-                <th scope="col" role="columnheader">State</th>
-              </tr>
-            </thead>
-            <tbody class="defra-flood-levels-table__body" role="rowgroup">
-            {% for item in model.stations %}
-            {% include "partials/level-row.html" %}
-            {% endfor %}
-            </tbody>
-            {% endif %}
-          </table>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <table class="defra-flood-levels-table" role="table" aria-labelledby="flood-table-caption" id="results">
+              <caption id="flood-table-caption" class="govuk-visually-hidden">
+                Results for {{ model.q }}, showing <span>{{ model.queryGroup }}</span> levels
+              </caption>
+              <thead class="govuk-visually-hidden" role="rowgroup">
+                {%- set hideHeader -%}
+                {% if model.queryGroup == 'rainfall' %}style="display:none"{% endif %}
+                {%- endset -%}
+                {%- set hideRainfallHeader -%}
+                {% if model.queryGroup != 'rainfall' %}style="display:none"{% endif %}
+                {%- endset -%}
+                {% if model.stations %}
+                <tr role="row" {{ hideRainfallHeader | safe }} data-group-type="rainfall">
+                  <th scope="col" role="columnheader">Gauge</th>
+                  <th scope="col" role="columnheader">1 hour</th>
+                  <th scope="col" role="columnheader">6 hours</th>
+                  <th scope="col" role="columnheader">24 hours</th>
+                </tr>
+                <tr role="row" {{ hideHeader | safe }} data-group-type="river,sea,groundwater">
+                  <th scope="col" role="columnheader">Gauge</th>
+                  <th scope="col" role="columnheader">Height</th>
+                  <th scope="col" role="columnheader">State</th>
+                </tr>
+              </thead>
+              <tbody class="defra-flood-levels-table__body" role="rowgroup">
+              {% for item in model.stations %}
+              {% include "partials/level-row.html" %}
+              {% endfor %}
+              </tbody>
+              {% endif %}
+            </table>
+          </div>
         </div>
-      </div>
+      {% endif %}
     {% endif %}
   {% endif %}
 {% endif %}
