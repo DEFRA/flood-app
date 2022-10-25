@@ -25,7 +25,7 @@
 {% endif %}
 
     <div class="defra-search govuk-form-group govuk-!-margin-bottom-2">
-      <form method="post">
+      <form method="post" action="/river-and-sea-levels/location">
         <label class="govuk-label defra-search__label" for="location">Search river, town or postcode </label>
         <div class="defra-search__container">
           <input class="defra-search__input" id="location" name="location" type="search" spellcheck="false" value="{% if not model.distStatement %}{{ model.q }}{% endif %}">
@@ -87,7 +87,7 @@
     {% endif %}
     {% if model.stations.length %}
 		<ul class="govuk-list" id="places-list">
-			<li><a href="/river-and-sea-levels?q={{model.placeAddress}}&includeTypes=place">{{ model.placeAddress | toMarked(model.q) | safe }}</a></li>
+			<li><a href="/river-and-sea-levels/location?q={{model.placeAddress}}&includeTypes=place">{{ model.placeAddress | toMarked(model.q) | safe }}</a></li>
 		</ul>
 		{% endif %}
 		<p>Alternatively try searching again</p>
@@ -106,7 +106,7 @@
           <ul class="defra-navbar__list" id="filter" data-controls="results">
             {% for filter in model.filters %}
             <li class="defra-navbar__item{% if filter.type == model.queryGroup %} defra-navbar__item--selected{% endif %}">
-              <a href="/river-and-sea-levels?q={{ model.q }}&group={{ filter.type }}" data-group-type="{{ filter.type }}">{{ filter.type | capitalize }} ({{ filter.count }})</a>
+              <a href="/river-and-sea-levels/location?q={{ model.q }}&group={{ filter.type }}" data-group-type="{{ filter.type }}">{{ filter.type | capitalize }} ({{ filter.count }})</a>
             </li>
             {% endfor %}
           </ul>
