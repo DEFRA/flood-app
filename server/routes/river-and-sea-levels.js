@@ -90,11 +90,7 @@ module.exports = [{
   path: `/${route}/location`,
   handler: async (request, h) => {
     const { location } = request.payload
-    if (!location) {
-      return h.redirect(`/${route}/location`).takeover()
-    } else {
-      return h.redirect(`/${route}/location?q=${encodeURIComponent(location)}`).takeover()
-    }
+    return h.redirect(`/${route}/location?q=${encodeURIComponent(location)}`).takeover()
   },
   options: {
     validate: {
