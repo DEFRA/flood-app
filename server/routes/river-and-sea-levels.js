@@ -27,8 +27,7 @@ module.exports = [{
       }
     }
     if (!place && rivers.length === 0) {
-      const noResultsModel = new ViewModel({ location, place })
-      return h.view(route, { model: noResultsModel, referer })
+      return h.view(route, { model: { q: location }, referer })
     }
     const stations = place ? await getStations(request, place) : undefined
     const model = new ViewModel({ location, place, stations, referer, rivers, queryGroup })
