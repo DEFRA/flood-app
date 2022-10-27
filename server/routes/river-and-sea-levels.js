@@ -1,6 +1,7 @@
 'use strict'
 
 const joi = require('@hapi/joi')
+const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/river-and-sea-levels')
 const locationService = require('../services/location')
 const util = require('../util')
@@ -12,7 +13,7 @@ module.exports = [{
   handler: async (request, h) => {
     const location = request.query.q
     const referer = request.headers.referer
-    const includeTypes = (request.query.includeTypes ?? 'place,river').split(',')
+    const includeTypes = request.query.includeTypes.split(',')
     const queryGroup = request.query.group
 
     let rivers = []
@@ -32,6 +33,38 @@ module.exports = [{
     const stations = place ? await getStations(request, place) : undefined
     const model = new ViewModel({ location, place, stations, referer, rivers, queryGroup })
     return h.view(route, { model })
+  },
+  options: {
+    validate: {
+      query: joi.object({
+        q: joi.string().trim().max(200),
+        group: joi.string().trim().max(11),
+        includeTypes: joi.string().default('place,river')
+      }),
+      failAction: (_request, h) => {
+        console.error('River and Sea levels search error: Invalid or no string input.')
+
+        return h.redirect()
+      }
+    }
+  }
+}, {
+  method: 'GET',
+  path: `/${route}/rainfall/{rainfallid}`,
+  handler: async (request, h) => {
+    const { rainfallid } = request.params
+    const rainfallStation = await request.server.methods.flood.getRainfallStation(rainfallid)
+
+    if (rainfallStation.length > 0) {
+      const x = rainfallStation[0].lon
+      const y = rainfallStation[0].lat
+
+      const stations = await request.server.methods.flood.getStationsByRadius(x, y, 8000)
+      const model = new ViewModel({ stations, rainfallid })
+      return h.view(route, { model })
+    }
+
+    return boom.notFound(`Rainfall Gauge "${rainfallid}" not found`)
   }
 }, {
   method: 'GET',
@@ -49,12 +82,13 @@ module.exports = [{
     if (location) {
       return h.redirect(`/${route}/location?q=${request.query.q}`)
     }
+    if (rainfallid) {
+      return h.redirect(`/${route}/rainfall/${rainfallid}`)
+    }
 
     if (rloiid) {
       originalStation = await request.server.methods.flood.getStationById(rloiid, 'u')
       stations = await getStations(request, place, rloiid, originalStation)
-    } else if (rainfallid) {
-      stations = await getStations(request, place, rloiid, originalStation, rainfallid)
     } else if (taCode) {
       stations = await getStations(request, place, rloiid, originalStation, rainfallid, taCode)
       targetArea = await request.server.methods.flood.getTargetArea(taCode)
