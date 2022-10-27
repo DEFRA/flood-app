@@ -46,7 +46,7 @@ class ViewModel {
 
     if (targetArea) {
       this.distStatement = `Showing levels within 5 miles of ${targetArea.ta_name}.`
-    } else if (rloiid) {
+    } else if (rloiid || rainfallid) {
       this.distStatement = `Showing levels within 5 miles of ${this.q}.`
     }
 

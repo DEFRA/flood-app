@@ -1016,7 +1016,6 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('Showing levels within 5 miles of Grants Bridge.')
     Code.expect(response.statusCode).to.equal(200)
   })
-
   lab.test('GET /river-and-sea-levels only groundwater stations', async () => {
     const floodService = require('../../server/services/flood')
 
@@ -1335,15 +1334,104 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.headers.location).to.equal('/river-and-sea-levels/rainfall/E24195')
   })
-  lab.test('GET /river-and-sea-levels?rainfall-id=GKHLETOY%%', async () => {
+  lab.test('GET /river-and-sea-levels/rainfall/E24195', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationsData = () => data.stationsWithRadiusRainfallid
+
+    const cachedStation = () => data.cachedRainfallStation
+
+    sandbox.stub(floodService, 'getStationsByRadius').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getRainfallStation').callsFake(cachedStation)
+
+    sandbox.stub(floodService, 'getStationsGeoJson').callsFake(cachedStation)
+
+    // Set cached stationsGeojson
+
+    floodService.stationsGeojson = await floodService.getStationsGeoJson()
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels/rainfall/E24195'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    const root = parse(response.payload)
+    const headings = root.querySelectorAll('h1').some(h => h.textContent.trim() === 'River, sea, groundwater and rainfall levels')
+    Code.expect(headings, 'Heading for levels found').to.be.true()
+    const searchBoxValue = root.querySelectorAll('input.defra-search__input#location')[0].attributes.value
+    Code.expect(searchBoxValue, 'Search box value').to.be.equal('')
+  })
+  lab.test('GET /river-and-sea-levels/rainfall/', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationsData = () => data.stationsWithRadiusRainfallid
+
+    const cachedStation = () => data.cachedRainfallStation
+
+    sandbox.stub(floodService, 'getStationsByRadius').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getRainfallStation').callsFake(cachedStation)
+
+    sandbox.stub(floodService, 'getStationsGeoJson').callsFake(cachedStation)
+
+    // Set cached stationsGeojson
+
+    floodService.stationsGeojson = await floodService.getStationsGeoJson()
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels/rainfall/'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.result.statusCode).to.equal(404)
+    Code.expect(response.result.message).to.equal('Not Found')
+  })
+  lab.test('GET /river-and-sea-levels/rainfall/GKHLETOY', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationsData = () => data.stationsWithinRadius
 
     const originalStation = () => data.rainfallStation.filter(function (rainfallStation) {
-      return rainfallStation.station_reference === 'GKHLETOY%%'
+      return rainfallStation.station_reference === 'GKHLETOY'
     })
 
     const cachedStation = () => data.cachedRainfallStation
@@ -1375,12 +1463,13 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/river-and-sea-levels?rainfall-id=GKHLETOY%%'
+      url: '/river-and-sea-levels/rainfall/GKHLETOY'
     }
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(500)
+    Code.expect(response.result.statusCode).to.equal(404)
+    Code.expect(response.result.message).to.equal('Rainfall Gauge "GKHLETOY" not found')
   })
   lab.test('GET /river-and-sea-levels?target-area=011FWFNC6KC', async () => {
     const floodService = require('../../server/services/flood')
