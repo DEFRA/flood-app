@@ -3,7 +3,6 @@ const ViewModel = require('../models/views/location')
 const OutlookTabsModel = require('../models/outlook-tabs')
 const locationService = require('../services/location')
 const util = require('../util')
-const LocationNotFoundError = require('../location-not-found-error')
 const formatDate = require('../util').formatDate
 const moment = require('moment-timezone')
 const tz = 'Europe/London'
@@ -21,15 +20,15 @@ module.exports = {
     }
 
     try {
-      place = await locationService.find(util.cleanseLocation(location))
+      [place] = await locationService.find(util.cleanseLocation(location))
     } catch (err) {
       console.error(`Location search error: [${err.name}] [${err.message}]`)
       console.error(err)
-      if (err instanceof LocationNotFoundError) {
-        return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location })
-      } else {
-        return h.view('location-error', { pageTitle: 'Sorry, there is a problem with the service - Check for flooding', location: location })
-      }
+      return h.view('location-error', { pageTitle: 'Sorry, there is a problem with the service - Check for flooding', location: location })
+    }
+
+    if (!place) {
+      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location })
     }
 
     if (!place.isEngland.is_england) {

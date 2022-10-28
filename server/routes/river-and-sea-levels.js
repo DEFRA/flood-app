@@ -4,7 +4,6 @@ const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/river-and-sea-levels')
 const locationService = require('../services/location')
-const LocationNotFoundError = require('../location-not-found-error')
 const util = require('../util')
 const route = 'river-and-sea-levels'
 
@@ -162,18 +161,9 @@ const getStations = async (request, place, rloiid, originalStation, rainfallid, 
   }
 }
 
-const notinUk = place => !place.isUK || place.isScotlandOrNorthernIreland
+const inUk = place => place?.isUK && !place?.isScotlandOrNorthernIreland
 
 async function findPlace (location) {
-  let place
-  try {
-    place = await locationService.find(util.cleanseLocation(location))
-    place = notinUk(place) ? undefined : place
-  } catch (error) {
-    if (!(error instanceof LocationNotFoundError)) {
-      console.error(`Location service error when searching for ${location}`)
-      throw error
-    }
-  }
-  return place
+  const [place] = await locationService.find(util.cleanseLocation(location))
+  return inUk(place) ? place : undefined
 }
