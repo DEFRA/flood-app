@@ -150,6 +150,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/error-pages'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -163,9 +164,74 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
+    // TODO: check that this is really what we want to do if bing is not available
+    // Looks like current live displays all stations if bing is unavailable
+    //
+    // Code.expect(response.payload).to.contain('No results for \'WA4 1HT\'')
+    // Code.expect(response.payload).to.contain('<p><strong>Call Floodline for advice</strong></p>\n')
+    // Code.expect(response.statusCode).to.equal(200)
+
+    Code.expect(response.statusCode).to.equal(500)
+    Code.expect(response.payload).to.contain('Sorry, there is a problem with the search')
+  })
+  lab.test('GET /rivers-and-sea-levels Bing returns no results', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationsData = () => []
+
+    sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
+
+    const fakeRiversData = () => []
+
+    sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
+
+    const fakeGetJson = () => {
+      return {
+        authenticationResultCode: 'ValidCredentials',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright',
+        resourceSets: [
+          {
+            estimatedTotal: 0,
+            resources: []
+          }
+        ],
+        statusCode: 200,
+        statusDescription: 'OK',
+        traceId: 'trace-id'
+      }
+    }
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels/location?q=WA4%201HT'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('No results for \'WA4 1HT\'')
     Code.expect(response.payload).to.contain('<p><strong>Call Floodline for advice</strong></p>\n')
-    Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /river-and-sea-levels with levels Low, Normal, High', async () => {
     const floodService = require('../../server/services/flood')
@@ -1259,7 +1325,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
           }
         ],
         statusCode: 200,
-        tatusDescription: 'OK',
+        statusDescription: 'OK',
         traceId: 'trace-id'
       }
     }
@@ -1534,7 +1600,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
           }
         ],
         statusCode: 200,
-        tatusDescription: 'OK',
+        statusDescription: 'OK',
         traceId: 'trace-id'
       }
     }

@@ -44,6 +44,10 @@ module.exports = {
             return h.view('404').code(404)
           }
 
+          if (statusCode === 500 && response.name === 'LocationSearchError') {
+            return h.view('location-error').code(statusCode)
+          }
+
           // The return the `500` view
           return h.view('500').code(statusCode)
         }
