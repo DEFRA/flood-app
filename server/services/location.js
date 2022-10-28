@@ -14,7 +14,7 @@ async function find (location) {
     bingData = await getJson(url, true)
   } catch (err) {
     console.error(err)
-    throw err
+    throw new LocationSearchError(`Bing error: ${err}`)
   }
 
   // At this point we expect to have received a 200 status code from location search api call

@@ -4,6 +4,7 @@ const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/river-and-sea-levels')
 const locationService = require('../services/location')
+const LocationNotFoundError = require('../location-not-found-error')
 const util = require('../util')
 const route = 'river-and-sea-levels'
 
@@ -19,6 +20,7 @@ module.exports = [{
     let rivers = []
     let place
     if (location && !location.match(/^england$/i)) {
+      // Note: allow any exceptions to bubble up and be handled by the errors plugin
       if (includeTypes.includes('place')) {
         place = await findPlace(util.cleanseLocation(location))
       }
@@ -168,8 +170,10 @@ async function findPlace (location) {
     place = await locationService.find(util.cleanseLocation(location))
     place = notinUk(place) ? undefined : place
   } catch (error) {
-    console.error(`Location search error: [${error.name}] [${error.message}]`)
-    console.error(error)
+    if (!(error instanceof LocationNotFoundError)) {
+      console.error(`Location service error when searching for ${location}`)
+      throw error
+    }
   }
   return place
 }
