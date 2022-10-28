@@ -59,6 +59,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/error-pages'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -72,8 +73,8 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('No results for \'wefwe we fwef str\'')
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('No results for \'wefwe we fwef str\'')
   })
   lab.test('GET /river-and-see-levels with query parameters of Kinghorn, Scotland', async () => {
     const floodService = require('../../server/services/flood')

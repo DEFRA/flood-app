@@ -34,16 +34,15 @@ async function find (location) {
     throw new LocationNotFoundError('Invalid geocode results (no resourceSets)')
   }
 
-  // Ensure we have some results
   const set = bingData.resourceSets[0]
   if (set.estimatedTotal === 0) {
-    throw new LocationNotFoundError('Location search returned no results')
+    return []
   }
 
   const data = set.resources[0]
 
   if (data.confidence.toLowerCase() === 'low') {
-    throw new LocationNotFoundError('Location search returned only low confidence results')
+    return []
   }
 
   const {
@@ -70,7 +69,7 @@ async function find (location) {
   // add on 10000m buffer to place.bbox for stations search
   const bbox10k = addBufferToBbox(bbox, 10000)
 
-  return {
+  return [{
     name,
     center,
     bbox2k,
@@ -79,7 +78,7 @@ async function find (location) {
     isEngland,
     isUK,
     isScotlandOrNorthernIreland
-  }
+  }]
 }
 
 module.exports = { find }
