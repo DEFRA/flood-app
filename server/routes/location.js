@@ -13,19 +13,11 @@ module.exports = {
   handler: async (request, h) => {
     const location = request.query.q || request.query.location
 
-    let place
-
     if (location.match(/^england$/i)) {
       return h.redirect('/')
     }
 
-    try {
-      [place] = await locationService.find(util.cleanseLocation(location))
-    } catch (err) {
-      console.error(`Location search error: [${err.name}] [${err.message}]`)
-      console.error(err)
-      return h.view('location-error', { pageTitle: 'Sorry, there is a problem with the service - Check for flooding', location: location })
-    }
+    const [place] = await locationService.find(util.cleanseLocation(location))
 
     if (!place) {
       return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location })
