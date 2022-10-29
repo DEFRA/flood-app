@@ -45,7 +45,9 @@ module.exports = {
           }
 
           if (statusCode === 500 && response.name === 'LocationSearchError') {
-            return h.view('location-error').code(statusCode)
+            return h.view('location-error', {
+              pageTitle: 'Sorry, there is a problem with the search - Check for flooding'
+            }).code(statusCode)
           }
 
           // The return the `500` view
