@@ -3,7 +3,6 @@ const { getJson, addBufferToBbox, formatName } = require('../util')
 const floodServices = require('./flood')
 const util = require('util')
 const LocationSearchError = require('../location-search-error')
-const LocationNotFoundError = require('../location-not-found-error')
 
 async function find (location) {
   const query = encodeURIComponent(location)
@@ -31,7 +30,7 @@ async function find (location) {
 
   // Check that the json is relevant
   if (!bingData.resourceSets || !bingData.resourceSets.length) {
-    throw new LocationNotFoundError('Invalid geocode results (no resourceSets)')
+    throw new LocationSearchError('Invalid geocode results (no resourceSets)')
   }
 
   const set = bingData.resourceSets[0]
