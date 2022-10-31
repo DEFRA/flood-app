@@ -166,7 +166,7 @@
 {% block bodyEnd %}
 {{ super() }}
 <script>
-  window.flood.model = {{ model.export | dump(2) | safe }}
+  window.flood.model = {{ model.exports | dump(2) | safe }}
 </script>
 <script src="{{assetPath}}/js/templates.js"></script>
 <script src="{{assetPath}}/js/river-and-sea-levels.js"></script>
