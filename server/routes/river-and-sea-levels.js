@@ -2,7 +2,7 @@
 
 const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
-const { ViewModel } = require('../models/views/river-and-sea-levels')
+const { RainfallViewModel, ViewModel } = require('../models/views/river-and-sea-levels')
 const locationService = require('../services/location')
 const util = require('../util')
 const route = 'river-and-sea-levels'
@@ -53,7 +53,6 @@ module.exports = [{
   path: `/${route}/rainfall/{rainfallid}`,
   handler: async (request, h) => {
     const { rainfallid } = request.params
-    const queryGroup = request.query.group
     const rainfallStation = await request.server.methods.flood.getRainfallStation(rainfallid)
 
     if (rainfallStation.length > 0) {
@@ -61,7 +60,7 @@ module.exports = [{
       const y = rainfallStation[0].lat
 
       const stations = await request.server.methods.flood.getStationsByRadius(x, y, 8000)
-      const model = new ViewModel({ stations, rainfallid, queryGroup })
+      const model = new RainfallViewModel({ stations, rainfallid })
       return h.view(route, { model })
     }
 
