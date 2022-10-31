@@ -2,64 +2,84 @@ const turf = require('@turf/turf')
 const moment = require('moment-timezone')
 const { bingKeyMaps, floodRiskUrl } = require('../../config')
 
-class ViewModel {
-  constructor ({ location, place, stations, referer, queryGroup, rivers, rloiid, rainfallid, originalStation, targetArea, riverid, error }) {
-    this.error = !!error
-    let bbox
-    this.isEngland = place ? place.isEngland.is_england : true
+function ViewModel ({ location, place, stations, referer, queryGroup, rivers, rloiid, rainfallid, originalStation, targetArea, riverid, error }) {
+  error = !!error
+  let bbox, filters, activeFilter, distStatement, pageTitle, metaDescription, center, stationsBbox
+  const isEngland = place ? place.isEngland.is_england : true
 
-    if (stations && this.isEngland) {
-      ({ originalStation, bbox } = this.mapProperties(rloiid, originalStation, stations, bbox, rainfallid, targetArea, riverid))
-      stations.forEach(station => {
-        this.stationProperties(station, place, stations, originalStation)
+  if (stations && isEngland) {
+    ({ originalStation, bbox } = mapProperties(rloiid, originalStation, stations, bbox, rainfallid, targetArea, riverid))
+    stations.forEach(station => {
+      stationProperties(station, place, stations, originalStation)
+    })
+    stations.sort((a, b) => a.distance - b.distance)
+
+    // ref: https://flaviocopes.com/javascript-destructure-object-to-existing-variable/
+    ;({ filters, activeFilter } = setFilters(stations, queryGroup))
+
+    stations.forEach(station => {
+      Object.keys(station).forEach(key => {
+        if (station[key] === null) {
+          delete station[key]
+        }
       })
-      stations.sort((a, b) => a.distance - b.distance)
+    })
 
-      const { filters, activeFilter } = this.setFilters(stations, queryGroup)
+    stations = isEngland ? stations : []
+    queryGroup = activeFilter.type
+  }
+  stations = isEngland ? stations : []
 
-      stations.forEach(station => {
-        Object.keys(station).forEach(key => {
-          if (station[key] === null) {
-            delete station[key]
-          }
-        })
-      })
+  const q = location || originalStation?.external_name || getRiverName(stations)
+  // const originalStationId = originalStation?.rloi_id
+  const placeName = place ? place.name : null
+  // const placeCentre = place ? place.center : []
+  const placeAddress = place ? place.address : null
+  const exports = {
+    placeBox: bbox || getPlaceBox(place, stations),
+    bingMaps: bingKeyMaps
+  }
+  const isMultilpleMatch = rivers?.length > 0
 
-      this.stations = this.isEngland ? stations : []
-      this.filters = filters
-      this.queryGroup = activeFilter.type
-    }
-
-    this.q = location || originalStation?.external_name || this.getRiverName(stations)
-    this.originalStationId = originalStation?.rloi_id
-    this.placeName = place ? place.name : null
-    this.placeCentre = place ? place.center : []
-    this.placeAddress = place ? place.address : null
-    this.export = {
-      placeBox: bbox || this.getPlaceBox(place, stations),
-      bingMaps: bingKeyMaps
-    }
-    this.referer = referer
-    this.rivers = rivers
-    this.floodRiskUrl = floodRiskUrl
-    this.isMultilpleMatch = rivers?.length > 0
-
-    if (targetArea) {
-      this.distStatement = `Showing levels within 5 miles of ${targetArea.ta_name}.`
-    } else if (rloiid || rainfallid) {
-      this.distStatement = `Showing levels within 5 miles of ${this.q}.`
-    }
-
-    if (this.placeName && this.isEngland) {
-      this.pageTitle = `${this.placeName} - Find river, sea, groundwater and rainfall levels`
-      this.metaDescription = `Find river, sea, groundwater and rainfall levels in ${this.placeName}. Check the last updated height and state recorded by the gauges.`
-    } else {
-      this.pageTitle = 'Find river, sea, groundwater and rainfall levels'
-      this.metaDescription = 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
-    }
+  if (targetArea) {
+    distStatement = `Showing levels within 5 miles of ${targetArea.ta_name}.`
+  } else if (rloiid || rainfallid) {
+    distStatement = `Showing levels within 5 miles of ${q}.`
   }
 
-  setFilters (stations, queryGroup) {
+  if (placeName && isEngland) {
+    pageTitle = `${placeName} - Find river, sea, groundwater and rainfall levels`
+    metaDescription = `Find river, sea, groundwater and rainfall levels in ${placeName}. Check the last updated height and state recorded by the gauges.`
+  } else {
+    pageTitle = 'Find river, sea, groundwater and rainfall levels'
+    metaDescription = 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
+  }
+
+  return {
+    // exposed as class properties - but not used
+    // activeFilter,
+    // originalStationId,
+    // placeName,
+    // placeCentre,
+    // referer,
+    // center,
+    // stationsBbox,
+    stations,
+    isEngland,
+    filters,
+    queryGroup,
+    q,
+    placeAddress,
+    exports,
+    rivers,
+    floodRiskUrl,
+    isMultilpleMatch,
+    distStatement,
+    pageTitle,
+    metaDescription
+  }
+
+  function setFilters (stations, queryGroup) {
     const filters = ['river', 'sea', 'rainfall', 'groundwater'].map(item => ({
       type: item,
       count: stations.filter(station => station.group_type === item).length
@@ -69,65 +89,65 @@ class ViewModel {
     return { filters, activeFilter }
   }
 
-  mapProperties (rloiid, originalStation, stations, bbox, rainfallid, targetArea, riverid) {
+  function mapProperties (rloiid, originalStation, stations, bbox, rainfallid, targetArea, riverid) {
     if (rloiid) {
       originalStation = stations.find(station => JSON.stringify(station.rloi_id) === rloiid)
-      const center = this.createCenter(stations)
+      center = createCenter(stations)
       originalStation.center = center.geometry
-      bbox = this.createBbox(stations)
+      bbox = createBbox(stations)
     }
     if (rainfallid) {
       originalStation = stations.find(station => station.telemetry_id === rainfallid)
-      const center = this.createCenter(stations)
+      const center = createCenter(stations)
       originalStation.center = center.geometry
-      bbox = this.createBbox(stations)
+      bbox = createBbox(stations)
     }
     if (targetArea) {
-      bbox = this.createBbox(stations)
+      bbox = createBbox(stations)
     }
     if (riverid) {
-      bbox = this.createBbox(stations)
+      bbox = createBbox(stations)
     }
     return { originalStation, bbox }
   }
 
-  createCenter (stations) {
+  function createCenter (stations) {
     const points = stations.map(station => [Number(station.lat), Number(station.lon)])
     const features = turf.points(points)
     return turf.center(features)
   }
 
-  createBbox (stations) {
+  function createBbox (stations) {
     const lons = stations.map(s => Number(s.lon))
     const lats = stations.map(s => Number(s.lat))
 
     return lons.length && lats.length ? [Math.min(...lons), Math.min(...lats), Math.max(...lons), Math.max(...lats)] : []
   }
 
-  stationProperties (station, place, stations, originalStation) {
-    station.external_name = this.formatName(station.external_name)
-    station.displayData = this.getDisplayData(station)
-    station.latestDatetime = station.status === 'Active' ? this.formattedTime(station) : null
-    station.formattedValue = station.status === 'Active' ? this.formatValue(station, station.value) : null
-    station.state = this.getStationState(station)
+  function stationProperties (station, place, stations, originalStation) {
+    station.external_name = formatName(station.external_name)
+    station.displayData = getDisplayData(station)
+    station.latestDatetime = station.status === 'Active' ? formattedTime(station) : null
+    station.formattedValue = station.status === 'Active' ? formatValue(station, station.value) : null
+    station.state = getStationState(station)
 
-    this.stationGroup(station)
+    stationGroup(station)
 
     if (!originalStation) {
       const coords = stations.map(s => [Number(s.lat), Number(s.lon)])
 
       const features = turf.points(coords)
 
-      this.center = turf.center(features)
+      center = turf.center(features)
     }
 
-    const originCenter = originalStation ? originalStation.center.coordinates : this.center.geometry.coordinates
+    const originCenter = originalStation ? originalStation.center.coordinates : center.geometry.coordinates
 
-    const distance = place ? this.calcDistance(station, place.center) : this.calcDistance(station, originCenter)
+    const distance = place ? calcDistance(station, place.center) : calcDistance(station, originCenter)
     station.distance = distance
   }
 
-  stationGroup (station) {
+  function stationGroup (station) {
     if ((station.station_type === 'S') || (station.station_type === 'M') || (station.station_type === 'C' && station.river_id !== 'Sea Levels')) {
       station.group_type = 'river'
     } else if (station.station_type === 'C') {
@@ -139,18 +159,18 @@ class ViewModel {
     }
   }
 
-  getDisplayData (station) {
+  function getDisplayData (station) {
     return !(station.status === 'Suspended' || station.status === 'Closed' || station.value === null || station.value_erred === true || station.iswales)
   }
 
-  getRiverName (stations) {
+  function getRiverName (stations) {
     if (stations) {
       return stations[0].river_name
     }
     return ''
   }
 
-  calcDistance (station, place) {
+  function calcDistance (station, place) {
     const from = turf.point([station.lon, station.lat])
     const to = turf.point(place)
     const options = { units: 'meters' }
@@ -158,7 +178,7 @@ class ViewModel {
     return turf.distance(from, to, options)
   }
 
-  formattedTime (station) {
+  function formattedTime (station) {
     if (!station.displayData) {
       return null
     } else if (station.value_timestamp) {
@@ -170,7 +190,7 @@ class ViewModel {
     return null
   }
 
-  formatValue (station, val) {
+  function formatValue (station, val) {
     if (!station.displayData) {
       return null
     } else {
@@ -179,7 +199,7 @@ class ViewModel {
     }
   }
 
-  getStationState (station) {
+  function getStationState (station) {
     if (!station.displayData) {
       return null
     }
@@ -196,19 +216,21 @@ class ViewModel {
     }
   }
 
-  formatName (name) {
+  function formatName (name) {
     return name.toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())
   }
 
-  getPlaceBox (place, stations) {
+  function getPlaceBox (place, stations) {
     let placeBox = []
-    if (place && this.isEngland) {
+    if (place && isEngland) {
       placeBox = place.bbox10k
     } else if (stations) {
-      placeBox = this.stationsBbox
+      placeBox = stationsBbox
     }
     return placeBox
   }
 }
 
-module.exports = ViewModel
+module.exports = {
+  ViewModel
+}

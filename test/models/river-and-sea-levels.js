@@ -4,7 +4,7 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
-const ViewModel = require('../../server/models/views/river-and-sea-levels')
+const { ViewModel } = require('../../server/models/views/river-and-sea-levels')
 const data = require('../data')
 
 lab.experiment('river-and-sea-levels model test', () => {
@@ -18,7 +18,7 @@ lab.experiment('river-and-sea-levels model test', () => {
   })
   lab.test('Test river-and-sea-level viewModel returns stations', async () => {
     const stationsData = data.riverAndSeaLevelData
-    const viewModel = new ViewModel(stationsData)
+    const viewModel = ViewModel(stationsData)
 
     const Result = viewModel
     Code.expect(Result.stations.length).to.equal(76)
@@ -28,7 +28,7 @@ lab.experiment('river-and-sea-levels model test', () => {
   lab.test('Test river-and-sea-level viewModel returns stations in distance order', async () => {
     const stationsData = data.riverAndSeaLevelDataUnordered
     const firstStation = data.riverAndSeaLevelDataUnordered.stations[0]
-    const viewModel = new ViewModel(stationsData)
+    const viewModel = ViewModel(stationsData)
 
     const Result = viewModel
     Code.expect(Result.stations[2].distance).to.be.greaterThan(Result.stations[1].distance)
@@ -37,7 +37,7 @@ lab.experiment('river-and-sea-levels model test', () => {
   })
   lab.test('Test river-and-sea-level viewModel filters stations into groups', async () => {
     const stationsData = data.riverAndSeaLevelData
-    const viewModel = new ViewModel(stationsData)
+    const viewModel = ViewModel(stationsData)
 
     const Result = viewModel
     Code.expect(Result.filters[0].count).to.equal(74)
@@ -47,14 +47,14 @@ lab.experiment('river-and-sea-levels model test', () => {
   })
   lab.test('Test river-and-sea-level viewModel returns formatted date time for stations', async () => {
     const stationsData = data.riverAndSeaLevelData
-    const viewModel = new ViewModel(stationsData)
+    const viewModel = ViewModel(stationsData)
 
     const Result = viewModel
     Code.expect(Result.stations[0].latestDatetime).to.equal('Updated 5:30am, 16 July ')
   })
   lab.test('Test river-and-sea-level viewModel returns formattedValue with correct number of decimal places', async () => {
     const stationsData = data.riverAndSeaLevelData
-    const viewModel = new ViewModel(stationsData)
+    const viewModel = ViewModel(stationsData)
 
     const Result = viewModel
 
@@ -70,7 +70,7 @@ lab.experiment('river-and-sea-levels model test', () => {
   })
   lab.test('Test river-and-sea-level viewModel returns rivers', async () => {
     const riversData = data.riverAndSeaLevelData
-    const viewModel = new ViewModel(riversData)
+    const viewModel = ViewModel(riversData)
 
     const Result = viewModel
 
@@ -80,7 +80,7 @@ lab.experiment('river-and-sea-levels model test', () => {
   })
   lab.test('Test river-and-sea-level viewModel flags multiple match', async () => {
     const riversData = data.riverAndSeaLevelData
-    const viewModel = new ViewModel(riversData)
+    const viewModel = ViewModel(riversData)
 
     const Result = viewModel
 
