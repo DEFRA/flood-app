@@ -246,7 +246,7 @@ function BarChart (containerId, stationId, data) {
     for (let i = 0; i < bands.length; i++) {
       numBands += Object.getOwnPropertyDescriptor(dataCache, bands[i].period) ? 1 : 0
     }
-    // Determin which controls to display
+    // Determine which controls to display
     forEach(segmentedControl.querySelectorAll('.defra-chart-segmented-control input'), input => {
       const isBand = period === input.getAttribute('data-period')
       const band = bands.find(x => x.period === input.getAttribute('data-period'))
@@ -311,10 +311,10 @@ function BarChart (containerId, stationId, data) {
       // New XMLHttp request
       return
     }
-    // Determin which resolution and telemetry set to use
+    // Determine which resolution and telemetry set to use
     const pageDuration = pageEnd.getTime() - pageStart.getTime()
-    const pageDurationHours = pageDuration / (1000 * 60 * 60)
-    const pageDurationDays = pageDuration / (1000 * 60 * 60 * 24)
+    const pageDurationHours = Math.floor(pageDuration / (1000 * 60 * 60))
+    const pageDurationDays = Math.floor(pageDuration / (1000 * 60 * 60 * 24))
     for (let i = 0; i < bands.length; i++) {
       if (pageDurationDays <= bands[i].days) {
         period = bands[i].period
