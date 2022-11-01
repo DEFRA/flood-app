@@ -49,7 +49,7 @@ function calcDistance (station, place) {
   return turf.distance(from, to, options)
 }
 
-function formattedTime (station) {
+function getFormattedTime (station) {
   if (!station.displayData) {
     return null
   } else if (station.value_timestamp) {
@@ -104,7 +104,9 @@ function deleteUndefinedProperties (stations) {
 function RainfallViewModel (referencePoint, stations) {
   const center = turf.point([referencePoint.lon, referencePoint.lat]).geometry
   const bbox = createBbox(stations)
-  stations.forEach(station => { setStationProperties(station, center.coordinates) })
+  stations.forEach(station => {
+    setStationProperties(station, center.coordinates)
+  })
   stations.sort((a, b) => a.distance - b.distance)
 
   const { filters, activeFilter: queryGroup } = setFilters(stations)
@@ -136,7 +138,7 @@ function RainfallViewModel (referencePoint, stations) {
   function setStationProperties (station, referenceCoordinates) {
     station.external_name = formatName(station.external_name)
     station.displayData = getDisplayData(station)
-    station.latestDatetime = station.status === 'Active' ? formattedTime(station) : null
+    station.latestDatetime = station.status === 'Active' ? getFormattedTime(station) : null
     station.formattedValue = station.status === 'Active' ? formatValue(station, station.value) : null
     station.state = getStationState(station)
     station.group_type = getStationGroup(station)
@@ -238,7 +240,7 @@ function ViewModel ({ location, place, stations, referer, queryGroup, rivers, rl
   function stationProperties (station, place, stations, originalStation) {
     station.external_name = formatName(station.external_name)
     station.displayData = getDisplayData(station)
-    station.latestDatetime = station.status === 'Active' ? formattedTime(station) : null
+    station.latestDatetime = station.status === 'Active' ? getFormattedTime(station) : null
     station.formattedValue = station.status === 'Active' ? formatValue(station, station.value) : null
     station.state = getStationState(station)
 
