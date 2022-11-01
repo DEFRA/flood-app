@@ -101,7 +101,7 @@ function deleteUndefinedProperties (stations) {
   })
 }
 
-function RainfallViewModel (referencePoint, stations) {
+function ReferencedStationViewModel (referencePoint, stations) {
   const center = turf.point([referencePoint.lon, referencePoint.lat]).geometry
   const bbox = createBbox(stations)
   stations.forEach(station => {
@@ -278,6 +278,6 @@ function ViewModel ({ location, place, stations, referer, queryGroup, rivers, rl
 }
 
 module.exports = {
-  RainfallViewModel,
+  ReferencedStationViewModel,
   ViewModel
 }

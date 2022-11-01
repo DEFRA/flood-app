@@ -2,7 +2,7 @@
 
 const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
-const { RainfallViewModel, ViewModel } = require('../models/views/river-and-sea-levels')
+const { ReferencedStationViewModel, ViewModel } = require('../models/views/river-and-sea-levels')
 const locationService = require('../services/location')
 const util = require('../util')
 const route = 'river-and-sea-levels'
@@ -63,7 +63,7 @@ module.exports = [{
         lon: rainfallStation.lon
       }
       const stations = await request.server.methods.flood.getStationsByRadius(referencePoint.lon, referencePoint.lat, 8000)
-      const model = new RainfallViewModel(referencePoint, stations)
+      const model = new ReferencedStationViewModel(referencePoint, stations)
       return h.view(route, { model })
     }
 
