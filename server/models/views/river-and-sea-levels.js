@@ -146,8 +146,7 @@ function RainfallViewModel (referencePoint, stations) {
   }
 }
 
-function ViewModel ({ location, place, stations, referer, queryGroup, rivers, rloiid, rainfallid, originalStation, targetArea, riverid, error }) {
-  error = !!error
+function ViewModel ({ location, place, stations, referer, queryGroup, rivers, rloiid, rainfallid, originalStation, targetArea, riverid }) {
   let bbox, filters, activeFilter, distStatement, pageTitle, metaDescription, center, stationsBbox
   const isEngland = place ? place.isEngland.is_england : true
 
