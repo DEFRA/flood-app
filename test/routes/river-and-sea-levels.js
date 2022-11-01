@@ -1449,6 +1449,8 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(headings, 'Heading for levels found').to.be.true()
     const searchBoxValue = root.querySelectorAll('input.defra-search__input#location')[0].attributes.value
     Code.expect(searchBoxValue, 'Search box value').to.be.equal('')
+    const paragraphs = root.querySelectorAll('p.govuk-body').some(p => p.textContent.trim() === 'Showing levels within 5 miles of EASTHAVEN BARRIER.')
+    Code.expect(paragraphs, 'Distance message found').to.be.true()
   })
   lab.test('GET /river-and-sea-levels/rainfall/', async () => {
     const floodService = require('../../server/services/flood')
@@ -1538,7 +1540,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.result.statusCode).to.equal(404)
     Code.expect(response.result.message).to.equal('Rainfall Gauge "GKHLETOY" not found')
   })
-  lab.test('GET /river-and-sea-levels?target-area=011FWFNC6KC', async () => {
+  lab.test('GET /river-and-sea-levels?target-area=011FWFNC6KC should redirect', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationsData = () => data.stationsWithinTa
@@ -1572,9 +1574,47 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('River (8)')
-    Code.expect(response.payload).to.contain('Showing levels within 5 miles of Keswick Campsite.')
+    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.headers.location).to.equal('/river-and-sea-levels/target-area/011FWFNC6KC')
+  })
+  lab.test('GET /river-and-sea-levels/target-area/011FWFNC6KC', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationsData = () => data.stationsWithinTa
+
+    const fakeTargetAreaData = () => data.getTA
+
+    sandbox.stub(floodService, 'getStationsWithinTargetArea').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getTargetArea').callsFake(fakeTargetAreaData)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/error-pages'))
+    await server.register(riversPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels/target-area/011FWFNC6KC'
+    }
+
+    const response = await server.inject(options)
+
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('River (8)')
+    Code.expect(response.payload).to.contain('Showing levels within the target area Keswick Campsite.')
   })
   lab.test('GET /river-and-sea-levels/location?q=tyne returns river list', async () => {
     const floodService = require('../../server/services/flood')
