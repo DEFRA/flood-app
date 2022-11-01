@@ -1,0 +1,20 @@
+# Check for flooding 5.12.2 Tuesday 1st November 2022
+
+# Release
+
+5.12.2
+
+https://eaflood.atlassian.net/projects/FSR/versions/16198/tab/release-report-all-issues
+
+# Tickets
+
+https://eaflood.atlassian.net/browse/FSR-628
+
+# Instructions
+
+Straight forward application build for release
+
+LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
+
