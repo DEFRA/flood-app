@@ -112,9 +112,6 @@ module.exports = [{
     if (rloiid) {
       originalStation = await request.server.methods.flood.getStationById(rloiid, 'u')
       stations = await getStations(request, place, rloiid, originalStation)
-    } else if (taCode) {
-      stations = await getStations(request, place, rloiid, originalStation, rainfallid, taCode)
-      targetArea = await request.server.methods.flood.getTargetArea(taCode)
     } else if (riverid) {
       stations = await getStations(request, place, rloiid, originalStation, rainfallid, taCode, riverid)
     }
@@ -168,15 +165,6 @@ const getStations = async (request, place, rloiid, originalStation, rainfallid, 
     const y = coordinates.coordinates[1]
 
     return request.server.methods.flood.getStationsByRadius(x, y, 8000)
-  } else if (rainfallid) {
-    const rainfallStation = await request.server.methods.flood.getRainfallStation(rainfallid)
-
-    const x = rainfallStation[0].lon
-    const y = rainfallStation[0].lat
-
-    return request.server.methods.flood.getStationsByRadius(x, y, 8000)
-  } else if (taCode) {
-    return request.server.methods.flood.getStationsWithinTargetArea(taCode)
   } else if (riverid) {
     return request.server.methods.flood.getRiverById(riverid)
   } else {
