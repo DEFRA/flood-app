@@ -53,14 +53,14 @@ module.exports = [{
   path: `/${route}/rainfall/{rainfallid}`,
   handler: async (request, h) => {
     const { rainfallid } = request.params
-    const rainfallStation = await request.server.methods.flood.getRainfallStation(rainfallid)
+    const rainfallStations = await request.server.methods.flood.getRainfallStation(rainfallid)
 
-    if (rainfallStation.length > 0) {
-      const x = rainfallStation[0].lon
-      const y = rainfallStation[0].lat
+    if (rainfallStations.length > 0) {
+      const x = rainfallStations[0].lon
+      const y = rainfallStations[0].lat
 
       const stations = await request.server.methods.flood.getStationsByRadius(x, y, 8000)
-      const model = new RainfallViewModel({ stations, rainfallid })
+      const model = new RainfallViewModel(rainfallStations[0].station_name, stations)
       return h.view(route, { model })
     }
 
