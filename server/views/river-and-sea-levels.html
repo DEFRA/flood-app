@@ -10,20 +10,6 @@
     </h1>
     {% if model.distStatement %}<p class="govuk-body">{{ model.distStatement }}</p>{% endif %} 
 
-    {% if model.error %}
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-          <div class="defra-service-error govuk-!-margin-bottom-7">
-            <h2 class="defra-service-error__title" id="error-summary-title">
-              Sorry, there is a problem with the search
-            </h2>
-            <p>Try again later, or contact Floodline.</p>
-            {% include "partials/context-footer.html" %}
-          </div>
-        </div>
-      </div>
-    {% endif %}
-
     <div class="defra-search govuk-form-group govuk-!-margin-bottom-2">
       <form method="post" action="/river-and-sea-levels/location">
         <label class="govuk-label defra-search__label" for="location">Search river, town or postcode </label>
@@ -44,7 +30,6 @@
   </div>
 </div>
 
-{% if not model.error %}
   {% if model.q and not model.stations | length and model.q and not model.rivers | length or model.isEngland === false and not model.rivers  %}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
@@ -149,13 +134,10 @@
       {% endif %}
     {% endif %}
   {% endif %}
-{% endif %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    {% if not model.error %}
     {% include "partials/context-footer.html" %}
-    {% endif %}
     {% include "partials/related-content.html" %}
   </div>
 </div>
