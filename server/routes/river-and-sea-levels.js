@@ -2,7 +2,7 @@
 
 const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
-const { ReferencedStationViewModel, ViewModel } = require('../models/views/river-and-sea-levels')
+const { AreaViewModel, ReferencedStationViewModel, ViewModel } = require('../models/views/river-and-sea-levels')
 const locationService = require('../services/location')
 const util = require('../util')
 const route = 'river-and-sea-levels'
@@ -50,6 +50,21 @@ module.exports = [{
   }
 }, {
   method: 'GET',
+  path: `/${route}/target-area/{targetAreaCode}`,
+  handler: async (request, h) => {
+    const { targetAreaCode } = request.params
+    const targetArea = await request.server.methods.flood.getTargetArea(targetAreaCode)
+
+    if (targetArea) {
+      const stations = await request.server.methods.flood.getStationsWithinTargetArea(targetAreaCode)
+      const model = AreaViewModel(targetArea.ta_name, stations)
+      return h.view(route, { model })
+    }
+
+    return boom.notFound(`Target area "${targetAreaCode}" not found`)
+  }
+}, {
+  method: 'GET',
   path: `/${route}/rainfall/{rainfallid}`,
   handler: async (request, h) => {
     const { rainfallid } = request.params
@@ -57,12 +72,14 @@ module.exports = [{
 
     if (rainfallStations.length > 0) {
       const rainfallStation = rainfallStations[0]
+      const radius = 8000 // metres
+      const distanceInMiles = Math.round(radius / 1609.344)
       const referencePoint = {
-        name: rainfallStation.station_name,
         lat: rainfallStation.lat,
-        lon: rainfallStation.lon
+        lon: rainfallStation.lon,
+        distStatement: `Showing levels within ${distanceInMiles} miles of ${rainfallStation.station_name}.`
       }
-      const stations = await request.server.methods.flood.getStationsByRadius(referencePoint.lon, referencePoint.lat, 8000)
+      const stations = await request.server.methods.flood.getStationsByRadius(referencePoint.lon, referencePoint.lat, radius)
       const model = new ReferencedStationViewModel(referencePoint, stations)
       return h.view(route, { model })
     }
@@ -87,6 +104,9 @@ module.exports = [{
     }
     if (rainfallid) {
       return h.redirect(`/${route}/rainfall/${rainfallid}`)
+    }
+    if (taCode) {
+      return h.redirect(`/${route}/target-area/${taCode}`)
     }
 
     if (rloiid) {
