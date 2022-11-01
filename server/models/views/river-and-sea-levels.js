@@ -101,27 +101,15 @@ function deleteUndefinedProperties (stations) {
   })
 }
 
-function RainfallViewModel ({ stations = [], rainfallid }) {
-  // ? need guard for empty stations
+function RainfallViewModel (stationName, stations) {
   const center = getCenter(stations)
   const bbox = createBbox(stations)
-  stations.forEach(station => {
-    setStationProperties(station, stations, center.coordinates)
-  })
+  stations.forEach(station => { setStationProperties(station, center.coordinates) })
   stations.sort((a, b) => a.distance - b.distance)
 
   const { filters, activeFilter: queryGroup } = setFilters(stations)
 
   deleteUndefinedProperties(stations)
-
-  const exports = {
-    placeBox: bbox,
-    bingMaps: bingKeyMaps
-  }
-  const originalStation = stations.find(station => station.telemetry_id === rainfallid)
-  const distStatement = `Showing levels within 5 miles of ${originalStation?.external_name}.`
-  const pageTitle = 'Find river, sea, groundwater and rainfall levels'
-  const metaDescription = 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
 
   return {
     // exposed as class properties - but not used
@@ -135,14 +123,17 @@ function RainfallViewModel ({ stations = [], rainfallid }) {
     stations,
     filters,
     queryGroup,
-    exports,
+    exports: {
+      placeBox: bbox,
+      bingMaps: bingKeyMaps
+    },
     floodRiskUrl,
-    distStatement,
-    pageTitle,
-    metaDescription
+    distStatement: `Showing levels within 5 miles of ${stationName}.`,
+    pageTitle: 'Find river, sea, groundwater and rainfall levels',
+    metaDescription: 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
   }
 
-  function setStationProperties (station, stations, referenceCoordinates) {
+  function setStationProperties (station, referenceCoordinates) {
     station.external_name = formatName(station.external_name)
     station.displayData = getDisplayData(station)
     station.latestDatetime = station.status === 'Active' ? formattedTime(station) : null
