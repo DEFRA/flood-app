@@ -4,7 +4,7 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
-const { RainfallViewModel, ViewModel } = require('../../server/models/views/river-and-sea-levels')
+const { ReferencedStationViewModel, ViewModel } = require('../../server/models/views/river-and-sea-levels')
 const data = require('../data')
 
 lab.experiment('river-and-sea-levels model test', () => {
@@ -86,8 +86,8 @@ lab.experiment('river-and-sea-levels model test', () => {
 
     Code.expect(Result.isMultilpleMatch).to.equal(true)
   })
-  lab.experiment('RainfallViewModel', () => {
-    lab.test('Test river-and-sea-level RainfallViewModel sorts stations in distance order from rainfall station', async () => {
+  lab.experiment('ReferencedStationViewModel', () => {
+    lab.test('Test river-and-sea-level ReferencedStationViewModel sorts stations in distance order from rainfall station', async () => {
       const stationsData = data.riverAndSeaLevelDataUnordered
       const [rainfallStation] = data.rainfallStation553564
 
@@ -97,7 +97,7 @@ lab.experiment('river-and-sea-levels model test', () => {
         lon: rainfallStation.lon
       }
 
-      const viewModel = RainfallViewModel(referencePoint, stationsData.stations)
+      const viewModel = ReferencedStationViewModel(referencePoint, stationsData.stations)
 
       const Result = viewModel
       Code.expect(Result.stations.length).to.equal(76)
