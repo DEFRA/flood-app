@@ -101,8 +101,8 @@ function deleteUndefinedProperties (stations) {
   })
 }
 
-function RainfallViewModel (stationName, stations) {
-  const center = getCenter(stations)
+function RainfallViewModel (referencePoint, stations) {
+  const center = turf.point([referencePoint.lon, referencePoint.lat]).geometry
   const bbox = createBbox(stations)
   stations.forEach(station => { setStationProperties(station, center.coordinates) })
   stations.sort((a, b) => a.distance - b.distance)
@@ -128,7 +128,7 @@ function RainfallViewModel (stationName, stations) {
       bingMaps: bingKeyMaps
     },
     floodRiskUrl,
-    distStatement: `Showing levels within 5 miles of ${stationName}.`,
+    distStatement: `Showing levels within 5 miles of ${referencePoint.name}.`,
     pageTitle: 'Find river, sea, groundwater and rainfall levels',
     metaDescription: 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
   }

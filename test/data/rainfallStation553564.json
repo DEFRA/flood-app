@@ -1,0 +1,24 @@
+[
+  {
+    "telemetry_station_id": "1286",
+    "station_reference": "553564",
+    "region": "North West",
+    "station_name": "Worleston",
+    "ngr": "SJ665574",
+    "easting": 366500,
+    "northing": 357400,
+    "centroid": "0101000020E61000009202D5ECEF0304C030C128BD6D8E4A40",
+    "data_type": "Total",
+    "period": "15 min",
+    "units": "mm",
+    "telemetry_value_parent_id": "153463745",
+    "value": "0",
+    "value_timestamp": "2022-11-01T12:45:00.000Z",
+    "day_total": "18.7",
+    "six_hr_total": "0",
+    "one_hr_total": "0",
+    "type": "R",
+    "lat": 53.11272396554921,
+    "lon": -2.501922464609671
+  }
+]
