@@ -57,7 +57,6 @@ module.exports = [{
 
     if (rainfallStations.length > 0) {
       const rainfallStation = rainfallStations[0]
-      // const referencePoint = (({ station_name: name, lat, lon }) => ({ name, lat, lon }))(rainfallStation)
       const referencePoint = {
         name: rainfallStation.station_name,
         lat: rainfallStation.lat,
