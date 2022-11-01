@@ -56,11 +56,15 @@ module.exports = [{
     const rainfallStations = await request.server.methods.flood.getRainfallStation(rainfallid)
 
     if (rainfallStations.length > 0) {
-      const x = rainfallStations[0].lon
-      const y = rainfallStations[0].lat
-
-      const stations = await request.server.methods.flood.getStationsByRadius(x, y, 8000)
-      const model = new RainfallViewModel(rainfallStations[0].station_name, stations)
+      const rainfallStation = rainfallStations[0]
+      // const referencePoint = (({ station_name: name, lat, lon }) => ({ name, lat, lon }))(rainfallStation)
+      const referencePoint = {
+        name: rainfallStation.station_name,
+        lat: rainfallStation.lat,
+        lon: rainfallStation.lon
+      }
+      const stations = await request.server.methods.flood.getStationsByRadius(referencePoint.lon, referencePoint.lat, 8000)
+      const model = new RainfallViewModel(referencePoint, stations)
       return h.view(route, { model })
     }
 

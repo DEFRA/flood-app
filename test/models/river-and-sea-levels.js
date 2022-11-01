@@ -4,7 +4,7 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
-const { ViewModel } = require('../../server/models/views/river-and-sea-levels')
+const { RainfallViewModel, ViewModel } = require('../../server/models/views/river-and-sea-levels')
 const data = require('../data')
 
 lab.experiment('river-and-sea-levels model test', () => {
@@ -25,7 +25,7 @@ lab.experiment('river-and-sea-levels model test', () => {
     Code.expect(Result.stations[0].river_name).to.equal('Valley Brook')
     Code.expect(Result.stations[0].region).to.equal('North West')
   })
-  lab.test('Test river-and-sea-level viewModel returns stations in distance order', async () => {
+  lab.test('Test river-and-sea-level viewModel returns stations in distance order from place', async () => {
     const stationsData = data.riverAndSeaLevelDataUnordered
     const firstStation = data.riverAndSeaLevelDataUnordered.stations[0]
     const viewModel = ViewModel(stationsData)
@@ -85,5 +85,24 @@ lab.experiment('river-and-sea-levels model test', () => {
     const Result = viewModel
 
     Code.expect(Result.isMultilpleMatch).to.equal(true)
+  })
+  lab.experiment('RainfallViewModel', () => {
+    lab.test('Test river-and-sea-level RainfallViewModel sorts stations in distance order from rainfall station', async () => {
+      const stationsData = data.riverAndSeaLevelDataUnordered
+      const [rainfallStation] = data.rainfallStation553564
+
+      const referencePoint = {
+        name: rainfallStation.station_name,
+        lat: rainfallStation.lat,
+        lon: rainfallStation.lon
+      }
+
+      const viewModel = RainfallViewModel(referencePoint, stationsData.stations)
+
+      const Result = viewModel
+      Code.expect(Result.stations.length).to.equal(76)
+      Code.expect(Result.stations[1].distance).to.be.greaterThan(Result.stations[0].distance)
+      Code.expect(Result.stations[2].distance).to.be.greaterThan(Result.stations[1].distance)
+    })
   })
 })
