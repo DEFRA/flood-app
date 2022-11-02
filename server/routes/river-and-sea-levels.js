@@ -30,6 +30,10 @@ module.exports = [{
     if (!place && rivers.length === 0) {
       return h.view(route, { model: { q: location }, referer })
     }
+    if ((place ? 1 : 0) + rivers.length > 1) {
+      return h.view(`${route}-list`, { model: { q: location, place, rivers } })
+    }
+
     const stations = place ? await getStations(request, place) : undefined
     const model = new ViewModel({ location, place, stations, referer, rivers, queryGroup })
     return h.view(route, { model })
