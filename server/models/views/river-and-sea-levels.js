@@ -2,105 +2,6 @@ const turf = require('@turf/turf')
 const moment = require('moment-timezone')
 const { bingKeyMaps, floodRiskUrl } = require('../../config')
 
-function setFilters (stations, queryGroup) {
-  const filters = ['river', 'sea', 'rainfall', 'groundwater'].map(item => ({
-    type: item,
-    count: stations.filter(station => station.group_type === item).length
-  }))
-
-  const activeFilter = filters.find(x => x.type === queryGroup) || filters.find(x => x.count > 0) || filters[0]
-  return { filters, activeFilter: activeFilter.type }
-}
-
-function getCenter (stations) {
-  const points = stations.map(station => [Number(station.lat), Number(station.lon)])
-  const features = turf.points(points)
-  return turf.center(features).geometry
-}
-
-function createBbox (stations) {
-  const lons = stations.map(s => Number(s.lon))
-  const lats = stations.map(s => Number(s.lat))
-
-  return lons.length && lats.length ? [Math.min(...lons), Math.min(...lats), Math.max(...lons), Math.max(...lats)] : []
-}
-
-function getStationGroup (station) {
-  if ((station.station_type === 'S') || (station.station_type === 'M') || (station.station_type === 'C' && station.river_id !== 'Sea Levels')) {
-    return 'river'
-  } else if (station.station_type === 'C') {
-    return 'sea'
-  } else if (station.station_type === 'G') {
-    return 'groundwater'
-  } else {
-    return 'rainfall'
-  }
-}
-
-function getDisplayData (station) {
-  return !(station.status === 'Suspended' || station.status === 'Closed' || station.value === null || station.value_erred === true || station.iswales)
-}
-
-function calcDistance (station, place) {
-  const from = turf.point([station.lon, station.lat])
-  const to = turf.point(place)
-  const options = { units: 'meters' }
-
-  return turf.distance(from, to, options)
-}
-
-function getFormattedTime (station) {
-  if (!station.displayData) {
-    return null
-  } else if (station.value_timestamp) {
-    const formattedTime = moment(station.value_timestamp).tz('Europe/London').format('h:mma')
-    const formattedDate = moment(station.value_timestamp).tz('Europe/London').format('D MMMM')
-
-    return `Updated ${formattedTime}, ${formattedDate} `
-  }
-  return null
-}
-
-function formatValue (station, val) {
-  if (!station.displayData) {
-    return null
-  } else {
-    const dp = station.station_type === 'R' ? 1 : 2
-    return parseFloat(Math.round(val * Math.pow(10, dp)) / (Math.pow(10, dp))).toFixed(dp) + (station.station_type === 'R' ? 'mm' : 'm')
-  }
-}
-
-function getStationState (station) {
-  if (!station.displayData) {
-    return null
-  }
-  if (station.station_type !== 'C' && station.value) {
-    if (parseFloat(station.value) >= parseFloat(station.percentile_5)) {
-      return 'HIGH'
-    } else if (parseFloat(station.value) < parseFloat(station.percentile_95)) {
-      return 'LOW'
-    } else {
-      return 'NORMAL'
-    }
-  } else {
-    return null
-  }
-}
-
-function formatName (name) {
-  return name.toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())
-}
-
-function deleteUndefinedProperties (stations) {
-  stations.forEach(station => {
-    Object.keys(station).forEach(key => {
-      if (station[key] === null) {
-        delete station[key]
-      }
-    })
-  })
-}
-
 function AreaViewModel (areaName, stations) {
   const bbox = createBbox(stations)
   stations.forEach(station => {
@@ -300,6 +201,105 @@ function ViewModel ({ location, place, stations, referer, queryGroup, rivers, rl
     }
     return placeBox
   }
+}
+
+function setFilters (stations, queryGroup) {
+  const filters = ['river', 'sea', 'rainfall', 'groundwater'].map(item => ({
+    type: item,
+    count: stations.filter(station => station.group_type === item).length
+  }))
+
+  const activeFilter = filters.find(x => x.type === queryGroup) || filters.find(x => x.count > 0) || filters[0]
+  return { filters, activeFilter: activeFilter.type }
+}
+
+function getCenter (stations) {
+  const points = stations.map(station => [Number(station.lat), Number(station.lon)])
+  const features = turf.points(points)
+  return turf.center(features).geometry
+}
+
+function createBbox (stations) {
+  const lons = stations.map(s => Number(s.lon))
+  const lats = stations.map(s => Number(s.lat))
+
+  return lons.length && lats.length ? [Math.min(...lons), Math.min(...lats), Math.max(...lons), Math.max(...lats)] : []
+}
+
+function getStationGroup (station) {
+  if ((station.station_type === 'S') || (station.station_type === 'M') || (station.station_type === 'C' && station.river_id !== 'Sea Levels')) {
+    return 'river'
+  } else if (station.station_type === 'C') {
+    return 'sea'
+  } else if (station.station_type === 'G') {
+    return 'groundwater'
+  } else {
+    return 'rainfall'
+  }
+}
+
+function getDisplayData (station) {
+  return !(station.status === 'Suspended' || station.status === 'Closed' || station.value === null || station.value_erred === true || station.iswales)
+}
+
+function calcDistance (station, place) {
+  const from = turf.point([station.lon, station.lat])
+  const to = turf.point(place)
+  const options = { units: 'meters' }
+
+  return turf.distance(from, to, options)
+}
+
+function getFormattedTime (station) {
+  if (!station.displayData) {
+    return null
+  } else if (station.value_timestamp) {
+    const formattedTime = moment(station.value_timestamp).tz('Europe/London').format('h:mma')
+    const formattedDate = moment(station.value_timestamp).tz('Europe/London').format('D MMMM')
+
+    return `Updated ${formattedTime}, ${formattedDate} `
+  }
+  return null
+}
+
+function formatValue (station, val) {
+  if (!station.displayData) {
+    return null
+  } else {
+    const dp = station.station_type === 'R' ? 1 : 2
+    return parseFloat(Math.round(val * Math.pow(10, dp)) / (Math.pow(10, dp))).toFixed(dp) + (station.station_type === 'R' ? 'mm' : 'm')
+  }
+}
+
+function getStationState (station) {
+  if (!station.displayData) {
+    return null
+  }
+  if (station.station_type !== 'C' && station.value) {
+    if (parseFloat(station.value) >= parseFloat(station.percentile_5)) {
+      return 'HIGH'
+    } else if (parseFloat(station.value) < parseFloat(station.percentile_95)) {
+      return 'LOW'
+    } else {
+      return 'NORMAL'
+    }
+  } else {
+    return null
+  }
+}
+
+function formatName (name) {
+  return name.toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())
+}
+
+function deleteUndefinedProperties (stations) {
+  stations.forEach(station => {
+    Object.keys(station).forEach(key => {
+      if (station[key] === null) {
+        delete station[key]
+      }
+    })
+  })
 }
 
 module.exports = {
