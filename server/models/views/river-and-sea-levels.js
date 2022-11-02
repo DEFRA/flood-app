@@ -188,7 +188,6 @@ function ViewModel ({ location, place, stations, referer, queryGroup, rivers, rl
 
     deleteUndefinedProperties(stations)
 
-    stations = isEngland ? stations : []
     queryGroup = activeFilter
   }
   stations = isEngland ? stations : []
