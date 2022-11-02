@@ -31,8 +31,6 @@
     <p>More than one match was found for your location. Choose the correct location from the following options:</p>
     {% if model.rivers.length %}
     <h3 class="govuk-heading-s">Rivers</h3>
-    {% endif %}
-    {% if model.rivers.length %}
     <ul class="govuk-list" id="rivers-list">
       {% for river in model.rivers %}
         <li><a href="/river-and-sea-levels?riverId={{ river.river_id }}">{{ river.qualified_name | toMarked(model.q) | safe}}</a></li>
@@ -60,9 +58,6 @@
 
 {% block bodyEnd %}
 {{ super() }}
-<script>
-  window.flood.model = {{ model.exports | dump(2) | safe }}
-</script>
 <script src="{{assetPath}}/js/templates.js"></script>
 <script src="{{assetPath}}/js/river-and-sea-levels.js"></script>
 {% endblock %}
