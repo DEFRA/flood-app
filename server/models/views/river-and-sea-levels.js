@@ -25,15 +25,6 @@ function RiverViewModel (stations) {
     pageTitle: 'Find river, sea, groundwater and rainfall levels',
     metaDescription: 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
   }
-
-  function setStationProperties (station) {
-    station.external_name = formatName(station.external_name)
-    station.displayData = getDisplayData(station)
-    station.latestDatetime = station.status === 'Active' ? getFormattedTime(station) : null
-    station.formattedValue = station.status === 'Active' ? formatValue(station, station.value) : null
-    station.state = getStationState(station)
-    station.group_type = getStationGroup(station)
-  }
 }
 
 function AreaViewModel (areaName, stations) {
@@ -59,22 +50,14 @@ function AreaViewModel (areaName, stations) {
     pageTitle: 'Find river, sea, groundwater and rainfall levels',
     metaDescription: 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
   }
-
-  function setStationProperties (station, referenceCoordinates) {
-    station.external_name = formatName(station.external_name)
-    station.displayData = getDisplayData(station)
-    station.latestDatetime = station.status === 'Active' ? getFormattedTime(station) : null
-    station.formattedValue = station.status === 'Active' ? formatValue(station, station.value) : null
-    station.state = getStationState(station)
-    station.group_type = getStationGroup(station)
-  }
 }
 
 function ReferencedStationViewModel (referencePoint, stations) {
   const center = turf.point([referencePoint.lon, referencePoint.lat]).geometry
   const bbox = createBbox(stations)
   stations.forEach(station => {
-    setStationProperties(station, center.coordinates)
+    setStationProperties(station)
+    station.distance = calcDistance(station, center.coordinates)
   })
   stations.sort((a, b) => a.distance - b.distance)
 
@@ -94,16 +77,6 @@ function ReferencedStationViewModel (referencePoint, stations) {
     distStatement: referencePoint.distStatement,
     pageTitle: 'Find river, sea, groundwater and rainfall levels',
     metaDescription: 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
-  }
-
-  function setStationProperties (station, referenceCoordinates) {
-    station.external_name = formatName(station.external_name)
-    station.displayData = getDisplayData(station)
-    station.latestDatetime = station.status === 'Active' ? getFormattedTime(station) : null
-    station.formattedValue = station.status === 'Active' ? formatValue(station, station.value) : null
-    station.state = getStationState(station)
-    station.group_type = getStationGroup(station)
-    station.distance = calcDistance(station, referenceCoordinates)
   }
 }
 
@@ -334,6 +307,15 @@ function deleteUndefinedProperties (stations) {
       }
     })
   })
+}
+
+function setStationProperties (station) {
+  station.external_name = formatName(station.external_name)
+  station.displayData = getDisplayData(station)
+  station.latestDatetime = station.status === 'Active' ? getFormattedTime(station) : null
+  station.formattedValue = station.status === 'Active' ? formatValue(station, station.value) : null
+  station.state = getStationState(station)
+  station.group_type = getStationGroup(station)
 }
 
 module.exports = {
