@@ -69,6 +69,29 @@ module.exports = [{
   }
 }, {
   method: 'GET',
+  path: `/${route}/rloi/{rloiId}`,
+  handler: async (request, h) => {
+    const { rloiId } = request.params
+    const riverLevelStation = await request.server.methods.flood.getStationById(rloiId, 'u')
+    const coordinates = JSON.parse(riverLevelStation.coordinates)
+
+    if (riverLevelStation) {
+      const radius = 8000 // metres
+      const distanceInMiles = Math.round(radius / 1609.344)
+      const referencePoint = {
+        lat: coordinates.coordinates[1],
+        lon: coordinates.coordinates[0],
+        distStatement: `Showing levels within ${distanceInMiles} miles of ${riverLevelStation.external_name}.`
+      }
+      const stations = await request.server.methods.flood.getStationsByRadius(referencePoint.lon, referencePoint.lat, radius)
+      const model = ReferencedStationViewModel(referencePoint, stations)
+      return h.view(route, { model })
+    }
+
+    return boom.notFound(`Rainfall Gauge "${rloiId}" not found`)
+  }
+}, {
+  method: 'GET',
   path: `/${route}/rainfall/{rainfallid}`,
   handler: async (request, h) => {
     const { rainfallid } = request.params
@@ -84,7 +107,7 @@ module.exports = [{
         distStatement: `Showing levels within ${distanceInMiles} miles of ${rainfallStation.station_name}.`
       }
       const stations = await request.server.methods.flood.getStationsByRadius(referencePoint.lon, referencePoint.lat, radius)
-      const model = new ReferencedStationViewModel(referencePoint, stations)
+      const model = ReferencedStationViewModel(referencePoint, stations)
       return h.view(route, { model })
     }
 
@@ -111,6 +134,9 @@ module.exports = [{
     }
     if (taCode) {
       return h.redirect(`/${route}/target-area/${taCode}`)
+    }
+    if (rloiid) {
+      return h.redirect(`/${route}/rloi/${rloiid}`)
     }
 
     if (rloiid) {
@@ -161,15 +187,7 @@ module.exports = [{
 }]
 
 const getStations = async (request, place, rloiid, originalStation, rainfallid, taCode, riverid) => {
-  if (rloiid) {
-    const station = originalStation
-    const coordinates = JSON.parse(station.coordinates)
-
-    const x = coordinates.coordinates[0]
-    const y = coordinates.coordinates[1]
-
-    return request.server.methods.flood.getStationsByRadius(x, y, 8000)
-  } else if (riverid) {
+  if (riverid) {
     return request.server.methods.flood.getRiverById(riverid)
   } else {
     return request.server.methods.flood.getStationsWithin(place.bbox10k)

@@ -39,7 +39,7 @@
       <span id="map"></span>
       {% if model.station.riverNavigation.up %}<a href="/station/{{model.station.riverNavigation.up}}" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>{% endif %}
       {% if model.station.riverNavigation.down %}<a href="/station/{{model.station.riverNavigation.down}}" class="defra-flood-nav__link defra-flood-nav__link--downstream">Downstream</a>{% endif %}
-      <a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels?rloi-id={{model.station.id}}" class="defra-flood-nav__link">Nearby levels</a>
+      <a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/{{model.station.id}}" class="defra-flood-nav__link">Nearby levels</a>
     </nav>
   </div>
 </div>

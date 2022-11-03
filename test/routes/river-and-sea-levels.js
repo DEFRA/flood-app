@@ -1038,51 +1038,6 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(root.querySelectorAll('h2').some(h => h.textContent.trim().startsWith('No results for'))).to.be.false()
     Code.expect(root.querySelectorAll('table.defra-flood-levels-table#results').length).to.equal(0)
   })
-  lab.test('GET /river-and-sea-levels?rloi-id=7224', async () => {
-    const floodService = require('../../server/services/flood')
-
-    const fakeStationsData = () => data.stationsWithinRadius
-
-    const originalStation = () => data.riverStation7224
-    const cachedStation = () => data.cachedStation
-
-    sandbox.stub(floodService, 'getStationsByRadius').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getStationById').callsFake(originalStation)
-    sandbox.stub(floodService, 'getStationsGeoJson').callsFake(cachedStation)
-
-    // Set cached stationsGeojson
-
-    floodService.stationsGeojson = await floodService.getStationsGeoJson()
-
-    const riversPlugin = {
-      plugin: {
-        name: 'rivers',
-        register: (server, options) => {
-          server.route(require('../../server/routes/river-and-sea-levels'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(riversPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/river-and-sea-levels?rloi-id=7224'
-    }
-
-    const response = await server.inject(options)
-
-    Code.expect(response.payload).to.contain('River (9)')
-    Code.expect(response.payload).to.contain('Grants Bridge')
-    Code.expect(response.payload).to.contain('Showing levels within 5 miles of Grants Bridge.')
-    Code.expect(response.statusCode).to.equal(200)
-  })
   lab.test('GET /river-and-sea-levels only groundwater stations', async () => {
     const floodService = require('../../server/services/flood')
 
@@ -2191,5 +2146,95 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     // const root = parse(response.payload)
     // Code.expect(root.querySelectorAll('h2').some(h => h.textContent.trim().startsWith('No results for'))).to.be.false()
     // Code.expect(root.querySelectorAll('table.defra-flood-levels-table#results').length).to.equal(0)
+  })
+  lab.experiment('RLOI', () => {
+    lab.test('GET /river-and-sea-levels?rloi-id=7224 should redirect', async () => {
+      const floodService = require('../../server/services/flood')
+
+      const fakeStationsData = () => data.stationsWithinRadius
+
+      const originalStation = () => data.riverStation7224
+      const cachedStation = () => data.cachedStation
+
+      sandbox.stub(floodService, 'getStationsByRadius').callsFake(fakeStationsData)
+      sandbox.stub(floodService, 'getStationById').callsFake(originalStation)
+      sandbox.stub(floodService, 'getStationsGeoJson').callsFake(cachedStation)
+
+      // Set cached stationsGeojson
+
+      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+
+      const riversPlugin = {
+        plugin: {
+          name: 'rivers',
+          register: (server, options) => {
+            server.route(require('../../server/routes/river-and-sea-levels'))
+          }
+        }
+      }
+
+      await server.register(require('../../server/plugins/views'))
+      await server.register(require('../../server/plugins/session'))
+      await server.register(riversPlugin)
+      // Add Cache methods to server
+      const registerServerMethods = require('../../server/services/server-methods')
+      registerServerMethods(server)
+
+      await server.initialize()
+      const options = {
+        method: 'GET',
+        url: '/river-and-sea-levels?rloi-id=7224'
+      }
+
+      const response = await server.inject(options)
+
+      Code.expect(response.statusCode).to.equal(302)
+      Code.expect(response.headers.location).to.equal('/river-and-sea-levels/rloi/7224')
+    })
+    lab.test('GET /river-and-sea-levels/rloi/7224', async () => {
+      const floodService = require('../../server/services/flood')
+
+      const fakeStationsData = () => data.stationsWithinRadius
+
+      const originalStation = () => data.riverStation7224
+      const cachedStation = () => data.cachedStation
+
+      sandbox.stub(floodService, 'getStationsByRadius').callsFake(fakeStationsData)
+      sandbox.stub(floodService, 'getStationById').callsFake(originalStation)
+      sandbox.stub(floodService, 'getStationsGeoJson').callsFake(cachedStation)
+
+      // Set cached stationsGeojson
+
+      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+
+      const riversPlugin = {
+        plugin: {
+          name: 'rivers',
+          register: (server, options) => {
+            server.route(require('../../server/routes/river-and-sea-levels'))
+          }
+        }
+      }
+
+      await server.register(require('../../server/plugins/views'))
+      await server.register(require('../../server/plugins/session'))
+      await server.register(riversPlugin)
+      // Add Cache methods to server
+      const registerServerMethods = require('../../server/services/server-methods')
+      registerServerMethods(server)
+
+      await server.initialize()
+      const options = {
+        method: 'GET',
+        url: '/river-and-sea-levels/rloi/7224'
+      }
+
+      const response = await server.inject(options)
+
+      Code.expect(response.statusCode).to.equal(200)
+      Code.expect(response.payload).to.contain('River (9)')
+      Code.expect(response.payload).to.contain('Grants Bridge')
+      Code.expect(response.payload).to.contain('Showing levels within 5 miles of Grants Bridge.')
+    })
   })
 })
