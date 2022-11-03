@@ -1,6 +1,8 @@
 const turf = require('@turf/turf')
 const moment = require('moment-timezone')
 const { bingKeyMaps, floodRiskUrl } = require('../../config')
+const pageTitle = 'Find river, sea, groundwater and rainfall levels'
+const metaDescription = 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
 
 function RiverViewModel (stations) {
   const bbox = createBbox(stations)
@@ -22,8 +24,8 @@ function RiverViewModel (stations) {
     },
     floodRiskUrl,
     distStatement: `Showing levels on ${stations[0].river_name}.`,
-    pageTitle: 'Find river, sea, groundwater and rainfall levels',
-    metaDescription: 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
+    pageTitle,
+    metaDescription
   }
 }
 
@@ -47,8 +49,8 @@ function AreaViewModel (areaName, stations) {
     },
     floodRiskUrl,
     distStatement: `Showing levels within the target area ${areaName}.`,
-    pageTitle: 'Find river, sea, groundwater and rainfall levels',
-    metaDescription: 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
+    pageTitle,
+    metaDescription
   }
 }
 
@@ -75,13 +77,13 @@ function ReferencedStationViewModel (referencePoint, stations) {
     },
     floodRiskUrl,
     distStatement: referencePoint.distStatement,
-    pageTitle: 'Find river, sea, groundwater and rainfall levels',
-    metaDescription: 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
+    pageTitle,
+    metaDescription
   }
 }
 
 function ViewModel ({ location, place, stations, referer, queryGroup, rivers, rloiid, rainfallid, originalStation, targetArea, riverid }) {
-  let bbox, filters, activeFilter, distStatement, pageTitle, metaDescription, center, stationsBbox
+  let bbox, filters, activeFilter, distStatement, title, description, center, stationsBbox
   const isEngland = place ? place.isEngland.is_england : true
 
   if (stations && isEngland) {
@@ -118,11 +120,11 @@ function ViewModel ({ location, place, stations, referer, queryGroup, rivers, rl
   }
 
   if (placeName && isEngland) {
-    pageTitle = `${placeName} - Find river, sea, groundwater and rainfall levels`
-    metaDescription = `Find river, sea, groundwater and rainfall levels in ${placeName}. Check the last updated height and state recorded by the gauges.`
+    title = `${placeName} - Find river, sea, groundwater and rainfall levels`
+    description = `Find river, sea, groundwater and rainfall levels in ${placeName}. Check the last updated height and state recorded by the gauges.`
   } else {
-    pageTitle = 'Find river, sea, groundwater and rainfall levels'
-    metaDescription = 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
+    title = pageTitle
+    description = metaDescription
   }
 
   return {
@@ -145,8 +147,8 @@ function ViewModel ({ location, place, stations, referer, queryGroup, rivers, rl
     floodRiskUrl,
     isMultilpleMatch,
     distStatement,
-    pageTitle,
-    metaDescription
+    pageTitle: title,
+    metaDescription: description
   }
 
   function mapProperties (rloiid, originalStation, stations, bbox, rainfallid, targetArea, riverid) {
