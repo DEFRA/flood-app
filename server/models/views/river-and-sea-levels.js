@@ -26,7 +26,7 @@ function RiverViewModel (stations) {
     metaDescription: 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
   }
 
-  function setStationProperties (station, referenceCoordinates) {
+  function setStationProperties (station) {
     station.external_name = formatName(station.external_name)
     station.displayData = getDisplayData(station)
     station.latestDatetime = station.status === 'Active' ? getFormattedTime(station) : null
