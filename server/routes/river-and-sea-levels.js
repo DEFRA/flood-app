@@ -34,7 +34,7 @@ module.exports = [{
       return h.view(`${route}-list`, { model: { q: location, place, rivers } })
     }
 
-    const stations = place ? await getStations(request, place) : []
+    const stations = place ? await request.server.methods.flood.getStationsWithin(place.bbox10k) : []
     const model = new ViewModel({ location, place, stations, referer, rivers, queryGroup })
     return h.view(route, { model })
   },
@@ -191,14 +191,6 @@ module.exports = [{
     }
   }
 }]
-
-const getStations = async (request, place, rloiid, originalStation, rainfallid, taCode, riverid) => {
-  if (riverid) {
-    return request.server.methods.flood.getRiverById(riverid)
-  } else {
-    return request.server.methods.flood.getStationsWithin(place.bbox10k)
-  }
-}
 
 const inUk = place => place?.isUK && !place?.isScotlandOrNorthernIreland
 
