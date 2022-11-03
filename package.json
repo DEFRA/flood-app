@@ -44,7 +44,6 @@
     "@hapi/vision": "^6.1.0",
     "@hapi/wreck": "^17.1.0",
     "@hapi/yar": "^10.1.1",
-    "hapi-rate-limit": "5.0.1",
     "@turf/polygon-smooth": "^6.5.0",
     "@turf/turf": "^6.5.0",
     "accessible-autocomplete": "2.0.3",
@@ -59,6 +58,7 @@
     "elm-pep": "^1.0.6",
     "geojson": "0.5.0",
     "govuk-frontend": "^3.14.0",
+    "hapi-rate-limit": "5.0.1",
     "jquery": "^3.6.0",
     "lodash.isequal": "^4.5.0",
     "moment-timezone": "^0.5.34",
@@ -78,5 +78,8 @@
       "server/dist",
       "service-down"
     ]
+  },
+  "devDependencies": {
+    "node-html-parser": "^6.1.1"
   }
 }

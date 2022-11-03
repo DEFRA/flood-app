@@ -51,7 +51,7 @@
       }
     ],
     "statusCode": 200,
-    "tatusDescription": "OK",
+    "statusDescription": "OK",
     "traceId": "trace-id"
   }
   

@@ -3,7 +3,6 @@ const { getJson, addBufferToBbox, formatName } = require('../util')
 const floodServices = require('./flood')
 const util = require('util')
 const LocationSearchError = require('../location-search-error')
-const LocationNotFoundError = require('../location-not-found-error')
 
 async function find (location) {
   const query = encodeURIComponent(location)
@@ -14,7 +13,7 @@ async function find (location) {
     bingData = await getJson(url, true)
   } catch (err) {
     console.error(err)
-    throw err
+    throw new LocationSearchError(`Bing error: ${err}`)
   }
 
   // At this point we expect to have received a 200 status code from location search api call
@@ -31,19 +30,18 @@ async function find (location) {
 
   // Check that the json is relevant
   if (!bingData.resourceSets || !bingData.resourceSets.length) {
-    throw new LocationNotFoundError('Invalid geocode results (no resourceSets)')
+    throw new LocationSearchError('Invalid geocode results (no resourceSets)')
   }
 
-  // Ensure we have some results
   const set = bingData.resourceSets[0]
   if (set.estimatedTotal === 0) {
-    throw new LocationNotFoundError('Location search returned no results')
+    return []
   }
 
   const data = set.resources[0]
 
   if (data.confidence.toLowerCase() === 'low') {
-    throw new LocationNotFoundError('Location search returned only low confidence results')
+    return []
   }
 
   const {
@@ -70,7 +68,7 @@ async function find (location) {
   // add on 10000m buffer to place.bbox for stations search
   const bbox10k = addBufferToBbox(bbox, 10000)
 
-  return {
+  return [{
     name,
     center,
     bbox2k,
@@ -79,7 +77,7 @@ async function find (location) {
     isEngland,
     isUK,
     isScotlandOrNorthernIreland
-  }
+  }]
 }
 
 module.exports = { find }

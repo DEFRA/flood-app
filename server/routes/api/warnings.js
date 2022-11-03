@@ -13,7 +13,7 @@ module.exports = {
       const location = util.cleanseLocation(request.query.location)
       let data, place
       if (location) {
-        place = await locationService.find(util.cleanseLocation(location))
+        [place] = await locationService.find(util.cleanseLocation(location))
       }
 
       if (place) {

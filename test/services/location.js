@@ -98,13 +98,13 @@ lab.experiment('location service test', () => {
       return error
     })
 
-    Code.expect(result).to.be.a.object()
-    Code.expect(result.Error).to.be.undefined()
-    Code.expect(result.address).to.equal('United Kingdom')
+    Code.expect(result).to.be.a.array()
+    Code.expect(result.length).to.be.equal(1)
+    Code.expect(result[0].address).to.equal('United Kingdom')
     // Test that bounding box for location has been given 2km buffer
-    Code.expect(result.bbox2k).to.equal(JSON.parse('[-18.316484081675988,49.939891170718475,12.576484310557825,60.79964993825727]'))
+    Code.expect(result[0].bbox2k).to.equal(JSON.parse('[-18.316484081675988,49.939891170718475,12.576484310557825,60.79964993825727]'))
     // Test that bounding box for location has been given 10km buffer
-    Code.expect(result.bbox10k).to.equal(JSON.parse('[-18.46371955596045,49.86823323015424,12.723719784842281,60.86947435757287]'))
+    Code.expect(result[0].bbox10k).to.equal(JSON.parse('[-18.46371955596045,49.86823323015424,12.723719784842281,60.86947435757287]'))
   })
 
   lab.test('Check for Bing call returning low confidence and hence no results', async () => {
@@ -161,8 +161,8 @@ lab.experiment('location service test', () => {
       return error
     })
 
-    Code.expect(result.name).to.equal('LocationNotFoundError')
-    Code.expect(result.message).to.equal('Location search returned only low confidence results')
+    Code.expect(result).to.be.a.array()
+    Code.expect(result.length).to.equal(0)
   })
 
   lab.test('Check for Bing call returning medium confidence results', async () => {
@@ -234,7 +234,7 @@ lab.experiment('location service test', () => {
 
     const location = require('../../server/services/location')
 
-    const result = await location.find('Preston').then((resolvedValue) => {
+    const [result] = await location.find('Preston').then((resolvedValue) => {
       return resolvedValue
     }, (error) => {
       return error
@@ -274,8 +274,7 @@ lab.experiment('location service test', () => {
       return error
     })
 
-    Code.expect(result.name).to.equal('LocationNotFoundError')
-    Code.expect(result.message).to.equal('Location search returned no results')
+    Code.expect(result.length).to.equal(0)
   })
   lab.test('Check for Bing call returning null response', async () => {
     const util = require('../../server/util')
@@ -458,7 +457,7 @@ lab.experiment('location service test', () => {
 
     const location = require('../../server/services/location')
 
-    const result = await location.find('').then((resolvedValue) => {
+    const [result] = await location.find('').then((resolvedValue) => {
       return resolvedValue
     }, (error) => {
       return error
@@ -523,7 +522,7 @@ lab.experiment('location service test', () => {
 
     const location = require('../../server/services/location')
 
-    const result = await location.find('').then((resolvedValue) => {
+    const [result] = await location.find('').then((resolvedValue) => {
       return resolvedValue
     }, (error) => {
       return error
@@ -618,7 +617,7 @@ lab.experiment('location service test', () => {
 
     const location = require('../../server/services/location')
 
-    const result = await location.find('Terenure').then((resolvedValue) => {
+    const [result] = await location.find('Terenure').then((resolvedValue) => {
       return resolvedValue
     }, (error) => {
       return error
@@ -702,7 +701,7 @@ lab.experiment('location service test', () => {
 
     const location = require('../../server/services/location')
 
-    const result = await location.find('newry').then((resolvedValue) => {
+    const [result] = await location.find('newry').then((resolvedValue) => {
       return resolvedValue
     }, (error) => {
       return error
@@ -795,7 +794,7 @@ lab.experiment('location service test', () => {
 
     const location = require('../../server/services/location')
 
-    const result = await location.find('Richard Taunton House').then((resolvedValue) => {
+    const [result] = await location.find('Richard Taunton House').then((resolvedValue) => {
       return resolvedValue
     }, (error) => {
       return error
@@ -874,7 +873,7 @@ lab.experiment('location service test', () => {
 
       const location = require('../../server/services/location')
 
-      const result = await location.find('').then((resolvedValue) => {
+      const [result] = await location.find('').then((resolvedValue) => {
         return resolvedValue
       }, (error) => {
         return error
@@ -940,7 +939,7 @@ lab.experiment('location service test', () => {
 
       const location = require('../../server/services/location')
 
-      const result = await location.find('').then((resolvedValue) => {
+      const [result] = await location.find('').then((resolvedValue) => {
         return resolvedValue
       }, (error) => {
         return error
@@ -1009,7 +1008,7 @@ lab.experiment('location service test', () => {
 
       const location = require('../../server/services/location')
 
-      const result = await location.find('').then((resolvedValue) => {
+      const [result] = await location.find('').then((resolvedValue) => {
         return resolvedValue
       }, (error) => {
         return error
