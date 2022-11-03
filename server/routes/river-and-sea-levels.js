@@ -2,7 +2,7 @@
 
 const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
-const { AreaViewModel, ReferencedStationViewModel, ViewModel } = require('../models/views/river-and-sea-levels')
+const { RiverViewModel, AreaViewModel, ReferencedStationViewModel, ViewModel } = require('../models/views/river-and-sea-levels')
 const locationService = require('../services/location')
 const util = require('../util')
 const route = 'river-and-sea-levels'
@@ -34,7 +34,7 @@ module.exports = [{
       return h.view(`${route}-list`, { model: { q: location, place, rivers } })
     }
 
-    const stations = place ? await getStations(request, place) : undefined
+    const stations = place ? await getStations(request, place) : []
     const model = new ViewModel({ location, place, stations, referer, rivers, queryGroup })
     return h.view(route, { model })
   },
@@ -66,6 +66,21 @@ module.exports = [{
     }
 
     return boom.notFound(`Target area "${targetAreaCode}" not found`)
+  }
+}, {
+  method: 'GET',
+  path: `/${route}/river/{riverId}`,
+  handler: async (request, h) => {
+    const { riverId } = request.params
+    // NOTE: this query seems slow
+    const stations = await request.server.methods.flood.getRiverById(riverId)
+
+    if (stations.length > 0) {
+      const model = RiverViewModel(stations)
+      return h.view(route, { model })
+    }
+
+    return boom.notFound(`Rainfall Gauge "${riverId}" not found`)
   }
 }, {
   method: 'GET',
@@ -122,9 +137,6 @@ module.exports = [{
     const rloiid = request.query['rloi-id']
     const rainfallid = request.query['rainfall-id']
     const riverid = request.query.riverId
-    const queryType = request.query.searchType
-    const queryGroup = request.query.group
-    let place, stations, originalStation, targetArea
 
     if (location) {
       return h.redirect(`/${route}/location?q=${request.query.q}`)
@@ -138,16 +150,10 @@ module.exports = [{
     if (rloiid) {
       return h.redirect(`/${route}/rloi/${rloiid}`)
     }
-
-    if (rloiid) {
-      originalStation = await request.server.methods.flood.getStationById(rloiid, 'u')
-      stations = await getStations(request, place, rloiid, originalStation)
-    } else if (riverid) {
-      stations = await getStations(request, place, rloiid, originalStation, rainfallid, taCode, riverid)
+    if (riverid) {
+      return h.redirect(`/${route}/river/${riverid}`)
     }
-
-    // blank-sucessful
-    const model = new ViewModel({ location, place, stations, queryType, queryGroup, rloiid, rainfallid, originalStation, targetArea, riverid })
+    const model = new ViewModel({ })
     return h.view(route, { model })
   },
   options: {

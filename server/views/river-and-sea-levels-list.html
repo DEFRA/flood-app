@@ -33,7 +33,7 @@
     <h3 class="govuk-heading-s">Rivers</h3>
     <ul class="govuk-list" id="rivers-list">
       {% for river in model.rivers %}
-        <li><a href="/river-and-sea-levels?riverId={{ river.river_id }}">{{ river.qualified_name | toMarked(model.q) | safe}}</a></li>
+        <li><a href="/river-and-sea-levels/river/{{ river.river_id }}">{{ river.qualified_name | toMarked(model.q) | safe}}</a></li>
       {% endfor %}
     </ul>
     {% endif %}

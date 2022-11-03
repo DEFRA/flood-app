@@ -2012,7 +2012,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
       .querySelectorAll('ul.govuk-list#rivers-list li a')
       .map(a => { return { text: a.textContent, href: a.attributes.href } })
     Code.expect(riverList.length, 'Number of matching rivers').to.equal(8)
-    Code.expect(riverList, 'River list').to.include({ text: 'Tetbury Avon', href: '/river-and-sea-levels?riverId=tetbury-avon' })
+    Code.expect(riverList, 'River list').to.include({ text: 'Tetbury Avon', href: '/river-and-sea-levels/river/tetbury-avon' })
 
     const placesList = root.querySelectorAll('ul.govuk-list#places-list li a')
     Code.expect(placesList.length, 'Number of matching places').to.equal(0)
@@ -2235,6 +2235,86 @@ lab.experiment('Test - /river-and-sea-levels', () => {
       Code.expect(response.payload).to.contain('River (9)')
       Code.expect(response.payload).to.contain('Grants Bridge')
       Code.expect(response.payload).to.contain('Showing levels within 5 miles of Grants Bridge.')
+    })
+  })
+  lab.experiment('River', () => {
+    lab.test('GET /river-and-sea-levels?river-id=river-nidd should redirect', async () => {
+      const floodService = require('../../server/services/flood')
+
+      const fakeStationsData = () => data.stationsWithinRadius
+
+      const originalStation = () => data.riverStation7224
+      const cachedStation = () => data.cachedStation
+
+      sandbox.stub(floodService, 'getStationsByRadius').callsFake(fakeStationsData)
+      sandbox.stub(floodService, 'getStationById').callsFake(originalStation)
+      sandbox.stub(floodService, 'getStationsGeoJson').callsFake(cachedStation)
+
+      // Set cached stationsGeojson
+
+      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+
+      const riversPlugin = {
+        plugin: {
+          name: 'rivers',
+          register: (server, options) => {
+            server.route(require('../../server/routes/river-and-sea-levels'))
+          }
+        }
+      }
+
+      await server.register(require('../../server/plugins/views'))
+      await server.register(require('../../server/plugins/session'))
+      await server.register(riversPlugin)
+      // Add Cache methods to server
+      const registerServerMethods = require('../../server/services/server-methods')
+      registerServerMethods(server)
+
+      await server.initialize()
+      const options = {
+        method: 'GET',
+        url: '/river-and-sea-levels?riverId=river-nidd'
+      }
+
+      const response = await server.inject(options)
+
+      Code.expect(response.statusCode).to.equal(302)
+      Code.expect(response.headers.location).to.equal('/river-and-sea-levels/river/river-nidd')
+    })
+    lab.test('GET /river-and-sea-levels/river/river-nidd', async () => {
+      const floodService = require('../../server/services/flood')
+
+      const riverStation = () => data.riverNiddStations
+
+      sandbox.stub(floodService, 'getRiverById').callsFake(riverStation)
+
+      const riversPlugin = {
+        plugin: {
+          name: 'rivers',
+          register: (server, options) => {
+            server.route(require('../../server/routes/river-and-sea-levels'))
+          }
+        }
+      }
+
+      await server.register(require('../../server/plugins/views'))
+      await server.register(require('../../server/plugins/session'))
+      await server.register(riversPlugin)
+      // Add Cache methods to server
+      const registerServerMethods = require('../../server/services/server-methods')
+      registerServerMethods(server)
+
+      await server.initialize()
+      const options = {
+        method: 'GET',
+        url: '/river-and-sea-levels/river/river-nidd'
+      }
+
+      const response = await server.inject(options)
+
+      Code.expect(response.statusCode).to.equal(200)
+      Code.expect(response.payload).to.contain('River (6)')
+      Code.expect(response.payload).to.contain('Showing levels on River Nidd.')
     })
   })
 })

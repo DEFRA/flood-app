@@ -2,6 +2,40 @@ const turf = require('@turf/turf')
 const moment = require('moment-timezone')
 const { bingKeyMaps, floodRiskUrl } = require('../../config')
 
+function RiverViewModel (stations) {
+  const bbox = createBbox(stations)
+  stations.forEach(station => {
+    setStationProperties(station)
+  })
+
+  const { filters, activeFilter: queryGroup } = setFilters(stations)
+
+  deleteUndefinedProperties(stations)
+
+  return {
+    stations,
+    filters,
+    queryGroup,
+    exports: {
+      placeBox: bbox,
+      bingMaps: bingKeyMaps
+    },
+    floodRiskUrl,
+    distStatement: `Showing levels on ${stations[0].river_name}.`,
+    pageTitle: 'Find river, sea, groundwater and rainfall levels',
+    metaDescription: 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
+  }
+
+  function setStationProperties (station, referenceCoordinates) {
+    station.external_name = formatName(station.external_name)
+    station.displayData = getDisplayData(station)
+    station.latestDatetime = station.status === 'Active' ? getFormattedTime(station) : null
+    station.formattedValue = station.status === 'Active' ? formatValue(station, station.value) : null
+    station.state = getStationState(station)
+    station.group_type = getStationGroup(station)
+  }
+}
+
 function AreaViewModel (areaName, stations) {
   const bbox = createBbox(stations)
   stations.forEach(station => {
@@ -303,6 +337,7 @@ function deleteUndefinedProperties (stations) {
 }
 
 module.exports = {
+  RiverViewModel,
   AreaViewModel,
   ReferencedStationViewModel,
   ViewModel

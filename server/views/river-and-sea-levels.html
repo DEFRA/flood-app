@@ -61,7 +61,7 @@
         {% if model.rivers.length %}
         <ul class="govuk-list" id="rivers-list">
           {% for river in model.rivers %}
-          <li><a href="/river-and-sea-levels?riverId={{ river.river_id }}">{{ river.qualified_name | toMarked(model.q) | safe}}</a></li>
+          <li><a href="/river-and-sea-levels/river/{{ river.river_id }}">{{ river.qualified_name | toMarked(model.q) | safe}}</a></li>
           {% endfor %}
         </ul>
         {% endif %}
