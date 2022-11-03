@@ -23,7 +23,7 @@ function RiverViewModel (stations) {
       bingMaps: bingKeyMaps
     },
     floodRiskUrl,
-    distStatement: `Showing levels on ${stations[0].river_name}.`,
+    distStatement: `Showing ${stations[0].river_name} levels.`,
     pageTitle,
     metaDescription
   }
@@ -48,7 +48,7 @@ function AreaViewModel (areaName, stations) {
       bingMaps: bingKeyMaps
     },
     floodRiskUrl,
-    distStatement: `Showing levels within the target area ${areaName}.`,
+    distStatement: `Showing levels within 5 miles of ${areaName}.`,
     pageTitle,
     metaDescription
   }

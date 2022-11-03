@@ -1569,7 +1569,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River (8)')
-    Code.expect(response.payload).to.contain('Showing levels within the target area Keswick Campsite.')
+    Code.expect(response.payload).to.contain('Showing levels within 5 miles of Keswick Campsite.')
   })
   lab.test('GET /river-and-sea-levels/location?q=tyne returns river list', async () => {
     const floodService = require('../../server/services/flood')
@@ -2314,7 +2314,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
       Code.expect(response.statusCode).to.equal(200)
       Code.expect(response.payload).to.contain('River (6)')
-      Code.expect(response.payload).to.contain('Showing levels on River Nidd.')
+      Code.expect(response.payload).to.contain('Showing River Nidd levels.')
     })
   })
 })
