@@ -18,14 +18,14 @@ function riverViewModel (stations) {
     stations,
     filters,
     queryGroup,
+    floodRiskUrl,
+    pageTitle,
+    metaDescription,
     exports: {
       placeBox: bbox,
       bingMaps: bingKeyMaps
     },
-    floodRiskUrl,
-    distStatement: `Showing ${stations[0].river_name} levels.`,
-    pageTitle,
-    metaDescription
+    distStatement: `Showing ${stations[0].river_name} levels.`
   }
 }
 
@@ -43,14 +43,14 @@ function areaViewModel (areaName, stations) {
     stations,
     filters,
     queryGroup,
+    floodRiskUrl,
+    pageTitle,
+    metaDescription,
     exports: {
       placeBox: bbox,
       bingMaps: bingKeyMaps
     },
-    floodRiskUrl,
-    distStatement: `Showing levels within 5 miles of ${areaName}.`,
-    pageTitle,
-    metaDescription
+    distStatement: `Showing levels within 5 miles of ${areaName}.`
   }
 }
 
@@ -71,14 +71,14 @@ function referencedStationViewModel (referencePoint, stations) {
     stations,
     filters,
     queryGroup,
+    floodRiskUrl,
+    pageTitle,
+    metaDescription,
     exports: {
       placeBox: bbox,
       bingMaps: bingKeyMaps
     },
-    floodRiskUrl,
-    distStatement: referencePoint.distStatement,
-    pageTitle,
-    metaDescription
+    distStatement: referencePoint.distStatement
   }
 }
 
@@ -117,12 +117,12 @@ function placeViewModel ({ location, place, stations = [], queryGroup }) {
     stations,
     isEngland,
     filters,
-    queryGroup: activeFilter,
-    q: location,
-    placeAddress: place.address,
     exports,
     floodRiskUrl,
     distStatement,
+    q: location,
+    queryGroup: activeFilter,
+    placeAddress: place.address,
     pageTitle: title,
     metaDescription: description
   }
