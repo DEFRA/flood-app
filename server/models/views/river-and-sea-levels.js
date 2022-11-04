@@ -4,7 +4,7 @@ const { bingKeyMaps, floodRiskUrl } = require('../../config')
 const pageTitle = 'Find river, sea, groundwater and rainfall levels'
 const metaDescription = 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
 
-function RiverViewModel (stations) {
+function riverViewModel (stations) {
   const bbox = createBbox(stations)
   stations.forEach(station => {
     setStationProperties(station)
@@ -29,7 +29,7 @@ function RiverViewModel (stations) {
   }
 }
 
-function AreaViewModel (areaName, stations) {
+function areaViewModel (areaName, stations) {
   const bbox = createBbox(stations)
   stations.forEach(station => {
     setStationProperties(station)
@@ -54,7 +54,7 @@ function AreaViewModel (areaName, stations) {
   }
 }
 
-function ReferencedStationViewModel (referencePoint, stations) {
+function referencedStationViewModel (referencePoint, stations) {
   const center = turf.point([referencePoint.lon, referencePoint.lat]).geometry
   const bbox = createBbox(stations)
   stations.forEach(station => {
@@ -82,7 +82,7 @@ function ReferencedStationViewModel (referencePoint, stations) {
   }
 }
 
-function ViewModel ({ location, place, stations, referer, queryGroup, rivers, rloiid, rainfallid, originalStation, targetArea, riverid }) {
+function viewModel ({ location, place, stations, referer, queryGroup, rivers, rloiid, rainfallid, originalStation, targetArea, riverid }) {
   let bbox, filters, activeFilter, distStatement, title, description, center, stationsBbox
   const isEngland = place ? place.isEngland.is_england : true
 
@@ -321,8 +321,8 @@ function setStationProperties (station) {
 }
 
 module.exports = {
-  RiverViewModel,
-  AreaViewModel,
-  ReferencedStationViewModel,
-  ViewModel
+  riverViewModel,
+  areaViewModel,
+  referencedStationViewModel,
+  viewModel
 }

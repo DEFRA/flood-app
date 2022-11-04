@@ -2,7 +2,7 @@
 
 const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
-const { RiverViewModel, AreaViewModel, ReferencedStationViewModel, ViewModel } = require('../models/views/river-and-sea-levels')
+const { riverViewModel, areaViewModel, referencedStationViewModel, viewModel } = require('../models/views/river-and-sea-levels')
 const locationService = require('../services/location')
 const util = require('../util')
 const route = 'river-and-sea-levels'
@@ -35,7 +35,7 @@ module.exports = [{
     }
 
     const stations = place ? await request.server.methods.flood.getStationsWithin(place.bbox10k) : []
-    const model = new ViewModel({ location, place, stations, referer, rivers, queryGroup })
+    const model = viewModel({ location, place, stations, referer, rivers, queryGroup })
     return h.view(route, { model })
   },
   options: {
@@ -61,7 +61,7 @@ module.exports = [{
 
     if (targetArea) {
       const stations = await request.server.methods.flood.getStationsWithinTargetArea(targetAreaCode)
-      const model = AreaViewModel(targetArea.ta_name, stations)
+      const model = areaViewModel(targetArea.ta_name, stations)
       return h.view(route, { model })
     }
 
@@ -76,7 +76,7 @@ module.exports = [{
     const stations = await request.server.methods.flood.getRiverById(riverId)
 
     if (stations.length > 0) {
-      const model = RiverViewModel(stations)
+      const model = riverViewModel(stations)
       return h.view(route, { model })
     }
 
@@ -99,7 +99,7 @@ module.exports = [{
         distStatement: `Showing levels within ${distanceInMiles} miles of ${riverLevelStation.external_name}.`
       }
       const stations = await request.server.methods.flood.getStationsByRadius(referencePoint.lon, referencePoint.lat, radius)
-      const model = ReferencedStationViewModel(referencePoint, stations)
+      const model = referencedStationViewModel(referencePoint, stations)
       return h.view(route, { model })
     }
 
@@ -122,7 +122,7 @@ module.exports = [{
         distStatement: `Showing levels within ${distanceInMiles} miles of ${rainfallStation.station_name}.`
       }
       const stations = await request.server.methods.flood.getStationsByRadius(referencePoint.lon, referencePoint.lat, radius)
-      const model = ReferencedStationViewModel(referencePoint, stations)
+      const model = referencedStationViewModel(referencePoint, stations)
       return h.view(route, { model })
     }
 
@@ -153,7 +153,7 @@ module.exports = [{
     if (riverid) {
       return h.redirect(`/${route}/river/${riverid}`)
     }
-    const model = new ViewModel({ })
+    const model = viewModel({ })
     return h.view(route, { model })
   },
   options: {
