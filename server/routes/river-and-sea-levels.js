@@ -2,7 +2,12 @@
 
 const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
-const { riverViewModel, areaViewModel, referencedStationViewModel, viewModel } = require('../models/views/river-and-sea-levels')
+const {
+  riverViewModel,
+  areaViewModel,
+  referencedStationViewModel,
+  placeViewModel
+} = require('../models/views/river-and-sea-levels')
 const locationService = require('../services/location')
 const util = require('../util')
 const route = 'river-and-sea-levels'
@@ -17,25 +22,32 @@ module.exports = [{
     const queryGroup = request.query.group
 
     let rivers = []
-    let place
+    let places = []
     if (location && !location.match(/^england$/i)) {
       // Note: allow any exceptions to bubble up and be handled by the errors plugin
       if (includeTypes.includes('place')) {
-        place = await findPlace(util.cleanseLocation(location))
+        places = await findPlaces(util.cleanseLocation(location))
       }
       if (includeTypes.includes('river')) {
         rivers = await request.server.methods.flood.getRiverByName(location)
       }
     }
-    if (!place && rivers.length === 0) {
-      return h.view(route, { model: { q: location }, referer })
-    }
-    if ((place ? 1 : 0) + rivers.length > 1) {
-      return h.view(`${route}-list`, { model: { q: location, place, rivers } })
+
+    if (places.length === 0) {
+      if (rivers.length === 0) {
+        return h.view(route, { model: { q: location }, referer })
+      } else if (rivers.length === 1) {
+        return h.redirect(`/${route}/river/${rivers[0].river_id}`)
+      }
     }
 
-    const stations = place ? await request.server.methods.flood.getStationsWithin(place.bbox10k) : []
-    const model = viewModel({ location, place, stations, referer, rivers, queryGroup })
+    if (places.length + rivers.length > 1) {
+      return h.view(`${route}-list`, { model: { q: location, place: places[0], rivers } })
+    }
+
+    const place = places[0]
+    const stations = await request.server.methods.flood.getStationsWithin(place.bbox10k)
+    const model = placeViewModel({ location, place, stations, referer, queryGroup })
     return h.view(route, { model })
   },
   options: {
@@ -153,8 +165,7 @@ module.exports = [{
     if (riverid) {
       return h.redirect(`/${route}/river/${riverid}`)
     }
-    const model = viewModel({ })
-    return h.view(route, { model })
+    return h.view(route, { })
   },
   options: {
     validate: {
@@ -194,7 +205,9 @@ module.exports = [{
 
 const inUk = place => place?.isUK && !place?.isScotlandOrNorthernIreland
 
-async function findPlace (location) {
+async function findPlaces (location) {
+  // NOTE: at the moment locationService.find just returns a single place
+  // using the [] for no results and with a nod to upcoming work to return >1 result
   const [place] = await locationService.find(util.cleanseLocation(location))
-  return inUk(place) ? place : undefined
+  return inUk(place) ? [place] : []
 }

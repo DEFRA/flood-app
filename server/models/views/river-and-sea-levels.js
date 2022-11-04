@@ -82,14 +82,15 @@ function referencedStationViewModel (referencePoint, stations) {
   }
 }
 
-function viewModel ({ location, place, stations, referer, queryGroup, rivers, rloiid, rainfallid, originalStation, targetArea, riverid }) {
-  let bbox, filters, activeFilter, distStatement, title, description, center, stationsBbox
+function placeViewModel ({ location, place, stations, referer, queryGroup }) {
+  let bbox, filters, activeFilter, distStatement, title, description, stationsBbox
+
   const isEngland = place ? place.isEngland.is_england : true
 
   if (stations && isEngland) {
-    ({ originalStation, bbox } = mapProperties(rloiid, originalStation, stations, bbox, rainfallid, targetArea, riverid))
     stations.forEach(station => {
-      stationProperties(station, place, stations, originalStation)
+      setStationProperties(station)
+      station.distance = calcDistance(station, place.center)
     })
     stations.sort((a, b) => a.distance - b.distance)
 
@@ -102,97 +103,31 @@ function viewModel ({ location, place, stations, referer, queryGroup, rivers, rl
   }
   stations = isEngland ? stations : []
 
-  const q = location || originalStation?.external_name || getRiverName(stations)
-  // const originalStationId = originalStation?.rloi_id
-  const placeName = place ? place.name : null
-  // const placeCentre = place ? place.center : []
-  const placeAddress = place ? place.address : null
   const exports = {
     placeBox: bbox || getPlaceBox(place, stations),
     bingMaps: bingKeyMaps
   }
-  const isMultilpleMatch = rivers?.length > 0
 
-  if (placeName && isEngland) {
-    title = `${placeName} - Find river, sea, groundwater and rainfall levels`
-    description = `Find river, sea, groundwater and rainfall levels in ${placeName}. Check the last updated height and state recorded by the gauges.`
+  if (place.name && isEngland) {
+    title = `${place.name} - Find river, sea, groundwater and rainfall levels`
+    description = `Find river, sea, groundwater and rainfall levels in ${place.name}. Check the last updated height and state recorded by the gauges.`
   } else {
     title = pageTitle
     description = metaDescription
   }
 
   return {
-    // exposed as class properties - but not used
-    // activeFilter,
-    // originalStationId,
-    // placeName,
-    // placeCentre,
-    // referer,
-    // center,
-    // stationsBbox,
     stations,
     isEngland,
     filters,
     queryGroup,
-    q,
-    placeAddress,
+    q: location,
+    placeAddress: place.address,
     exports,
-    rivers,
     floodRiskUrl,
-    isMultilpleMatch,
     distStatement,
     pageTitle: title,
     metaDescription: description
-  }
-
-  function mapProperties (rloiid, originalStation, stations, bbox, rainfallid, targetArea, riverid) {
-    if (rloiid) {
-      originalStation = stations.find(station => JSON.stringify(station.rloi_id) === rloiid)
-      originalStation.center = getCenter(stations)
-      bbox = createBbox(stations)
-    }
-    if (rainfallid) {
-      originalStation = stations.find(station => station.telemetry_id === rainfallid)
-      originalStation.center = getCenter(stations)
-      bbox = createBbox(stations)
-    }
-    if (targetArea) {
-      bbox = createBbox(stations)
-    }
-    if (riverid) {
-      bbox = createBbox(stations)
-    }
-    return { originalStation, bbox }
-  }
-
-  function stationProperties (station, place, stations, originalStation) {
-    station.external_name = formatName(station.external_name)
-    station.displayData = getDisplayData(station)
-    station.latestDatetime = station.status === 'Active' ? getFormattedTime(station) : null
-    station.formattedValue = station.status === 'Active' ? formatValue(station, station.value) : null
-    station.state = getStationState(station)
-
-    station.group_type = getStationGroup(station)
-
-    if (!originalStation) {
-      const coords = stations.map(s => [Number(s.lat), Number(s.lon)])
-
-      const features = turf.points(coords)
-
-      center = turf.center(features)
-    }
-
-    const originCenter = originalStation ? originalStation.center.coordinates : center.geometry.coordinates
-
-    const distance = place ? calcDistance(station, place.center) : calcDistance(station, originCenter)
-    station.distance = distance
-  }
-
-  function getRiverName (stations) {
-    if (stations) {
-      return stations[0].river_name
-    }
-    return ''
   }
 
   function getPlaceBox (place, stations) {
@@ -214,12 +149,6 @@ function setFilters (stations, queryGroup) {
 
   const activeFilter = filters.find(x => x.type === queryGroup) || filters.find(x => x.count > 0) || filters[0]
   return { filters, activeFilter: activeFilter.type }
-}
-
-function getCenter (stations) {
-  const points = stations.map(station => [Number(station.lat), Number(station.lon)])
-  const features = turf.points(points)
-  return turf.center(features).geometry
 }
 
 function createBbox (stations) {
@@ -318,5 +247,5 @@ module.exports = {
   riverViewModel,
   areaViewModel,
   referencedStationViewModel,
-  viewModel
+  placeViewModel
 }
