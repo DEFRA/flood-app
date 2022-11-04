@@ -11,6 +11,7 @@ const {
 const locationService = require('../services/location')
 const util = require('../util')
 const route = 'river-and-sea-levels'
+const { bingKeyMaps } = require('../config')
 
 module.exports = [{
   method: 'GET',
@@ -35,7 +36,7 @@ module.exports = [{
 
     if (places.length === 0) {
       if (rivers.length === 0) {
-        return h.view(route, { model: { q: location }, referer })
+        return h.view(route, { model: { q: location, exports: { placeBox: [], bingMaps: bingKeyMaps } }, referer })
       } else if (rivers.length === 1) {
         return h.redirect(`/${route}/river/${rivers[0].river_id}`)
       }
