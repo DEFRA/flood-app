@@ -82,29 +82,26 @@ function referencedStationViewModel (referencePoint, stations) {
   }
 }
 
-function placeViewModel ({ location, place, stations, referer, queryGroup }) {
-  let bbox, filters, activeFilter, distStatement, title, description, stationsBbox
+function placeViewModel ({ location, place, stations = [], queryGroup }) {
+  let distStatement, title, description
 
   const isEngland = place ? place.isEngland.is_england : true
 
-  if (stations && isEngland) {
-    stations.forEach(station => {
-      setStationProperties(station)
-      station.distance = calcDistance(station, place.center)
-    })
-    stations.sort((a, b) => a.distance - b.distance)
+  stations.forEach(station => {
+    setStationProperties(station)
+    station.distance = calcDistance(station, place.center)
+  })
+  stations.sort((a, b) => a.distance - b.distance)
 
-    // ref: https://flaviocopes.com/javascript-destructure-object-to-existing-variable/
-    ;({ filters, activeFilter } = setFilters(stations, queryGroup))
+  // ref: https://flaviocopes.com/javascript-destructure-object-to-existing-variable/
+  const { filters, activeFilter } = setFilters(stations, queryGroup)
 
-    deleteUndefinedProperties(stations)
+  deleteUndefinedProperties(stations)
 
-    queryGroup = activeFilter
-  }
-  stations = isEngland ? stations : []
+  const placeBox = isEngland ? place.bbox10k : []
 
   const exports = {
-    placeBox: bbox || getPlaceBox(place, stations),
+    placeBox: placeBox,
     bingMaps: bingKeyMaps
   }
 
@@ -120,7 +117,7 @@ function placeViewModel ({ location, place, stations, referer, queryGroup }) {
     stations,
     isEngland,
     filters,
-    queryGroup,
+    queryGroup: activeFilter,
     q: location,
     placeAddress: place.address,
     exports,
@@ -128,16 +125,6 @@ function placeViewModel ({ location, place, stations, referer, queryGroup }) {
     distStatement,
     pageTitle: title,
     metaDescription: description
-  }
-
-  function getPlaceBox (place, stations) {
-    let placeBox = []
-    if (place && isEngland) {
-      placeBox = place.bbox10k
-    } else if (stations) {
-      placeBox = stationsBbox
-    }
-    return placeBox
   }
 }
 
