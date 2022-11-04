@@ -113,12 +113,6 @@ function viewModel ({ location, place, stations, referer, queryGroup, rivers, rl
   }
   const isMultilpleMatch = rivers?.length > 0
 
-  if (targetArea) {
-    distStatement = `Showing levels within 5 miles of ${targetArea.ta_name}.`
-  } else if (rloiid || rainfallid) {
-    distStatement = `Showing levels within 5 miles of ${q}.`
-  }
-
   if (placeName && isEngland) {
     title = `${placeName} - Find river, sea, groundwater and rainfall levels`
     description = `Find river, sea, groundwater and rainfall levels in ${placeName}. Check the last updated height and state recorded by the gauges.`
