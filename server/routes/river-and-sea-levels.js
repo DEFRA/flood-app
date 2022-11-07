@@ -166,7 +166,7 @@ module.exports = [{
     if (riverid) {
       return h.redirect(`/${route}/river/${riverid}`)
     }
-    return h.view(route, { })
+    return h.view(route, { model: { q: location, exports: { placeBox: [], bingMaps: bingKeyMaps } } })
   },
   options: {
     validate: {
