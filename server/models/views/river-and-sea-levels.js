@@ -21,11 +21,11 @@ function riverViewModel (stations) {
     floodRiskUrl,
     pageTitle,
     metaDescription,
+    q: stations[0].river_name,
     exports: {
       placeBox: bbox,
       bingMaps: bingKeyMaps
-    },
-    distStatement: `Showing ${stations[0].river_name} levels.`
+    }
   }
 }
 
