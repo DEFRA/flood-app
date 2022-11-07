@@ -36,7 +36,7 @@ module.exports = [{
 
     if (places.length === 0) {
       if (rivers.length === 0) {
-        return h.view(route, { model: { q: location, exports: { placeBox: [], bingMaps: bingKeyMaps } }, referer })
+        return h.view(route, { model: { q: location }, referer })
       } else if (rivers.length === 1) {
         return h.redirect(`/${route}/river/${rivers[0].river_id}`)
       }
