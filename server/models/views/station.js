@@ -285,11 +285,14 @@ class ViewModel {
       })
     }
 
+    let stationStageDatum = this.station.stageDatum
+    let stationSubtract = this.station.subtract
+
     console.log('----------')
     console.log('id:', this.station.id)
     console.log('post_process:', this.station.post_process)
-    console.log('stageDatum:', this.station.stageDatum)
-    console.log('subtract:', this.station.subtract)
+    console.log('stageDatum:', stationStageDatum)
+    console.log('subtract:', stationSubtract)
 
     let imtdThreshold1 = imtdThresholds.thresholdsImtd[1]
 
@@ -297,11 +300,11 @@ class ViewModel {
       console.log('thresholdsImtd[1]:', imtdThreshold1)
 
       if (this.station.post_process) {
-        if (this.station.stageDatum > 0) {
-          imtdThreshold1 = imtdThreshold1 - this.station.stageDatum
+        if (stationStageDatum > 0) {
+          imtdThreshold1 = imtdThreshold1 - stationStageDatum
           console.log('Subtracted [stageDatum]')
-        } else if (this.station.stageDatum <= 0 && this.station.subtract > 0) {
-          imtdThreshold1 = imtdThreshold1 - this.station.subtract
+        } else if (stationStageDatum <= 0 && stationSubtract > 0) {
+          imtdThreshold1 = imtdThreshold1 - stationSubtract
           console.log('Subtracted [subtract]')
         }
       }
@@ -326,11 +329,11 @@ class ViewModel {
       console.log('thresholdsImtd[0]:', imtdThreshold0)
       // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
       if (this.station.post_process) {
-        if (this.station.stageDatum > 0) {
-          imtdThreshold0 = imtdThreshold0 - this.station.stageDatum
+        if (stationStageDatum > 0) {
+          imtdThreshold0 = imtdThreshold0 - stationStageDatum
           console.log('Subtracted [stageDatum]')
-        } else if (this.station.stageDatum <= 0 && this.station.subtract > 0) {
-          imtdThreshold0 = imtdThreshold0 - this.station.subtract
+        } else if (stationStageDatum <= 0 && stationSubtract > 0) {
+          imtdThreshold0 = imtdThreshold0 - stationSubtract
           console.log('Subtracted [subtract]')
         }
       }
