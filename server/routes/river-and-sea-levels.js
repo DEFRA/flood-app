@@ -2,10 +2,16 @@
 
 const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
-const { AreaViewModel, ReferencedStationViewModel, ViewModel } = require('../models/views/river-and-sea-levels')
+const {
+  riverViewModel,
+  areaViewModel,
+  referencedStationViewModel,
+  placeViewModel
+} = require('../models/views/river-and-sea-levels')
 const locationService = require('../services/location')
 const util = require('../util')
 const route = 'river-and-sea-levels'
+const { bingKeyMaps } = require('../config')
 
 module.exports = [{
   method: 'GET',
@@ -17,25 +23,32 @@ module.exports = [{
     const queryGroup = request.query.group
 
     let rivers = []
-    let place
+    let places = []
     if (location && !location.match(/^england$/i)) {
       // Note: allow any exceptions to bubble up and be handled by the errors plugin
       if (includeTypes.includes('place')) {
-        place = await findPlace(util.cleanseLocation(location))
+        places = await findPlaces(util.cleanseLocation(location))
       }
       if (includeTypes.includes('river')) {
         rivers = await request.server.methods.flood.getRiverByName(location)
       }
     }
-    if (!place && rivers.length === 0) {
-      return h.view(route, { model: { q: location }, referer })
-    }
-    if ((place ? 1 : 0) + rivers.length > 1) {
-      return h.view(`${route}-list`, { model: { q: location, place, rivers } })
+
+    if (places.length === 0) {
+      if (rivers.length === 0) {
+        return h.view(route, { model: { q: location }, referer })
+      } else if (rivers.length === 1) {
+        return h.redirect(`/${route}/river/${rivers[0].river_id}`)
+      }
     }
 
-    const stations = place ? await getStations(request, place) : undefined
-    const model = new ViewModel({ location, place, stations, referer, rivers, queryGroup })
+    if (places.length + rivers.length > 1) {
+      return h.view(`${route}-list`, { model: { q: location, place: places[0], rivers } })
+    }
+
+    const place = places[0]
+    const stations = await request.server.methods.flood.getStationsWithin(place.bbox10k)
+    const model = placeViewModel({ location, place, stations, referer, queryGroup })
     return h.view(route, { model })
   },
   options: {
@@ -61,11 +74,49 @@ module.exports = [{
 
     if (targetArea) {
       const stations = await request.server.methods.flood.getStationsWithinTargetArea(targetAreaCode)
-      const model = AreaViewModel(targetArea.ta_name, stations)
+      const model = areaViewModel(targetArea.ta_name, stations)
       return h.view(route, { model })
     }
 
     return boom.notFound(`Target area "${targetAreaCode}" not found`)
+  }
+}, {
+  method: 'GET',
+  path: `/${route}/river/{riverId}`,
+  handler: async (request, h) => {
+    const { riverId } = request.params
+    // NOTE: this query seems slow
+    const stations = await request.server.methods.flood.getRiverById(riverId)
+
+    if (stations.length > 0) {
+      const model = riverViewModel(stations)
+      return h.view(route, { model })
+    }
+
+    return boom.notFound(`Rainfall Gauge "${riverId}" not found`)
+  }
+}, {
+  method: 'GET',
+  path: `/${route}/rloi/{rloiId}`,
+  handler: async (request, h) => {
+    const { rloiId } = request.params
+    const riverLevelStation = await request.server.methods.flood.getStationById(rloiId, 'u')
+    const coordinates = JSON.parse(riverLevelStation.coordinates)
+
+    if (riverLevelStation) {
+      const radius = 8000 // metres
+      const distanceInMiles = Math.round(radius / 1609.344)
+      const referencePoint = {
+        lat: coordinates.coordinates[1],
+        lon: coordinates.coordinates[0],
+        distStatement: `Showing levels within ${distanceInMiles} miles of ${riverLevelStation.external_name}.`
+      }
+      const stations = await request.server.methods.flood.getStationsByRadius(referencePoint.lon, referencePoint.lat, radius)
+      const model = referencedStationViewModel(referencePoint, stations)
+      return h.view(route, { model })
+    }
+
+    return boom.notFound(`Rainfall Gauge "${rloiId}" not found`)
   }
 }, {
   method: 'GET',
@@ -84,7 +135,7 @@ module.exports = [{
         distStatement: `Showing levels within ${distanceInMiles} miles of ${rainfallStation.station_name}.`
       }
       const stations = await request.server.methods.flood.getStationsByRadius(referencePoint.lon, referencePoint.lat, radius)
-      const model = new ReferencedStationViewModel(referencePoint, stations)
+      const model = referencedStationViewModel(referencePoint, stations)
       return h.view(route, { model })
     }
 
@@ -99,9 +150,6 @@ module.exports = [{
     const rloiid = request.query['rloi-id']
     const rainfallid = request.query['rainfall-id']
     const riverid = request.query.riverId
-    const queryType = request.query.searchType
-    const queryGroup = request.query.group
-    let place, stations, originalStation, targetArea
 
     if (location) {
       return h.redirect(`/${route}/location?q=${request.query.q}`)
@@ -112,17 +160,13 @@ module.exports = [{
     if (taCode) {
       return h.redirect(`/${route}/target-area/${taCode}`)
     }
-
     if (rloiid) {
-      originalStation = await request.server.methods.flood.getStationById(rloiid, 'u')
-      stations = await getStations(request, place, rloiid, originalStation)
-    } else if (riverid) {
-      stations = await getStations(request, place, rloiid, originalStation, rainfallid, taCode, riverid)
+      return h.redirect(`/${route}/rloi/${rloiid}`)
     }
-
-    // blank-sucessful
-    const model = new ViewModel({ location, place, stations, queryType, queryGroup, rloiid, rainfallid, originalStation, targetArea, riverid })
-    return h.view(route, { model })
+    if (riverid) {
+      return h.redirect(`/${route}/river/${riverid}`)
+    }
+    return h.view(route, { model: { q: location, exports: { placeBox: [], bingMaps: bingKeyMaps } } })
   },
   options: {
     validate: {
@@ -160,25 +204,11 @@ module.exports = [{
   }
 }]
 
-const getStations = async (request, place, rloiid, originalStation, rainfallid, taCode, riverid) => {
-  if (rloiid) {
-    const station = originalStation
-    const coordinates = JSON.parse(station.coordinates)
-
-    const x = coordinates.coordinates[0]
-    const y = coordinates.coordinates[1]
-
-    return request.server.methods.flood.getStationsByRadius(x, y, 8000)
-  } else if (riverid) {
-    return request.server.methods.flood.getRiverById(riverid)
-  } else {
-    return request.server.methods.flood.getStationsWithin(place.bbox10k)
-  }
-}
-
 const inUk = place => place?.isUK && !place?.isScotlandOrNorthernIreland
 
-async function findPlace (location) {
+async function findPlaces (location) {
+  // NOTE: at the moment locationService.find just returns a single place
+  // using the [] for no results and with a nod to upcoming work to return >1 result
   const [place] = await locationService.find(util.cleanseLocation(location))
-  return inUk(place) ? place : undefined
+  return inUk(place) ? [place] : []
 }
