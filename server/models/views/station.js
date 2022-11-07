@@ -291,18 +291,22 @@ class ViewModel {
     console.log('stageDatum:', this.station.stageDatum)
     console.log('subtract:', this.station.subtract)
 
-    if (imtdThresholds.thresholdsImtd[1] !== null) {
-      console.log('thresholdsImtd[1]:', imtdThresholds.thresholdsImtd[1])
+    let imtdThreshold1 = imtdThresholds.thresholdsImtd[1]
+
+    if (imtdThreshold1 !== null) {
+      console.log('thresholdsImtd[1]:', imtdThreshold1)
 
       if (this.station.post_process) {
         if (this.station.stageDatum > 0) {
-          imtdThresholds.thresholdsImtd[1] = imtdThresholds.thresholdsImtd[1] - this.station.stageDatum
+          imtdThreshold1 = imtdThreshold1 - this.station.stageDatum
           console.log('Subtracted [stageDatum]')
         } else if (this.station.stageDatum <= 0 && this.station.subtract > 0) {
-          imtdThresholds.thresholdsImtd[1] = imtdThresholds.thresholdsImtd[1] - this.station.subtract
+          imtdThreshold1 = imtdThreshold1 - this.station.subtract
           console.log('Subtracted [subtract]')
         }
       }
+
+      imtdThresholds.thresholdsImtd[1] = imtdThreshold1
 
       this.alertThreshold = parseFloat(imtdThresholds.thresholdsImtd[1]).toFixed(2)
       thresholds.push({
@@ -316,18 +320,22 @@ class ViewModel {
       console.log('thresholdsImtd[1]:', 0)
     }
 
-    if (imtdThresholds.thresholdsImtd[0] !== null) {
-      console.log('thresholdsImtd[0]:', imtdThresholds.thresholdsImtd[0])
+    let imtdThreshold0 = imtdThresholds.thresholdsImtd[0]
+
+    if (imtdThreshold0 !== null) {
+      console.log('thresholdsImtd[0]:', imtdThreshold0)
       // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
       if (this.station.post_process) {
         if (this.station.stageDatum > 0) {
-          imtdThresholds.thresholdsImtd[0] = imtdThresholds.thresholdsImtd[0] - this.station.stageDatum
+          imtdThreshold0 = imtdThreshold0 - this.station.stageDatum
           console.log('Subtracted [stageDatum]')
         } else if (this.station.stageDatum <= 0 && this.station.subtract > 0) {
-          imtdThresholds.thresholdsImtd[0] = imtdThresholds.thresholdsImtd[0] - this.station.subtract
+          imtdThreshold0 = imtdThreshold0 - this.station.subtract
           console.log('Subtracted [subtract]')
         }
       }
+
+      imtdThresholds.thresholdsImtd[0] = imtdThreshold0
 
       this.warningThreshold = parseFloat(imtdThresholds.thresholdsImtd[0]).toFixed(2)
       thresholds.push({
