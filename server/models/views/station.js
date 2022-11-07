@@ -285,20 +285,16 @@ class ViewModel {
       })
     }
 
-
     console.log('----------')
     console.log('id:', this.station.id)
     console.log('post_process:', this.station.post_process)
     console.log('stageDatum:', this.station.stageDatum)
     console.log('subtract:', this.station.subtract)
 
-
     if (imtdThresholds.thresholdsImtd[1] !== null) {
-
 
       console.log('thresholdsImtd[1]:', imtdThresholds.thresholdsImtd[1])
       
-
       if (this.station.post_process) {
         if (this.station.stageDatum > 0) {
           imtdThresholds.thresholdsImtd[1] = imtdThresholds.thresholdsImtd[1] - this.station.stageDatum
