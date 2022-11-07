@@ -285,8 +285,8 @@ class ViewModel {
       })
     }
 
-    let stationStageDatum = this.station.stageDatum
-    let stationSubtract = this.station.subtract
+    const stationStageDatum = this.station.stageDatum
+    const stationSubtract = this.station.subtract
 
     console.log('----------')
     console.log('id:', this.station.id)
