@@ -14,12 +14,12 @@ if (document.getElementById('map')) {
     btnText: 'View map of levels',
     btnClasses: 'defra-button-secondary defra-button-secondary--icon',
     layers: 'mv,ri,ti,gr,rf',
-    extent: window.flood.model.placeBox,
+    extent: window.flood.model ? window.flood.model.placeBox : null,
     data: {
       button: 'River-list:Map-View:View-Live-warning-map',
       aerial: 'River-list-Map:Map-interaction:View-satelite-basemap'
     },
-    selectedId: window.flood.model.originalStationId
+    selectedId: window.flood.model ? window.flood.model.originalStationId : null
   })
 }
 
