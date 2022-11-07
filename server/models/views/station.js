@@ -285,11 +285,30 @@ class ViewModel {
       })
     }
 
+
+    console.log('----------')
+    console.log('id:', this.station.id)
+    console.log('post_process:', this.station.post_process)
+    console.log('stageDatum:', this.station.stageDatum)
+    console.log('subtract:', this.station.subtract)
+
+
     if (imtdThresholds.thresholdsImtd[1] !== null) {
-      // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
-      if (this.station.stageDatum > 0) {
-        imtdThresholds.thresholdsImtd[1] = imtdThresholds.thresholdsImtd[1] - this.station.stageDatum
+
+
+      console.log('thresholdsImtd[1]:', imtdThresholds.thresholdsImtd[1])
+      
+
+      if (this.station.post_process) {
+        if (this.station.stageDatum > 0) {
+          imtdThresholds.thresholdsImtd[1] = imtdThresholds.thresholdsImtd[1] - this.station.stageDatum
+          console.log('Subtracted [stageDatum]')
+        } else if (this.station.stageDatum <= 0 && this.station.subtract > 0) {
+          imtdThresholds.thresholdsImtd[1] = imtdThresholds.thresholdsImtd[1] - this.station.subtract
+          console.log('Subtracted [subtract]')
+        }
       }
+
       this.alertThreshold = parseFloat(imtdThresholds.thresholdsImtd[1]).toFixed(2)
       thresholds.push({
         id: 'alertThreshold',
@@ -298,13 +317,23 @@ class ViewModel {
         description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
         shortname: 'Possible flood alerts'
       })
+    } else {
+      console.log('thresholdsImtd[1]:', 0)
     }
 
     if (imtdThresholds.thresholdsImtd[0] !== null) {
+      console.log('thresholdsImtd[0]:', imtdThresholds.thresholdsImtd[0])
       // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
-      if (this.station.stageDatum > 0) {
-        imtdThresholds.thresholdsImtd[0] = imtdThresholds.thresholdsImtd[0] - this.station.stageDatum
+      if (this.station.post_process) {
+        if (this.station.stageDatum > 0) {
+          imtdThresholds.thresholdsImtd[0] = imtdThresholds.thresholdsImtd[0] - this.station.stageDatum
+          console.log('Subtracted [stageDatum]')
+        } else if (this.station.stageDatum <= 0 && this.station.subtract > 0) {
+          imtdThresholds.thresholdsImtd[0] = imtdThresholds.thresholdsImtd[0] - this.station.subtract
+          console.log('Subtracted [subtract]')
+        }
       }
+
       this.warningThreshold = parseFloat(imtdThresholds.thresholdsImtd[0]).toFixed(2)
       thresholds.push({
         id: 'warningThreshold',
@@ -313,6 +342,8 @@ class ViewModel {
         description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
         shortname: 'Possible flood warnings'
       })
+    } else {
+      console.log('thresholdsImtd[1]:', 0)
     }
     // }
 
