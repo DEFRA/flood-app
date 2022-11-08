@@ -340,7 +340,7 @@ class ViewModel {
       thresholds.push({
         id: 'warningThreshold',
         value: this.warningThreshold,
-        valueImtd: imtdThresholds.imtdThreshold0 || 'n/a',
+        valueImtd: imtdThreshold0 || 'n/a',
         description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
         shortname: 'Possible flood warnings'
       })
