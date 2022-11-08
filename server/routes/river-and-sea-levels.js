@@ -97,7 +97,7 @@ module.exports = [{
     const riverid = request.query.riverId
 
     if (request.query.q) {
-      return await locationQueryHandler(request, h)
+      return locationQueryHandler(request, h)
     }
     if (rainfallid) {
       return h.redirect(`/${route}/rainfall/${rainfallid}`)
