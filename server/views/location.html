@@ -65,7 +65,7 @@
       {% else %}
       <div class="defra-flood-status-item">
         <div class="defra-flood-status-item__text">
-          There are no flood warnings or alerts in this area{% if model.hasHighLevels %} but some <a href="/river-and-sea-levels/location?q={{ model.q }}">river and sea levels</a> are high{% endif %}.
+          There are no flood warnings or alerts in this area{% if model.hasHighLevels %} but some <a href="/river-and-sea-levels?q={{ model.q }}">river and sea levels</a> are high{% endif %}.
         </div>
       </div>
       {% endif %}
@@ -99,7 +99,7 @@
     <!-- River and sea levels -->
     <h2 class="govuk-heading-m">Latest river, sea, groundwater and rainfall levels</h2>
     <p>There are around 3,500 measuring stations, and most are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
-    <p><a data-journey-click="Location:Station list:Location - View station list" href="/river-and-sea-levels/location?q={{ model.location }}">Find a river, sea, groundwater or rainfall level in this area</a></p> 
+    <p><a data-journey-click="Location:Station list:Location - View station list" href="/river-and-sea-levels?q={{ model.location }}">Find a river, sea, groundwater or rainfall level in this area</a></p> 
     <!-- end river and sea levels -->
     <h2 class="govuk-heading-m">Flood forecast for the next 5 days</h2>
     {% if model.outOfDate or model.dataError %}
