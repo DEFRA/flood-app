@@ -14,14 +14,16 @@ function riverViewModel (stations) {
 
   deleteUndefinedProperties(stations)
 
+  const riverName = stations[0].river_name
+
   return {
     stations,
     filters,
     queryGroup,
     floodRiskUrl,
-    pageTitle,
+    pageTitle: `${riverName} - ${pageTitle}`,
     metaDescription,
-    q: stations[0].river_name,
+    q: riverName,
     exports: {
       placeBox: bbox,
       bingMaps: bingKeyMaps
@@ -106,7 +108,7 @@ function placeViewModel ({ location, place, stations = [], queryGroup }) {
   }
 
   if (place.name && isEngland) {
-    title = `${place.name} - Find river, sea, groundwater and rainfall levels`
+    title = `${place.name} - ${pageTitle}`
     description = `Find river, sea, groundwater and rainfall levels in ${place.name}. Check the last updated height and state recorded by the gauges.`
   } else {
     title = pageTitle
