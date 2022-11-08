@@ -11,7 +11,6 @@ const {
 const locationService = require('../services/location')
 const util = require('../util')
 const route = 'river-and-sea-levels'
-const { bingKeyMaps } = require('../config')
 
 module.exports = [{
   method: 'GET',
@@ -92,13 +91,12 @@ module.exports = [{
   method: 'GET',
   path: `/${route}`,
   handler: async (request, h) => {
-    const location = request.query.q
     const taCode = request.query['target-area']
     const rloiid = request.query['rloi-id']
     const rainfallid = request.query['rainfall-id']
     const riverid = request.query.riverId
 
-    if (location) {
+    if (request.query.q) {
       return await locationQueryHandler(request, h)
     }
     if (rainfallid) {
@@ -113,7 +111,7 @@ module.exports = [{
     if (riverid) {
       return h.redirect(`/${route}/river/${riverid}`)
     }
-    return h.view(route, { model: { q: location, exports: { placeBox: [], bingMaps: bingKeyMaps } } })
+    return h.view(route, {})
   },
   options: {
     validate: {
@@ -160,7 +158,6 @@ async function locationQueryHandler (request, h) {
   let rivers = []
   let places = []
   if (location && !location.match(/^england$/i)) {
-    // Note: allow any exceptions to bubble up and be handled by the errors plugin
     if (includeTypes.includes('place')) {
       places = await findPlaces(util.cleanseLocation(location))
     }
