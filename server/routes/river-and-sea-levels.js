@@ -15,58 +15,6 @@ const { bingKeyMaps } = require('../config')
 
 module.exports = [{
   method: 'GET',
-  path: `/${route}/location`,
-  handler: async (request, h) => {
-    const location = request.query.q
-    const referer = request.headers.referer
-    const includeTypes = request.query.includeTypes.split(',')
-    const queryGroup = request.query.group
-
-    let rivers = []
-    let places = []
-    if (location && !location.match(/^england$/i)) {
-      // Note: allow any exceptions to bubble up and be handled by the errors plugin
-      if (includeTypes.includes('place')) {
-        places = await findPlaces(util.cleanseLocation(location))
-      }
-      if (includeTypes.includes('river')) {
-        rivers = await request.server.methods.flood.getRiverByName(location)
-      }
-    }
-
-    if (places.length === 0) {
-      if (rivers.length === 0) {
-        return h.view(route, { model: { q: location }, referer })
-      } else if (rivers.length === 1) {
-        return h.redirect(`/${route}/river/${rivers[0].river_id}`)
-      }
-    }
-
-    if (places.length + rivers.length > 1) {
-      return h.view(`${route}-list`, { model: { q: location, place: places[0], rivers } })
-    }
-
-    const place = places[0]
-    const stations = await request.server.methods.flood.getStationsWithin(place.bbox10k)
-    const model = placeViewModel({ location, place, stations, referer, queryGroup })
-    return h.view(route, { model })
-  },
-  options: {
-    validate: {
-      query: joi.object({
-        q: joi.string().trim().max(200),
-        group: joi.string().trim().max(11),
-        includeTypes: joi.string().default('place,river')
-      }),
-      failAction: (_request, h) => {
-        console.error('River and Sea levels search error: Invalid or no string input.')
-
-        return h.redirect()
-      }
-    }
-  }
-}, {
-  method: 'GET',
   path: `/${route}/target-area/{targetAreaCode}`,
   handler: async (request, h) => {
     const { targetAreaCode } = request.params
@@ -85,7 +33,6 @@ module.exports = [{
   path: `/${route}/river/{riverId}`,
   handler: async (request, h) => {
     const { riverId } = request.params
-    // NOTE: this query seems slow
     const stations = await request.server.methods.flood.getRiverById(riverId)
 
     if (stations.length > 0) {
@@ -152,7 +99,7 @@ module.exports = [{
     const riverid = request.query.riverId
 
     if (location) {
-      return h.redirect(`/${route}/location?q=${request.query.q}`)
+      return await locationQueryHandler(request, h)
     }
     if (rainfallid) {
       return h.redirect(`/${route}/rainfall/${rainfallid}`)
@@ -174,7 +121,7 @@ module.exports = [{
         q: joi.string().trim().max(200),
         group: joi.string().trim().max(11),
         searchType: joi.string().trim().max(11),
-        includeTypes: joi.string(),
+        includeTypes: joi.string().default('place,river'),
         'rloi-id': joi.string(),
         'rainfall-id': joi.string(),
         'target-area': joi.string(),
@@ -189,20 +136,56 @@ module.exports = [{
   }
 }, {
   method: 'POST',
-  path: `/${route}/location`,
+  path: `/${route}`,
   handler: async (request, h) => {
     const { location } = request.payload
-    return h.redirect(`/${route}/location?q=${encodeURIComponent(location)}`).takeover()
+    return h.redirect(`/${route}?q=${encodeURIComponent(location)}`).takeover()
   },
   options: {
     validate: {
       payload: joi.object({
         location: joi.string().required()
       }),
-      failAction: (_request, h, _err) => h.redirect(`/${route}/location`).takeover()
+      failAction: (_request, h, _err) => h.redirect(`/${route}`).takeover()
     }
   }
 }]
+
+async function locationQueryHandler (request, h) {
+  const location = request.query.q
+  const referer = request.headers.referer
+  const includeTypes = request.query.includeTypes.split(',')
+  const queryGroup = request.query.group
+
+  let rivers = []
+  let places = []
+  if (location && !location.match(/^england$/i)) {
+    // Note: allow any exceptions to bubble up and be handled by the errors plugin
+    if (includeTypes.includes('place')) {
+      places = await findPlaces(util.cleanseLocation(location))
+    }
+    if (includeTypes.includes('river')) {
+      rivers = await request.server.methods.flood.getRiverByName(location)
+    }
+  }
+
+  if (places.length === 0) {
+    if (rivers.length === 0) {
+      return h.view(route, { model: { q: location }, referer })
+    } else if (rivers.length === 1) {
+      return h.redirect(`/${route}/river/${rivers[0].river_id}`)
+    }
+  }
+
+  if (places.length + rivers.length > 1) {
+    return h.view(`${route}-list`, { model: { q: location, place: places[0], rivers } })
+  }
+
+  const place = places[0]
+  const stations = await request.server.methods.flood.getStationsWithin(place.bbox10k)
+  const model = placeViewModel({ location, place, stations, referer, queryGroup })
+  return h.view(route, { model })
+}
 
 const inUk = place => place?.isUK && !place?.isScotlandOrNorthernIreland
 
