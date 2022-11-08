@@ -2313,8 +2313,11 @@ lab.experiment('Test - /river-and-sea-levels', () => {
       const response = await server.inject(options)
 
       Code.expect(response.statusCode).to.equal(200)
-      Code.expect(response.payload).to.contain('River (6)')
-      Code.expect(response.payload).to.contain('Showing River Nidd levels.')
+      const root = parse(response.payload)
+      const searchBoxValue = root.querySelectorAll('input.defra-search__input#location')[0].attributes.value
+      Code.expect(searchBoxValue, 'Search box value').to.be.equal('River Nidd')
+      const riversTab = root.querySelectorAll('ul#filter.defra-navbar__list li.defra-navbar__item--selected')[0].text.trim()
+      Code.expect(riversTab).to.be.equal('River (6)')
     })
   })
 })
