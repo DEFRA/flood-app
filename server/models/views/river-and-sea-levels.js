@@ -95,7 +95,6 @@ function placeViewModel ({ location, place, stations = [], queryGroup }) {
   })
   stations.sort((a, b) => a.distance - b.distance)
 
-  // ref: https://flaviocopes.com/javascript-destructure-object-to-existing-variable/
   const { filters, activeFilter } = setFilters(stations, queryGroup)
 
   deleteUndefinedProperties(stations)
@@ -107,9 +106,9 @@ function placeViewModel ({ location, place, stations = [], queryGroup }) {
     bingMaps: bingKeyMaps
   }
 
-  if (place.name && isEngland) {
-    title = `${place.name} - ${pageTitle}`
-    description = `Find river, sea, groundwater and rainfall levels in ${place.name}. Check the last updated height and state recorded by the gauges.`
+  if (location && isEngland) {
+    title = `${location} - ${pageTitle}`
+    description = `Find river, sea, groundwater and rainfall levels in ${location}. Check the last updated height and state recorded by the gauges.`
   } else {
     title = pageTitle
     description = metaDescription
