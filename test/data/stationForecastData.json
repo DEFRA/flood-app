@@ -298,7 +298,7 @@
       }
     ],
     "imtdThresholds": {
-      "thresholdsImtd": [ "44.1", "43.91" ],
+      "thresholdsImtd": [ "43.91", "43.91" ],
         "values": {
             "$": {
                 "stationReference": "750832",
