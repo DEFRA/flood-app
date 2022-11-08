@@ -345,7 +345,7 @@ class ViewModel {
         shortname: 'Possible flood warnings'
       })
     } else {
-      console.log('thresholdsImtd[1]:', 0)
+      console.log('thresholdsImtd[0]:', 0)
     }
     // }
 
