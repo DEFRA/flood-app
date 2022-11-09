@@ -298,7 +298,6 @@ class ViewModel {
 
     if (imtdThreshold1 !== null) {
       console.log('thresholdsImtd[1]:', imtdThreshold1)
-
       if (this.station.post_process) {
         if (stationStageDatum > 0) {
           imtdThreshold1 = imtdThreshold1 - stationStageDatum
@@ -336,7 +335,7 @@ class ViewModel {
         }
       }
 
-      this.warningThreshold = parseFloat(imtdThresholds.imtdThreshold0).toFixed(2)
+      this.warningThreshold = parseFloat(imtdThreshold0).toFixed(2)
       thresholds.push({
         id: 'warningThreshold',
         value: this.warningThreshold,
