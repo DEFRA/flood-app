@@ -147,12 +147,9 @@
 
 {% block bodyEnd %}
 {{ super() }}
-{% if model.exports %}
-  {# only need this conditional until 'no results' page (and therefore no model.exports) is in separate template file #}
-  <script>
-    window.flood.model = {{ model.exports | dump(2) | safe }}
-  </script>
-{% endif %}
+<script>
+  window.flood.model = {{ model.clientModel | dump(2) | safe }}
+</script>
 <script src="{{assetPath}}/js/templates.js"></script>
 <script src="{{assetPath}}/js/river-and-sea-levels.js"></script>
 {% endblock %}

@@ -6,11 +6,12 @@ const {
   riverViewModel,
   areaViewModel,
   referencedStationViewModel,
-  placeViewModel
+  placeViewModel,
+  disambiguationModel,
+  emptyResultsModel
 } = require('../models/views/river-and-sea-levels')
 const locationService = require('../services/location')
 const util = require('../util')
-const { bingKeyMaps } = require('../config')
 const route = 'river-and-sea-levels'
 
 module.exports = [{
@@ -112,7 +113,7 @@ module.exports = [{
     if (riverid) {
       return h.redirect(`/${route}/river/${riverid}`)
     }
-    return h.view(route, { model: { q: request.query.q, exports: { placeBox: [], bingMaps: bingKeyMaps } } })
+    return h.view(route, { model: emptyResultsModel() })
   },
   options: {
     validate: {
@@ -169,14 +170,14 @@ async function locationQueryHandler (request, h) {
 
   if (places.length === 0) {
     if (rivers.length === 0) {
-      return h.view(route, { model: { q: location, exports: { placeBox: [], bingMaps: bingKeyMaps } }, referer })
+      return h.view(route, { model: emptyResultsModel(location) })
     } else if (rivers.length === 1) {
       return h.redirect(`/${route}/river/${rivers[0].river_id}`)
     }
   }
 
   if (places.length + rivers.length > 1) {
-    return h.view(`${route}-list`, { model: { q: location, place: places[0], rivers } })
+    return h.view(`${route}-list`, { model: disambiguationModel(location, places, rivers) })
   }
 
   const place = places[0]
