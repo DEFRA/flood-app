@@ -5,11 +5,19 @@ const pageTitle = 'Find river, sea, groundwater and rainfall levels'
 const metaDescription = 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
 
 function emptyResultsModel (q) {
-  return { q, clientModel: getClientModel() }
+  return {
+    q,
+    clientModel: getClientModel()
+  }
 }
 
 function disambiguationModel (q, places, rivers) {
-  return { q, place: places[0], rivers, clientModel: getClientModel() }
+  return {
+    q,
+    rivers,
+    place: places[0],
+    clientModel: getClientModel()
+  }
 }
 
 function riverViewModel (stations) {
