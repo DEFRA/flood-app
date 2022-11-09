@@ -4,6 +4,22 @@ const { bingKeyMaps, floodRiskUrl } = require('../../config')
 const pageTitle = 'Find river, sea, groundwater and rainfall levels'
 const metaDescription = 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
 
+function emptyResultsModel (q) {
+  return {
+    q,
+    clientModel: getClientModel()
+  }
+}
+
+function disambiguationModel (q, places, rivers) {
+  return {
+    q,
+    rivers,
+    place: places[0],
+    clientModel: getClientModel()
+  }
+}
+
 function riverViewModel (stations) {
   const bbox = createBbox(stations)
   stations.forEach(station => {
@@ -21,13 +37,10 @@ function riverViewModel (stations) {
     filters,
     queryGroup,
     floodRiskUrl,
-    pageTitle: `${riverName} - ${pageTitle}`,
     metaDescription,
+    pageTitle: `${riverName} - ${pageTitle}`,
     q: riverName,
-    exports: {
-      placeBox: bbox,
-      bingMaps: bingKeyMaps
-    }
+    clientModel: getClientModel(bbox)
   }
 }
 
@@ -48,10 +61,7 @@ function areaViewModel (areaName, stations) {
     floodRiskUrl,
     pageTitle,
     metaDescription,
-    exports: {
-      placeBox: bbox,
-      bingMaps: bingKeyMaps
-    },
+    clientModel: getClientModel(bbox),
     distStatement: `Showing levels within 5 miles of ${areaName}.`
   }
 }
@@ -76,10 +86,7 @@ function referencedStationViewModel (referencePoint, stations) {
     floodRiskUrl,
     pageTitle,
     metaDescription,
-    exports: {
-      placeBox: bbox,
-      bingMaps: bingKeyMaps
-    },
+    clientModel: getClientModel(bbox),
     distStatement: referencePoint.distStatement
   }
 }
@@ -99,13 +106,6 @@ function placeViewModel ({ location, place, stations = [], queryGroup }) {
 
   deleteUndefinedProperties(stations)
 
-  const placeBox = isEngland ? place.bbox10k : []
-
-  const exports = {
-    placeBox: placeBox,
-    bingMaps: bingKeyMaps
-  }
-
   if (location && isEngland) {
     title = `${location} - ${pageTitle}`
     description = `Find river, sea, groundwater and rainfall levels in ${location}. Check the last updated height and state recorded by the gauges.`
@@ -118,10 +118,10 @@ function placeViewModel ({ location, place, stations = [], queryGroup }) {
     stations,
     isEngland,
     filters,
-    exports,
     floodRiskUrl,
     distStatement,
     q: location,
+    clientModel: getClientModel(isEngland ? place.bbox10k : []),
     queryGroup: activeFilter,
     placeAddress: place.address,
     pageTitle: title,
@@ -231,9 +231,15 @@ function setStationProperties (station) {
   station.group_type = getStationGroup(station)
 }
 
+function getClientModel (placeBox = []) {
+  return { placeBox, bingMaps: bingKeyMaps }
+}
+
 module.exports = {
   riverViewModel,
   areaViewModel,
   referencedStationViewModel,
-  placeViewModel
+  placeViewModel,
+  disambiguationModel,
+  emptyResultsModel
 }
