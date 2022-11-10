@@ -7,6 +7,8 @@ const metaDescription = 'Find river, sea, groundwater and rainfall levels in Eng
 function emptyResultsModel (q) {
   return {
     q,
+    pageTitle,
+    metaDescription,
     clientModel: getClientModel()
   }
 }
@@ -14,7 +16,9 @@ function emptyResultsModel (q) {
 function disambiguationModel (q, places, rivers) {
   return {
     q,
+    metaDescription,
     rivers,
+    pageTitle: `${q} - River, sea, groundwater and rainfall levels`,
     place: places[0],
     clientModel: getClientModel()
   }
