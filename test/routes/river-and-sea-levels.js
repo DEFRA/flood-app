@@ -365,8 +365,11 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const metaDescription = root
       .querySelectorAll('[name="description"]')
 
+    const metaTitle = root
+      .querySelectorAll('[property="og:title"]')
+
     Code.expect(metaDescription[0]._attrs.content).to.equal('Find river, sea, groundwater and rainfall levels in Warrington. Check the last updated height and state recorded by the gauges.')
-    Code.expect(response.payload).to.contain('Warrington - Find river, sea, groundwater and rainfall levels - GOV.UK\n')
+    Code.expect(metaTitle[0]._attrs.content).to.contain('Warrington - Find river, sea, groundwater and rainfall levels - GOV.UK')
 
     Code.expect(response.payload).to.contain('<span class="defra-flood-levels-table-state defra-flood-levels-table-state--grey">LOW</span>')
     Code.expect(response.payload).to.contain('<span class="defra-flood-levels-table-state defra-flood-levels-table-state--grey">NORMAL</span>')
