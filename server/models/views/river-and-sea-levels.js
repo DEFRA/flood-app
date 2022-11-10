@@ -15,10 +15,10 @@ function emptyResultsModel (q) {
 
 function disambiguationModel (q, places, rivers) {
   return {
-    pageTitle: `${q} - River, sea, groundwater and rainfall levels`,
     q,
     metaDescription,
     rivers,
+    pageTitle: `${q} - River, sea, groundwater and rainfall levels`,
     place: places[0],
     clientModel: getClientModel()
   }
