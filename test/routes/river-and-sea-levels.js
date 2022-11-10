@@ -360,6 +360,14 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
+    const root = parse(response.payload)
+
+    const metaDescription = root
+      .querySelectorAll('[name="description"]')
+
+    Code.expect(metaDescription[0]._attrs.content).to.equal('Find river, sea, groundwater and rainfall levels in Warrington. Check the last updated height and state recorded by the gauges.')
+    Code.expect(response.payload).to.contain('Warrington - Find river, sea, groundwater and rainfall levels - GOV.UK\n')
+
     Code.expect(response.payload).to.contain('<span class="defra-flood-levels-table-state defra-flood-levels-table-state--grey">LOW</span>')
     Code.expect(response.payload).to.contain('<span class="defra-flood-levels-table-state defra-flood-levels-table-state--grey">NORMAL</span>')
     Code.expect(response.payload).to.contain('<span class="defra-flood-levels-table-state defra-flood-levels-table-state--blue">HIGH</span>')
@@ -1717,6 +1725,13 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
+    const root = parse(response.payload)
+
+    const metaDescription = root
+      .querySelectorAll('[name="description"]')
+
+    Code.expect(metaDescription[0]._attrs.content).to.equal('Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.')
+    Code.expect(response.payload).to.contain('avon - River, sea, groundwater and rainfall levels - GOV.UK')
     Code.expect(response.payload).to.contain('Levels near')
     Code.expect(response.payload).to.contain('Rivers')
     Code.expect(response.payload).to.contain('More than one match was found for your location.')
