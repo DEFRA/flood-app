@@ -288,26 +288,16 @@ class ViewModel {
     const stationStageDatum = this.station.stageDatum
     const stationSubtract = this.station.subtract
 
-    console.log('----------')
-    console.log('id:', this.station.id)
-    console.log('post_process:', this.station.post_process)
-    console.log('stageDatum:', stationStageDatum)
-    console.log('subtract:', stationSubtract)
-
     let imtdThreshold1 = imtdThresholds.thresholdsImtd[1]
 
     if (imtdThreshold1 !== null) {
-      console.log('thresholdsImtd[1]:', imtdThreshold1)
       if (this.station.post_process) {
         if (stationStageDatum > 0) {
           imtdThreshold1 = imtdThreshold1 - stationStageDatum
-          console.log('Subtracted [stageDatum]')
         } else if (stationStageDatum <= 0 && stationSubtract > 0) {
           imtdThreshold1 = imtdThreshold1 - stationSubtract
-          console.log('Subtracted [subtract]')
         }
       }
-
       this.alertThreshold = parseFloat(imtdThreshold1).toFixed(2)
       thresholds.push({
         id: 'alertThreshold',
@@ -316,22 +306,17 @@ class ViewModel {
         description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
         shortname: 'Possible flood alerts'
       })
-    } else {
-      console.log('thresholdsImtd[1]:', 0)
     }
 
     let imtdThreshold0 = imtdThresholds.thresholdsImtd[0]
 
     if (imtdThreshold0 !== null) {
-      console.log('thresholdsImtd[0]:', imtdThreshold0)
       // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
       if (this.station.post_process) {
         if (stationStageDatum > 0) {
           imtdThreshold0 = imtdThreshold0 - stationStageDatum
-          console.log('Subtracted [stageDatum]')
         } else if (stationStageDatum <= 0 && stationSubtract > 0) {
           imtdThreshold0 = imtdThreshold0 - stationSubtract
-          console.log('Subtracted [subtract]')
         }
       }
 
@@ -343,8 +328,6 @@ class ViewModel {
         description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
         shortname: 'Possible flood warnings'
       })
-    } else {
-      console.log('thresholdsImtd[0]:', 0)
     }
     // }
 
