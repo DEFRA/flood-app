@@ -10,7 +10,7 @@ import '../components/map/live'
 if (document.getElementById('map')) {
 // Create LiveMap
   window.flood.maps.createLiveMap('map', {
-    btnText: 'View map of flood warnings and alerts',
+    btnText: 'View map of flood warning and alert areas',
     btnClasses: 'defra-button-secondary defra-button-secondary--icon',
     layers: 'mv,ts,tw,ta',
     extent: window.flood.model.placeBbox
