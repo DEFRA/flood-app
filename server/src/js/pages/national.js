@@ -11,7 +11,7 @@ import '../components/map/outlook'
 // Create Live Map
 if (document.getElementById('map-live')) {
   window.flood.maps.createLiveMap('map-live', {
-    btnText: window.flood.model.hasActiveFloods ? 'View map of flood warnings and alerts' : 'View map',
+    btnText: window.flood.model.hasActiveFloods ? 'View map of flood warning and alert areas' : 'View map',
     btnClasses: 'defra-button-secondary defra-button-secondary--icon',
     data: {
       button: 'National:Map-View:View-National-warning-map',
