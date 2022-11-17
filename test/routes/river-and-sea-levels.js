@@ -1373,7 +1373,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
     const root = parse(response.payload)
-    const headings = root.querySelectorAll('h1').some(h => h.textContent.trim() === 'River, sea, groundwater and rainfall levels')
+    const headings = root.querySelectorAll('h1').some(h => h.textContent.trim() === 'Find river, sea, groundwater and rainfall levels')
     Code.expect(headings, 'Heading for levels found').to.be.true()
     const searchBoxValue = root.querySelectorAll('input.defra-search__input#location')[0].attributes.value
     Code.expect(searchBoxValue, 'Search box value').to.be.equal('')
