@@ -1551,7 +1551,23 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const fakeIsEngland = () => {
       return { is_england: true }
     }
-    const fakeRiversData = () => [{ local_name: 'River North Tyne', qualified_name: 'River North Tyne', other_names: null, river_id: 'river-north-tyne' }, { local_name: 'River South Tyne', qualified_name: 'River South Tyne', other_names: null, river_id: 'river-south-tyne' }, { local_name: 'River Tyne', qualified_name: 'River Tyne', other_names: null, river_id: 'river-tyne' }]
+    const fakeRiversData = () => [
+      {
+        name: 'River North Tyne',
+        qualified_name: 'River North Tyne',
+        id: 'river-north-tyne'
+      },
+      {
+        name: 'River South Tyne',
+        qualified_name: 'River South Tyne',
+        id: 'river-south-tyne'
+      },
+      {
+        name: 'River Tyne',
+        qualified_name: 'River Tyne',
+        id: 'river-tyne'
+      }
+    ]
 
     sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
     sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
@@ -1642,9 +1658,11 @@ lab.experiment('Test - /river-and-sea-levels', () => {
       one_hr_total: null,
       id: '610'
     }]
+
     const fakeIsEngland = () => {
       return { is_england: true }
     }
+
     const fakeRiversData = () => [
       {
         local_name: 'Little Avon River',
@@ -1780,52 +1798,44 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     }
     const fakeRiversData = () => [
       {
-        local_name: 'Little Avon River',
+        name: 'Little Avon River',
         qualified_name: 'Little Avon River',
-        other_names: null,
-        river_id: 'little-avon-river'
+        id: 'little-avon-river'
       },
       {
-        local_name: 'River Avon',
+        name: 'River Avon',
         qualified_name: 'River Avon (Bristol)',
-        other_names: null,
-        river_id: 'river-avon-bristol'
+        id: 'river-avon-bristol'
       },
       {
-        local_name: 'River Avon',
+        name: 'River Avon',
         qualified_name: 'River Avon (Corsham)',
-        other_names: null,
-        river_id: 'river-avon-corsham'
+        id: 'river-avon-corsham'
       },
       {
-        local_name: 'River Avon',
+        name: 'River Avon',
         qualified_name: 'River Avon (Devon)',
-        other_names: null,
-        river_id: 'river-avon-devon'
+        id: 'river-avon-devon'
       },
       {
-        local_name: 'River Avon',
+        name: 'River Avon',
         qualified_name: 'River Avon (Hampshire)',
-        other_names: null,
-        river_id: 'river-avon-hampshire'
+        id: 'river-avon-hampshire'
       },
       {
-        local_name: 'River Avon',
+        name: 'River Avon',
         qualified_name: 'River Avon (Warwickshire)',
-        other_names: null,
-        river_id: 'river-avon-warwickshire'
+        id: 'river-avon-warwickshire'
       },
       {
-        local_name: 'Sherston Avon',
+        name: 'Sherston Avon',
         qualified_name: 'Sherston Avon',
-        other_names: null,
-        river_id: 'sherston-avon'
+        id: 'sherston-avon'
       },
       {
-        local_name: 'Tetbury Avon',
+        name: 'Tetbury Avon',
         qualified_name: 'Tetbury Avon',
-        other_names: null,
-        river_id: 'tetbury-avon'
+        id: 'tetbury-avon'
       }
     ]
 
@@ -1904,51 +1914,43 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     }
     const fakeRiversData = () => [
       {
-        local_name: 'Little Avon River',
+        name: 'Little Avon River',
         qualified_name: 'Little Avon River',
-        other_names: null,
         id: 'little-avon-river'
       },
       {
-        local_name: 'River Avon',
+        name: 'River Avon',
         qualified_name: 'River Avon (Bristol)',
-        other_names: null,
         id: 'river-avon-bristol'
       },
       {
-        local_name: 'River Avon',
+        name: 'River Avon',
         qualified_name: 'River Avon (Corsham)',
-        other_names: null,
         id: 'river-avon-corsham'
       },
       {
-        local_name: 'River Avon',
+        name: 'River Avon',
         qualified_name: 'River Avon (Devon)',
-        other_names: null,
         id: 'river-avon-devon'
       },
       {
-        local_name: 'River Avon',
+        name: 'River Avon',
         qualified_name: 'River Avon (Hampshire)',
-        other_names: null,
         id: 'river-avon-hampshire'
       },
       {
-        local_name: 'River Avon',
+        name: 'River Avon',
         qualified_name: 'River Avon (Warwickshire)',
-        other_names: null,
         id: 'river-avon-warwickshire'
       },
       {
-        local_name: 'Sherston Avon',
+        name: 'Sherston Avon',
         qualified_name: 'Sherston Avon',
-        other_names: null,
         id: 'sherston-avon'
       },
       {
-        local_name: 'Tetbury Avon',
+        name: 'Tetbury Avon',
         qualified_name: 'Tetbury Avon',
-        other_names: null,
         id: 'tetbury-avon'
       }
     ]
@@ -1997,6 +1999,102 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const placesList = root.querySelectorAll('ul.govuk-list#places-list li a')
     Code.expect(placesList.length, 'Number of matching places').to.equal(0)
+  })
+  lab.test('GET /river-and-sea-levels?q=river mersey returns the river stations', async () => {
+    const floodService = require('../../server/services/flood')
+    const fakeStationsData = () => [{
+      river_id: 'river-alne',
+      river_name: 'River Alne',
+      navigable: true,
+      view_rank: 1,
+      rank: '1',
+      rloi_id: 2083,
+      up: null,
+      down: 2048,
+      telemetry_id: '2621',
+      region: 'Midlands',
+      catchment: 'Warwickshire Avon',
+      wiski_river_name: 'River Alne',
+      agency_name: 'Henley River',
+      external_name: 'Henley River',
+      station_type: 'S',
+      status: 'Active',
+      qualifier: 'u',
+      iswales: false,
+      value: '0.414',
+      value_timestamp: '2022-09-26T13:30:00.000Z',
+      value_erred: false,
+      percentile_5: '0.546',
+      percentile_95: '0.387',
+      centroid: '0101000020E6100000068A4FA62670FCBF9C9AE66602264A40',
+      lon: -1.77738060917966,
+      lat: 52.29694830188711,
+      day_total: null,
+      six_hr_total: null,
+      one_hr_total: null,
+      id: '610'
+    }]
+    const fakeRiversData = () => [
+      {
+        name: 'River Mersey',
+        qualified_name: 'River Mersey',
+        id: 'river-mersey'
+      }
+    ]
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+    const fakeGetJson = () => {
+      return {
+        authenticationResultCode: 'ValidCredentials',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright',
+        resourceSets: [
+          {
+            estimatedTotal: 0,
+            resources: []
+          }
+        ],
+        statusCode: 200,
+        statusDescription: 'OK',
+        traceId: 'trace-id'
+      }
+    }
+
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=river%20mersey'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.headers.location).to.equal('/river-and-sea-levels/river/river-mersey')
   })
   lab.test('POST /river-and-sea-levels empty query should redirect', async () => {
     const floodService = require('../../server/services/flood')

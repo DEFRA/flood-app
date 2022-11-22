@@ -172,7 +172,7 @@ async function locationQueryHandler (request, h) {
     if (rivers.length === 0) {
       return h.view(route, { model: emptyResultsModel(location) })
     } else if (rivers.length === 1) {
-      return h.redirect(`/${route}/river/${rivers[0].river_id}`)
+      return h.redirect(`/${route}/river/${rivers[0].id}`)
     }
   }
 
