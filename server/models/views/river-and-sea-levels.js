@@ -18,7 +18,7 @@ function disambiguationModel (q, places, rivers) {
     q,
     metaDescription,
     rivers,
-    pageTitle: `${q} - River, sea, groundwater and rainfall levels`,
+    pageTitle: `${q} - ${pageTitle}`,
     place: places[0],
     clientModel: getClientModel()
   }
@@ -34,7 +34,7 @@ function riverViewModel (stations) {
 
   deleteUndefinedProperties(stations)
 
-  const riverName = stations[0].river_name
+  const qualifiedRiverName = stations[0].river_qualified_name
 
   return {
     stations,
@@ -42,8 +42,8 @@ function riverViewModel (stations) {
     queryGroup,
     floodRiskUrl,
     metaDescription,
-    pageTitle: `${riverName} - ${pageTitle}`,
-    q: riverName,
+    pageTitle: `${qualifiedRiverName} - ${pageTitle}`,
+    q: qualifiedRiverName,
     clientModel: getClientModel(bbox)
   }
 }
