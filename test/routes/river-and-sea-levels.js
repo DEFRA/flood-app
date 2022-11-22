@@ -1612,6 +1612,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const fakeStationsData = () => [{
       river_id: 'river-alne',
       river_name: 'River Alne',
+      river_qualified_name: 'River Alne',
       navigable: true,
       view_rank: 1,
       rank: '1',
@@ -1734,7 +1735,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
       .querySelectorAll('[name="description"]')
 
     Code.expect(metaDescription[0]._attrs.content).to.equal('Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.')
-    Code.expect(response.payload).to.contain('avon - River, sea, groundwater and rainfall levels - GOV.UK')
+    Code.expect(response.payload).to.contain('avon - Find river, sea, groundwater and rainfall levels - GOV.UK')
     Code.expect(response.payload).to.contain('Levels near')
     Code.expect(response.payload).to.contain('Rivers')
     Code.expect(response.payload).to.contain('More than one match was found for your location.')
@@ -1906,49 +1907,49 @@ lab.experiment('Test - /river-and-sea-levels', () => {
         local_name: 'Little Avon River',
         qualified_name: 'Little Avon River',
         other_names: null,
-        river_id: 'little-avon-river'
+        id: 'little-avon-river'
       },
       {
         local_name: 'River Avon',
         qualified_name: 'River Avon (Bristol)',
         other_names: null,
-        river_id: 'river-avon-bristol'
+        id: 'river-avon-bristol'
       },
       {
         local_name: 'River Avon',
         qualified_name: 'River Avon (Corsham)',
         other_names: null,
-        river_id: 'river-avon-corsham'
+        id: 'river-avon-corsham'
       },
       {
         local_name: 'River Avon',
         qualified_name: 'River Avon (Devon)',
         other_names: null,
-        river_id: 'river-avon-devon'
+        id: 'river-avon-devon'
       },
       {
         local_name: 'River Avon',
         qualified_name: 'River Avon (Hampshire)',
         other_names: null,
-        river_id: 'river-avon-hampshire'
+        id: 'river-avon-hampshire'
       },
       {
         local_name: 'River Avon',
         qualified_name: 'River Avon (Warwickshire)',
         other_names: null,
-        river_id: 'river-avon-warwickshire'
+        id: 'river-avon-warwickshire'
       },
       {
         local_name: 'Sherston Avon',
         qualified_name: 'Sherston Avon',
         other_names: null,
-        river_id: 'sherston-avon'
+        id: 'sherston-avon'
       },
       {
         local_name: 'Tetbury Avon',
         qualified_name: 'Tetbury Avon',
         other_names: null,
-        river_id: 'tetbury-avon'
+        id: 'tetbury-avon'
       }
     ]
 
