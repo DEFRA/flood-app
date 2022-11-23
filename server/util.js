@@ -63,7 +63,7 @@ function groupBy (arr, prop) {
 
 function cleanseLocation (location) {
   if (location) {
-    return location.replace(/[^a-zA-Z0-9',-.& ]/g, '')
+    return location.replace(/[^a-zA-Z0-9',-.& ()]/g, '')
   }
 }
 

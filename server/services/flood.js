@@ -133,8 +133,8 @@ module.exports = {
     return util.getJson(`${serviceUrl}/target-area/${taCode}`)
   },
 
-  getRiversByName (location) {
-    return util.getJson(`${serviceUrl}/river-name/${location}`)
+  getRiversByName (searchText) {
+    return util.getJson(`${serviceUrl}/river-name/${encodeURIComponent(searchText)}`)
   },
 
   getStationsByRadius (x, y, rad = 8000) {

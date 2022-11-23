@@ -159,8 +159,8 @@ async function locationQueryHandler (request, h) {
 
   let rivers = []
   let places = []
-  if (location && !location.match(/^england$/i)) {
-    const cleanLocation = util.cleanseLocation(location)
+  const cleanLocation = util.cleanseLocation(location)
+  if (cleanLocation && !cleanLocation.match(/^england$/i)) {
     if (includeTypes.includes('place')) {
       places = await findPlaces(cleanLocation)
     }
@@ -192,6 +192,6 @@ const inUk = place => place?.isUK && !place?.isScotlandOrNorthernIreland
 async function findPlaces (location) {
   // NOTE: at the moment locationService.find just returns a single place
   // using the [] for no results and with a nod to upcoming work to return >1 result
-  const [place] = await locationService.find(util.cleanseLocation(location))
+  const [place] = await locationService.find(location)
   return inUk(place) ? [place] : []
 }
