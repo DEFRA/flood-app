@@ -160,11 +160,12 @@ async function locationQueryHandler (request, h) {
   let rivers = []
   let places = []
   if (location && !location.match(/^england$/i)) {
+    const cleanLocation = util.cleanseLocation(location)
     if (includeTypes.includes('place')) {
-      places = await findPlaces(util.cleanseLocation(location))
+      places = await findPlaces(cleanLocation)
     }
     if (includeTypes.includes('river')) {
-      rivers = await request.server.methods.flood.getRiverByName(location)
+      rivers = await request.server.methods.flood.getRiverByName(cleanLocation)
     }
   }
 
