@@ -201,7 +201,7 @@ lab.experiment('Flood service test', () => {
 
     Code.expect(result).to.equal('ok')
   })
-  lab.test('Test getRiverByName', async () => {
+  lab.test('Test getRiversByName', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -213,7 +213,7 @@ lab.experiment('Flood service test', () => {
 
     const floodService = require('../../server/services/flood')
 
-    const result = await floodService.getRiverByName('tyne')
+    const result = await floodService.getRiversByName('tyne')
 
     Code.expect(result).to.equal('ok')
   })
