@@ -46,7 +46,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
     const fakeRiversData = () => []
 
-    sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
+    sandbox.stub(floodService, 'getRiversByName').callsFake(fakeRiversData)
 
     const riversPlugin = {
       plugin: {
@@ -93,7 +93,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const fakeRiversData = () => []
 
-    sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
+    sandbox.stub(floodService, 'getRiversByName').callsFake(fakeRiversData)
 
     const riversPlugin = {
       plugin: {
@@ -131,7 +131,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const fakeRiversData = () => []
 
-    sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
+    sandbox.stub(floodService, 'getRiversByName').callsFake(fakeRiversData)
 
     const fakeGetJson = () => {
       throw new Error('Bing error')
@@ -184,7 +184,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const fakeRiversData = () => []
 
-    sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
+    sandbox.stub(floodService, 'getRiversByName').callsFake(fakeRiversData)
 
     const fakeGetJson = () => {
       return {
@@ -666,7 +666,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const fakeRiversData = () => []
 
-    sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
+    sandbox.stub(floodService, 'getRiversByName').callsFake(fakeRiversData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
 
@@ -1570,7 +1570,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     ]
 
     sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
+    sandbox.stub(floodService, 'getRiversByName').callsFake(fakeRiversData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
 
     const fakeGetJson = () => {
@@ -1717,7 +1717,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const fakeGetJson = () => data.avonGetJson
 
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
+    sandbox.stub(floodService, 'getRiversByName').callsFake(fakeRiversData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
 
     const riversPlugin = {
@@ -1842,7 +1842,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const fakeGetJson = () => data.avonGetJson
 
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
+    sandbox.stub(floodService, 'getRiversByName').callsFake(fakeRiversData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
 
     const riversPlugin = {
@@ -1958,7 +1958,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const fakeGetJson = () => data.avonGetJson
 
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
+    sandbox.stub(floodService, 'getRiversByName').callsFake(fakeRiversData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
 
     const riversPlugin = {
@@ -2063,7 +2063,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     }
 
     sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getRiverByName').callsFake(fakeRiversData)
+    sandbox.stub(floodService, 'getRiversByName').callsFake(fakeRiversData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
 
     const riversPlugin = {

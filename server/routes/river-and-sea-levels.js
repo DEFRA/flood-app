@@ -165,7 +165,7 @@ async function locationQueryHandler (request, h) {
       places = await findPlaces(cleanLocation)
     }
     if (includeTypes.includes('river')) {
-      rivers = await request.server.methods.flood.getRiverByName(cleanLocation)
+      rivers = await request.server.methods.flood.getRiversByName(cleanLocation)
     }
   }
 
