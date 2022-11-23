@@ -133,7 +133,7 @@ module.exports = {
     return util.getJson(`${serviceUrl}/target-area/${taCode}`)
   },
 
-  getRiverByName (location) {
+  getRiversByName (location) {
     return util.getJson(`${serviceUrl}/river-name/${location}`)
   },
 
