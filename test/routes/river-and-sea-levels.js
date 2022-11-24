@@ -234,6 +234,102 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('No results for \'WA4 1HT\'')
     Code.expect(response.payload).to.contain('<p><strong>Call Floodline for advice</strong></p>\n')
   })
+  lab.test('GET /rivers-and-sea-levels single character search should return no results', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationsData = () => [{
+      river_id: 'river-alne',
+      river_name: 'River Alne',
+      navigable: true,
+      view_rank: 1,
+      rank: '1',
+      rloi_id: 2083,
+      up: null,
+      down: 2048,
+      telemetry_id: '2621',
+      region: 'Midlands',
+      catchment: 'Warwickshire Avon',
+      wiski_river_name: 'River Alne',
+      agency_name: 'Henley River',
+      external_name: 'Henley River',
+      station_type: 'S',
+      status: 'Active',
+      qualifier: 'u',
+      iswales: false,
+      value: '0.414',
+      value_timestamp: '2022-09-26T13:30:00.000Z',
+      value_erred: false,
+      percentile_5: '0.546',
+      percentile_95: '0.387',
+      centroid: '0101000020E6100000068A4FA62670FCBF9C9AE66602264A40',
+      lon: -1.77738060917966,
+      lat: 52.29694830188711,
+      day_total: null,
+      six_hr_total: null,
+      one_hr_total: null,
+      id: '610'
+    }]
+
+    sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
+
+    const fakeRiversData = () => [
+      {
+        name: 'River Mersey',
+        qualified_name: 'River Mersey',
+        id: 'river-mersey'
+      }
+    ]
+
+    sandbox.stub(floodService, 'getRiversByName').callsFake(fakeRiversData)
+
+    const fakeGetJson = () => {
+      return {
+        authenticationResultCode: 'ValidCredentials',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright',
+        resourceSets: [
+          {
+            estimatedTotal: 0,
+            resources: []
+          }
+        ],
+        statusCode: 200,
+        statusDescription: 'OK',
+        traceId: 'trace-id'
+      }
+    }
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(riversPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=e'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('No results for \'e\'')
+    Code.expect(response.payload).to.contain('<p><strong>Call Floodline for advice</strong></p>\n')
+  })
   lab.test('GET /river-and-sea-levels with levels Low, Normal, High', async () => {
     const floodService = require('../../server/services/flood')
 
