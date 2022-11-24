@@ -76,8 +76,12 @@ function formatValue (val) {
   return parseFloat(Math.round(val * Math.pow(10, 1)) / (Math.pow(10, 1))).toFixed(1)
 }
 
+function escapeRegExp (string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
+}
+
 function toMarked (string, find) {
-  const reg = new RegExp(`(${find})`, 'gi')
+  const reg = new RegExp(`(${escapeRegExp(find)})`, 'gi')
   return string.replace(reg, '<mark>$1</mark>')
 }
 
