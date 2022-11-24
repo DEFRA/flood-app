@@ -160,7 +160,7 @@ async function locationQueryHandler (request, h) {
   let rivers = []
   let places = []
   const cleanLocation = util.cleanseLocation(location)
-  if (cleanLocation && !cleanLocation.match(/^england$/i)) {
+  if (cleanLocation && cleanLocation.length > 1 && !cleanLocation.match(/^england$/i)) {
     if (includeTypes.includes('place')) {
       places = await findPlaces(cleanLocation)
     }
