@@ -722,7 +722,7 @@ maps.createLiveMap = (mapId, options = {}) => {
     button.setAttribute('data-journey-click', options.data.button)
   }
   btnContainer.parentNode.replaceChild(button, btnContainer)
-  
+
   // Detect keyboard interaction
   window.addEventListener('keydown', (e) => {
     maps.isKeyboard = true
