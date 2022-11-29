@@ -17,7 +17,8 @@ if (document.getElementById('map')) {
     extent: window.flood.model ? window.flood.model.placeBox : null,
     data: {
       button: 'River-list:Map-View:View-Live-warning-map',
-      aerial: 'River-list-Map:Map-interaction:View-satelite-basemap'
+      checkBox: 'River-list:Map interaction:Map - Layer interaction',
+      aerial: 'River-list:Map-interaction:View-satelite-basemap'
     },
     selectedId: window.flood.model ? window.flood.model.originalStationId : null
   })
