@@ -41,7 +41,7 @@ module.exports = [{
       return h.view(route, { model })
     }
 
-    return boom.notFound(`Rainfall Gauge "${riverId}" not found`)
+    return boom.notFound(`River"${riverId}" not found`)
   }
 }, {
   method: 'GET',
@@ -64,7 +64,7 @@ module.exports = [{
       return h.view(route, { model })
     }
 
-    return boom.notFound(`Rainfall Gauge "${rloiId}" not found`)
+    return boom.notFound(`RLOI "${rloiId}" not found`)
   }
 }, {
   method: 'GET',
