@@ -8,11 +8,10 @@ This is the front end application to check the flooding service
 
 ### Prerequisites
 
-Running flood-db: https://github.com/DEFRA/flood-db
-Running flood-gis: https://github.com/DEFRA/flood-gis
-Running flood-service: https://github.com/DEFRA/flood-service
-
-Node.js v16.x.x
+- Running flood-db: https://github.com/DEFRA/flood-db
+- Running flood-gis: https://github.com/DEFRA/flood-gis
+- Running flood-service: https://github.com/DEFRA/flood-service
+- Node.js v16.x.x
 
 ### Testing the application
 ```
@@ -32,6 +31,12 @@ $ node index.js
 ```
 
 Go to http://localhost:3009
+
+### Developing the application
+
+When making changes to the application, bear in mind that certain aspects and components are only updated when you perform the **npm run build** stage.
+
+If your changes are not reflected in the browser/console, you should check this first.
 
 # Environment variables
 

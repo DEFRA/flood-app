@@ -8,7 +8,6 @@ const util = require('../../util')
 class ViewModel {
   constructor (options) {
     const { station, telemetry, forecast, impacts, river, warningsAlerts } = options
-
     this.station = new Station(station)
     this.station.riverNavigation = river
 
@@ -111,6 +110,7 @@ class ViewModel {
     this.catchments = []
     this.date = new Date()
     this.status = this.station.status
+    console.log('\nthis.status: ', this.status)
     this.outOfDate = util.dateDiff(Date.now(), this.station.statusDate) <= 5
     this.porMaxValueIsProvisional = false
     this.station.floodingIsPossible = false
@@ -139,10 +139,13 @@ class ViewModel {
     // Gets the latest value object
     if (this.telemetry.length) {
       this.readings = this.telemetry.length
+      console.log('this.readings: ', this.readings)
       this.recentValue = this.telemetry[0]
       this.recentValueBelowZero = this.recentValue._ <= 0
       this.station.recentValue = this.recentValue
       this.hasNegativeValues = this.telemetry.some(t => t._ <= 0)
+      // only used to trigger the 'Levels that are very low or below zero...' line in the station page
+      console.log('this.hasNegativeValues: ', this.hasNegativeValues)
     }
 
     if (this.recentValue) {
