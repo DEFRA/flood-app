@@ -75,6 +75,13 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('No results for \'wefwe we fwef str\'')
+
+    const root = parse(response.payload)
+    checkTitleAndDescription(
+      root,
+      'wefwe we fwef str - Find river, sea, groundwater and rainfall levels - GOV.UK',
+      'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
+    )
   })
   lab.test('GET /river-and-see-levels with query parameters of Kinghorn, Scotland', async () => {
     const floodService = require('../../server/services/flood')
@@ -458,14 +465,11 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const root = parse(response.payload)
 
-    const metaDescription = root
-      .querySelectorAll('[name="description"]')
-
-    const metaTitle = root
-      .querySelectorAll('[property="og:title"]')
-
-    Code.expect(metaDescription[0]._attrs.content).to.equal('Find river, sea, groundwater and rainfall levels in Warrington. Check the last updated height and state recorded by the gauges.')
-    Code.expect(metaTitle[0]._attrs.content).to.contain('Warrington - Find river, sea, groundwater and rainfall levels - GOV.UK')
+    checkTitleAndDescription(
+      root,
+      'Warrington - Find river, sea, groundwater and rainfall levels - GOV.UK',
+      'Find river, sea, groundwater and rainfall levels in Warrington. Check the last updated height and state recorded by the gauges.'
+    )
 
     Code.expect(response.payload).to.contain('<span class="defra-flood-levels-table-state defra-flood-levels-table-state--grey">LOW</span>')
     Code.expect(response.payload).to.contain('<span class="defra-flood-levels-table-state defra-flood-levels-table-state--grey">NORMAL</span>')
@@ -2531,3 +2535,14 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     })
   })
 })
+
+function checkTitleAndDescription (root, title, description) {
+  const metaDescription = root
+    .querySelectorAll('[name="description"]')
+
+  const metaTitle = root
+    .querySelectorAll('[property="og:title"]')
+
+  Code.expect(metaDescription[0]._attrs.content).to.equal(description)
+  Code.expect(metaTitle[0]._attrs.content).to.contain(title)
+}
