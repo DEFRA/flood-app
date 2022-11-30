@@ -2191,7 +2191,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.statusCode).to.equal(302)
     Code.expect(response.headers.location).to.equal('/river-and-sea-levels/river/river-mersey')
   })
-  lab.test('POST /river-and-sea-levels empty query should return no results', async () => {
+  lab.test('POST /river-and-sea-levels empty query should return start page', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -2227,7 +2227,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.not.contain('Page not found')
+    Code.expect(response.payload).to.not.contain('No results for')
   })
   lab.test('POST /river-and-sea-levels non empty query should redirect', async () => {
     const floodService = require('../../server/services/flood')
