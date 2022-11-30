@@ -5,6 +5,7 @@ const wreck = require('@hapi/wreck').defaults({
   timeout: config.httpTimeoutMs
 })
 const LocationSearchError = require('./location-search-error')
+const ALLOWED_SEARCH_CHARS = 'a-zA-Z0-9\',-.& ()'
 
 function request (method, url, options, ext = false) {
   return wreck[method](url, options)
@@ -63,7 +64,8 @@ function groupBy (arr, prop) {
 
 function cleanseLocation (location) {
   if (location) {
-    return location.replace(/[^a-zA-Z0-9',-.& ()]/g, '')
+    const re = new RegExp(`[^${ALLOWED_SEARCH_CHARS}]`, 'g')
+    return location.replace(re, '')
   }
 }
 
@@ -143,5 +145,6 @@ module.exports = {
   toMarked,
   dateDiff,
   formatRainfallTelemetry,
-  rainfallTelemetryPadOut
+  rainfallTelemetryPadOut,
+  ALLOWED_SEARCH_CHARS
 }

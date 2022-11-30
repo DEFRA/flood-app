@@ -1,7 +1,7 @@
 const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
-const { formatName, toMarked } = require('../../server/util')
+const { formatName, toMarked, cleanseLocation } = require('../../server/util')
 
 lab.experiment('util', () => {
   lab.experiment('toMarked', () => {
@@ -15,6 +15,14 @@ lab.experiment('util', () => {
       // A requirement to return no results for single character search side steps the template rendering
       // error but it seems prudent to escape charaters before passing them to the regex generator
       Code.expect(toMarked('This is some (text) to be marked', '(')).to.equal('This is some <mark>(</mark>text) to be marked')
+    })
+  })
+  lab.experiment('cleanLocation', () => {
+    lab.test('Find text is cleansed', async () => {
+      Code.expect(cleanseLocation('This is some text to be cleansed', 'text')).to.equal('This is some text to be cleansed')
+    })
+    lab.test('Find text is cleansed when search term contains special character', async () => {
+      Code.expect(cleanseLocation('This is some (text) to be cleansed <script>alert(\'TEST\')</script>', '(')).to.equal('This is some (text) to be cleansed scriptalert(\'TEST\')script')
     })
   })
   lab.experiment('formatName', () => {
