@@ -1103,7 +1103,6 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.statusCode).to.equal(200)
 
     const root = parse(response.payload)
-    // Code.expect(response.payload).to.not.contain('No results for')
     Code.expect(root.querySelectorAll('h2').some(h => h.textContent.trim().startsWith('No results for'))).to.be.false()
     Code.expect(root.querySelectorAll('table.defra-flood-levels-table#results').length).to.equal(0)
   })
@@ -2192,7 +2191,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.statusCode).to.equal(302)
     Code.expect(response.headers.location).to.equal('/river-and-sea-levels/river/river-mersey')
   })
-  lab.test('POST /river-and-sea-levels empty query should redirect', async () => {
+  lab.test('POST /river-and-sea-levels empty query should return no results', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -2227,13 +2226,8 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers.location).to.equal('/river-and-sea-levels')
-
+    Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.not.contain('Page not found')
-    // const root = parse(response.payload)
-    // Code.expect(root.querySelectorAll('h2').some(h => h.textContent.trim().startsWith('No results for'))).to.be.false()
-    // Code.expect(root.querySelectorAll('table.defra-flood-levels-table#results').length).to.equal(0)
   })
   lab.test('POST /river-and-sea-levels non empty query should redirect', async () => {
     const floodService = require('../../server/services/flood')
@@ -2322,7 +2316,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     // Code.expect(root.querySelectorAll('h2').some(h => h.textContent.trim().startsWith('No results for'))).to.be.false()
     // Code.expect(root.querySelectorAll('table.defra-flood-levels-table#results').length).to.equal(0)
   })
-  lab.test('POST /river-and-sea-levels query parameters should strip out script tags', async () => {
+  lab.test('POST /river-and-sea-levels query parameters should display script tags safely', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -2354,12 +2348,14 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const options = {
       method: 'POST',
       url: '/river-and-sea-levels',
-      payload: { location: '<script>alert(\'TEST\')</script>' }
+      payload: { location: "<script>alert('TEST')</script>" }
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers.location).to.equal('/river-and-sea-levels')
+    Code.expect(response.statusCode).to.equal(200)
+    const root = parse(response.payload)
+    const headers = root.querySelectorAll('h2')
+    Code.expect(headers.some(h => h.text.trim().startsWith("No results for \x3Cscript>alert('TEST')\x3C/script>"))).to.be.false()
   })
   lab.experiment('RLOI', () => {
     lab.test('GET /river-and-sea-levels?rloi-id=7224 should redirect', async () => {

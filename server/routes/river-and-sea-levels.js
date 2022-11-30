@@ -146,7 +146,7 @@ module.exports = [{
       payload: joi.object({
         location: joi.string().regex(new RegExp(`^[${util.ALLOWED_SEARCH_CHARS}]*$`)).required()
       }),
-      failAction: (_request, h, _err) => h.view(route, { model: emptyResultsModel(_request.payload.location) }).takeover()
+      failAction: (_request, h, _err) => h.view(route, { model: emptyResultsModel(_request.payload?.location) }).takeover()
     }
   }
 }]
