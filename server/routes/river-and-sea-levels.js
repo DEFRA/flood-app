@@ -98,6 +98,8 @@ module.exports = [{
     const rainfallid = request.query['rainfall-id']
     const riverid = request.query.riverId
 
+    // note: the redirects below are to handle any bookmarks users may have as all internal links use the new format
+    // the redirects can be removed at some point in the future when we are no longer concerned about broken bookmarks
     if (request.query.q) {
       return locationQueryHandler(request, h)
     }
