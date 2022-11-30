@@ -144,7 +144,7 @@ module.exports = [{
   options: {
     validate: {
       payload: joi.object({
-        location: joi.string().required()
+        location: joi.string().regex(/^[a-zA-Z0-9',-.& ()]*$/).required()
       }),
       failAction: (_request, h, _err) => h.redirect(`/${route}`).takeover()
     }
