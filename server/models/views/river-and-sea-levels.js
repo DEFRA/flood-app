@@ -7,8 +7,8 @@ const metaDescription = 'Find river, sea, groundwater and rainfall levels in Eng
 function emptyResultsModel (q) {
   return {
     q,
-    pageTitle,
     metaDescription,
+    pageTitle: `${q} - ${pageTitle}`,
     clientModel: getClientModel()
   }
 }
