@@ -26,7 +26,14 @@ module.exports = [{
       const model = areaViewModel(targetArea.ta_name, stations)
       return h.view(route, { model })
     }
-    return h.view(route, { model: emptyResultsModel() })
+    throw boom.notFound(`Cannot find target area ${targetAreaCode}`)
+  },
+  options: {
+    validate: {
+      params: joi.object({
+        targetAreaCode: joi.string().regex(/^[a-z0-9]*$/i).required()
+      })
+    }
   }
 }, {
   method: 'GET',
