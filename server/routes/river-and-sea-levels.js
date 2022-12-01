@@ -21,13 +21,12 @@ module.exports = [{
     const { targetAreaCode } = request.params
     const targetArea = await request.server.methods.flood.getTargetArea(targetAreaCode)
 
-    if (targetArea) {
+    if (targetArea.ta_name) {
       const stations = await request.server.methods.flood.getStationsWithinTargetArea(targetAreaCode)
       const model = areaViewModel(targetArea.ta_name, stations)
       return h.view(route, { model })
     }
-
-    return boom.notFound(`Target area "${targetAreaCode}" not found`)
+    return h.view(route, { model: emptyResultsModel() })
   }
 }, {
   method: 'GET',
