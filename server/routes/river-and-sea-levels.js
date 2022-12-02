@@ -31,7 +31,7 @@ module.exports = [{
   options: {
     validate: {
       params: joi.object({
-        targetAreaCode: joi.string().regex(/^[a-z0-9]*$/i).required()
+        targetAreaCode: joi.string().regex(/^[a-z0-9_]*$/i).required()
       })
     }
   }
