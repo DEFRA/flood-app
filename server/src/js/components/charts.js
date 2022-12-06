@@ -222,7 +222,12 @@ function LineChart (containerId, data) {
     dataPoint._ = d._
     toolTipX = xScale(new Date(dataPoint.ts))
     toolTipY = pointer(e)[1]
-    toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(Number(dataPoint._).toFixed(2) + 'm')
+    // Set values below zero to display '≤0', rather than the actual value
+    dataPoint.checkTooltipValue = Number(dataPoint._).toFixed(2)
+    if (dataPoint.checkTooltipValue == 0.00) {
+      dataPoint.checkTooltipValue = '≤ 0'
+    }
+    toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(dataPoint.checkTooltipValue + 'm')
     toolTip.select('text').append('tspan').attr('x', 12).attr('dy', '1.4em').text(parseTime(new Date(dataPoint.ts)).toLowerCase() + ', ' + parseDate(new Date(dataPoint.ts)))
     // Update tooltip left/right background
     updateToolTipBackground()
@@ -310,6 +315,11 @@ function LineChart (containerId, data) {
   if (hasObserved) {
     clipInner.append('g').classed('observed observed-focus', true)
     const observedLine = lines.filter(l => l.type === 'observed')
+    for (let o = 0; o < observedLine.length; o++) {
+      if (observedLine[o]._ < 0) {
+        observedLine[o]._ = 0
+      }
+    }
     observedArea = svg.select('.observed').append('path').datum(observedLine).classed('observed-area', true)
     observed = svg.select('.observed').append('path').datum(observedLine).classed('observed-line', true)
   }
@@ -457,9 +467,9 @@ function LineChart (containerId, data) {
     thresholdsContainer.on('mouseover', (e) => {
       if (e.target.closest('.threshold')) hideTooltip()
     })
-  } else {
-    // no Values so hide chart div
-    document.getElementsByClassName('defra-line-chart')[0].style.display = 'none'
+  // } else {
+    // no Values so hide chart div <- DISABLED
+    // document.getElementsByClassName('defra-line-chart')[0].style.display = 'none'
   }
 }
 

@@ -1,6 +1,6 @@
 'use strict'
 import 'elm-pep'
-// import '../components/charts'
+import '../components/charts'
 import '../components/nunjucks'
 import '../components/map/maps'
 import '../components/map/styles'
@@ -25,7 +25,6 @@ window.flood.maps.createLiveMap('map', {
 })
 
 const chart = document.querySelector('.defra-line-chart')
-console.log('Checking chart status')
 if (chart) {
   // If javascript is enabled make content visible to all but assitive technology
   // var figure = chart.parentNode
