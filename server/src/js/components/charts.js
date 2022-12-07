@@ -225,7 +225,7 @@ function LineChart (containerId, data) {
     // Set values below zero to display '≤0', rather than the actual value
     dataPoint.checkTooltipValue = Number(dataPoint._).toFixed(2)
     if (dataPoint.checkTooltipValue == 0.00) {
-      dataPoint.checkTooltipValue = '≤ 0'
+      dataPoint.checkTooltipValue = '0'
     }
     toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(dataPoint.checkTooltipValue + 'm')
     toolTip.select('text').append('tspan').attr('x', 12).attr('dy', '1.4em').text(parseTime(new Date(dataPoint.ts)).toLowerCase() + ', ' + parseDate(new Date(dataPoint.ts)))
