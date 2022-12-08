@@ -75,6 +75,8 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('No results for \'wefwe we fwef str\'')
+    // Page Title
+    Code.expect(response.payload).to.contain('wefwe we fwef str - Find river, sea, groundwater and rainfall levels - GOV.UK\n')
 
     const root = parse(response.payload)
     checkTitleAndDescription(
@@ -1067,6 +1069,9 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const response = await server.inject(options)
 
     Code.expect(response.payload).to.contain('No results for \'England\'')
+    // page title
+    Code.expect(response.payload).to.contain('Find river, sea, groundwater and rainfall levels - GOV.UK\n')
+
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /river-and-sea-levels empty query', async () => {
@@ -1109,6 +1114,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const root = parse(response.payload)
     Code.expect(root.querySelectorAll('h2').some(h => h.textContent.trim().startsWith('No results for'))).to.be.false()
     Code.expect(root.querySelectorAll('table.defra-flood-levels-table#results').length).to.equal(0)
+    Code.expect(response.payload).to.contain('Find river, sea, groundwater and rainfall levels - GOV.UK\n')
   })
   lab.test('GET /river-and-sea-levels only groundwater stations', async () => {
     const floodService = require('../../server/services/flood')
