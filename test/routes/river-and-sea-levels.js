@@ -1115,7 +1115,6 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(root.querySelectorAll('h2').some(h => h.textContent.trim().startsWith('No results for'))).to.be.false()
     Code.expect(root.querySelectorAll('table.defra-flood-levels-table#results').length).to.equal(0)
     Code.expect(response.payload).to.contain('Find river, sea, groundwater and rainfall levels - GOV.UK\n')
-
   })
   lab.test('GET /river-and-sea-levels only groundwater stations', async () => {
     const floodService = require('../../server/services/flood')

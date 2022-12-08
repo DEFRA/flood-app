@@ -13,7 +13,7 @@ function emptyResultsModel (q) {
   }
 }
 
-function formatTitle(q) {
+function formatTitle (q) {
   return q ? `${q} - ${pageTitle}` : `${pageTitle}`
 }
 
