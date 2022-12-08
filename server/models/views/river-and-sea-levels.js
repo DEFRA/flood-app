@@ -8,9 +8,13 @@ function emptyResultsModel (q) {
   return {
     q,
     metaDescription,
-    pageTitle: `${q} - ${pageTitle}`,
+    pageTitle: formatTitle(q),
     clientModel: getClientModel()
   }
+}
+
+function formatTitle(q) {
+  return q ? `${q} - ${pageTitle}` : `${pageTitle}`
 }
 
 function disambiguationModel (q, places, rivers) {
