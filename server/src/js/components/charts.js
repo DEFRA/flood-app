@@ -22,24 +22,33 @@ function LineChart (containerId, data) {
 
   const chart = document.getElementById(containerId)
 
+// console.log('data.observed: ', data.observed)
+
   // Setup array to combine observed and forecast points and identify startPoint for locator
   let lines = []
   let dataPoint
   let hasObserved = false
   let hasForecast = false
   if (data.observed.length) {
+console.log('data.plotNegativeValues: ', data.plotNegativeValues)
     const errorFilter = l => !l.err
     const errorAndNegativeFilter = l => errorFilter(l) && l._ >= 0
     const filterFunction = data.plotNegativeValues ? errorFilter : errorAndNegativeFilter
+console.log('filterFunction: ', filterFunction)
+    // const filterFunction = errorFilter
+console.log('data.observed: ', data.observed)
     lines = data.observed.filter(filterFunction).map(l => ({ ...l, type: 'observed' })).reverse()
+console.log('lines1: ', lines)
     dataPoint = lines[lines.length - 1] ? JSON.parse(JSON.stringify(lines[lines.length - 1])) : null
     hasObserved = lines.length > 0
   }
+// console.log('data.observed2: ', data.observed)
   if (data.forecast.length) {
     lines = lines.concat(data.forecast.map(l => ({ ...l, type: 'forecast' })))
     hasForecast = true
   }
 
+console.log('lines2: ', lines)
   // Set dataPointLatest
   const dataPointLatest = JSON.parse(JSON.stringify(dataPoint))
   let dataPointLocator = dataPointLatest
@@ -222,7 +231,7 @@ function LineChart (containerId, data) {
     dataPoint._ = d._
     toolTipX = xScale(new Date(dataPoint.ts))
     toolTipY = pointer(e)[1]
-    // Set values below zero to display '≤0', rather than the actual value
+    // Set values below zero to display zero, rather than the actual value
     dataPoint.checkTooltipValue = Number(dataPoint._).toFixed(2)
     if (dataPoint.checkTooltipValue == 0.00) {
       dataPoint.checkTooltipValue = '0'
@@ -312,14 +321,21 @@ function LineChart (containerId, data) {
 
   // Add observed and forecast elements
   let observedArea, observed, forecastArea, forecast
+  // console.log('data.observed3: ', data.observed)
   if (hasObserved) {
     clipInner.append('g').classed('observed observed-focus', true)
     const observedLine = lines.filter(l => l.type === 'observed')
+
+    console.log('observedLine: ', observedLine)
+
     for (let o = 0; o < observedLine.length; o++) {
       if (observedLine[o]._ < 0) {
         observedLine[o]._ = 0
       }
     }
+    
+    console.log('observedLine2: ', observedLine)
+    
     observedArea = svg.select('.observed').append('path').datum(observedLine).classed('observed-area', true)
     observed = svg.select('.observed').append('path').datum(observedLine).classed('observed-line', true)
   }

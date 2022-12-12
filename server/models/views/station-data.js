@@ -9,7 +9,7 @@ function Station (data) {
   this.name = data.external_name
   this.river = data.wiski_river_name
   this.type = data.station_type.toLowerCase()
-  this.plotNegativeValues = ['c', 'g', 's'].includes(this.type)
+  this.plotNegativeValues = ['c', 'g', 's', 'm'].includes(this.type)
   this.status = data.status.toLowerCase()
   this.statusDate = data.status_date
   this.statusReason = data.status_reason
