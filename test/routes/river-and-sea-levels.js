@@ -803,6 +803,16 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     Code.expect(response.payload).to.contain('<p class="govuk-body">If you searched a river or place in England, you should:</p>')
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('No results for \'welshpool\'')
+    // Page Title
+    Code.expect(response.payload).to.contain('welshpool - Find river, sea, groundwater and rainfall levels - GOV.UK\n')
+
+    const root = parse(response.payload)
+    checkTitleAndDescription(
+      root,
+      'welshpool - Find river, sea, groundwater and rainfall levels - GOV.UK',
+      'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the gauges.'
+    )
   })
   lab.test('GET /river-and-sea-levels Station is coastal with percentiles so should be in river section', async () => {
     const floodService = require('../../server/services/flood')

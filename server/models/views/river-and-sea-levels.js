@@ -118,7 +118,7 @@ function placeViewModel ({ location, place, stations = [], queryGroup }) {
     title = `${location} - ${pageTitle}`
     description = `Find river, sea, groundwater and rainfall levels in ${location}. Check the last updated height and state recorded by the gauges.`
   } else {
-    title = pageTitle
+    title = location ? `${location} - ${pageTitle}` : pageTitle
     description = metaDescription
   }
 
