@@ -4,7 +4,7 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
-const ViewModel = require('../../server/models/views/river-and-sea-levels')
+const { referencedStationViewModel, placeViewModel } = require('../../server/models/views/river-and-sea-levels')
 const data = require('../data')
 
 lab.experiment('river-and-sea-levels model test', () => {
@@ -16,14 +16,69 @@ lab.experiment('river-and-sea-levels model test', () => {
   lab.afterEach(async () => {
     await sandbox.restore()
   })
-  lab.test('Test river-and-sea-level viewModel payload cheshire & rain icons display correct in list', async () => {
+  lab.test('Test river-and-sea-level placeViewModel returns stations', async () => {
     const stationsData = data.riverAndSeaLevelData
-    const viewModel = new ViewModel(stationsData)
 
-    const Result = viewModel
-    Code.expect(Result.pageTitle).to.equal('cheshire - River and sea levels in England')
-    Code.expect(Result.countLevels).to.equal(76)
-    Code.expect(Result.stations['rainfall-North-West'][0].valueState).to.equal('wet')
-    Code.expect(Result.stations['rainfall-North-West'][1].valueState).to.equal('')
+    const model = placeViewModel(stationsData)
+
+    Code.expect(model.stations.length).to.equal(76)
+    Code.expect(model.stations[0].river_name).to.equal('Valley Brook')
+    Code.expect(model.stations[0].region).to.equal('North West')
+  })
+  lab.test('Test river-and-sea-level placeViewModel returns stations in distance order from place', async () => {
+    const stationsData = data.riverAndSeaLevelDataUnordered
+    const firstStation = data.riverAndSeaLevelDataUnordered.stations[0]
+    const model = placeViewModel(stationsData)
+
+    Code.expect(model.stations[2].distance).to.be.greaterThan(model.stations[1].distance)
+    Code.expect(model.stations[0].river_name).to.not.equal(firstStation.river_name)
+    Code.expect(model.stations[0].region).to.equal('North West')
+  })
+  lab.test('Test river-and-sea-level placeViewModel filters stations into groups', async () => {
+    const stationsData = data.riverAndSeaLevelData
+    const model = placeViewModel(stationsData)
+
+    Code.expect(model.filters[0].count).to.equal(74)
+    Code.expect(model.filters[1].count).to.equal(0)
+    Code.expect(model.filters[2].count).to.equal(2)
+    Code.expect(model.filters[3].count).to.equal(0)
+  })
+  lab.test('Test river-and-sea-level placeViewModel returns formatted date time for stations', async () => {
+    const stationsData = data.riverAndSeaLevelData
+    const model = placeViewModel(stationsData)
+
+    Code.expect(model.stations[0].latestDatetime).to.equal('Updated 5:30am, 16 July ')
+  })
+  lab.test('Test river-and-sea-level placeViewModel returns formattedValue with correct number of decimal places', async () => {
+    const stationsData = data.riverAndSeaLevelData
+    const model = placeViewModel(stationsData)
+
+    const station = model.stations.find(item => {
+      return item.station_type === 'S'
+    })
+    const rainfallStation = model.stations.find(item => {
+      return item.station_type === 'R'
+    })
+
+    Code.expect(station.formattedValue).to.equal('0.22m')
+    Code.expect(rainfallStation.formattedValue).to.equal('0.0mm')
+  })
+  lab.experiment('referencedStationViewModel', () => {
+    lab.test('Test river-and-sea-level referencedStationViewModel sorts stations in distance order from rainfall station', async () => {
+      const stationsData = data.riverAndSeaLevelDataUnordered
+      const [rainfallStation] = data.rainfallStation553564
+
+      const referencePoint = {
+        name: rainfallStation.station_name,
+        lat: rainfallStation.lat,
+        lon: rainfallStation.lon
+      }
+
+      const model = referencedStationViewModel(referencePoint, stationsData.stations)
+
+      Code.expect(model.stations.length).to.equal(76)
+      Code.expect(model.stations[1].distance).to.be.greaterThan(model.stations[0].distance)
+      Code.expect(model.stations[2].distance).to.be.greaterThan(model.stations[1].distance)
+    })
   })
 })

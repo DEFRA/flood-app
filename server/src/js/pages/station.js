@@ -12,10 +12,12 @@ import '../components/toggle-list-display'
 // Create LiveMap
 window.flood.maps.createLiveMap('map', {
   btnText: 'View map',
-  btnClasses: 'defra-button-map-s',
+  btnClasses: 'defra-link-icon-s',
   layers: 'mv,ri,ti,gr,rf',
   data: {
-    button: 'Station:Map View:Station - View map'
+    button: 'Station:Map View:Station - View map',
+    checkBox: 'Station:Map interaction:Map - Layer interaction',
+    aerial: 'Station:Map interaction:View-satelite-basemap'
   },
   centre: JSON.parse(window.flood.model.station.coordinates).coordinates,
   selectedId: 'stations.' + window.flood.model.station.id,
@@ -85,7 +87,7 @@ if (chart) {
   }
 }
 
-// Add toggle list display for imapacts
+// Add toggle list display for impacts
 const toggleListDisplay = document.getElementById('toggle-list-display')
 if (toggleListDisplay) {
   window.flood.createToggleListDisplay(toggleListDisplay, {

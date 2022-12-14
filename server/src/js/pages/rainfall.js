@@ -13,7 +13,8 @@ import '../components/toggletip'
 if (document.getElementById('map')) {
   window.flood.maps.createLiveMap('map', {
     btnText: 'View map',
-    btnClasses: 'defra-button-map-s govuk-!-margin-right-1',
+    btnClasses: 'defra-link-icon-s',
+    btnType: 'link',
     data: {
       button: 'Rainfall:Map View:Rainfall - View map'
     },

@@ -1,6 +1,7 @@
 const moment = require('moment-timezone')
 const severity = require('../models/severity')
 const { groupBy } = require('../util')
+const { svgDataDefault, svgDataOne, svgDataTwo, svgDataThree } = require('../src/images/svgFloodsIcons')
 
 class Floods {
   constructor (data, national = true) {
@@ -13,21 +14,8 @@ class Floods {
       floods = !floods
         ? floods
         : floods.map(flood => {
-          flood.html = `<li class="defra-flood-list__item defra-flood-list__item--${item.hash}">
-                        <span class="defra-flood-list__item-title">
-                            <a href="/target-area/${flood.ta_code}">${flood.ta_name}</a>
-                        </span>
-                        <dl class="defra-flood-list__item-meta">
-                            <div>
-                          <dt>
-                              ${item.id === 4 ? 'Removed' : 'Updated'} at
-                          </dt>
-                          <dd>
-                              <time datetime="${flood.situation_changed}">${moment.tz(flood.situation_changed, 'Europe/London').format('h:mma')} on ${moment(flood.situation_changed).tz('Europe/London').format('D MMMM YYYY')}</time>
-                          </dd>
-                            </div>
-                        </dl>
-                      </li>`
+          const svgInner = svgMarkup(item)
+          createHtml(flood, item, svgInner)
           return flood
         })
       return {
@@ -112,3 +100,33 @@ class Floods {
   }
 }
 module.exports = Floods
+function svgMarkup (item) {
+  let svgInner
+  if (item.id === 3) {
+    svgInner = `${svgDataThree}`
+  } else if (item.id === 2) {
+    svgInner = `${svgDataTwo}`
+  } else if (item.id === 1) {
+    svgInner = `${svgDataOne}`
+  } else {
+    svgInner = `${svgDataDefault}`
+  }
+  return svgInner
+}
+function createHtml (flood, item, svgInner) {
+  flood.html = `
+            <li class="defra-flood-warnings-list-item">
+              <div class="defra-flood-warnings-list-item__icon">
+                <svg role="img" focusable="false" width="38" height="38" viewBox="0 0 38 38" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.41421">
+                  <title>${item.title}</title>
+                  ${svgInner}
+                </svg>
+              </div>
+              <div class="defra-flood-warnings-list-item__description">
+                <a href="/target-area/${flood.ta_code}" class="defra-flood-warnings-list-item__title">${flood.ta_name}</a>
+                <span class="defra-flood-warnings-list-item__meta">${item.id === 4 ? 'Removed at' : 'Updated'} 
+                <time datetime="${flood.situation_changed}">${moment.tz(flood.situation_changed, 'Europe/London').format('h:mma')} on 
+                ${moment(flood.situation_changed).tz('Europe/London').format('D MMMM YYYY')}</time></span>
+              </div>
+            </li>`
+}

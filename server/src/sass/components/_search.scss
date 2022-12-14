@@ -1,6 +1,11 @@
+
+
 .defra-search {
-    display:table;
-    width:100%;
+    margin-bottom: 0px;
+    &__container {
+        display:table;
+        width:100%;
+    }
     &__input {
         @extend .govuk-input;
         display: table-cell;
@@ -13,6 +18,12 @@
     }
     &__input:focus {
         z-index: 2;
+    }
+    &__input--error:not(:focus) {
+        border-color: $govuk-error-colour;
+    }
+    &__label {
+        margin-bottom: 10px;
     }
     &__submit-container {
         display: table-cell;
@@ -29,55 +40,39 @@
         margin:0px;
         padding:0px;
         box-shadow:none;
-        text-indent:-5000px;
         background-color:govuk-colour('blue');
         border: 2px solid govuk-colour('blue');
         z-index: 1;
         cursor: pointer;
-    }
-    &__button:after {
-        position:absolute;
-        content:'';
-        width:20px;
-        height:20px;
-        top:50%;
-        left:50%;
-        margin:-10px 0px 0px -10px;
-        background-image: url('#{$govuk-images-path}icon-search.svg');
-        background-position: 0% 0%;
-        background-size:40px 20px;
-        background-repeat: no-repeat;
+        color: white;
+        outline: 3px solid transparent;
+        svg {
+            position:absolute;
+            top: 8px;
+            left: 8px;
+        }
     }
     &__button:hover {
         background-color: govuk-colour('light-blue');
         border-color: govuk-colour('light-blue');
     }
-    &__button:focus,
-    &__button:active {
-        background-color: $govuk-focus-colour;
-        border-color: $govuk-focus-colour;
-        outline:0;
+    &__button:focus {
+        outline: 3px solid $govuk-focus-colour;
+        box-shadow: inset 0 0 0 2px govuk-colour('black');
+        border-color: govuk-colour('black');
         z-index: 2;
+    }
+    &__button:active {
+        color: govuk-colour('black');
     }
     &__button:focus:after,
     &__button:active:after {
-        background-position: 100% 0%;
+        background-image: svg-url('<svg width="20" height="20" viewBox="0 0 20 20" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="0" y="0" width="50" height="50" style="fill:none;"/><path d="M12.316,14.791c-1.242,0.79 -2.716,1.248 -4.296,1.248c-4.426,0 -8.02,-3.593 -8.02,-8.019c0,-4.426 3.594,-8.02 8.02,-8.02c4.426,0 8.019,3.594 8.019,8.02c0,1.58 -0.458,3.054 -1.248,4.296l5.209,5.209l-2.475,2.475l-5.209,-5.209Zm-4.296,-12.771c3.311,0 6,2.688 6,6c0,3.311 -2.689,6 -6,6c-3.312,0 -6,-2.689 -6,-6c0,-3.312 2.688,-6 6,-6Z" style="fill:#0b0c0c;"/></svg>');
     }
 }
-.defra-search-summary {
-    position:relative;
-    border-bottom:1px solid govuk-colour('black');
-    margin-bottom:10px;
-    &__count {
-        @extend .govuk-body;
-        @include govuk-responsive-margin(1, 'bottom');
-    }
-    .defra-button-map-s {
-        position:absolute;
-        right:0px;
-        top:2px;
-        @include mq ($from: tablet) {
-            top:3px;
-        }
+.js-enabled .defra-search {
+    &__label {
+        font-weight: normal;
+        margin-bottom: 5px;
     }
 }

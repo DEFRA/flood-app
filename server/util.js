@@ -5,6 +5,7 @@ const wreck = require('@hapi/wreck').defaults({
   timeout: config.httpTimeoutMs
 })
 const LocationSearchError = require('./location-search-error')
+const ALLOWED_SEARCH_CHARS = 'a-zA-Z0-9\',-.& ()'
 
 function request (method, url, options, ext = false) {
   return wreck[method](url, options)
@@ -63,7 +64,8 @@ function groupBy (arr, prop) {
 
 function cleanseLocation (location) {
   if (location) {
-    return location.replace(/[^a-zA-Z0-9',-.& ]/g, '')
+    const re = new RegExp(`[^${ALLOWED_SEARCH_CHARS}]`, 'g')
+    return location.replace(re, '')
   }
 }
 
@@ -74,6 +76,15 @@ function addBufferToBbox (bbox, m) {
 
 function formatValue (val) {
   return parseFloat(Math.round(val * Math.pow(10, 1)) / (Math.pow(10, 1))).toFixed(1)
+}
+
+function escapeRegExp (string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
+}
+
+function toMarked (string, find) {
+  const reg = new RegExp(`(${escapeRegExp(find)})`, 'gi')
+  return string.replace(reg, '<mark>$1</mark>')
 }
 
 function dateDiff (date1, date2) {
@@ -104,6 +115,20 @@ function rainfallTelemetryPadOut (values, valueDuration) {
   return values
 }
 
+function formatName (name = '', addressLine = undefined) {
+  // Note: We assume Bing is consitent in it's capitalisation of terms so we don't lower case them
+  // (i.e. 'Durham, durham' will not occur in the real world)
+
+  return name
+    .split(/,\s*/)
+  // Strip out addressLine to make name returned more ambiguous as we're not giving property specific information
+    .filter(part => !(addressLine && part === addressLine))
+  // remove repeated words
+    .filter((part, index, allParts) => part !== allParts[index + 1])
+    .filter(part => part !== 'United Kingdom')
+    .join(', ')
+}
+
 module.exports = {
   get,
   post,
@@ -116,7 +141,10 @@ module.exports = {
   cleanseLocation,
   addBufferToBbox,
   formatValue,
+  formatName,
+  toMarked,
   dateDiff,
   formatRainfallTelemetry,
-  rainfallTelemetryPadOut
+  rainfallTelemetryPadOut,
+  ALLOWED_SEARCH_CHARS
 }

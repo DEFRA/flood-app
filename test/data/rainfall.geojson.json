@@ -15,7 +15,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 771,
-        "station_name": "ACLE RAINGAUGE",
+        "station_name": "ACLE RAIN GAUGE",
         "ngr": "TG4073709902",
         "easting": 640737,
         "northing": 309902,
@@ -44,7 +44,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5542,
-        "station_name": "ASHBROOK RAINGAUGE GSM",
+        "station_name": "ASHBROOK  GSM",
         "ngr": "TL2020027600",
         "easting": 520200,
         "northing": 227600,
@@ -102,7 +102,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 3813,
-        "station_name": "ATTLEBOROUGH RAINGAUGE",
+        "station_name": "ATTLEBOROUGH RAIN GAUGE",
         "ngr": "TM0280095100",
         "easting": 602800,
         "northing": 295100,
@@ -131,7 +131,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1084,
-        "station_name": "BASILDON STW RAINGAUGE GSM",
+        "station_name": "BASILDON STW RAIN GAUGE GSM",
         "ngr": "TQ7375090631",
         "easting": 573750,
         "northing": 190631,
@@ -160,7 +160,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 832,
-        "station_name": "BASSINGBOURN RAINGAUGE",
+        "station_name": "BASSINGBOURN RAIN GAUGE",
         "ngr": "TL3325745257",
         "easting": 533257,
         "northing": 245257,
@@ -189,7 +189,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 732,
-        "station_name": "BEDFORD RAINGAUGE METOFF",
+        "station_name": "BEDFORD RAIN GAUGE METOFF",
         "ngr": "TL0839949405",
         "easting": 508399,
         "northing": 249405,
@@ -218,7 +218,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 26888,
-        "station_name": "BEELSBY RAINGAUGE GSM",
+        "station_name": "BEELSBY RAIN GAUGE GSM",
         "ngr": "TA1978301637",
         "easting": 519783,
         "northing": 401637,
@@ -276,7 +276,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 767,
-        "station_name": "BENHALL RAINGAUGE",
+        "station_name": "BENHALL RAIN GAUGE",
         "ngr": "TM3820460584",
         "easting": 638204,
         "northing": 260584,
@@ -305,7 +305,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 765,
-        "station_name": "BILDESTON RAINGAUGE",
+        "station_name": "BILDESTON RAIN GAUGE",
         "ngr": "TL9910048700",
         "easting": 599100,
         "northing": 248700,
@@ -334,7 +334,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5535,
-        "station_name": "BIRCHMOOR RAINGAUGE",
+        "station_name": "BIRCHMOOR RAIN GAUGE",
         "ngr": "SP9410834347",
         "easting": 494108,
         "northing": 234347,
@@ -363,7 +363,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 849,
-        "station_name": "BOCKING STW RAINGAUGE METOFF GSM",
+        "station_name": "BOCKING STW RAIN GAUGE METOFF GSM",
         "ngr": "TL7790024300",
         "easting": 577900,
         "northing": 224300,
@@ -392,7 +392,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5633,
-        "station_name": "BOURN PLUVIO RAINGAUGE",
+        "station_name": "BOURN PLUVIO RAIN GAUGE",
         "ngr": "TL3368357875",
         "easting": 533683,
         "northing": 257875,
@@ -421,7 +421,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 504559,
-        "station_name": "BRACKLEY RAINE RAINGAUGE",
+        "station_name": "BRACKLEY RAINE RAIN GAUGE",
         "ngr": "SP5970036400",
         "easting": 459700,
         "northing": 236400,
@@ -450,7 +450,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 2,
-        "station_name": "BRAMPTON RAINGAUGE",
+        "station_name": "BRAMPTON RAIN GAUGE",
         "ngr": "TL2230070900",
         "easting": 522300,
         "northing": 270900,
@@ -479,7 +479,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 412,
-        "station_name": "BRANT BROUGHTON RAINGAUGE GSM",
+        "station_name": "BRANT BROUGHTON RAIN GAUGE GSM",
         "ngr": "SK9238954234",
         "easting": 492389,
         "northing": 354234,
@@ -508,7 +508,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 22765,
-        "station_name": "BRAUNSTON RAINGAUGE",
+        "station_name": "BRAUNSTON RAIN GAUGE",
         "ngr": "SK8386006469",
         "easting": 483860,
         "northing": 306469,
@@ -537,7 +537,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 737,
-        "station_name": "BRIGHTLINGSEA RAINGAUGE",
+        "station_name": "BRIGHTLINGSEA RAIN GAUGE",
         "ngr": "TM0720017800",
         "easting": 607200,
         "northing": 217800,
@@ -566,7 +566,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 23262,
-        "station_name": "BRIGSTOCK RAINGAUGE GSM",
+        "station_name": "BRIGSTOCK RAIN GAUGE GSM",
         "ngr": "SP9484584746",
         "easting": 494845,
         "northing": 284746,
@@ -595,7 +595,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1008,
-        "station_name": "BRISTON STW RAINGAUGE GSM",
+        "station_name": "BRISTON STW RAIN GAUGE GSM",
         "ngr": "TG0728731426",
         "easting": 607287,
         "northing": 331426,
@@ -653,7 +653,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 870,
-        "station_name": "BURNHAM OVERY STW RAINGAUGE GSM",
+        "station_name": "BURNHAM OVERY STW RAIN GAUGE GSM",
         "ngr": "TF8451942263",
         "easting": 584519,
         "northing": 342263,
@@ -682,7 +682,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 845,
-        "station_name": "BURNHAM RAINGAUGE ESSEX",
+        "station_name": "BURNHAM RAIN GAUGE ESSEX",
         "ngr": "TQ9570095400",
         "easting": 595700,
         "northing": 195400,
@@ -711,7 +711,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 777,
-        "station_name": "BURROUGH GREEN RAIN E RAINGAUGE",
+        "station_name": "BURROUGH GREEN RAIN E RAIN GAUGE",
         "ngr": "TL6427455135",
         "easting": 564274,
         "northing": 255135,
@@ -740,7 +740,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5487,
-        "station_name": "BURWELL RAINGAUGE",
+        "station_name": "BURWELL RAIN GAUGE",
         "ngr": "TL5916468802",
         "easting": 559164,
         "northing": 268802,
@@ -769,7 +769,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 416,
-        "station_name": "CADNEY RAINGAUGE BRIGG",
+        "station_name": "CADNEY RAIN GAUGE BRIGG",
         "ngr": "SE9959205266",
         "easting": 499592,
         "northing": 405266,
@@ -798,7 +798,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 26176,
-        "station_name": "CANWICK RAINGAUGE GSM",
+        "station_name": "CANWICK RAIN GAUGE GSM",
         "ngr": "SK9972170296",
         "easting": 499721,
         "northing": 370296,
@@ -827,7 +827,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1857,
-        "station_name": "CHANTRY RAINGAUGE IPSWICH",
+        "station_name": "CHANTRY RAIN GAUGE IPSWICH",
         "ngr": "TM1490041400",
         "easting": 614900,
         "northing": 241400,
@@ -856,7 +856,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5498,
-        "station_name": "CHATTERIS RAINGAUGE",
+        "station_name": "CHATTERIS RAIN GAUGE",
         "ngr": "TL3960087200",
         "easting": 539600,
         "northing": 287200,
@@ -885,7 +885,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 915,
-        "station_name": "CHELMSFORD BROOKEND STW RAINGAUGE GSM",
+        "station_name": "CHELMSFORD BROOKEND STW RAIN GAUGE GSM",
         "ngr": "TL7382906797",
         "easting": 573829,
         "northing": 206797,
@@ -914,7 +914,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 26186,
-        "station_name": "CHESTERTON RAINGAUGE GSM",
+        "station_name": "CHESTERTON RAIN GAUGE GSM",
         "ngr": "TL1282094614",
         "easting": 512820,
         "northing": 294614,
@@ -943,7 +943,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 905,
-        "station_name": "COGGESHALL RAINGAUGE",
+        "station_name": "COGGESHALL RAIN GAUGE",
         "ngr": "TL8590021100",
         "easting": 585900,
         "northing": 221100,
@@ -972,7 +972,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 7029,
-        "station_name": "CORBY GLEN RAINGAUGE",
+        "station_name": "CORBY GLEN RAIN GAUGE",
         "ngr": "SK9926524647",
         "easting": 499265,
         "northing": 324647,
@@ -1001,7 +1001,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 22457,
-        "station_name": "CORBY RAINGAUGE",
+        "station_name": "CORBY RAIN GAUGE",
         "ngr": "SP9066688889",
         "easting": 490666,
         "northing": 288889,
@@ -1030,7 +1030,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 2566,
-        "station_name": "COVENHAM RAINGAUGE METOFF",
+        "station_name": "COVENHAM RAIN GAUGE METOFF",
         "ngr": "TF3502296603",
         "easting": 535022,
         "northing": 396603,
@@ -1059,7 +1059,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1028,
-        "station_name": "CROPPENBURG RAINGAUGE GSM",
+        "station_name": "CROPPENBURG RAIN GAUGE GSM",
         "ngr": "TQ8169583414",
         "easting": 581695,
         "northing": 183414,
@@ -1088,7 +1088,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 7016,
-        "station_name": "CROWLAND RAINGAUGE",
+        "station_name": "CROWLAND RAIN GAUGE",
         "ngr": "TF2461009171",
         "easting": 524610,
         "northing": 309171,
@@ -1117,7 +1117,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 23340,
-        "station_name": "DAVENTRY RESERVOIR RAINGAUGE",
+        "station_name": "DAVENTRY RESERVOIR RAIN GAUGE",
         "ngr": "SP5838761983",
         "easting": 458387,
         "northing": 261983,
@@ -1175,7 +1175,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 6147,
-        "station_name": "DINGLEY PLUVIO RAINGAUGE",
+        "station_name": "DINGLEY PLUVIO RAIN GAUGE",
         "ngr": "SP7737986757",
         "easting": 477379,
         "northing": 286757,
@@ -1204,7 +1204,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 22501,
-        "station_name": "DODFORD RAINGAUGE",
+        "station_name": "DODFORD RAIN GAUGE",
         "ngr": "SP6218660631",
         "easting": 462186,
         "northing": 260631,
@@ -1291,7 +1291,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1081,
-        "station_name": "DRAYTON PARSLOW RAINGAUGE",
+        "station_name": "DRAYTON PARSLOW RAIN GAUGE",
         "ngr": "SP8483928693",
         "easting": 484839,
         "northing": 228693,
@@ -1320,7 +1320,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 970,
-        "station_name": "EARLS COLNE STW RAINGAUGE GSM",
+        "station_name": "EARLS COLNE STW RAIN GAUGE GSM",
         "ngr": "TL8651829384",
         "easting": 586518,
         "northing": 229384,
@@ -1378,7 +1378,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 953,
-        "station_name": "EAST DEREHAM RAINGAUGE",
+        "station_name": "EAST DEREHAM RAIN GAUGE",
         "ngr": "TF9790013600",
         "easting": 597900,
         "northing": 313600,
@@ -1436,7 +1436,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 384,
-        "station_name": "EAST KIRKBY RAINGAUGE",
+        "station_name": "EAST KIRKBY RAIN GAUGE",
         "ngr": "TF3330061600",
         "easting": 533300,
         "northing": 361600,
@@ -1465,7 +1465,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 827,
-        "station_name": "ELMDON RAINGAUGE",
+        "station_name": "ELMDON RAIN GAUGE",
         "ngr": "TL4700440237",
         "easting": 547004,
         "northing": 240237,
@@ -1494,7 +1494,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 2991,
-        "station_name": "ELY OFFICE RAINGAUGE METOFF",
+        "station_name": "ELY OFFICE RAIN GAUGE METOFF",
         "ngr": "TL5518280729",
         "easting": 555182,
         "northing": 280729,
@@ -1523,7 +1523,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5465,
-        "station_name": "ETTON PLUVIO RAINGAUGE",
+        "station_name": "ETTON PLUVIO RAIN GAUGE",
         "ngr": "TF1421605106",
         "easting": 514216,
         "northing": 305106,
@@ -1552,7 +1552,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1018,
-        "station_name": "FAKENHAM STW RAINGAUGE GSM",
+        "station_name": "FAKENHAM STW RAIN GAUGE GSM",
         "ngr": "TF9265230231",
         "easting": 592652,
         "northing": 330231,
@@ -1610,7 +1610,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5779,
-        "station_name": "FLITWICK RAINGAUGE",
+        "station_name": "FLITWICK RAIN GAUGE",
         "ngr": "TL0380636461",
         "easting": 503806,
         "northing": 236461,
@@ -1639,7 +1639,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 822,
-        "station_name": "FORNCETT END RAINGAUGE",
+        "station_name": "FORNCETT END RAIN GAUGE",
         "ngr": "TM1440093100",
         "easting": 614400,
         "northing": 293100,
@@ -1668,7 +1668,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5620,
-        "station_name": "FOXCOTE RAINGAUGE",
+        "station_name": "FOXCOTE RAIN GAUGE",
         "ngr": "SP7125135743",
         "easting": 471251,
         "northing": 235743,
@@ -1697,7 +1697,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 26185,
-        "station_name": "FRAMPTON RAINGAUGE GSM",
+        "station_name": "FRAMPTON RAIN GAUGE GSM",
         "ngr": "TF3153039829",
         "easting": 531530,
         "northing": 339829,
@@ -1726,7 +1726,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 355,
-        "station_name": "GOXHILL RAINGAUGE METOFF",
+        "station_name": "GOXHILL RAIN GAUGE METOFF",
         "ngr": "TA0950019950",
         "easting": 509500,
         "northing": 419950,
@@ -1755,7 +1755,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 980,
-        "station_name": "GREAT CORNARD STW RAINGAUGE GSM",
+        "station_name": "GREAT CORNARD STW RAIN GAUGE GSM",
         "ngr": "TL8852638553",
         "easting": 588526,
         "northing": 238553,
@@ -1784,7 +1784,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 884,
-        "station_name": "GREAT DUNMOW STW RAINE RAINGAUGE",
+        "station_name": "GREAT DUNMOW STW RAINE RAIN GAUGE",
         "ngr": "TL6310922129",
         "easting": 563109,
         "northing": 222129,
@@ -1813,7 +1813,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 859,
-        "station_name": "GREAT FINBOROUGH STW RAINGAUGE GSM",
+        "station_name": "GREAT FINBOROUGH STW RAIN GAUGE GSM",
         "ngr": "TM0195957791",
         "easting": 601959,
         "northing": 257791,
@@ -1842,7 +1842,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5796,
-        "station_name": "GREAT GIDDING RAINGAUGE",
+        "station_name": "GREAT GIDDING RAIN GAUGE",
         "ngr": "TL1200082400",
         "easting": 512000,
         "northing": 282400,
@@ -1871,7 +1871,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 358,
-        "station_name": "GREAT OAKLEY RAINGAUGE ESSEX",
+        "station_name": "GREAT OAKLEY RAIN GAUGE ESSEX",
         "ngr": "TM2110026200",
         "easting": 621100,
         "northing": 226200,
@@ -1900,7 +1900,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 23352,
-        "station_name": "GREAT OXENDON RAINGAUGE GSM",
+        "station_name": "GREAT OXENDON RAIN GAUGE GSM",
         "ngr": "SP7339982379",
         "easting": 473399,
         "northing": 282379,
@@ -1929,7 +1929,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1014,
-        "station_name": "GREAT SAMPFORD FGS AND RAINGAUGE",
+        "station_name": "GREAT SAMPFORD FGS AND RAIN GAUGE",
         "ngr": "TL6450035100",
         "easting": 564500,
         "northing": 235100,
@@ -1958,7 +1958,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 3848,
-        "station_name": "GRIMSTON RAINE RAINGAUGE WITS",
+        "station_name": "GRIMSTON RAINE RAIN GAUGE WITS",
         "ngr": "TF7120021000",
         "easting": 571200,
         "northing": 321000,
@@ -1987,7 +1987,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 368,
-        "station_name": "GUTHRAM GOWT RAINGAUGE METOFF",
+        "station_name": "GUTHRAM GOWT RAIN GAUGE METOFF",
         "ngr": "TF1712822496",
         "easting": 517128,
         "northing": 322496,
@@ -2016,7 +2016,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 22462,
-        "station_name": "HALLATON RAINGAUGE",
+        "station_name": "HALLATON RAIN GAUGE",
         "ngr": "SP7954095960",
         "easting": 479540,
         "northing": 295960,
@@ -2045,7 +2045,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 813,
-        "station_name": "HANNINGFIELD RESERVOIR RAINGAUGE",
+        "station_name": "HANNINGFIELD RESERVOIR RAIN GAUGE",
         "ngr": "TQ7230096800",
         "easting": 572300,
         "northing": 196800,
@@ -2074,7 +2074,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 22448,
-        "station_name": "HANNINGTON RESERVOIR RAINGAUGE",
+        "station_name": "HANNINGTON RESERVOIR RAIN GAUGE",
         "ngr": "SP8266771190",
         "easting": 482667,
         "northing": 271190,
@@ -2103,7 +2103,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 807,
-        "station_name": "HARLESTON RAINGAUGE",
+        "station_name": "HARLESTON RAIN GAUGE",
         "ngr": "TM2490084100",
         "easting": 624900,
         "northing": 284100,
@@ -2132,7 +2132,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 800,
-        "station_name": "HEACHAM RAINGAUGE METOFF",
+        "station_name": "HEACHAM RAIN GAUGE METOFF",
         "ngr": "TF6684636358",
         "easting": 566846,
         "northing": 336358,
@@ -2190,7 +2190,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1030,
-        "station_name": "HETHERSETT RAINGAUGE",
+        "station_name": "HETHERSETT RAIN GAUGE",
         "ngr": "TG1470005300",
         "easting": 614700,
         "northing": 305300,
@@ -2219,7 +2219,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 22466,
-        "station_name": "HOLBEACH RAINGAUGE",
+        "station_name": "HOLBEACH RAIN GAUGE",
         "ngr": "TF3574925939",
         "easting": 535749,
         "northing": 325939,
@@ -2248,7 +2248,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 946,
-        "station_name": "HORSLEY CROSS PLUVIO RAINGAUGE",
+        "station_name": "HORSLEY CROSS PLUVIO RAIN GAUGE",
         "ngr": "TM1240027600",
         "easting": 612400,
         "northing": 227600,
@@ -2277,7 +2277,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1658,
-        "station_name": "HULLBRIDGE RAINGAUGE",
+        "station_name": "HULLBRIDGE RAIN GAUGE",
         "ngr": "TQ7960094000",
         "easting": 579600,
         "northing": 194000,
@@ -2306,7 +2306,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 22752,
-        "station_name": "HUSBANDS BOSWORTH RAINGAUGE",
+        "station_name": "HUSBANDS BOSWORTH RAIN GAUGE",
         "ngr": "SP6446984783",
         "easting": 464469,
         "northing": 284783,
@@ -2335,7 +2335,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 731,
-        "station_name": "HUTTON STW RAINGAUGE METOFF GSM",
+        "station_name": "HUTTON STW RAIN GAUGE METOFF GSM",
         "ngr": "TQ6510095700",
         "easting": 565100,
         "northing": 195700,
@@ -2364,7 +2364,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 23277,
-        "station_name": "KEELBY RAINGAUGE",
+        "station_name": "KEELBY RAIN GAUGE",
         "ngr": "TA1687109830",
         "easting": 516871,
         "northing": 409830,
@@ -2393,7 +2393,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 22455,
-        "station_name": "KIBWORTH RAINGAUGE",
+        "station_name": "KIBWORTH RAIN GAUGE",
         "ngr": "SP6915093503",
         "easting": 469150,
         "northing": 293503,
@@ -2422,7 +2422,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 22456,
-        "station_name": "KINGS CLIFFE RAINGAUGE",
+        "station_name": "KINGS CLIFFE RAIN GAUGE",
         "ngr": "TL0121497392",
         "easting": 501214,
         "northing": 297392,
@@ -2451,7 +2451,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 792,
-        "station_name": "KIRTLING GREEN FGS AND RAINGAUGE DUAL COMMS",
+        "station_name": "KIRTLING GREEN FGS AND RAIN GAUGE DUAL COMMS",
         "ngr": "TL6800056000",
         "easting": 568000,
         "northing": 256000,
@@ -2509,7 +2509,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1016,
-        "station_name": "LANGHAM FGS AND RAINGAUGE",
+        "station_name": "LANGHAM FGS AND RAIN GAUGE",
         "ngr": "TM0200034400",
         "easting": 602000,
         "northing": 234400,
@@ -2538,7 +2538,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1033,
-        "station_name": "LATCHINGDON RAINGAUGE",
+        "station_name": "LATCHINGDON RAIN GAUGE",
         "ngr": "TL8780001800",
         "easting": 587800,
         "northing": 201800,
@@ -2596,7 +2596,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 788,
-        "station_name": "LETCHWORTH RAINGAUGE METOFF",
+        "station_name": "LETCHWORTH RAIN GAUGE METOFF",
         "ngr": "TL2076934557",
         "easting": 520769,
         "northing": 234557,
@@ -2654,7 +2654,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5614,
-        "station_name": "LITCHBOROUGH RAINGAUGE",
+        "station_name": "LITCHBOROUGH RAIN GAUGE",
         "ngr": "SP6244655100",
         "easting": 462446,
         "northing": 255100,
@@ -2683,7 +2683,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 22774,
-        "station_name": "LOUTH KENWICK RAINGAUGE",
+        "station_name": "LOUTH KENWICK RAIN GAUGE",
         "ngr": "TF3428885100",
         "easting": 534288,
         "northing": 385100,
@@ -2712,7 +2712,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 783,
-        "station_name": "LOWESTOFT RAINGAUGE",
+        "station_name": "LOWESTOFT RAIN GAUGE",
         "ngr": "TM5400092400",
         "easting": 654000,
         "northing": 292400,
@@ -2741,7 +2741,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 938,
-        "station_name": "MALDON RAINGAUGE",
+        "station_name": "MALDON RAIN GAUGE",
         "ngr": "TL8900007400",
         "easting": 589000,
         "northing": 207400,
@@ -2770,7 +2770,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 22463,
-        "station_name": "MANTHORPE RAINGAUGE",
+        "station_name": "MANTHORPE RAIN GAUGE",
         "ngr": "TF0666616418",
         "easting": 506666,
         "northing": 316418,
@@ -2799,7 +2799,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 739,
-        "station_name": "MARCH RAINGAUGE METOFF",
+        "station_name": "MARCH RAIN GAUGE METOFF",
         "ngr": "TL4401099227",
         "easting": 544010,
         "northing": 299227,
@@ -2828,7 +2828,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 853,
-        "station_name": "MERSEA ISLAND RAINGAUGE",
+        "station_name": "MERSEA ISLAND RAIN GAUGE",
         "ngr": "TM0440014600",
         "easting": 604400,
         "northing": 214600,
@@ -2857,7 +2857,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5792,
-        "station_name": "METOFF ANDREWSFIELD RAINGAUGE",
+        "station_name": "METOFF ANDREWSFIELD RAIN GAUGE",
         "ngr": "TL6871024794",
         "easting": 568710,
         "northing": 224794,
@@ -2886,7 +2886,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 742,
-        "station_name": "METOFF BEDFORD RAINGAUGE",
+        "station_name": "METOFF BEDFORD RAIN GAUGE",
         "ngr": "TL0491659860",
         "easting": 504916,
         "northing": 259860,
@@ -2915,7 +2915,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1245,
-        "station_name": "METOFF CONINGSBY RAINGAUGE",
+        "station_name": "METOFF CONINGSBY RAIN GAUGE",
         "ngr": "TF2244856742",
         "easting": 522448,
         "northing": 356742,
@@ -2944,7 +2944,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 759,
-        "station_name": "METOFF CRANWELL RAINGAUGE",
+        "station_name": "METOFF CRANWELL RAIN GAUGE",
         "ngr": "TF0045049260",
         "easting": 500450,
         "northing": 349260,
@@ -2973,7 +2973,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 757,
-        "station_name": "METOFF HOLBEACH RAINGAUGE",
+        "station_name": "METOFF HOLBEACH RAIN GAUGE",
         "ngr": "TF4402732784",
         "easting": 544027,
         "northing": 332784,
@@ -3002,7 +3002,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1323,
-        "station_name": "METOFF MARHAM RAINGAUGE",
+        "station_name": "METOFF MARHAM RAIN GAUGE",
         "ngr": "TF7367409048",
         "easting": 573674,
         "northing": 309048,
@@ -3031,7 +3031,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1086,
-        "station_name": "METOFF SCAMPTON RAINGAUGE",
+        "station_name": "METOFF SCAMPTON RAIN GAUGE",
         "ngr": "SK9684079866",
         "easting": 496840,
         "northing": 379866,
@@ -3060,7 +3060,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 755,
-        "station_name": "METOFF SHOEBURYNESS RAINGAUGE",
+        "station_name": "METOFF SHOEBURYNESS RAIN GAUGE",
         "ngr": "TQ9607887772",
         "easting": 596078,
         "northing": 187772,
@@ -3089,7 +3089,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1246,
-        "station_name": "METOFF WADDINGTON RAINGAUGE",
+        "station_name": "METOFF WADDINGTON RAIN GAUGE",
         "ngr": "SK9879265272",
         "easting": 498792,
         "northing": 365272,
@@ -3118,7 +3118,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 478761,
-        "station_name": "METOFF WAINFLEET RAINGAUGE",
+        "station_name": "METOFF WAINFLEET RAIN GAUGE",
         "ngr": "TF5218156981",
         "easting": 552181,
         "northing": 356981,
@@ -3147,7 +3147,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 735,
-        "station_name": "METOFF WATTISHAM RAINGAUGE",
+        "station_name": "METOFF WATTISHAM RAIN GAUGE",
         "ngr": "TM0254251410",
         "easting": 602542,
         "northing": 251410,
@@ -3176,7 +3176,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 725,
-        "station_name": "METOFF WEYBOURNE RAINGAUGE",
+        "station_name": "METOFF WEYBOURNE RAIN GAUGE",
         "ngr": "TG0985943672",
         "easting": 609859,
         "northing": 343672,
@@ -3205,7 +3205,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1083,
-        "station_name": "METOFF WITTERING RAINGAUGE",
+        "station_name": "METOFF WITTERING RAIN GAUGE",
         "ngr": "TF0428702621",
         "easting": 504287,
         "northing": 302621,
@@ -3234,7 +3234,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5462,
-        "station_name": "MILDENHALL RAINGAUGE",
+        "station_name": "MILDENHALL RAIN GAUGE",
         "ngr": "TL6930374844",
         "easting": 569303,
         "northing": 274844,
@@ -3263,7 +3263,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1651,
-        "station_name": "MORLEY RAINGAUGE GSM",
+        "station_name": "MORLEY RAIN GAUGE GSM",
         "ngr": "TM0565099447",
         "easting": 605650,
         "northing": 299447,
@@ -3292,7 +3292,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 841,
-        "station_name": "MUNDFORD ROAD THETFORD RAINGAUGE",
+        "station_name": "MUNDFORD ROAD THETFORD RAIN GAUGE",
         "ngr": "TL8644584473",
         "easting": 586445,
         "northing": 284473,
@@ -3321,7 +3321,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 963,
-        "station_name": "NEEDHAM MARKET RAINGAUGE",
+        "station_name": "NEEDHAM MARKET RAIN GAUGE",
         "ngr": "TM0950054900",
         "easting": 609500,
         "northing": 254900,
@@ -3350,7 +3350,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 46669,
-        "station_name": "NORTH WALSHAM RAINGAUGE",
+        "station_name": "NORTH WALSHAM RAIN GAUGE",
         "ngr": "TG2970030700",
         "easting": 629700,
         "northing": 330700,
@@ -3379,7 +3379,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5516,
-        "station_name": "OLNEY RAINGAUGE",
+        "station_name": "OLNEY RAIN GAUGE",
         "ngr": "SP8872852659",
         "easting": 488728,
         "northing": 252659,
@@ -3408,7 +3408,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 363,
-        "station_name": "OSBOURNBY RAINGAUGE METOFF",
+        "station_name": "OSBOURNBY RAIN GAUGE METOFF",
         "ngr": "TF0757338260",
         "easting": 507573,
         "northing": 338260,
@@ -3437,7 +3437,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 23281,
-        "station_name": "OUNDLE RAINGAUGE",
+        "station_name": "OUNDLE RAIN GAUGE",
         "ngr": "TL0398189701",
         "easting": 503981,
         "northing": 289701,
@@ -3466,7 +3466,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 858,
-        "station_name": "POOLE STREET FGS DUAL COMMS AND RAINGAUGE",
+        "station_name": "POOLE STREET FGS DUAL COMMS AND RAIN GAUGE",
         "ngr": "TL7710036400",
         "easting": 577100,
         "northing": 236400,
@@ -3495,7 +3495,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 877,
-        "station_name": "PORINGLAND STW RAINGAUGE GSM",
+        "station_name": "PORINGLAND STW RAIN GAUGE GSM",
         "ngr": "TG2836100933",
         "easting": 628361,
         "northing": 300933,
@@ -3524,7 +3524,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5599,
-        "station_name": "POTTON RAINGAUGE GSM",
+        "station_name": "POTTON RAIN GAUGE GSM",
         "ngr": "TL2221948581",
         "easting": 522219,
         "northing": 248581,
@@ -3553,7 +3553,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 22459,
-        "station_name": "PRESTON CAPES RAINGAUGE",
+        "station_name": "PRESTON CAPES RAIN GAUGE",
         "ngr": "SP5670554507",
         "easting": 456705,
         "northing": 254507,
@@ -3582,7 +3582,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 22744,
-        "station_name": "QUINTON RAINGAUGE",
+        "station_name": "QUINTON RAIN GAUGE",
         "ngr": "SP7751554733",
         "easting": 477515,
         "northing": 254733,
@@ -3611,7 +3611,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 22450,
-        "station_name": "RAITHBY RAINGAUGE",
+        "station_name": "RAITHBY RAIN GAUGE",
         "ngr": "TF3203886521",
         "easting": 532038,
         "northing": 386521,
@@ -3640,7 +3640,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 26184,
-        "station_name": "RAVENSTHORPE RAINGAUGE GSM",
+        "station_name": "RAVENSTHORPE RAIN GAUGE GSM",
         "ngr": "SP6815570392",
         "easting": 468155,
         "northing": 270392,
@@ -3698,7 +3698,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 988,
-        "station_name": "REDISHAM RAINGAUGE",
+        "station_name": "REDISHAM RAIN GAUGE",
         "ngr": "TM4100084100",
         "easting": 641000,
         "northing": 284100,
@@ -3727,7 +3727,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 22465,
-        "station_name": "ROPSLEY RAINGAUGE",
+        "station_name": "ROPSLEY RAIN GAUGE",
         "ngr": "TF0010033600",
         "easting": 500100,
         "northing": 333600,
@@ -3756,7 +3756,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1025,
-        "station_name": "RUSHBROOKE RAINGAUGE",
+        "station_name": "RUSHBROOKE RAIN GAUGE",
         "ngr": "TL8732362352",
         "easting": 587323,
         "northing": 262352,
@@ -3785,7 +3785,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 330,
-        "station_name": "RUSKINGTON PLUVIO RAINGAUGE",
+        "station_name": "RUSKINGTON PLUVIO RAIN GAUGE",
         "ngr": "TF0906350528",
         "easting": 509063,
         "northing": 350528,
@@ -3814,7 +3814,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1010,
-        "station_name": "SALLE RAINGAUGE",
+        "station_name": "SALLE RAIN GAUGE",
         "ngr": "TG1260024300",
         "easting": 612600,
         "northing": 324300,
@@ -3843,7 +3843,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5473,
-        "station_name": "SALTERSFORD PLUVIO RAINGAUGE",
+        "station_name": "SALTERSFORD PLUVIO RAIN GAUGE",
         "ngr": "SK9271533450",
         "easting": 492715,
         "northing": 333450,
@@ -3872,7 +3872,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 992,
-        "station_name": "SCARHOUSE GSM RAINGAUGE",
+        "station_name": "SCARHOUSE GSM RAIN GAUGE",
         "ngr": "TQ7936382300",
         "easting": 579363,
         "northing": 182300,
@@ -3930,7 +3930,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 923,
-        "station_name": "SIBLE HEDINGHAM STW RAINGAUGE GSM",
+        "station_name": "SIBLE HEDINGHAM STW RAIN GAUGE GSM",
         "ngr": "TL7923232797",
         "easting": 579232,
         "northing": 232797,
@@ -3988,7 +3988,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 26175,
-        "station_name": "SOUTH FERRIBY RAINGAUGE GSM",
+        "station_name": "SOUTH FERRIBY RAIN GAUGE GSM",
         "ngr": "SE9757421017",
         "easting": 497574,
         "northing": 421017,
@@ -4017,7 +4017,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 345,
-        "station_name": "SOUTH WITHAM RAINGAUGE",
+        "station_name": "SOUTH WITHAM RAIN GAUGE",
         "ngr": "SK9292019628",
         "easting": 492920,
         "northing": 319628,
@@ -4046,7 +4046,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 23348,
-        "station_name": "SPALDING RAINGAUGE GSM",
+        "station_name": "SPALDING RAIN GAUGE GSM",
         "ngr": "TF2613225075",
         "easting": 526132,
         "northing": 325075,
@@ -4075,7 +4075,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1666,
-        "station_name": "SPRINGFIELD FGS AND RAINGAUGE",
+        "station_name": "SPRINGFIELD FGS AND RAIN GAUGE",
         "ngr": "TL7130007100",
         "easting": 571300,
         "northing": 207100,
@@ -4104,7 +4104,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 22458,
-        "station_name": "STAMFORD RAINGAUGE",
+        "station_name": "STAMFORD RAIN GAUGE",
         "ngr": "TF0691306489",
         "easting": 506913,
         "northing": 306489,
@@ -4133,7 +4133,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 496215,
-        "station_name": "STANTON PLUVIO RAINGAUGE",
+        "station_name": "STANTON PLUVIO RAIN GAUGE",
         "ngr": "TL9730073500",
         "easting": 597300,
         "northing": 273500,
@@ -4162,7 +4162,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 995,
-        "station_name": "STEEPLE BUMPSTEAD STW RAINGAUGE GSM",
+        "station_name": "STEEPLE BUMPSTEAD STW RAIN GAUGE GSM",
         "ngr": "TL6828341874",
         "easting": 568283,
         "northing": 241874,
@@ -4191,7 +4191,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 403,
-        "station_name": "STENIGOT RAINGAUGE",
+        "station_name": "STENIGOT RAIN GAUGE",
         "ngr": "TF2583282715",
         "easting": 525832,
         "northing": 382715,
@@ -4220,7 +4220,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5571,
-        "station_name": "ST IVES RAINGAUGE",
+        "station_name": "ST IVES RAIN GAUGE",
         "ngr": "TL3171073365",
         "easting": 531710,
         "northing": 273365,
@@ -4249,7 +4249,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 29005,
-        "station_name": "STOKE BY CLARE LS AND RAINGAUGE",
+        "station_name": "STOKE BY CLARE LS AND RAIN GAUGE",
         "ngr": "TL7466443414",
         "easting": 574664,
         "northing": 243414,
@@ -4278,7 +4278,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 973,
-        "station_name": "STRADBROKE RAINGAUGE",
+        "station_name": "STRADBROKE RAIN GAUGE",
         "ngr": "TM2350074500",
         "easting": 623500,
         "northing": 274500,
@@ -4307,7 +4307,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 402,
-        "station_name": "TEALBY RAINGAUGE METOFF",
+        "station_name": "TEALBY RAIN GAUGE METOFF",
         "ngr": "TF1516290375",
         "easting": 515162,
         "northing": 390375,
@@ -4336,7 +4336,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 27001,
-        "station_name": "TETFORD RAINGAUGE GSM",
+        "station_name": "TETFORD RAIN GAUGE GSM",
         "ngr": "TF3382274240",
         "easting": 533822,
         "northing": 374240,
@@ -4365,7 +4365,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1655,
-        "station_name": "TILLINGHAM RAINGAUGE",
+        "station_name": "TILLINGHAM RAIN GAUGE",
         "ngr": "TL9880004300",
         "easting": 598800,
         "northing": 204300,
@@ -4423,7 +4423,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 985,
-        "station_name": "TIPTREE RAINGAUGE",
+        "station_name": "TIPTREE RAIN GAUGE",
         "ngr": "TL9070016500",
         "easting": 590700,
         "northing": 216500,
@@ -4452,7 +4452,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5580,
-        "station_name": "TODDINGTON RAINGAUGE",
+        "station_name": "TODDINGTON RAIN GAUGE",
         "ngr": "TL0014728507",
         "easting": 500147,
         "northing": 228507,
@@ -4510,7 +4510,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1,
-        "station_name": "TOWCESTER RAINGAUGE METOFF",
+        "station_name": "TOWCESTER RAIN GAUGE METOFF",
         "ngr": "SP7170948741",
         "easting": 471709,
         "northing": 248741,
@@ -4539,7 +4539,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 372,
-        "station_name": "ULCEBY CROSS RAINGAUGE METOFF",
+        "station_name": "ULCEBY CROSS RAIN GAUGE METOFF",
         "ngr": "TF4049072930",
         "easting": 540490,
         "northing": 372930,
@@ -4568,7 +4568,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 413,
-        "station_name": "UPTON RAINGAUGE LINCS",
+        "station_name": "UPTON RAIN GAUGE LINCS",
         "ngr": "SK8763586834",
         "easting": 487635,
         "northing": 386834,
@@ -4597,7 +4597,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1088,
-        "station_name": "UTTONS DROVE RAINE RAINGAUGE SWAVESEY",
+        "station_name": "UTTONS DROVE RAINE RAIN GAUGE SWAVESEY",
         "ngr": "TL3672065325",
         "easting": 536720,
         "northing": 265325,
@@ -4626,7 +4626,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5382,
-        "station_name": "WELLINGBOROUGH RAIN E RAINGAUGE",
+        "station_name": "WELLINGBOROUGH RAIN E RAIN GAUGE",
         "ngr": "SP9071367349",
         "easting": 490713,
         "northing": 267349,
@@ -4655,7 +4655,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1000,
-        "station_name": "WEST BERGHOLT STW RAINGAUGE GSM",
+        "station_name": "WEST BERGHOLT STW RAIN GAUGE GSM",
         "ngr": "TL9601526765",
         "easting": 596015,
         "northing": 226765,
@@ -4684,7 +4684,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1090,
-        "station_name": "WETHERSFIELD STW RAINGAUGE GSM",
+        "station_name": "WETHERSFIELD STW RAIN GAUGE GSM",
         "ngr": "TL7061730649",
         "easting": 570617,
         "northing": 230649,
@@ -4713,7 +4713,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 1664,
-        "station_name": "WHITE NOTLEY RAINGAUGE",
+        "station_name": "WHITE NOTLEY RAIN GAUGE",
         "ngr": "TL7900018400",
         "easting": 579000,
         "northing": 218400,
@@ -4742,7 +4742,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 23391,
-        "station_name": "WICKENBY RAINGAUGE",
+        "station_name": "WICKENBY RAIN GAUGE",
         "ngr": "TF1031081240",
         "easting": 510310,
         "northing": 381240,
@@ -4771,7 +4771,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 931,
-        "station_name": "WICKHAMBROOK RAINGAUGE",
+        "station_name": "WICKHAMBROOK RAIN GAUGE",
         "ngr": "TL7490055000",
         "easting": 574900,
         "northing": 255000,
@@ -4800,7 +4800,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 978,
-        "station_name": "WILLINGALE RAINGAUGE",
+        "station_name": "WILLINGALE RAIN GAUGE",
         "ngr": "TL6050007500",
         "easting": 560500,
         "northing": 207500,
@@ -4829,7 +4829,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 4,
-        "station_name": "WING RAIN E RAINGAUGE WITS",
+        "station_name": "WING RAIN E RAIN GAUGE WITS",
         "ngr": "SK8979002700",
         "easting": 489790,
         "northing": 302700,
@@ -4858,7 +4858,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 889,
-        "station_name": "WITHAM STW RAINGAUGE GSM",
+        "station_name": "WITHAM STW RAIN GAUGE GSM",
         "ngr": "TL8278813895",
         "easting": 582788,
         "northing": 213895,
@@ -4887,7 +4887,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 900,
-        "station_name": "WIXOE PS RAINGAUGE GSM",
+        "station_name": "WIXOE PS RAIN GAUGE GSM",
         "ngr": "TL7100043100",
         "easting": 571000,
         "northing": 243100,
@@ -4916,7 +4916,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 967,
-        "station_name": "WOODBRIDGE RAINGAUGE",
+        "station_name": "WOODBRIDGE RAIN GAUGE",
         "ngr": "TM2590047500",
         "easting": 625900,
         "northing": 247500,
@@ -4945,7 +4945,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 982,
-        "station_name": "WORLINGHAM RAINGAUGE GSM",
+        "station_name": "WORLINGHAM RAIN GAUGE GSM",
         "ngr": "TM4519889374",
         "easting": 645198,
         "northing": 289374,
@@ -4974,7 +4974,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 989,
-        "station_name": "WRITTLE COLLEGE RAINGAUGE",
+        "station_name": "WRITTLE COLLEGE RAIN GAUGE",
         "ngr": "TL6783306661",
         "easting": 567833,
         "northing": 206661,
@@ -5003,7 +5003,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 20609,
-        "station_name": "YARDLEY HASTINGS RAINGAUGE GSM",
+        "station_name": "YARDLEY HASTINGS RAIN GAUGE GSM",
         "ngr": "SP8669257349",
         "easting": 486692,
         "northing": 257349,
@@ -5032,7 +5032,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 5590,
-        "station_name": "YELDEN RAINGAUGE",
+        "station_name": "YELDEN RAIN GAUGE",
         "ngr": "TL0150567443",
         "easting": 501505,
         "northing": 267443,
@@ -15819,7 +15819,7 @@
       "geometry_name": "centroid",
       "properties": {
         "telemetry_station_id": 117,
-        "station_name": "BROUGR RAINGAUGE",
+        "station_name": "BROUGR RAIN GAUGE",
         "ngr": "SU307338",
         "easting": 430700,
         "northing": 133800,

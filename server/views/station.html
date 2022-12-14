@@ -33,6 +33,17 @@
   </div>
 </div>
 
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <nav aria-label="Related levels" class="govuk-!-margin-top-0">
+      <span id="map"></span>
+      {% if model.station.riverNavigation.up %}<a href="/station/{{model.station.riverNavigation.up}}" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>{% endif %}
+      {% if model.station.riverNavigation.down %}<a href="/station/{{model.station.riverNavigation.down}}" class="defra-flood-nav__link defra-flood-nav__link--downstream">Downstream</a>{% endif %}
+      <a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/{{model.station.id}}" class="defra-flood-nav__link">Nearby levels</a>
+    </nav>
+  </div>
+</div>
+
 {# For multi station #}
 {% if model.station.isMulti %}
   <div class="govuk-grid-row">
@@ -108,7 +119,7 @@
             </div>
           {% endif %}
           <h2 class="govuk-visually-hidden">Station summary</h2>
-          <div class="defra-flood-statistics">
+          <div class="defra-flood-statistics govuk-!-margin-top-2">
             <dl class="defra-flood-statistics__list">
             {# if station has hasPercentiles, this should exclude Coastal #}
               {% if model.station.hasPercentiles and not model.station.isCoastal  %}
@@ -163,16 +174,6 @@
   {% endif %}
 {% endif %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <nav aria-label="Related levels" class="defra-flood-nav govuk-!-margin-top-3 govuk-!-margin-bottom-6">
-      <span id="map"></span>
-      {% if model.station.riverNavigation.up %}<a href="/station/{{model.station.riverNavigation.up}}" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>{% endif %}
-      {% if model.station.riverNavigation.down %}<a href="/station/{{model.station.riverNavigation.down}}" class="defra-flood-nav__link defra-flood-nav__link--downstream">Downstream</a>{% endif %}
-      <a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels?rloi-id={{model.station.id}}" class="defra-flood-nav__link">Nearby levels</a>
-    </nav>
-  </div>
-</div>
 
 {# Graph #}
 {% if model.station.isActive and model.readings %}
@@ -180,7 +181,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <figure class="defra-line-chart" aria-hidden="true" hidden>
-      <figcaption class="govuk-heading-m govuk-!-margin-bottom-7">Height over the last 5 days {% if model.isFfoi %}and up to 36 hour forecast{% endif %}</figcaption>
+      <figcaption class="govuk-heading-m govuk-!-margin-top-4 govuk-!-margin-bottom-4">Height over the last 5 days {% if model.isFfoi %}and up to 36 hour forecast{% endif %}</figcaption>
         <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
         {% if model.isFfoi and not model.forecastOutOfDate %}
         <p class="govuk-body-s govuk-!-margin-top-0 govuk-!-margin-bottom-2"> {{ model.forecastDetails }}</p>

@@ -1,0 +1,4003 @@
+[
+    {
+       "river_id":"river-itchen-hampshire",
+       "display":"River Itchen (Hampshire)"
+    },
+    {
+       "river_id":"river-lavant-sussex",
+       "display":"River Lavant (Sussex)"
+    },
+    {
+       "river_id":"river-dun-hampshire",
+       "display":"River Dun (Hampshire)"
+    },
+    {
+       "river_id":"river-dove-north-yorkshire",
+       "display":"River Dove (North Yorkshire)"
+    },
+    {
+       "river_id":"river-derwent-yorkshire",
+       "display":"River Derwent (Yorkshire)"
+    },
+    {
+       "river_id":"river-itchen-warwickshire",
+       "display":"River Itchen (Warwickshire)"
+    },
+    {
+       "river_id":"river-esk-cumbria-north",
+       "display":"River Esk (North Cumbria)"
+    },
+    {
+       "river_id":"river-lavant-hampshire",
+       "display":"River Lavant (Hampshire)"
+    },
+    {
+       "river_id":"river-dun-berkshire",
+       "display":"River Dun (Berkshire)"
+    },
+    {
+       "river_id":"river-derwent-northumberland",
+       "display":"River Derwent (Northumberland)"
+    },
+    {
+       "river_id":"river-greta-cumbria",
+       "display":"River Greta (Cumbria)"
+    },
+    {
+       "river_id":"river-derwent-derbyshire",
+       "display":"River Derwent (Derbyshire)"
+    },
+    {
+       "river_id":"river-esk-yorkshire",
+       "display":"River Esk (Yorkshire)"
+    },
+    {
+       "river_id":"river-leven-cumbria",
+       "display":"River Leven (Cumbria)"
+    },
+    {
+       "river_id":"river-leven-yorkshire",
+       "display":"River Leven (Cumbria)"
+    },
+    {
+       "river_id":"river-stour-worcestershire",
+       "display":"River Stour (Worcestershire)"
+    },
+    {
+       "river_id":"river-swift-warwickshire",
+       "display":"River Swift (Warwickshire)"
+    },
+    {
+       "river_id":"river-rea-west-midlands",
+       "display":"River Rea (West Midlands)"
+    },
+    {
+       "river_id":"river-swift-hampshire",
+       "display":"River Swift (Hampshire)"
+    },
+    {
+       "river_id":"river-rother-kent",
+       "display":"River Rother (Kent)"
+    },
+    {
+       "river_id":"river-sence-leicestershire",
+       "display":"River Sence (Leicestershire)"
+    },
+    {
+       "river_id":"river-sence-leicestershire-west",
+       "display":"River Sence (West Leicestershire)"
+    },
+    {
+       "river_id":"river-rother-yorkshire",
+       "display":"River Rother (Yorkshire)"
+    },
+    {
+       "river_id":"river-till-northumberland",
+       "display":"River Till (Northumberland)"
+    },
+    {
+       "river_id":"river-tame-west-midlands",
+       "display":"River Tame (West Midlands)"
+    },
+    {
+       "river_id":"river-wallington-hampshire",
+       "display":"River Wallington (Hampshire)"
+    },
+    {
+       "river_id":"river-wallington-cambridgeshire",
+       "display":"River Wallington (Cambridgeshire)"
+    },
+    {
+       "river_id":"river-rother-west-sussex",
+       "display":"River Rother (Sussex)"
+    },
+    {
+       "river_id":"river-stour-dorset",
+       "display":"River Stour (Dorset)"
+    },
+    {
+       "river_id":"river-tame-greater-manchester",
+       "display":"River Tame (Greater Manchester)"
+    },
+    {
+       "river_id":"river-rea-shropshire",
+       "display":"River Rea (Shropshire)"
+    },
+    {
+       "river_id":"river-stour-essex",
+       "display":"River Stour (Essex)"
+    },
+    {
+       "river_id":"river-till-lincolnshire",
+       "display":"River Till (Lincolnshire)"
+    },
+    {
+       "river_id":"river-stour-warwickshire",
+       "display":"River Stour (Warwickshire)"
+    },
+    {
+       "river_id":"salfords-stream-sussex",
+       "display":"Salfords Stream (Sussex)"
+    },
+    {
+       "river_id":"river-yeo-somerset",
+       "display":"River Yeo (Somerset)"
+    },
+    {
+       "river_id":"river-wey-dorset",
+       "display":"River Wey (Dorset)"
+    },
+    {
+       "river_id":"river-wey-surrey",
+       "display":"River Wey (Surrey)"
+    },
+    {
+       "river_id":"river-yeo-lapford",
+       "display":"River Yeo (Lapford)"
+    },
+    {
+       "river_id":"river-yeo-creedy",
+       "display":"River Yeo (Creedy)"
+    },
+    {
+       "river_id":"river-wye-buckinghamshire",
+       "display":"River Wye (Buckinghamshire)"
+    },
+    {
+       "river_id":"salfords-stream-kent",
+       "display":"Salfords Stream (Kent)"
+    },
+    {
+       "river_id":"river-wye-derbyshire",
+       "display":"River Wye (Derbyshire)"
+    },
+    {
+       "river_id":"river-eden-cumbria",
+       "display":"River Eden (Cumbria)"
+    },
+    {
+       "river_id":"addlestone-bourne",
+       "display":"Addlestone Bourne"
+    },
+    {
+       "river_id":"alwen",
+       "display":"Alwen"
+    },
+    {
+       "river_id":"kyd-brook-east-branch",
+       "display":"Kyd Brook (East Branch)"
+    },
+    {
+       "river_id":"kyre-brook",
+       "display":"Kyre Brook"
+    },
+    {
+       "river_id":"river-ancholme",
+       "display":"River Ancholme"
+    },
+    {
+       "river_id":"river-anker",
+       "display":"River Anker"
+    },
+    {
+       "river_id":"river-ant",
+       "display":"River Ant"
+    },
+    {
+       "river_id":"river-anton",
+       "display":"River Anton"
+    },
+    {
+       "river_id":"river-arun",
+       "display":"River Arun"
+    },
+    {
+       "river_id":"river-ashburn",
+       "display":"River Ashburn"
+    },
+    {
+       "river_id":"river-asker",
+       "display":"River Asker"
+    },
+    {
+       "river_id":"river-bain",
+       "display":"River Bain"
+    },
+    {
+       "river_id":"river-banwy",
+       "display":"River Banwy"
+    },
+    {
+       "river_id":"river-barle",
+       "display":"River Barle"
+    },
+    {
+       "river_id":"river-batherm",
+       "display":"River Batherm"
+    },
+    {
+       "river_id":"river-beal",
+       "display":"River Beal"
+    },
+    {
+       "river_id":"river-beam",
+       "display":"River Beam"
+    },
+    {
+       "river_id":"river-beane",
+       "display":"River Beane"
+    },
+    {
+       "river_id":"river-beault",
+       "display":"River Beault"
+    },
+    {
+       "river_id":"river-bela",
+       "display":"River Bela"
+    },
+    {
+       "river_id":"river-birket",
+       "display":"River Birket"
+    },
+    {
+       "river_id":"river-biss",
+       "display":"River Biss"
+    },
+    {
+       "river_id":"river-blyth",
+       "display":"River Blyth"
+    },
+    {
+       "river_id":"alconbury-brook",
+       "display":"Alconbury Brook"
+    },
+    {
+       "river_id":"aldford-brook",
+       "display":"Aldford Brook"
+    },
+    {
+       "river_id":"aldingbourne-rife",
+       "display":"Aldingbourne Rife"
+    },
+    {
+       "river_id":"aller-brook",
+       "display":"Aller Brook"
+    },
+    {
+       "river_id":"allison-dyke",
+       "display":"Allison Dyke"
+    },
+    {
+       "river_id":"alverthorpe-beck",
+       "display":"Alverthorpe Beck"
+    },
+    {
+       "river_id":"alyn",
+       "display":"Alyn"
+    },
+    {
+       "river_id":"ampney-brook",
+       "display":"Ampney Brook"
+    },
+    {
+       "river_id":"amwell-loop",
+       "display":"Amwell Loop"
+    },
+    {
+       "river_id":"arkle-beck",
+       "display":"Arkle Beck"
+    },
+    {
+       "river_id":"arrowe-brook",
+       "display":"Arrowe Brook"
+    },
+    {
+       "river_id":"ash-brook",
+       "display":"Ash Brook"
+    },
+    {
+       "river_id":"atherfield-brook",
+       "display":"Atherfield Brook"
+    },
+    {
+       "river_id":"babingley-river",
+       "display":"Babingley River"
+    },
+    {
+       "river_id":"back-delfin",
+       "display":"Back Delfin"
+    },
+    {
+       "river_id":"badsey-brook",
+       "display":"Badsey Brook"
+    },
+    {
+       "river_id":"bagley-brook",
+       "display":"Bagley Brook"
+    },
+    {
+       "river_id":"bagley-dike",
+       "display":"Bagley Dike"
+    },
+    {
+       "river_id":"baguley-brook",
+       "display":"Baguley Brook"
+    },
+    {
+       "river_id":"baildon-dyke",
+       "display":"Baildon Dyke"
+    },
+    {
+       "river_id":"balne-beck",
+       "display":"Balne Beck"
+    },
+    {
+       "river_id":"barbourne-brook",
+       "display":"Barbourne Brook"
+    },
+    {
+       "river_id":"bardsey-beck",
+       "display":"Bardsey Beck"
+    },
+    {
+       "river_id":"barge-canal",
+       "display":"Barge Canal"
+    },
+    {
+       "river_id":"barlings-eau",
+       "display":"Barlings Eau"
+    },
+    {
+       "river_id":"barmston-drain",
+       "display":"Barmston Drain"
+    },
+    {
+       "river_id":"barnham-rife",
+       "display":"Barnham Rife"
+    },
+    {
+       "river_id":"bartley-water",
+       "display":"Bartley Water"
+    },
+    {
+       "river_id":"barton-haven",
+       "display":"Barton Haven"
+    },
+    {
+       "river_id":"batley-beck",
+       "display":"Batley Beck"
+    },
+    {
+       "river_id":"bear-brook",
+       "display":"Bear Brook"
+    },
+    {
+       "river_id":"beaulieu-river",
+       "display":"Beaulieu River"
+    },
+    {
+       "river_id":"bechan-brook",
+       "display":"Bechan Brook"
+    },
+    {
+       "river_id":"bedale-beck",
+       "display":"Bedale Beck"
+    },
+    {
+       "river_id":"bedburn-beck",
+       "display":"Bedburn Beck"
+    },
+    {
+       "river_id":"beverley-brook",
+       "display":"Beverley Brook"
+    },
+    {
+       "river_id":"bickerly-mill-stream",
+       "display":"Bickerly Mill Stream"
+    },
+    {
+       "river_id":"bielby-beck",
+       "display":"Bielby Beck"
+    },
+    {
+       "river_id":"billinghay-skirth",
+       "display":"Billinghay Skirth"
+    },
+    {
+       "river_id":"bin-brook",
+       "display":"Bin Brook"
+    },
+    {
+       "river_id":"bishop-monkton-beck",
+       "display":"Bishop Monkton Beck"
+    },
+    {
+       "river_id":"black-brook",
+       "display":"Black Brook"
+    },
+    {
+       "river_id":"blackburn-brook",
+       "display":"Blackburn Brook"
+    },
+    {
+       "river_id":"blackfoss-beck",
+       "display":"Blackfoss Beck"
+    },
+    {
+       "river_id":"blacup-beck",
+       "display":"Blacup Beck"
+    },
+    {
+       "river_id":"bloxham-brook",
+       "display":"Bloxham Brook"
+    },
+    {
+       "river_id":"blue-beck",
+       "display":"Blue Beck"
+    },
+    {
+       "river_id":"bodmin-town-leat",
+       "display":"Bodmin Town Leat"
+    },
+    {
+       "river_id":"bolingey-stream",
+       "display":"Bolingey Stream"
+    },
+    {
+       "river_id":"bosham-stream",
+       "display":"Bosham Stream"
+    },
+    {
+       "river_id":"bottle-brook",
+       "display":"Bottle Brook"
+    },
+    {
+       "river_id":"boundary-brook",
+       "display":"Boundary Brook"
+    },
+    {
+       "river_id":"bourn-brook",
+       "display":"Bourn Brook"
+    },
+    {
+       "river_id":"bourne-brook",
+       "display":"Bourne Brook"
+    },
+    {
+       "river_id":"bourne-rivulet",
+       "display":"Bourne Rivulet"
+    },
+    {
+       "river_id":"bow-brook",
+       "display":"Bow Brook"
+    },
+    {
+       "river_id":"bowmont-water",
+       "display":"Bowmont Water"
+    },
+    {
+       "river_id":"bradford-beck",
+       "display":"Bradford Beck"
+    },
+    {
+       "river_id":"bradiford-water",
+       "display":"Bradiford Water"
+    },
+    {
+       "river_id":"bradley-brook",
+       "display":"Bradley Brook"
+    },
+    {
+       "river_id":"bramham-beck",
+       "display":"Bramham Beck"
+    },
+    {
+       "river_id":"brampton-branch",
+       "display":"Brampton Branch"
+    },
+    {
+       "river_id":"bridgehouse-beck",
+       "display":"Bridgehouse Beck"
+    },
+    {
+       "river_id":"brinkworth-brook",
+       "display":"Brinkworth Brook"
+    },
+    {
+       "river_id":"brislington-brook",
+       "display":"Brislington Brook"
+    },
+    {
+       "river_id":"bristol-frome",
+       "display":"Bristol Frome"
+    },
+    {
+       "river_id":"broad-fleet",
+       "display":"Broad Fleet"
+    },
+    {
+       "river_id":"brook-dike",
+       "display":"Brook Dike"
+    },
+    {
+       "river_id":"brough-beck",
+       "display":"Brough Beck"
+    },
+    {
+       "river_id":"broughton-beck",
+       "display":"Broughton Beck"
+    },
+    {
+       "river_id":"broughton-brook",
+       "display":"Broughton Brook"
+    },
+    {
+       "river_id":"browney-dyke",
+       "display":"Browney Dyke"
+    },
+    {
+       "river_id":"brownwich-stream",
+       "display":"Brownwich Stream"
+    },
+    {
+       "river_id":"buck-beck",
+       "display":"Buck Beck"
+    },
+    {
+       "river_id":"budleigh-brook",
+       "display":"Budleigh Brook"
+    },
+    {
+       "river_id":"bulstake-stream",
+       "display":"Bulstake Stream"
+    },
+    {
+       "river_id":"bumpstead-brook",
+       "display":"Bumpstead Brook"
+    },
+    {
+       "river_id":"burrow-beck",
+       "display":"Burrow Beck"
+    },
+    {
+       "river_id":"burstow-stream",
+       "display":"Burstow Stream"
+    },
+    {
+       "river_id":"burstwick-drain",
+       "display":"Burstwick Drain"
+    },
+    {
+       "river_id":"bury-brook",
+       "display":"Bury Brook"
+    },
+    {
+       "river_id":"bushy-beck",
+       "display":"Bushy Beck"
+    },
+    {
+       "river_id":"by-brook",
+       "display":"By Brook"
+    },
+    {
+       "river_id":"caker-stream",
+       "display":"Caker Stream"
+    },
+    {
+       "river_id":"camlad",
+       "display":"Camlad"
+    },
+    {
+       "river_id":"candover-stream",
+       "display":"Candover Stream"
+    },
+    {
+       "river_id":"canley-brook",
+       "display":"Canley Brook"
+    },
+    {
+       "river_id":"cannington-brook",
+       "display":"Cannington Brook"
+    },
+    {
+       "river_id":"cannon-brook",
+       "display":"Cannon Brook"
+    },
+    {
+       "river_id":"canons-brook",
+       "display":"Canons Brook"
+    },
+    {
+       "river_id":"carnon-river",
+       "display":"Carnon River"
+    },
+    {
+       "river_id":"carr-brook",
+       "display":"Carr Brook"
+    },
+    {
+       "river_id":"catcliffe-drain",
+       "display":"Catcliffe Drain"
+    },
+    {
+       "river_id":"ceiriog",
+       "display":"Ceiriog"
+    },
+    {
+       "river_id":"chad-brook",
+       "display":"Chad Brook"
+    },
+    {
+       "river_id":"chalgrove-brook",
+       "display":"Chalgrove Brook"
+    },
+    {
+       "river_id":"charlton-brook",
+       "display":"Charlton Brook"
+    },
+    {
+       "river_id":"cheddar-yeo",
+       "display":"Cheddar Yeo"
+    },
+    {
+       "river_id":"cheriton-stream",
+       "display":"Cheriton Stream"
+    },
+    {
+       "river_id":"chertsey-bourne",
+       "display":"Chertsey Bourne"
+    },
+    {
+       "river_id":"chew-stoke-brook",
+       "display":"Chew Stoke Brook"
+    },
+    {
+       "river_id":"ching-brook",
+       "display":"Ching Brook"
+    },
+    {
+       "river_id":"chitterne-brook",
+       "display":"Chitterne Brook"
+    },
+    {
+       "river_id":"clackers-brook",
+       "display":"Clackers Brook"
+    },
+    {
+       "river_id":"clanfield-brook",
+       "display":"Clanfield Brook"
+    },
+    {
+       "river_id":"clay-coton-brook",
+       "display":"Clay Coton Brook"
+    },
+    {
+       "river_id":"clipstone-brook",
+       "display":"Clipstone Brook"
+    },
+    {
+       "river_id":"clow-beck",
+       "display":"Clow Beck"
+    },
+    {
+       "river_id":"coal-burn",
+       "display":"Coal Burn"
+    },
+    {
+       "river_id":"coastal-stream",
+       "display":"Coastal Stream"
+    },
+    {
+       "river_id":"cobbins-brook",
+       "display":"Cobbins Brook"
+    },
+    {
+       "river_id":"cock-beck",
+       "display":"Cock Beck"
+    },
+    {
+       "river_id":"cocker-beck",
+       "display":"Cocker Beck"
+    },
+    {
+       "river_id":"cockers-dyke",
+       "display":"Cockers Dyke"
+    },
+    {
+       "river_id":"cockshaw-burn",
+       "display":"Cockshaw Burn"
+    },
+    {
+       "river_id":"cod-beck",
+       "display":"Cod Beck"
+    },
+    {
+       "river_id":"colliters-brook",
+       "display":"Colliters Brook"
+    },
+    {
+       "river_id":"colne-brook",
+       "display":"Colne Brook"
+    },
+    {
+       "river_id":"colne-water",
+       "display":"Colne Water"
+    },
+    {
+       "river_id":"combe-haven",
+       "display":"Combe Haven"
+    },
+    {
+       "river_id":"coney-gut",
+       "display":"Coney Gut"
+    },
+    {
+       "river_id":"congresbury-yeo",
+       "display":"Congresbury Yeo"
+    },
+    {
+       "river_id":"cove-brook",
+       "display":"Cove Brook"
+    },
+    {
+       "river_id":"cragg-brook",
+       "display":"Cragg Brook"
+    },
+    {
+       "river_id":"cranleigh-waters",
+       "display":"Cranleigh Waters"
+    },
+    {
+       "river_id":"cripsey-brook",
+       "display":"Cripsey Brook"
+    },
+    {
+       "river_id":"river-amber",
+       "display":"River Amber"
+    },
+    {
+       "river_id":"cuckmere-&-pevensey-levels",
+       "display":"Cuckmere & Pevensey Levels"
+    },
+    {
+       "river_id":"cundall-beck",
+       "display":"Cundall Beck"
+    },
+    {
+       "river_id":"cunsey-beck",
+       "display":"Cunsey Beck"
+    },
+    {
+       "river_id":"currymoor-drain",
+       "display":"Currymoor Drain"
+    },
+    {
+       "river_id":"dacre-beck",
+       "display":"Dacre Beck"
+    },
+    {
+       "river_id":"danes-stream",
+       "display":"Danes Stream"
+    },
+    {
+       "river_id":"daniels-brook",
+       "display":"Daniels Brook"
+    },
+    {
+       "river_id":"dauntsey-brook",
+       "display":"Dauntsey Brook"
+    },
+    {
+       "river_id":"dawlish-water",
+       "display":"Dawlish Water"
+    },
+    {
+       "river_id":"day-brook",
+       "display":"Day Brook"
+    },
+    {
+       "river_id":"dean",
+       "display":"Dean"
+    },
+    {
+       "river_id":"dean-bottom-beck",
+       "display":"Dean Bottom Beck"
+    },
+    {
+       "river_id":"deans-brook",
+       "display":"Deans Brook"
+    },
+    {
+       "river_id":"de-lank-river",
+       "display":"De Lank River"
+    },
+    {
+       "river_id":"dimore-brook",
+       "display":"Dimore Brook"
+    },
+    {
+       "river_id":"docken's-water",
+       "display":"Docken's Water"
+    },
+    {
+       "river_id":"dollis-brook",
+       "display":"Dollis Brook"
+    },
+    {
+       "river_id":"doniford-stream",
+       "display":"Doniford Stream"
+    },
+    {
+       "river_id":"dorcan-brook",
+       "display":"Dorcan Brook"
+    },
+    {
+       "river_id":"dorset-frome",
+       "display":"Dorset Frome"
+    },
+    {
+       "river_id":"dover-beck",
+       "display":"Dover Beck"
+    },
+    {
+       "river_id":"dovers-brook",
+       "display":"Dovers Brook"
+    },
+    {
+       "river_id":"dowles-brook",
+       "display":"Dowles Brook"
+    },
+    {
+       "river_id":"dragley-beck",
+       "display":"Dragley Beck"
+    },
+    {
+       "river_id":"ea-beck",
+       "display":"Ea Beck"
+    },
+    {
+       "river_id":"eagley-brook",
+       "display":"Eagley Brook"
+    },
+    {
+       "river_id":"earby-beck",
+       "display":"Earby Beck"
+    },
+    {
+       "river_id":"eastburn-beck",
+       "display":"Eastburn Beck"
+    },
+    {
+       "river_id":"east-clandon-stream",
+       "display":"East Clandon Stream"
+    },
+    {
+       "river_id":"east-dart-river",
+       "display":"East Dart River"
+    },
+    {
+       "river_id":"eastern-yar",
+       "display":"Eastern Yar"
+    },
+    {
+       "river_id":"east-fen-catchwater",
+       "display":"East Fen Catchwater"
+    },
+    {
+       "river_id":"east-glen-river",
+       "display":"East Glen River"
+    },
+    {
+       "river_id":"east-lyn-river",
+       "display":"East Lyn River"
+    },
+    {
+       "river_id":"east-okement-river",
+       "display":"East Okement River"
+    },
+    {
+       "river_id":"east-stour-kent",
+       "display":"East Stour"
+    },
+    {
+       "river_id":"east-wilder-brook",
+       "display":"East Wilder Brook"
+    },
+    {
+       "river_id":"edgware-brook",
+       "display":"Edgware Brook"
+    },
+    {
+       "river_id":"egginton-brook",
+       "display":"Egginton Brook"
+    },
+    {
+       "river_id":"eller-beck",
+       "display":"Eller Beck"
+    },
+    {
+       "river_id":"elvington-beck",
+       "display":"Elvington Beck"
+    },
+    {
+       "river_id":"emm-brook",
+       "display":"Emm Brook"
+    },
+    {
+       "river_id":"emral-brook",
+       "display":"Emral Brook"
+    },
+    {
+       "river_id":"endon-brook",
+       "display":"Endon Brook"
+    },
+    {
+       "river_id":"eridge-stream",
+       "display":"Eridge Stream"
+    },
+    {
+       "river_id":"ewelme-brook",
+       "display":"Ewelme Brook"
+    },
+    {
+       "river_id":"exminster-marshes",
+       "display":"Exminster Marshes"
+    },
+    {
+       "river_id":"farnley-beck",
+       "display":"Farnley Beck"
+    },
+    {
+       "river_id":"fenay-beck",
+       "display":"Fenay Beck"
+    },
+    {
+       "river_id":"ferring-rife",
+       "display":"Ferring Rife"
+    },
+    {
+       "river_id":"field-drain",
+       "display":"Field Drain"
+    },
+    {
+       "river_id":"finham-brook",
+       "display":"Finham Brook"
+    },
+    {
+       "river_id":"fishlake-stream",
+       "display":"Fishlake Stream"
+    },
+    {
+       "river_id":"fleet-drain",
+       "display":"Fleet Drain"
+    },
+    {
+       "river_id":"flood-channel",
+       "display":"Flood Channel"
+    },
+    {
+       "river_id":"ford-brook",
+       "display":"Ford Brook"
+    },
+    {
+       "river_id":"ford-green-brook",
+       "display":"Ford Green Brook"
+    },
+    {
+       "river_id":"fosdyke-canal",
+       "display":"Fosdyke Canal"
+    },
+    {
+       "river_id":"foston-beck",
+       "display":"Foston Beck"
+    },
+    {
+       "river_id":"foston-brook",
+       "display":"Foston Brook"
+    },
+    {
+       "river_id":"foudry-brook",
+       "display":"Foudry Brook"
+    },
+    {
+       "river_id":"fowlea-brook",
+       "display":"Fowlea Brook"
+    },
+    {
+       "river_id":"fowler-bridge-drain",
+       "display":"Fowler Bridge Drain"
+    },
+    {
+       "river_id":"frays-river",
+       "display":"Frays River"
+    },
+    {
+       "river_id":"frodingham-beck",
+       "display":"Frodingham Beck"
+    },
+    {
+       "river_id":"gaddesby-brook",
+       "display":"Gaddesby Brook"
+    },
+    {
+       "river_id":"gatwick-stream",
+       "display":"Gatwick Stream"
+    },
+    {
+       "river_id":"gauze-brook",
+       "display":"Gauze Brook"
+    },
+    {
+       "river_id":"gelyn",
+       "display":"Gelyn"
+    },
+    {
+       "river_id":"gilwiskaw-brook",
+       "display":"Gilwiskaw Brook"
+    },
+    {
+       "river_id":"ginge-brook",
+       "display":"Ginge Brook"
+    },
+    {
+       "river_id":"glaze-brook",
+       "display":"Glaze Brook"
+    },
+    {
+       "river_id":"glenridding-beck",
+       "display":"Glenridding Beck"
+    },
+    {
+       "river_id":"glen-stream",
+       "display":"Glen Stream"
+    },
+    {
+       "river_id":"glossop-brook",
+       "display":"Glossop Brook"
+    },
+    {
+       "river_id":"glusburn-bridge",
+       "display":"Glusburn Bridge"
+    },
+    {
+       "river_id":"gowdall-ings",
+       "display":"Gowdall Ings"
+    },
+    {
+       "river_id":"grace-dieu-brook",
+       "display":"Grace Dieu Brook"
+    },
+    {
+       "river_id":"great-stour-kent",
+       "display":"Great Stour"
+    },
+    {
+       "river_id":"green-dyke",
+       "display":"Green Dyke"
+    },
+    {
+       "river_id":"grimescar-dike",
+       "display":"Grimescar Dike"
+    },
+    {
+       "river_id":"gurnard-luck",
+       "display":"Gurnard Luck"
+    },
+    {
+       "river_id":"gwyle",
+       "display":"Gwyle"
+    },
+    {
+       "river_id":"gypsey-race",
+       "display":"Gypsey Race"
+    },
+    {
+       "river_id":"hagnaby-beck",
+       "display":"Hagnaby Beck"
+    },
+    {
+       "river_id":"halse-water",
+       "display":"Halse Water"
+    },
+    {
+       "river_id":"harpers-brook",
+       "display":"Harpers Brook"
+    },
+    {
+       "river_id":"hartburn-beck",
+       "display":"Hartburn Beck"
+    },
+    {
+       "river_id":"harwood-beck",
+       "display":"Harwood Beck"
+    },
+    {
+       "river_id":"river-corve",
+       "display":"River Corve"
+    },
+    {
+       "river_id":"hatherley-brook",
+       "display":"Hatherley Brook"
+    },
+    {
+       "river_id":"haweswater-beck",
+       "display":"Haweswater Beck"
+    },
+    {
+       "river_id":"hawkcombe-stream",
+       "display":"Hawkcombe Stream"
+    },
+    {
+       "river_id":"heacham-river",
+       "display":"Heacham River"
+    },
+    {
+       "river_id":"hebble-brook",
+       "display":"Hebble Brook"
+    },
+    {
+       "river_id":"hebden-water",
+       "display":"Hebden Water"
+    },
+    {
+       "river_id":"heighington-beck",
+       "display":"Heighington Beck"
+    },
+    {
+       "river_id":"hellifield-beck",
+       "display":"Hellifield Beck"
+    },
+    {
+       "river_id":"henmore-brook",
+       "display":"Henmore Brook"
+    },
+    {
+       "river_id":"hermitage-stream",
+       "display":"Hermitage Stream"
+    },
+    {
+       "river_id":"hickling-broad",
+       "display":"Hickling Broad"
+    },
+    {
+       "river_id":"hillfarrance-brook",
+       "display":"Hillfarrance Brook"
+    },
+    {
+       "river_id":"hilton-brook",
+       "display":"Hilton Brook"
+    },
+    {
+       "river_id":"hinksey-stream",
+       "display":"Hinksey Stream"
+    },
+    {
+       "river_id":"hodge-beck",
+       "display":"Hodge Beck"
+    },
+    {
+       "river_id":"hoe-stream",
+       "display":"Hoe Stream"
+    },
+    {
+       "river_id":"hogsmill-river",
+       "display":"Hogsmill River"
+    },
+    {
+       "river_id":"hol-beck",
+       "display":"Hol Beck"
+    },
+    {
+       "river_id":"holderness-drain",
+       "display":"Holderness Drain"
+    },
+    {
+       "river_id":"holgate-beck",
+       "display":"Holgate Beck"
+    },
+    {
+       "river_id":"holme-brook",
+       "display":"Holme Brook"
+    },
+    {
+       "river_id":"honddu",
+       "display":"Honddu"
+    },
+    {
+       "river_id":"horner-water",
+       "display":"Horner Water"
+    },
+    {
+       "river_id":"horsbere-brook",
+       "display":"Horsbere Brook"
+    },
+    {
+       "river_id":"hovingham-beck",
+       "display":"Hovingham Beck"
+    },
+    {
+       "river_id":"hughenden-stream",
+       "display":"Hughenden Stream"
+    },
+    {
+       "river_id":"river-maun",
+       "display":"River Maun"
+    },
+    {
+       "river_id":"huish-level-rhyne",
+       "display":"Huish Level Rhyne"
+    },
+    {
+       "river_id":"huntingfield-watercourse",
+       "display":"Huntingfield Watercourse"
+    },
+    {
+       "river_id":"ifield-brook",
+       "display":"Ifield Brook"
+    },
+    {
+       "river_id":"ings-beck",
+       "display":"Ings Beck"
+    },
+    {
+       "river_id":"irfon",
+       "display":"Irfon"
+    },
+    {
+       "river_id":"ithon",
+       "display":"Ithon"
+    },
+    {
+       "river_id":"jubilee-river",
+       "display":"Jubilee River"
+    },
+    {
+       "river_id":"kelbrook-beck",
+       "display":"Kelbrook Beck"
+    },
+    {
+       "river_id":"kenwith-stream",
+       "display":"Kenwith Stream"
+    },
+    {
+       "river_id":"kielder-burn",
+       "display":"Kielder Burn"
+    },
+    {
+       "river_id":"killhope-burn",
+       "display":"Killhope Burn"
+    },
+    {
+       "river_id":"kilton-beck",
+       "display":"Kilton Beck"
+    },
+    {
+       "river_id":"kingsbridge-estuary",
+       "display":"Kingsbridge Estuary"
+    },
+    {
+       "river_id":"kingsclere-brook",
+       "display":"Kingsclere Brook"
+    },
+    {
+       "river_id":"kyd-brook",
+       "display":"Kyd Brook"
+    },
+    {
+       "river_id":"laceby-beck",
+       "display":"Laceby Beck"
+    },
+    {
+       "river_id":"landkey-brook",
+       "display":"Landkey Brook"
+    },
+    {
+       "river_id":"lands-beck",
+       "display":"Lands Beck"
+    },
+    {
+       "river_id":"langford-brook",
+       "display":"Langford Brook"
+    },
+    {
+       "river_id":"lariggan-river",
+       "display":"Lariggan River"
+    },
+    {
+       "river_id":"law-brook",
+       "display":"Law Brook"
+    },
+    {
+       "river_id":"ledwyche-brook",
+       "display":"Ledwyche Brook"
+    },
+    {
+       "river_id":"leigh-brook",
+       "display":"Leigh Brook"
+    },
+    {
+       "river_id":"letcombe-brook",
+       "display":"Letcombe Brook"
+    },
+    {
+       "river_id":"levisham-beck",
+       "display":"Levisham Beck"
+    },
+    {
+       "river_id":"lilley-brook",
+       "display":"Lilley Brook"
+    },
+    {
+       "river_id":"limey-water",
+       "display":"Limey Water"
+    },
+    {
+       "river_id":"little-avon-river",
+       "display":"Little Avon River"
+    },
+    {
+       "river_id":"little-dart-river",
+       "display":"Little Dart River"
+    },
+    {
+       "river_id":"littlemead-brook",
+       "display":"Littlemead Brook"
+    },
+    {
+       "river_id":"little-salt-moor-rhyne",
+       "display":"Little Salt Moor Rhyne"
+    },
+    {
+       "river_id":"little-stour",
+       "display":"Little Stour"
+    },
+    {
+       "river_id":"litton-cheney-stream",
+       "display":"Litton Cheney Stream"
+    },
+    {
+       "river_id":"lledan-brook",
+       "display":"Lledan Brook"
+    },
+    {
+       "river_id":"llynfi",
+       "display":"Llynfi"
+    },
+    {
+       "river_id":"lochinver-beck",
+       "display":"Lochinver Beck"
+    },
+    {
+       "river_id":"long-brook",
+       "display":"Long brook"
+    },
+    {
+       "river_id":"longload-main-drain",
+       "display":"Longload Main Drain"
+    },
+    {
+       "river_id":"longwood-brook",
+       "display":"Longwood Brook"
+    },
+    {
+       "river_id":"low-moor-beck",
+       "display":"Low Moor Beck"
+    },
+    {
+       "river_id":"lukely-brook",
+       "display":"Lukely Brook"
+    },
+    {
+       "river_id":"lustrum-beck",
+       "display":"Lustrum Beck"
+    },
+    {
+       "river_id":"lyme-brook",
+       "display":"Lyme Brook"
+    },
+    {
+       "river_id":"lymington",
+       "display":"Lymington"
+    },
+    {
+       "river_id":"maidenhead-ditch",
+       "display":"Maidenhead Ditch"
+    },
+    {
+       "river_id":"manacan-river",
+       "display":"Manacan River"
+    },
+    {
+       "river_id":"mangerton-brook",
+       "display":"Mangerton Brook"
+    },
+    {
+       "river_id":"marchington-brook",
+       "display":"Marchington Brook"
+    },
+    {
+       "river_id":"marston-meysey-brook",
+       "display":"Marston Meysey Brook"
+    },
+    {
+       "river_id":"marton-west-beck",
+       "display":"Marton West Beck"
+    },
+    {
+       "river_id":"maud-foster/stonebridge-drain",
+       "display":"Maud Foster/Stonebridge Drain"
+    },
+    {
+       "river_id":"meadlake-ditch",
+       "display":"Meadlake Ditch"
+    },
+    {
+       "river_id":"meanwood-beck",
+       "display":"Meanwood Beck"
+    },
+    {
+       "river_id":"mearley-brook",
+       "display":"Mearley Brook"
+    },
+    {
+       "river_id":"medbourne-brook",
+       "display":"Medbourne Brook"
+    },
+    {
+       "river_id":"meece-brook",
+       "display":"Meece Brook"
+    },
+    {
+       "river_id":"mells-river",
+       "display":"Mells River"
+    },
+    {
+       "river_id":"merrow-common-stream",
+       "display":"Merrow Common Stream"
+    },
+    {
+       "river_id":"mevagissey-stream",
+       "display":"Mevagissey Stream"
+    },
+    {
+       "river_id":"mickley-dyke",
+       "display":"Mickley Dyke"
+    },
+    {
+       "river_id":"midford-brook",
+       "display":"Midford Brook"
+    },
+    {
+       "river_id":"mill-bourne",
+       "display":"Mill Bourne"
+    },
+    {
+       "river_id":"mill-brook",
+       "display":"Mill Brook"
+    },
+    {
+       "river_id":"mimmshall-brook",
+       "display":"Mimmshall Brook"
+    },
+    {
+       "river_id":"mires-beck",
+       "display":"Mires Beck"
+    },
+    {
+       "river_id":"monk-dyke",
+       "display":"Monk Dyke"
+    },
+    {
+       "river_id":"monks-brook",
+       "display":"Monks Brook"
+    },
+    {
+       "river_id":"monksilver-stream",
+       "display":"Monksilver Stream"
+    },
+    {
+       "river_id":"monkton-mead",
+       "display":"Monkton Mead"
+    },
+    {
+       "river_id":"monnow",
+       "display":"Monnow"
+    },
+    {
+       "river_id":"moors-burn",
+       "display":"Moors Burn"
+    },
+    {
+       "river_id":"moors-river",
+       "display":"Moors River"
+    },
+    {
+       "river_id":"mutton-brook",
+       "display":"Mutton Brook"
+    },
+    {
+       "river_id":"nailbourne",
+       "display":"Nailbourne"
+    },
+    {
+       "river_id":"nazeing-brook",
+       "display":"Nazeing Brook"
+    },
+    {
+       "river_id":"netherley-brook",
+       "display":"Netherley Brook"
+    },
+    {
+       "river_id":"nettleham-beck",
+       "display":"Nettleham Beck"
+    },
+    {
+       "river_id":"norbury-brook",
+       "display":"Norbury Brook"
+    },
+    {
+       "river_id":"north-drain",
+       "display":"North Drain"
+    },
+    {
+       "river_id":"northmoor-main-drain",
+       "display":"Northmoor Main Drain"
+    },
+    {
+       "river_id":"nunney-brook",
+       "display":"Nunney Brook"
+    },
+    {
+       "river_id":"oakenshaw-beck",
+       "display":"Oakenshaw Beck"
+    },
+    {
+       "river_id":"oakington-brook",
+       "display":"Oakington Brook"
+    },
+    {
+       "river_id":"oakley-cross-beck",
+       "display":"Oakley Cross Beck"
+    },
+    {
+       "river_id":"ogden-brook",
+       "display":"Ogden Brook"
+    },
+    {
+       "river_id":"old-bedford-river",
+       "display":"Old Bedford River"
+    },
+    {
+       "river_id":"oldbury-naite-rhyne",
+       "display":"Oldbury Naite Rhyne"
+    },
+    {
+       "river_id":"old-mill-stream",
+       "display":"Old Mill Stream"
+    },
+    {
+       "river_id":"ormesby-beck",
+       "display":"Ormesby Beck"
+    },
+    {
+       "river_id":"oulton-beck",
+       "display":"Oulton Beck"
+    },
+    {
+       "river_id":"ouse-burn",
+       "display":"Ouse Burn"
+    },
+    {
+       "river_id":"ousemere-lode",
+       "display":"Ousemere Lode"
+    },
+    {
+       "river_id":"oxlease-drain",
+       "display":"Oxlease Drain"
+    },
+    {
+       "river_id":"par-river",
+       "display":"Par River"
+    },
+    {
+       "river_id":"penberth-stream",
+       "display":"Penberth Stream"
+    },
+    {
+       "river_id":"pendle-water",
+       "display":"Pendle Water"
+    },
+    {
+       "river_id":"pent-stream",
+       "display":"Pent Stream"
+    },
+    {
+       "river_id":"perrancombe-stream",
+       "display":"Perrancombe Stream"
+    },
+    {
+       "river_id":"petersfield-stream",
+       "display":"Petersfield Stream"
+    },
+    {
+       "river_id":"petty's-brook",
+       "display":"Petty's Brook"
+    },
+    {
+       "river_id":"pickering-beck",
+       "display":"Pickering Beck"
+    },
+    {
+       "river_id":"picknall-brook",
+       "display":"Picknall Brook"
+    },
+    {
+       "river_id":"piddle-brook",
+       "display":"Piddle Brook"
+    },
+    {
+       "river_id":"pillhill-brook",
+       "display":"Pillhill Brook"
+    },
+    {
+       "river_id":"pimlico-brook",
+       "display":"Pimlico Brook"
+    },
+    {
+       "river_id":"pincey-brook",
+       "display":"Pincey Brook"
+    },
+    {
+       "river_id":"pishiobury-brook",
+       "display":"Pishiobury Brook"
+    },
+    {
+       "river_id":"pocklington-beck",
+       "display":"Pocklington Beck"
+    },
+    {
+       "river_id":"pointon-lode",
+       "display":"Pointon Lode"
+    },
+    {
+       "river_id":"porter-brook",
+       "display":"Porter Brook"
+    },
+    {
+       "river_id":"poyle-channel",
+       "display":"Poyle Channel"
+    },
+    {
+       "river_id":"poynton-brook",
+       "display":"Poynton Brook"
+    },
+    {
+       "river_id":"praze-stream",
+       "display":"Praze Stream"
+    },
+    {
+       "river_id":"priorpot-beck-derwent",
+       "display":"Priorpot Beck"
+    },
+    {
+       "river_id":"pyl-brook",
+       "display":"Pyl Brook"
+    },
+    {
+       "river_id":"pymmes-brook",
+       "display":"Pymmes Brook"
+    },
+    {
+       "river_id":"quy-water",
+       "display":"Quy Water"
+    },
+    {
+       "river_id":"radlett-brook",
+       "display":"Radlett Brook"
+    },
+    {
+       "river_id":"rags-brook",
+       "display":"Rags Brook"
+    },
+    {
+       "river_id":"rattlesden-river",
+       "display":"Rattlesden River"
+    },
+    {
+       "river_id":"rea-brook",
+       "display":"Rea Brook"
+    },
+    {
+       "river_id":"redhill-brook",
+       "display":"Redhill Brook"
+    },
+    {
+       "river_id":"ridings-brook",
+       "display":"Ridings Brook"
+    },
+    {
+       "river_id":"riseley-brook",
+       "display":"Riseley Brook"
+    },
+    {
+       "river_id":"rising-brook",
+       "display":"Rising Brook"
+    },
+    {
+       "river_id":"river-adur",
+       "display":"River Adur"
+    },
+    {
+       "river_id":"river-aire",
+       "display":"River Aire"
+    },
+    {
+       "river_id":"river-alde",
+       "display":"River Alde"
+    },
+    {
+       "river_id":"river-aller",
+       "display":"River Aller"
+    },
+    {
+       "river_id":"river-alne",
+       "display":"River Alne"
+    },
+    {
+       "river_id":"river-alre",
+       "display":"River Alre"
+    },
+    {
+       "river_id":"river-alt",
+       "display":"River Alt"
+    },
+    {
+       "river_id":"river-alver-hampshire",
+       "display":"River Alver"
+    },
+    {
+       "river_id":"river-blakewater",
+       "display":"River Blakewater"
+    },
+    {
+       "river_id":"river-blithe",
+       "display":"River Blithe"
+    },
+    {
+       "river_id":"river-blythe",
+       "display":"River Blythe"
+    },
+    {
+       "river_id":"river-bollin",
+       "display":"River Bollin"
+    },
+    {
+       "river_id":"river-bovey",
+       "display":"River Bovey"
+    },
+    {
+       "river_id":"river-box",
+       "display":"River Box"
+    },
+    {
+       "river_id":"river-boyd",
+       "display":"River Boyd"
+    },
+    {
+       "river_id":"river-brain",
+       "display":"River Brain"
+    },
+    {
+       "river_id":"river-brant",
+       "display":"River Brant"
+    },
+    {
+       "river_id":"river-brathay",
+       "display":"River Brathay"
+    },
+    {
+       "river_id":"river-bray",
+       "display":"River Bray"
+    },
+    {
+       "river_id":"river-brede",
+       "display":"River Brede"
+    },
+    {
+       "river_id":"river-brent",
+       "display":"River Brent"
+    },
+    {
+       "river_id":"river-brett",
+       "display":"River Brett"
+    },
+    {
+       "river_id":"river-bride",
+       "display":"River Bride"
+    },
+    {
+       "river_id":"river-brit-dorset",
+       "display":"River Brit"
+    },
+    {
+       "river_id":"river-brock",
+       "display":"River Brock"
+    },
+    {
+       "river_id":"river-browney",
+       "display":"River Browney"
+    },
+    {
+       "river_id":"river-brue",
+       "display":"River Brue"
+    },
+    {
+       "river_id":"river-brun",
+       "display":"River Brun"
+    },
+    {
+       "river_id":"river-bulbourne",
+       "display":"River Bulbourne"
+    },
+    {
+       "river_id":"river-bull",
+       "display":"River Bull"
+    },
+    {
+       "river_id":"river-bure",
+       "display":"River Bure"
+    },
+    {
+       "river_id":"river-burn",
+       "display":"River Burn"
+    },
+    {
+       "river_id":"river-burwash-kent",
+       "display":"River Burwash"
+    },
+    {
+       "river_id":"river-caen",
+       "display":"River Caen"
+    },
+    {
+       "river_id":"river-cain",
+       "display":"River Cain"
+    },
+    {
+       "river_id":"river-caldew",
+       "display":"River Caldew"
+    },
+    {
+       "river_id":"river-cale",
+       "display":"River Cale"
+    },
+    {
+       "river_id":"river-camel",
+       "display":"River Camel"
+    },
+    {
+       "river_id":"river-can",
+       "display":"River Can"
+    },
+    {
+       "river_id":"river-char",
+       "display":"River Char"
+    },
+    {
+       "river_id":"river-chater",
+       "display":"River Chater"
+    },
+    {
+       "river_id":"river-chelmer",
+       "display":"River Chelmer"
+    },
+    {
+       "river_id":"river-chelt",
+       "display":"River Chelt"
+    },
+    {
+       "river_id":"river-cherwell",
+       "display":"River Cherwell"
+    },
+    {
+       "river_id":"river-chess",
+       "display":"River Chess"
+    },
+    {
+       "river_id":"river-chew",
+       "display":"River Chew"
+    },
+    {
+       "river_id":"river-churn",
+       "display":"River Churn"
+    },
+    {
+       "river_id":"river-churnet",
+       "display":"River Churnet"
+    },
+    {
+       "river_id":"river-clyst",
+       "display":"River Clyst"
+    },
+    {
+       "river_id":"river-clywedog",
+       "display":"River Clywedog"
+    },
+    {
+       "river_id":"river-cober",
+       "display":"River Cober"
+    },
+    {
+       "river_id":"river-cocker",
+       "display":"River Cocker"
+    },
+    {
+       "river_id":"river-coln",
+       "display":"River Coln"
+    },
+    {
+       "river_id":"river-coly",
+       "display":"River Coly"
+    },
+    {
+       "river_id":"river-conder",
+       "display":"River Conder"
+    },
+    {
+       "river_id":"river-coquet",
+       "display":"River Coquet"
+    },
+    {
+       "river_id":"river-crake",
+       "display":"River Crake"
+    },
+    {
+       "river_id":"river-crane",
+       "display":"River Crane"
+    },
+    {
+       "river_id":"river-cray",
+       "display":"River Cray"
+    },
+    {
+       "river_id":"river-creedy",
+       "display":"River Creedy"
+    },
+    {
+       "river_id":"river-crimple",
+       "display":"River Crimple"
+    },
+    {
+       "river_id":"river-croal",
+       "display":"River Croal"
+    },
+    {
+       "river_id":"river-crouch",
+       "display":"River Crouch"
+    },
+    {
+       "river_id":"river-cuckmere",
+       "display":"River Cuckmere"
+    },
+    {
+       "river_id":"river-culm",
+       "display":"River Culm"
+    },
+    {
+       "river_id":"river-dane",
+       "display":"River Dane"
+    },
+    {
+       "river_id":"river-darent",
+       "display":"River Darent"
+    },
+    {
+       "river_id":"river-dart",
+       "display":"River Dart"
+    },
+    {
+       "river_id":"river-darwen",
+       "display":"River Darwen"
+    },
+    {
+       "river_id":"river-dearne",
+       "display":"River Dearne"
+    },
+    {
+       "river_id":"river-deben",
+       "display":"River Deben"
+    },
+    {
+       "river_id":"river-dee",
+       "display":"River Dee"
+    },
+    {
+       "river_id":"river-dever",
+       "display":"River Dever"
+    },
+    {
+       "river_id":"river-devon",
+       "display":"River Devon"
+    },
+    {
+       "river_id":"river-dikler",
+       "display":"River Dikler"
+    },
+    {
+       "river_id":"river-doe-lea",
+       "display":"River Doe Lea"
+    },
+    {
+       "river_id":"river-don",
+       "display":"River Don"
+    },
+    {
+       "river_id":"river-dore",
+       "display":"River Dore"
+    },
+    {
+       "river_id":"river-douglas",
+       "display":"River Douglas"
+    },
+    {
+       "river_id":"river-dour",
+       "display":"River Dour"
+    },
+    {
+       "river_id":"river-drone",
+       "display":"River Drone"
+    },
+    {
+       "river_id":"river-derwent-cumbria",
+       "display":"River Derwent (Cumbria)"
+    },
+    {
+       "river_id":"river-eden-kent",
+       "display":"River Eden (Kent)"
+    },
+    {
+       "river_id":"river-greta-durham",
+       "display":"River Greta (Durham)"
+    },
+    {
+       "river_id":"river-esk-cumbria-west",
+       "display":"River Esk (West Cumbria)"
+    },
+    {
+       "river_id":"river-dove-staffordshire",
+       "display":"River Dove (Staffordshire)"
+    },
+    {
+       "river_id":"river-frome-severn",
+       "display":"River Frome (Severn)"
+    },
+    {
+       "river_id":"river-mease",
+       "display":"River Mease"
+    },
+    {
+       "river_id":"river-frome-wye",
+       "display":"River Frome (Wye)"
+    },
+    {
+       "river_id":"river-duddon",
+       "display":"River Duddon"
+    },
+    {
+       "river_id":"river-dudwell-kent",
+       "display":"River Dudwell"
+    },
+    {
+       "river_id":"river-dulas",
+       "display":"River Dulas"
+    },
+    {
+       "river_id":"river-eamont",
+       "display":"River Eamont"
+    },
+    {
+       "river_id":"river-east-allen",
+       "display":"River East Allen"
+    },
+    {
+       "river_id":"river-eau",
+       "display":"River Eau"
+    },
+    {
+       "river_id":"river-ebble",
+       "display":"River Ebble"
+    },
+    {
+       "river_id":"river-ecclesbourne",
+       "display":"River Ecclesbourne"
+    },
+    {
+       "river_id":"river-ehen",
+       "display":"River Ehen"
+    },
+    {
+       "river_id":"river-elan",
+       "display":"River Elan"
+    },
+    {
+       "river_id":"river-ellen",
+       "display":"River Ellen"
+    },
+    {
+       "river_id":"river-ems",
+       "display":"River Ems"
+    },
+    {
+       "river_id":"river-enborne",
+       "display":"River Enborne"
+    },
+    {
+       "river_id":"river-erewash",
+       "display":"River Erewash"
+    },
+    {
+       "river_id":"river-erme",
+       "display":"River Erme"
+    },
+    {
+       "river_id":"river-etherow",
+       "display":"River Etherow"
+    },
+    {
+       "river_id":"river-evenlode",
+       "display":"River Evenlode"
+    },
+    {
+       "river_id":"river-exe",
+       "display":"River Exe"
+    },
+    {
+       "river_id":"river-fal",
+       "display":"River Fal"
+    },
+    {
+       "river_id":"river-flit",
+       "display":"River Flit"
+    },
+    {
+       "river_id":"river-font",
+       "display":"River Font"
+    },
+    {
+       "river_id":"river-foss",
+       "display":"River Foss"
+    },
+    {
+       "river_id":"river-foulness",
+       "display":"River Foulness"
+    },
+    {
+       "river_id":"river-fowey",
+       "display":"River Fowey"
+    },
+    {
+       "river_id":"river-fromus",
+       "display":"River Fromus"
+    },
+    {
+       "river_id":"river-gade",
+       "display":"River Gade"
+    },
+    {
+       "river_id":"river-gannel",
+       "display":"River Gannel"
+    },
+    {
+       "river_id":"river-gaunless",
+       "display":"River Gaunless"
+    },
+    {
+       "river_id":"river-gelt",
+       "display":"River Gelt"
+    },
+    {
+       "river_id":"river-gipping",
+       "display":"River Gipping"
+    },
+    {
+       "river_id":"river-glem",
+       "display":"River Glem"
+    },
+    {
+       "river_id":"river-glen",
+       "display":"River Glen"
+    },
+    {
+       "river_id":"river-glenderamackin",
+       "display":"River Glenderamackin"
+    },
+    {
+       "river_id":"river-glyme",
+       "display":"River Glyme"
+    },
+    {
+       "river_id":"river-gowan",
+       "display":"River Gowan"
+    },
+    {
+       "river_id":"river-gowy",
+       "display":"River Gowy"
+    },
+    {
+       "river_id":"river-goyt",
+       "display":"River Goyt"
+    },
+    {
+       "river_id":"river-granta",
+       "display":"River Granta"
+    },
+    {
+       "river_id":"river-graveney",
+       "display":"River Graveney"
+    },
+    {
+       "river_id":"river-great-ouse",
+       "display":"River Great Ouse"
+    },
+    {
+       "river_id":"river-greet",
+       "display":"River Greet"
+    },
+    {
+       "river_id":"river-haddeo",
+       "display":"River Haddeo"
+    },
+    {
+       "river_id":"river-hamble",
+       "display":"River Hamble"
+    },
+    {
+       "river_id":"river-hamps",
+       "display":"River Hamps"
+    },
+    {
+       "river_id":"river-harbourne",
+       "display":"River Harbourne"
+    },
+    {
+       "river_id":"river-hart",
+       "display":"River Hart"
+    },
+    {
+       "river_id":"river-hartburn",
+       "display":"River Hartburn"
+    },
+    {
+       "river_id":"river-hayle",
+       "display":"River Hayle"
+    },
+    {
+       "river_id":"river-hindburn",
+       "display":"River Hindburn"
+    },
+    {
+       "river_id":"river-hipper",
+       "display":"River Hipper"
+    },
+    {
+       "river_id":"river-hiz",
+       "display":"River Hiz"
+    },
+    {
+       "river_id":"river-hodder",
+       "display":"River Hodder"
+    },
+    {
+       "river_id":"river-holme",
+       "display":"River Holme"
+    },
+    {
+       "river_id":"river-hooke",
+       "display":"River Hooke"
+    },
+    {
+       "river_id":"river-hull",
+       "display":"River Hull"
+    },
+    {
+       "river_id":"river-hyndburn",
+       "display":"River Hyndburn"
+    },
+    {
+       "river_id":"river-dove-south-yorkshire",
+       "display":"River Dove (South Yorkshire)"
+    },
+    {
+       "river_id":"river-ingrebourne",
+       "display":"River Ingrebourne"
+    },
+    {
+       "river_id":"river-inny",
+       "display":"River Inny"
+    },
+    {
+       "river_id":"river-irk",
+       "display":"River Irk"
+    },
+    {
+       "river_id":"river-irt",
+       "display":"River Irt"
+    },
+    {
+       "river_id":"river-irthing",
+       "display":"River Irthing"
+    },
+    {
+       "river_id":"river-irwell",
+       "display":"River Irwell"
+    },
+    {
+       "river_id":"river-isbourne",
+       "display":"River Isbourne"
+    },
+    {
+       "river_id":"river-ise",
+       "display":"River Ise"
+    },
+    {
+       "river_id":"river-isle",
+       "display":"River Isle"
+    },
+    {
+       "river_id":"river-ivel",
+       "display":"River Ivel"
+    },
+    {
+       "river_id":"river-jordan",
+       "display":"River Jordan"
+    },
+    {
+       "river_id":"river-keekle",
+       "display":"River Keekle"
+    },
+    {
+       "river_id":"river-keer",
+       "display":"River Keer"
+    },
+    {
+       "river_id":"river-kennall",
+       "display":"River Kennall"
+    },
+    {
+       "river_id":"river-kennet",
+       "display":"River Kennet"
+    },
+    {
+       "river_id":"river-kennett",
+       "display":"River Kennett"
+    },
+    {
+       "river_id":"river-kenn-tributary",
+       "display":"River Kenn Tributary"
+    },
+    {
+       "river_id":"river-kensey",
+       "display":"River Kensey"
+    },
+    {
+       "river_id":"river-kent",
+       "display":"River Kent"
+    },
+    {
+       "river_id":"river-kenwyn",
+       "display":"River Kenwyn"
+    },
+    {
+       "river_id":"river-key",
+       "display":"River Key"
+    },
+    {
+       "river_id":"river-kyle",
+       "display":"River Kyle"
+    },
+    {
+       "river_id":"river-kym",
+       "display":"River Kym"
+    },
+    {
+       "river_id":"river-lambourn",
+       "display":"River Lambourn"
+    },
+    {
+       "river_id":"river-lark",
+       "display":"River Lark"
+    },
+    {
+       "river_id":"river-laver",
+       "display":"River Laver"
+    },
+    {
+       "river_id":"river-leach",
+       "display":"River Leach"
+    },
+    {
+       "river_id":"river-leadon",
+       "display":"River Leadon"
+    },
+    {
+       "river_id":"river-leam",
+       "display":"River Leam"
+    },
+    {
+       "river_id":"river-lee",
+       "display":"River Lee"
+    },
+    {
+       "river_id":"river-leen",
+       "display":"River Leen"
+    },
+    {
+       "river_id":"river-lemon",
+       "display":"River Lemon"
+    },
+    {
+       "river_id":"river-lew",
+       "display":"River Lew"
+    },
+    {
+       "river_id":"river-lim-dorset",
+       "display":"River Lim"
+    },
+    {
+       "river_id":"river-lin",
+       "display":"River Lin"
+    },
+    {
+       "river_id":"river-little-ouse",
+       "display":"River Little Ouse"
+    },
+    {
+       "river_id":"river-lod",
+       "display":"River Lod"
+    },
+    {
+       "river_id":"river-loddon",
+       "display":"River Loddon"
+    },
+    {
+       "river_id":"river-lostock",
+       "display":"River Lostock"
+    },
+    {
+       "river_id":"river-lowman",
+       "display":"River Lowman"
+    },
+    {
+       "river_id":"river-lowther",
+       "display":"River Lowther"
+    },
+    {
+       "river_id":"river-lox",
+       "display":"River Lox"
+    },
+    {
+       "river_id":"river-loxley",
+       "display":"River Loxley"
+    },
+    {
+       "river_id":"river-lud",
+       "display":"River Lud"
+    },
+    {
+       "river_id":"river-lugg",
+       "display":"River Lugg"
+    },
+    {
+       "river_id":"river-lune",
+       "display":"River Lune"
+    },
+    {
+       "river_id":"river-lydden",
+       "display":"River Lydden"
+    },
+    {
+       "river_id":"river-lymn",
+       "display":"River Lymn"
+    },
+    {
+       "river_id":"river-lynher",
+       "display":"River Lynher"
+    },
+    {
+       "river_id":"river-manifold",
+       "display":"River Manifold"
+    },
+    {
+       "river_id":"river-marden",
+       "display":"River Marden"
+    },
+    {
+       "river_id":"river-mardle",
+       "display":"River Mardle"
+    },
+    {
+       "river_id":"river-meden",
+       "display":"River Meden"
+    },
+    {
+       "river_id":"river-medina",
+       "display":"River Medina"
+    },
+    {
+       "river_id":"river-medlock",
+       "display":"River Medlock"
+    },
+    {
+       "river_id":"river-medway",
+       "display":"River Medway"
+    },
+    {
+       "river_id":"river-meese",
+       "display":"River Meese"
+    },
+    {
+       "river_id":"river-meon",
+       "display":"River Meon"
+    },
+    {
+       "river_id":"river-mersey",
+       "display":"River Mersey"
+    },
+    {
+       "river_id":"river-mimram",
+       "display":"River Mimram"
+    },
+    {
+       "river_id":"river-mint",
+       "display":"River Mint"
+    },
+    {
+       "river_id":"river-misbourne",
+       "display":"River Misbourne"
+    },
+    {
+       "river_id":"river-nadder",
+       "display":"River Nadder"
+    },
+    {
+       "river_id":"river-nar",
+       "display":"River Nar"
+    },
+    {
+       "river_id":"river-neet",
+       "display":"River Neet"
+    },
+    {
+       "river_id":"river-nene",
+       "display":"River Nene"
+    },
+    {
+       "river_id":"river-nidd",
+       "display":"River Nidd"
+    },
+    {
+       "river_id":"river-north-lew",
+       "display":"River North Lew"
+    },
+    {
+       "river_id":"river-north-tyne",
+       "display":"River North Tyne"
+    },
+    {
+       "river_id":"river-ock",
+       "display":"River Ock"
+    },
+    {
+       "river_id":"river-og",
+       "display":"River Og"
+    },
+    {
+       "river_id":"river-okement",
+       "display":"River Okement"
+    },
+    {
+       "river_id":"river-onny",
+       "display":"River Onny"
+    },
+    {
+       "river_id":"river-ore",
+       "display":"River Ore"
+    },
+    {
+       "river_id":"river-otter",
+       "display":"River Otter"
+    },
+    {
+       "river_id":"river-ottery",
+       "display":"River Ottery"
+    },
+    {
+       "river_id":"river-ouzel",
+       "display":"River Ouzel"
+    },
+    {
+       "river_id":"river-pang",
+       "display":"River Pang"
+    },
+    {
+       "river_id":"river-pant",
+       "display":"River Pant"
+    },
+    {
+       "river_id":"river-parrett",
+       "display":"River Parrett"
+    },
+    {
+       "river_id":"river-penk",
+       "display":"River Penk"
+    },
+    {
+       "river_id":"river-perry",
+       "display":"River Perry"
+    },
+    {
+       "river_id":"river-petteril",
+       "display":"River Petteril"
+    },
+    {
+       "river_id":"river-piddle",
+       "display":"River Piddle"
+    },
+    {
+       "river_id":"river-pinn",
+       "display":"River Pinn"
+    },
+    {
+       "river_id":"river-plym",
+       "display":"River Plym"
+    },
+    {
+       "river_id":"river-pol",
+       "display":"River Pol"
+    },
+    {
+       "river_id":"river-pont",
+       "display":"River Pont"
+    },
+    {
+       "river_id":"river-pool",
+       "display":"River Pool"
+    },
+    {
+       "river_id":"river-poulter",
+       "display":"River Poulter"
+    },
+    {
+       "river_id":"river-quaggy",
+       "display":"River Quaggy"
+    },
+    {
+       "river_id":"river-quin",
+       "display":"River Quin"
+    },
+    {
+       "river_id":"river-rase",
+       "display":"River Rase"
+    },
+    {
+       "river_id":"river-ravensbourne",
+       "display":"River Ravensbourne"
+    },
+    {
+       "river_id":"river-ravensbourne-east-branch",
+       "display":"River Ravensbourne (East branch)"
+    },
+    {
+       "river_id":"river-rawthey",
+       "display":"River Rawthey"
+    },
+    {
+       "river_id":"river-mole-devon",
+       "display":"River Mole (Devon)"
+    },
+    {
+       "river_id":"river-lyd-gloucestershire",
+       "display":"River Lyd (Gloucestershire)"
+    },
+    {
+       "river_id":"river-lyd-devon",
+       "display":"River Lyd (Devon)"
+    },
+    {
+       "river_id":"river-mole-surrey",
+       "display":"River Mole (Surrey)"
+    },
+    {
+       "river_id":"river-ouse-sussex",
+       "display":"River Ouse (Sussex)"
+    },
+    {
+       "river_id":"river-ouse-yorkshire",
+       "display":"River Ouse (Yorkshire)"
+    },
+    {
+       "river_id":"river-ray",
+       "display":"River Ray"
+    },
+    {
+       "river_id":"river-rede",
+       "display":"River Rede"
+    },
+    {
+       "river_id":"river-rhee",
+       "display":"River Rhee"
+    },
+    {
+       "river_id":"river-rib",
+       "display":"River Rib"
+    },
+    {
+       "river_id":"river-ribble",
+       "display":"River Ribble"
+    },
+    {
+       "river_id":"river-riccal",
+       "display":"River Riccal"
+    },
+    {
+       "river_id":"river-roch",
+       "display":"River Roch"
+    },
+    {
+       "river_id":"river-roden",
+       "display":"River Roden"
+    },
+    {
+       "river_id":"river-roding",
+       "display":"River Roding"
+    },
+    {
+       "river_id":"river-rom",
+       "display":"River Rom"
+    },
+    {
+       "river_id":"river-rothay",
+       "display":"River Rothay"
+    },
+    {
+       "river_id":"river-ryburn",
+       "display":"River Ryburn"
+    },
+    {
+       "river_id":"river-rye",
+       "display":"River Rye"
+    },
+    {
+       "river_id":"river-ryton",
+       "display":"River Ryton"
+    },
+    {
+       "river_id":"river-salwarpe",
+       "display":"River Salwarpe"
+    },
+    {
+       "river_id":"river-seaton",
+       "display":"River Seaton"
+    },
+    {
+       "river_id":"river-seven-yorkshire",
+       "display":"River Seven"
+    },
+    {
+       "river_id":"river-severn",
+       "display":"River Severn"
+    },
+    {
+       "river_id":"river-shalbourne",
+       "display":"River Shalbourne"
+    },
+    {
+       "river_id":"river-sheaf",
+       "display":"River Sheaf"
+    },
+    {
+       "river_id":"river-sheppey",
+       "display":"River Sheppey"
+    },
+    {
+       "river_id":"river-sherbourne",
+       "display":"River Sherbourne"
+    },
+    {
+       "river_id":"river-shuttle-kent",
+       "display":"River Shuttle"
+    },
+    {
+       "river_id":"river-sid",
+       "display":"River Sid"
+    },
+    {
+       "river_id":"river-skell",
+       "display":"River Skell"
+    },
+    {
+       "river_id":"river-skerne",
+       "display":"River Skerne"
+    },
+    {
+       "river_id":"river-slea",
+       "display":"River Slea"
+    },
+    {
+       "river_id":"river-smite",
+       "display":"River Smite"
+    },
+    {
+       "river_id":"river-snail",
+       "display":"River Snail"
+    },
+    {
+       "river_id":"river-soar",
+       "display":"River Soar"
+    },
+    {
+       "river_id":"river-south-tyne",
+       "display":"River South Tyne"
+    },
+    {
+       "river_id":"river-sow",
+       "display":"River Sow"
+    },
+    {
+       "river_id":"river-sowe",
+       "display":"River Sowe"
+    },
+    {
+       "river_id":"river-sowy",
+       "display":"River Sowy"
+    },
+    {
+       "river_id":"river-sprint",
+       "display":"River Sprint"
+    },
+    {
+       "river_id":"river-steeping",
+       "display":"River Steeping"
+    },
+    {
+       "river_id":"river-stennack",
+       "display":"River Stennack"
+    },
+    {
+       "river_id":"river-stert",
+       "display":"River Stert"
+    },
+    {
+       "river_id":"river-stiffkey",
+       "display":"River Stiffkey"
+    },
+    {
+       "river_id":"river-stort",
+       "display":"River Stort"
+    },
+    {
+       "river_id":"river-strat",
+       "display":"River Strat"
+    },
+    {
+       "river_id":"river-strine",
+       "display":"River Strine"
+    },
+    {
+       "river_id":"river-swale-yorkshire",
+       "display":"River Swale"
+    },
+    {
+       "river_id":"river-swarbourne",
+       "display":"River Swarbourne"
+    },
+    {
+       "river_id":"river-tale",
+       "display":"River Tale"
+    },
+    {
+       "river_id":"river-tamar",
+       "display":"River Tamar"
+    },
+    {
+       "river_id":"river-tanat",
+       "display":"River Tanat"
+    },
+    {
+       "river_id":"river-tavy",
+       "display":"River Tavy"
+    },
+    {
+       "river_id":"river-taw",
+       "display":"River Taw"
+    },
+    {
+       "river_id":"river-team",
+       "display":"River Team"
+    },
+    {
+       "river_id":"river-tean",
+       "display":"River Tean"
+    },
+    {
+       "river_id":"river-tees",
+       "display":"River Tees"
+    },
+    {
+       "river_id":"river-teign",
+       "display":"River Teign"
+    },
+    {
+       "river_id":"river-teise",
+       "display":"River Teise"
+    },
+    {
+       "river_id":"river-teme",
+       "display":"River Teme"
+    },
+    {
+       "river_id":"river-tern",
+       "display":"River Tern"
+    },
+    {
+       "river_id":"river-test",
+       "display":"River Test"
+    },
+    {
+       "river_id":"river-thame",
+       "display":"River Thame"
+    },
+    {
+       "river_id":"river-thames",
+       "display":"River Thames"
+    },
+    {
+       "river_id":"river-thet",
+       "display":"River Thet"
+    },
+    {
+       "river_id":"river-thrushel",
+       "display":"River Thrushel"
+    },
+    {
+       "river_id":"river-thurne",
+       "display":"River Thurne"
+    },
+    {
+       "river_id":"river-tiddy",
+       "display":"River Tiddy"
+    },
+    {
+       "river_id":"river-tillingbourne",
+       "display":"River Tillingbourne"
+    },
+    {
+       "river_id":"river-tillingham",
+       "display":"River Tillingham"
+    },
+    {
+       "river_id":"river-tone",
+       "display":"River Tone"
+    },
+    {
+       "river_id":"river-torridge",
+       "display":"River Torridge"
+    },
+    {
+       "river_id":"river-tove",
+       "display":"River Tove"
+    },
+    {
+       "river_id":"river-trent",
+       "display":"River Trent"
+    },
+    {
+       "river_id":"river-tud",
+       "display":"River Tud"
+    },
+    {
+       "river_id":"river-tutt",
+       "display":"River Tutt"
+    },
+    {
+       "river_id":"river-tweed",
+       "display":"River Tweed"
+    },
+    {
+       "river_id":"river-twyver",
+       "display":"River Twyver"
+    },
+    {
+       "river_id":"river-tyne",
+       "display":"River Tyne"
+    },
+    {
+       "river_id":"river-uck",
+       "display":"River Uck"
+    },
+    {
+       "river_id":"river-umber",
+       "display":"River Umber"
+    },
+    {
+       "river_id":"river-ure",
+       "display":"River Ure"
+    },
+    {
+       "river_id":"river-valency",
+       "display":"River Valency"
+    },
+    {
+       "river_id":"river-ver",
+       "display":"River Ver"
+    },
+    {
+       "river_id":"river-vyrnwy",
+       "display":"River Vyrnwy"
+    },
+    {
+       "river_id":"river-waldon",
+       "display":"River Waldon"
+    },
+    {
+       "river_id":"river-walkham",
+       "display":"River Walkham"
+    },
+    {
+       "river_id":"river-wandle-kent",
+       "display":"River Wandle"
+    },
+    {
+       "river_id":"river-wansbeck",
+       "display":"River Wansbeck"
+    },
+    {
+       "river_id":"river-waring",
+       "display":"River Waring"
+    },
+    {
+       "river_id":"river-waveney",
+       "display":"River Waveney"
+    },
+    {
+       "river_id":"river-wear",
+       "display":"River Wear"
+    },
+    {
+       "river_id":"river-weaver",
+       "display":"River Weaver"
+    },
+    {
+       "river_id":"river-welland",
+       "display":"River Welland"
+    },
+    {
+       "river_id":"river-wenning",
+       "display":"River Wenning"
+    },
+    {
+       "river_id":"river-wensum",
+       "display":"River Wensum"
+    },
+    {
+       "river_id":"river-went",
+       "display":"River Went"
+    },
+    {
+       "river_id":"river-west-allen",
+       "display":"River West Allen"
+    },
+    {
+       "river_id":"river-wharfe",
+       "display":"River Wharfe"
+    },
+    {
+       "river_id":"river-whitewater",
+       "display":"River Whitewater"
+    },
+    {
+       "river_id":"river-whitting",
+       "display":"River Whitting"
+    },
+    {
+       "river_id":"river-whittle",
+       "display":"River Whittle"
+    },
+    {
+       "river_id":"river-wid",
+       "display":"River Wid"
+    },
+    {
+       "river_id":"river-windrush",
+       "display":"River Windrush"
+    },
+    {
+       "river_id":"river-winterbourne",
+       "display":"River Winterbourne"
+    },
+    {
+       "river_id":"river-wiske",
+       "display":"River Wiske"
+    },
+    {
+       "river_id":"river-wissey",
+       "display":"River Wissey"
+    },
+    {
+       "river_id":"river-witham",
+       "display":"River Witham"
+    },
+    {
+       "river_id":"river-wolf",
+       "display":"River Wolf"
+    },
+    {
+       "river_id":"river-worfe",
+       "display":"River Worfe"
+    },
+    {
+       "river_id":"river-worth",
+       "display":"River Worth"
+    },
+    {
+       "river_id":"river-wreake",
+       "display":"River Wreake"
+    },
+    {
+       "river_id":"river-wriggle",
+       "display":"River Wriggle"
+    },
+    {
+       "river_id":"river-wrythe-kent",
+       "display":"River Wrythe"
+    },
+    {
+       "river_id":"river-wye",
+       "display":"River Wye"
+    },
+    {
+       "river_id":"river-wylye",
+       "display":"River Wylye"
+    },
+    {
+       "river_id":"river-wyre",
+       "display":"River Wyre"
+    },
+    {
+       "river_id":"river-yare",
+       "display":"River Yare"
+    },
+    {
+       "river_id":"river-yarrow",
+       "display":"River Yarrow"
+    },
+    {
+       "river_id":"river-yarty",
+       "display":"River Yarty"
+    },
+    {
+       "river_id":"river-yealm",
+       "display":"River Yealm"
+    },
+    {
+       "river_id":"roall-dyke",
+       "display":"Roall Dyke"
+    },
+    {
+       "river_id":"roe-beck",
+       "display":"Roe Beck"
+    },
+    {
+       "river_id":"rolleston-brook",
+       "display":"Rolleston Brook"
+    },
+    {
+       "river_id":"rookhope-burn",
+       "display":"Rookhope Burn"
+    },
+    {
+       "river_id":"rothley-brook",
+       "display":"Rothley Brook"
+    },
+    {
+       "river_id":"rudhall-brook",
+       "display":"Rudhall Brook"
+    },
+    {
+       "river_id":"ruskington-beck",
+       "display":"Ruskington Beck"
+    },
+    {
+       "river_id":"rye-meads-effluent-channel",
+       "display":"Rye Meads Effluent Channel"
+    },
+    {
+       "river_id":"salmon-brook",
+       "display":"Salmon Brook"
+    },
+    {
+       "river_id":"salt-haven",
+       "display":"Salt Haven"
+    },
+    {
+       "river_id":"sampford-brett-stream",
+       "display":"Sampford Brett Stream"
+    },
+    {
+       "river_id":"sandon-brook",
+       "display":"Sandon Brook"
+    },
+    {
+       "river_id":"sandy-brook",
+       "display":"Sandy Brook"
+    },
+    {
+       "river_id":"sandyford-brook",
+       "display":"Sandyford Brook"
+    },
+    {
+       "river_id":"sankey-brook",
+       "display":"Sankey Brook"
+    },
+    {
+       "river_id":"saredon-brook",
+       "display":"Saredon Brook"
+    },
+    {
+       "river_id":"scurf-dyke",
+       "display":"Scurf Dyke"
+    },
+    {
+       "river_id":"seacourt-stream",
+       "display":"Seacourt Stream"
+    },
+    {
+       "river_id":"sea-cut",
+       "display":"Sea Cut"
+    },
+    {
+       "river_id":"selby-dam",
+       "display":"Selby Dam"
+    },
+    {
+       "river_id":"semington-brook",
+       "display":"Semington Brook"
+    },
+    {
+       "river_id":"shaw-brook-tributary",
+       "display":"Shaw Brook Tributary"
+    },
+    {
+       "river_id":"sherston-avon",
+       "display":"Sherston Avon"
+    },
+    {
+       "river_id":"shill-brook",
+       "display":"Shill Brook"
+    },
+    {
+       "river_id":"shreen-water",
+       "display":"Shreen Water"
+    },
+    {
+       "river_id":"silk-stream",
+       "display":"Silk Stream"
+    },
+    {
+       "river_id":"silsden-beck",
+       "display":"Silsden Beck"
+    },
+    {
+       "river_id":"sincil-dyke",
+       "display":"Sincil Dyke"
+    },
+    {
+       "river_id":"sinderland-brook",
+       "display":"Sinderland Brook"
+    },
+    {
+       "river_id":"skeffling-drain",
+       "display":"Skeffling Drain"
+    },
+    {
+       "river_id":"skirting-beck",
+       "display":"Skirting Beck"
+    },
+    {
+       "river_id":"slad-brook",
+       "display":"Slad Brook"
+    },
+    {
+       "river_id":"smallhope-burn",
+       "display":"Smallhope Burn"
+    },
+    {
+       "river_id":"smestow-brook",
+       "display":"Smestow Brook"
+    },
+    {
+       "river_id":"snaith-ings",
+       "display":"Snaith Ings"
+    },
+    {
+       "river_id":"snaizeholme-beck",
+       "display":"Snaizeholme Beck"
+    },
+    {
+       "river_id":"somborne-stream",
+       "display":"Somborne Stream"
+    },
+    {
+       "river_id":"somerset-frome",
+       "display":"Somerset Frome"
+    },
+    {
+       "river_id":"sor-brook",
+       "display":"Sor Brook"
+    },
+    {
+       "river_id":"sour-beck",
+       "display":"Sour Beck"
+    },
+    {
+       "river_id":"south-brook",
+       "display":"South Brook"
+    },
+    {
+       "river_id":"southcourt-brook",
+       "display":"Southcourt Brook"
+    },
+    {
+       "river_id":"south-forty-foot-drain",
+       "display":"South Forty Foot Drain"
+    },
+    {
+       "river_id":"spen-beck",
+       "display":"Spen Beck"
+    },
+    {
+       "river_id":"spratford-stream",
+       "display":"Spratford Stream"
+    },
+    {
+       "river_id":"spring-brook",
+       "display":"Spring Brook"
+    },
+    {
+       "river_id":"stainfield-beck",
+       "display":"Stainfield Beck"
+    },
+    {
+       "river_id":"stansted-brook",
+       "display":"Stansted Brook"
+    },
+    {
+       "river_id":"st-austell-river",
+       "display":"St Austell River"
+    },
+    {
+       "river_id":"st-blazey-stream",
+       "display":"St Blazey Stream"
+    },
+    {
+       "river_id":"stevenage-brook",
+       "display":"Stevenage Brook"
+    },
+    {
+       "river_id":"st-james-stream",
+       "display":"St James Stream"
+    },
+    {
+       "river_id":"st-johns-beck",
+       "display":"St Johns Beck"
+    },
+    {
+       "river_id":"st-neot-river",
+       "display":"St Neot River"
+    },
+    {
+       "river_id":"stock-beck",
+       "display":"Stock Beck"
+    },
+    {
+       "river_id":"stonham-watercourse",
+       "display":"Stonham Watercourse"
+    },
+    {
+       "river_id":"stour-brook",
+       "display":"Stour Brook"
+    },
+    {
+       "river_id":"sud-brook",
+       "display":"Sud Brook"
+    },
+    {
+       "river_id":"sulham-brook",
+       "display":"Sulham Brook"
+    },
+    {
+       "river_id":"sutton-beck",
+       "display":"Sutton Beck"
+    },
+    {
+       "river_id":"swalecliffe-brook",
+       "display":"Swalecliffe Brook"
+    },
+    {
+       "river_id":"swan-brook",
+       "display":"Swan Brook"
+    },
+    {
+       "river_id":"swavesey-drain",
+       "display":"Swavesey Drain"
+    },
+    {
+       "river_id":"swill-brook",
+       "display":"Swill Brook"
+    },
+    {
+       "river_id":"swinney-beck",
+       "display":"Swinney Beck"
+    },
+    {
+       "river_id":"sydling-water",
+       "display":"Sydling Water"
+    },
+    {
+       "river_id":"tadburn-lake",
+       "display":"Tadburn Lake"
+    },
+    {
+       "river_id":"tang-hall-beck",
+       "display":"Tang Hall Beck"
+    },
+    {
+       "river_id":"tanners-brook",
+       "display":"Tanners Brook"
+    },
+    {
+       "river_id":"tetbury-avon",
+       "display":"Tetbury Avon"
+    },
+    {
+       "river_id":"thacka-beck",
+       "display":"Thacka Beck"
+    },
+    {
+       "river_id":"thames-medway-canal",
+       "display":"Thames Medway Canal"
+    },
+    {
+       "river_id":"the-beck",
+       "display":"The Beck"
+    },
+    {
+       "river_id":"the-cut",
+       "display":"The Cut"
+    },
+    {
+       "river_id":"the-fleet",
+       "display":"The Fleet"
+    },
+    {
+       "river_id":"the-gissage",
+       "display":"The Gissage"
+    },
+    {
+       "river_id":"theobalds-brook",
+       "display":"Theobalds Brook"
+    },
+    {
+       "river_id":"the-roxbourne",
+       "display":"The Roxbourne"
+    },
+    {
+       "river_id":"thorngumbald-drain",
+       "display":"Thorngumbald Drain"
+    },
+    {
+       "river_id":"thornton-beck",
+       "display":"Thornton Beck"
+    },
+    {
+       "river_id":"tory-brook",
+       "display":"Tory Brook"
+    },
+    {
+       "river_id":"town-beck",
+       "display":"Town Beck"
+    },
+    {
+       "river_id":"trawden-brook",
+       "display":"Trawden Brook"
+    },
+    {
+       "river_id":"tresillian-river",
+       "display":"Tresillian River"
+    },
+    {
+       "river_id":"trothy",
+       "display":"Trothy"
+    },
+    {
+       "river_id":"tryweryn",
+       "display":"Tryweryn"
+    },
+    {
+       "river_id":"turkey-brook",
+       "display":"Turkey Brook"
+    },
+    {
+       "river_id":"twin",
+       "display":"Twin"
+    },
+    {
+       "river_id":"ulley-brook",
+       "display":"Ulley Brook"
+    },
+    {
+       "river_id":"ullswater",
+       "display":"Ullswater"
+    },
+    {
+       "river_id":"umborne-brook",
+       "display":"Umborne Brook"
+    },
+    {
+       "river_id":"usway-burn",
+       "display":"Usway Burn"
+    },
+    {
+       "river_id":"valley-brook",
+       "display":"Valley Brook"
+    },
+    {
+       "river_id":"waithe-beck",
+       "display":"Waithe Beck"
+    },
+    {
+       "river_id":"walkford-brook",
+       "display":"Walkford Brook"
+    },
+    {
+       "river_id":"waller-hill-beck",
+       "display":"Waller Hill Beck"
+    },
+    {
+       "river_id":"wallop-brook",
+       "display":"Wallop Brook"
+    },
+    {
+       "river_id":"walsden-water",
+       "display":"Walsden Water"
+    },
+    {
+       "river_id":"waren-burn",
+       "display":"Waren Burn"
+    },
+    {
+       "river_id":"warleggan-river",
+       "display":"Warleggan River"
+    },
+    {
+       "river_id":"wash-dike",
+       "display":"Wash Dike"
+    },
+    {
+       "river_id":"washford-river",
+       "display":"Washford River"
+    },
+    {
+       "river_id":"washpit-brook",
+       "display":"Washpit Brook"
+    },
+    {
+       "river_id":"wealdstone-brook",
+       "display":"Wealdstone Brook"
+    },
+    {
+       "river_id":"weedon-beck",
+       "display":"Weedon Beck"
+    },
+    {
+       "river_id":"wellow-brook",
+       "display":"Wellow Brook"
+    },
+    {
+       "river_id":"wendlebury-brook",
+       "display":"Wendlebury Brook"
+    },
+    {
+       "river_id":"wendling-beck",
+       "display":"Wendling Beck"
+    },
+    {
+       "river_id":"wendover-springs",
+       "display":"Wendover Springs"
+    },
+    {
+       "river_id":"wesley-brook",
+       "display":"Wesley Brook"
+    },
+    {
+       "river_id":"west-bank-pond",
+       "display":"West Bank Pond"
+    },
+    {
+       "river_id":"west-beck",
+       "display":"West Beck"
+    },
+    {
+       "river_id":"west-clough",
+       "display":"West Clough"
+    },
+    {
+       "river_id":"west-dart-river",
+       "display":"West Dart River"
+    },
+    {
+       "river_id":"western-yar",
+       "display":"Western Yar"
+    },
+    {
+       "river_id":"west-fen-catchwater-drain",
+       "display":"West Fen Catchwater Drain"
+    },
+    {
+       "river_id":"west-glen-river",
+       "display":"West Glen River"
+    },
+    {
+       "river_id":"west-lyn-river",
+       "display":"West Lyn River"
+    },
+    {
+       "river_id":"west-moor-drain",
+       "display":"West Moor Drain"
+    },
+    {
+       "river_id":"west-okement-river",
+       "display":"West Okement River"
+    },
+    {
+       "river_id":"west-sedgemoor-drain",
+       "display":"West Sedgemoor Drain"
+    },
+    {
+       "river_id":"wheelan-dyke",
+       "display":"Wheelan Dyke"
+    },
+    {
+       "river_id":"whetstone-brook",
+       "display":"Whetstone Brook"
+    },
+    {
+       "river_id":"whiston-brook",
+       "display":"Whiston Brook"
+    },
+    {
+       "river_id":"white-water-dyke",
+       "display":"White Water Dyke"
+    },
+    {
+       "river_id":"whitley-beck",
+       "display":"Whitley Beck"
+    },
+    {
+       "river_id":"whitley-brook",
+       "display":"Whitley Brook"
+    },
+    {
+       "river_id":"willow-beck",
+       "display":"Willow Beck"
+    },
+    {
+       "river_id":"willow-brook",
+       "display":"Willow Brook"
+    },
+    {
+       "river_id":"wincham-brook",
+       "display":"Wincham Brook"
+    },
+    {
+       "river_id":"windermere",
+       "display":"Windermere"
+    },
+    {
+       "river_id":"windle-brook",
+       "display":"Windle Brook"
+    },
+    {
+       "river_id":"winestead-drain",
+       "display":"Winestead Drain"
+    },
+    {
+       "river_id":"winford-brook",
+       "display":"Winford Brook"
+    },
+    {
+       "river_id":"witcombe-bottom-main-drain",
+       "display":"Witcombe Bottom Main Drain"
+    },
+    {
+       "river_id":"withy-brook",
+       "display":"Withy Brook"
+    },
+    {
+       "river_id":"wiza-beck",
+       "display":"Wiza Beck"
+    },
+    {
+       "river_id":"woodbridge-brook",
+       "display":"Woodbridge Brook"
+    },
+    {
+       "river_id":"wood-brook",
+       "display":"Wood Brook"
+    },
+    {
+       "river_id":"wooler-water",
+       "display":"Wooler Water"
+    },
+    {
+       "river_id":"wootton-brook",
+       "display":"Wootton Brook"
+    },
+    {
+       "river_id":"worsley-brook",
+       "display":"Worsley Brook"
+    },
+    {
+       "river_id":"wortley-beck",
+       "display":"Wortley Beck"
+    },
+    {
+       "river_id":"wotton-brook",
+       "display":"Wotton Brook"
+    },
+    {
+       "river_id":"wraysbury-river",
+       "display":"Wraysbury River"
+    },
+    {
+       "river_id":"wych-brook",
+       "display":"Wych Brook"
+    },
+    {
+       "river_id":"wyke-beck",
+       "display":"Wyke Beck"
+    },
+    {
+       "river_id":"wymans-brook",
+       "display":"Wymans Brook"
+    },
+    {
+       "river_id":"yazor-brook",
+       "display":"Yazor Brook"
+    },
+    {
+       "river_id":"yeading-brook",
+       "display":"Yeading Brook"
+    },
+    {
+       "river_id":"yeading-brook-eastern-arm",
+       "display":"Yeading Brook (Eastern Arm)"
+    },
+    {
+       "river_id":null,
+       "display":null
+    },
+    {
+       "river_id":"trout-beck-northumberland",
+       "display":"Trout Beck (Northumberland)"
+    },
+    {
+       "river_id":"trout-beck-east-cumbria",
+       "display":"Trout Beck (East Cumbria)"
+    },
+    {
+       "river_id":"trout-beck-lake-district",
+       "display":"Trout Beck (Lake District)"
+    },
+    {
+       "river_id":"west-brook-kent",
+       "display":"West Brook (Kent)"
+    },
+    {
+       "river_id":"new-cut",
+       "display":"New Cut"
+    },
+    {
+       "river_id":"whaddon-brook-gloucestershire",
+       "display":"Whaddon Brook (Gloucestershire)"
+    },
+    {
+       "river_id":"winterbourne-stream-berkshire",
+       "display":"Winterbourne Stream (Berkshire)"
+    },
+    {
+       "river_id":"winterbourne-stream-sussex",
+       "display":"Winterbourne Stream (Sussex)"
+    },
+    {
+       "river_id":"west-brook-hampshire",
+       "display":"West Brook (Hampshire)"
+    },
+    {
+       "river_id":"whaddon-brook-cambridgeshire",
+       "display":"Whaddon Brook (Cambridgeshire)"
+    },
+    {
+       "river_id":"river-arrow-herefordshire",
+       "display":"River Arrow (Herefordshire)"
+    },
+    {
+       "river_id":"river-arrow-warwickshire",
+       "display":"River Arrow (Warwickshire)"
+    },
+    {
+       "river_id":"river-cam-severn",
+       "display":"River Cam (Severn)"
+    },
+    {
+       "river_id":"river-cam-cambridgeshire",
+       "display":"River Cam (Cambridgeshire)"
+    },
+    {
+       "river_id":"river-cam-somerset",
+       "display":"River Cam (Somerset)"
+    },
+    {
+       "river_id":"river-cole-staffordshire",
+       "display":"River Cole (Staffordshire)"
+    },
+    {
+       "river_id":"river-cole-wiltshire",
+       "display":"River Cole (Wiltshire)"
+    },
+    {
+       "river_id":"river-calder-yorkshire",
+       "display":"River Calder (Yorkshire)"
+    },
+    {
+       "river_id":"river-calder-cumbria",
+       "display":"River Calder (Cumbria)"
+    },
+    {
+       "river_id":"river-calder-lancashire",
+       "display":"River Calder (Lancashire)"
+    },
+    {
+       "river_id":"river-ash-hertfordshire",
+       "display":"River Ash (Hertfordshire)"
+    },
+    {
+       "river_id":"river-ash-middlesex",
+       "display":"River Ash (Middlesex)"
+    },
+    {
+       "river_id":"river-blackwater-essex",
+       "display":"River Blackwater (Essex)"
+    },
+    {
+       "river_id":"river-blackwater-loddon",
+       "display":"River Blackwater (Loddon)"
+    },
+    {
+       "river_id":"red-cornwall",
+       "display":"Red (Cornwall)"
+    },
+    {
+       "river_id":"red-hertfordshire",
+       "display":"Red (Hertfordshire)"
+    },
+    {
+       "river_id":"river-blackwater-new-forest",
+       "display":"River Blackwater (New Forest)"
+    },
+    {
+       "river_id":"river-bourne-wiltshire",
+       "display":"River Bourne (Wiltshire)"
+    },
+    {
+       "river_id":"river-bourne-kent",
+       "display":"River Bourne (Kent)"
+    },
+    {
+       "river_id":"brompton-beck-derwent",
+       "display":"Brompton Beck (Derwent)"
+    },
+    {
+       "river_id":"brompton-beck-hambleton",
+       "display":"Brompton Beck (Hambleton)"
+    },
+    {
+       "river_id":"river-avon-hampshire",
+       "display":"River Avon (Hampshire)"
+    },
+    {
+       "river_id":"river-avon-warwickshire",
+       "display":"River Avon (Warwickshire)"
+    },
+    {
+       "river_id":"river-avon-devon",
+       "display":"River Avon (Devon)"
+    },
+    {
+       "river_id":"river-avon-bristol",
+       "display":"River Avon (Bristol)"
+    },
+    {
+       "river_id":"river-avon-corsham",
+       "display":"River Avon (Corsham)"
+    },
+    {
+       "river_id":"river-axe-somerset",
+       "display":"River Axe (Somerset)"
+    },
+    {
+       "river_id":"river-axe-devon",
+       "display":"River Axe (Devon)"
+    },
+    {
+       "river_id":"river-colne-hertfordshire",
+       "display":"River Colne (Hertfordshire)"
+    },
+    {
+       "river_id":"river-colne-yorkshire",
+       "display":"River Colne (Yorkshire)"
+    },
+    {
+       "river_id":"river-colne-essex",
+       "display":"River Colne (Essex)"
+    },
+    {
+       "river_id":"river-allen-dorset",
+       "display":"River Allen (Dorset)"
+    },
+    {
+       "river_id":"river-allen-cornwall-north",
+       "display":"River Allen (Cornwall North)"
+    },
+    {
+       "river_id":"river-allen-cornwall-south",
+       "display":"River Allen (Cornwall South)"
+    },
+    {
+       "river_id":"river-dene-warwickshire",
+       "display":"River Dene (Warwickshire)"
+    },
+    {
+       "river_id":"river-dene-gloucestershire",
+       "display":"River Dene (Gloucestershire)"
+    },
+    {
+       "river_id":"mill-beck-back-delphin",
+       "display":"Mill Beck (Back Delphin)"
+    },
+    {
+       "river_id":"mill-beck-derwent",
+       "display":"Mill Beck (Derwent)"
+    }
+ ]
+ 

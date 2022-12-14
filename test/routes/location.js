@@ -1811,6 +1811,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/session'))
     await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/error-pages'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1823,7 +1824,7 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.statusCode).to.equal(500)
     Code.expect(response.payload).to.contain('<h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Sorry, there is a problem with the search</h1>')
   })
 })

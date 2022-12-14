@@ -22,6 +22,7 @@
 // Text button
 .defra-button-text {
     @extend .govuk-body;
+    position: relative;
     margin:0px;
     color:$govuk-link-colour;
     background-color: transparent;
@@ -35,7 +36,7 @@
         outline:3px solid transparent;
         background-color: $govuk-focus-colour;
         color: $govuk-text-colour !important;
-        box-shadow: 0 -2px #ffdd00, 0 4px #0b0c0c;
+        box-shadow: 0 -2px #ffdd00, 0 4px currentColor;
         text-decoration: none;
     }
     &:active {
@@ -44,103 +45,85 @@
     &:hover {
         color:$govuk-link-hover-colour;
     }
-    &-s {
-        @extend .defra-button-text;
-        @extend .govuk-body-s;
-    }
+}
+.defra-button-text-s {
+    @extend .defra-button-text;
+    @include govuk-font($size: 16);
 }
 
-// Map button
-.defra-button-map {
-    @extend .defra-button-text;
-    position:relative;
-    display:inline-block;
-    padding-left:20px;
-    &:before {
-        content: "";
-        position: absolute;
-        top:0px;
-        left:0px;
-        background-image: svg-url('<svg width="15" height="20" viewBox="0 0 15 20"><path d="M15,7.5c0.009,3.778 -4.229,9.665 -7.5,12.5c-3.271,-2.835 -7.509,-8.722 -7.5,-12.5c0,-4.142 3.358,-7.5 7.5,-7.5c4.142,0 7.5,3.358 7.5,7.5Zm-7.5,5.461c3.016,0 5.461,-2.445 5.461,-5.461c0,-3.016 -2.445,-5.461 -5.461,-5.461c-3.016,0 -5.461,2.445 -5.461,5.461c0,3.016 2.445,5.461 5.461,5.461Z" fill="#0b0c0c"/></svg>');
-        background-color:transparent;
-        background-size:15px 20px;
-        background-repeat: no-repeat;
-        background-position: top left;
-        height:20px;
-        width:15px;
-        @include mq ($from: tablet) {
-            top: 3px;
+// Secondoary button
+a.defra-button-secondary,
+button.defra-button-secondary {
+    position: relative;
+    display: inline-block;
+    @include govuk-font($size: 16);
+    width: auto;
+    margin: 0px 0px 5px;
+    border: 1px solid govuk-colour('mid-grey');
+    box-shadow: none;
+    background-color: white;
+    padding: 9px 10px 10px;
+    outline: 3px solid transparent;
+    cursor: pointer;
+    color: $govuk-text-colour;
+    text-decoration: none;
+    &:visited {
+        color: $govuk-text-colour;
+    }
+    &:hover {
+        background-color: #dbdad9;
+    }
+    &:focus {
+        background-color: $govuk-focus-colour;
+        border-color: $govuk-focus-colour;
+        box-shadow: 0 4px 0 govuk-colour('black');
+    }
+    &--icon {
+        padding-left: 31px;
+        svg {
+            color: govuk-colour('black');
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            margin-top: -11px;
         }
-    }
-    &:hover:not(:active):not(:focus):before {
-        background-image: svg-url('<svg width="15" height="20" viewBox="0 0 15 20"><path d="M15,7.5c0.009,3.778 -4.229,9.665 -7.5,12.5c-3.271,-2.835 -7.509,-8.722 -7.5,-12.5c0,-4.142 3.358,-7.5 7.5,-7.5c4.142,0 7.5,3.358 7.5,7.5Zm-7.5,5.461c3.016,0 5.461,-2.445 5.461,-5.461c0,-3.016 -2.445,-5.461 -5.461,-5.461c-3.016,0 -5.461,2.445 -5.461,5.461c0,3.016 2.445,5.461 5.461,5.461Z" fill="#003078"/></svg>');
-    }
-    &-s {
-        @extend .defra-button-map;
-        padding-left:17px;
-        @include mq ($from: tablet) {
-            padding-left:18px;
-        }
-        @include govuk-font($size: 16);
-    }
-    &-s:before {
-        top:0px;
-        background-size:13.5px 18px;
-        height:18px;
-        width:13.5px;
-    }
-    span {
-        display: inline-block;
-        border-bottom:1px solid $govuk-text-colour;
-    }
-    &:focus span {
-        border:0px;
-    }
-    &:hover span {
-        border-color:$govuk-link-hover-colour;
-    }
-    &:active span {
-        border-color: $govuk-text-colour;
     }
 }
+.defra-button-secondary-s {
+    @extend .defra-button-secondary;
+    @include govuk-font($size: 14);
+    padding: 6px 7px 7px;
+}
 
-// Download button
-.defra-button-download {
-    @extend .defra-button-text;
+// Text buttons with icons
+.defra-link-s {
     position:relative;
     display:inline-block;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    @include govuk-font($size: 16);
+    &:last-of-type {
+        margin-right: 0px;
+    }
+    @include mq ($from: tablet) {
+        margin-right: 10px;
+    }
+}
+.defra-link-icon-s {
+    @extend .defra-link-s;
     padding-left:21px;
-    &:before {
-        content: "";
+    svg {
         position: absolute;
-        top:0px;
+        color: govuk-colour('black');
+        top:50%;
+        margin-top: -10px;
         left:1px;
-        background-image: svg-url('<svg width="13" height="17" viewBox="0 0 13 17"><rect x="0" y="0" width="10.5" height="14.5" style="fill:#0b0c0c;"/><path d="M2,17L13,17L13,2L11.5,2L11.5,15.509L2,15.509L2,17Z" style="fill:#0b0c0c;"/></svg>');
-        background-color:transparent;
-        background-size:13px 17px;
-        background-repeat: no-repeat;
-        background-position: top left;
-        height:17px;
-        width:13px;
-        @include mq ($from: tablet) {
-            top: 1px;
-        }
     }
-    &:hover:before {
-        background-image: svg-url('<svg width="13" height="17" viewBox="0 0 13 17"><rect x="0" y="0" width="10.5" height="14.5" style="fill:#003078"/><path d="M2,17L13,17L13,2L11.5,2L11.5,15.509L2,15.509L2,17Z" style="fill:#003078"/></svg>');
+    &:hover svg {
+        color: $govuk-link-hover-colour;
     }
-    &:focus:before,
-    &:active:before {
-        background-image: svg-url('<svg width="13" height="17" viewBox="0 0 13 17"><rect x="0" y="0" width="10.5" height="14.5" style="fill:#0b0c0c;"/><path d="M2,17L13,17L13,2L11.5,2L11.5,15.509L2,15.509L2,17Z" style="fill:#0b0c0c;"/></svg>');
-    }
-    &-s {
-        @extend .defra-button-download;
-        @include govuk-font($size: 16);
-    }
-    &-s:before {
-        top:0px;
-        @include mq ($from: tablet) {
-            top: 1px;
-        }
+    &:focus svg,
+    &:active svg {
+        color: govuk-colour('black');
     }
 }

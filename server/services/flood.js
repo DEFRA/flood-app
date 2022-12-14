@@ -44,7 +44,7 @@ module.exports = {
   },
 
   getStationsWithinTargetArea (taCode) {
-    return util.getJson(`${serviceUrl}/stations-within-target-area/${taCode}`)
+    return util.getJson(`${serviceUrl}/stations-within-target-area/${encodeURIComponent(taCode)}`)
   },
 
   getWarningsAlertsWithinStationBuffer (rloiId) {
@@ -130,7 +130,11 @@ module.exports = {
   },
 
   getTargetArea (taCode) {
-    return util.getJson(`${serviceUrl}/target-area/${taCode}`)
+    return util.getJson(`${serviceUrl}/target-area/${encodeURIComponent(taCode)}`)
+  },
+
+  getRiversByName (searchText) {
+    return util.getJson(`${serviceUrl}/river-name/${encodeURIComponent(searchText)}`)
   },
 
   getStationsByRadius (x, y, rad = 8000) {

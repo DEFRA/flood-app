@@ -5,6 +5,7 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
+const { parse } = require('node-html-parser')
 
 lab.experiment('Target-area tests', () => {
   let sandbox
@@ -122,9 +123,25 @@ lab.experiment('Target-area tests', () => {
     }
 
     const response = await server.inject(options)
+
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('<h2 class="govuk-heading-m govuk-!-margin-top-6">Share this page</h2>')
-    Code.expect(response.payload).to.contain('Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water')
+
+    const root = parse(response.payload)
+
+    const h1Found = root.querySelectorAll('h1').some(h => h.textContent.trim() === 'Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water')
+    Code.expect(h1Found, 'Heading for target area found').to.be.true()
+
+    const h2Found = root.querySelectorAll('h2').some(h =>
+      h.textContent.trim() === 'Share this page' &&
+      h.attributes.class === 'govuk-heading-m govuk-!-margin-top-6'
+    )
+    Code.expect(h2Found, 'Share heading text found').to.be.true()
+
+    const anchorFound = root.querySelectorAll('a').some(a =>
+      a.text === 'Find a river, sea, groundwater or rainfall level in this area' &&
+      a.attributes.href === '/river-and-sea-levels/target-area/011WAFDW'
+    )
+    Code.expect(anchorFound, 'Link to levels in the area found').to.be.true()
   })
   lab.test('GET target-area 011WAFDW  blank situation text', async () => {
     const floodService = require('../../server/services/flood')

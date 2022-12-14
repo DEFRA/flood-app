@@ -10,21 +10,9 @@ import '../components/map/live'
 if (document.getElementById('map')) {
 // Create LiveMap
   window.flood.maps.createLiveMap('map', {
-    btnText: 'View map',
-    btnClasses: 'defra-button-map-s',
+    btnText: 'View map of flood warning and alert areas',
+    btnClasses: 'defra-button-secondary defra-button-secondary--icon',
     layers: 'mv,ts,tw,ta',
     extent: window.flood.model.placeBbox
-  })
-}
-
-if (document.getElementById('map-station')) {
-  // Create LiveMap for station
-  window.flood.maps.createLiveMap('map-station', {
-    btnText: 'View map',
-    btnClasses: 'defra-button-map-s',
-    layers: 'mv,ts,tw,ta',
-    centre: JSON.parse(window.flood.model.station.coordinates).coordinates,
-    selectedId: 'stations.' + window.flood.model.station.id,
-    zoom: 13
   })
 }

@@ -58,6 +58,14 @@ module.exports = server => {
     }
   })
 
+  server.method('flood.getRiversByName', floodServices.getRiversByName, {
+    cache: {
+      cache: cacheType,
+      expiresIn: 1 * 60 * 1000, // 1 minute
+      generateTimeout: 10 * 1000 // 10 seconds
+    }
+  })
+
   server.method('flood.getStationsWithin', floodServices.getStationsWithin, {
     cache: {
       cache: cacheType,
