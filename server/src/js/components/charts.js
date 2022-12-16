@@ -30,15 +30,15 @@ function LineChart (containerId, data) {
   let hasObserved = false
   let hasForecast = false
   if (data.observed.length) {
-console.log('data.plotNegativeValues: ', data.plotNegativeValues)
+// console.log('data.plotNegativeValues: ', data.plotNegativeValues)
     const errorFilter = l => !l.err
     const errorAndNegativeFilter = l => errorFilter(l) && l._ >= 0
     const filterFunction = data.plotNegativeValues ? errorFilter : errorAndNegativeFilter
-console.log('filterFunction: ', filterFunction)
+// console.log('filterFunction: ', filterFunction)
     // const filterFunction = errorFilter
-console.log('data.observed: ', data.observed)
+// console.log('data.observed: ', data.observed)
     lines = data.observed.filter(filterFunction).map(l => ({ ...l, type: 'observed' })).reverse()
-console.log('lines1: ', lines)
+// console.log('lines1: ', lines)
     dataPoint = lines[lines.length - 1] ? JSON.parse(JSON.stringify(lines[lines.length - 1])) : null
     hasObserved = lines.length > 0
   }
@@ -48,7 +48,7 @@ console.log('lines1: ', lines)
     hasForecast = true
   }
 
-console.log('lines2: ', lines)
+// console.log('lines2: ', lines)
   // Set dataPointLatest
   const dataPointLatest = JSON.parse(JSON.stringify(dataPoint))
   let dataPointLocator = dataPointLatest
@@ -326,15 +326,15 @@ console.log('lines2: ', lines)
     clipInner.append('g').classed('observed observed-focus', true)
     const observedLine = lines.filter(l => l.type === 'observed')
 
-    console.log('observedLine: ', observedLine)
+    // console.log('window.flood.model.station.isCoastal: ', window.flood.model.station.isCoastal)
 
-    for (let o = 0; o < observedLine.length; o++) {
-      if (observedLine[o]._ < 0) {
-        observedLine[o]._ = 0
+    if (!window.flood.model.station.isCoastal) {
+      for (let o = 0; o < observedLine.length; o++) {
+        if (observedLine[o]._ < 0) {
+          observedLine[o]._ = 0
+        }
       }
     }
-    
-    console.log('observedLine2: ', observedLine)
     
     observedArea = svg.select('.observed').append('path').datum(observedLine).classed('observed-area', true)
     observed = svg.select('.observed').append('path').datum(observedLine).classed('observed-line', true)
