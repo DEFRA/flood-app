@@ -224,7 +224,7 @@ function LineChart (containerId, data) {
     toolTipY = pointer(e)[1]
     // Set values below zero to display zero, rather than the actual value
     dataPoint.checkTooltipValue = Number(dataPoint._).toFixed(2)
-    if (dataPoint.checkTooltipValue == 0.00) {
+    if (dataPoint.checkTooltipValue === 0.00) {
       dataPoint.checkTooltipValue = '0'
     }
     toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(dataPoint.checkTooltipValue + 'm')
@@ -322,7 +322,7 @@ function LineChart (containerId, data) {
         }
       }
     }
-    
+
     observedArea = svg.select('.observed').append('path').datum(observedLine).classed('observed-area', true)
     observed = svg.select('.observed').append('path').datum(observedLine).classed('observed-line', true)
   }
