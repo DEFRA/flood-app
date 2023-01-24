@@ -1,0 +1,24 @@
+# Check for flooding 6.0.0
+
+FSR-524 Station list page
+FSR-586 Station List Page - location searching
+FSR-587 Station List page - River searching
+FSR-617 Update accessibility statement
+FSR-652 Update typo on "There is a problem with search" error page
+FSR-636 Rivers database updates
+FSR-707 Fix: use correct icons for no longer in force
+
+# Instructions
+
+!Important for webops
+
+Steps
+
+1 - Execute LFW_{STAGE}_02_UPDATE_DATABASE
+2 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+3 - Update and Execute LFW_{STAGE}_99_LOAD_RIVERS
+      a: change Script Path for job to jenkins/data/riversJenkinsfile
+      b: save and execute job
+
+Note: 
+Execute smoke tests and forward results
