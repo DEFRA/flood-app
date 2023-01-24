@@ -181,4 +181,13 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.station.id).to.equal(1001)
     Code.expect(Result.warningsBanner).to.equal('There is a flood warning within 5 miles of this measuring station')
   })
+  lab.test('Test station viewModel removes spike in telemetry', async () => {
+    const stationData = data.stationRiverSpike
+    const viewModel = new ViewModel(stationData)
+
+    const Result = viewModel
+
+    // 480 telemetry values went in to the model, should be one less
+    Code.expect(Result.readings).to.equal(479)
+  })
 })

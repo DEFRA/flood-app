@@ -69,6 +69,21 @@ function cleanseLocation (location) {
   }
 }
 
+function rmAnomalys (data) {
+  const anomalyVal = 100
+  const avg = data.reduce((a, b) => a + b._, 0) / data.length
+
+  const maxVal = avg * anomalyVal
+
+  for (let i = 0; i < data.length; i++) {
+    if (data[i]._ > maxVal) {
+      data.splice(i, 1)
+      i--
+    }
+  }
+  return data
+}
+
 function addBufferToBbox (bbox, m) {
   // Convert bbox (binding box) )into polygon, add buffer, and convert back to bbox as db query needs a bbox envelope
   return turf.bbox(turf.buffer(turf.bboxPolygon(bbox), m, { units: 'meters' }))
@@ -146,5 +161,6 @@ module.exports = {
   dateDiff,
   formatRainfallTelemetry,
   rainfallTelemetryPadOut,
-  ALLOWED_SEARCH_CHARS
+  ALLOWED_SEARCH_CHARS,
+  rmAnomalys
 }
