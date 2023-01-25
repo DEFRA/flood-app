@@ -138,9 +138,7 @@ class ViewModel {
 
     // Gets the latest value object
     if (this.telemetry.length) {
-      // look for spikes in the telemetry data and remove them
-      this.telemetry = util.rmAnomalys(this.telemetry)
-
+      this.telemetry = util.removeSpikes(this.telemetry)
       this.readings = this.telemetry.length
       this.recentValue = this.telemetry[0]
       this.recentValueBelowZero = this.recentValue._ <= 0

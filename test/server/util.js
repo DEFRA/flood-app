@@ -3,7 +3,7 @@ const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const spikeTelem = require('../data/spikeTelem.json')
 const nonSpikeTelem = require('../data/nonSpikeTelem.json')
-const { formatName, toMarked, cleanseLocation, rmAnomalys } = require('../../server/util')
+const { formatName, toMarked, cleanseLocation, removeSpikes } = require('../../server/util')
 
 lab.experiment('util', () => {
   lab.experiment('toMarked', () => {
@@ -52,11 +52,11 @@ lab.experiment('util', () => {
       Code.expect(formatName()).to.equal('')
     })
     lab.test('Removes spike in telem, 480 values should be 479 values returned', async () => {
-      const telem = rmAnomalys(spikeTelem)
+      const telem = removeSpikes(spikeTelem)
       Code.expect(telem.length).to.equal(479)
     })
     lab.test('No spikes in telem, 480 values should be 480 values returned', async () => {
-      const telem = rmAnomalys(nonSpikeTelem)
+      const telem = removeSpikes(nonSpikeTelem)
       Code.expect(telem.length).to.equal(480)
     })
   })

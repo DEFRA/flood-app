@@ -69,7 +69,7 @@ function cleanseLocation (location) {
   }
 }
 
-function rmAnomalys (data) {
+function removeSpikes (data) {
   const anomalyVal = 100
   const avg = data.reduce((a, b) => a + b._, 0) / data.length
   const maxVal = avg * anomalyVal
@@ -154,5 +154,5 @@ module.exports = {
   formatRainfallTelemetry,
   rainfallTelemetryPadOut,
   ALLOWED_SEARCH_CHARS,
-  rmAnomalys
+  removeSpikes
 }
