@@ -73,8 +73,7 @@ function rmAnomalys (data) {
   const anomalyVal = 100
   const avg = data.reduce((a, b) => a + b._, 0) / data.length
   const maxVal = avg * anomalyVal
-  const filtered = data.filter(el => el._ < maxVal)
-  return filtered
+  return data.filter(el => el._ < maxVal)
 }
 
 function addBufferToBbox (bbox, m) {
