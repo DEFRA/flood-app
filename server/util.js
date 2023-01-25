@@ -72,15 +72,9 @@ function cleanseLocation (location) {
 function rmAnomalys (data) {
   const anomalyVal = 100
   const avg = data.reduce((a, b) => a + b._, 0) / data.length
-
   const maxVal = avg * anomalyVal
-
-  for (let i = 0; i < data.length; i++) {
-    if (data[i]._ > maxVal) {
-      data.splice(i, 1)
-    }
-  }
-  return data
+  const filtered = data.filter(el => el._ < maxVal)
+  return filtered
 }
 
 function addBufferToBbox (bbox, m) {
