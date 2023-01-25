@@ -78,7 +78,6 @@ function rmAnomalys (data) {
   for (let i = 0; i < data.length; i++) {
     if (data[i]._ > maxVal) {
       data.splice(i, 1)
-      i--
     }
   }
   return data

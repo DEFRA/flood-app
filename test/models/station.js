@@ -188,6 +188,6 @@ lab.experiment('Station model test', () => {
     const Result = viewModel
 
     // 480 telemetry values went in to the model, should be one less
-    Code.expect(Result.readings).to.equal(479)
+    Code.expect(Result.telemetry.length).to.equal(479)
   })
 })
