@@ -4,6 +4,11 @@
   </h2>
   <nav role="navigation" aria-labelledby="subsection-title">
     <ul class="govuk-list govuk-!-font-size-16">
+      {% if model.getWarnings %}
+      <li>
+        <a data-journey-click="{% if model.getWarnings %}{{ model.getWarnings }}{% endif %}" href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a>
+      </li>
+      {% endif %}
       <li>
         <a data-journey-click="{% if model.planAhead %}{{ model.planAhead }}{% endif %}" class="govuk-link" href="/plan-ahead-for-flooding">
           How to plan ahead for flooding
