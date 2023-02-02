@@ -31,7 +31,13 @@ class ViewModel {
       dataError: outlook.dataError,
       isDummyData: floods.isDummyData,
       outlookOutOfDate,
-      floodRiskUrl
+      floodRiskUrl,
+      getWarnings: 'National:Related-content:Get-warnings-for-flooding',
+      planAhead: 'National:Related-content:Plan-ahead-for-flooding',
+      whatToDo: 'National:Related-content:What-to-do-in-a-flood',
+      recoverAfter: 'National:Related-content:Recover-after-a-flood',
+      longTerm: 'National:Related-content:Check-long-term-risk',
+      reportFlood: 'National:Related-content:Report-a-flood'
     })
 
     // Strip out flood array as it is superflous to the view
