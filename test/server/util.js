@@ -51,11 +51,11 @@ lab.experiment('util', () => {
     lab.test('Fails gracefully with undefined name', async () => {
       Code.expect(formatName()).to.equal('')
     })
-    lab.test('Removes spike in telem, 480 values should be 479 values returned', async () => {
+    lab.test('Removes spike in telem over 300m, should be 479 values returned', async () => {
       const telem = removeSpikes(spikeTelem)
       Code.expect(telem.length).to.equal(479)
     })
-    lab.test('No spikes in telem, 480 values should be 480 values returned', async () => {
+    lab.test('No spikes in telem all values under 300m, 480 values returned', async () => {
       const telem = removeSpikes(nonSpikeTelem)
       Code.expect(telem.length).to.equal(480)
     })

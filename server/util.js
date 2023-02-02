@@ -70,9 +70,7 @@ function cleanseLocation (location) {
 }
 
 function removeSpikes (data) {
-  const anomalyVal = 100
-  const avg = data.reduce((a, b) => a + b._, 0) / data.length
-  const maxVal = avg * anomalyVal
+  const maxVal = 300
   return data.filter(el => el._ < maxVal)
 }
 
