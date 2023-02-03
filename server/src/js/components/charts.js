@@ -220,6 +220,7 @@ function LineChart (containerId, data) {
     dataPoint._ = d._
     toolTipX = xScale(new Date(dataPoint.ts))
     toolTipY = pointer(e)[1]
+<<<<<<< HEAD
 
     // Set values below zero to display zero, rather than the actual value
     dataPoint.checkTooltipValue = Number(dataPoint._).toFixed(2)
@@ -231,6 +232,18 @@ function LineChart (containerId, data) {
     toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(dataPoint.checkTooltipValue + 'm')
 
     // Update tooltip left/right background
+=======
+    toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(Number(dataPoint._).toFixed(2) + 'm')
+
+    // Set values below zero to display zero, rather than the actual value
+     dataPoint.checkTooltipValue = Number(dataPoint._).toFixed(2)
+     if (dataPoint.checkTooltipValue === 0.00) {
+       dataPoint.checkTooltipValue = '0'
+     }
+     toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(dataPoint.checkTooltipValue + 'm')
+
+     // Update tooltip left/right background
+>>>>>>> 0c68dfb (Updated to incorporate changes from original branch)
     updateToolTipBackground()
     // Update tooltip location
     toolTip.attr('transform', 'translate(' + toolTipX + ',' + toolTipY + ')')
