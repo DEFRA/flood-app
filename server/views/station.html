@@ -135,7 +135,7 @@
                 <dt class="defra-flood-statistics__key">Height</dt>
                 <dd class="defra-flood-statistics__value">
                   {% if model.station.isRiver and model.recentValueBelowZero %}
-                    &le; 0m
+                    0m
                   {% else %}
                     {{ (model.station.recentValue._).toFixed(2) }}m
                   {% endif %}
