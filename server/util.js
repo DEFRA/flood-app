@@ -70,7 +70,7 @@ function cleanseLocation (location) {
 }
 
 function removeSpikes (data) {
-  const maxVal = 300
+  const maxVal = 400
   return data.filter(el => el._ < maxVal)
 }
 
