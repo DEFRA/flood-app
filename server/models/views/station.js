@@ -27,7 +27,8 @@ class ViewModel {
       reportFlood: 'Station:Related-content:Report-a-flood',
       twitterEvent: 'Station:Share Page:Station - Share to Twitter',
       facebookEvent: 'Station:Share Page:Station - Share to Facebook',
-      emailEvent: 'Station:Share Page:Station - Share to email'
+      emailEvent: 'Station:Share Page:Station - Share to email',
+      floodRiskUrl: config.floodRiskUrl
     })
     // Group warnings/alerts by severity level
 
