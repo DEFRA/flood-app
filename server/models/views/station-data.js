@@ -33,6 +33,8 @@ function Station (data) {
   this.isActive = this.status === 'active'
   this.isSuspended = this.status === 'suspended'
   this.isUkCmf = this.status === 'ukcmf'
+  this.post_process = data.post_process
+  this.subtract = data.subtract
 }
 
 module.exports = Station
