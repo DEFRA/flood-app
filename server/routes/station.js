@@ -38,9 +38,10 @@ module.exports = {
     }
 
     // batching all the service calls together, greatly improves page performance
-    const [telemetry, thresholds, impacts, warningsAlerts, river] = await Promise.all([
+    const [telemetry, thresholds, thresholdsImtd, impacts, warningsAlerts, river] = await Promise.all([
       request.server.methods.flood.getStationTelemetry(id, direction),
       request.server.methods.flood.getStationForecastThresholds(id),
+      request.server.methods.flood.getStationImtdThresholds(id),
       request.server.methods.flood.getImpactData(station.rloi_id),
       request.server.methods.flood.getWarningsAlertsWithinStationBuffer(station.rloi_id),
       request.server.methods.flood.getRiverStationByStationId(id, direction)
@@ -48,7 +49,8 @@ module.exports = {
 
     if (station.status === 'Closed') {
       const river = []
-      const model = new ViewModel({ station, telemetry, impacts, river, warningsAlerts })
+      const imtdThresholds = { thresholdsImtd }
+      const model = new ViewModel({ station, telemetry, imtdThresholds, impacts, river, warningsAlerts })
       return h.view('station', { model })
     }
 
@@ -57,11 +59,13 @@ module.exports = {
       // Forecast station
       const values = await request.server.methods.flood.getStationForecastData(station.wiski_id)
       const forecast = { thresholds, values }
-      const model = new ViewModel({ station, telemetry, forecast, impacts, river, warningsAlerts })
+      const imtdThresholds = { thresholdsImtd, values }
+      const model = new ViewModel({ station, telemetry, forecast, imtdThresholds, impacts, river, warningsAlerts })
       return h.view('station', { model })
     } else {
       // Non-forecast Station
-      const model = new ViewModel({ station, telemetry, impacts, river, warningsAlerts })
+      const imtdThresholds = { thresholdsImtd }
+      const model = new ViewModel({ station, telemetry, imtdThresholds, impacts, river, warningsAlerts })
       return h.view('station', { model })
     }
   },
