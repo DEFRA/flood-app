@@ -9,7 +9,8 @@ function emptyResultsModel (q) {
     q,
     metaDescription,
     pageTitle: formatTitle(q),
-    clientModel: getClientModel()
+    clientModel: getClientModel(),
+    floodRiskUrl
   }
 }
 
