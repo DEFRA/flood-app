@@ -1,5 +1,4 @@
 const createServer = require('./server')
-const config = require('./server/config')
 const pkg = require('./package.json')
 
 createServer()
