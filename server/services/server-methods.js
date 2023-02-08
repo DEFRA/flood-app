@@ -122,7 +122,7 @@ module.exports = server => {
       generateTimeout: 10 * 1000 // 10 seconds
     }
   })
-  
+
   server.method('flood.getStationImtdThresholds', floodServices.getStationImtdThresholds, {
     cache: {
       cache: cacheType,
