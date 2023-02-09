@@ -32,7 +32,7 @@ class ViewModel {
       isDummyData: floods.isDummyData,
       outlookOutOfDate,
       floodRiskUrl,
-      getWarnings: 'National:Related-content:Get-warnings-for-flooding',
+      getWarnings: 'National:Related-content:Get-warnings',
       planAhead: 'National:Related-content:Plan-ahead-for-flooding',
       whatToDo: 'National:Related-content:What-to-do-in-a-flood',
       recoverAfter: 'National:Related-content:Recover-after-a-flood',
