@@ -18,7 +18,17 @@ class ViewModel {
 
     Object.assign(this, {
       feedback: false,
-      bingMaps: config.bingKeyMaps
+      bingMaps: config.bingKeyMaps,
+      getWarnings: 'Station:Related-content:Get-warnings',
+      planAhead: 'Station:Related-content:Plan-ahead-for-flooding',
+      whatToDo: 'Station:Related-content:What-to-do-in-a-flood',
+      recoverAfter: 'Station:Related-content:Recover-after-a-flood',
+      longTerm: 'Station:Related-content:Check-long-term-risk',
+      reportFlood: 'Station:Related-content:Report-a-flood',
+      twitterEvent: 'Station:Share Page:Station - Share to Twitter',
+      facebookEvent: 'Station:Share Page:Station - Share to Facebook',
+      emailEvent: 'Station:Share Page:Station - Share to email',
+      floodRiskUrl: config.floodRiskUrl
     })
     // Group warnings/alerts by severity level
 
