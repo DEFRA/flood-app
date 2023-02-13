@@ -1,0 +1,25 @@
+# Check for flooding 6.1.0 Thursday 16th February 2023
+
+# Release
+
+6.1.0
+
+https://eaflood.atlassian.net/projects/FSR/versions/16105/tab/release-report-all-issues
+
+# Tickets
+
+https://eaflood.atlassian.net/browse/FSR-700
+https://eaflood.atlassian.net/browse/FSR-702
+https://eaflood.atlassian.net/browse/FSR-703
+https://eaflood.atlassian.net/browse/FSR-728
+https://eaflood.atlassian.net/browse/FSR-656
+https://eaflood.atlassian.net/browse/FSR-693
+https://eaflood.atlassian.net/browse/FSR-734
+
+# Instructions
+
+Straight forward application build for release
+
+LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
