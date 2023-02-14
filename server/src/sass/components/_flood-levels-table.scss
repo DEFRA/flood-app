@@ -1,112 +1,188 @@
 .defra-flood-levels-table {
-    @extend .govuk-table;
-    position: relative;
-    margin-top: -1px;
-    margin-bottom: 0px;
+  @extend .govuk-table;
+  position: relative;
+  margin-top: -1px;
+  margin-bottom: 0px;
+  @include mq ($until: tablet) {
+    display: block;
+  }
+  &__caption {
+    // @extend .govuk-table__caption;
+    // @extend .govuk-table__caption--m;
+    // margin-top: 15px;
+    @extend .govuk-visually-hidden;
+    // @include mq ($until: tablet) {
+    //   display: block;
+    // }
+  }
+  &__head {
     @include mq ($until: tablet) {
       display: block;
+    }   
+  }
+  &__head tr {
+    @include mq ($until: tablet) {
+      display: flex;
+      flex-wrap: wrap;
     }
-    &__body {
-      @include mq ($until: tablet) {
-        display: block;
-      }
-    }
-    &__row {
-      border-top: 1px solid govuk-tint($govuk-border-colour, 50);
-      @include mq ($until: tablet) {
-        display: block;
-        overflow: auto;
-      }
-    }
-    &__row--hidden {
-      display:none;
-    }
-    &__cell {
-      @extend .govuk-table__cell;
-      border-bottom: 0px;
-      vertical-align: middle;
-      text-align: left;
-      padding-left: 0px;
-      padding-right: 0px;
-      @include mq ($until: tablet) {
-        border: 0px;
-        float: left;
-      }
-      a:not(:hover) {
-        text-decoration: none;
-      }
-    }
-    &__cell--location {
-      @include govuk-font($size: 19, $weight: bold);
-      width: 50%;
-      padding-right:20px;
-      @include mq ($until: tablet) {
-        padding-right: 0px;
-        display: block;
-        width: 100%;
-      }
-    }
-    &__cell--location-rainfall {
-      @include govuk-font($size: 19, $weight: bold);
-      width: 40%;
-      padding-right:20px;
-      @include mq ($until: tablet) {
-        padding-right: 0px;
-        display: block;
-        width: 100%;
-      }
-    }
-    &__cell--height {
-      width: 20%;
-      @include mq ($until: tablet) {
-        padding-top:0px;
-        width: 70%;
-      }
-    }
-    &__cell--state {
-      width: 10%;
-      @include mq ($until: tablet) {
-        padding-top:0px;
-        width: 30%;
-      }
-    }
-    &__cell--rainfall {
-      width: 20%;
-      @include mq ($until: tablet) {
-        padding-top: 0px;
-        width: 33.33%;
-        min-width: 4em;
-      }
-    }
-    &-meta {
-      display: block;
-      @include govuk-font($size: 16);
+  }
+  &__head &__cell {
+    text-align: left;
+    @include govuk-font($size: 16);
+    @include mq ($until: tablet) {
       color: $govuk-secondary-text-colour;
     }
-    &-subtitle {
-      display: block;
-      @include govuk-font($size: 16);
-    }
-    &-na {
-      @include govuk-font($size: 16);
-    }
-    &-numeric {
-      @include govuk-font($size: 19, $tabular: true);
-      display: inline-block;
-      padding-top: 4px;
-      padding-bottom: 4px;
-    }
-    &-state {
-      position: relative;
-      @include govuk-font($size: 19, $weight: normal);
-      text-transform: uppercase;
-      // color: $govuk-secondary-text-colour;
-      background-color: govuk-colour('light-grey');
-      display: inline-block;
-      padding: 4px 8px;
-      &--blue {
-        color: govuk-colour('dark-blue');
-        background-color: govuk-tint(govuk-colour('blue'), 80);
+    &--location {
+      @include mq ($until: tablet) {
+        @include defra-visually-hidden();
       }
     }
   }
+  &__body {
+    @include mq ($until: tablet) {
+      display: block;
+    }
+  }
+  &__row {
+    border-top: 1px solid govuk-tint($govuk-border-colour, 70);
+    border-bottom: 1px solid govuk-tint($govuk-border-colour, 70);
+    @include mq ($until: tablet) {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: -1px;
+    }
+  }
+  &__cell {
+    @extend .govuk-table__cell;
+    border-bottom: 0px;
+    vertical-align: middle;
+    text-align: left;
+    padding-left: 0px;
+    padding-right: 0px;
+    @include mq ($until: tablet) {
+      display: inline-block;
+    }
+    a {
+      display: inline-block;
+    }
+    a:not(:hover) {
+      text-decoration: none;
+    }
+  }
+  &__cell--location {
+    @include govuk-font($size: 19, $weight: bold);
+    width: 50%;
+    padding-right:20px;
+    @include mq ($until: tablet) {
+      padding-top:10px;
+      padding-right: 0px;
+      width: 100%;
+    }
+  }
+  &__cell--location-rainfall {
+    @include govuk-font($size: 19, $weight: bold);
+    width: 40%;
+    padding-right:20px;
+    @include mq ($until: tablet) {
+      padding-top:10px;
+      padding-right: 0px;
+      width: 100%;
+    }
+  }
+  &__cell--height {
+    width: 17%;
+    @include mq ($until: tablet) {
+      width: auto;
+      flex: 1 1 1em;
+    }
+  }
+  &__cell--trend {
+    width: 22%;
+    @include mq ($until: tablet) {
+      width: auto;
+      flex: 1 1 3.5em;
+    }
+  }
+  &__cell--state {
+    width: 10%;
+    @include mq ($until: tablet) {
+      width: auto;
+      flex: 1 1 0.5em;
+    }
+  }
+  &__cell--rainfall {
+    width: 20%;
+    @include mq ($until: tablet) {
+      width: auto;
+      flex: 1 1 auto;
+    }
+  }
+  &-subtitle {
+    display: block;
+    @include govuk-font($size: 16);
+  }
+  &-meta {
+    display: block;
+    @include govuk-font($size: 16);
+    color: $govuk-secondary-text-colour;
+  }
+  &-na {
+    @include govuk-font($size: 16);
+  }
+  &-numeric {
+    @include govuk-font($size: 19, $tabular: true);
+    display: inline-block;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+  &-state {
+    position: relative;
+    @include govuk-font($size: 19, $weight: normal);
+    text-transform: uppercase;
+    // color: $govuk-secondary-text-colour;
+    background-color: govuk-colour('light-grey');
+    display: inline-block;
+    padding: 4px 8px;
+    &--blue {
+      color: govuk-colour('dark-blue');
+      background-color: govuk-tint(govuk-colour('blue'), 80);
+    }
+  }
+  &-trend {
+    padding: 4px;
+    display: inline-block;
+    // color: $govuk-secondary-text-colour;
+    position: relative;
+    text-transform: uppercase;
+    @include govuk-font($size: 19, $weight: normal);
+    padding-left: 30px;
+    @include mq ($from: tablet) {
+      padding-left: 36px;
+    }
+    &__icon {
+      position: absolute;
+      border-radius: 100%;
+      border: 1px solid govuk-colour('mid-grey');
+      width: 24px;
+      height: 24px;
+      left: 0px;
+      top: 1px;
+      @include mq ($from: tablet) {
+        width: 28px;
+        height: 28px;
+        top: 2px;
+      }
+    }
+    svg {
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      color: govuk-colour('black');
+      @include mq ($from: tablet) {
+        left:6px;
+        top: 6px;
+      }
+    }
+  }
+}

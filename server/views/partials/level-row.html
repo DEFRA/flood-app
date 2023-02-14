@@ -31,15 +31,12 @@
   {% if item.group_type == 'rainfall' %}
   <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" role="cell">
     {{ item.one_hr_total }}mm
-    <span class="defra-flood-levels-table-meta">last hour</span>
   </td>
   <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" role="cell">
     {{ item.six_hr_total }}mm
-    <span class="defra-flood-levels-table-meta">last 6hrs</span>
   </td>
   <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" role="cell">
     {{ item.day_total }}mm
-    <span class="defra-flood-levels-table-meta">last 24hrs</span>
   </td>
 
   <!-- Sea or tide -->
