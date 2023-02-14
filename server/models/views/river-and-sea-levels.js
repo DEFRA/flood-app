@@ -185,8 +185,11 @@ function getFormattedTime (station) {
   } else if (station.value_timestamp) {
     const formattedTime = moment(station.value_timestamp).tz('Europe/London').format('h:mma')
     const formattedDate = moment(station.value_timestamp).tz('Europe/London').format('D MMMM')
-
-    return `Updated ${formattedTime}, ${formattedDate} `
+    if (station.station_type === 'R') {
+      return `Totals up to ${formattedTime}, ${formattedDate} `
+    } else {
+      return `Latest at ${formattedTime}, ${formattedDate} `
+    }
   }
   return null
 }
