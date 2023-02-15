@@ -69,6 +69,11 @@ function cleanseLocation (location) {
   }
 }
 
+function removeSpikes (data) {
+  const maxVal = 400
+  return data.filter(el => el._ < maxVal)
+}
+
 function addBufferToBbox (bbox, m) {
   // Convert bbox (binding box) )into polygon, add buffer, and convert back to bbox as db query needs a bbox envelope
   return turf.bbox(turf.buffer(turf.bboxPolygon(bbox), m, { units: 'meters' }))
@@ -146,5 +151,6 @@ module.exports = {
   dateDiff,
   formatRainfallTelemetry,
   rainfallTelemetryPadOut,
-  ALLOWED_SEARCH_CHARS
+  ALLOWED_SEARCH_CHARS,
+  removeSpikes
 }

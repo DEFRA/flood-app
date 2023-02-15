@@ -15,6 +15,8 @@ class ViewModel {
     const outlookOutOfDate = (now - issueDate) > hours48
 
     Object.assign(this, {
+      outlookOutOfDate,
+      floodRiskUrl,
       pageTitle: 'Check for flooding in England',
       metaDescription:
         'View current flood warnings and alerts for England and the national flood forecast for the next 5 days. Also check river, sea, groundwater and rainfall levels.',
@@ -30,8 +32,12 @@ class ViewModel {
       outlookUTC: moment(outlook._timestampOutlook).tz(tz).format(),
       dataError: outlook.dataError,
       isDummyData: floods.isDummyData,
-      outlookOutOfDate,
-      floodRiskUrl
+      getWarnings: 'National:Related-content:Get-warnings',
+      planAhead: 'National:Related-content:Plan-ahead-for-flooding',
+      whatToDo: 'National:Related-content:What-to-do-in-a-flood',
+      recoverAfter: 'National:Related-content:Recover-after-a-flood',
+      longTerm: 'National:Related-content:Check-long-term-risk',
+      reportFlood: 'National:Related-content:Report-a-flood'
     })
 
     // Strip out flood array as it is superflous to the view

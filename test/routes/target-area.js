@@ -133,7 +133,7 @@ lab.experiment('Target-area tests', () => {
 
     const h2Found = root.querySelectorAll('h2').some(h =>
       h.textContent.trim() === 'Share this page' &&
-      h.attributes.class === 'govuk-heading-m govuk-!-margin-top-6'
+      h.attributes.class === 'govuk-heading-s govuk-!-margin-top-0'
     )
     Code.expect(h2Found, 'Share heading text found').to.be.true()
 
