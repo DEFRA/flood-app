@@ -293,7 +293,7 @@ class ViewModel {
 
     let imtdThreshold1 = imtdThresholds.thresholdsImtd[1]
 
-    if (imtdThreshold1 !== null) {
+    if (!imtdThresholds.thresholdsImtd.hasOwnProperty('error') && imtdThreshold1 !== null) {
       if (this.station.post_process) {
         if (stationStageDatum > 0) {
           imtdThreshold1 = imtdThreshold1 - stationStageDatum
@@ -313,7 +313,7 @@ class ViewModel {
 
     let imtdThreshold0 = imtdThresholds.thresholdsImtd[0]
 
-    if (imtdThreshold0 !== null) {
+    if (!imtdThresholds.thresholdsImtd.hasOwnProperty('error') && imtdThreshold0 !== null) {
       // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
       if (this.station.post_process) {
         if (stationStageDatum > 0) {
