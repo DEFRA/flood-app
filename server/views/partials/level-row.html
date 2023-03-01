@@ -61,6 +61,20 @@
     <span class="defra-flood-levels-table-na">n/a</a>
     {% endif %}
   </td>
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--trend" role="cell">
+    {% if item.trend %}
+      <span class="defra-flood-levels-table-trend">
+        <span class="defra-flood-levels-table-trend__icon defra-flood-levels-tables-trend__icon--{{ item.trend }}">
+          <svg width="16" height="16" viewBox="0 0 16 16" style="fill:currentColor">
+            <path d="{{ item.trendSvgPath }}"></path>
+          </svg>
+        </span>
+        {{ item.trend }}
+      </span>
+    {% else %}
+    <span class="defra-flood-levels-table-na">n/a</a>
+    {% endif %}
+  </td>
   <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--state" role="cell">
     {% if item.state %}
     <span class="defra-flood-levels-table-state defra-flood-levels-table-state--{% if item.state == 'HIGH' %}blue{% else %}grey{% endif %}">{{ item.state }}</span>
