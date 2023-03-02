@@ -2,14 +2,21 @@ mark {
     background-color: transparent;
     font-weight: bold;
     color: inherit;
-  }
-
+}
+.govuk-caption-s {
+    @extend .govuk-caption-m;
+    @include govuk-font($size: 16);
+}
+.govuk-caption-xs {
+    @extend .govuk-caption-m;
+    @include govuk-font($size: 14);
+}
+// below to be removed once no longer needed
 .defra-flood-heading-image {
     display: inline-block;
     vertical-align: middle;
     margin-right:2px;
 }
-
 // Abbr consistent behavior
 abbr {
     text-decoration:none;
