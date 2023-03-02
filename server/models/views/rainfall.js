@@ -32,7 +32,7 @@ class ViewModel {
       const now = moment().tz(tz).format()
       const fiveDaysAgo = moment().subtract(5, 'days').format()
       const latestDateTime = this.telemetry[0].value_timestamp
-      this.latestDayFormatted = moment(latestDateTime).tz(tz).format('Do MMMM')
+      this.latestDayFormatted = moment(latestDateTime).tz(tz).format('D MMMM')
       this.latestTimeFormatted = moment(latestDateTime).tz(tz).format('h:mma')
       this.outOfDate = lastDataRefresh(this.telemetry[0].value_timestamp)
       const dataStartDateTime = fiveDaysAgo
