@@ -18,12 +18,6 @@ class ViewModel {
     this.facebookEvent = 'Station:Share Page:Station - Share to Facebook'
     this.emailEvent = 'Station:Share Page:Station - Share to email'
 
-    const trendSvgPaths = {
-      falling: 'M9.844 8.419l2.116-2.116 1.697 7.354-7.354-1.697 2.128-2.128-6.789-6.788L3.056 1.63l6.788 6.789z',
-      rising: 'M8.419 6.156L6.303 4.04l7.354-1.697-1.697 7.354-2.128-2.128-6.788 6.789-1.414-1.414 6.789-6.788z',
-      steady: 'M9.6,6.992l0,-2.992l6.4,4l-6.4,4l0,-3.009l-9.6,0l0,-1.999l9.6,0Z'
-    }
-
     Object.assign(this, {
       feedback: false,
       bingMaps: config.bingKeyMaps,
@@ -37,9 +31,7 @@ class ViewModel {
       facebookEvent: 'Station:Share Page:Station - Share to Facebook',
       emailEvent: 'Station:Share Page:Station - Share to email',
       floodRiskUrl: config.floodRiskUrl,
-      trendSvgPaths: trendSvgPaths,
-      trend: river.trend,
-      trendSvgPath: trendSvgPaths[river.trend]
+      trend: river.trend
     })
     // Group warnings/alerts by severity level
 
