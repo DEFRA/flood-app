@@ -49,8 +49,7 @@ module.exports = {
 
     if (station.status === 'Closed') {
       const river = []
-      const imtdThresholds = { thresholdsImtd }
-      const model = new ViewModel({ station, telemetry, imtdThresholds, impacts, river, warningsAlerts })
+      const model = new ViewModel({ station, telemetry, thresholdsImtd, impacts, river, warningsAlerts })
       return h.view('station', { model })
     }
 
@@ -59,13 +58,11 @@ module.exports = {
       // Forecast station
       const values = await request.server.methods.flood.getStationForecastData(station.wiski_id)
       const forecast = { thresholds, values }
-      const imtdThresholds = { thresholdsImtd, values }
-      const model = new ViewModel({ station, telemetry, forecast, imtdThresholds, impacts, river, warningsAlerts })
+      const model = new ViewModel({ station, telemetry, forecast, thresholdsImtd, impacts, river, warningsAlerts })
       return h.view('station', { model })
     } else {
       // Non-forecast Station
-      const imtdThresholds = { thresholdsImtd }
-      const model = new ViewModel({ station, telemetry, imtdThresholds, impacts, river, warningsAlerts })
+      const model = new ViewModel({ station, telemetry, thresholdsImtd, impacts, river, warningsAlerts })
       return h.view('station', { model })
     }
   },
