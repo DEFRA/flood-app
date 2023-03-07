@@ -133,14 +133,12 @@
                   {% else %}
                     {{ (model.station.recentValue._).toFixed(2) }}m
                   {% endif %}
-            <!--     <span class="defra-flood-statistics__value-detail"> at <time datetime="">{{ model.station.recentValue.formattedTime }}</time> {{ model.station.recentValue.dateWhen }}</span> -->
                 </dd>
               </div>
               <div class="defra-flood-statistics__item"> 
                 <dt class="defra-flood-statistics__key">Trend</dt>
                 <dd class="defra-flood-statistics__value">
                     {{ model.trend | capitalize }}
-                    <!-- <span class="defra-flood-statistics__value-detail">{{ model.station.stateInformation}}</span> -->
                 </dd>
               </div>
             {# if station has hasPercentiles, this should exclude Coastal #}
@@ -149,7 +147,6 @@
                 <dt class="defra-flood-statistics__key">State</dt>
                 <dd class="defra-flood-statistics__value">
                     {{ model.station.state }}
-                    <!-- <span class="defra-flood-statistics__value-detail">{{ model.station.stateInformation}}</span> -->
                 </dd>
               </div>
               {% endif %}
