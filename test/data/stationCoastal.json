@@ -2445,6 +2445,42 @@
       "err": false
     }
   ],
+  "river":[
+    {
+      "river_id":"Sea Levels",
+      "river_name":"Sea Levels",
+      "river_qualified_name":null,
+      "navigable":false,
+      "view_rank":2,
+      "rank":null,
+      "rloi_id":3252,
+      "up":null,
+      "down":null,
+      "telemetry_id":"45127",
+      "region":"South West",
+      "catchment":"Exe",
+      "wiski_river_name":"South Devon Coast",
+      "agency_name":"Exmouth",
+      "external_name":"Exmouth",
+      "station_type":"C",
+      "status":"Active",
+      "qualifier":"u",
+      "iswales":false,
+      "value":"0.888",
+      "value_timestamp":"2023-03-06T04:00:00.000Z",
+      "value_erred":false,
+      "trend":"rising",
+      "percentile_5":null,
+      "percentile_95":null,
+      "centroid":"0101000020E610000039C5AB6DDF640BC005C892A9F24E4940",
+      "lon":-3.424254280857579,
+      "lat":50.616780468626565,
+      "day_total":null,
+      "six_hr_total":null,
+      "one_hr_total":null,
+      "id":"1063"
+   }
+  ],
   "impacts":[],
   "warningsAlerts":[]
 }

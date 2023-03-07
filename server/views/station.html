@@ -139,7 +139,7 @@
               <div class="defra-flood-statistics__item"> 
                 <dt class="defra-flood-statistics__key">Trend</dt>
                 <dd class="defra-flood-statistics__value">
-                    {{ model.station.trend }}
+                    {{ model.trend | capitalize }}
                     <!-- <span class="defra-flood-statistics__value-detail">{{ model.station.stateInformation}}</span> -->
                 </dd>
               </div>
@@ -156,7 +156,7 @@
             </dl>
             {% if model.station.hasPercentiles and not model.station.isCoastal  %}
             <p class="govuk-caption-s govuk-!-margin-top-3 govuk-!-margin-bottom-0">
-              Normal range {{ model.station.levelLow | round(2) }}m to {{ model.station.levelHigh | round(2) }}m
+              Normal range {{ model.station.stateInformation}}
             </p>
             {% endif %}
           </div>
