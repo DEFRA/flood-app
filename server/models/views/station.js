@@ -291,43 +291,43 @@ class ViewModel {
     const stationStageDatum = this.station.stageDatum
     const stationSubtract = this.station.subtract
 
-    let imtdThreshold1 = imtdThresholds.thresholdsImtd[1]
+    let imtdThresholdAlert = imtdThresholds.alert
 
-    if (typeof imtdThresholds.thresholdsImtd.error === 'undefined' && imtdThreshold1 !== null) {
+    if (typeof imtdThresholds.thresholdsImtd.error === 'undefined' && imtdThresholdAlert !== null) {
       if (this.station.post_process) {
         if (stationStageDatum > 0) {
-          imtdThreshold1 = imtdThreshold1 - stationStageDatum
+          imtdThresholdAlert = imtdThresholdAlert - stationStageDatum
         } else if (stationStageDatum <= 0 && stationSubtract > 0) {
-          imtdThreshold1 = imtdThreshold1 - stationSubtract
+          imtdThresholdAlert = imtdThresholdAlert - stationSubtract
         }
       }
-      this.alertThreshold = parseFloat(imtdThreshold1).toFixed(2)
+      this.alertThreshold = parseFloat(imtdThresholdAlert).toFixed(2)
       thresholds.push({
         id: 'alertThreshold',
         value: this.alertThreshold,
-        valueImtd: imtdThreshold1 || 'n/a',
+        valueImtd: imtdThresholdAlert || 'n/a',
         description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
         shortname: 'Possible flood alerts'
       })
     }
 
-    let imtdThreshold0 = imtdThresholds.thresholdsImtd[0]
+    let imtdThresholdWarning = imtdThresholds.warning
 
-    if (typeof imtdThresholds.thresholdsImtd.error === 'undefined' && imtdThreshold0 !== null) {
+    if (typeof imtdThresholds.thresholdsImtd.error === 'undefined' && imtdThresholdWarning !== null) {
       // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
       if (this.station.post_process) {
         if (stationStageDatum > 0) {
-          imtdThreshold0 = imtdThreshold0 - stationStageDatum
+          imtdThresholdWarning = imtdThresholdWarning - stationStageDatum
         } else if (stationStageDatum <= 0 && stationSubtract > 0) {
-          imtdThreshold0 = imtdThreshold0 - stationSubtract
+          imtdThresholdWarning = imtdThresholdWarning - stationSubtract
         }
       }
 
-      this.warningThreshold = parseFloat(imtdThreshold0).toFixed(2)
+      this.warningThreshold = parseFloat(imtdThresholdWarning).toFixed(2)
       thresholds.push({
         id: 'warningThreshold',
         value: this.warningThreshold,
-        valueImtd: imtdThreshold0 || 'n/a',
+        valueImtd: imtdThresholdWarning || 'n/a',
         description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
         shortname: 'Possible flood warnings'
       })
