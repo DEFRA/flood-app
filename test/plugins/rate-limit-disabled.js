@@ -88,14 +88,12 @@ lab.experiment('rate-limit plugin disabled test', () => {
     const fakeThresholdsData = () => []
     const fakeWarningsAlertsData = () => []
     const fakeRiverStationData = () => []
-    const fakeImtdThresholdsData = () => [0, 0]
     const fakeStationThresholdData = () => [0, 0]
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeImtdThresholdsData)
     sandbox.stub(floodService, 'getStationThreshold').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverStationData)
