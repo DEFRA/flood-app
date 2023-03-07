@@ -80,10 +80,6 @@ module.exports = {
     return util.getJson(`${serviceUrl}/station/${id}/threshold`)
   },
 
-  getStationImtdThresholds (id) {
-    return util.getJson(`${serviceUrl}/station/${id}/imtd/thresholds`)
-  },
-
   getStationForecastData (id) {
     return util.getJson(`${serviceUrl}/station/${id}/forecast/data`)
   },

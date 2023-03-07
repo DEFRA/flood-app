@@ -41,7 +41,7 @@ module.exports = {
     const [telemetry, thresholds, thresholdsImtd, impacts, warningsAlerts, river] = await Promise.all([
       request.server.methods.flood.getStationTelemetry(id, direction),
       request.server.methods.flood.getStationForecastThresholds(id),
-      request.server.methods.flood.getStationImtdThresholds(id),
+      request.server.methods.flood.getStationThreshold(id),
       request.server.methods.flood.getImpactData(station.rloi_id),
       request.server.methods.flood.getWarningsAlertsWithinStationBuffer(station.rloi_id),
       request.server.methods.flood.getRiverStationByStationId(id)
