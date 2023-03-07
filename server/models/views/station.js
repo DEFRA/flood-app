@@ -9,8 +9,6 @@ class ViewModel {
   constructor (options) {
     const { station, telemetry, forecast, impacts, river, warningsAlerts } = options
 
-    console.log(river)
-
     this.station = new Station(station)
     this.station.riverNavigation = river
 

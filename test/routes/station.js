@@ -664,7 +664,7 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
     Code.expect(response.payload).to.contain('High')
-    Code.expect(response.payload).to.contain('<time datetime="">1:30am</time>')
+    Code.expect(response.payload).to.contain('Latest at 1:30am')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146" class="defra-flood-nav__link">Nearby levels</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5122" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>')
     Code.expect(response.payload).to.not.contain('Go downstream</a>')
@@ -889,7 +889,7 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
     Code.expect(response.payload).to.contain('Low\n')
-    Code.expect(response.payload).to.contain('<time datetime="">1:30am</time>')
+    Code.expect(response.payload).to.contain('Latest at 1:30am')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146" class="defra-flood-nav__link">Nearby levels</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5122" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>')
   })
@@ -1021,7 +1021,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('Sea level at Bude - GOV.UK')
-    Code.expect(response.payload).to.contain('at <time datetime="">6:00am</time>')
+    Code.expect(response.payload).to.contain('Latest at 6:00am')
     Code.expect(response.payload).to.contain('3.59m')
   })
   lab.test('GET station/7333 ffoi no max value ', async () => {
