@@ -60,12 +60,12 @@ window.flood = {
     },
     setGTagAnalyticsCookies: () => {
       const script = document.createElement('script')
-      script.src = `https://www.googletagmanager.com/gtag/js?id=G-XNV5TZXSTT`
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.GA_ID}`
       script.onload = () => {
         window.dataLayer = window.dataLayer || []
         function gtag () { window.dataLayer.push(arguments) }
         gtag('js', new Date())
-        gtag('config', 'G-XNV5TZXSTT', { cookie_domain: document.domain })
+        gtag('config', process.env.GA_ID, { cookie_domain: document.domain })
       }
       document.body.appendChild(script)
     },
