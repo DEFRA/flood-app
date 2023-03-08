@@ -347,11 +347,13 @@ lab.experiment('Test - /station/{id}', () => {
         value: '9.567',
         value_timestamp: '2020-03-17T04:30:00.000Z',
         value_erred: false,
+        trend: 'steady',
         percentile_5: '3.5',
         percentile_95: '0.15',
         centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
         lon: -2.68044442027032,
-        lat: 53.7529105624953
+        lat: 53.7529105624953,
+        id: '2695'
       }
     }
 
@@ -401,6 +403,7 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
     Code.expect(response.payload).to.contain('Normal')
+    Code.expect(response.payload).to.contain('Steady')
     Code.expect(response.payload).to.contain('0.15m to 3.50m')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146" class="defra-flood-nav__link">Nearby levels</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5122" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>')
@@ -480,11 +483,13 @@ lab.experiment('Test - /station/{id}', () => {
         value: '0.341',
         value_timestamp: '2020-03-18T08:00:00.000Z',
         value_erred: false,
+        trend: 'steady',
         percentile_5: '0.659',
         percentile_95: '0.098',
         centroid: '0101000020E61000003F2646D543C5F2BF161F852994324A40',
         lon: -1.17316039381184,
-        lat: 52.3951465511329
+        lat: 52.3951465511329,
+        id: '2695'
       }
     }
 
@@ -610,11 +615,13 @@ lab.experiment('Test - /station/{id}', () => {
         value: '9.567',
         value_timestamp: '2020-03-17T04:30:00.000Z',
         value_erred: false,
+        trend: 'falling',
         percentile_5: '3.5',
         percentile_95: '0.15',
         centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
         lon: -2.68044442027032,
-        lat: 53.7529105624953
+        lat: 53.7529105624953,
+        id: '2695'
       }
     }
 
@@ -664,6 +671,7 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
     Code.expect(response.payload).to.contain('High')
+    Code.expect(response.payload).to.contain('Falling')
     Code.expect(response.payload).to.contain('Latest at 1:30am')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146" class="defra-flood-nav__link">Nearby levels</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5122" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>')
@@ -835,11 +843,13 @@ lab.experiment('Test - /station/{id}', () => {
         value: '9.567',
         value_timestamp: '2020-03-17T04:30:00.000Z',
         value_erred: false,
+        trend: 'rising',
         percentile_5: '3.5',
         percentile_95: '0.15',
         centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
         lon: -2.68044442027032,
-        lat: 53.7529105624953
+        lat: 53.7529105624953,
+        id: '2695'
       }
     }
 
@@ -889,6 +899,7 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
     Code.expect(response.payload).to.contain('Low\n')
+    Code.expect(response.payload).to.contain('Rising')
     Code.expect(response.payload).to.contain('Latest at 1:30am')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146" class="defra-flood-nav__link">Nearby levels</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5122" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>')

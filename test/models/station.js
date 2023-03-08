@@ -29,6 +29,7 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.station.state).to.equal('Normal')
     Code.expect(Result.station.stateInformation).to.equal('0.35m to 2.84m')
     Code.expect(Result.station.status).to.equal('active')
+    Code.expect(Result.trend).to.equal('steady')
     Code.expect(Result.banner).to.equal(0)
     Code.expect(Result.pageTitle).to.equal('River Adur level at Beeding Bridge')
     Code.expect(Result.dataOverHourOld).to.equal(true)
