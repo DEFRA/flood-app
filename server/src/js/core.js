@@ -60,12 +60,12 @@ window.flood = {
     },
     setGTagAnalyticsCookies: () => {
       const script = document.createElement('script')
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.GA_ID}`
+      script.src = `https://www.googletagmanager.com/gtag/js?id=G-XNV5TZXSTT`
       script.onload = () => {
         window.dataLayer = window.dataLayer || []
         function gtag () { window.dataLayer.push(arguments) }
         gtag('js', new Date())
-        gtag('config', process.env.GA_ID, { cookie_domain: document.domain })
+        gtag('config', G-XNV5TZXSTT, { cookie_domain: document.domain })
       }
       document.body.appendChild(script)
     },
@@ -207,4 +207,4 @@ if (!calledGTag) {
     window.flood.utils.setGTagAnalyticsCookies()
   }
 }
-window.flood.utils.setGoogleAnalyticsEvent()
+// window.flood.utils.setGoogleAnalyticsEvent()
