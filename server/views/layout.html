@@ -25,7 +25,16 @@
   <!-- Stage: {{ env }} {{ stage }} -->
   <!-- Application version: {{ appVersion }} -->
 
+  
+
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5PGN53R');</script>
   <link href="{{ assetPath }}/stylesheets/application.css" rel="stylesheet" />
+
+ 
 
   {% if metaCanonical %}
     <link rel="canonical" href="{{fullUrl}}"/>
@@ -47,6 +56,7 @@
 
 {% block beforeContent %}
 
+
   <!-- If dummy warning data is being used -->
   {% if isDummyData %}
     {{ govukWarningText({
@@ -62,6 +72,15 @@
       iconFallbackText: "Warning"
     }) }}
   {% endif %}
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XNV5TZXSTT"></script>
+<script>
+  window.dataLayer = window.dataLayer || []
+  function gtag(){dataLayer.push(arguments)}
+  gtag('js', new Date())
+
+  gtag('config', 'G-XNV5TZXSTT')
+</script>
 
   <div class="govuk-phase-banner">
     <p class="govuk-phase-banner__content">
@@ -79,10 +98,12 @@
 {% block content %}
 {% endblock %}
 
+
 {% block bodyEnd %}
 
-  {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
-
+{# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
+  
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5PGN53R" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <script src="{{ assetPath }}/js/all.js"></script>
     <script>window.GOVUKFrontend.initAll()</script>
     <script src="{{ assetPath }}/js/core.js"></script>

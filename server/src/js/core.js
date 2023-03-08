@@ -60,7 +60,7 @@ window.flood = {
     },
     setGTagAnalyticsCookies: () => {
       const script = document.createElement('script')
-      script.src = `https://www.googletagmanager.com/gtag/js?id=G-XNV5TZXSTT}`
+      script.src = `https://www.googletagmanager.com/gtag/js?id=G-XNV5TZXSTT`
       script.onload = () => {
         window.dataLayer = window.dataLayer || []
         function gtag () { window.dataLayer.push(arguments) }
