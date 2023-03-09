@@ -7,7 +7,7 @@ const util = require('../../util')
 
 class ViewModel {
   constructor (options) {
-    const { station, telemetry, forecast, thresholdsImtd, impacts, river, warningsAlerts } = options
+    const { station, telemetry, forecast, imtdThresholds, impacts, river, warningsAlerts } = options
 
     this.station = new Station(station)
     this.station.riverNavigation = river
@@ -291,7 +291,7 @@ class ViewModel {
     const stationStageDatum = this.station.stageDatum
     const stationSubtract = this.station.subtract
 
-    let imtdThresholdAlert = thresholdsImtd?.alert
+    let imtdThresholdAlert = imtdThresholds?.alert
     if (imtdThresholdAlert) {
       if (this.station.post_process) {
         if (stationStageDatum > 0) {
@@ -310,7 +310,7 @@ class ViewModel {
       })
     }
 
-    let imtdThresholdWarning = thresholdsImtd?.warning
+    let imtdThresholdWarning = imtdThresholds?.warning
     if (imtdThresholdWarning) {
       // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
       if (this.station.post_process) {
