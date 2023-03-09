@@ -297,17 +297,5 @@
         "geometry":"{\"type\":\"Point\",\"coordinates\":[-3.03674273776571,53.8811798090409]}"
       }
     ],
-    "imtdThresholds": {
-      "thresholdsImtd": [ "43.91", "43.91" ],
-        "values": {
-            "$": {
-                "stationReference": "750832",
-                "stationName": "Greta Bridge",
-                "key": "fwfidata/ENT_7024/NWFSNWTS20220722110400000.XML",
-                "date": "2022-07-22",
-                "time": "11:04:20"
-              },
-            "SetofValues": []
-        }
-    }
+    "imtdThresholds": { "alert": "43.91", "warning": "43.91" }
   }
