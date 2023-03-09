@@ -296,9 +296,8 @@ class ViewModel {
     const stationStageDatum = this.station.stageDatum
     const stationSubtract = this.station.subtract
 
-    let imtdThresholdAlert = imtdThresholds.alert
-
-    if (typeof imtdThresholds.thresholdsImtd.error === 'undefined' && imtdThresholdAlert !== null) {
+    let imtdThresholdAlert = imtdThresholds?.alert
+    if (imtdThresholdAlert) {
       if (this.station.post_process) {
         if (stationStageDatum > 0) {
           imtdThresholdAlert = imtdThresholdAlert - stationStageDatum
@@ -316,9 +315,8 @@ class ViewModel {
       })
     }
 
-    let imtdThresholdWarning = imtdThresholds.warning
-
-    if (typeof imtdThresholds.thresholdsImtd.error === 'undefined' && imtdThresholdWarning !== null) {
+    let imtdThresholdWarning = imtdThresholds?.warning
+    if (imtdThresholdWarning) {
       // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
       if (this.station.post_process) {
         if (stationStageDatum > 0) {
