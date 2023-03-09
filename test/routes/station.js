@@ -241,7 +241,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeForecastThresholds)
-    sandbox.stub(floodService, 'getStationThreshold').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
     sandbox.stub(floodService, 'getStationForecastData').callsFake(fakeStationForecastData)
@@ -375,7 +375,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
-    sandbox.stub(floodService, 'getStationThreshold').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
 
     const stationPlugin = {
@@ -513,7 +513,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
-    sandbox.stub(floodService, 'getStationThreshold').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
 
     const stationPlugin = {
@@ -647,7 +647,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
-    sandbox.stub(floodService, 'getStationThreshold').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
 
     const stationPlugin = {
@@ -745,7 +745,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
-    sandbox.stub(floodService, 'getStationThreshold').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverStationData)
 
@@ -879,7 +879,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
-    sandbox.stub(floodService, 'getStationThreshold').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
 
     const stationPlugin = {
@@ -1015,7 +1015,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
-    sandbox.stub(floodService, 'getStationThreshold').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
 
     const stationPlugin = {
@@ -1260,7 +1260,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeForecastThresholds)
-    sandbox.stub(floodService, 'getStationThreshold').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
     sandbox.stub(floodService, 'getStationForecastData').callsFake(fakeStationForecastData)
@@ -1512,7 +1512,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeForecastThresholds)
-    sandbox.stub(floodService, 'getStationThreshold').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
     sandbox.stub(floodService, 'getStationForecastData').callsFake(fakeStationForecastData)
@@ -1651,7 +1651,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
-    sandbox.stub(floodService, 'getStationThreshold').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
 
     const stationPlugin = {
@@ -1941,7 +1941,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
-    sandbox.stub(floodService, 'getStationThreshold').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
 
     const stationPlugin = {

@@ -123,7 +123,7 @@ module.exports = server => {
     }
   })
 
-  server.method('flood.getStationThreshold', floodServices.getStationThreshold, {
+  server.method('flood.getStationImtdThresholds', floodServices.getStationImtdThresholds, {
     cache: {
       cache: cacheType,
       expiresIn: 1 * 60 * 1000, // 1 minute
