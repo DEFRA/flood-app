@@ -67,17 +67,9 @@ window.flood = {
         gtag('js', new Date())
         gtag('config', 'G-TM9QYEJJPC', { cookie_domain: document.domain })
       }
-      const gtagManager = document.createElement('script')
+      // const gtagManager = document.createElement('script')
 
-      gtagManager.onload = () => {
-        (function (w, d, s, l, i) {
-          w[l] = w[l] || []; w[l].push({
-            'gtm.start': new Date().getTime(),
-            event: 'gtm.js'
-          }); var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f)
-        })(window, document, 'script', 'dataLayer', 'G-TM9QYEJJPC')
-      }
+      const gtagTwo = document.head.innerHTML = "<script>(function (w, d, s, l, i) {w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js'}); var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f)})(window, document, 'script', 'dataLayer', 'G-TM9QYEJJPC')</script>"
 
       // <noscript><iframe src=`https://www.googletagmanager.com/ns.html?id=${process.env.GA_ID}` height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
@@ -89,7 +81,8 @@ window.flood = {
       iframe.setAttribute('style', 'display:none;visibility:hidden')
       noscript.appendChild(iframe)
 
-      document.head.appendChild(gtagManager)
+      // document.head.appendChild(gtagManager)
+      document.head.appendChild(gtagTwo)
       document.body.appendChild(script)
       document.body.appendChild(noscript)
     },
