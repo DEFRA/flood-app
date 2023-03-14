@@ -138,7 +138,11 @@
               <div class="defra-flood-statistics__item"> 
                 <dt class="defra-flood-statistics__key">Trend</dt>
                 <dd class="defra-flood-statistics__value">
-                    {{ model.trend | capitalize }}
+                  {% if model.trend %}
+                  {{ model.station.trend | capitalize }}
+                  {% else %}
+                  n/a
+                  {% endif %}
                 </dd>
               </div>
             {# if station has hasPercentiles, this should exclude Coastal #}

@@ -358,7 +358,7 @@ function LiveMap (mapId, options) {
     const formattedExpiredTime = moment(date).tz('Europe/London').format('h:mma')
     const formattedExpiredDate = moment(date).tz('Europe/London').format('D MMMM')
 
-    return `Recent rainfall up to ${formattedExpiredTime}, ${formattedExpiredDate}`
+    return `Totals up to ${formattedExpiredTime}, ${formattedExpiredDate}`
   }
 
   // Time format function
@@ -370,31 +370,10 @@ function LiveMap (mapId, options) {
   }
 
   // Day format function
-  const formatDay = (date) => {
+  const formatDayMonth = (date) => {
     const day = date.getDate()
-    const nth = (day) => {
-      if (day > 3 && day < 21) return 'th'
-      switch (day % 10) { case 1: return 'st'; case 2: return 'nd'; case 3: return 'rd'; default: return 'th' }
-    }
-    const shortDay = date.toLocaleString('en-GB', { weekday: 'short' })
-    const today = new Date()
-    const yesterday = new Date()
-    const tomorrow = new Date()
-    today.setHours(0, 0, 0, 0)
-    yesterday.setDate(yesterday.getDate() - 1)
-    yesterday.setHours(0, 0, 0, 0)
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    tomorrow.setHours(0, 0, 0, 0)
-    date.setHours(0, 0, 0, 0)
-    if (date.getTime() === today.getTime()) {
-      return 'today'
-    } else if (date.getTime() === yesterday.getTime()) {
-      return 'yesterday'
-    } else if (date.getTime() === tomorrow.getTime()) {
-      return 'tomorrow'
-    } else {
-      return ' on ' + shortDay + ' ' + date.getDate() + nth(day)
-    }
+    const month = date.toLocaleString('en-GB', { month: 'long' })
+    return `${day} ${month}`
   }
 
   const capitalise = (str) => {
@@ -407,8 +386,9 @@ function LiveMap (mapId, options) {
     model.id = feature.getId().substring(feature.getId().indexOf('.') + 1)
     // Format dates for river levels
     if (feature.getId().startsWith('stations')) {
-      model.date = formatTime(new Date(model.value_date)) + ' ' + formatDay(new Date(model.value_date))
+      model.date = `${formatTime(new Date(model.value_date))}, ${formatDayMonth(new Date(model.value_date))}`
       model.state = feature.get('state')
+      model.trend = feature.get('trend')
     }
     if (feature.getId().startsWith('rainfall')) {
       model.id = feature.getId().toString().split('.')[1]

@@ -15,6 +15,7 @@ class ViewModel {
     this.twitterEvent = 'Station:Share Page:Station - Share to Twitter'
     this.facebookEvent = 'Station:Share Page:Station - Share to Facebook'
     this.emailEvent = 'Station:Share Page:Station - Share to email'
+    this.station.trend = river.trend
 
     Object.assign(this, {
       feedback: false,

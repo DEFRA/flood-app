@@ -31,7 +31,7 @@
 <div id="infoDescription">
     <strong class="defra-map-info__name">
         <a data-journey-click="Map:Map interaction:Map - Open station from tooltip" href="/station/{{ model.id }}">
-            {% if model.type === 'C' %}Tide{% elif model.type === 'G' %}Groundwater{% else %}{{ model.river }}{% endif %} at
+            {% if model.type === 'C' %}Sea Level{% elif model.type === 'G' %}Groundwater{% else %}{{ model.river }}{% endif %} at
             {{ model.name }}
             {% if model.iswales %} (Natural Resources Wales){% endif %}
         </a>
@@ -53,6 +53,21 @@
                 <span class="defra-flood-data-list__value">{{ model.value | round(2) }}m</span>
             </dd>
         </div>
+        {% if model.value and model.type !== 'R' and model.status !== 'Closed' and model.status !== 'Suspended' and not model.iswales %}
+        <div class="defra-flood-data-list__column">
+            <dt class="govuk-visually-hidden">Trend</dt>
+            <dd>
+                <span class="defra-flood-data-list__description">Trend</span>
+                <span class="defra-flood-data-list__value">
+                    {% if model.trend %}
+                    {{ model.trend | capitalize }}
+                    {% else %}
+                    n/a
+                    {% endif %}
+                </span>
+            </dd>
+        </div>
+        {% endif %}
         {% if model.value and model.type !== 'C' and model.status !== 'Closed' and model.status !== 'Suspended' and not model.iswales %}
         <div class="defra-flood-data-list__column">
             <dt class="govuk-visually-hidden">State</dt>
@@ -73,7 +88,7 @@
     {% endif %}
     </dl>
     {% if model.status !== 'Closed' and model.status !== 'Suspended' and model.value %}
-    <p class="defra-map-info__meta">Latest reading: {{ model.date }}</p>
+    <p class="defra-map-info__meta">Latest at {{ model.date }}</p>
     {% endif %}
     {% if model.up or model.down %}
     <div class="defra-map-info__buttons">
