@@ -8,10 +8,7 @@ function processThreshold (threshold, stationStageDatum, stationSubtract, postPr
         threshold = threshold - stationSubtract
       }
     }
-    return {
-      value: parseFloat(threshold).toFixed(2),
-      valueImtd: threshold || 'n/a'
-    }
+    return parseFloat(threshold).toFixed(2)
   }
   return null
 }
@@ -26,7 +23,7 @@ function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtra
       id: 'alertThreshold',
       description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
       shortname: 'Possible flood alerts',
-      ...imtdThresholdAlert
+      value: imtdThresholdAlert
     })
   }
 
@@ -38,7 +35,7 @@ function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtra
       id: 'warningThreshold',
       description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
       shortname: 'Possible flood warnings',
-      ...imtdThresholdWarning
+      value: imtdThresholdWarning
     })
   }
   return thresholds

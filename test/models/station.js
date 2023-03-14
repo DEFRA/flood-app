@@ -37,7 +37,6 @@ lab.experiment('Station model test', () => {
       {
         id: 'warningThreshold',
         value: '1.45',
-        valueImtd: 1.451,
         description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
         shortname: 'Possible flood warnings'
       }
@@ -46,7 +45,6 @@ lab.experiment('Station model test', () => {
       {
         id: 'alertThreshold',
         value: '0.56',
-        valueImtd: 0.5619999999999999,
         description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
         shortname: 'Possible flood alerts'
       }
