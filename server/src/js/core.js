@@ -225,4 +225,4 @@ if (!calledGTag) {
     window.flood.utils.setGTagAnalyticsCookies()
   }
 }
-// window.flood.utils.setGoogleAnalyticsEvent()
+window.flood.utils.setGoogleAnalyticsEvent()
