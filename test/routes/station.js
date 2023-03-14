@@ -238,7 +238,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     const fakeStationForecastData = () => []
     const fakeWarningsAlertsData = () => []
-    const fakeStationThresholdData = () => [0, 0]
+    const fakeStationThresholdData = () => { return { alert: null, warning: null } }
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
@@ -368,7 +368,7 @@ lab.experiment('Test - /station/{id}', () => {
     const fakeImpactsData = () => []
     const fakeThresholdsData = () => []
     const fakeTargetAreasData = () => []
-    const fakeStationThresholdData = () => [0, 0]
+    const fakeStationThresholdData = () => { return { alert: null, warning: null } }
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
@@ -503,7 +503,7 @@ lab.experiment('Test - /station/{id}', () => {
     const fakeImpactsData = () => []
     const fakeThresholdsData = () => []
     const fakeWarningsAlertsData = () => []
-    const fakeStationThresholdData = () => [0, 0]
+    const fakeStationThresholdData = () => { return { alert: null, warning: null } }
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
@@ -635,7 +635,7 @@ lab.experiment('Test - /station/{id}', () => {
     const fakeImpactsData = () => []
     const fakeThresholdsData = () => []
     const fakeWarningsAlertsData = () => []
-    const fakeStationThresholdData = () => [0, 0]
+    const fakeStationThresholdData = () => { return { alert: null, warning: null } }
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
@@ -733,7 +733,7 @@ lab.experiment('Test - /station/{id}', () => {
     const fakeThresholdsData = () => []
     const fakeWarningsAlertsData = () => []
     const fakeRiverStationData = () => []
-    const fakeStationThresholdData = () => [0, 0]
+    const fakeStationThresholdData = () => { return { alert: null, warning: null } }
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
@@ -864,7 +864,7 @@ lab.experiment('Test - /station/{id}', () => {
     const fakeImpactsData = () => []
     const fakeThresholdsData = () => []
     const fakeWarningsAlertsData = () => []
-    const fakeStationThresholdData = () => [0, 0]
+    const fakeStationThresholdData = () => { return { alert: null, warning: null } }
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
@@ -999,7 +999,7 @@ lab.experiment('Test - /station/{id}', () => {
     const fakeImpactsData = () => []
     const fakeThresholdsData = () => []
     const fakeWarningsAlertsData = () => []
-    const fakeStationThresholdData = () => [0, 0]
+    const fakeStationThresholdData = () => { return { alert: null, warning: null } }
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
@@ -1247,7 +1247,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     const fakeStationForecastData = () => data.fakeStationForecastData
     const fakeWarningsAlertsData = () => []
-    const fakeStationThresholdData = () => [0, 0]
+    const fakeStationThresholdData = () => { return { alert: null, warning: null } }
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
@@ -1497,7 +1497,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     const fakeStationForecastData = () => data.fakeStationForecastDataMax
     const fakeWarningsAlertsData = () => []
-    const fakeStationThresholdData = () => [0, 0]
+    const fakeStationThresholdData = () => { return { alert: null, warning: null } }
 
     fakeStationForecastData().SetofValues[0].Value[0].$.date = moment().utc().add(1, 'hours').format('YYYY-MM-DD')
     fakeStationForecastData().SetofValues[0].Value[0].$.time = moment().utc().add(1, 'hours').format('HH:mm:ss')
@@ -1637,7 +1637,7 @@ lab.experiment('Test - /station/{id}', () => {
     const fakeImpactsData = () => []
     const fakeThresholdsData = () => []
     const fakeTargetAreasData = () => []
-    const fakeStationThresholdData = () => [0, 0]
+    const fakeStationThresholdData = () => { return { alert: null, warning: null } }
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
@@ -1927,7 +1927,7 @@ lab.experiment('Test - /station/{id}', () => {
     const fakeImpactsData = () => []
     const fakeThresholdsData = () => []
     const fakeTargetAreasData = () => []
-    const fakeStationThresholdData = () => [0, 0]
+    const fakeStationThresholdData = () => { return { alert: null, warning: null } }
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
