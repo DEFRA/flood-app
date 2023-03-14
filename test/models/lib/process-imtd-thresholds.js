@@ -39,6 +39,34 @@ lab.experiment('process IMTD thresholds test', () => {
       { id: 'warningThreshold', description: 'Property flooding is possible above this level. One or more flood warnings may be issued', shortname: 'Possible flood warnings', value: '1.60' }
     ])
   })
+  lab.test('thresholds should be returned as is when post processing is true, stageDatum is less than zero and stationSubtract is less than zero', async () => {
+    const threshold = processImtdThresholds({ alert: 1.1, warning: 2.1 }, -2.2, -0.5, true)
+    Code.expect(threshold).to.equal([
+      { id: 'alertThreshold', description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued', shortname: 'Possible flood alerts', value: '1.10' },
+      { id: 'warningThreshold', description: 'Property flooding is possible above this level. One or more flood warnings may be issued', shortname: 'Possible flood warnings', value: '2.10' }
+    ])
+  })
+  lab.test('thresholds should be returned as is when post processing is true, stageDatum is equal to zero and stationSubtract is less than zero', async () => {
+    const threshold = processImtdThresholds({ alert: 1.1, warning: 2.1 }, 0, -0.5, true)
+    Code.expect(threshold).to.equal([
+      { id: 'alertThreshold', description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued', shortname: 'Possible flood alerts', value: '1.10' },
+      { id: 'warningThreshold', description: 'Property flooding is possible above this level. One or more flood warnings may be issued', shortname: 'Possible flood warnings', value: '2.10' }
+    ])
+  })
+  lab.test('thresholds should be returned as adjusted when post processing is true, stageDatum is equal to zero and stationSubtract is greater than than zero', async () => {
+    const threshold = processImtdThresholds({ alert: 1.1, warning: 2.1 }, 0, 0.5, true)
+    Code.expect(threshold).to.equal([
+      { id: 'alertThreshold', description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued', shortname: 'Possible flood alerts', value: '0.60' },
+      { id: 'warningThreshold', description: 'Property flooding is possible above this level. One or more flood warnings may be issued', shortname: 'Possible flood warnings', value: '1.60' }
+    ])
+  })
+  lab.test('thresholds should be returned as is when post processing is true, stageDatum is equal to zero and stationSubtract is zero', async () => {
+    const threshold = processImtdThresholds({ alert: 1.1, warning: 2.1 }, 0, 0, true)
+    Code.expect(threshold).to.equal([
+      { id: 'alertThreshold', description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued', shortname: 'Possible flood alerts', value: '1.10' },
+      { id: 'warningThreshold', description: 'Property flooding is possible above this level. One or more flood warnings may be issued', shortname: 'Possible flood warnings', value: '2.10' }
+    ])
+  })
   lab.test('single null thresholds should not be returned', async () => {
     const threshold = processImtdThresholds({ alert: 1.1, warning: null }, 0, 0, false)
     Code.expect(threshold).to.equal([
