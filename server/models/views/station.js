@@ -5,46 +5,49 @@ const Station = require('./station-data')
 const Forecast = require('./station-forecast')
 const util = require('../../util')
 
-function getImtdThresholds (imtdThresholds, stationStageDatum, stationSubtract, thresholds, postProcess) {
-  let imtdThresholdAlert = imtdThresholds?.alert
-  if (imtdThresholdAlert) {
+function processThreshold (threshold, stationStageDatum, stationSubtract, postProcess) {
+  if (threshold) {
     if (postProcess) {
       if (stationStageDatum > 0) {
-        imtdThresholdAlert = imtdThresholdAlert - stationStageDatum
+        threshold = threshold - stationStageDatum
       } else if (stationStageDatum <= 0 && stationSubtract > 0) {
-        imtdThresholdAlert = imtdThresholdAlert - stationSubtract
+        threshold = threshold - stationSubtract
       }
     }
+    return {
+      value: parseFloat(threshold).toFixed(2),
+      valueImtd: threshold || 'n/a'
+    }
+  }
+  return null
+}
+
+function getImtdThresholds (imtdThresholds, stationStageDatum, stationSubtract, postProcess) {
+  const thresholds = []
+
+  const imtdThresholdAlert = processThreshold(imtdThresholds?.alert, stationStageDatum, stationSubtract, postProcess)
+  if (imtdThresholdAlert) {
     // this.alertThreshold = parseFloat(imtdThresholdAlert).toFixed(2)
     thresholds.push({
       id: 'alertThreshold',
-      value: parseFloat(imtdThresholdAlert).toFixed(2),
-      valueImtd: imtdThresholdAlert || 'n/a',
       description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
-      shortname: 'Possible flood alerts'
+      shortname: 'Possible flood alerts',
+      ...imtdThresholdAlert
     })
   }
 
-  let imtdThresholdWarning = imtdThresholds?.warning
+  const imtdThresholdWarning = processThreshold(imtdThresholds?.warning, stationStageDatum, stationSubtract, postProcess)
   if (imtdThresholdWarning) {
     // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
-    if (postProcess) {
-      if (stationStageDatum > 0) {
-        imtdThresholdWarning = imtdThresholdWarning - stationStageDatum
-      } else if (stationStageDatum <= 0 && stationSubtract > 0) {
-        imtdThresholdWarning = imtdThresholdWarning - stationSubtract
-      }
-    }
-
     // this.warningThreshold = parseFloat(imtdThresholdWarning).toFixed(2)
     thresholds.push({
       id: 'warningThreshold',
-      value: parseFloat(imtdThresholdWarning).toFixed(2),
-      valueImtd: imtdThresholdWarning || 'n/a',
       description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
-      shortname: 'Possible flood warnings'
+      shortname: 'Possible flood warnings',
+      ...imtdThresholdWarning
     })
   }
+  return thresholds
 }
 
 class ViewModel {
@@ -330,10 +333,14 @@ class ViewModel {
       })
     }
 
-    const stationStageDatum = this.station.stageDatum
-    const stationSubtract = this.station.subtract
+    const processedImtdThresholds = getImtdThresholds(
+      imtdThresholds,
+      this.station.stageDatum,
+      this.station.subtract,
+      this.station.post_process
+    )
 
-    getImtdThresholds(imtdThresholds, stationStageDatum, stationSubtract, thresholds, this.station.post_process)
+    thresholds.push(...processedImtdThresholds)
 
     if (this.station.percentile5) {
       // Only push typical range if it has a percentil5
