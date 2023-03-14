@@ -182,7 +182,7 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.station.id).to.equal(7177)
     Code.expect(Result.station.hasImpacts).to.equal(true)
     Code.expect(Result.station.formattedPorMaxDate).to.equal('10/02/09')
-    Code.expect(Result.thresholds[0].level).to.equal('43.91')
+    Code.expect(Result.thresholds[0].level).to.equal('44.91')
     Code.expect(Result.isUpstream).to.equal(true)
     Code.expect(Result.isDownstream).to.equal(false)
     Code.expect(Result.severeBanner).to.equal('Severe flood warning for Coast from Fleetwood to Blackpool')

@@ -85,8 +85,5 @@
             "lat":50.8828385361225
         },
         "warningsAlerts":[],
-        "imtdThresholds": {
-          "alert": 1.222,
-          "warning": 2.111
-        }
+        "imtdThresholds": { "alert": 1.222, "warning": 2.111 }
 }
