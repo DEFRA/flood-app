@@ -61,7 +61,7 @@ lab.experiment('river-and-sea-levels model test', () => {
     })
 
     Code.expect(station.formattedValue).to.equal('0.22m')
-    Code.expect(rainfallStation.formattedValue).to.equal('0.0mm')
+    Code.expect(rainfallStation.formattedValue).to.equal('0m')
   })
   lab.experiment('referencedStationViewModel', () => {
     lab.test('Test river-and-sea-level referencedStationViewModel sorts stations in distance order from rainfall station', async () => {
