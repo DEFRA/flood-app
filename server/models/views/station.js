@@ -124,7 +124,6 @@ class ViewModel {
     this.status = this.station.status
     this.outOfDate = util.dateDiff(Date.now(), this.station.statusDate) <= 5
     this.porMaxValueIsProvisional = false
-    this.station.floodingIsPossible = false
     this.station.hasPercentiles = true
     this.station.hasImpacts = false
     this.warningsAlerts = warningsAlertsGroups
@@ -198,24 +197,8 @@ class ViewModel {
         this.phase = this.isFfoi ? 'beta' : false
       }
 
-      // River level and forecast message
-      this.atRiskFAL = this.alertThreshold &&
-        ((this.recentValue && parseFloat(this.recentValue._)) >= parseFloat(this.alertThreshold) ||
-          (this.hasForecast && this.ffoi.maxValue && parseFloat(this.ffoi.maxValue._) >= parseFloat(this.alertThreshold)))
-
-      this.atRiskFW = this.warningThreshold &&
-        ((this.recentValue && parseFloat(this.recentValue._)) >= parseFloat(this.warningThreshold) ||
-          (this.hasForecast && this.ffoi.maxValue && parseFloat(this.ffoi.maxValue._) >= parseFloat(this.warningThreshold)))
-
-      // Alerts and percentiles
-      this.station.floodingIsPossible = this.atRiskFAL || this.atRiskFW
-
       if (this.station.percentile5 && this.station.percentile95) {
-        if (!isNaN(this.station.percentile5) && !isNaN(this.station.percentile95)) {
-          if (parseFloat(this.recentValue._) >= parseFloat(this.station.percentile5)) {
-            this.station.floodingIsPossible = true
-          }
-        } else {
+        if (isNaN(this.station.percentile5) || isNaN(this.station.percentile95)) {
           this.station.hasPercentiles = false
         }
       } else {
