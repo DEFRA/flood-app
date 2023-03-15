@@ -56,8 +56,6 @@ function LineChart (containerId, data) {
     .y((d) => { return yScale(d._) })
 
   // Set level and date formats
-  const parseTime = timeFormat('%-I:%M%p')
-  const parseDate = timeFormat('%e %b')
   const parseDateShort = timeFormat('%-e/%-m')
   const parseDateLong = timeFormat('%a, %e %b')
 
@@ -228,9 +226,9 @@ function LineChart (containerId, data) {
     if (dataPoint.checkTooltipValue <= 0) {
       dataPoint.checkTooltipValue = '0'
     }
-     toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(dataPoint.checkTooltipValue + 'm')
+    toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(dataPoint.checkTooltipValue + 'm')
 
-     // Update tooltip left/right background
+    // Update tooltip left/right background
     updateToolTipBackground()
     // Update tooltip location
     toolTip.attr('transform', 'translate(' + toolTipX + ',' + toolTipY + ')')
