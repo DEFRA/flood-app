@@ -211,7 +211,11 @@
       {% for band in model.thresholds %}
       <div class="defra-flood-impact-list__row {% if band.isLatest %} defra-flood-impact-list__row--current {% elif band.isExceeded %} defra-flood-impact-list__row--exceeded{% endif %}" {% if band.type === 'historical' %} data-toggle-list-display-item="impact" {% endif %}>
         <dt class="defra-flood-impact-list__key">
-          {{ band.level }}m
+          {% if band.level < 0 %}
+            0m
+          {% else %}
+            {{ band.level }}m
+          {% endif %}
           {% if not band.isLatest and band.isExceeded %}
           <span class="govuk-visually-hidden">(level exceeded)</span>
           {% endif %}
