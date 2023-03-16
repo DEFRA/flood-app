@@ -178,8 +178,16 @@ class ViewModel {
 
       // FFOI processing
       if (forecast) {
+        // Note: thresolds from forecasting is probably now redundant (thresholds now come from the IMTD API
+        // We still process the thresolds but the discard them in favour of the IMTD ones
+        // Need to remove the redundant threshold prcessing code as a tech debt item.
         const { thresholds } = forecast
 
+        // In the absence of thresholds, need to decide what would be an indicator of a forecast station
+        // Options would be:
+        // * presence of forecast on s3
+        // * entry in ffoi_stations
+        // * some other option
         this.isFfoi = thresholds.length > 0
         if (this.isFfoi) {
           this.ffoi = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
