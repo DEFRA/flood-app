@@ -297,5 +297,5 @@
         "geometry":"{\"type\":\"Point\",\"coordinates\":[-3.03674273776571,53.8811798090409]}"
       }
     ],
-    "imtdThresholds": { "alert": "43.91", "warning": "43.91" }
+    "imtdThresholds": { "alert": "44.91", "warning": "43.91" }
   }

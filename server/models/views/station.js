@@ -5,6 +5,7 @@ const Station = require('./station-data')
 const Forecast = require('./station-forecast')
 const util = require('../../util')
 const tz = 'Europe/London'
+const processImtdThresholds = require('./lib/process-imtd-thresholds')
 
 class ViewModel {
   constructor (options) {
@@ -126,7 +127,6 @@ class ViewModel {
     this.status = this.station.status
     this.outOfDate = util.dateDiff(Date.now(), this.station.statusDate) <= 5
     this.porMaxValueIsProvisional = false
-    this.station.floodingIsPossible = false
     this.station.hasPercentiles = true
     this.station.hasImpacts = false
     this.warningsAlerts = warningsAlertsGroups
@@ -183,8 +183,16 @@ class ViewModel {
 
       // FFOI processing
       if (forecast) {
+        // Note: thresolds from forecasting is probably now redundant (thresholds now come from the IMTD API
+        // We still process the thresolds but the discard them in favour of the IMTD ones
+        // Need to remove the redundant threshold prcessing code as a tech debt item.
         const { thresholds } = forecast
 
+        // In the absence of thresholds, need to decide what would be an indicator of a forecast station
+        // Options would be:
+        // * presence of forecast on s3
+        // * entry in ffoi_stations
+        // * some other option
         this.isFfoi = thresholds.length > 0
         if (this.isFfoi) {
           this.ffoi = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
@@ -202,24 +210,8 @@ class ViewModel {
         this.phase = this.isFfoi ? 'beta' : false
       }
 
-      // River level and forecast message
-      this.atRiskFAL = this.alertThreshold &&
-        ((this.recentValue && parseFloat(this.recentValue._)) >= parseFloat(this.alertThreshold) ||
-          (this.hasForecast && this.ffoi.maxValue && parseFloat(this.ffoi.maxValue._) >= parseFloat(this.alertThreshold)))
-
-      this.atRiskFW = this.warningThreshold &&
-        ((this.recentValue && parseFloat(this.recentValue._)) >= parseFloat(this.warningThreshold) ||
-          (this.hasForecast && this.ffoi.maxValue && parseFloat(this.ffoi.maxValue._) >= parseFloat(this.warningThreshold)))
-
-      // Alerts and percentiles
-      this.station.floodingIsPossible = this.atRiskFAL || this.atRiskFW
-
       if (this.station.percentile5 && this.station.percentile95) {
-        if (!isNaN(this.station.percentile5) && !isNaN(this.station.percentile95)) {
-          if (parseFloat(this.recentValue._) >= parseFloat(this.station.percentile5)) {
-            this.station.floodingIsPossible = true
-          }
-        } else {
+        if (isNaN(this.station.percentile5) || isNaN(this.station.percentile95)) {
           this.station.hasPercentiles = false
         }
       } else {
@@ -293,48 +285,14 @@ class ViewModel {
       })
     }
 
-    const stationStageDatum = this.station.stageDatum
-    const stationSubtract = this.station.subtract
+    const processedImtdThresholds = processImtdThresholds(
+      imtdThresholds,
+      this.station.stageDatum,
+      this.station.subtract,
+      this.station.post_process
+    )
 
-    let imtdThresholdAlert = imtdThresholds?.alert
-    if (imtdThresholdAlert) {
-      if (this.station.post_process) {
-        if (stationStageDatum > 0) {
-          imtdThresholdAlert = imtdThresholdAlert - stationStageDatum
-        } else if (stationStageDatum <= 0 && stationSubtract > 0) {
-          imtdThresholdAlert = imtdThresholdAlert - stationSubtract
-        }
-      }
-      this.alertThreshold = parseFloat(imtdThresholdAlert).toFixed(2)
-      thresholds.push({
-        id: 'alertThreshold',
-        value: this.alertThreshold,
-        valueImtd: imtdThresholdAlert || 'n/a',
-        description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
-        shortname: 'Possible flood alerts'
-      })
-    }
-
-    let imtdThresholdWarning = imtdThresholds?.warning
-    if (imtdThresholdWarning) {
-      // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
-      if (this.station.post_process) {
-        if (stationStageDatum > 0) {
-          imtdThresholdWarning = imtdThresholdWarning - stationStageDatum
-        } else if (stationStageDatum <= 0 && stationSubtract > 0) {
-          imtdThresholdWarning = imtdThresholdWarning - stationSubtract
-        }
-      }
-
-      this.warningThreshold = parseFloat(imtdThresholdWarning).toFixed(2)
-      thresholds.push({
-        id: 'warningThreshold',
-        value: this.warningThreshold,
-        valueImtd: imtdThresholdWarning || 'n/a',
-        description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
-        shortname: 'Possible flood warnings'
-      })
-    }
+    thresholds.push(...processedImtdThresholds)
 
     if (this.station.percentile5) {
       // Only push typical range if it has a percentil5

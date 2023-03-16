@@ -1,6 +1,5 @@
 const moment = require('moment-timezone')
 const severity = require('../severity')
-const util = require('../../util')
 
 function Forecast (data, isCoastal, latestObserved) {
   if (data.values && data.values.SetofValues.length > 0) {
@@ -65,29 +64,8 @@ function Forecast (data, isCoastal, latestObserved) {
     1: 0,
     2: 0,
     3: 0,
-    4: 0,
-    FALThreshold: [],
-    FWThreshold: []
+    4: 0
   }
-  // TODO THIS NEEDS A REFACTOR BADLY
-  // Sort the thresholds and get their severity object
-  function sortThresholds (threshold) {
-    if (threshold.fwa_severity > -1) {
-      this.warnings[threshold.fwa_severity]++
-      threshold.notification = severity[threshold.fwa_severity - 1]
-    }
-
-    switch (threshold.fwa_type) {
-      case 'a':
-        this.warnings.FALThreshold.push(threshold)
-        break
-      case 'w':
-        this.warnings.FWThreshold.push(threshold)
-        break
-      default:
-    }
-  }
-  data.thresholds.forEach(sortThresholds, this)
 
   this.hasWarnings = this.warnings[1] > 0 || this.warnings[2] > 0 || this.warnings[3] > 0
   if (this.hasWarnings) {
@@ -112,19 +90,9 @@ function Forecast (data, isCoastal, latestObserved) {
     }
   }
 
-  this.alertThreshold = this.warnings.FALThreshold.length > 0
-    ? util.toFixed(this.warnings.FALThreshold[0].value, 2)
-    : undefined
-
-  this.warningThreshold = this.warnings.FWThreshold.length > 0
-    ? util.toFixed(this.warnings.FWThreshold[0].value, 2)
-    : undefined
-
   // client side JSON
   this.forecastJSON = JSON.stringify({
     hasForecast: this.hasForecastData,
-    alertThreshold: this.alertThreshold,
-    warningThreshold: this.warningThreshold,
     maxValue: this.maxValue
   })
 }
