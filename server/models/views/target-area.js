@@ -26,7 +26,7 @@ class ViewModel {
       fallbackText = '<p>We\'ll update this page when there\'s a flood warning in the area.</p><p>A flood warning means flooding to some property is expected. A severe flood warning means there\'s a danger to life.</p>'
     }
 
-    const eaTwitter = twitLink.find(({ area }) => area)
+    const eaTwitter = twitLink.find(t => t.area === area.area)
 
     let situation = fallbackText
     if (flood && flood.situation) {
