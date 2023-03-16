@@ -223,8 +223,10 @@ function LineChart (containerId, data) {
 
     // Set values below zero to display zero, rather than the actual value
     dataPoint.checkTooltipValue = Number(dataPoint._).toFixed(2)
-    if (dataPoint.checkTooltipValue <= 0) {
-      dataPoint.checkTooltipValue = '0'
+    if (!window.flood.model.station.isCoastal) {
+      if (dataPoint.checkTooltipValue <= 0) {
+        dataPoint.checkTooltipValue = '0'
+      }
     }
     toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(dataPoint.checkTooltipValue + 'm')
 
