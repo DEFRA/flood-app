@@ -67,10 +67,9 @@
     </p>
     <p><a data-journey-click="Target Area:Get Warnings:TA - Get warnings" href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email.</a></p>
 
-    <p>Flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warning{% else %}alert{% endif %} area: {{ model.area.description }}</p>
+    <p>Flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warning{% else %}alert{% endif %} area: {{ model.area.description }}. {% if model.eaTwitter%}<a class="govuk-link" href="https://twitter.com/{{model.eaTwitter}}">Follow Environment Agencys regional Twitter account for latest updates</a>{% endif %}</p>
     
     <div><span id="map"></span></div>
-
 
     <h2 class="govuk-heading-m">Latest river, sea, groundwater and rainfall levels</h2>
     <p>There are around 3,500 measuring stations, and most are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>

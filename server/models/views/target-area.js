@@ -1,5 +1,6 @@
 const severity = require('../severity')
 const moment = require('moment-timezone')
+const twitLink = require('../targetAreaTwitter')
 const { bingKeyMaps, floodRiskUrl } = require('../../config')
 
 class ViewModel {
@@ -35,6 +36,9 @@ class ViewModel {
       ? moment.tz(flood.situation_changed, 'Europe/London').format('h:mma')
       : moment.tz('Europe/London').format('h:mma')
 
+  
+    const eaTwitter = severityLevel.id != 4 ? twitLink.find(({ area }) => area === area) : false
+    
     const areaDescription = `Flood ${type} area: ${area.description}`
     const parentAreaAlert = (!!(((flood && severityLevel.id === 4) && (type === 'warning')) || !flood) && (parentSeverityLevel && parentSeverityLevel.isActive))
 
@@ -61,6 +65,7 @@ class ViewModel {
       situation: situation,
       parentAreaAlert: parentAreaAlert,
       areaDescription: areaDescription,
+      eaTwitter: eaTwitter.link,
       targetArea: area.code,
       feedback: false,
       mapTitle,
