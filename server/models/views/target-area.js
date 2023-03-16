@@ -31,7 +31,8 @@ class ViewModel {
     let situation = fallbackText
     if (flood && flood.situation) {
       const message = flood.situation.endsWith('.') ? flood.situation.slice(0, -1) : flood.situation
-      situation = `<p>${message}. Follow <a class="govuk-link" href="https://twitter.com/${eaTwitter.link}">@${eaTwitter.link}</a> on Twitter for the latest information in your area.</p>`
+      situation = `<p>${message}. Follow <a class="govuk-link" href="https://twitter.com/${eaTwitter.link}">@${eaTwitter.link}</a> on 
+      Twitter for the latest information in your area.</p>`
     }
 
     const dateSituationChanged = flood

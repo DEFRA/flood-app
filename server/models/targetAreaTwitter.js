@@ -15,14 +15,4 @@ const twitLink = [
   { area: 'Thames', link: 'EnvAgency' }
 ]
 
-// const areaSlug = {
-//   1: 'EnvAgencyNW',
-//   2: 'EnvAgencyyne',
-//   3: 'EnvAgencymids',
-//   4: 'EnvAgencyAnglia',
-//   5: 'EnvAgencySW',
-//   6: 'EnvAgencySE',
-//   7: 'EnvAgency'
-// }
-
 module.exports = twitLink
