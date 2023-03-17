@@ -1,18 +1,18 @@
 const twitLink = [
-  { area: 'Herts and North London', link: 'EnvAgencySW' },
-  { area: 'Lincs and Northants', link: 'EnvAgencyyne' },
-  { area: 'Devon and Cornwall', link: 'EnvAgencymids' },
-  { area: 'West Midlands', link: 'EnvAgencyAnglia' },
-  { area: 'East Midlands', link: 'EnvAgencySW' },
-  { area: 'East Anglia', link: 'EnvAgencySE' },
-  { area: 'Kent S London and E Sussex', link: 'EnvAgency' },
-  { area: 'North East', link: 'EnvAgency' },
-  { area: 'Yorkshire', link: 'EnvAgency' },
-  { area: 'Solent and South Downs', link: 'EnvAgency' },
-  { area: 'Gtr Mancs Mersey and Ches', link: 'EnvAgency' },
-  { area: 'Wessex', link: 'EnvAgency' },
-  { area: 'Cumbria and Lancashire', link: 'EnvAgency' },
-  { area: 'Thames', link: 'EnvAgency' }
+  { area: 'Herts and North London', link: 'EnvAgencySE' },
+  { area: 'Lincs and Northants', link: 'EnvAgencyMids' },
+  { area: 'Devon and Cornwall', link: 'EnvAgencySW' },
+  { area: 'West Midlands', link: 'EnvAgencyMids' },
+  { area: 'East Midlands', link: 'EnvAgencyMids' },
+  { area: 'East Anglia', link: 'EnvAgencyAnglia' },
+  { area: 'Kent S London and E Sussex', link: 'EnvAgencySE' },
+  { area: 'North East', link: 'EnvAgencyYNE' },
+  { area: 'Yorkshire', link: 'EnvAgencyYNE' },
+  { area: 'Solent and South Downs', link: 'EnvAgencySE' },
+  { area: 'Gtr Mancs Mersey and Ches', link: 'EnvAgencyNW' },
+  { area: 'Wessex', link: 'EnvAgencySW' },
+  { area: 'Cumbria and Lancashire', link: 'EnvAgencyNW' },
+  { area: 'Thames', link: 'EnvAgencySE' }
 ]
 
 module.exports = twitLink
