@@ -33,7 +33,7 @@ class ViewModel {
       flood.situation = flood.situation.trim()
       const message = flood.situation.endsWith('.') ? flood.situation.slice(0, -1) : flood.situation
       situation = `<p>${message}. Follow <a class="govuk-link" href="https://twitter.com/${eaTwitter.link}">@${eaTwitter.link}</a> on 
-      Twitter for the latest information in your area.</p>`
+      Twitter for information for your area.</p>`
     }
 
     const dateSituationChanged = flood
@@ -44,7 +44,10 @@ class ViewModel {
       ? moment.tz(flood.situation_changed, 'Europe/London').format('h:mma')
       : moment.tz('Europe/London').format('h:mma')
 
-    const areaDescription = `Flood ${type} area: ${area.description}`
+    area.description = area.description.trim()
+    const description = area.description.endsWith('.') ? area.description.slice(0, -1) : area.description
+    const areaDescription = `Flood ${type} area: ${description}.`
+
     const parentAreaAlert = (!!(((flood && severityLevel.id === 4) && (type === 'warning')) || !flood) && (parentSeverityLevel && parentSeverityLevel.isActive))
 
     let situationChanged = flood

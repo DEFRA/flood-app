@@ -290,8 +290,8 @@ lab.experiment('Target-area tests', () => {
           {
             ta_id: 229,
             ta_code: '011WAFDW',
-            ta_name: 'Upper River Derwent, Stonethwaite Beck and Derwent Water',
-            ta_description: 'The Upper Derwent from Seathwaite to Derwent Water',
+            ta_name: 'Upper River Derwent, Stonethwaite Beck and Derwent Water.',
+            ta_description: 'The Upper Derwent from Seathwaite to Derwent Water.',
             situation: 'Test Situation in target area',
             quick_dial: 141029,
             situation_changed: '2020-08-05T18:23:00.000Z',

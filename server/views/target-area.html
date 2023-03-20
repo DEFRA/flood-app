@@ -61,7 +61,7 @@
       {{ model.situation | safe }}
     </div>
 
-    <p>Flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warning{% else %}alert{% endif %} area: {{ model.area.description }}.</p>
+    <p>{{ model.areaDescription | safe }}</p>
   
     <p><a data-journey-click="Target Area:Station list:TA - View station list" href="/river-and-sea-levels/target-area/{{ model.targetArea }}">Find a river, sea, groundwater or rainfall level in this area</a></p>
 
