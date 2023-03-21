@@ -1,5 +1,6 @@
 const severity = require('../severity')
 const moment = require('moment-timezone')
+const twitLink = require('../targetAreaTwitter')
 const { bingKeyMaps, floodRiskUrl } = require('../../config')
 
 class ViewModel {
@@ -25,7 +26,15 @@ class ViewModel {
       fallbackText = '<p>We\'ll update this page when there\'s a flood warning in the area.</p><p>A flood warning means flooding to some property is expected. A severe flood warning means there\'s a danger to life.</p>'
     }
 
-    const situation = flood && flood.situation !== '' ? `<p>${flood.situation}</p>` : fallbackText
+    const eaTwitter = twitLink.find(t => t.area === area.area)
+
+    let situation = fallbackText
+    if (flood && flood.situation) {
+      flood.situation = flood.situation.trim()
+      const message = flood.situation.endsWith('.') ? flood.situation.slice(0, -1) : flood.situation
+      situation = `<p>${message}. Follow <a class="govuk-link" href="https://twitter.com/${eaTwitter.link}">@${eaTwitter.link}</a> on 
+      Twitter for information for your area.</p>`
+    }
 
     const dateSituationChanged = flood
       ? moment.tz(flood.situation_changed, 'Europe/London').format('D MMMM YYYY')
@@ -35,7 +44,10 @@ class ViewModel {
       ? moment.tz(flood.situation_changed, 'Europe/London').format('h:mma')
       : moment.tz('Europe/London').format('h:mma')
 
-    const areaDescription = `Flood ${type} area: ${area.description}`
+    area.description = area.description.trim()
+    const description = area.description.endsWith('.') ? area.description.slice(0, -1) : area.description
+    const areaDescription = `Flood ${type} area: ${description}.`
+
     const parentAreaAlert = (!!(((flood && severityLevel.id === 4) && (type === 'warning')) || !flood) && (parentSeverityLevel && parentSeverityLevel.isActive))
 
     let situationChanged = flood
