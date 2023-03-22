@@ -81,11 +81,9 @@ lab.experiment('Test - /station/{id}', () => {
       }
     }
 
-    const today = new Date()
-
     const fakeTelemetryData = () => [
       {
-        ts: today,
+        ts: '2022-02-08T08:30:00.000Z',
         _: 3.589,
         err: false,
         formattedTime: '6:00am',
@@ -174,7 +172,7 @@ lab.experiment('Test - /station/{id}', () => {
         geom: '0101000020E61000004F04711E4E60B6BFCA6B257497E44940',
         coordinates: '{"type":"Point","coordinates":[-0.087407,51.785872]}',
         comment: 'Property Flooding - Harts Horns Pub',
-        shortname: 'Floodining at pub',
+        shortname: 'Flooding at pub',
         description: 'Flooding at pub on Hornsmill Road',
         type: 'Property Impact',
         obsfloodyear: null,
@@ -359,7 +357,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     const fakeTelemetryData = () => [
       {
-        ts: '2020-03-13T01:30Z',
+        ts: '2022-02-08T08:30:00.000Z',
         _: 1.354,
         err: false
       }
@@ -1086,12 +1084,11 @@ lab.experiment('Test - /station/{id}', () => {
     }
 
     // const yesterday = moment().subtract(1, 'days').startOf('day')
-    const today = new Date()
 
     const fakeTelemetryData = () => [
       {
         // ts: yesterday,
-        ts: today,
+        ts: '2022-02-08T08:30:00.000Z',
         _: 3.589,
         err: false,
         formattedTime: '6:00am',
@@ -1331,8 +1328,7 @@ lab.experiment('Test - /station/{id}', () => {
       }
     }
 
-    // const yesterday = moment().subtract(1, 'days').startOf('day')
-    const today = moment.tz('Europe/London').add(30, 'm').toDate()
+    const today = new Date().toString()
 
     const formattedDate = moment.tz(today, 'Europe/London').format('h:mma')
 
@@ -1621,7 +1617,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     const fakeTelemetryData = () => [
       {
-        ts: newTime,
+        ts: '2022-02-08T08:30:00.000Z',
         _: 1.354,
         err: false
       }
