@@ -43,7 +43,7 @@ module.exports = {
       request.server.methods.flood.getStationForecastThresholds(id),
       request.server.methods.flood.getImpactData(station.rloi_id),
       request.server.methods.flood.getWarningsAlertsWithinStationBuffer(station.rloi_id),
-      request.server.methods.flood.getRiverStationByStationId(id)
+      request.server.methods.flood.getRiverStationByStationId(id, direction)
     ])
 
     if (station.status === 'Closed') {
