@@ -2,53 +2,14 @@
 .defra-button-start {
     @extend .govuk-button;
     @extend .govuk-button--secondary;
-    &:after {
-        content: '';
+    svg {
+        color: govuk-colour('black');
         display: inline-block;
         position:relative;
         margin-left:5px;
         vertical-align: middle;
         top:-1px;
-        width:13px;
-        height:15px;
-        background-image: svg-url('<svg width="13" height="15" viewBox="0 0 13 15" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M0.325,0l4.875,0l7.5,7.5l-7.5,7.5l-4.875,0l7.5,-7.5l-7.5,-7.5Z" style="fill-rule:nonzero;"/></svg>');
-        background-color:transparent;
-        background-size:13px 15px;
-        background-repeat: no-repeat;
-        background-position: top left;
     }
-}
-
-// Text button
-.defra-button-text {
-    @extend .govuk-body;
-    position: relative;
-    margin:0px;
-    color:$govuk-link-colour;
-    background-color: transparent;
-    border:0px;
-    text-align:left;
-    text-decoration: underline;
-    padding:0;
-    border-radius: 0;
-    cursor:pointer;
-    &:focus {
-        outline:3px solid transparent;
-        background-color: $govuk-focus-colour;
-        color: $govuk-text-colour !important;
-        box-shadow: 0 -2px #ffdd00, 0 4px currentColor;
-        text-decoration: none;
-    }
-    &:active {
-        color: $govuk-text-colour !important;
-    }
-    &:hover {
-        color:$govuk-link-hover-colour;
-    }
-}
-.defra-button-text-s {
-    @extend .defra-button-text;
-    @include govuk-font($size: 16);
 }
 
 // Secondoary button
@@ -63,7 +24,6 @@ button.defra-button-secondary {
     box-shadow: none;
     background-color: white;
     padding: 9px 10px 10px;
-    outline: 3px solid transparent;
     cursor: pointer;
     color: $govuk-text-colour;
     text-decoration: none;
@@ -71,12 +31,18 @@ button.defra-button-secondary {
         color: $govuk-text-colour;
     }
     &:hover {
-        background-color: #dbdad9;
+        background-color: govuk-colour('light-grey');
     }
     &:focus {
         background-color: $govuk-focus-colour;
         border-color: $govuk-focus-colour;
-        box-shadow: 0 4px 0 govuk-colour('black');
+        box-shadow: 0 2px 0 govuk-colour('black');
+        outline: 3px solid transparent;
+    }
+    &:not([keyboard-focus]):focus {
+        background-color: white;
+        border: 1px solid govuk-colour('mid-grey');
+        box-shadow: none;
     }
     &--icon {
         padding-left: 31px;
@@ -95,29 +61,50 @@ button.defra-button-secondary {
     padding: 6px 7px 7px;
 }
 
-// Text buttons with icons
-.defra-link-s {
+// Buttons like hyperlinks
+.defra-button-text {
+    @extend .govuk-link;
+    position: relative;
+    margin:0px;
+    padding:0;
+    color:$govuk-link-colour;
+    background-color: transparent;
+    border:0px;
+    text-align:left;
+    border-radius: 0;
+    cursor:pointer;
+}
+.defra-button-text-s {
+    @extend .defra-button-text;
+    @include govuk-font($size: 19);
+    @include mq ($from: tablet) {
+      @include govuk-font($size: 16);
+    }
+}
+
+// Hyperlinks with icons
+.defra-link-icon {
     position:relative;
     display:inline-block;
     margin-right: 5px;
-    margin-bottom: 10px;
-    @include govuk-font($size: 16);
+    @include govuk-font($size: 19);
     &:last-of-type {
         margin-right: 0px;
     }
     @include mq ($from: tablet) {
         margin-right: 10px;
     }
-}
-.defra-link-icon-s {
-    @extend .defra-link-s;
-    padding-left:21px;
     svg {
-        position: absolute;
+        position: relative;
+        display: inline-block;
         color: govuk-colour('black');
-        top:50%;
-        margin-top: -10px;
-        left:1px;
+        vertical-align: top;
+        margin-right: 7px;
+        top: 1px;
+        @include mq ($from: tablet) {
+            margin-right: 8px;
+            top: 4px;
+        }
     }
     &:hover svg {
         color: $govuk-link-hover-colour;
@@ -125,5 +112,17 @@ button.defra-button-secondary {
     &:focus svg,
     &:active svg {
         color: govuk-colour('black');
+    }
+}
+.defra-link-icon-s {
+    @extend .defra-link-icon;
+    @include govuk-font($size: 19);
+    @include mq ($from: tablet) {
+      @include govuk-font($size: 16);
+    }
+    svg {
+        margin-right: 6px;
+        margin-bottom: -4px;
+        top: 0px;
     }
 }

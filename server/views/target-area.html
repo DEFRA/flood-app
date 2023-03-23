@@ -51,30 +51,29 @@
     </div>
     {% endif %}
 
-    <h1 class="govuk-heading-xl">{{ model.pageTitle }}</h1>
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-1">{{ model.pageTitle }}</h1>
+    <p class="defra-flood-meta govuk-!-margin-top-1 govuk-!-margin-bottom-0">
+      <time datetime="{{model.situationChanged}}">{{model.situationChanged}}</time>
+    </p>
+    <span id="map"></span>
 
-  </div>
-</div>
+    <div class="govuk-!-padding-top-6">
+      {{ model.situation | safe }}
+    </div>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    {{ model.situation | safe }}
+    <p>{{ model.areaDescription | safe }}</p>
+  
+    <p><a data-journey-click="Target Area:Station list:TA - View station list" href="/river-and-sea-levels/target-area/{{ model.targetArea }}">Find a river, sea, groundwater or rainfall level in this area</a></p>
+
+    <p>
+      <a data-journey-click="Target Area:Get Warnings:TA - Get warnings" href="https://www.gov.uk/sign-up-for-flood-warnings" class="defra-link-icon">
+        <svg viewBox="0 0 14 20" width="14" height="20" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" fill="currentColor"><path d="M9.27 15.747C9.27 16.99 8.26 18 7.016 18s-2.253-1.01-2.253-2.253H9.27zM6.015 1.86v-.859A1 1 0 0 1 7.016 0c.553 0 1.002.449 1.002 1.001v.859c2.284.465 4.006 2.487 4.006 4.907v4.357l1.628 1.661c.488.489.488 1.282 0 1.771a1.25 1.25 0 0 1-.886.366H1.252a1.25 1.25 0 0 1-.886-.366c-.488-.489-.488-1.282 0-1.771l1.643-1.661V6.767c0-2.42 1.721-4.442 4.006-4.907z"></path></svg>Get flood warnings by phone, text or email.
+      </a>
+    </p>
+
     {% if model.severity %}
     <p>Could this information be better? <a href="https://defragroup.eu.qualtrics.com/jfe/form/SV_26xlu1fVwKTHkwu?Source={{fullUrl}}">Tell us how to improve it.</a></p>
     {% endif %}
-    <p class="defra-flood-meta defra-flood-meta--border govuk-!-margin-top-6 govuk-!-margin-bottom-6">
-      <time datetime="{{model.situationChanged}}">{{model.situationChanged}}</time>
-    </p>
-    <p><a data-journey-click="Target Area:Get Warnings:TA - Get warnings" href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email.</a></p>
-
-    <p>Flood {% if model.area.code.slice(4,5).toLowerCase() == 'w'%}warning{% else %}alert{% endif %} area: {{ model.area.description }}</p>
-    
-    <div><span id="map"></span></div>
-
-
-    <h2 class="govuk-heading-m">Latest river, sea, groundwater and rainfall levels</h2>
-    <p>There are around 3,500 measuring stations, and most are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
-    <p><a data-journey-click="Target Area:Station list:TA - View station list" href="/river-and-sea-levels/target-area/{{ model.targetArea }}">Find a river, sea, groundwater or rainfall level in this area</a></p>
 
     {% include "partials/context-footer.html" %}
     {% include "partials/social.html" %}
