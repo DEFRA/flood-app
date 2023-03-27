@@ -28,7 +28,7 @@
   }
   &__head &__cell {
     text-align: left;
-    @include govuk-font($size: 16);
+    @include govuk-font($size: 16, $weight: bold);
     @include mq ($until: tablet) {
       color: $govuk-secondary-text-colour;
     }
