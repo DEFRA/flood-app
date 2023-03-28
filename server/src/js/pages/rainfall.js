@@ -30,7 +30,7 @@ if (document.getElementById('bar-chart')) {
   window.flood.charts.createBarChart('bar-chart', window.flood.model.stationId, window.flood.model.telemetry)
 }
 
-// Add toggletips
-if (document.querySelectorAll('.defra-toggletip')) {
+// Toggletips
+if (document.querySelectorAll('[data-toggletip]')) {
   window.flood.createToggletips()
 }

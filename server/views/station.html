@@ -119,7 +119,7 @@
             </div>
           {% endif %}
           <div class="defra-flood-statistics defra-flood-statistics--border">
-            <div class="govuk-!-margin-top-4">
+            <div class="govuk-!-margin-top-4" data-toggletip data-toggletip-label="More information about the latest reading" data-toggletip-content="We get readings more often as the risk of flooding increases.">
               <h2 class="govuk-heading-s govuk-!-margin-bottom-0">
                 Latest at {{ model.station.recentValue.formattedTime }}, {{ model.station.recentValue.latestDayFormatted }}
               </h2>
@@ -128,23 +128,27 @@
               <div class="defra-flood-statistics__item">
                 <dt class="defra-flood-statistics__key">Height</dt>
                 <dd class="defra-flood-statistics__value">
+                  <span {% if model.station.isGroundwater or model.station.isRiver %}data-toggletip data-toggletip-label="More information about the height" data-toggletip-content="{{ model.infoHeight }}"{% endif %}>
                   {% if model.station.isRiver and model.recentValueBelowZero %}
                     &le; 0m
                   {% else %}
                     {{ (model.station.recentValue._).toFixed(2) }}m
                   {% endif %}
+                </span>
                 </dd>
               </div>
+              {% if model.station.trend %}
               <div class="defra-flood-statistics__item"> 
-                <dt class="defra-flood-statistics__key">Trend</dt>
+                <dt class="defra-flood-statistics__key">
+                  Trend
+                </dt>
                 <dd class="defra-flood-statistics__value">
-                  {% if model.trend %}
-                  {{ model.station.trend | capitalize }}
-                  {% else %}
-                  n/a
-                  {% endif %}
+                  <span data-toggletip data-toggletip-label="More information about the trend" data-toggletip-content="{{ model.infoTrend }}">
+                    {{ model.station.trend | capitalize }}
+                  </span>
                 </dd>
               </div>
+              {% endif %}
             {# if station has hasPercentiles, this should exclude Coastal #}
               {% if model.station.hasPercentiles and not model.station.isCoastal  %}
               <div class="defra-flood-statistics__item"> 
