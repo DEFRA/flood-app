@@ -83,13 +83,13 @@
             {% if model.queryGroup != 'rainfall' %}style="display:none"{% endif %}
             {%- endset -%}
             <tr role="row" data-group-type="rainfall" {{ hideRainfallHeader | safe }}>
-              <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--location" scope="col" role="columnheader">Gauge</th>
+              <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--location" scope="col" role="columnheader">Measuring station</th>
               <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" scope="col" role="columnheader">1 hour</th>
               <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" scope="col" role="columnheader">6 hours</th>
               <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" scope="col" role="columnheader">24 hours</th>
             </tr>
             <tr role="row" data-group-type="river,sea,groundwater" {{ hideHeader | safe }}>
-              <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--location" scope="col" role="columnheader">Gauge</th>
+              <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--location" scope="col" role="columnheader">Measuring station</th>
               <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--height" scope="col" role="columnheader">Height</th>
               <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--trend" scope="col" role="columnheader">Trend</th>
               <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--state" scope="col" role="columnheader">State</th>
