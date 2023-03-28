@@ -273,14 +273,13 @@ class ViewModel {
 
     if (this.station.recentValue && !this.station.recentValue.err) {
       let tVal = this.station.recentValue._.toFixed(2)
-      console.log(tVal)
       if (tVal <= 0) {
         tVal = 0
       }
       thresholds.push({
         id: 'latest',
         value: tVal,
-        description: 'Latest levelx',
+        description: 'Latest level',
         shortname: ''
       })
     }
