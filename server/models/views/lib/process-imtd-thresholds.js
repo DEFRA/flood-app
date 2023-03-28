@@ -15,16 +15,6 @@ function processThreshold (threshold, stationStageDatum, stationSubtract, postPr
 function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtract, postProcess) {
   const thresholds = []
 
-  const imtdThresholdAlert = processThreshold(imtdThresholds?.alert, stationStageDatum, stationSubtract, postProcess)
-  if (imtdThresholdAlert) {
-    thresholds.push({
-      id: 'alertThreshold',
-      description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
-      shortname: 'Possible flood alerts',
-      value: imtdThresholdAlert
-    })
-  }
-
   const imtdThresholdWarning = processThreshold(imtdThresholds?.warning, stationStageDatum, stationSubtract, postProcess)
   if (imtdThresholdWarning) {
     // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
@@ -33,6 +23,16 @@ function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtra
       description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
       shortname: 'Possible flood warnings',
       value: imtdThresholdWarning
+    })
+  }
+
+  const imtdThresholdAlert = processThreshold(imtdThresholds?.alert, stationStageDatum, stationSubtract, postProcess)
+  if (imtdThresholdAlert) {
+    thresholds.push({
+      id: 'alertThreshold',
+      description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
+      shortname: 'Possible flood alerts',
+      value: imtdThresholdAlert
     })
   }
   return thresholds
