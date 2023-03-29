@@ -71,7 +71,9 @@
             1 hour
           </dt>
           <dd class="defra-flood-statistics__value">
-            {{ model.telemetryRainfall.latest1hr }}mm
+            <span data-toggletip data-toggletip-label="More information about the 1 hour total" data-toggletip-content="Total for the hour up to {{ model.latestTimeFormatted }}, {{ model.latestDayFormatted }}">
+              {{ model.telemetryRainfall.latest1hr }}mm
+              </span>
           </dd>
         </div>
         <div class="defra-flood-statistics__item"> 
@@ -79,7 +81,9 @@
             6 hours
           </dt>
           <dd class="defra-flood-statistics__value">
-            {{ model.telemetryRainfall.latest6hr }}mm
+            <span data-toggletip data-toggletip-label="More information about the 6 hour total" data-toggletip-content="Total for the 6 hours up to {{ model.latestTimeFormatted }}, {{ model.latestDayFormatted }}">
+              {{ model.telemetryRainfall.latest6hr }}mm
+              </span>
           </dd>
         </div>
         <div class="defra-flood-statistics__item"> 
@@ -87,7 +91,9 @@
             24 hours
           </dt>
           <dd class="defra-flood-statistics__value">
-            {{ model.telemetryRainfall.latest24hr }}mm
+            <span data-toggletip data-toggletip-label="More information about the 24 hour total" data-toggletip-content="Total for the 24 hours up to {{ model.latestTimeFormatted }}, {{ model.latestDayFormatted }}">
+              {{ model.telemetryRainfall.latest24hr }}mm
+              </span>
           </dd>
         </div>
       </dl>

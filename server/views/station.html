@@ -154,7 +154,9 @@
               <div class="defra-flood-statistics__item"> 
                 <dt class="defra-flood-statistics__key">State</dt>
                 <dd class="defra-flood-statistics__value">
-                    {{ model.station.state }}
+                  <span {% if model.station.isGroundwater or model.station.isRiver %}data-toggletip data-toggletip-label="More information about the state" data-toggletip-content="{{ model.infoState }}"{% endif %}>
+                    {{ model.station.state | capitalize }}
+                    </span>
                 </dd>
               </div>
               {% endif %}

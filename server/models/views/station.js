@@ -340,23 +340,23 @@ class ViewModel {
       })
     }
 
-        // Toggletips
-        if (this.station.type === 's' || this.station.type === 'm' || this.station.type === 'g') {
-          this.infoHeight = (() => {
-            if (station.stageDatum <= 0) {
-              return 'This station measures height from sea level.'
-            } else if (this.recentValueBelowZero) {
-              return 'This station measures height from a fixed point on or close to the riverbed. A reading of 0 metres can be normal for some stations because of natural changes to the riverbed.'
-            } else {
-              return 'This station measures height from a fixed point on or close to the riverbed.'
-            }
-          })()
-          this.infoState = (() => {
-            const state = station.state === 'high' ? 'above' : station.state === 'low' ? 'below' : 'within'
-            return `There are 3 states: low, normal and high. The latest level is ${state} the normal range. We calculate the normal range using an average of past measurements and other local factors.`
-          })()
+    // Toggletips
+    if (this.station.type === 's' || this.station.type === 'm' || this.station.type === 'g') {
+      this.infoHeight = (() => {
+        if (station.stageDatum <= 0) {
+          return 'This station measures height from sea level.'
+        } else if (this.recentValueBelowZero) {
+          return 'This station measures height from a fixed point on or close to the riverbed. A reading of 0 metres can be normal for some stations because of natural changes to the riverbed.'
+        } else {
+          return 'This station measures height from a fixed point on or close to the riverbed.'
         }
-        this.infoTrend = 'The last 2 readings indicate the trend.'
+      })()
+      this.infoState = (() => {
+        const state = station.state === 'high' ? 'above' : station.state === 'low' ? 'below' : 'within'
+        return `There are 3 states: low, normal and high. The latest level is ${state} the normal range. We calculate the normal range using an average of past measurements and other local factors.`
+      })()
+    }
+    this.infoTrend = 'The last 2 readings indicate the trend.'
 
     // Group and sort thresholds
     thresholds = thresholds.reduce(
