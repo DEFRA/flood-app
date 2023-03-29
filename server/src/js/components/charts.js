@@ -56,8 +56,6 @@ function LineChart (containerId, data) {
     .y((d) => { return yScale(d._) })
 
   // Set level and date formats
-  const parseTime = timeFormat('%-I:%M%p')
-  const parseDate = timeFormat('%e %b')
   const parseDateShort = timeFormat('%-e/%-m')
   const parseDateLong = timeFormat('%a, %e %b')
 
@@ -222,8 +220,16 @@ function LineChart (containerId, data) {
     dataPoint._ = d._
     toolTipX = xScale(new Date(dataPoint.ts))
     toolTipY = pointer(e)[1]
-    toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(Number(dataPoint._).toFixed(2) + 'm')
-    toolTip.select('text').append('tspan').attr('x', 12).attr('dy', '1.4em').text(parseTime(new Date(dataPoint.ts)).toLowerCase() + ', ' + parseDate(new Date(dataPoint.ts)))
+
+    // Set values below zero to display zero, rather than the actual value
+    dataPoint.checkTooltipValue = Number(dataPoint._).toFixed(2)
+    if (!window.flood.model.station.isCoastal) {
+      if (dataPoint.checkTooltipValue <= 0) {
+        dataPoint.checkTooltipValue = '0'
+      }
+    }
+    toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(dataPoint.checkTooltipValue + 'm')
+
     // Update tooltip left/right background
     updateToolTipBackground()
     // Update tooltip location
@@ -310,6 +316,13 @@ function LineChart (containerId, data) {
   if (hasObserved) {
     clipInner.append('g').classed('observed observed-focus', true)
     const observedLine = lines.filter(l => l.type === 'observed')
+    if (!window.flood.model.station.isCoastal) {
+      for (let o = 0; o < observedLine.length; o++) {
+        if (observedLine[o]._ < 0) {
+          observedLine[o]._ = 0
+        }
+      }
+    }
     observedArea = svg.select('.observed').append('path').datum(observedLine).classed('observed-area', true)
     observed = svg.select('.observed').append('path').datum(observedLine).classed('observed-line', true)
   }
@@ -457,9 +470,9 @@ function LineChart (containerId, data) {
     thresholdsContainer.on('mouseover', (e) => {
       if (e.target.closest('.threshold')) hideTooltip()
     })
-  } else {
-    // no Values so hide chart div
-    document.getElementsByClassName('defra-line-chart')[0].style.display = 'none'
+  // } else {
+    // no Values so hide chart div <- DISABLED
+    // document.getElementsByClassName('defra-line-chart')[0].style.display = 'none'
   }
 }
 
