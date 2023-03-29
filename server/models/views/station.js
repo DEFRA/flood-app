@@ -341,9 +341,9 @@ class ViewModel {
     }
 
     // Toggletips
-    if (this.station.type === 's' || this.station.type === 'm' || this.station.type === 'g') {
+    if (this.station.type === 's' || this.station.type === 'm' || this.station.type === 'g' || this.station.type === 'c') {
       this.infoHeight = (() => {
-        if (station.stageDatum <= 0) {
+        if (station.stage_datum <= 0) {
           return 'This station measures height from sea level.'
         } else if (this.recentValueBelowZero) {
           return 'This station measures height from a fixed point on or close to the riverbed. A reading of 0 metres can be normal for some stations because of natural changes to the riverbed.'
@@ -352,7 +352,7 @@ class ViewModel {
         }
       })()
       this.infoState = (() => {
-        const state = station.state === 'high' ? 'above' : station.state === 'low' ? 'below' : 'within'
+        const state = this.station.state === 'High' ? 'above' : this.station.state === 'Low' ? 'below' : 'within'
         return `There are 3 states: low, normal and high. The latest level is ${state} the normal range. We calculate the normal range using an average of past measurements and other local factors.`
       })()
     }
