@@ -358,7 +358,7 @@ function LiveMap (mapId, options) {
     const formattedExpiredTime = moment(date).tz('Europe/London').format('h:mma')
     const formattedExpiredDate = moment(date).tz('Europe/London').format('D MMMM')
 
-    return `Totals up to ${formattedExpiredTime}, ${formattedExpiredDate}`
+    return `Totals up to ${formattedExpiredTime} on ${formattedExpiredDate}`
   }
 
   // Time format function
@@ -386,7 +386,7 @@ function LiveMap (mapId, options) {
     model.id = feature.getId().substring(feature.getId().indexOf('.') + 1)
     // Format dates for river levels
     if (feature.getId().startsWith('stations')) {
-      model.date = `${formatTime(new Date(model.value_date))}, ${formatDayMonth(new Date(model.value_date))}`
+      model.date = `${formatTime(new Date(model.value_date))} on ${formatDayMonth(new Date(model.value_date))}`
       model.state = feature.get('state')
       model.trend = feature.get('trend')
     }
