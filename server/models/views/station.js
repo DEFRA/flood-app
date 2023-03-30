@@ -347,7 +347,7 @@ class ViewModel {
     // Toggletips
     if ((this.station.type === 's') || (this.station.type === 'm') || (this.station.type === 'g') || (this.station.isTidal)) {
       this.infoHeight = (() => {
-        if (station.stage_datum <= 0) {
+        if (Number(station.stage_datum) === 0) {
           return 'This station measures height from sea level.'
         } else if (this.recentValueBelowZero) {
           return 'This station measures height from a fixed point on or close to the riverbed.' +
