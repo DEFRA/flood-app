@@ -223,13 +223,13 @@ lab.experiment('Flood service test', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/river-station-by-station-id/5031')
+      .withArgs('http://server2/river-station-by-station-id/5031/u')
       .once()
       .returns('ok')
 
     const floodService = require('../../server/services/flood')
 
-    const result = await floodService.getRiverStationByStationId(5031)
+    const result = await floodService.getRiverStationByStationId(5031, 'u')
 
     Code.expect(result).to.equal('ok')
   })

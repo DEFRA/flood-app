@@ -185,8 +185,11 @@ function getFormattedTime (station) {
   } else if (station.value_timestamp) {
     const formattedTime = moment(station.value_timestamp).tz('Europe/London').format('h:mma')
     const formattedDate = moment(station.value_timestamp).tz('Europe/London').format('D MMMM')
-
-    return `Updated ${formattedTime}, ${formattedDate} `
+    if (station.station_type === 'R') {
+      return `Totals up to ${formattedTime}, ${formattedDate} `
+    } else {
+      return `Latest at ${formattedTime}, ${formattedDate} `
+    }
   }
   return null
 }
@@ -232,12 +235,19 @@ function deleteUndefinedProperties (stations) {
 }
 
 function setStationProperties (station) {
+  const trendSvgPaths = {
+    falling: 'M9.844 8.419l2.116-2.116 1.697 7.354-7.354-1.697 2.128-2.128-6.789-6.788L3.056 1.63l6.788 6.789z',
+    rising: 'M8.419 6.156L6.303 4.04l7.354-1.697-1.697 7.354-2.128-2.128-6.788 6.789-1.414-1.414 6.789-6.788z',
+    steady: 'M9.6,6.992l0,-2.992l6.4,4l-6.4,4l0,-3.009l-9.6,0l0,-1.999l9.6,0Z'
+  }
   station.external_name = formatName(station.external_name)
   station.displayData = getDisplayData(station)
   station.latestDatetime = station.status === 'Active' ? getFormattedTime(station) : null
   station.formattedValue = station.status === 'Active' ? formatValue(station, station.value) : null
   station.state = getStationState(station)
   station.group_type = getStationGroup(station)
+  station.trend = station.displayData ? station.trend : null
+  station.trendSvgPath = trendSvgPaths[station.trend]
 }
 
 function getClientModel (placeBox = []) {

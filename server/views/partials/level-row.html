@@ -31,15 +31,12 @@
   {% if item.group_type == 'rainfall' %}
   <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" role="cell">
     {{ item.one_hr_total }}mm
-    <span class="defra-flood-levels-table-meta">last hour</span>
   </td>
   <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" role="cell">
     {{ item.six_hr_total }}mm
-    <span class="defra-flood-levels-table-meta">last 6hrs</span>
   </td>
   <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" role="cell">
     {{ item.day_total }}mm
-    <span class="defra-flood-levels-table-meta">last 24hrs</span>
   </td>
 
   <!-- Sea or tide -->
@@ -60,6 +57,20 @@
   <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--height" role="cell">
     {% if item.formattedValue %}
     <span class="defra-flood-levels-table-numeric">{{ item.formattedValue }}</span>
+    {% else %}
+    <span class="defra-flood-levels-table-na">n/a</a>
+    {% endif %}
+  </td>
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--trend" role="cell">
+    {% if item.trend %}
+      <span class="defra-flood-levels-table-trend">
+        <span class="defra-flood-levels-table-trend__icon defra-flood-levels-tables-trend__icon--{{ item.trend }}">
+          <svg width="16" height="16" viewBox="0 0 16 16" style="fill:currentColor">
+            <path d="{{ item.trendSvgPath }}"></path>
+          </svg>
+        </span>
+        {{ item.trend }}
+      </span>
     {% else %}
     <span class="defra-flood-levels-table-na">n/a</a>
     {% endif %}

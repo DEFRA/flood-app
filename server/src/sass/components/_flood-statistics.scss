@@ -1,50 +1,31 @@
 .defra-flood-statistics {
-    border-top: 1px solid $govuk-border-colour;
-    border-bottom: 1px solid $govuk-border-colour;
     &__list {
         margin:0;
-        @include mq ($from: tablet) {
-            margin-left:-15px;
-            margin-right:-15px;
-        }
     }
     &__list:after {
         content:'';
         display:block;
         clear:both;
     }
-    &__column-one-quarter {
-        width:50%;
-        box-sizing: border-box;
-        padding-right: 10px;
-        float:left;
-        @include mq ($from: tablet) {
-            padding: 0px 15px;
-            width:33.33%;
-        }
-    }
-    &__column-one-third {
+    &__item {
         width:33.33%;
         box-sizing: border-box;
         padding-right: 10px;
         float:left;
-        @include mq ($from: tablet) {
-            padding: 0px 15px;
+        min-width: 6em;
+        @include mq ($from: desktop) {
+            width: 25%;
         }
     }
     &__key {
-        // @include govuk-font($size: 19, $weight: bold);
         @include govuk-font($size: 19);
-        padding-top: 20px;
-        margin-bottom: 5px;
+        color: $govuk-secondary-text-colour;
     }
     &__value {
-        @include govuk-font($size: 36);
-        // color: govuk-colour('blue');
+        @include govuk-font($size: 27);
         margin:0;
         display: block;
         box-sizing: border-box;
-        padding-bottom: 20px;
     }
     &__value::first-letter {
         margin-left: -0.075em;
@@ -53,10 +34,15 @@
         border-bottom: 0px;
         margin-bottom: 0px;
     }
-    &__value-detail {
-        @include govuk-font($size: 16);
-        color: $govuk-text-colour;
-        margin-top: 5px;
-        display: block;
+    &--border {
+        border-top: 1px solid $govuk-border-colour;
+        border-bottom: 1px solid $govuk-border-colour;
+        padding-bottom: 15px; 
+        @include mq ($from: tablet) {
+            padding-bottom: 20px;
+        }
+    }
+    &--border &__key {
+        padding-top: 15px;
     }
 }

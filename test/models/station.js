@@ -29,6 +29,7 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.station.state).to.equal('Normal')
     Code.expect(Result.station.stateInformation).to.equal('0.35m to 2.84m')
     Code.expect(Result.station.status).to.equal('active')
+    Code.expect(Result.trend).to.equal('steady')
     Code.expect(Result.banner).to.equal(0)
     Code.expect(Result.pageTitle).to.equal('River Adur level at Beeding Bridge')
     Code.expect(Result.dataOverHourOld).to.equal(true)
@@ -189,5 +190,38 @@ lab.experiment('Station model test', () => {
 
     // 480 telemetry values went in to the model, should be one less
     Code.expect(Result.telemetry.length).to.equal(479)
+  })
+  lab.test('Test station viewModel returns Sea Level Height ToggleTip', async () => {
+    const stationData = data.toggleTipSeaLevelStation
+
+    const viewModel = new ViewModel(stationData)
+
+    const Result = viewModel
+
+    Code.expect(Result.infoHeight).to.equal('This station measures height from sea level.')
+    Code.expect(Result.infoTrend).to.equal('The last 2 readings indicate the trend.')
+    Code.expect(Result.infoState).to.equal('There are 3 states: low, normal and high. The latest level is within the normal range. We calculate the normal range using an average of past measurements and other local factors.')
+  })
+  lab.test('Test station viewModel returns Below Zero Height ToggleTip', async () => {
+    const stationData = data.toggleTipBelowZeroStation
+
+    const viewModel = new ViewModel(stationData)
+
+    const Result = viewModel
+
+    Code.expect(Result.infoHeight).to.equal('This station measures height from a fixed point on or close to the riverbed. A reading of 0 metres can be normal for some stations because of natural changes to the riverbed.')
+    Code.expect(Result.infoTrend).to.equal('The last 2 readings indicate the trend.')
+    Code.expect(Result.infoState).to.equal('There are 3 states: low, normal and high. The latest level is below the normal range. We calculate the normal range using an average of past measurements and other local factors.')
+  })
+  lab.test('Test station viewModel returns River Bed Height ToggleTip', async () => {
+    const stationData = data.toggleTipRiverBedStation
+
+    const viewModel = new ViewModel(stationData)
+
+    const Result = viewModel
+
+    Code.expect(Result.infoHeight).to.equal('This station measures height from a fixed point on or close to the riverbed.')
+    Code.expect(Result.infoTrend).to.equal('The last 2 readings indicate the trend.')
+    Code.expect(Result.infoState).to.equal('There are 3 states: low, normal and high. The latest level is above the normal range. We calculate the normal range using an average of past measurements and other local factors.')
   })
 })

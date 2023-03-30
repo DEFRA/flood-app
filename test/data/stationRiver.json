@@ -78,6 +78,7 @@
             "value":"0.805",
             "value_timestamp":"2020-07-13T12:00:00.000Z",
             "value_erred":false,
+            "trend":"steady",
             "percentile_5":"2.84",
             "percentile_95":"0.353",
             "centroid":"0101000020E6100000CCA1A09030A3D3BFB42568DA00714940",

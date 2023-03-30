@@ -81,11 +81,9 @@ lab.experiment('Test - /station/{id}', () => {
       }
     }
 
-    const today = new Date()
-
     const fakeTelemetryData = () => [
       {
-        ts: today,
+        ts: '2022-02-08T08:30:00.000Z',
         _: 3.589,
         err: false,
         formattedTime: '6:00am',
@@ -174,7 +172,7 @@ lab.experiment('Test - /station/{id}', () => {
         geom: '0101000020E61000004F04711E4E60B6BFCA6B257497E44940',
         coordinates: '{"type":"Point","coordinates":[-0.087407,51.785872]}',
         comment: 'Property Flooding - Harts Horns Pub',
-        shortname: 'Floodining at pub',
+        shortname: 'Flooding at pub',
         description: 'Flooding at pub on Hornsmill Road',
         type: 'Property Impact',
         obsfloodyear: null,
@@ -347,17 +345,19 @@ lab.experiment('Test - /station/{id}', () => {
         value: '9.567',
         value_timestamp: '2020-03-17T04:30:00.000Z',
         value_erred: false,
+        trend: 'steady',
         percentile_5: '3.5',
         percentile_95: '0.15',
         centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
         lon: -2.68044442027032,
-        lat: 53.7529105624953
+        lat: 53.7529105624953,
+        id: '2695'
       }
     }
 
     const fakeTelemetryData = () => [
       {
-        ts: '2020-03-13T01:30Z',
+        ts: '2022-02-08T08:30:00.000Z',
         _: 1.354,
         err: false
       }
@@ -401,11 +401,12 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
     Code.expect(response.payload).to.contain('Normal')
+    Code.expect(response.payload).to.contain('Steady')
     Code.expect(response.payload).to.contain('0.15m to 3.50m')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146" class="defra-flood-nav__link">Nearby levels</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5122" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>')
     Code.expect(response.payload).to.contain('<h2 class="govuk-heading-s govuk-!-margin-top-0">Share this page</h2>')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-2">Download height data CSV (12KB)</a>')
+    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-secondary defra-button-secondary--icon"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download height data CSV (12KB)</a>')
   })
   lab.test('GET station/2042/downstream ', async () => {
     const floodService = require('../../server/services/flood')
@@ -480,11 +481,13 @@ lab.experiment('Test - /station/{id}', () => {
         value: '0.341',
         value_timestamp: '2020-03-18T08:00:00.000Z',
         value_erred: false,
+        trend: 'steady',
         percentile_5: '0.659',
         percentile_95: '0.098',
         centroid: '0101000020E61000003F2646D543C5F2BF161F852994324A40',
         lon: -1.17316039381184,
-        lat: 52.3951465511329
+        lat: 52.3951465511329,
+        id: '2695'
       }
     }
 
@@ -610,11 +613,13 @@ lab.experiment('Test - /station/{id}', () => {
         value: '9.567',
         value_timestamp: '2020-03-17T04:30:00.000Z',
         value_erred: false,
+        trend: 'falling',
         percentile_5: '3.5',
         percentile_95: '0.15',
         centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
         lon: -2.68044442027032,
-        lat: 53.7529105624953
+        lat: 53.7529105624953,
+        id: '2695'
       }
     }
 
@@ -664,7 +669,8 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
     Code.expect(response.payload).to.contain('High')
-    Code.expect(response.payload).to.contain('<time datetime="">1:30am</time>')
+    Code.expect(response.payload).to.contain('Falling')
+    Code.expect(response.payload).to.contain('Latest at 1:30am')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146" class="defra-flood-nav__link">Nearby levels</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5122" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>')
     Code.expect(response.payload).to.not.contain('Go downstream</a>')
@@ -835,11 +841,13 @@ lab.experiment('Test - /station/{id}', () => {
         value: '9.567',
         value_timestamp: '2020-03-17T04:30:00.000Z',
         value_erred: false,
+        trend: 'rising',
         percentile_5: '3.5',
         percentile_95: '0.15',
         centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
         lon: -2.68044442027032,
-        lat: 53.7529105624953
+        lat: 53.7529105624953,
+        id: '2695'
       }
     }
 
@@ -889,7 +897,8 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
     Code.expect(response.payload).to.contain('Low\n')
-    Code.expect(response.payload).to.contain('<time datetime="">1:30am</time>')
+    Code.expect(response.payload).to.contain('Rising')
+    Code.expect(response.payload).to.contain('Latest at 1:30am')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146" class="defra-flood-nav__link">Nearby levels</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5122" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>')
   })
@@ -1021,7 +1030,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('Sea level at Bude - GOV.UK')
-    Code.expect(response.payload).to.contain('at <time datetime="">6:00am</time>')
+    Code.expect(response.payload).to.contain('Latest at 6:00am')
     Code.expect(response.payload).to.contain('3.59m')
   })
   lab.test('GET station/7333 ffoi no max value ', async () => {
@@ -1075,12 +1084,11 @@ lab.experiment('Test - /station/{id}', () => {
     }
 
     // const yesterday = moment().subtract(1, 'days').startOf('day')
-    const today = new Date()
 
     const fakeTelemetryData = () => [
       {
         // ts: yesterday,
-        ts: today,
+        ts: '2022-02-08T08:30:00.000Z',
         _: 3.589,
         err: false,
         formattedTime: '6:00am',
@@ -1320,8 +1328,7 @@ lab.experiment('Test - /station/{id}', () => {
       }
     }
 
-    // const yesterday = moment().subtract(1, 'days').startOf('day')
-    const today = moment.tz('Europe/London').add(30, 'm').toDate()
+    const today = new Date().toString()
 
     const formattedDate = moment.tz(today, 'Europe/London').format('h:mma')
 
@@ -1610,7 +1617,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     const fakeTelemetryData = () => [
       {
-        ts: newTime,
+        ts: '2022-02-08T08:30:00.000Z',
         _: 1.354,
         err: false
       }
@@ -1945,6 +1952,6 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146" class="defra-flood-nav__link">Nearby levels</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5122" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>')
     Code.expect(response.payload).to.contain('<h2 class="govuk-heading-s govuk-!-margin-top-0">Share this page</h2>')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-2">Download height data CSV (12KB)</a>')
+    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-secondary defra-button-secondary--icon"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download height data CSV (12KB)</a>')
   })
 })
