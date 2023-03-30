@@ -277,10 +277,7 @@ class ViewModel {
     let thresholds = []
 
     if (this.station.recentValue && !this.station.recentValue.err) {
-      let tVal = this.station.recentValue._.toFixed(2)
-      if (tVal <= 0) {
-        tVal = 0
-      }
+      let tVal = this.station.type != 'c' && this.station.recentValue._ <= 0 ? 0 : this.station.recentValue._.toFixed(2)
       thresholds.push({
         id: 'latest',
         value: tVal,
