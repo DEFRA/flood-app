@@ -18,7 +18,8 @@ https://eaflood.atlassian.net/browse/FSR-720
 Straight forward application build for release
 
 1 - Execute LFW_{STAGE}_02_UPDATE_DATABASE
-2 - Execute LFW_{STAGE}_99_LOAD_RIVERS
-3 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+2 - Execute LFW_{STAGE}_03_UPDATE_GEOSERVER_PIPELINE
+3 - Execute LFW_{STAGE}_99_LOAD_RIVERS
+4 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
 
 Execute smoke tests and forward results
