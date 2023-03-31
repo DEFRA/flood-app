@@ -118,31 +118,54 @@
               </p>
             </div>
           {% endif %}
-          <h2 class="govuk-visually-hidden">Station summary</h2>
-          <div class="defra-flood-statistics govuk-!-margin-top-2">
-            <dl class="defra-flood-statistics__list">
-            {# if station has hasPercentiles, this should exclude Coastal #}
-              {% if model.station.hasPercentiles and not model.station.isCoastal  %}
-              <div class="defra-flood-statistics__column-one-third"> 
-                <dt class="defra-flood-statistics__key">State</dt>
-                <dd class="defra-flood-statistics__value">
-                    {{ model.station.state }}
-                    <span class="defra-flood-statistics__value-detail">{{ model.station.stateInformation}}</span>
-                </dd>
-              </div>
-              {% endif %}
-              <div class="defra-flood-statistics__column-one-third">
+          <div class="defra-flood-statistics defra-flood-statistics--border">
+            <div class="govuk-!-margin-top-4" data-toggletip data-toggletip-label="More information about the latest reading" data-toggletip-content="We get readings more often as the risk of flooding increases.">
+              <h2 class="govuk-heading-s govuk-!-margin-bottom-0">
+                Latest at {{ model.station.recentValue.formattedTime }} on {{ model.station.recentValue.latestDayFormatted }}
+              </h2>
+            </div>
+            <dl class="defra-flood-statistics__list" aria-label="Latest readings">
+              <div class="defra-flood-statistics__item">
                 <dt class="defra-flood-statistics__key">Height</dt>
                 <dd class="defra-flood-statistics__value">
+                  <span {% if model.station.isGroundwater or model.station.isRiver or model.station.isTidal %} data-toggletip data-toggletip-label="More information about the height" data-toggletip-content="{{ model.infoHeight }}"{% endif %}>
                   {% if model.station.isRiver and model.recentValueBelowZero %}
                     &le; 0m
                   {% else %}
                     {{ (model.station.recentValue._).toFixed(2) }}m
                   {% endif %}
-                   <span class="defra-flood-statistics__value-detail"> at <time datetime="">{{ model.station.recentValue.formattedTime }}</time> {{ model.station.recentValue.dateWhen }}</span>
+                </span>
                 </dd>
               </div>
+              {% if model.station.trend %}
+              <div class="defra-flood-statistics__item"> 
+                <dt class="defra-flood-statistics__key">
+                  Trend
+                </dt>
+                <dd class="defra-flood-statistics__value">
+                  <span data-toggletip data-toggletip-label="More information about the trend" data-toggletip-content="{{ model.infoTrend }}">
+                    {{ model.station.trend | capitalize }}
+                  </span>
+                </dd>
+              </div>
+              {% endif %}
+            {# if station has hasPercentiles, this should exclude Coastal #}
+              {% if model.station.hasPercentiles and not model.station.isCoastal  %}
+              <div class="defra-flood-statistics__item"> 
+                <dt class="defra-flood-statistics__key">State</dt>
+                <dd class="defra-flood-statistics__value">
+                  <span {% if model.station.isGroundwater or model.station.isRiver %}data-toggletip data-toggletip-label="More information about the state" data-toggletip-content="{{ model.infoState }}"{% endif %}>
+                    {{ model.station.state | capitalize }}
+                    </span>
+                </dd>
+              </div>
+              {% endif %}
             </dl>
+            {% if model.station.hasPercentiles and not model.station.isCoastal  %}
+            <p class="govuk-caption-s govuk-!-margin-top-3 govuk-!-margin-bottom-0">
+              Normal range {{ model.station.stateInformation}}
+            </p>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -196,7 +219,8 @@
   </div>
 </div>
 
-<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/{{model.station.id}}{% if model.station.qualifier == 'd' %}/downstream{% endif %}" class="defra-button-download-s govuk-!-margin-bottom-2 govuk-!-margin-top-2">Download height data CSV ({% if model.isFfoi %}16{% else %}12{% endif %}KB)</a>
+<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/{{model.station.id}}{% if model.station.qualifier == 'd' %}/downstream{% endif %}" class="defra-button-secondary defra-button-secondary--icon"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download height data CSV ({% if model.isFfoi %}16{% else %}12{% endif %}KB)</a>
+
 {% endif %}
 
 {# Impacts and thresholds #}

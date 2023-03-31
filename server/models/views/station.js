@@ -4,6 +4,7 @@ const config = require('../../config')
 const Station = require('./station-data')
 const Forecast = require('./station-forecast')
 const util = require('../../util')
+const tz = 'Europe/London'
 
 class ViewModel {
   constructor (options) {
@@ -15,6 +16,7 @@ class ViewModel {
     this.twitterEvent = 'Station:Share Page:Station - Share to Twitter'
     this.facebookEvent = 'Station:Share Page:Station - Share to Facebook'
     this.emailEvent = 'Station:Share Page:Station - Share to email'
+    this.station.trend = river.trend
 
     Object.assign(this, {
       feedback: false,
@@ -28,7 +30,8 @@ class ViewModel {
       twitterEvent: 'Station:Share Page:Station - Share to Twitter',
       facebookEvent: 'Station:Share Page:Station - Share to Facebook',
       emailEvent: 'Station:Share Page:Station - Share to email',
-      floodRiskUrl: config.floodRiskUrl
+      floodRiskUrl: config.floodRiskUrl,
+      trend: river.trend
     })
     // Group warnings/alerts by severity level
 
@@ -137,14 +140,14 @@ class ViewModel {
         if (diff.asDays() < numberOfProvisionalDays) {
           this.station.porMaxValueIsProvisional = true
         }
-        this.station.formattedPorMaxDate = moment.tz(this.station.porMaxDate, 'Europe/London').format('DD/MM/YY')
-        this.station.thresholdPorMaxDate = moment.tz(this.station.porMaxDate, 'Europe/London').format('D MMMM YYYY')
+        this.station.formattedPorMaxDate = moment.tz(this.station.porMaxDate, tz).format('DD/MM/YY')
+        this.station.thresholdPorMaxDate = moment.tz(this.station.porMaxDate, tz).format('D MMMM YYYY')
       }
     }
 
     // formatted Status Date and time
-    this.station.formattedStatusDate = moment.tz(this.station.statusDate, 'Europe/London').format('dddd D MMMM YYYY')
-    this.station.formattedStatusTime = moment.tz(this.station.statusDate, 'Europe/London').format('h:ma')
+    this.station.formattedStatusDate = moment.tz(this.station.statusDate, tz).format('dddd D MMMM YYYY')
+    this.station.formattedStatusTime = moment.tz(this.station.statusDate, tz).format('h:ma')
 
     // Gets the latest value object
     if (this.telemetry.length) {
@@ -158,7 +161,9 @@ class ViewModel {
 
     if (this.recentValue) {
       // Get most recent value time
-      this.recentValue.formattedTime = moment.tz(this.recentValue.ts, 'Europe/London').format('h:mma')
+      this.recentValue.formattedTime = moment.tz(this.recentValue.ts, tz).format('h:mma')
+      this.recentValue.latestDayFormatted = moment.tz(this.recentValue.ts).format('D MMMM')
+
       const today = moment().startOf('day')
       const yesterday = moment().subtract(1, 'days').startOf('day')
 
@@ -169,10 +174,10 @@ class ViewModel {
       // check if recent value is over one hour old
       this.dataOverHourOld = new Date(this.recentValue.ts) < oneHourAgo
 
-      this.recentValue.dateWhen = 'on ' + moment.tz(this.recentValue.ts, 'Europe/London').format('D/MM/YY')
-      if (moment.tz(this.recentValue.ts, 'Europe/London').isSame(today, 'd')) {
+      this.recentValue.dateWhen = 'on ' + moment.tz(this.recentValue.ts, tz).format('D/MM/YY')
+      if (moment.tz(this.recentValue.ts, tz).isSame(today, 'd')) {
         this.recentValue.dateWhen = 'today'
-      } else if (moment.tz(this.recentValue.ts, 'Europe/London').isSame(yesterday, 'd')) {
+      } else if (moment.tz(this.recentValue.ts, tz).isSame(yesterday, 'd')) {
         this.recentValue.dateWhen = 'yesterday'
       }
 
@@ -334,6 +339,40 @@ class ViewModel {
         })
       })
     }
+
+    if (this.station.type === 'c' && river.river_id !== 'Sea Levels') {
+      this.station.isTidal = true
+    }
+
+    // Toggletips
+    if ((this.station.type === 's') || (this.station.type === 'm') || (this.station.type === 'g') || (this.station.isTidal)) {
+      this.infoHeight = (() => {
+        if (Number(station.stage_datum) === 0) {
+          return 'This station measures height from sea level.'
+        } else if (this.recentValueBelowZero) {
+          return 'This station measures height from a fixed point on or close to the riverbed.' +
+          ' A reading of 0 metres can be normal for some stations because of natural changes to the riverbed.'
+        } else {
+          return 'This station measures height from a fixed point on or close to the riverbed.'
+        }
+      })()
+      this.infoState = (() => {
+        let state
+        switch (this.station.state) {
+          case 'High':
+            state = 'above'
+            break
+          case 'Low':
+            state = 'below'
+            break
+          default:
+            state = 'within'
+        }
+        return `There are 3 states: low, normal and high. The latest level is ${state} the normal range. ` +
+        'We calculate the normal range using an average of past measurements and other local factors.'
+      })()
+    }
+    this.infoTrend = 'The last 2 readings indicate the trend.'
 
     // Group and sort thresholds
     thresholds = thresholds.reduce(

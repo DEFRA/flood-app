@@ -64,7 +64,7 @@ lab.experiment('Rainfall model test', () => {
 
     const Result = viewModel
 
-    Code.expect(Result.latestDayFormatted).to.equal('9th February')
+    Code.expect(Result.latestDayFormatted).to.equal('9 February')
     Code.expect(Result.latestTimeFormatted).to.equal('9:15am')
   })
   lab.test('Test station id constructed correctly', async () => {

@@ -8,6 +8,7 @@ import '../components/map/layers'
 import '../components/map/container'
 import '../components/map/live'
 import '../components/toggle-list-display'
+import '../components/toggletip'
 
 // Create LiveMap
 window.flood.maps.createLiveMap('map', {
@@ -94,4 +95,9 @@ if (toggleListDisplay) {
     type: 'impact',
     btnText: 'historical events'
   })
+}
+
+// Toggletips
+if (document.querySelectorAll('[data-toggletip]')) {
+  window.flood.createToggletips()
 }

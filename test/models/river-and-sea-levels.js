@@ -47,7 +47,7 @@ lab.experiment('river-and-sea-levels model test', () => {
     const stationsData = data.riverAndSeaLevelData
     const model = placeViewModel(stationsData)
 
-    Code.expect(model.stations[0].latestDatetime).to.equal('Updated 5:30am, 16 July ')
+    Code.expect(model.stations[0].latestDatetime).to.equal('Latest at 5:30am, 16 July ')
   })
   lab.test('Test river-and-sea-level placeViewModel returns formattedValue with correct number of decimal places', async () => {
     const stationsData = data.riverAndSeaLevelData

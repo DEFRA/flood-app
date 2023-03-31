@@ -55,8 +55,8 @@ module.exports = {
     return util.getJson(`${serviceUrl}/river/${id}`)
   },
 
-  getRiverStationByStationId (id) {
-    return util.getJson(`${serviceUrl}/river-station-by-station-id/${id}`)
+  getRiverStationByStationId (id, direction) {
+    return util.getJson(`${serviceUrl}/river-station-by-station-id/${id}/${direction}`)
   },
 
   getRainfallStationTelemetry (id) {
