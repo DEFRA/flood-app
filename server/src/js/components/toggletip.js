@@ -27,7 +27,7 @@ const toggletips = () => {
       const target = toggletip.querySelector('.defra-toggletip-target') || toggletip
       const targetWidth = target.getBoundingClientRect().width
       const targetLeft = target.getBoundingClientRect().left
-      const viewportWidth = window.innerWidth
+      const viewportWidth = document.body.clientWidth
       let infoWidth = info.getBoundingClientRect().width
       // Limit info width when zoomed
       infoWidth = infoWidth > (viewportWidth - (viewportMargin * 2)) ? viewportWidth - (viewportMargin * 2) : infoWidth
@@ -92,13 +92,10 @@ const toggletips = () => {
     button.className = 'defra-toggletip__button defra-toggletip-target'
     button.setAttribute('aria-label', toggletip.getAttribute('data-toggletip-label') || 'More information')
     button.innerHTML = `
-      <span class="defra-toggletip__button-icon">
-      <svg focusable="false" aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" style="fill-rule:evenodd;clip-rule:evenodd">
-      <circle cx="9" cy="9" r="7.5" style="fill:none;stroke:currentColor;stroke-width:1px;"/>
-      <text x="4.687px" y="12.906px" fill="currentColor" style="font-family:'Courier-Bold', 'Courier';font-size:14px;">i</text>
-      </svg>
-      </span>
-      <span class="defra-toggletip__button-text">i</span>
+    <span class="defra-toggletip__button-icon">
+    <svg focusable="false" aria-hidden="true" width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="7.5" fill="none" stroke="currentColor"/><path d="M9.841 11.409h1.47c.314 0 .538.057.67.171s.198.303.198.567c0 .269-.067.463-.201.581s-.357.178-.667.178H6.69c-.31 0-.532-.059-.667-.178s-.201-.312-.201-.581c0-.264.065-.453.195-.567s.354-.171.673-.171h1.47V8.087h-.773c-.305 0-.524-.058-.656-.175s-.198-.308-.198-.577.064-.461.191-.575.349-.17.663-.17h2.058c.127 0 .225.026.294.078s.102.124.102.216v4.525zM8.857 3.5c.333 0 .554.064.663.191s.164.433.164.916c0 .465-.049.753-.147.865s-.329.167-.694.167c-.355 0-.584-.052-.687-.157s-.154-.314-.154-.629c0-.583.053-.954.158-1.114s.337-.239.697-.239z" fill-rule="nonzero" fill="currentColor"/></svg>
+    </span>
+    <span class="defra-toggletip__button-text">i</span>
       `
     container.appendChild(button)
     container.appendChild(info)
