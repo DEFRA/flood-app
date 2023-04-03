@@ -298,7 +298,7 @@ function LineChart (containerId, data) {
     renderThresholds()
   }
 
-  //
+  // 
   // Setup
   //
 
@@ -312,19 +312,23 @@ function LineChart (containerId, data) {
   const clipInner = svgInner.append('g').attr('clip-path', 'url(#clip)')
 
   // Add observed and forecast elements
-  let observedArea, observed, forecastArea, forecast
+  let observedArea, observed, forecastArea, forecast, correctedLine, newLine
   if (hasObserved) {
     clipInner.append('g').classed('observed observed-focus', true)
     const observedLine = lines.filter(l => l.type === 'observed')
+
     if (!window.flood.model.station.isCoastal) {
-      for (let o = 0; o < observedLine.length; o++) {
-        if (observedLine[o]._ < 0) {
-          observedLine[o]._ = 0
+      correctedLine = observedLine.map(val => {
+        newLine = {...val}
+        if (val._ <= 0) {
+          newLine._ = 0
         }
-      }
+        return newLine
+      })
     }
-    observedArea = svg.select('.observed').append('path').datum(observedLine).classed('observed-area', true)
-    observed = svg.select('.observed').append('path').datum(observedLine).classed('observed-line', true)
+    
+    observedArea = svg.select('.observed').append('path').datum(correctedLine).classed('observed-area', true)
+    observed = svg.select('.observed').append('path').datum(correctedLine).classed('observed-line', true)
   }
   if (hasForecast) {
     clipInner.append('g').classed('forecast', true)
@@ -470,9 +474,6 @@ function LineChart (containerId, data) {
     thresholdsContainer.on('mouseover', (e) => {
       if (e.target.closest('.threshold')) hideTooltip()
     })
-  // } else {
-    // no Values so hide chart div <- DISABLED
-    // document.getElementsByClassName('defra-line-chart')[0].style.display = 'none'
   }
 }
 
