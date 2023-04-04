@@ -1,0 +1,20 @@
+# Check for flooding 6.3.1 Thursday 6th April 2023
+
+# Release
+
+6.3.1
+
+https://eaflood.atlassian.net/projects/FSR/versions/16444/tab/release-report-all-issues
+
+# Tickets
+
+https://eaflood.atlassian.net/browse/FSR-803
+https://eaflood.atlassian.net/browse/FSR-804
+
+# Instructions
+
+Straight forward application build for release
+
+4 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
