@@ -186,9 +186,9 @@ function getFormattedTime (station) {
     const formattedTime = moment(station.value_timestamp).tz('Europe/London').format('h:mma')
     const formattedDate = moment(station.value_timestamp).tz('Europe/London').format('D MMMM')
     if (station.station_type === 'R') {
-      return `Totals up to ${formattedTime}, ${formattedDate} `
+      return `Totals up to ${formattedTime} on ${formattedDate} `
     } else {
-      return `Latest at ${formattedTime}, ${formattedDate} `
+      return `Latest at ${formattedTime} on ${formattedDate} `
     }
   }
   return null
