@@ -298,7 +298,7 @@ function LineChart (containerId, data) {
     renderThresholds()
   }
 
-  // 
+  //
   // Setup
   //
 
@@ -315,18 +315,18 @@ function LineChart (containerId, data) {
   let observedArea, observed, forecastArea, forecast, correctedLine, newLine
   if (hasObserved) {
     clipInner.append('g').classed('observed observed-focus', true)
-    const observedLine = lines.filter(l => l.type === 'observed')
+    const observedLines = lines.filter(l => l.type === 'observed')
 
     if (!window.flood.model.station.isCoastal) {
-      correctedLine = observedLine.map(val => {
-        newLine = {...val}
+      correctedLine = observedLines.map(val => {
+        newLine = { ...val }
         if (val._ <= 0) {
           newLine._ = 0
         }
         return newLine
       })
     }
-    
+
     observedArea = svg.select('.observed').append('path').datum(correctedLine).classed('observed-area', true)
     observed = svg.select('.observed').append('path').datum(correctedLine).classed('observed-line', true)
   }
