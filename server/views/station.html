@@ -129,11 +129,11 @@
                 <dt class="defra-flood-statistics__key">Height</dt>
                 <dd class="defra-flood-statistics__value">
                   <span {% if model.station.isGroundwater or model.station.isRiver or model.station.isTidal %} data-toggletip data-toggletip-label="More information about the height" data-toggletip-content="{{ model.infoHeight }}"{% endif %}>
-                    {% if model.station.isRiver and model.recentValueBelowZero %}
-                      0m
-                    {% else %}
-                      {{ (model.station.recentValue._).toFixed(2) }}m
-                    {% endif %}
+                  {% if model.station.isRiver and model.recentValueBelowZero %}
+                    0m
+                  {% else %}
+                    {{ (model.station.recentValue._).toFixed(2) }}m
+                  {% endif %}
                 </span>
                 </dd>
               </div>
