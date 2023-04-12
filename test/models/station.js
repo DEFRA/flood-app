@@ -34,6 +34,22 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.pageTitle).to.equal('River Adur level at Beeding Bridge')
     Code.expect(Result.dataOverHourOld).to.equal(true)
     Code.expect(Result.postTitle).to.equal('Latest river level information for the River Adur at Beeding Bridge ')
+    Code.expect(Result.thresholds[2].values).to.equal([
+      {
+        id: 'warningThreshold',
+        value: '1.45',
+        description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
+        shortname: 'Possible flood warnings'
+      }
+    ])
+    Code.expect(Result.thresholds[4].values).to.equal([
+      {
+        id: 'alertThreshold',
+        value: '0.56',
+        description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
+        shortname: 'Possible flood alerts'
+      }
+    ])
   })
   lab.test('Test station viewModel dataOverHourOld to be false', async () => {
     const stationData = data.stationRiver
@@ -167,7 +183,7 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.station.id).to.equal(7177)
     Code.expect(Result.station.hasImpacts).to.equal(true)
     Code.expect(Result.station.formattedPorMaxDate).to.equal('10/02/09')
-    Code.expect(Result.thresholds[0].level).to.equal('2.35')
+    Code.expect(Result.thresholds[0].level).to.equal('44.91')
     Code.expect(Result.isUpstream).to.equal(true)
     Code.expect(Result.isDownstream).to.equal(false)
     Code.expect(Result.severeBanner).to.equal('Severe flood warning for Coast from Fleetwood to Blackpool')
