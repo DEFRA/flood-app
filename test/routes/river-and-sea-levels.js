@@ -82,7 +82,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     checkTitleAndDescription(
       root,
       'wefwe we fwef str - Find river, sea, groundwater and rainfall levels - GOV.UK',
-      'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the measuring station.'
+      'Find river, sea, groundwater and rainfall levels in England. Check the last updated height, trend and state recorded by the measuring station.'
     )
   })
   lab.test('GET /river-and-see-levels with query parameters of Kinghorn, Scotland', async () => {
@@ -470,7 +470,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     checkTitleAndDescription(
       root,
       'Warrington - Find river, sea, groundwater and rainfall levels - GOV.UK',
-      'Find river, sea, groundwater and rainfall levels in Warrington. Check the last updated height and state recorded by the measuring station.'
+      'Find river, sea, groundwater and rainfall levels in Warrington. Check the last updated height, trend and state recorded by the measuring station.'
     )
 
     Code.expect(response.payload).to.contain('<span class="defra-flood-levels-table-state defra-flood-levels-table-state--grey">LOW</span>')
@@ -613,7 +613,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     checkTitleAndDescription(
       root,
       'Warrington - Find river, sea, groundwater and rainfall levels - GOV.UK',
-      'Find river, sea, groundwater and rainfall levels in Warrington. Check the last updated height and state recorded by the measuring station.'
+      'Find river, sea, groundwater and rainfall levels in Warrington. Check the last updated height, trend and state recorded by the measuring station.'
     )
 
     Code.expect(response.payload).to.contain('falling')
@@ -955,7 +955,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     checkTitleAndDescription(
       root,
       'welshpool - Find river, sea, groundwater and rainfall levels - GOV.UK',
-      'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the measuring station.'
+      'Find river, sea, groundwater and rainfall levels in England. Check the last updated height, trend and state recorded by the measuring station.'
     )
   })
   lab.test('GET /river-and-sea-levels Station is coastal with percentiles so should be in river section', async () => {
@@ -2011,7 +2011,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const metaDescription = root
       .querySelectorAll('[name="description"]')
 
-    Code.expect(metaDescription[0]._attrs.content).to.equal('Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the measuring station.')
+    Code.expect(metaDescription[0]._attrs.content).to.equal('Find river, sea, groundwater and rainfall levels in England. Check the last updated height, trend and state recorded by the measuring station.')
     Code.expect(response.payload).to.contain('avon - Find river, sea, groundwater and rainfall levels - GOV.UK')
     Code.expect(response.payload).to.contain('Levels near')
     Code.expect(response.payload).to.contain('Rivers')
