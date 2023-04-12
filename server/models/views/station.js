@@ -162,7 +162,7 @@ class ViewModel {
     if (this.recentValue) {
       // Get most recent value time
       this.recentValue.formattedTime = moment.tz(this.recentValue.ts, tz).format('h:mma')
-      this.recentValue.latestDayFormatted = moment.tz(this.recentValue.ts).format('D MMMM')
+      this.recentValue.latestDayFormatted = moment.tz(this.recentValue.ts, tz).format('D MMMM')
 
       const today = moment().startOf('day')
       const yesterday = moment().subtract(1, 'days').startOf('day')
