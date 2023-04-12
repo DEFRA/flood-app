@@ -2,7 +2,7 @@ const turf = require('@turf/turf')
 const moment = require('moment-timezone')
 const { bingKeyMaps, floodRiskUrl } = require('../../config')
 const pageTitle = 'Find river, sea, groundwater and rainfall levels'
-const metaDescription = 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height and state recorded by the measuring station.'
+const metaDescription = 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height, trend and state recorded by the measuring station.'
 
 function emptyResultsModel (q) {
   return {
