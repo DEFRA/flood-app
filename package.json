@@ -20,7 +20,8 @@
     "lint": "standard",
     "unit-test": "FLOOD_APP_LOCAL_CACHE=true && lab --verbose -c -r console -o stdout -r lcov -o coverage/lcov.info",
     "test": "npm run lint && npm run unit-test",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "prepare": "husky install"
   },
   "author": "defra",
   "license": "ISC",
@@ -80,6 +81,7 @@
     ]
   },
   "devDependencies": {
+    "husky": "^8.0.3",
     "node-html-parser": "^6.1.1"
   }
 }
