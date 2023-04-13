@@ -1,0 +1,28 @@
+# Check for flooding 6.4.0 Thursday 20th April 2023
+
+# Release
+
+6.4.0
+
+https://eaflood.atlassian.net/projects/FSR/versions/16305/tab/release-report-all-issues
+
+# Tickets
+
+https://eaflood.atlassian.net/browse/FSR-595 (Dispay IMTD thresholds)
+https://eaflood.atlassian.net/browse/FSR-721 (Display forecast for station 8175)
+https://eaflood.atlassian.net/browse/FSR-802 (Update meta tags)
+https://eaflood.atlassian.net/browse/FSR-839 (Fix date issue for latest value)
+Others TBC
+
+# Instructions
+
+Application, service and database build for release
+
+Straight forward application build for release
+
+1 - Execute LFW_{STAGE}_02_UPDATE_DATABASE
+2 - Replicate LFW_{STAGE}_99_LOAD_IMTD from the dev environment into prodg and prodb
+3 - Run LFW_{STAGE}_99_LOAD_IMTD
+4 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
