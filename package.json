@@ -21,7 +21,7 @@
     "unit-test": "FLOOD_APP_LOCAL_CACHE=true && lab --verbose -c -r console -o stdout -r lcov -o coverage/lcov.info",
     "test": "npm run lint && npm run unit-test",
     "postinstall": "npm run build",
-    "prepare": "husky install"
+    "prepare": "node -e \"try { require('husky').install() } catch (e) {if (e.code !== 'MODULE_NOT_FOUND') { throw e } }\""
   },
   "author": "defra",
   "license": "ISC",
