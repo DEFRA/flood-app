@@ -263,6 +263,25 @@ class ViewModel {
     }
     this.metaDescription = `Check the latest recorded ${stationType.toLowerCase()} level and recent 5-day trend at ${stationLocation}`
 
+    // below zero
+    if (this.telemetry.length) {
+      const isRiver = (this.station.type === 's' || this.station.type === 'm')
+
+      if (isRiver) {
+        telemetry.forEach(function (tele) {
+          if (isRiver && tele._ <= 0) {
+            tele._ = 0
+          } else {
+            tele._ = parseFloat(tele._).toFixed(2)
+          }
+        })
+      } else if (this.station.type === 'c') {
+        telemetry.forEach(function (tele) {
+          tele._ = parseFloat(tele._).toFixed(2)
+        }
+     )}
+    }
+
     // Thresholds
     let thresholds = []
 

@@ -129,11 +129,7 @@
                 <dt class="defra-flood-statistics__key">Height</dt>
                 <dd class="defra-flood-statistics__value">
                   <span {% if model.station.isGroundwater or model.station.isRiver or model.station.isTidal %} data-toggletip data-toggletip-label="More information about the height" data-toggletip-content="{{ model.infoHeight }}"{% endif %}>
-                  {% if model.station.isRiver and model.recentValueBelowZero %}
-                    0m
-                  {% else %}
-                    {{ (model.station.recentValue._).toFixed(2) }}m
-                  {% endif %}
+                    {{ (model.station.recentValue._) }}m
                 </span>
                 </dd>
               </div>
@@ -235,11 +231,7 @@
       {% for band in model.thresholds %}
       <div class="defra-flood-impact-list__row {% if band.isLatest %} defra-flood-impact-list__row--current {% elif band.isExceeded %} defra-flood-impact-list__row--exceeded{% endif %}" {% if band.type === 'historical' %} data-toggle-list-display-item="impact" {% endif %}>
         <dt class="defra-flood-impact-list__key">
-          {% if not model.station.isCoastal and band.level <= 0 %}
-            0m
-          {% else %}
             {{ band.level }}m
-          {% endif %}
           {% if not band.isLatest and band.isExceeded %}
           <span class="govuk-visually-hidden">(level exceeded)</span>
           {% endif %}
