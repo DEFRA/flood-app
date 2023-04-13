@@ -410,6 +410,13 @@ function LiveMap (mapId, options) {
       ? null
       : (Math.round(model.day_total * 10) / 10).toFixed(1)
 
+    // Below Zero
+    if (model.type !== 'C' && model.value < 0) {
+      model.value = 0
+    } else {
+      model.value = model.value.toFixed(2)
+    }
+
     const html = window.nunjucks.render('info-live.html', { model: model })
     feature.set('html', html)
   }
