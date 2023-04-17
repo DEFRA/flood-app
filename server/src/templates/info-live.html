@@ -50,7 +50,13 @@
             <dt class="govuk-visually-hidden">Height</dt>
             <dd>
                 <span class="defra-flood-data-list__description">Height</span>
-                <span class="defra-flood-data-list__value">{{ model.value }}</span>
+                <span class="defra-flood-data-list__value">
+                    {% if not model.type === 'C' and model.value < 0 %}
+                        0
+                    {% else %}
+                        {{ model.value | round(2) }}
+                    {% endif %}m
+                </span>
             </dd>
         </div>
         {% if model.value and model.type !== 'R' and model.status !== 'Closed' and model.status !== 'Suspended' and not model.iswales %}

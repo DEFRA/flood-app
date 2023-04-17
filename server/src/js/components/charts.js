@@ -56,6 +56,8 @@ function LineChart (containerId, data) {
     .y((d) => { return yScale(data.plotNegativeValues === false && d._ < 0 ? 0 : d._) }) // *DBL below zero addition
 
   // Set level and date formats
+  const parseTime = timeFormat('%-I:%M%p')
+  const parseDate = timeFormat('%e %b')
   const parseDateShort = timeFormat('%-e/%-m')
   const parseDateLong = timeFormat('%a, %e %b')
 
@@ -307,7 +309,7 @@ function LineChart (containerId, data) {
   const clipInner = svgInner.append('g').attr('clip-path', 'url(#clip)')
 
   // Add observed and forecast elements
-  let observedArea, observed, forecastArea, forecast, correctedLine, newLine
+  let observedArea, observed, forecastArea, forecast, correctedLines, newLine
   if (hasObserved) {
     clipInner.append('g').classed('observed observed-focus', true)
     const observedLines = lines.filter(l => l.type === 'observed')
