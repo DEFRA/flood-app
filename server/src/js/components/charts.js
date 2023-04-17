@@ -56,6 +56,8 @@ function LineChart (containerId, data) {
     .y((d) => { return yScale(d._) })
 
   // Set level and date formats
+  const parseTime = timeFormat('%-I:%M%p')
+  const parseDate = timeFormat('%e %b')
   const parseDateShort = timeFormat('%-e/%-m')
   const parseDateLong = timeFormat('%a, %e %b')
 
@@ -229,6 +231,7 @@ function LineChart (containerId, data) {
       }
     }
     toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(dataPoint.checkTooltipValue + 'm')
+    toolTip.select('text').append('tspan').attr('x', 12).attr('dy', '1.4em').text(parseTime(new Date(dataPoint.ts)).toLowerCase() + ', ' + parseDate(new Date(dataPoint.ts)))
 
     // Update tooltip left/right background
     updateToolTipBackground()
@@ -312,21 +315,24 @@ function LineChart (containerId, data) {
   const clipInner = svgInner.append('g').attr('clip-path', 'url(#clip)')
 
   // Add observed and forecast elements
-  let observedArea, observed, forecastArea, forecast, correctedLine, newLine
+  let observedArea, observed, forecastArea, forecast, correctedLines, newLine
   if (hasObserved) {
     clipInner.append('g').classed('observed observed-focus', true)
     const observedLines = lines.filter(l => l.type === 'observed')
     if (!window.flood.model.station.isCoastal) {
-      correctedLine = observedLines.map(val => {
+      correctedLines = observedLines.map(val => {
         newLine = { ...val }
         if (val._ <= 0) {
           newLine._ = 0
         }
         return newLine
       })
+      observedArea = svg.select('.observed').append('path').datum(correctedLines).classed('observed-area', true)
+      observed = svg.select('.observed').append('path').datum(correctedLines).classed('observed-line', true)
+    } else {
+      observedArea = svg.select('.observed').append('path').datum(observedLines).classed('observed-area', true)
+      observed = svg.select('.observed').append('path').datum(observedLines).classed('observed-line', true)
     }
-    observedArea = svg.select('.observed').append('path').datum(correctedLine).classed('observed-area', true)
-    observed = svg.select('.observed').append('path').datum(correctedLine).classed('observed-line', true)
   }
   if (hasForecast) {
     clipInner.append('g').classed('forecast', true)
