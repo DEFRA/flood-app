@@ -134,9 +134,9 @@ lab.experiment('Station model test', () => {
     const viewModel = new ViewModel(data.stationGroudwater)
     Code.expect(viewModel.station.plotNegativeValues).to.equal(true)
   })
-  lab.test('Test station viewModel plotNegativeValues should be true for river station', async () => {
+  lab.test('Test station viewModel plotNegativeValues should be false for river station', async () => {
     const viewModel = new ViewModel(data.stationRiver)
-    Code.expect(viewModel.station.plotNegativeValues).to.equal(true)
+    Code.expect(viewModel.station.plotNegativeValues).to.equal(false)
   })
   lab.test('Test station viewModel plotNegativeValues should be true for coastal station', async () => {
     const viewModel = new ViewModel(data.stationCoastal)
