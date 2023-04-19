@@ -29,7 +29,7 @@ function LineChart (containerId, data) {
   let hasForecast = false
   if (data.observed.length) {
     const errorFilter = l => !l.err
-    const errorAndNegativeFilter = l => errorFilter(l)// && l._ >= 0 // *DBL below zero addition
+    const errorAndNegativeFilter = l => errorFilter(l)// *DBL below zero addition
     const filterFunction = data.plotNegativeValues ? errorFilter : errorAndNegativeFilter
     lines = data.observed.filter(filterFunction).map(l => ({ ...l, type: 'observed' })).reverse()
     dataPoint = lines[lines.length - 1] ? JSON.parse(JSON.stringify(lines[lines.length - 1])) : null
@@ -48,13 +48,11 @@ function LineChart (containerId, data) {
   const area = d3Area().curve(curveMonotoneX)
     .x((d) => { return xScale(new Date(d.ts)) })
     .y0((d) => { return height })
-    // .y1((d) => { return yScale(d._) })
     .y1(d => { return yScale(data.plotNegativeValues === false && d._ < 0 ? 0 : d._) }) // *DBL below zero addition
 
   // Line generator
   const line = d3Line().curve(curveMonotoneX)
     .x((d) => { return xScale(new Date(d.ts)) })
-    // .y((d) => { return yScale(d._) })
     .y((d) => { return yScale(data.plotNegativeValues === false && d._ < 0 ? 0 : d._) }) // *DBL below zero addition
 
   // Set level and date formats
@@ -202,7 +200,6 @@ function LineChart (containerId, data) {
   const updateLocator = () => {
     dataPointLocator = dataPoint // Set locator position
     locatorX = Math.floor(xScale(new Date(dataPointLocator.ts)))
-    // locatorY = Math.floor(yScale(dataPointLocator._))
     locatorY = Math.floor(yScale(data.plotNegativeValues === false && dataPointLocator._ < 0 ? 0 : dataPointLocator._)) // *DBL below zero addition
     const latestX = Math.floor(xScale(new Date(dataPointLatest.ts)))
     locator.classed('locator--offset', true)
@@ -226,15 +223,7 @@ function LineChart (containerId, data) {
     toolTipX = xScale(new Date(dataPoint.ts))
     toolTipY = pointer(e)[1]
 
-    // Set values below zero to display zero, rather than the actual value
-    // dataPoint.checkTooltipValue = Number(dataPoint._).toFixed(2)
-    // if (!window.flood.model.station.isCoastal) {
-    //   if (dataPoint.checkTooltipValue <= 0) {
-    //     dataPoint.checkTooltipValue = '0'
-    //   }
-    // }
     const value = data.plotNegativeValues === false && (Math.round(dataPoint._ * 100) / 100) <= 0 ? '0' : dataPoint._.toFixed(2) // *DBL below zero addition
-    // toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(dataPoint.checkTooltipValue + 'm')
     toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(value + 'm') // *DBL below zero addition
     toolTip.select('text').append('tspan').attr('x', 12).attr('dy', '1.4em').text(parseTime(new Date(dataPoint.ts)).toLowerCase() + ', ' + parseDate(new Date(dataPoint.ts)))
 
@@ -320,24 +309,12 @@ function LineChart (containerId, data) {
   const clipInner = svgInner.append('g').attr('clip-path', 'url(#clip)')
 
   // Add observed and forecast elements
-  let observedArea, observed, forecastArea, forecast, correctedLines, newLine
+  let observedArea, observed, forecastArea, forecast
   if (hasObserved) {
     clipInner.append('g').classed('observed observed-focus', true)
     const observedLines = lines.filter(l => l.type === 'observed')
-    if (!window.flood.model.station.isCoastal) {
-      correctedLines = observedLines.map(val => {
-        newLine = { ...val }
-        if (val._ <= 0) {
-          newLine._ = 0
-        }
-        return newLine
-      })
-      observedArea = svg.select('.observed').append('path').datum(correctedLines).classed('observed-area', true)
-      observed = svg.select('.observed').append('path').datum(correctedLines).classed('observed-line', true)
-    } else {
-      observedArea = svg.select('.observed').append('path').datum(observedLines).classed('observed-area', true)
-      observed = svg.select('.observed').append('path').datum(observedLines).classed('observed-line', true)
-    }
+    observedArea = svg.select('.observed').append('path').datum(observedLines).classed('observed-area', true)
+    observed = svg.select('.observed').append('path').datum(observedLines).classed('observed-line', true)
   }
   if (hasForecast) {
     clipInner.append('g').classed('forecast', true)
@@ -483,6 +460,9 @@ function LineChart (containerId, data) {
     thresholdsContainer.on('mouseover', (e) => {
       if (e.target.closest('.threshold')) hideTooltip()
     })
+  } else {
+    // no Values so hide chart div
+    document.getElementsByClassName('defra-line-chart')[0].style.display = 'none'
   }
 }
 
