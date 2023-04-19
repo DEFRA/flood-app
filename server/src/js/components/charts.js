@@ -309,7 +309,7 @@ function LineChart (containerId, data) {
   const clipInner = svgInner.append('g').attr('clip-path', 'url(#clip)')
 
   // Add observed and forecast elements
-  let observedArea, observed, forecastArea, forecast, correctedLines, newLine
+  let observedArea, observed, forecastArea, forecast
   if (hasObserved) {
     clipInner.append('g').classed('observed observed-focus', true)
     const observedLines = lines.filter(l => l.type === 'observed')
@@ -460,6 +460,9 @@ function LineChart (containerId, data) {
     thresholdsContainer.on('mouseover', (e) => {
       if (e.target.closest('.threshold')) hideTooltip()
     })
+  } else {
+    // no Values so hide chart div
+    document.getElementsByClassName('defra-line-chart')[0].style.display = 'none'
   }
 }
 
