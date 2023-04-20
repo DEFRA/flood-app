@@ -478,7 +478,6 @@ function LiveMap (mapId, options) {
 
   // Set layers from querystring
 
-//  const lyrs = getParameterByName('lyr') ? getParameterByName('lyr').split(',') : []
   const lyrs = getParameterByName('lyr') ? getParameterByName('lyr').split(',') : ['mv']
   setLayerVisibility(lyrs)
   const checkboxes = document.querySelectorAll('.defra-map-key input[type=checkbox]')
