@@ -477,7 +477,6 @@ function LiveMap (mapId, options) {
   state.initialExt = window.history.state.initialExt || getLonLatFromExtent(map.getView().calculateExtent(map.getSize()))
 
   // Set layers from querystring
-
   const lyrs = getParameterByName('lyr') ? getParameterByName('lyr').split(',') : ['mv']
   setLayerVisibility(lyrs)
   const checkboxes = document.querySelectorAll('.defra-map-key input[type=checkbox]')
@@ -488,7 +487,6 @@ function LiveMap (mapId, options) {
   forEach(radios, (radio) => {
     radio.checked = lyrs.includes(radio.id)
   })
-
 
   //
   // Events
