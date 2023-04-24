@@ -51,7 +51,7 @@
             <dd>
                 <span class="defra-flood-data-list__description">Height</span>
                 <span class="defra-flood-data-list__value">
-                    {% if not model.type === 'C' and model.value < 0 %}
+                    {% if model.type != 'C' and model.value < 0 %}
                         0
                     {% else %}
                         {{ model.value | round(2) }}
