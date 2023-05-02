@@ -1,0 +1,21 @@
+# Check for flooding 6.5.0 Thursday 4th May 2023
+
+# Release
+
+6.5.0
+
+https://eaflood.atlassian.net/projects/FSR/versions/16484/tab/release-report-all-issues
+
+# Tickets
+
+https://eaflood.atlassian.net/browse/FSR-869 (Refresh of IMTD thresholds)
+
+# Instructions
+
+Application, service and database build for release
+
+Straight forward application build for release
+
+1 - Run LFW_{STAGE}_99_LOAD_IMTD
+
+Execute smoke tests and forward results
