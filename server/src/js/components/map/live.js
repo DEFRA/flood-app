@@ -127,6 +127,9 @@ function LiveMap (mapId, options) {
     })
     road.setVisible(lyrCodes.includes('mv'))
     satellite.setVisible(lyrCodes.includes('sv'))
+    if (!['mv', 'sv'].some(l => lyrCodes.includes(l))) {
+      road.setVisible(true)
+    }
     // Overide warnings visibility if target area provided
     if (targetArea.pointFeature) {
       warnings.setVisible(true)
@@ -474,18 +477,16 @@ function LiveMap (mapId, options) {
   state.initialExt = window.history.state.initialExt || getLonLatFromExtent(map.getView().calculateExtent(map.getSize()))
 
   // Set layers from querystring
-  if (getParameterByName('lyr')) {
-    const lyrs = getParameterByName('lyr') ? getParameterByName('lyr').split(',') : []
-    setLayerVisibility(lyrs)
-    const checkboxes = document.querySelectorAll('.defra-map-key input[type=checkbox]')
-    forEach(checkboxes, (checkbox) => {
-      checkbox.checked = lyrs.includes(checkbox.id)
-    })
-    const radios = document.querySelectorAll('.defra-map-key input[type=radio]')
-    forEach(radios, (radio) => {
-      radio.checked = lyrs.includes(radio.id)
-    })
-  }
+  const lyrs = getParameterByName('lyr') ? getParameterByName('lyr').split(',') : ['mv']
+  setLayerVisibility(lyrs)
+  const checkboxes = document.querySelectorAll('.defra-map-key input[type=checkbox]')
+  forEach(checkboxes, (checkbox) => {
+    checkbox.checked = lyrs.includes(checkbox.id)
+  })
+  const radios = document.querySelectorAll('.defra-map-key input[type=radio]')
+  forEach(radios, (radio) => {
+    radio.checked = lyrs.includes(radio.id)
+  })
 
   //
   // Events

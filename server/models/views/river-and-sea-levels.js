@@ -197,6 +197,8 @@ function getFormattedTime (station) {
 function formatValue (station, val) {
   if (!station.displayData) {
     return null
+  } else if (val <= 0) {
+    return '0m'
   } else {
     const dp = station.station_type === 'R' ? 1 : 2
     return parseFloat(Math.round(val * Math.pow(10, dp)) / (Math.pow(10, dp))).toFixed(dp) + (station.station_type === 'R' ? 'mm' : 'm')

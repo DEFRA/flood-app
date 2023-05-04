@@ -1,0 +1,15 @@
+name: PR Title Check
+
+on:
+    pull_request:
+        types: [opened, edited, synchronize]
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' }}
+        steps:
+          - name: 🛂 Enforce Jira Issue Key in Pull Request Title
+            if: ${{ github.base_ref == 'development' && (startsWith(github.head_ref, 'feature') || startsWith(github.head_ref, 'fix'))}}
+            uses: ryanvade/enforce-pr-title-style-action@v1
+            with:
+              projectKey: FSR

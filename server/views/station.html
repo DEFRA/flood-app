@@ -71,7 +71,7 @@
             {{ model.station.statusReason}}
           {% else %}
             We are working to get it back online.
-          {% endif %} 
+          {% endif %}
           You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a>.
         </p>
       </div>
@@ -129,16 +129,16 @@
                 <dt class="defra-flood-statistics__key">Height</dt>
                 <dd class="defra-flood-statistics__value">
                   <span {% if model.station.isGroundwater or model.station.isRiver or model.station.isTidal %} data-toggletip data-toggletip-label="More information about the height" data-toggletip-content="{{ model.infoHeight }}"{% endif %}>
-                  {% if model.station.isRiver and model.recentValueBelowZero %}
-                    &le; 0m
-                  {% else %}
-                    {{ (model.station.recentValue._).toFixed(2) }}m
-                  {% endif %}
+                    {% if model.station.isRiver and model.recentValueBelowZero %}
+                      0m
+                    {% else %}
+                      {{ (model.station.recentValue._).toFixed(2) }}m
+                    {% endif %}
                 </span>
                 </dd>
               </div>
               {% if model.station.trend %}
-              <div class="defra-flood-statistics__item"> 
+              <div class="defra-flood-statistics__item">
                 <dt class="defra-flood-statistics__key">
                   Trend
                 </dt>
@@ -151,7 +151,7 @@
               {% endif %}
             {# if station has hasPercentiles, this should exclude Coastal #}
               {% if model.station.hasPercentiles and not model.station.isCoastal  %}
-              <div class="defra-flood-statistics__item"> 
+              <div class="defra-flood-statistics__item">
                 <dt class="defra-flood-statistics__key">State</dt>
                 <dd class="defra-flood-statistics__value">
                   <span {% if model.station.isGroundwater or model.station.isRiver %}data-toggletip data-toggletip-label="More information about the state" data-toggletip-content="{{ model.infoState }}"{% endif %}>
@@ -188,12 +188,12 @@
     {% endif %}
 
   {% else %}
-    
+
   <div class="defra-service-error govuk-!-margin-bottom-3">
     <h2 class="defra-service-error__title" id="error-summary-title">There's a problem with the data</h2>
     <p class="govuk-body govuk-!-margin-bottom-0">There's no recent data. Try again later.</p>
   </div>
-    
+
   {% endif %}
 {% endif %}
 
@@ -235,12 +235,16 @@
       {% for band in model.thresholds %}
       <div class="defra-flood-impact-list__row {% if band.isLatest %} defra-flood-impact-list__row--current {% elif band.isExceeded %} defra-flood-impact-list__row--exceeded{% endif %}" {% if band.type === 'historical' %} data-toggle-list-display-item="impact" {% endif %}>
         <dt class="defra-flood-impact-list__key">
-          {{ band.level }}m
+          {% if not model.station.isCoastal and band.level <= 0 %}
+            0m
+          {% else %}
+            {{ band.level }}m
+          {% endif %}
           {% if not band.isLatest and band.isExceeded %}
           <span class="govuk-visually-hidden">(level exceeded)</span>
           {% endif %}
         </dt>
-        {% for threshold in band.values %} 
+        {% for threshold in band.values %}
         <dd class="defra-flood-impact-list__value"  {% if threshold.type === 'historical' %} data-toggle-list-display-item="impact" {% endif %} data-id="{{ threshold.id }}" data-level="{{ threshold.value }}" data-name="{{ threshold.shortname }}">
           <div class="defra-flood-impact-list__container">
             {{ threshold.description | safe }}
@@ -252,7 +256,7 @@
         {% endfor %}
       </div>
       {% endfor %}
-    </dl> 
+    </dl>
   </div>
 </div>
 {% endif %}
@@ -312,8 +316,8 @@
     {% include "partials/context-footer.html" %}
     {% include "partials/social.html" %}
     {% include "partials/related-content.html" %}
-  </div>  
-</div>  
+  </div>
+</div>
 
 
 
