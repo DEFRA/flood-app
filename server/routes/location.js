@@ -17,6 +17,10 @@ module.exports = {
       return h.redirect('/')
     }
 
+    if (location.match(/^scotland$|^ireland$|^wales$/i)) {
+      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location })
+    }
+
     const [place] = await locationService.find(util.cleanseLocation(location))
 
     if (!place) {
