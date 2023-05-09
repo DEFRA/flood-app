@@ -128,7 +128,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('<p class="govuk-body">If you searched a place outside England, you should visit:</p>\n')
+    Code.expect(response.payload).to.contain('<p class="govuk-body">If you want to search for a place outside England, you should go to:</p>\n')
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /rivers-and-sea-levels Bing returns error', async () => {
@@ -945,7 +945,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('<p class="govuk-body">If you searched a river or place in England, you should:</p>')
+    Code.expect(response.payload).to.contain('<p class="govuk-body">If you searched for a river or place in England, you should:</p>')
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('No results for \'welshpool\'')
     // Page Title

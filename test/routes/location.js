@@ -208,6 +208,88 @@ lab.experiment('Routes test - location - 2', () => {
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
   })
+
+  lab.test('GET /location returns not found page when entering Wales', async () => {
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/location?q=Wales'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('We couldn\'t find')
+  })
+  lab.test('GET /location returns not found when entering Scotland', async () => {
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/location?q=Scotland'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('We couldn\'t find')
+  })
+  lab.test('GET /location returns not found when entering Ireland', async () => {
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/location?q=Ireland'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('We couldn\'t find')
+  })
   lab.test('GET /location with query parameters known and unknown e.g. facebook click id', async () => {
     const floodService = require('../../server/services/flood')
 
