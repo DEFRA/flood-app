@@ -1,0 +1,25 @@
+# Check for flooding 6.5.0 Thursday 4th May 2023
+
+# Release
+
+6.5.1
+
+https://eaflood.atlassian.net/projects/FSR/versions/16490/tab/release-report-all-issues
+
+# Tickets
+
+https://eaflood.atlassian.net/browse/FSR-594 (Add below zero message and display graph on all fluvial only station pages when stationreadings are zero or below zero)
+https://eaflood.atlassian.net/browse/FSR-706 (Accessibility - All Banner colour changes across the service)
+https://eaflood.atlassian.net/browse/FSR-748 (Ensure default basemap on blank map)
+https://eaflood.atlassian.net/browse/FSR-876 (Users able to search "Wales" "Scotland" and "Ireland" and see location results)
+https://eaflood.atlassian.net/browse/FSR-878 (Iterate 'Error: Find location' content)
+
+# Instructions
+
+Application, service and database build for release
+
+Straight forward application build for release
+
+1 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
