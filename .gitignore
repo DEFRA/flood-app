@@ -6,3 +6,4 @@ logs
 server/dist
 coverage
 lcov.info
+*.env
