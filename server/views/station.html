@@ -132,6 +132,7 @@
                     {% if model.station.isRiver and model.recentValueBelowZero %}
                       0m
                     {% else %}
+                    0m
                       {{ (model.station.recentValue._).toFixed(2) }}m
                     {% endif %}
                 </span>
