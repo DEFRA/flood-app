@@ -219,11 +219,11 @@ function LineChart (containerId, data) {
     // Determine which date value is closest to the mouse
     const d = mouseDate - new Date(d0.ts) > new Date(d1.ts) - mouseDate ? d1 : d0
     dataPoint.ts = d.ts
-    dataPoint._ = d._
+    dataPoint._ = parseFloat(d._).toFixed(2)
     toolTipX = xScale(new Date(dataPoint.ts))
     toolTipY = pointer(e)[1]
 
-    const value = data.plotNegativeValues === false && (Math.round(dataPoint._ * 100) / 100) <= 0 ? '0' : dataPoint._.toFixed(2) // *DBL below zero addition
+    const value = data.plotNegativeValues === false && (Math.round(dataPoint._ * 100) / 100) <= 0 ? '0' : dataPoint._ // *DBL below zero addition
     toolTip.select('text').append('tspan').attr('class', 'tool-tip-text__strong').attr('dy', '0.5em').text(value + 'm') // *DBL below zero addition
     toolTip.select('text').append('tspan').attr('x', 12).attr('dy', '1.4em').text(parseTime(new Date(dataPoint.ts)).toLowerCase() + ', ' + parseDate(new Date(dataPoint.ts)))
 
