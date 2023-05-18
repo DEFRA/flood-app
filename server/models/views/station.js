@@ -222,15 +222,13 @@ class ViewModel {
         if (this.station.type === 'c') {
           this.station.state = Math.round(this.station.recentValue._ * 10) / 10 + 'm'
         } else {
+          this.station.stateInformation = this.station.percentile95 + 'm to ' + this.station.percentile5 + 'm'
           if (parseFloat(this.station.recentValue._) > parseFloat(this.station.percentile5)) {
             this.station.state = 'High'
-            this.station.stateInformation = 'above ' + this.station.percentile5 + 'm'
           } else if (parseFloat(this.station.recentValue._) < parseFloat(this.station.percentile95)) {
             this.station.state = 'Low'
-            this.station.stateInformation = 'below ' + this.station.percentile95 + 'm'
           } else {
             this.station.state = 'Normal'
-            this.station.stateInformation = this.station.percentile95 + 'm to ' + this.station.percentile5 + 'm'
           }
         }
       }
