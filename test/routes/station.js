@@ -2365,7 +2365,6 @@ lab.experiment('Test - /station/{id}', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('Normal')
     Code.expect(response.payload).to.contain('Steady')
     Code.expect(response.payload).to.not.contain('Normal range ')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146" class="defra-flood-nav__link">Nearby levels</a>')

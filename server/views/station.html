@@ -264,53 +264,7 @@
 {# Station Details #}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <details class="govuk-details govuk-!-margin-top-6" data-module="govuk-details">
-      <summary class="govuk-details__summary">
-        <span class="govuk-details__summary-text">
-          View technical information for this measuring station
-        </span>
-      </summary>
-      <div class="govuk-details__text">
-        <dl class="govuk-summary-list govuk-summary-list--no-border govuk-summary-list--defra-flood-station govuk-!-font-size-16">
-
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Site datum
-            </dt>
-            <dd class="govuk-summary-list__value">
-              {{ model.station.stageDatum }}m (Above Ordnance Datum)
-            </dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Station name
-            </dt>
-            <dd class="govuk-summary-list__value">
-              {{ model.station.name }}
-            </dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Normal range
-            </dt>
-            <dd class="govuk-summary-list__value">
-          {% if model.station.hasPercentiles %}
-              {{ model.station.percentile95 }}m to {{ model.station.percentile5 }}m
-          {% endif %}
-            </dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Station ID
-            </dt>
-            <dd class="govuk-summary-list__value">
-              {{ model.station.id }}
-            </dd>
-          </div>
-        </dl>
-      </div>
-    </details>
-    <p class="govuk-text govuk-!-margin-bottom-6">
+    <p class="govuk-text govuk-!-margin-top-3">
       <a href="/how-we-measure-river-sea-groundwater-levels">How we measure river, sea and groundwater levels</a>
     </p>
     {% include "partials/context-footer.html" %}
