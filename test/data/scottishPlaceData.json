@@ -1,0 +1,25 @@
+{
+  "name":"Kinghorn",
+  "center":[
+     -3.17269707,
+     56.07282257
+  ],
+  "bbox2k":[
+     -3.2168500195831133,
+     56.043899426617905,
+     -3.1356420744568037,
+     56.09467708095029
+  ],
+  "bbox10k":[
+     -3.3457654344546057,
+     55.97195379812693,
+     -3.006726659585311,
+     56.16662270943732
+  ],
+  "address":"Kinghorn, Burntisland, Fife",
+  "isEngland":{
+     "is_england":false
+  },
+  "isUK":true,
+  "isScotlandOrNorthernIreland":true
+}
