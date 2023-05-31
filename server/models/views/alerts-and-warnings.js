@@ -21,7 +21,7 @@ class ViewModel {
       if (this.station && this.station.agency_name) {
         this.pageTitle = `${this.station.agency_name} - flood alerts and warnings`
       } else {
-        this.pageTitle = `${location ? location + ' f' : 'F'}lood alerts and warnings`
+        this.pageTitle = `${location ? location + ' - f' : 'F'}lood alerts and warnings`
       }
     }
     this.countFloods = floods ? floods.floods.length : 0
@@ -31,7 +31,7 @@ class ViewModel {
 
     this.expose = {
       station: this.station,
-      placeBbox: this.placeBbox,
+      placeBbox: this.isEngland ? this.placeBbox : [],
       countFloods: this.countFloods,
       bingMaps: bingKeyMaps
     }
