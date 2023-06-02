@@ -203,12 +203,23 @@ if (saveButton) {
     } else {
       window.flood.utils.setCookie('set_cookie_usage', '', -1)
       window.flood.utils.setCookie('_ga', '', -1)
-      // Get cookie name
-      const gtagCookie = document.cookie.match('(^|;) ?(_ga_.*)=([^;]*)(;|$)')
+
+      const gtagCookie = document.cookie.match('(^|;) ?(_ga_TM[a-zA-Z0-9]*)=([^;]*)(;|$)')
       if (gtagCookie && gtagCookie[2]) {
-        window.flood.utils.setCookie(gtagCookie[2], '', -1)
+        const expirationDate = new Date()
+        expirationDate.setFullYear(expirationDate.getFullYear() - 1)
+        document.cookie = `${gtagCookie[2]}=; expires=${expirationDate.toUTCString()}; path=/; domain=${window.location.hostname};`
+      }
+
+      const additionalCookieName = '_ga_VPKM6F5K20'
+      const additionalCookieValue = document.cookie.match(`(^|;) ?(${additionalCookieName})=([^;]*)(;|$)`)
+      if (additionalCookieValue && additionalCookieValue[2]) {
+        const expirationDate = new Date()
+        expirationDate.setFullYear(expirationDate.getFullYear() - 1)
+        document.cookie = `${additionalCookieValue[2]}=; expires=${expirationDate.toUTCString()}; path=/; domain=${window.location.hostname};`
       }
     }
+
     const alert = document.getElementById('cookie-notification')
     alert.removeAttribute('style')
     alert.focus()
