@@ -204,11 +204,10 @@ if (saveButton) {
       window.flood.utils.setCookie('set_cookie_usage', '', -1)
       window.flood.utils.setCookie('_ga', '', -1)
       // Get cookie name
-      const gtagCookie = document.cookie.match('(^|;) ?(_ga_TM.*)=([^;]*)(;|$)')
+      const gtagCookie = document.cookie.match('(^|;) ?(_ga_TM[a-zA-Z0-9]*)=([^;]*)(;|$)')
       if (gtagCookie && gtagCookie[2]) {
         window.flood.utils.setCookie(gtagCookie[2], '', -1)
       }
-      window.flood.utils.setCookie('_gid', '', -1)
     }
     const alert = document.getElementById('cookie-notification')
     alert.removeAttribute('style')
