@@ -204,7 +204,7 @@ if (saveButton) {
       window.flood.utils.setCookie('set_cookie_usage', '', -1)
       window.flood.utils.setCookie('_ga', '', -1)
       // Get cookie name
-      const gtagCookie = document.cookie.match('(^|;) ?(_ga_TM[a-zA-Z0-9]*)=([^;]*)(;|$)')
+      const gtagCookie = document.cookie.match('(^|;) ?(_ga_.*)=([^;]*)(;|$)')
       if (gtagCookie && gtagCookie[2]) {
         window.flood.utils.setCookie(gtagCookie[2], '', -1)
       }
