@@ -2,101 +2,115 @@
 
 {% block content %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">
-      Check for flooding in England
-    </h1>
-  </div>
-</div>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <div class="defra-flood-status">
-      {% if not model.hasActiveFloods %}
-      <div class="defra-flood-status-item">
-        <div class="defra-flood-status-item__text">
-          <strong>
-            No flood alerts or warnings
-          </strong>
-        </div>
-      </div>
-      {% endif %}
-      {% for group in model.floods %}
-      {% if group.count > 0 %}
-      {% if group.severity.id < 4 %}
-      <div class="defra-flood-status-item defra-flood-status-item--{{ group.severity.hash }}">
-        <span class="defra-flood-status-item__icon"></span>
-        <div class="defra-flood-status-item__text">
-          <strong>
-            <a data-journey-click="National:View Warnings:National-View-{{ group.severity.hash }}" href="/alerts-and-warnings{% if group.severity.id === model.highestSeverityId %}{% else %}#{{ group.severity.pluralisedHash }}{% endif %}">
-              {{ group.title | lower }}
-            </a>
-          </strong>
-          {% if group.severity.id == 3 %}
-          <span class="defra-flood-status-item__text-secondary">There is a danger to life</span>
-          {% else %}
-          <span class="defra-flood-status-item__text-secondary">{{ group.severity.subTitle }}</span>
-          {% endif %}
-        </div>
-      </div>
-      {% else %}
-      <p class="defra-flood-status__text">
-        <a data-journey-click="National:View Warnings:National - View removed warnings" href="/alerts-and-warnings#{{ group.severity.pluralisedHash }}">{{ group.title | lower }}</a> {{ group.severity.subTitle }}
-      </p>
-      {% endif %}
-      {% endif %}
-      {% endfor %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">
+        Check for flooding in England
+      </h1>
     </div>
-    {% if model.hasActiveFloods %}
-      <span id="map-live"></span>
-    {% endif %}
-    <p class="defra-flood-meta {% if model.hasActiveFloods or model.hasWarningsRemoved %} defra-flood-meta--border govuk-!-margin-top-3{% endif %} govuk-!-margin-top-0 govuk-!-margin-bottom-6">      Updated at <time datetime="{{model.dateUTC}}">{{model.dateFormatted}}</time>
-    </p> 
-
-    <a data-journey-click="National:Location search:National - Location search" href="/find-location" class="defra-button-start govuk-!-margin-bottom-7" data-module="govuk-button" role="button">
-      Check for flooding near you
-    </a>
-
-    <h2 class="govuk-heading-m">Latest river, sea, groundwater and rainfall levels</h2>
-    <p>There are around 3,500 measuring stations and most are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
-    <p><a data-journey-click="National:station list:National-view station list" href="/river-and-sea-levels">Find a river, sea, groundwater or rainfall level</a></p>
-
-    <h2 class="govuk-heading-m govuk-!-margin-top-2" id="outlook">Flood forecast for the next 5 days</h2>
-    {% if model.outlookOutOfDate or model.dataError %}
-      <div class="defra-service-error govuk-!-margin-bottom-3">
-        <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>
-        <p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>
-      </div>
-    {% else %}
-      {% for line in model.outlook.full %}
-        <p class="govuk-body defra-flood-meta--p">
-          {{ line }}
-        </p>
-      {% endfor %}
-      {% if model.outlook.hasOutlookConcern %}
-      <span id="map-outlook"></span>
-      {% endif %}
-
-      <p class="defra-flood-meta defra-flood-meta--border govuk-!-margin-top-6 govuk-!-margin-bottom-4">
-        Updated at <time datetime="{{ model.outlook.outlookUTC }}">{{ model.outlook.outlookTimestamp }}</time><br>
-        Produced by the Met Office and Environment Agency</p>
-    {% endif %}
-    {% include "partials/context-footer.html" %}
   </div>
- 
 
-  <div class="govuk-grid-column-one-third">
-    {% include "partials/related-content.html" %}
-</div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <div class="defra-flood-status">
+        {% if not model.hasActiveFloods %}
+          <div class="defra-flood-status-item">
+            <div class="defra-flood-status-item__text">
+              <strong>
+                No flood alerts or warnings
+              </strong>
+            </div>
+          </div>
+        {% endif %}
+        {% for group in model.floods %}
+          {% if group.count > 0 %}
+            {% if group.severity.id < 4 %}
+              <div class="defra-flood-status-item defra-flood-status-item--{{ group.severity.hash }}">
+                <span class="defra-flood-status-item__icon"></span>
+                <div class="defra-flood-status-item__text">
+                  <strong>
+                    <a data-journey-click="National:View Warnings:National-View-{{ group.severity.hash }}"
+                       href="/alerts-and-warnings
+                           {% if group.severity.id === model.highestSeverityId %}{% else %}#{{ group.severity.pluralisedHash }}{% endif %}">
+                      {{ group.title | lower }}
+                    </a>
+                  </strong>
+                  {% if group.severity.id == 3 %}
+                    <span class="defra-flood-status-item__text-secondary">There is a danger to life</span>
+                  {% else %}
+                    <span class="defra-flood-status-item__text-secondary">{{ group.severity.subTitle }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            {% else %}
+              <p class="defra-flood-status__text">
+                <a data-journey-click="National:View Warnings:National - View removed warnings"
+                   href="/alerts-and-warnings#{{ group.severity.pluralisedHash }}">{{ group.title | lower }}</a> {{ group.severity.subTitle }}
+              </p>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% if model.hasActiveFloods %}
+        <span id="map-live"></span>
+      {% endif %}
+      <p class="defra-flood-meta {% if model.hasActiveFloods or model.hasWarningsRemoved %} defra-flood-meta--border govuk-!-margin-top-3{% endif %} govuk-!-margin-top-0 govuk-!-margin-bottom-6">
+        Updated at
+        <time datetime="{{ model.dateUTC }}">{{ model.dateFormatted }}</time>
+      </p>
+
+      <a data-journey-click="National:Location search:National - Location search" href="/find-location"
+         class="defra-button-start govuk-!-margin-bottom-7" data-module="govuk-button" role="button">
+        Check for flooding near you
+      </a>
+
+      <h2 class="govuk-heading-m">Latest river, sea, groundwater and rainfall levels</h2>
+      <p>There are around 3,500 measuring stations and most are along main rivers and the coast. These levels can help
+        you understand your flood risk now and over the next few days.</p>
+      <p><a data-journey-click="National:station list:National-view station list" href="/river-and-sea-levels">Find a
+        river, sea, groundwater or rainfall level</a></p>
+
+      <h2 class="govuk-heading-m govuk-!-margin-top-2" id="outlook">Flood forecast for the next 5 days</h2>
+      {% if model.outlookOutOfDate or model.dataError %}
+        <div class="defra-service-error govuk-!-margin-bottom-3">
+          <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the
+            data</h2>
+          <p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>
+        </div>
+      {% else %}
+        {% for line in model.outlook.full %}
+          <p class="govuk-body defra-flood-meta--p">
+            {{ line }}
+          </p>
+        {% endfor %}
+        {% if model.outlook.hasOutlookConcern %}
+          <span id="map-outlook"></span>
+        {% endif %}
+
+        <p class="defra-flood-meta defra-flood-meta--border govuk-!-margin-top-6 govuk-!-margin-bottom-4">
+          Updated at
+          <time datetime="{{ model.outlook.outlookUTC }}">{{ model.outlook.outlookTimestamp }}</time>
+          <br>
+          Produced by the Met Office and Environment Agency
+        </p>
+      {% endif %}
+      {% include "partials/context-footer.html" %}
+    </div>
+
+
+    <div class="govuk-grid-column-one-third">
+      {% include "partials/related-content.html" %}
+    </div>
+  </div>
 
 {% endblock %}
 
 {% block bodyEnd %}
-{{ super() }}
-<script>
-  window.flood.model = {{ model | dump(2) | safe }}
-</script>
-<script src="{{assetPath}}/js/templates.js"></script>
-<script src="{{assetPath}}/js/national.js"></script>
+  {{ super() }}
+  <script>
+    window.flood.model =
+    {{ model | dump(2) | safe }}
+  </script>
+  <script src="{{ assetPath }}/js/templates.js"></script>
+  <script src="{{ assetPath }}/js/national.js"></script>
 {% endblock %}

@@ -1,16 +1,17 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Service status</h1>
-    <p class="defra-updated">
-      As of <time datetime="{{ now }}">{{ now | formatDate }}</time>
-    </p>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">Service status</h1>
+      <p class="defra-updated">
+        As of
+        <time datetime="{{ now }}">{{ now | formatDate }}</time>
+      </p>
 
-    <table class="govuk-table" aria-label="Application details">
-      <h2 class="govuk-heading-m">Application</h2>
-      <tbody class="govuk-table__body">
+      <table class="govuk-table" aria-label="Application details">
+        <h2 class="govuk-heading-m">Application</h2>
+        <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">Environment</th>
           <td class="govuk-table__cell">{{ env }}</td>
@@ -20,10 +21,10 @@
           <td class="govuk-table__cell">{{ appVersion }}</td>
         </tr>
         </tbody>
-    </table>
-    <table class="govuk-table" aria-label="FWIS details">
-      <h2 class="govuk-heading-m">FWIS</h2>
-      <tbody class="govuk-table__body">
+      </table>
+      <table class="govuk-table" aria-label="FWIS details">
+        <h2 class="govuk-heading-m">FWIS</h2>
+        <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">FWIS timestamp</th>
           <td class="govuk-table__cell">{{ fwisDate | formatDate }}</td>
@@ -36,11 +37,11 @@
           <th scope="row" class="govuk-table__header">FWIS message count</th>
           <td class="govuk-table__cell">{{ fwisCount }}</td>
         </tr>
-       </tbody>
-    </table>
-    <table class="govuk-table" aria-label="Outlook details">
-      <h2 class="govuk-heading-m">Outlook</h2>
-      <tbody class="govuk-table__body">
+        </tbody>
+      </table>
+      <table class="govuk-table" aria-label="Outlook details">
+        <h2 class="govuk-heading-m">Outlook</h2>
+        <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">Flood outlook timestamp</th>
           <td class="govuk-table__cell">{{ outlookTimestamp | formatDate }}</td>
@@ -49,11 +50,11 @@
           <th scope="row" class="govuk-table__header">Flood outlook age</th>
           <td class="govuk-table__cell">{{ outlookAgeHours }} hours</td>
         </tr>
-       </tbody>
-    </table>
-    <table class="govuk-table" aria-label="Service health checks">
-      <h2 class="govuk-heading-m">Service health checks</h2>
-      <tbody class="govuk-table__body">
+        </tbody>
+      </table>
+      <table class="govuk-table" aria-label="Service health checks">
+        <h2 class="govuk-heading-m">Service health checks</h2>
+        <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">Backend services</th>
           <td class="govuk-table__cell">{{ service }}</td>
@@ -72,13 +73,14 @@
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">Location service (BING location api)</th>
           <td class="govuk-table__cell">{{ locationService }}</td>
-          <td class="govuk-table__cell">{% if locationService === 'Successful' %}{{ locationServicems }}ms{% endif %}</td>
+          <td class="govuk-table__cell">
+            {% if locationService === 'Successful' %}{{ locationServicems }}ms{% endif %}</td>
         </tr>
-       </tbody>
-    </table>
-    <table class="govuk-table" aria-label="Stations details">
-      <h2 class="govuk-heading-m">Stations</h2>
-      <tbody class="govuk-table__body">
+        </tbody>
+      </table>
+      <table class="govuk-table" aria-label="Stations details">
+        <h2 class="govuk-heading-m">Stations</h2>
+        <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">Stations load timestamp</th>
           <td class="govuk-table__cell">{{ stationsTimestamp | formatDate }}</td>
@@ -91,44 +93,44 @@
           <th scope="row" class="govuk-table__header">Stations count</th>
           <td class="govuk-table__cell">{{ stationsCount }}</td>
         </tr>
-       </tbody>
-    </table>
-    <table class="govuk-table" aria-label="Telemetry details">
-      <h2 class="govuk-heading-m">Telemetry</h2>
+        </tbody>
+      </table>
+      <table class="govuk-table" aria-label="Telemetry details">
+        <h2 class="govuk-heading-m">Telemetry</h2>
         <thead class="govuk-table__head">
-          <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">File prefix</th>
-            <th scope="col" class="govuk-table__header">Region</th>
-            <th scope="col" class="govuk-table__header">File last imported</th>
-          </tr>
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">File prefix</th>
+          <th scope="col" class="govuk-table__header">Region</th>
+          <th scope="col" class="govuk-table__header">File last imported</th>
+        </tr>
         </thead>
         <tbody class="govuk-table__body">
         {% for item in telemetry %}
-        <tr class="govuk-table__row">
-          <td class="govuk-table__cell">{{ item.file_prefix }}</td>
-          <td class="govuk-table__cell">{{ item.region }}</td>
-          <td class="govuk-table__cell">{{ item.imported | formatDate }}</td>
-        </tr>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">{{ item.file_prefix }}</td>
+            <td class="govuk-table__cell">{{ item.region }}</td>
+            <td class="govuk-table__cell">{{ item.imported | formatDate }}</td>
+          </tr>
         {% endfor %}
-       </tbody>
-    </table>
-    <table class="govuk-table" aria-label="FFOI details">
-      <h2 class="govuk-heading-m">FFOI</h2>
-      <thead class="govuk-table__head">
+        </tbody>
+      </table>
+      <table class="govuk-table" aria-label="FFOI details">
+        <h2 class="govuk-heading-m">FFOI</h2>
+        <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header">File prefix</th>
           <th scope="col" class="govuk-table__header">File last imported</th>
         </tr>
-      </thead>
-      <tbody class="govuk-table__body">
-      {% for item in ffoi %}
-        <tr class="govuk-table__row">
-          <td class="govuk-table__cell">{{ item.file_prefix }}</td>
-          <td class="govuk-table__cell">{{ item.imported | formatDate }}</td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody class="govuk-table__body">
+        {% for item in ffoi %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">{{ item.file_prefix }}</td>
+            <td class="govuk-table__cell">{{ item.imported | formatDate }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 {% endblock %}

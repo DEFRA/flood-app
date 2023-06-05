@@ -2,129 +2,145 @@
 
 {% block beforeContent %}
 
-<div class="govuk-phase-banner">
-  <p class="govuk-phase-banner__content">
-    <strong class="govuk-tag govuk-phase-banner__content__tag">
-      beta
-    </strong>
-    <span class="govuk-phase-banner__text">
-      This is a new service – your <a class="govuk-link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965?Source={{fullUrl}}">feedback</a> will help us to improve it.
+  <div class="govuk-phase-banner">
+    <p class="govuk-phase-banner__content">
+      <strong class="govuk-tag govuk-phase-banner__content__tag">
+        beta
+      </strong>
+      <span class="govuk-phase-banner__text">
+      This is a new service – your <a class="govuk-link"
+                                      href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965?Source={{ fullUrl }}">feedback</a> will help us to improve it.
     </span>
-  </p>
-</div>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <a href="/find-location" class="defra-flood-location-link">Check another location</a>
+    </p>
   </div>
-</div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <a href="/find-location" class="defra-flood-location-link">Check another location</a>
+    </div>
+  </div>
 
 {% endblock %}
 
 {% block content %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-7">
-      {{ model.pageTitle }}
-    </h1>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-7">
+        {{ model.pageTitle }}
+      </h1>
+    </div>
   </div>
-</div>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-   
-    <div class="defra-flood-status govuk-!-margin-bottom-1">
-      {% if model.hasActiveFloods %}
-        {% if model.bannerSevereMainLink %}
-        <div class="defra-flood-status-item defra-flood-status-item--severe">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <div class="defra-flood-status govuk-!-margin-bottom-1">
+        {% if model.hasActiveFloods %}
+          {% if model.bannerSevereMainLink %}
+            <div class="defra-flood-status-item defra-flood-status-item--severe">
           <span class="defra-flood-status-item__icon">
-            <span class="govuk-visually-hidden">{{model.severitySevereTitle}}</span>
+            <span class="govuk-visually-hidden">{{ model.severitySevereTitle }}</span>
           </span>
-          <div class="defra-flood-status-item__text">
-            <strong>
-              <a data-journey-click="Location :View Warnings:Location - View severe flood warnings" href="{{ model.bannerSevereMainLink }}">{{ model.bannerSevereMainText }}</a>
-            </strong>
-            <span class="defra-flood-status-item__text-secondary">{{ model.bannerSevereSub }}</span>
+              <div class="defra-flood-status-item__text">
+                <strong>
+                  <a data-journey-click="Location :View Warnings:Location - View severe flood warnings"
+                     href="{{ model.bannerSevereMainLink }}">{{ model.bannerSevereMainText }}</a>
+                </strong>
+                <span class="defra-flood-status-item__text-secondary">{{ model.bannerSevereSub }}</span>
+              </div>
+            </div>
+          {% endif %}
+          {% if model.bannerMainLink %}
+            <div class="defra-flood-status-item defra-flood-status-item--{{ model.severity }}">
+          <span class="defra-flood-status-item__icon">
+            <span class="govuk-visually-hidden">{{ model.severityTitle }}</span>
+          </span>
+              <div class="defra-flood-status-item__text">
+                <strong>
+                  <a data-journey-click="Location :View Warnings:Location - View {{ model.severity }}"
+                     href="{{ model.bannerMainLink }}">{{ model.bannerMainText }}</a>
+                </strong>
+                <span class="defra-flood-status-item__text-secondary">{{ model.bannerSub }}</span>
+              </div>
+            </div>
+          {% endif %}
+        {% else %}
+          <div class="defra-flood-status-item">
+            <div class="defra-flood-status-item__text">
+              There are no flood warnings or alerts in this area{% if model.hasHighLevels %} but some
+              <a href="/river-and-sea-levels?q={{ model.q }}">river and sea levels</a> are high{% endif %}.
+            </div>
           </div>
-        </div>
         {% endif %}
-        {% if model.bannerMainLink%}
-        <div class="defra-flood-status-item defra-flood-status-item--{{model.severity}}">
-          <span class="defra-flood-status-item__icon">
-            <span class="govuk-visually-hidden">{{model.severityTitle}}</span>
-          </span>
-          <div class="defra-flood-status-item__text">
-            <strong>
-              <a data-journey-click="Location :View Warnings:Location - View {{model.severity}}" href="{{ model.bannerMainLink }}">{{ model.bannerMainText }}</a>
-            </strong>
-            <span class="defra-flood-status-item__text-secondary">{{ model.bannerSub }}</span>
-          </div>
-        </div>
+      </div>
+
+      {% if model.hasFloods %}
+        {% if model.alerts %}
+          <p class="govuk-body">
+            <a data-journey-click="Location :View Warnings:Location - View flood alerts"
+               href="{{ model.alertsSummaryLink }}">{{ model.alertsSummaryLinkText }}</a> {{ model.alertsSummaryText }}
+            also in the wider area, where some flooding is possible.
+          </p>
+        {% endif %}
+        {% if model.removed %}
+          <p class="govuk-body">
+            <a data-journey-click="Location :View Warnings:Location - View removed warnings"
+               href="{{ model.removedLink }}">{{ model.removedLinkText }}</a> {{ model.removedText }}
+          </p>
         {% endif %}
       {% else %}
-      <div class="defra-flood-status-item">
-        <div class="defra-flood-status-item__text">
-          There are no flood warnings or alerts in this area{% if model.hasHighLevels %} but some <a href="/river-and-sea-levels?q={{ model.q }}">river and sea levels</a> are high{% endif %}.
+        <p>This service tells you your risk of flooding from rivers, the sea and groundwater. <a
+            data-journey-click="Location:Surface water:Location - Contact local council"
+            href="https://www.gov.uk/find-local-council">Contact your local council about surface water flooding</a>
+          (also known as flash flooding).</p>
+      {% endif %}
+
+      <p><a data-journey-click="Location:Get warnings:Location - Get warnings"
+            href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
+
+      {% if model.hasActiveFloods %}
+        <span id="map"></span>
+      {% endif %}
+
+      <p class="defra-flood-meta defra-flood-meta--border govuk-!-margin-top-0 govuk-!-margin-bottom-4">
+        <time datetime="{{ model.issueUTC }}">{{ model.dateFormatted }}</time>
+      </p>
+
+      <!-- River and sea levels -->
+      <h2 class="govuk-heading-m">Latest river, sea, groundwater and rainfall levels</h2>
+      <p>There are around 3,500 measuring stations, and most are along main rivers and the coast. These levels can help
+        you understand your flood risk now and over the next few days.</p>
+      <p><a data-journey-click="Location:Station list:Location - View station list"
+            href="/river-and-sea-levels?q={{ model.location }}">Find a river, sea, groundwater or rainfall level in this
+        area</a></p>
+      <!-- end river and sea levels -->
+      <h2 class="govuk-heading-m">Flood forecast for the next 5 days</h2>
+      {% if model.outOfDate or model.dataError %}
+        <div class="defra-service-error govuk-!-margin-bottom-3">
+          <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the
+            data</h2>
+          <p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>
         </div>
-      </div>
+      {% else %}
+        {% include "partials/outlook-region.html" %}
       {% endif %}
+      {% include "partials/context-footer.html" %}
+
     </div>
-    
-    {% if model.hasFloods %}
-      {% if model.alerts  %}
-      <p class="govuk-body">
-        <a data-journey-click="Location :View Warnings:Location - View flood alerts" href="{{ model.alertsSummaryLink }}">{{ model.alertsSummaryLinkText }}</a> {{ model.alertsSummaryText }} also in the wider area, where some flooding is possible. 
-      </p>
-      {% endif %}
-      {% if model.removed  %}
-      <p class="govuk-body">
-        <a data-journey-click="Location :View Warnings:Location - View removed warnings" href="{{ model.removedLink }}">{{ model.removedLinkText }}</a> {{ model.removedText }}
-      </p>
-      {% endif %}
-    {% else %}
-      <p>This service tells you your risk of flooding from rivers, the sea and groundwater. <a data-journey-click="Location:Surface water:Location - Contact local council"        href="https://www.gov.uk/find-local-council">Contact your local council about surface water flooding</a> (also known as flash flooding).</p>
-    {% endif %}
-
-    <p><a data-journey-click="Location:Get warnings:Location - Get warnings" href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
-
-    {% if model.hasActiveFloods %}
-      <span id="map"></span>
-    {% endif %}
-
-    <p class="defra-flood-meta defra-flood-meta--border govuk-!-margin-top-0 govuk-!-margin-bottom-4">
-      <time datetime="{{model.issueUTC}}">{{model.dateFormatted}}</time>
-    </p>
-
-    <!-- River and sea levels -->
-    <h2 class="govuk-heading-m">Latest river, sea, groundwater and rainfall levels</h2>
-    <p>There are around 3,500 measuring stations, and most are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
-    <p><a data-journey-click="Location:Station list:Location - View station list" href="/river-and-sea-levels?q={{ model.location }}">Find a river, sea, groundwater or rainfall level in this area</a></p> 
-    <!-- end river and sea levels -->
-    <h2 class="govuk-heading-m">Flood forecast for the next 5 days</h2>
-    {% if model.outOfDate or model.dataError %}
-    <div class="defra-service-error govuk-!-margin-bottom-3">
-      <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>
-      <p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>
-    </div> 
-    {% else %}
-      {% include "partials/outlook-region.html" %}
-    {% endif %}
-    {% include "partials/context-footer.html" %}
-
+    <div class="govuk-grid-column-one-third">
+      {% include "partials/related-content.html" %}
+    </div>
   </div>
-  <div class="govuk-grid-column-one-third">
-    {% include "partials/related-content.html" %}
-  </div>
-</div>
 
 {% endblock %}
 
 {% block bodyEnd %}
   {{ super() }}
   <script>
-    window.flood.model = {{ model.expose | dump(2) | safe }}
+    window.flood.model =
+    {{ model.expose | dump(2) | safe }}
   </script>
-  <script src="{{assetPath}}/js/templates.js"></script>
-  <script src="{{assetPath}}/js/location.js"></script>
+  <script src="{{ assetPath }}/js/templates.js"></script>
+  <script src="{{ assetPath }}/js/location.js"></script>
 {% endblock %}

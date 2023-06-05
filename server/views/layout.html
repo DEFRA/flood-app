@@ -16,26 +16,26 @@
 {% endblock %}
 
 {% block head %}
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="{{fullUrl}}" />
-  <meta property="og:title" content="{{metaTitle}}" />
-  <meta property="og:description" content="{{metaDescription}}" />
-  <meta name="description" content="{{metaDescription}}" />
-  <meta name="google-site-verification" content="y6LbLfoXyHHDG2k5BAGCzMw_f4l9Y4MdCsX5SELenE8" />
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="{{ fullUrl }}"/>
+  <meta property="og:title" content="{{ metaTitle }}"/>
+  <meta property="og:description" content="{{ metaDescription }}"/>
+  <meta name="description" content="{{ metaDescription }}"/>
+  <meta name="google-site-verification" content="y6LbLfoXyHHDG2k5BAGCzMw_f4l9Y4MdCsX5SELenE8"/>
   <!-- Stage: {{ env }} {{ stage }} -->
   <!-- Application version: {{ appVersion }} -->
 
-  <link href="{{ assetPath }}/stylesheets/application.css" rel="stylesheet" />
+  <link href="{{ assetPath }}/stylesheets/application.css" rel="stylesheet"/>
 
   {% if metaCanonical %}
-    <link rel="canonical" href="{{fullUrl}}"/>
+    <link rel="canonical" href="{{ fullUrl }}"/>
   {% endif %}
-  
+
 {% endblock %}
 
 {% block header %}
 
-{%  include "partials/cookie-banner.html" %}
+  {% include "partials/cookie-banner.html" %}
 
   {{ govukHeader({
     homepageUrl: "https://www.gov.uk/",
@@ -69,7 +69,8 @@
         beta
       </strong>
       <span class="govuk-phase-banner__text">
-        This is a new service – your <a class="govuk-link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965?Source={{fullUrl}}">feedback</a> will help us to improve it.
+        This is a new service – your <a class="govuk-link"
+                                        href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965?Source={{ fullUrl }}">feedback</a> will help us to improve it.
       </span>
     </p>
   </div>
@@ -83,9 +84,9 @@
 
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
 
-    <script src="{{ assetPath }}/js/all.js"></script>
-    <script>window.GOVUKFrontend.initAll()</script>
-    <script src="{{ assetPath }}/js/core.js"></script>
+  <script src="{{ assetPath }}/js/all.js"></script>
+  <script>window.GOVUKFrontend.initAll()</script>
+  <script src="{{ assetPath }}/js/core.js"></script>
 {% endblock %}
 
 {% block footer %}

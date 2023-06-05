@@ -5,124 +5,139 @@
 
 {% block content %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">
         Flood alerts and warnings
-    </h1>
-  </div>
-</div>
-
-{% if model.error %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <div class="defra-service-error govuk-!-margin-bottom-7">
-      <h2 class="defra-service-error__title" id="error-summary-title">
-        Sorry, there is currently a problem searching a location
-      </h2>
-      <p>Try again later, or use the list to find a warning or alert.</p>
+      </h1>
     </div>
   </div>
-</div>
-{% endif %}
 
-{% if model.countFloods or (not model.countFloods and model.q) %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-  
-    {% if model.station.agency_name %}
-    <p>Showing alerts and warnings within 5 miles of {{model.station.agency_name }}. <a href="/alerts-and-warnings">Show all alerts and warnings</a></p>
-    {% endif %}
-
-    <div class="defra-search govuk-form-group govuk-!-margin-bottom-2">
-      <form method="post" action="/alerts-and-warnings">
-        <label class="govuk-label defra-search__label" for="location">Search a location</label>
-        <div class="defra-search__container">
-          <input class="defra-search__input" id="location" name="location" type="search" spellcheck="false" value="{{ model.q }}">
-          <div class="defra-search__submit-container">
-            <button class="defra-search__button">
-              <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="0" y="0" width="50" height="50" style="fill:none;"/><path d="M12.316,14.791c-1.242,0.79 -2.716,1.248 -4.296,1.248c-4.426,0 -8.02,-3.593 -8.02,-8.019c0,-4.426 3.594,-8.02 8.02,-8.02c4.426,0 8.019,3.594 8.019,8.02c0,1.58 -0.458,3.054 -1.248,4.296l5.209,5.209l-2.475,2.475l-5.209,-5.209Zm-4.296,-12.771c3.311,0 6,2.688 6,6c0,3.311 -2.689,6 -6,6c-3.312,0 -6,-2.689 -6,-6c0,-3.312 2.688,-6 6,-6Z" style="fill:currentColor;"/></svg>
-              <span class="govuk-visually-hidden">Search</span>
-            </button>
-          </div>
+  {% if model.error %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <div class="defra-service-error govuk-!-margin-bottom-7">
+          <h2 class="defra-service-error__title" id="error-summary-title">
+            Sorry, there is currently a problem searching a location
+          </h2>
+          <p>Try again later, or use the list to find a warning or alert.</p>
         </div>
-      </form>
+      </div>
     </div>
-    <span id="{{ model.map }}"></span>
+  {% endif %}
 
-    {% if not model.countFloods %}
-      <h2 class="govuk-heading-m govuk-!-margin-top-7">
-        No alerts or warnings found for '{{ model.q }}' 
-      </h2>
-      <p class="govuk-body">If you searched a place in England, you should:</p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>check the spelling</li>
-        <li>enter a broader location</li>
-      </ul>
-      <p class="govuk-body">If you searched a place outside England, you should visit:</p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li><a href="https://www.sepa.org.uk/environment/water/flooding/">Scottish Environment Protection Agency</a></li>
-        <li><a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">Northern Ireland Direct</a></li>
-        <li><a href="https://naturalresources.wales/flooding">Natural Resources Wales</a></li>
-      </ul>
+  {% if model.countFloods or (not model.countFloods and model.q) %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+
+        {% if model.station.agency_name %}
+          <p>Showing alerts and warnings within 5 miles of {{ model.station.agency_name }}. <a
+              href="/alerts-and-warnings">Show all alerts and warnings</a></p>
+        {% endif %}
+
+        <div class="defra-search govuk-form-group govuk-!-margin-bottom-2">
+          <form method="post" action="/alerts-and-warnings">
+            <label class="govuk-label defra-search__label" for="location">Search a location</label>
+            <div class="defra-search__container">
+              <input class="defra-search__input" id="location" name="location" type="search" spellcheck="false"
+                     value="{{ model.q }}">
+              <div class="defra-search__submit-container">
+                <button class="defra-search__button">
+                  <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20"
+                       style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+                    <rect x="0" y="0" width="50" height="50" style="fill:none;"></rect>
+                    <path
+                        d="M12.316,14.791c-1.242,0.79 -2.716,1.248 -4.296,1.248c-4.426,0 -8.02,-3.593 -8.02,-8.019c0,-4.426 3.594,-8.02 8.02,-8.02c4.426,0 8.019,3.594 8.019,8.02c0,1.58 -0.458,3.054 -1.248,4.296l5.209,5.209l-2.475,2.475l-5.209,-5.209Zm-4.296,-12.771c3.311,0 6,2.688 6,6c0,3.311 -2.689,6 -6,6c-3.312,0 -6,-2.689 -6,-6c0,-3.312 2.688,-6 6,-6Z"
+                        style="fill:currentColor;">
+                    </path>
+                  </svg>
+                  <span class="govuk-visually-hidden">Search</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <span id="{{ model.map }}"></span>
+
+        {% if not model.countFloods %}
+          <h2 class="govuk-heading-m govuk-!-margin-top-7">
+            No alerts or warnings found for '{{ model.q }}'
+          </h2>
+          <p class="govuk-body">If you searched a place in England, you should:</p>
+          <ul class="govuk-list govuk-list--bullet">
+            <li>check the spelling</li>
+            <li>enter a broader location</li>
+          </ul>
+          <p class="govuk-body">If you searched a place outside England, you should visit:</p>
+          <ul class="govuk-list govuk-list--bullet">
+            <li><a href="https://www.sepa.org.uk/environment/water/flooding/">Scottish Environment Protection Agency</a>
+            </li>
+            <li><a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">Northern Ireland
+              Direct</a></li>
+            <li><a href="https://naturalresources.wales/flooding">Natural Resources Wales</a></li>
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if model.countFloods %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <ul class="defra-flood-warnings-list" id="list">
+            {% for group in model.floods %}
+              {% if group.count > 0 %}
+                <li class="defra-flood-warnings-list__category">
+                  <h3 class="defra-flood-warnings-list__category-title" id="{{ group.severity.pluralisedHash }}">
+                    {{ group.count }} {% if group.count != 1 %}{{ group.severity.pluralisedTitle | lower }}{% else %}
+                    {{ group.severity.title | lower }}{% endif %}
+                  </h3>
+                  <p>{{ group.severity.subTitle }}</p>
+                  <ul class="defra-flood-warnings-list__items">
+                    {% for item in group.floods %}
+                      {{ item.html | safe }}
+                    {% endfor %}
+                  </ul>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
     {% endif %}
-  </div>
-</div>
 
-{% if model.countFloods %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <ul class="defra-flood-warnings-list" id="list">
-      {% for group in model.floods %}
-      {% if group.count > 0 %}
-      <li class="defra-flood-warnings-list__category">
-        <h3 class="defra-flood-warnings-list__category-title" id="{{ group.severity.pluralisedHash }}">
-          {{ group.count }} {% if group.count != 1 %}{{ group.severity.pluralisedTitle | lower }}{% else %}{{ group.severity.title | lower }}{% endif %}
-        </h3>
-        <p>{{ group.severity.subTitle }}</p>
-        <ul class="defra-flood-warnings-list__items">
-          {% for item in group.floods %}
-            {{ item.html | safe }}
-          {% endfor %}
+  {% else %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-m">
+          No flood alerts or warnings
+        </h2>
+        <p class="govuk-body">If you're checking a place outside England, you should visit:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li><a href="https://www.sepa.org.uk/environment/water/flooding/">Scottish Environment Protection Agency</a>
+          </li>
+          <li><a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">Northern Ireland
+            Direct</a></li>
+          <li><a href="https://naturalresources.wales/flooding">Natural Resources Wales</a></li>
         </ul>
-      </li>
-      {% endif %}
-      {% endfor %}
-    </ul>
-  </div>
-</div>
-{% endif %}
+      </div>
+    </div>
+  {% endif %}
 
-{% else %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-m">
-      No flood alerts or warnings 
-    </h2>
-    <p class="govuk-body">If you're checking a place outside England, you should visit:</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li><a href="https://www.sepa.org.uk/environment/water/flooding/">Scottish Environment Protection Agency</a></li>
-      <li><a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">Northern Ireland Direct</a></li>
-      <li><a href="https://naturalresources.wales/flooding">Natural Resources Wales</a></li>
-    </ul>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {% include "partials/context-footer.html" %}
+      {% include "partials/related-content.html" %}
+    </div>
   </div>
-</div>
-{% endif %}
-    
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    {% include "partials/context-footer.html" %}
-    {% include "partials/related-content.html" %}
-  </div>
-</div>
 
 {% endblock %}
 
 {% block bodyEnd %}
-{{ super() }}
-<script>
-  window.flood.model = {{ model.expose | dump(2) | safe }}
-</script>
-<script src="{{assetPath}}/js/templates.js"></script>
-<script src="{{assetPath}}/js/alerts-and-warnings.js"></script>
+  {{ super() }}
+  <script>
+    window.flood.model =
+    {{ model.expose | dump(2) | safe }}
+  </script>
+  <script src="{{ assetPath }}/js/templates.js"></script>
+  <script src="{{ assetPath }}/js/alerts-and-warnings.js"></script>
 {% endblock %}
