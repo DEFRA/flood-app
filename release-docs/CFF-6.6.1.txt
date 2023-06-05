@@ -1,0 +1,23 @@
+# Check for flooding 6.5.0 Tuesday 13th May 2023
+
+# Release
+
+6.6.1
+
+https://eaflood.atlassian.net/projects/FSR/versions/16490/tab/release-report-all-issues
+
+# Tickets
+
+https://eaflood.atlassian.net/browse/FSR-864 Normal range label on station page using old logic
+https://eaflood.atlassian.net/browse/FSR-872 Remove technical information section on station pages
+https://eaflood.atlassian.net/browse/FSR-920 Target Area list page showing old search error
+
+# Instructions
+
+Application, service and database build for release
+
+Straight forward application build for release
+
+1 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
