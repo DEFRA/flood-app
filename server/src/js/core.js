@@ -229,7 +229,7 @@ function deleteGA4Cookies () {
   const ga4CookieRegex = /(^|;)\s*(_ga_.+?)=.*?(?=;|$)/g
   let match
   while ((match = ga4CookieRegex.exec(document.cookie)) !== null) {
-    setCookie(match[2], '', -1)
+    setCookie(match[2], '', -1, './', document.domain)
   }
 }
 
@@ -247,7 +247,7 @@ if (saveButton) {
         window.flood.utils.setGTagAnalyticsCookies()
       } else {
         setCookie('set_cookie_usage', '', -1)
-        setCookie('_ga', '', -1)
+        setCookie('_ga', '', -1, './', document.domain)
         deleteGA4Cookies()
       }
 
