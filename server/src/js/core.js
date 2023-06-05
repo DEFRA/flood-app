@@ -3,7 +3,6 @@
 // client-side javascript across all our pages
 import 'core-js/modules/es6.promise'
 import 'core-js/modules/es6.array.iterator'
-import Cookies from 'js-cookie'
 
 window.flood = {
   utils: {
@@ -205,11 +204,11 @@ if (saveButton) {
       window.flood.utils.setCookie('set_cookie_usage', '', -1)
       window.flood.utils.setCookie('_ga', '', -1)
 
-      // Get cookie name
-      const gtagCookie = document.cookie.match('(^|;) ?(_ga_.*)=([^;]*)(;|$)')
-
-      if (gtagCookie && gtagCookie[2]) {
-        Cookies.remove(gtagCookie[2], { path: '', domain: document.domain })
+      // Get GA4 cookie name
+      const ga4CookieRegex = /(^|;)\s*(_ga_.+?)=.*?(?=;|$)/g;
+      let match;
+      while ((match = ga4CookieRegex.exec(document.cookie)) !== null) {
+        window.flood.utils.setCookie(match[2], '', -1)
       }
     }
     const alert = document.getElementById('cookie-notification')
