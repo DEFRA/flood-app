@@ -206,7 +206,7 @@ if (saveButton) {
 
       // Get cookie name
       const gtagCookie = document.cookie.match('(^|;) ?(_ga_.*)=([^;]*)(;|$)')
-      
+
       if (gtagCookie && gtagCookie[2]) {
         window.flood.utils.setCookie(gtagCookie[2], '', -1)
       }
