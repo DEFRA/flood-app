@@ -217,7 +217,7 @@ const saveButton = document.getElementById('cookies-save')
 //   })
 // }
 
-function setCookie(name, value, days) {
+function setCookie (name, value, days) {
   try {
     window.flood.utils.setCookie(name, value, days)
   } catch (error) {
@@ -225,7 +225,7 @@ function setCookie(name, value, days) {
   }
 }
 
-function deleteGA4Cookies() {
+function deleteGA4Cookies () {
   const ga4CookieRegex = /(^|;)\s*(_ga_.+?)=.*?(?=;|$)/g
   let match
   while ((match = ga4CookieRegex.exec(document.cookie)) !== null) {
