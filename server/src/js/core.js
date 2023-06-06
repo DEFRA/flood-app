@@ -225,11 +225,28 @@ function setCookie (name, value, days) {
   }
 }
 
+// function deleteGA4Cookies () {
+//   const ga4CookieRegex = /(^|;)\s*(_ga_.+?)=.*?(?=;|$)/g
+//   let match
+//   while ((match = ga4CookieRegex.exec(document.cookie)) !== null) {
+//     setCookie(match[2], '', -1, './', document.domain)
+//   }
+// }
+
 function deleteGA4Cookies () {
   const ga4CookieRegex = /(^|;)\s*(_ga_.+?)=.*?(?=;|$)/g
   let match
   while ((match = ga4CookieRegex.exec(document.cookie)) !== null) {
-    setCookie(match[2], '', -1, './', document.domain)
+    deleteCookie(match[2])
+  }
+}
+
+function deleteCookie (name) {
+  try {
+    const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
+    document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + document.domain
+  } catch (error) {
+    console.error(`Failed to delete cookie ${name}: ${error}`)
   }
 }
 
