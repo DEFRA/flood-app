@@ -56,7 +56,7 @@ window.flood = {
     setCookie: (name, value, days) => {
       const d = new Date()
       d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
-      document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + document.domain
+      document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + window.location.hostname
     },
     setGTagAnalyticsCookies: () => {
       const script = document.createElement('script')
@@ -65,7 +65,7 @@ window.flood = {
         window.dataLayer = window.dataLayer || []
         function gtag () { window.dataLayer.push(arguments) }
         gtag('js', new Date())
-        gtag('config', process.env.GA4_ID, { cookie_domain: document.domain })
+        gtag('config', process.env.GA4_ID, { cookie_domain: window.location.hostname })
       }
 
       const gtagManager = document.createElement('script')
@@ -229,7 +229,7 @@ function setCookie (name, value, days) {
 //   const ga4CookieRegex = /(^|;)\s*(_ga_.+?)=.*?(?=;|$)/g
 //   let match
 //   while ((match = ga4CookieRegex.exec(document.cookie)) !== null) {
-//     setCookie(match[2], '', -1, './', document.domain)
+//     setCookie(match[2], '', -1, './', window.location.hostname)
 //   }
 // }
 
@@ -244,8 +244,7 @@ function deleteGA4Cookies () {
 function deleteCookie (name) {
   try {
     const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
-    console.log('Deleting cookie: ', document.domain)
-    document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + document.domain
+    document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + window.location.hostname
   } catch (error) {
     console.error(`Failed to delete cookie ${name}: ${error}`)
   }
@@ -265,7 +264,7 @@ if (saveButton) {
         window.flood.utils.setGTagAnalyticsCookies()
       } else {
         setCookie('set_cookie_usage', '', -1)
-        setCookie('_ga', '', -1, './', document.domain)
+        setCookie('_ga', '', -1, './', window.location.hostname)
         deleteGA4Cookies()
       }
 
