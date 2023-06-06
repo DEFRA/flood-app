@@ -225,17 +225,17 @@ function setCookie (name, value, days) {
   }
 }
 
-// function deleteGA4Cookies () {
-//   const ga4CookieRegex = /(^|;)\s*(_ga_.+?)=.*?(?=;|$)/g
-//   let match
-//   while ((match = ga4CookieRegex.exec(document.cookie)) !== null) {
-//     setCookie(match[2], '', -1, './', window.location.hostname)
-//   }
-// }
-
 function deleteGA4Cookies () {
+  const gaCookieRegex = /(^|;)\s*(_ga)=.*?(?=;|$)/g
   const ga4CookieRegex = /(^|;)\s*(_ga_.+?)=.*?(?=;|$)/g
   let match
+
+  // Delete _ga cookie if present
+  if ((match = gaCookieRegex.exec(document.cookie)) !== null) {
+    deleteCookie(match[2])
+  }
+
+  // Delete GA4 cookies
   while ((match = ga4CookieRegex.exec(document.cookie)) !== null) {
     deleteCookie(match[2])
   }
