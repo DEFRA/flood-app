@@ -191,32 +191,6 @@ if (cookieButtons) {
 
 const saveButton = document.getElementById('cookies-save')
 
-// if (saveButton) {
-//   saveButton.addEventListener('click', function (e) {
-//     e.preventDefault()
-//     const useCookies = document.querySelectorAll('input[name="accept-analytics"]')
-//     window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
-//     if (useCookies[0].checked) {
-//       window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
-//       calledGTag = true
-//       window.flood.utils.setGTagAnalyticsCookies()
-//     } else {
-//       window.flood.utils.setCookie('set_cookie_usage', '', -1)
-//       window.flood.utils.setCookie('_ga', '', -1)
-
-//       // Get GA4 cookie name
-//       const ga4CookieRegex = /(^|;)\s*(_ga_.+?)=.*?(?=;|$)/g
-//       let match
-//       while ((match = ga4CookieRegex.exec(document.cookie)) !== null) {
-//         window.flood.utils.setCookie(match[2], '', -1)
-//       }
-//     }
-//     const alert = document.getElementById('cookie-notification')
-//     alert.removeAttribute('style')
-//     alert.focus()
-//   })
-// }
-
 function setCookie (name, value, days) {
   try {
     window.flood.utils.setCookie(name, value, days)
