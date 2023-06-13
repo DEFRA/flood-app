@@ -13,6 +13,7 @@ class ViewModel {
 
     this.station = new Station(station)
     this.station.riverNavigation = river
+    this.id = station.id
 
     this.twitterEvent = 'Station:Share Page:Station - Share to Twitter'
     this.facebookEvent = 'Station:Share Page:Station - Share to Facebook'
@@ -171,7 +172,7 @@ class ViewModel {
 
       oneHourAgo.setHours(oneHourAgo.getHours() - 1)
 
-      // check if recent value is over one hour old
+      // check if recent value is over one hour old0
       this.dataOverHourOld = new Date(this.recentValue.ts) < oneHourAgo
 
       this.recentValue.dateWhen = 'on ' + moment.tz(this.recentValue.ts, tz).format('D/MM/YY')
@@ -234,20 +235,15 @@ class ViewModel {
       }
     }
 
-    // Set Lat long
+    // // Set Lat long
     const coordinates = JSON.parse(this.station.coordinates).coordinates
     coordinates.reverse()
 
+    this.centre = coordinates.join(',')
+
     // Set pageTitle, metaDescription
-    let stationType
+    const stationType = stationTypeCalculator(this.station.type)
     const stationLocation = this.station.name
-    if (this.station.type === 'c') {
-      stationType = 'Sea'
-    } else if (this.station.type === 'g') {
-      stationType = 'Groundwater'
-    } else {
-      stationType = 'River'
-    }
 
     if (this.station.type === 'g') {
       this.pageTitle = `Groundwater level at ${stationLocation}`
@@ -385,7 +381,62 @@ class ViewModel {
     // Set canonical url
     this.metaCanonical = `/station/${this.station.id}${this.station.direction === 'upstream' ? '' : '/downstream'}`
     this.liveServiceUrl = `/station/${this.station.id}${this.station.direction === 'downstream' ? '?direction=d' : ''}`
+
+    // Map
+
+    this.zoom = 14
+    let forecastData
+    if (forecast) {
+      forecastData = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
+    }
+    let telemetryData
+    if (telemetry.length) {
+      telemetryData = telemetryBuilder(this.telemetry, forecastData, this.station.type)
+    }
+    this.telemetryRefined = telemetryData || []
   }
+}
+
+function stationTypeCalculator (stationTypeData) {
+  let stationType
+  if (stationTypeData === 'c') {
+    stationType = 'Sea'
+  } else if (stationTypeData === 'g') {
+    stationType = 'Groundwater'
+  } else {
+    stationType = 'River'
+  }
+  return stationType
+}
+function telemetryBuilder (telemetryData, forecastData, stationType) {
+  const observed = telemetryData.map(function (telemetry) {
+    return {
+      dateTime: telemetry.ts,
+      value: telemetry._
+    }
+  })
+
+  let forecast = []
+
+  if (forecastData) {
+    forecast = forecastData.processedValues.map(function (forecast) {
+      return {
+        dateTime: forecast.ts,
+        value: Number(forecast._)
+      }
+    })
+  }
+
+  const telemetry = {
+    type: stationTypeCalculator(stationType).toLowerCase(),
+    latestDateTime: telemetryData[0].ts,
+    dataStartDateTime: moment(telemetryData[0].ts).subtract(5, 'days').toISOString().replace(/.\d+Z$/g, 'Z'),
+    dataEndDateTime: moment().toISOString().replace(/.\d+Z$/g, 'Z'),
+    observed: observed,
+    forecast: forecast
+  }
+
+  return telemetry
 }
 
 module.exports = ViewModel
