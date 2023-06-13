@@ -1,6 +1,6 @@
 'use strict'
 import 'elm-pep'
-import '../components/charts'
+import '../components/line-chart'
 import '../components/nunjucks'
 import '../components/map/maps'
 import '../components/map/styles'
@@ -12,7 +12,7 @@ import '../components/toggletip'
 
 // Create LiveMap
 window.flood.maps.createLiveMap('map', {
-  btnText: 'View map',
+  btnText: 'Map',
   btnClasses: 'defra-link-icon-s',
   layers: 'mv,ri,ti,gr,rf',
   data: {
@@ -20,70 +20,21 @@ window.flood.maps.createLiveMap('map', {
     checkBox: 'Station:Map interaction:Map - Layer interaction',
     aerial: 'Station:Map interaction:View-satelite-basemap'
   },
-  centre: JSON.parse(window.flood.model.station.coordinates).coordinates,
-  selectedId: 'stations.' + window.flood.model.station.id,
+  centre: window.flood.model.centre.split(','),
+  selectedId: 'stations.' + window.flood.model.id,
   zoom: 14
 })
 
-const chart = document.querySelector('.defra-line-chart')
-if (chart) {
-  // If javascript is enabled make content visible to all but assitive technology
-  // var figure = chart.parentNode
-  chart.setAttribute('aria-hidden', true)
-  chart.removeAttribute('hidden')
-  // Create line chart instance
-  const lineChart = window.flood.charts.createLineChart('line-chart', {
-    now: new Date(),
-    observed: window.flood.model.telemetry,
-    forecast: window.flood.model.ffoi && !window.flood.model.forecastOutOfDate ? window.flood.model.ffoi.processedValues : [],
-    plotNegativeValues: window.flood.model.station.plotNegativeValues
-  })
-  if (Object.keys(lineChart).length) {
-    if (window.flood.utils.getParameterByName('t')) {
-      // Find threshold in model
-      const thresholdId = window.flood.utils.getParameterByName('t')
-      let matchedThresholds = []
-      window.flood.model.thresholds.forEach(function (threshold) {
-        matchedThresholds = matchedThresholds.concat(threshold.values.filter(function (value) {
-          return (value.id.toString() === thresholdId)
-        }))
-      })
-      const threshold = matchedThresholds[0]
-      lineChart.addThreshold({
-        id: threshold.id,
-        level: threshold.value,
-        name: threshold.shortname
-      })
-    } else {
-      const typical = document.querySelector('.defra-flood-impact-list__value[data-id="pc5"]:last-child')
-      if (typical) {
-        lineChart.addThreshold({
-          id: typical.getAttribute('data-id'),
-          level: Number(typical.getAttribute('data-level')),
-          name: typical.getAttribute('data-name')
-        })
-      }
-    }
-    // Add threshold buttons
-    Array.from(document.querySelectorAll('.defra-flood-impact-list__value')).forEach(value => {
-      const button = document.createElement('button')
-      button.innerHTML = 'Show on chart<span class="govuk-visually-hidden"> (Visual only)</span>'
-      button.setAttribute('data-journey-click', 'Station:Chart interaction:Station - show on chart')
-      button.className = 'defra-button-text-s'
-      button.addEventListener('click', function (e) {
-        lineChart.addThreshold({
-          id: value.getAttribute('data-id'),
-          level: Number(value.getAttribute('data-level')),
-          name: value.getAttribute('data-name')
-        })
-        // Scroll viewport to chart
-        const offsetTop = chart.getBoundingClientRect().top + window.pageYOffset
-        window.scrollTo(0, offsetTop)
-      })
-      const action = value.querySelector('.defra-flood-impact-list__action')
-      if (action) {
-        action.appendChild(button)
-      }
+// Line chart
+if (document.getElementById('line-chart')) {
+  const lineChart = window.flood.charts.createLineChart('line-chart', window.flood.model.id, window.flood.model.telemetry)
+  const thresholdId = `threshold-${window.flood.model.id}-high`
+  const threshold = document.querySelector(`[data-id="${thresholdId}"]`)
+  if (threshold) {
+    lineChart.addThreshold({
+      id: thresholdId,
+      name: threshold.getAttribute('data-name'),
+      level: Number(threshold.getAttribute('data-level'))
     })
   }
 }
