@@ -198,28 +198,53 @@
 {% endif %}
 
 
-{# Graph #}
+
 {% if model.station.isActive and model.readings %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <figure class="defra-line-chart" aria-hidden="true" hidden>
-      <figcaption class="govuk-heading-m govuk-!-margin-top-4 govuk-!-margin-bottom-4">Height over the last 5 days {% if model.isFfoi %}and up to 36 hour forecast{% endif %}</figcaption>
-        <div id="line-chart" class="defra-line-chart__container" role="presentation"></div>
-        {% if model.isFfoi and not model.forecastOutOfDate %}
-        <p class="govuk-body-s govuk-!-margin-top-0 govuk-!-margin-bottom-2"> {{ model.forecastDetails }}</p>
-        {% endif %}
-        {% if model.dataOverHourOld %}
-        <p class="govuk-body-s govuk-!-margin-top-0 govuk-!-margin-bottom-2">We take measurements more often as the risk of flooding increases.</p>
-        {% endif %}
-        {% if model.station.isRiver and model.hasNegativeValues %}
-        <p class="govuk-body-s govuk-!-margin-top-0 govuk-!-margin-bottom-2">Levels that are very low or below zero are normal for some stations.</p>
-        {% endif %}
-    </figure>
+    <div class="defra-line-chart govuk-!-margin-bottom-4">
+      <h2 class="govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-4">Height in metres over the last 5 days {% if model.station.isForecast %}and up to 36 hour forecast{% endif %}</h2>
+
+      {# Forecast information #}
+      {% if model.station.isForecast %}
+      <div class="defra-flood-status defra-flood-status--full">
+        <div class="defra-flood-status-item defra-flood-status-item--information govuk-!-margin-bottom-4">
+          <div class="defra-flood-status-item__container">
+            <span class="defra-flood-status-item__icon">
+              <svg focusable="false" aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" style="fill-rule:evenodd;clip-rule:evenodd">
+                <circle cx="9" cy="9" r="7.5" style="fill:none;stroke:currentColor;stroke-width:1px;"></circle>
+                <text x="4.687px" y="12.906px" fill="currentColor" style="font-family:'Courier-Bold', 'Courier';font-size:14px;">i</text>
+              </svg>
+              <!-- <svg width="18" height="18" viewBox="0 0 18 18" style="fill-rule:evenodd;clip-rule:evenodd"><circle cx="9" cy="9" r="7.5" style="fill:none;stroke:#000;stroke-width:1px;"></circle><text x="4.687px" y="12.906px" style="font-family:'Courier-Bold', 'Courier';font-size:14px;">i</text></svg> -->
+            </span>
+            <div class="defra-flood-status-item__text">
+              <span class="govuk-visually-hidden">Information:</span>
+              <p class="govuk-body-s govuk-!-margin-bottom-0">This station includes an automated model{% if model.station.rloiId == '8028' %} which you should consider alongside other factors{% endif %}. The highest level in the model is {{ model.station.forecastHighest | round(2) }}m at {{ model.forecastHighestTime }}.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      {# Graph #}
+
+      <div id="line-chart" class="defra-line-chart__container"></div>
+
+      {% if model.isFfoi and not model.forecastOutOfDate %}
+      <p class="govuk-body-s govuk-!-margin-top-0 govuk-!-margin-bottom-2"> {{ model.forecastDetails }}</p>
+      {% endif %}
+      {% if model.dataOverHourOld %}
+      <p class="govuk-body-s govuk-!-margin-top-0 govuk-!-margin-bottom-2">We take measurements more often as the risk of flooding increases.</p>
+      {% endif %}
+      {% if model.station.isRiver and model.hasNegativeValues %}
+      <p class="govuk-body-s govuk-!-margin-top-0 govuk-!-margin-bottom-2">Levels that are very low or below zero are normal for some stations.</p>
+      {% endif %}
+
+      <a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/{{model.station.id}}{% if model.station.qualifier == 'd' %}/downstream{% endif %}" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV ({% if model.isFfoi %}16{% else %}12{% endif %}KB)</a>
+    </div>
   </div>
 </div>
-
-<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/{{model.station.id}}{% if model.station.qualifier == 'd' %}/downstream{% endif %}" class="defra-button-secondary defra-button-secondary--icon"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download height data CSV ({% if model.isFfoi %}16{% else %}12{% endif %}KB)</a>
 
 {% endif %}
 
@@ -227,7 +252,7 @@
 {% if model.thresholds.length > 0 %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h2 class="govuk-heading-m govuk-!-margin-top-6">How levels here could affect nearby areas</h2>
+    <h2 class="govuk-heading-s govuk-!-margin-bottom-4">How levels here could affect nearby areas</h2>
     {% if model.station.hasImpacts %}
     <span id="toggle-list-display" data-toggle-list-display-type="impact"></span>
     {% endif %}
@@ -249,7 +274,7 @@
           <div class="defra-flood-impact-list__container">
             {{ threshold.description | safe }}
             {% if not band.isLatest %}
-            <span class="defra-flood-impact-list__action"></span>
+            <span class="defra-flood-impact-list__action" data-id="threshold-{{ threshold.id }}" data-level="{{ band.level }}" data-name="{{ threshold.name }}" data-threshold-add></span>
             {% endif %}
           </div>
         </dd>
@@ -267,8 +292,8 @@
     <p class="govuk-text govuk-!-margin-top-3">
       <a href="/how-we-measure-river-sea-groundwater-levels">How we measure river, sea and groundwater levels</a>
     </p>
-    {% include "partials/context-footer.html" %}
     {% include "partials/social.html" %}
+    {% include "partials/context-footer.html" %}
     {% include "partials/related-content.html" %}
   </div>
 </div>
@@ -279,8 +304,18 @@
 
 {% block bodyEnd %}
 {{ super() }}
+<script src="{{assetPath}}/js/core.js"></script>
 <script>
-  window.flood.model = {{ model | dump(2) | safe }}
+  window.flood.model = {
+    mapButtonText: 'Map',
+    mapButtonClass: 'defra-link-icon-s',
+    mapButtonType: 'link',
+    mapLayers: 'mv,ri,se,gr,rl',
+    id: {{ model.station.id | dump | safe }},
+    zoom: {{ model.zoom | dump | safe }},
+    centre: {{ model.centre | dump | safe }},
+    telemetry: {{ model.telemetryRefined | dump | safe }}
+  }
 </script>
 <script src="{{assetPath}}/js/templates.js"></script>
 <script src="{{assetPath}}/js/station.js"></script>
