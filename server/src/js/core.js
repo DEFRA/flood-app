@@ -218,7 +218,7 @@ function deleteGA4Cookies () {
 function deleteCookie (name) {
   try {
     const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
-    document.cookie = name + '=; expires=' + expires + '; path=/; domain=.defra.cloud'
+    document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + window.location.hostname
   } catch (error) {
     console.error(`Failed to delete cookie ${name}: ${error}`)
   }
@@ -258,4 +258,5 @@ if (!calledGTag) {
     window.flood.utils.setGTagAnalyticsCookies()
   }
 }
+
 window.flood.utils.setGoogleAnalyticsEvent()
