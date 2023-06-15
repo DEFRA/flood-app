@@ -205,12 +205,17 @@ function deleteGA4Cookies () {
 
     for (let i = 0; i < cookies.length; i++) {
       const cookie = cookies[i].trim()
+      console.log(`Cookie ${cookie}`)
+
+      const name = cookie.split("=")
 
       // Check if the cookie name starts with "_ga_"
       if (cookie.indexOf('_ga_') === 0) {
-        deleteCookie(cookie)
+        deleteCookie(name[0])
       }
-      deleteCookie('_ga')
+      if (cookie.indexOf('_ga') === 0) {
+        deleteCookie(name[0])
+      }
     }
   } catch (error) {
     console.error(`Failed to delete GA4 cookies: ${error}`)
@@ -219,8 +224,9 @@ function deleteGA4Cookies () {
 
 function deleteCookie (name) {
   try {
+    console.log(`Deleting cookie ${name}`)
     const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
-    document.cookie = name + '=; expires=' + expires + '; path=/;'
+    document.cookie = name + '=; expires=' + expires + '; path=/;' + '; domain=' + window.location.hostname
   } catch (error) {
     console.error(`Failed to delete cookie ${name}: ${error}`)
   }
@@ -276,6 +282,16 @@ function deleteOldCookies () {
 
   if (!cookieExists) {
     try {
+      const cookies = document.cookie.split(';')
+
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim()
+
+      // Check if the cookie name starts with "_ga_"
+      if (cookie.indexOf('_gat_') === 0) {
+        deleteCookie(cookie)
+      }
+    }
       deleteCookie('_ga')
       deleteCookie('_gid')
       deleteCookie('seen_cookie_message')
