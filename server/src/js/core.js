@@ -218,7 +218,7 @@ function deleteGA4Cookies () {
 function deleteCookie (name) {
   try {
     const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
-    document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + window.location.hostname
+    document.cookie = name + '=; expires=' + expires + '; path=/;'
   } catch (error) {
     console.error(`Failed to delete cookie ${name}: ${error}`)
   }
