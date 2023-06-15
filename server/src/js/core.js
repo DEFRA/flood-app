@@ -200,18 +200,20 @@ function setCookie (name, value, days) {
 }
 
 function deleteGA4Cookies () {
-  const gaCookieRegex = /(^|;)\s*(_ga)=.*?(?=;|$)/g
-  const ga4CookieRegex = /(^|;)\s*(_ga_.+?)=.*?(?=;|$)/g
-  let match
+  try {
+    const cookies = document.cookie.split(';')
 
-  // Delete _ga cookie if present
-  if ((match = gaCookieRegex.exec(document.cookie)) !== null) {
-    deleteCookie(match[2])
-  }
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim()
 
-  // Delete GA4 cookies
-  while ((match = ga4CookieRegex.exec(document.cookie)) !== null) {
-    deleteCookie(match[2])
+      // Check if the cookie name starts with "_ga_"
+      if (cookie.indexOf('_ga_') === 0) {
+        deleteCookie(cookie)
+      }
+      deleteCookie('_ga')
+    }
+  } catch (error) {
+    console.error(`Failed to delete GA4 cookies: ${error}`)
   }
 }
 
@@ -238,7 +240,6 @@ if (saveButton) {
         window.flood.utils.setGTagAnalyticsCookies()
       } else {
         setCookie('set_cookie_usage', '', -1)
-        setCookie('_ga', '', -1, './', window.location.hostname)
         deleteGA4Cookies()
       }
 
@@ -257,6 +258,38 @@ if (!calledGTag) {
     calledGTag = true
     window.flood.utils.setGTagAnalyticsCookies()
   }
+}
+
+function deleteOldCookies () {
+  const cookies = document.cookie.split(';')
+
+  let cookieExists = false
+
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim()
+
+    // Check if the cookie starts with "cookie_update"
+    if (cookie.indexOf('cookie_update') === 0) {
+      cookieExists = true
+    }
+  }
+
+  if (!cookieExists) {
+    try {
+      deleteCookie('_ga')
+      deleteCookie('_gid')
+      deleteCookie('seen_cookie_message')
+      deleteCookie('set_cookie_usage')
+      window.flood.utils.setCookie('cookie_update', 'true', 365)
+    } catch (error) {
+      console.log('Error deleting cookies:', error)
+    }
+  }
+}
+
+// Call the function to delete old cookies and set the "cookie_update" cookie
+window.onload = function () {
+  deleteOldCookies()
 }
 
 window.flood.utils.setGoogleAnalyticsEvent()
