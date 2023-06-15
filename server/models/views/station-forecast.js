@@ -14,8 +14,6 @@ function Forecast (data, isCoastal, latestObserved) {
       ? moment(latestObserved.ts)
       : moment(data.values.start_timestamp)
 
-    console.log(this.forecastStart)
-
     this.truncateDate = isCoastal
       ? moment(this.forecastStart).add(5, 'days')
       : moment(this.forecastStart).add(36, 'hours')
