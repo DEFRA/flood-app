@@ -223,9 +223,7 @@ function deleteGA4Cookies () {
 
 function deleteCookie (name) {
   try {
-    console.log(`Deleting cookie ${name}`)
-    const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
-    document.cookie = name + '=; expires=' + expires + '; path=/;'
+    window.flood.utils.setCookie(name, '', -1)
   } catch (error) {
     console.error(`Failed to delete cookie ${name}: ${error}`)
   }
