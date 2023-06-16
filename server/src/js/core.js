@@ -224,7 +224,7 @@ function deleteGA4Cookies () {
 
 function deleteCookie (name) {
   try {
-    Cookies.remove(name, { path: '/', domain: document.domain })
+    Cookies.remove(name, { path: '/', domain: '.defra.cloud' })
   } catch (error) {
     console.error(`Failed to delete cookie ${name}: ${error}`)
   }
