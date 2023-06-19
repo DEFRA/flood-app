@@ -68,21 +68,21 @@ window.flood = {
         gtag('config', process.env.GA4_ID, { cookie_domain: window.location.hostname })
       }
 
-      const gtagManager = document.createElement('script')
-      gtagManager.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${process.env.GTM_ID}');`
+      // const gtagManager = document.createElement('script')
+      // gtagManager.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${process.env.GTM_ID}');`
 
-      const noscript = document.createElement('noscript')
-      const iframe = document.createElement('iframe')
-      iframe.setAttribute('src', `https://www.googletagmanager.com/ns.html?id=${process.env.GA4_ID}`)
-      iframe.setAttribute('height', '0')
-      iframe.setAttribute('width', '0')
-      iframe.setAttribute('style', 'display:none;visibility:hidden')
-      noscript.appendChild(iframe)
+      // const noscript = document.createElement('noscript')
+      // const iframe = document.createElement('iframe')
+      // iframe.setAttribute('src', `https://www.googletagmanager.com/ns.html?id=${process.env.GA4_ID}`)
+      // iframe.setAttribute('height', '0')
+      // iframe.setAttribute('width', '0')
+      // iframe.setAttribute('style', 'display:none;visibility:hidden')
+      // noscript.appendChild(iframe)
 
-      const head = document.getElementsByTagName('head')[0]
-      head.insertBefore(gtagManager, head.firstChild)
-      document.head.appendChild(gtagManager)
-      document.body.appendChild(noscript)
+      // const head = document.getElementsByTagName('head')[0]
+      // head.insertBefore(gtagManager, head.firstChild)
+      // document.head.appendChild(gtagManager)
+      // document.body.appendChild(noscript)
       document.body.appendChild(script)
     },
     setGoogleAnalyticsEvent: () => {
@@ -224,7 +224,7 @@ function deleteGA4Cookies () {
 function deleteCookie (name) {
   try {
     const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
-    document.cookie = name + '=; expires=' + expires + '; path=/; domain=.' + window.location.hostname
+    document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + window.location.hostname
   } catch (error) {
     console.error(`Failed to delete cookie ${name}: ${error}`)
   }
