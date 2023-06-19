@@ -3,7 +3,6 @@
 // client-side javascript across all our pages
 import 'core-js/modules/es6.promise'
 import 'core-js/modules/es6.array.iterator'
-import Cookies from 'js-cookie'
 
 window.flood = {
   utils: {
@@ -224,8 +223,8 @@ function deleteGA4Cookies () {
 
 function deleteCookie (name) {
   try {
-    window.flood.utils.setCookie(name, 'true', 30)
-    Cookies.remove(name, { path: '/', domain: window.location.hostname })
+    const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
+    document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + window.location.hostname
   } catch (error) {
     console.error(`Failed to delete cookie ${name}: ${error}`)
   }
