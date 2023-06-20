@@ -265,7 +265,7 @@ if (!calledGTag) {
   }
 }
 
-function deleteOldCookies () {
+async function deleteOldCookies () {
   if (document.cookie.includes('cookies_update=true')) {
     // "cookies_update" cookie exists, no further action needed
     return
@@ -282,8 +282,8 @@ function deleteOldCookies () {
 }
 
 // Call the function to delete old cookies and set the "cookie_update" cookie
-window.onload = function () {
-  deleteOldCookies()
+window.onload = async function () {
+  await deleteOldCookies()
 }
 
 window.flood.utils.setGoogleAnalyticsEvent()
