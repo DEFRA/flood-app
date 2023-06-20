@@ -269,24 +269,13 @@ function deleteOldCookies () {
   if (document.cookie.includes('cookies_update=true')) {
     // "cookies_update" cookie exists, no further action needed
     return
-  }
-  const cookies = document.cookie.split(';')
+  } else {
+    const cookies = document.cookie.split(';')
 
-  const now = new Date()
-  now.setTime(now.getTime())
-
-  for (let i = 0; i < cookies.length; i++) {
-    const cookie = cookies[i].trim()
-    const eqPos = cookie.indexOf('=')
-    const name = eqPos > -1 ? cookie.split('=')[0] : cookie
-
-    if (name === 'seen_cookie_message' || name.startsWith('_ga_')) {
-      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`
-    } else {
-      const cookieCreated = new Date(document.cookie.match(`(^|;\\s*)${name}=([^;]*)`)[2])
-      if (cookieCreated < now) {
-        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`
-      }
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim()
+      const name = cookie.split('=')[0]
+      deleteCookie(name)
     }
   }
   document.cookie = 'cookies_update=true;path=/;'
