@@ -67,22 +67,6 @@ window.flood = {
         gtag('js', new Date())
         gtag('config', process.env.GA4_ID, { cookie_domain: window.location.hostname })
       }
-
-      // const gtagManager = document.createElement('script')
-      // gtagManager.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${process.env.GTM_ID}');`
-
-      // const noscript = document.createElement('noscript')
-      // const iframe = document.createElement('iframe')
-      // iframe.setAttribute('src', `https://www.googletagmanager.com/ns.html?id=${process.env.GA4_ID}`)
-      // iframe.setAttribute('height', '0')
-      // iframe.setAttribute('width', '0')
-      // iframe.setAttribute('style', 'display:none;visibility:hidden')
-      // noscript.appendChild(iframe)
-
-      // const head = document.getElementsByTagName('head')[0]
-      // head.insertBefore(gtagManager, head.firstChild)
-      // document.head.appendChild(gtagManager)
-      // document.body.appendChild(noscript)
       document.body.appendChild(script)
     },
     setGoogleAnalyticsEvent: () => {
@@ -108,6 +92,22 @@ window.flood = {
       }
       document.addEventListener('change', gaEvent)
       document.addEventListener('click', gaEvent)
+    },
+    disableGoogleAnalytics: () => {
+      const script = document.createElement('script')
+      script.text = `window['ga-disable-${process.env.GA4_ID}'] = true;`
+      document.head.appendChild(script)
+
+      const gtagScript = document.createElement('script')
+      gtagScript.async = true
+      gtagScript.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.GA4_ID}`
+      gtagScript.onload = () => {
+        window.dataLayer = window.dataLayer || []
+        function gtag () { window.dataLayer.push(arguments) }
+        gtag('js', new Date())
+        gtag('config', process.env.GA4_ID)
+      }
+      document.head.appendChild(gtagScript)
     }
   }
 }
@@ -245,6 +245,7 @@ if (saveButton) {
       } else {
         setCookie('set_cookie_usage', '', -1)
         deleteGA4Cookies()
+        window.flood.utils.disableGoogleAnalytics()
       }
 
       const alert = document.getElementById('cookie-notification')
@@ -265,44 +266,30 @@ if (!calledGTag) {
 }
 
 function deleteOldCookies () {
+  if (document.cookie.includes('cookies_update=true')) {
+    // "cookies_update" cookie exists, no further action needed
+    return
+  }
   const cookies = document.cookie.split(';')
 
-  let gaCookie = false
-  let gidCookie = false
+  const now = new Date()
+  now.setTime(now.getTime())
 
   for (let i = 0; i < cookies.length; i++) {
     const cookie = cookies[i].trim()
+    const eqPos = cookie.indexOf('=')
+    const name = eqPos > -1 ? cookie.split('=')[0] : cookie
 
-    if (cookie.indexOf('_ga') === 0) {
-      gaCookie = true
-    }
-
-    if (cookie.indexOf('_gid') === 0) {
-      gidCookie = true
-    }
-  }
-
-  if (gaCookie && gidCookie) {
-    try {
-      const cookies = document.cookie.split(';')
-
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim()
-
-        // Check if the cookie name starts with "_ga_"
-        if (cookie.indexOf('_gat_') === 0) {
-          deleteCookie(cookie)
-        }
+    if (name === 'seen_cookie_message' || name.startsWith('_ga_')) {
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`
+    } else {
+      const cookieCreated = new Date(document.cookie.match(`(^|;\\s*)${name}=([^;]*)`)[2])
+      if (cookieCreated < now) {
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`
       }
-      deleteCookie('_ga')
-      deleteCookie('_gid')
-      deleteCookie('seen_cookie_message')
-      deleteCookie('set_cookie_usage')
-      window.flood.utils.setCookie('cookie_update', 'true', 365)
-    } catch (error) {
-      console.log('Error deleting cookies:', error)
     }
   }
+  document.cookie = 'cookies_update=true;path=/;'
 }
 
 // Call the function to delete old cookies and set the "cookie_update" cookie
