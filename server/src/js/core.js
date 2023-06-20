@@ -275,7 +275,7 @@ function deleteOldCookies () {
     for (let i = 0; i < cookies.length; i++) {
       const cookie = cookies[i].trim()
       const name = cookie.split('=')[0]
-      deleteCookie(name)
+      document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/'
     }
   }
   document.cookie = 'cookies_update=true;path=/;'
