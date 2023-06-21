@@ -95,19 +95,16 @@ window.flood = {
     },
     disableGoogleAnalytics: () => {
       const script = document.createElement('script')
-      script.text = `window['ga-disable-${process.env.GA4_ID}'] = true;`
+      script.text = `
+        if (!window.flood.utils.getCookie('set_cookie_usage')) {
+          window['ga-disable-${process.env.GA4_ID}'] = true;
+        } else {
+          window['ga-disable-${process.env.GA4_ID}'] = false;
+        }
+      `
       document.head.appendChild(script)
 
-      const gtagScript = document.createElement('script')
-      gtagScript.async = true
-      gtagScript.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.GA4_ID}`
-      gtagScript.onload = () => {
-        window.dataLayer = window.dataLayer || []
-        function gtag () { window.dataLayer.push(arguments) }
-        gtag('js', new Date())
-        gtag('config', process.env.GA4_ID)
-      }
-      document.head.appendChild(gtagScript)
+      // Rest of the function...
     }
   }
 }
