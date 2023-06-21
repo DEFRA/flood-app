@@ -112,28 +112,20 @@ window.flood = {
   }
 }
 
-const inferGaCookieDomain = () => {
-  const domain = document.domain
-  if (domain.match('.defra.cloud')) {
-    return 'domain=.defra.cloud;'
-  }
-  return window.location.hostname
-}
-
-const deleteGaCookies = analyticsAccount => {
-  const cookies = document.cookie.split(';')
-  cookies.forEach(cookie => {
-    const [name = ''] = cookie.split('=')
-    if (name.match('_gid|_ga')) {
-      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;${inferGaCookieDomain()}`
-    }
-  })
-  // if (analyticsAccount) {
-  //   // This is also required, as without it analytics makes one last call,
-  //   // which reinstates one of the GA cookies, that we just deleted
-  //   window[`ga-disable-${analyticsAccount}`] = true
-  // }
-}
+// const deleteGaCookies = analyticsAccount => {
+//   const cookies = document.cookie.split(';')
+//   cookies.forEach(cookie => {
+//     const [name = ''] = cookie.split('=')
+//     if (name.match('_gid|_ga')) {
+//       document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;${inferGaCookieDomain()}`
+//     }
+//   })
+// if (analyticsAccount) {
+//   // This is also required, as without it analytics makes one last call,
+//   // which reinstates one of the GA cookies, that we just deleted
+//   window[`ga-disable-${analyticsAccount}`] = true
+// }
+// }
 
 const elem = document.getElementById('cookie-banner')
 let calledGTag = false
@@ -222,36 +214,37 @@ function setCookie (name, value, days) {
   }
 }
 
-// function deleteGA4Cookies () {
-//   try {
-//     const cookies = document.cookie.split(';')
+function deleteGA4Cookies () {
+  try {
+    const cookies = document.cookie.split(';')
 
-//     for (let i = 0; i < cookies.length; i++) {
-//       const cookie = cookies[i].trim()
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim()
 
-//       const name = cookie.split('=')
+      const name = cookie.split('=')
 
-//       // Check if the cookie name starts with "_ga_"
-//       if (cookie.indexOf('_ga_') === 0) {
-//         deleteCookie(name[0])
-//       }
-//       if (cookie.indexOf('_ga') === 0) {
-//         deleteCookie(name[0])
-//       }
-//     }
-//   } catch (error) {
-//     console.error(`Failed to delete GA4 cookies: ${error}`)
-//   }
-// }
+      // Check if the cookie name starts with "_ga_"
+      if (cookie.indexOf('_ga_') === 0) {
+        deleteCookie(name[0])
+      }
+      if (cookie.indexOf('_ga') === 0) {
+        deleteCookie(name[0])
+      }
+    }
+  } catch (error) {
+    console.error(`Failed to delete GA4 cookies: ${error}`)
+  }
+}
 
-// function deleteCookie (name) {
-//   try {
-//     const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
-//     document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + window.location.hostname
-//   } catch (error) {
-//     console.error(`Failed to delete cookie ${name}: ${error}`)
-//   }
-// }
+function deleteCookie (name) {
+  try {
+    const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
+    document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + window.location.hostname
+    document.cookie = name + '=; expires=' + expires + '; path=/; domain=.defra.cloud;'
+  } catch (error) {
+    console.error(`Failed to delete cookie ${name}: ${error}`)
+  }
+}
 
 if (saveButton) {
   saveButton.addEventListener('click', function (e) {
@@ -267,7 +260,7 @@ if (saveButton) {
         window.flood.utils.setGTagAnalyticsCookies()
       } else {
         setCookie('set_cookie_usage', '', -1)
-        deleteGaCookies()
+        deleteGA4Cookies()
         window.flood.utils.disableGoogleAnalytics()
       }
 
