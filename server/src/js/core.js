@@ -114,13 +114,10 @@ window.flood = {
 
 const inferGaCookieDomain = () => {
   const domain = document.domain
-  if (domain.match('flood-map-for-planning.service.gov.uk')) {
-    return 'domain=.flood-map-for-planning.service.gov.uk;'
-  }
   if (domain.match('.defra.cloud')) {
     return 'domain=.defra.cloud;'
   }
-  return ''
+  return window.location.hostname
 }
 
 const deleteGaCookies = analyticsAccount => {
@@ -131,11 +128,11 @@ const deleteGaCookies = analyticsAccount => {
       document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;${inferGaCookieDomain()}`
     }
   })
-  if (analyticsAccount) {
-    // This is also required, as without it analytics makes one last call,
-    // which reinstates one of the GA cookies, that we just deleted
-    window[`ga-disable-${analyticsAccount}`] = true
-  }
+  // if (analyticsAccount) {
+  //   // This is also required, as without it analytics makes one last call,
+  //   // which reinstates one of the GA cookies, that we just deleted
+  //   window[`ga-disable-${analyticsAccount}`] = true
+  // }
 }
 
 const elem = document.getElementById('cookie-banner')
