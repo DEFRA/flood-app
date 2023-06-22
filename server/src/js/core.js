@@ -109,21 +109,6 @@ window.flood = {
   }
 }
 
-// const deleteGaCookies = analyticsAccount => {
-//   const cookies = document.cookie.split(';')
-//   cookies.forEach(cookie => {
-//     const [name = ''] = cookie.split('=')
-//     if (name.match('_gid|_ga')) {
-//       document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;${inferGaCookieDomain()}`
-//     }
-//   })
-// if (analyticsAccount) {
-//   // This is also required, as without it analytics makes one last call,
-//   // which reinstates one of the GA cookies, that we just deleted
-//   window[`ga-disable-${analyticsAccount}`] = true
-// }
-// }
-
 const elem = document.getElementById('cookie-banner')
 let calledGTag = false
 
@@ -289,9 +274,10 @@ async function deleteOldCookies () {
       const cookie = cookies[i].trim()
       const name = cookie.split('=')[0]
       deleteCookie(name)
+      window.flood.utils.disableGoogleAnalytics()
     }
   }
-  document.cookie = 'cookies_update=true;path=/;'
+  setCookie('cookies_update', 'true', 30)
 }
 
 // Call the function to delete old cookies and set the "cookie_update" cookie
