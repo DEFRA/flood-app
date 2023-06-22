@@ -2,7 +2,7 @@ const nunjucks = require('nunjucks')
 const util = require('../util')
 const config = require('../config')
 const pkg = require('../../package.json')
-const { gaAccId, gaOptId, floodFisUrl, gaFourAccId, gtmAccId } = config
+const { floodFisUrl, gaFourAccId, gtmAccId } = config
 
 module.exports = {
   plugin: require('@hapi/vision'),
@@ -38,8 +38,6 @@ module.exports = {
       appVersion: pkg.version,
       assetPath: '/assets',
       serviceName: 'Check for flooding',
-      gaAccId,
-      gaOptId,
       floodFisUrl,
       gaFourAccId,
       gtmAccId

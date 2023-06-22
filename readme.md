@@ -53,7 +53,6 @@ DEFRA employees can find examples of environment variables stored in our private
 | FLOOD_APP_BING_URL   | MS Bing Location Search  |    yes    |         |                             | For location search |
 | FLOOD_APP_GEOSERVER_URL   | Geoserver  |    yes    |         |                             | For maps ows |
 | FLOOD_APP_SERVICE_URL   | flood-service  |    yes    |         |                             | For flood api |
-| FLOOD_APP_GA_ID   | Google analytics Id |    no    |         |                             |  |
 | FLOOD_APP_GA4_ID   | Google analytics 4 Id |    no    |         |                             |  |
 | FLOOD_APP_GTM_ID   | Google Tag Manager Id |    no    |         |                             |  |
 | FLOOD_APP_NRW_STATION_URL | NRW station search  | yes | https://rivers-and-seas.naturalresources.wales/Station/ | |

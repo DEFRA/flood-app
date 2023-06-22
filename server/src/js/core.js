@@ -103,8 +103,6 @@ window.flood = {
         }
       `
       document.head.appendChild(script)
-
-      // Rest of the function...
     }
   }
 }
@@ -240,6 +238,7 @@ if (saveButton) {
         setCookie('set_cookie_usage', 'true', 30)
         calledGTag = true
         window.flood.utils.setGTagAnalyticsCookies()
+        window.flood.utils.disableGoogleAnalytics()
       } else {
         setCookie('set_cookie_usage', '', -1)
         deleteGA4Cookies()
