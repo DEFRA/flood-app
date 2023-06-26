@@ -220,6 +220,8 @@ function deleteCookie (name) {
   try {
     const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
     document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + window.location.hostname
+    // clears GA cookies that are set on the .defra.cloud domain by default, may be able to remove line
+    // in future once GA4 is fully rolled out to all users
     document.cookie = name + '=; expires=' + expires + '; path=/; domain=.defra.cloud;'
   } catch (error) {
     console.error(`Failed to delete cookie ${name}: ${error}`)
