@@ -27,6 +27,8 @@
 
   <link href="{{ assetPath }}/stylesheets/application.css" rel="stylesheet" />
 
+ 
+
   {% if metaCanonical %}
     <link rel="canonical" href="{{fullUrl}}"/>
   {% endif %}
@@ -46,6 +48,7 @@
 {% endblock %}
 
 {% block beforeContent %}
+
 
   <!-- If dummy warning data is being used -->
   {% if isDummyData %}
@@ -79,10 +82,10 @@
 {% block content %}
 {% endblock %}
 
+
 {% block bodyEnd %}
 
-  {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
-
+{# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
     <script src="{{ assetPath }}/js/all.js"></script>
     <script>window.GOVUKFrontend.initAll()</script>
     <script src="{{ assetPath }}/js/core.js"></script>

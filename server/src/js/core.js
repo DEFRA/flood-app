@@ -56,16 +56,16 @@ window.flood = {
     setCookie: (name, value, days) => {
       const d = new Date()
       d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
-      document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + document.domain
+      document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + window.location.hostname
     },
     setGTagAnalyticsCookies: () => {
       const script = document.createElement('script')
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.GA_ID}`
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.GA4_ID}`
       script.onload = () => {
         window.dataLayer = window.dataLayer || []
         function gtag () { window.dataLayer.push(arguments) }
         gtag('js', new Date())
-        gtag('config', process.env.GA_ID, { cookie_domain: document.domain })
+        gtag('config', process.env.GA4_ID, { cookie_domain: window.location.hostname })
       }
       document.body.appendChild(script)
     },
@@ -92,6 +92,17 @@ window.flood = {
       }
       document.addEventListener('change', gaEvent)
       document.addEventListener('click', gaEvent)
+    },
+    disableGoogleAnalytics: () => {
+      const script = document.createElement('script')
+      script.text = `
+        if (!window.flood.utils.getCookie('set_cookie_usage')) {
+          window['ga-disable-${process.env.GA4_ID}'] = true;
+        } else {
+          window['ga-disable-${process.env.GA4_ID}'] = false;
+        }
+      `
+      document.head.appendChild(script)
     }
   }
 }
@@ -175,28 +186,73 @@ if (cookieButtons) {
 
 const saveButton = document.getElementById('cookies-save')
 
+function setCookie (name, value, days) {
+  try {
+    window.flood.utils.setCookie(name, value, days)
+  } catch (error) {
+    console.error(`Failed to set cookie ${name}: ${error}`)
+  }
+}
+
+function deleteGA4Cookies () {
+  try {
+    const cookies = document.cookie.split(';')
+
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim()
+
+      const name = cookie.split('=')
+
+      // Check if the cookie name starts with "_ga_"
+      if (cookie.indexOf('_ga_') === 0) {
+        deleteCookie(name[0])
+      }
+      if (cookie.indexOf('_ga') === 0) {
+        deleteCookie(name[0])
+      }
+    }
+  } catch (error) {
+    console.error(`Failed to delete GA4 cookies: ${error}`)
+  }
+}
+
+function deleteCookie (name) {
+  try {
+    const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
+    document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + window.location.hostname
+    // clears GA cookies that are set on the .defra.cloud domain by default, may be able to remove line
+    // in future once GA4 is fully rolled out to all users
+    document.cookie = name + '=; expires=' + expires + '; path=/; domain=.defra.cloud;'
+  } catch (error) {
+    console.error(`Failed to delete cookie ${name}: ${error}`)
+  }
+}
+
 if (saveButton) {
   saveButton.addEventListener('click', function (e) {
     e.preventDefault()
-    const useCookies = document.querySelectorAll('input[name="accept-analytics"]')
-    window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
-    if (useCookies[0].checked) {
-      window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
-      calledGTag = true
-      window.flood.utils.setGTagAnalyticsCookies()
-    } else {
-      window.flood.utils.setCookie('set_cookie_usage', '', -1)
-      window.flood.utils.setCookie('_ga', '', -1)
-      // Get cookie name
-      const gtagCookie = document.cookie.match('(^|;) ?(_gat_gtag.*)=([^;]*)(;|$)')
-      if (gtagCookie && gtagCookie[2]) {
-        window.flood.utils.setCookie(gtagCookie[2], '', -1)
+
+    try {
+      const useCookies = document.querySelectorAll('input[name="accept-analytics"]')
+      setCookie('seen_cookie_message', 'true', 30)
+
+      if (useCookies[0].checked) {
+        setCookie('set_cookie_usage', 'true', 30)
+        calledGTag = true
+        window.flood.utils.setGTagAnalyticsCookies()
+        window.flood.utils.disableGoogleAnalytics()
+      } else {
+        setCookie('set_cookie_usage', '', -1)
+        deleteGA4Cookies()
+        window.flood.utils.disableGoogleAnalytics()
       }
-      window.flood.utils.setCookie('_gid', '', -1)
+
+      const alert = document.getElementById('cookie-notification')
+      alert.removeAttribute('style')
+      alert.focus()
+    } catch (error) {
+      console.error(`An error occurred when handling the save button click event: ${error}`)
     }
-    const alert = document.getElementById('cookie-notification')
-    alert.removeAttribute('style')
-    alert.focus()
   })
 }
 
@@ -207,4 +263,27 @@ if (!calledGTag) {
     window.flood.utils.setGTagAnalyticsCookies()
   }
 }
+
+async function deleteOldCookies () {
+  if (document.cookie.includes('cookies_update=true')) {
+    // "cookies_update" cookie exists, no further action needed
+    return
+  } else {
+    const cookies = document.cookie.split(';')
+
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim()
+      const name = cookie.split('=')[0]
+      deleteCookie(name)
+      window.flood.utils.disableGoogleAnalytics()
+    }
+  }
+  setCookie('cookies_update', 'true', 30)
+}
+
+// Call the function to delete old cookies and set the "cookie_update" cookie
+window.onload = async function () {
+  await deleteOldCookies()
+}
+
 window.flood.utils.setGoogleAnalyticsEvent()
