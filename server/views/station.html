@@ -204,28 +204,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <div class="defra-line-chart govuk-!-margin-bottom-4">
-      <h2 class="govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-4">Height in metres over the last 5 days {% if model.station.isForecast %}and up to 36 hour forecast{% endif %}</h2>
-
-      {# Forecast information #}
-      {% if model.station.isForecast %}
-      <div class="defra-flood-status defra-flood-status--full">
-        <div class="defra-flood-status-item defra-flood-status-item--information govuk-!-margin-bottom-4">
-          <div class="defra-flood-status-item__container">
-            <span class="defra-flood-status-item__icon">
-              <svg focusable="false" aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" style="fill-rule:evenodd;clip-rule:evenodd">
-                <circle cx="9" cy="9" r="7.5" style="fill:none;stroke:currentColor;stroke-width:1px;"></circle>
-                <text x="4.687px" y="12.906px" fill="currentColor" style="font-family:'Courier-Bold', 'Courier';font-size:14px;">i</text>
-              </svg>
-              <!-- <svg width="18" height="18" viewBox="0 0 18 18" style="fill-rule:evenodd;clip-rule:evenodd"><circle cx="9" cy="9" r="7.5" style="fill:none;stroke:#000;stroke-width:1px;"></circle><text x="4.687px" y="12.906px" style="font-family:'Courier-Bold', 'Courier';font-size:14px;">i</text></svg> -->
-            </span>
-            <div class="defra-flood-status-item__text">
-              <span class="govuk-visually-hidden">Information:</span>
-              <p class="govuk-body-s govuk-!-margin-bottom-0">This station includes an automated model{% if model.station.rloiId == '8028' %} which you should consider alongside other factors{% endif %}. The highest level in the model is {{ model.station.forecastHighest | round(2) }}m at {{ model.forecastHighestTime }}.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      {% endif %}
+      <h2 class="govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-4">Height in metres over the last 5 days {% if model.isForecast %}and up to 36 hour forecast{% endif %}</h2>
 
       {# Graph #}
 
