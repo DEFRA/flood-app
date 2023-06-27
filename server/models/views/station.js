@@ -388,6 +388,7 @@ class ViewModel {
     let forecastData
     if (forecast) {
       forecastData = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
+      this.isForecast = true
     }
     let telemetryData
     if (telemetry.length) {
