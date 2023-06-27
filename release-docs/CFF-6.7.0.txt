@@ -10,6 +10,7 @@ https://eaflood.atlassian.net/projects/FSR/versions/16565/tab/release-report-all
 
 https://eaflood.atlassian.net/browse/FSR-775 Move to GA4
 https://eaflood.atlassian.net/browse/FSR-943 Review cookies policy
+https://eaflood.atlassian.net/browse/FSR-956 IMTD data refresh
 
 # Instructions
 
