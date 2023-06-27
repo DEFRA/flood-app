@@ -1,0 +1,23 @@
+# Check for flooding 6.7.0 Thursday 29th June 2023
+
+# Release
+
+6.7.0
+
+https://eaflood.atlassian.net/projects/FSR/versions/16565/tab/release-report-all-issues
+
+# Tickets
+
+https://eaflood.atlassian.net/browse/FSR-775 Move to GA4
+https://eaflood.atlassian.net/browse/FSR-943 Review cookies policy
+
+# Instructions
+
+Application, service and database build for release
+
+Straight forward application build for release
+
+1 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+2 - Run LFW_{STAGE}_99_LOAD_IMTD
+
+Execute smoke tests and forward results
