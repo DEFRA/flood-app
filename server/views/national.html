@@ -26,7 +26,9 @@
       {% if group.count > 0 %}
       {% if group.severity.id < 4 %}
       <div class="defra-flood-status-item defra-flood-status-item--{{ group.severity.hash }}">
-        <span class="defra-flood-status-item__icon"></span>
+        <span class="defra-flood-status-item__icon">
+          {{ group.severity.icon | safe }}
+        </span>
         <div class="defra-flood-status-item__text">
           <strong>
             <a data-journey-click="National:View Warnings:National-View-{{ group.severity.hash }}" href="/alerts-and-warnings{% if group.severity.id === model.highestSeverityId %}{% else %}#{{ group.severity.pluralisedHash }}{% endif %}">

@@ -1543,7 +1543,7 @@ lab.experiment('Test - /station/{id}', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('The highest level in our forecast is')
+    Code.expect(response.payload).to.contain('The highest level in the model is')
     Code.expect(response.payload).to.not.contain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
     Code.expect(response.payload).to.contain('<a href="/station/7332" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>')
     Code.expect(response.payload).to.contain('<a href="/station/7357" class="defra-flood-nav__link defra-flood-nav__link--downstream">Downstream</a>')
@@ -1681,7 +1681,7 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('We take measurements more often as the risk of flooding increases.')
   })
-  lab.test('GET station/2033 should redirect to nrw page ', async () => {
+  lab.test('GET station/2033 should redirect to new page ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
