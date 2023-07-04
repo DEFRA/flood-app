@@ -112,6 +112,7 @@ class ViewModel {
   groupSevere (group, location) {
     this.bannerSevereSub = 'There is a danger to life'
     this.severitySevereTitle = group.severity.title
+    this.severeIcon = group.severity.icon
     if (group.floods.length === 1) {
       this.bannerSevereMainLink = `/target-area/${group.floods[0].ta_code}`
       this.bannerSevereMainText = `Severe flood warning for ${group.floods[0].ta_name}`
@@ -125,6 +126,7 @@ class ViewModel {
     this.bannerSub = 'Flooding is expected'
     this.severity = group.severity.hash
     this.severityTitle = group.severity.title
+    this.mainIcon = group.severity.icon
     if (group.floods.length === 1) {
       this.bannerMainLink = `/target-area/${group.floods[0].ta_code}`
       this.bannerMainText = `Flood warning for ${group.floods[0].ta_name}`
@@ -146,6 +148,7 @@ class ViewModel {
         this.bannerMainLink = `/alerts-and-warnings?q=${encodeURIComponent(location)}#alerts`
         this.bannerMainText = `${group.floods.length} flood alerts in this area`
       }
+      this.mainIcon = group.severity.icon
     } else {
       this.alerts = group.floods.length
       if (group.floods.length === 1) {

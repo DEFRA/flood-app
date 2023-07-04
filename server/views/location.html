@@ -39,6 +39,7 @@
         {% if model.bannerSevereMainLink %}
         <div class="defra-flood-status-item defra-flood-status-item--severe">
           <span class="defra-flood-status-item__icon">
+            {{ model.severeIcon | safe }}
             <span class="govuk-visually-hidden">{{model.severitySevereTitle}}</span>
           </span>
           <div class="defra-flood-status-item__text">
@@ -52,6 +53,7 @@
         {% if model.bannerMainLink%}
         <div class="defra-flood-status-item defra-flood-status-item--{{model.severity}}">
           <span class="defra-flood-status-item__icon">
+            {{ model.severeIcon | safe }}
             <span class="govuk-visually-hidden">{{model.severityTitle}}</span>
           </span>
           <div class="defra-flood-status-item__text">

@@ -12,7 +12,9 @@
     <div class="defra-flood-status govuk-!-margin-bottom-3">
       {% if model.flood and model.severity.id < 4%}
       <div class="defra-flood-status-item defra-flood-status-item--{{model.severity.hash}}">
-        <span class="defra-flood-status-item__icon"></span>
+        <span class="defra-flood-status-item__icon">
+          {{model.severity.icon | safe }}
+        </span>
         <div class="defra-flood-status-item__text">
           <strong>{{model.severity.subTitle}} - <a class="govuk-link" href="{{model.severity.actionLink}}">{{model.severity.tagline}}</a></strong>
         </div>
