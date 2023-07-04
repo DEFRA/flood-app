@@ -163,7 +163,6 @@ function LineChart (containerId, stationId, data, options = {}) {
       .attr('x', d => xScale(new Date(d.dateTime)))
       .attr('y', d => yScale(dataCache.type === 'river' && d.value < 0 ? 0 : d.value))
       .text(d => {
-        console.log(d)
         const value = `${dataCache.type === 'river' && d.value < 0 ? 0 : d.value.toFixed(2)}m`
         const time = timeFormat('%-I:%M%p')(new Date(d.dateTime)).toLowerCase()
         const date = timeFormat('%e %b')(new Date(d.dateTime))
