@@ -371,7 +371,7 @@ class ViewModel {
 
         if (highestPoint !== null) {
           const forecastHighestPoint = parseFloat(highestPoint._).toFixed(2)
-          const forecastHighestPointTime = moment.tz(highestPoint.ts, tz).format('D MMMM') + ' at ' + moment.tz(highestPoint.ts, tz).format('h:mma')
+          const forecastHighestPointTime = `${moment.tz(highestPoint.ts, tz).format('D MMMM')} at ${moment.tz(highestPoint.ts, tz).format('h:mma')}`
 
           this.forecastHighest = forecastHighestPoint
           this.forecastHighestTime = forecastHighestPointTime
