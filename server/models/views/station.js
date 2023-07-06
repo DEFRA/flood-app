@@ -185,35 +185,6 @@ class ViewModel {
         this.recentValue.dateWhen = 'yesterday'
       }
 
-      // FFOI processing
-      // if (forecast) {
-      //   // Note: thresolds from forecasting is probably now redundant (thresholds now come from the IMTD API
-      //   // We still process the thresolds but the discard them in favour of the IMTD ones
-      //   // Need to remove the redundant threshold prcessing code as a tech debt item.
-      //   const { thresholds } = forecast
-
-      //   // In the absence of thresholds, need to decide what would be an indicator of a forecast station
-      //   // Options would be:
-      //   // * presence of forecast on s3
-      //   // * entry in ffoi_stations
-      //   // * some other option
-      //   this.isFfoi = thresholds.length > 0
-      //   if (this.isFfoi) {
-      //     this.ffoi = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
-      //     this.hasForecast = this.ffoi.hasForecastData
-
-      //     const highestPoint = this.ffoi.maxValue || null
-      //     if (highestPoint !== null) {
-      //       const forecastHighestPoint = parseFloat(highestPoint._).toFixed(2)
-      //       const forecastHighestPointTime = highestPoint.formattedTimestamp
-
-      //       this.forecastDetails = `The highest level in our forecast is ${forecastHighestPoint}m at ${forecastHighestPointTime}. Forecasts come from a computer model and can change.`
-      //     }
-      //   }
-
-      //   this.phase = this.isFfoi ? 'beta' : false
-      // }
-
       if (this.station.percentile5 && this.station.percentile95) {
         if (isNaN(this.station.percentile5) || isNaN(this.station.percentile95)) {
           this.station.hasPercentiles = false
@@ -417,9 +388,7 @@ class ViewModel {
 }
 
 function getBannerIcon (id) {
-  return severity.filter(item => {
-    return item.id === id
-  })[0].icon
+  return severity.filter(item => item.id === id)[0].icon
 }
 
 function stationTypeCalculator (stationTypeData) {
@@ -433,18 +402,18 @@ function stationTypeCalculator (stationTypeData) {
   }
   return stationType
 }
-function telemetryForecastBuilder (telemetryData, forecastData, stationType) {
-  const observed = telemetryData.map(function (telemetry) {
+function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationType) {
+  const observed = telemetryRawData.map(function (telemetry) {
     return {
       dateTime: telemetry.ts,
       value: telemetry._
     }
   })
 
-  let forecast = []
+  let forecastData = []
 
-  if (forecastData) {
-    forecast = forecastData.processedValues.map(function (forecast) {
+  if (forecastRawData) {
+    forecastData = forecastRawData.processedValues.map(function (forecast) {
       return {
         dateTime: forecast.ts,
         value: Number(forecast._)
@@ -452,16 +421,16 @@ function telemetryForecastBuilder (telemetryData, forecastData, stationType) {
     })
   }
 
-  const telemetry = {
+  const telemetryData = {
     type: stationTypeCalculator(stationType).toLowerCase(),
-    latestDateTime: telemetryData[0].ts,
-    dataStartDateTime: moment(telemetryData[0].ts).subtract(5, 'days').toISOString().replace(/.\d+Z$/g, 'Z'),
+    latestDateTime: telemetryRawData[0].ts,
+    dataStartDateTime: moment(telemetryRawData[0].ts).subtract(5, 'days').toISOString().replace(/.\d+Z$/g, 'Z'),
     dataEndDateTime: moment().toISOString().replace(/.\d+Z$/g, 'Z'),
     observed: observed,
-    forecast: forecast
+    forecast: forecastData
   }
 
-  return telemetry
+  return telemetryData
 }
 
 module.exports = ViewModel
