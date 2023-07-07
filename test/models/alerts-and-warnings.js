@@ -59,3 +59,11 @@ lab.test('Test location sets page title', async () => {
 
   Code.expect(Result.pageTitle).to.equal('Newcastle Upon Tyne - flood alerts and warnings')
 })
+
+lab.test('Test getWarnings has appropriate Value', async () => {
+  const options = {}
+
+  const Result = await new ViewModel(options)
+
+  Code.expect(Result.getWarnings).to.equal('Alerts-and-warnings:Related-content:Get-warnings')
+})
