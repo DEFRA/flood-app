@@ -421,7 +421,7 @@ function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationTyp
     })
   }
 
-  const telemetryData = {
+  return {
     type: stationTypeCalculator(stationType).toLowerCase(),
     latestDateTime: telemetryRawData[0].ts,
     dataStartDateTime: moment(telemetryRawData[0].ts).subtract(5, 'days').toISOString().replace(/.\d+Z$/g, 'Z'),
@@ -429,8 +429,6 @@ function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationTyp
     observed: observed,
     forecast: forecastData
   }
-
-  return telemetryData
 }
 
 module.exports = ViewModel
