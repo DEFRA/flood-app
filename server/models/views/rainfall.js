@@ -18,6 +18,7 @@ class ViewModel {
       stationId: rainfallStation[0].station_reference,
       centroid: [rainfallStation[0].lon, rainfallStation[0].lat],
       region: rainfallStation[0].region,
+      getWarnings: 'Rainfall:Related-content:Get-warnings',
       planAhead: 'Rainfall:Related-content:Plan-ahead-for-flooding',
       whatToDo: 'Rainfall:Related-content:What-to-do-in-a-flood',
       recoverAfter: 'Rainfall:Related-content:Recover-after-a-flood',

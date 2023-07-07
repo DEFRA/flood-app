@@ -4,11 +4,14 @@ const { bingKeyMaps, floodRiskUrl } = require('../../config')
 const pageTitle = 'Find river, sea, groundwater and rainfall levels'
 const metaDescription = 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height, trend and state recorded by the measuring station.'
 
+const getWarningsString = 'Rivers-and-sea-levels:Related-content:Get-warnings'
+
 function emptyResultsModel (q) {
   return {
     q,
     metaDescription,
     floodRiskUrl,
+    getWarnings: getWarningsString,
     pageTitle: formatTitle(q),
     clientModel: getClientModel()
   }
@@ -23,6 +26,7 @@ function disambiguationModel (q, places, rivers) {
     q,
     metaDescription,
     rivers,
+    getWarnings: getWarningsString,
     pageTitle: `${q} - ${pageTitle}`,
     place: places[0],
     clientModel: getClientModel()
@@ -47,6 +51,7 @@ function riverViewModel (stations) {
     queryGroup,
     floodRiskUrl,
     metaDescription,
+    getWarnings: getWarningsString,
     pageTitle: `${qualifiedRiverName} - ${pageTitle}`,
     q: qualifiedRiverName,
     clientModel: getClientModel(bbox)
@@ -70,6 +75,7 @@ function areaViewModel (areaName, stations) {
     floodRiskUrl,
     pageTitle,
     metaDescription,
+    getWarnings: getWarningsString,
     clientModel: getClientModel(bbox),
     distStatement: `Showing levels within 5 miles of ${areaName}.`
   }
@@ -95,6 +101,7 @@ function referencedStationViewModel (referencePoint, stations) {
     floodRiskUrl,
     pageTitle,
     metaDescription,
+    getWarnings: getWarningsString,
     clientModel: getClientModel(bbox),
     distStatement: referencePoint.distStatement
   }
@@ -133,6 +140,7 @@ function placeViewModel ({ location, place, stations = [], queryGroup }) {
     clientModel: getClientModel(isEngland ? place.bbox10k : []),
     queryGroup: activeFilter,
     placeAddress: place.address,
+    getWarnings: getWarningsString,
     pageTitle: title,
     metaDescription: description
   }
