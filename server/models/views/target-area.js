@@ -30,10 +30,15 @@ class ViewModel {
 
     let situation = fallbackText
     if (flood && flood.situation) {
-      flood.situation = flood.situation.trim()
-      const message = flood.situation
+      let message = flood.situation = flood.situation.trim()
 
-      situation = `<p>${message ? message + '.' : message} Follow <a class="govuk-link" href="https://twitter.com/${eaTwitter.link}">@${eaTwitter.link}</a> on 
+      if (message && !message.endsWith('.')) {
+        message += '.'
+      }
+
+      message += ' '
+
+      situation = `<p>${message}Follow <a class="govuk-link" href="https://twitter.com/${eaTwitter.link}">@${eaTwitter.link}</a> on 
       Twitter for information for your area.</p>`
     }
 
