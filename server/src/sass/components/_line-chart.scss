@@ -277,18 +277,6 @@
     .threshold:not(.threshold--selected) .threshold__line {
         cursor: pointer;
     }
-    // Typical/Alert
-    // .threshold--alert {
-    //     .threshold__line {
-    //         stroke: $govuk-border-colour;
-    //     }
-    // }
-    // .threshold.threshold--selected.threshold--alert,
-    // .threshold.threshold--mouseover.threshold--alert {
-    //     .threshold__line {
-    //         stroke: $govuk-text-colour;
-    //     }
-    // }
     // Significant points
     .significant .point circle {
         opacity: 0;
