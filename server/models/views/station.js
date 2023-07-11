@@ -388,7 +388,7 @@ class ViewModel {
 }
 
 function getBannerIcon (id) {
-  return severity.filter(item => item.id === id)[0].icon
+  return severity.find(item => item.id === id)?.icon
 }
 
 function stationTypeCalculator (stationTypeData) {
