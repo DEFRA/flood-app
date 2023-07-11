@@ -1,6 +1,6 @@
 {
   "name": "flood-app",
-  "version": "6.7.0",
+  "version": "6.7.1",
   "description": "Flood risk app",
   "main": "index.js",
   "repository": "github:defra/flood-app",
@@ -63,15 +63,15 @@
     "jquery": "^3.6.0",
     "lodash.isequal": "^4.5.0",
     "moment-timezone": "^0.5.34",
-    "node-sass": "^7.0.0",
+    "node-sass": "^9.0.0",
     "node-schedule": "^2.1.0",
-    "nunjucks": "^3.2.3",
+    "nunjucks": "^3.2.4",
     "ol": "^6.9.0",
     "regenerator-runtime": "^0.13.9",
     "sinon": "^12.0.1",
     "standard": "^16.0.4",
     "uglify-js": "^3.14.4",
-    "webpack": "^5.65.0",
+    "webpack": "^5.88.1",
     "webpack-cli": "^4.9.1"
   },
   "standard": {
