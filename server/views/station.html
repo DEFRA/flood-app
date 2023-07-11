@@ -308,7 +308,8 @@
     id: {{ model.station.id | dump | safe }},
     zoom: {{ model.zoom | dump | safe }},
     centre: {{ model.centre | dump | safe }},
-    telemetry: {{ model.telemetryRefined | dump | safe }}
+    telemetry: {{ model.telemetryRefined | dump | safe }},
+    bingMaps: {{ model.bingMaps | dump | safe }}
   }
 </script>
 <script src="{{assetPath}}/js/templates.js"></script>

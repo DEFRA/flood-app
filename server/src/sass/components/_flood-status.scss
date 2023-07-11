@@ -1,3 +1,7 @@
+$white: #ffffff;
+$red: #e3000f;
+$amber: #f18700;
+
 .defra-flood-status {
     padding-bottom:10px;
     @include mq ($from: tablet) {
@@ -29,9 +33,9 @@
 .defra-flood-status-item {
     @extend .govuk-inset-text;
     position: relative;
-    padding: 0px;
+    padding: 0;
     background-color: govuk-colour('light-grey');
-    margin-top:0px;
+    margin-top:0;
     margin-bottom:10px;
     &:last-of-type {
         margin-bottom:5px;
@@ -73,35 +77,35 @@
         position: absolute;
         box-sizing: border-box;
         content: '';
-        left: 0px;
-        top: 0px;
-        bottom: 0px;
-        right: 0px;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
         border: 1px solid transparent;
         pointer-events: none;
     }
 }
 .defra-flood-status-item--severe {
-    background-color: govuk-tint(#e3000f, 93);
-    border-color:#e3000f;
+    background-color: govuk-tint($red, 93);
+    border-color:$red;
     &:after {
-        color: govuk-tint(#e3000f, 93);
+        color: govuk-tint($red, 93);
         border-color: currentColor;
     }
 }
 .defra-flood-status-item--warning {
-    background-color:govuk-tint(#e3000f, 93);
-    border-color:#e3000f;
+    background-color:govuk-tint($red, 93);
+    border-color:$red;
     &:after {
-        color: govuk-tint(#e3000f, 93);
+        color: govuk-tint($red, 93);
         border-color: currentColor;
     }
 }
 .defra-flood-status-item--alert {
-    background-color: govuk-tint(#f18700, 90);
-    border-color:#f18700;
+    background-color: govuk-tint($amber, 90);
+    border-color:$amber;
     &:after {
-        color: govuk-tint(#f18700, 90);
+        color: govuk-tint($amber, 90);
         border-color: currentColor;
     }
 }
@@ -117,7 +121,7 @@
         color: white;
         width: 20px;
         height: 20px;
-        margin: 0px 5px;
+        margin: 0 5px;
         @include mq ($from: tablet) {
             width: 25px;
             height: 25px;
@@ -149,13 +153,6 @@
         }
     }
 }
-/*
-.defra-flood-status-item--removed {
-    .defra-flood-status-item__icon:after {
-        background-position: 100% 75%;
-    }
-}
-*/
 .defra-flood-status__text {
     @extend .govuk-body;
     @include govuk-responsive-margin(3, 'top');
