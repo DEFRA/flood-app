@@ -1,0 +1,23 @@
+# Check for flooding 6.7.1 Wednesday 12th July 2023
+
+# Release
+
+6.7.1
+
+https://eaflood.atlassian.net/projects/FSR/versions/16479/tab/release-report-all-issues
+
+# Tickets
+
+https://eaflood.atlassian.net/browse/FSR-776 Dependency Updates
+https://eaflood.atlassian.net/browse/FSR-867 Review 'Related Content' Links
+https://eaflood.atlassian.net/browse/FSR-958 Remove Full stop from Cookies Policy
+
+# Instructions
+
+Application, service and database build for release
+
+Straight forward application build for release
+
+1 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
