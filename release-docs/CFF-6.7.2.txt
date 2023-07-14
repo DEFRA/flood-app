@@ -1,4 +1,4 @@
-# Check for flooding 6.7.2 Tuesdayday 18th July 2023
+# Check for flooding 6.7.2 Tuesday 18th July 2023
 
 # Release
 
