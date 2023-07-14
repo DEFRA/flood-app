@@ -1,6 +1,5 @@
 const severity = require('../severity')
 const moment = require('moment-timezone')
-const twitLink = require('../targetAreaTwitter')
 const { bingKeyMaps, floodRiskUrl } = require('../../config')
 
 class ViewModel {
@@ -26,15 +25,12 @@ class ViewModel {
       fallbackText = '<p>We\'ll update this page when there\'s a flood warning in the area.</p><p>A flood warning means flooding to some property is expected. A severe flood warning means there\'s a danger to life.</p>'
     }
 
-    const eaTwitter = twitLink.find(t => t.area === area.area)
-
     let situation = fallbackText
     if (flood && flood.situation) {
       flood.situation = flood.situation.trim()
       const message = flood.situation
 
-      situation = `<p>${message ? message + '.' : message} Follow <a class="govuk-link" href="https://twitter.com/${eaTwitter.link}">@${eaTwitter.link}</a> on 
-      Twitter for information for your area.</p>`
+      situation = `<p>${message}</p>`
     }
 
     const dateSituationChanged = flood
