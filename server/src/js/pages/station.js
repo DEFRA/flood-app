@@ -28,7 +28,7 @@ window.flood.maps.createLiveMap('map', {
 // Line chart
 if (document.getElementById('line-chart')) {
   const lineChart = window.flood.charts.createLineChart('line-chart', window.flood.model.id, window.flood.model.telemetry)
-  const thresholdId = `threshold-${window.flood.model.id}-high`
+  const thresholdId = 'threshold-pc5'
   const threshold = document.querySelector(`[data-id="${thresholdId}"]`)
   if (threshold) {
     lineChart.addThreshold({
