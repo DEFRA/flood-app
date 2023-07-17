@@ -91,7 +91,7 @@
       color: govuk-colour('black');
       background-color: transparent;
       svg {
-        color: govuk-colour('black');
+        color: currentColor;
       }
     }
     &:active {
@@ -166,7 +166,6 @@
       svg {
         position: relative;
         display: inline-block;
-        color: govuk-colour('black');
         vertical-align: top;
         left: 0px;
         margin: 0px 7px -3px 1px;
@@ -188,12 +187,15 @@
       color: $govuk-link-hover-colour;
       svg {
         color: $govuk-link-hover-colour;
+        @media (forced-colors: active) {
+          color: currentColor;
+        }
       }
     }
     .defra-navbar__item a:focus {
       color: govuk-colour('black');
       svg {
-        color: govuk-colour('black');
+        color: currentColor;
       }
     }
     .defra-navbar__item--selected a:not(:focus) {
