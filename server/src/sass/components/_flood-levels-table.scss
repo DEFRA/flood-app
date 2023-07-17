@@ -179,6 +179,9 @@
       left: 4px;
       top: 4px;
       color: govuk-colour('black');
+      @media (forced-colors: active) {
+        color: currentColor;
+      }
       @include mq ($from: tablet) {
         left:6px;
         top: 6px;
