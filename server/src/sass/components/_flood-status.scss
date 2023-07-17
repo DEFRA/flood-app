@@ -37,6 +37,14 @@ $amber: #f18700;
     background-color: govuk-colour('light-grey');
     margin-top:0;
     margin-bottom:10px;
+
+    @media (forced-colors: active) {
+        border-top-width: 1px;
+        border-bottom-width: 1px;
+        border-right-width: 1px;
+        border-style: solid;
+    }
+
     &:last-of-type {
         margin-bottom:5px;
     }
