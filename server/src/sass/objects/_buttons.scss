@@ -54,6 +54,9 @@ button.defra-button-secondary {
             left: 10px;
             top: 50%;
             margin-top: -11px;
+            @media (forced-colors: active) {
+                color: currentColor;
+            }
         }
     }
 }
