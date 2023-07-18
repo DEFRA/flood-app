@@ -43,6 +43,10 @@
     .axis.y text,
     .axis.x text {
         fill: $govuk-secondary-text-colour;
+
+        @media (forced-colors: active) {
+            fill: currentColor;
+        }
     }
     .axis path,
     .axis line {
@@ -50,6 +54,10 @@
         stroke: $govuk-border-colour;
         stroke-width: 1;
         shape-rendering: crispEdges;
+
+        @media (forced-colors: active) {
+            stroke: currentColor;
+        }
     }
     .axis.y path {
         visibility:hidden;
@@ -66,12 +74,20 @@
     }
     .axis.y .tick:first-of-type line {
         stroke: $govuk-border-colour;
+
+        @media (forced-colors: active) {
+            stroke: currentColor;
+        }
     }
     .grid line {
         fill: none;
         stroke: rgba($govuk-text-colour, 0.1);
         stroke-width: 1;
         shape-rendering: crispEdges;
+
+        @media (forced-colors: active) {
+            stroke: currentColor;
+        }
     }
     .grid path {
         visibility: hidden;
@@ -82,9 +98,17 @@
         stroke: $govuk-link-colour;
         stroke-width: 3;
         fill: none;
+
+        @media (forced-colors: active) {
+            stroke: currentColor;
+        }
     }
     .observed-area { 
         fill: rgba($govuk-link-colour, 0.1);
+
+        @media (forced-colors: active) {
+            fill: none;
+        }
     }
     // Forecast
     .forecast-line { 
@@ -92,27 +116,44 @@
         stroke: $govuk-secondary-text-colour;
         stroke-width: 3;
         fill: none;
+        @media (forced-colors: active) {
+            stroke: currentColor;
+        }
     }
     .forecast-area { 
         fill: rgba($govuk-border-colour, 0.1);
+        @media (forced-colors: active) {
+            fill: none;
+        }
     }
     // Locator
     .locator-point {
         stroke-width: 3;
         stroke: $govuk-link-colour;
-        fill: white; 
+        fill: white;
+        @media (forced-colors: active) {
+            stroke: currentColor;
+            fill: currentColor;
+        }
     }
     .locator-line {
         display:none;
         stroke-width: 1;
         stroke: rgba($govuk-text-colour, 0.1);
-        shape-rendering: crispEdges; 
+        shape-rendering: crispEdges;
+
+        @media (forced-colors: active) {
+            stroke: currentColor;
+        }
     }
     .locator--offset .locator-line {
         display:block;
     }
     .locator--forecast .locator-point {
         stroke: $govuk-secondary-text-colour;
+        @media (forced-colors: active) {
+            stroke: currentColor;
+        }
     }
     // Tooltip
     .tool-tip {
@@ -126,6 +167,9 @@
         stroke-width: 1;
         stroke: $govuk-secondary-text-colour;
         shape-rendering: crispEdges;
+        @media (forced-colors: active) {
+            stroke: currentColor;
+        }
     }
     .tool-tip-text {
         @include govuk-font($size: 16);
@@ -141,6 +185,7 @@
     }
     .time-now-text {
         @include govuk-font($size: 14, $weight: bold);
+        fill: currentColor;
     }
     // Thresholds
     .threshold__line {
@@ -164,7 +209,10 @@
     .threshold__remove rect {
         stroke-width: 0;
         stroke: transparent;
-        fill: white; 
+        fill: white;
+        @media (forced-colors: active) {
+            fill: none;
+        }
     }
     .threshold__remove:hover {
         cursor: pointer;
@@ -179,6 +227,9 @@
         stroke: govuk-colour('dark-grey');
         shape-rendering: auto;
         stroke-linecap: square;
+        @media (forced-colors: active) {
+            stroke: currentColor;
+        }
     }
     .threshold-label__text {
         @include govuk-font($size: 16);
@@ -194,12 +245,18 @@
         }
         .threshold__line {
             stroke: $govuk-text-colour;
+            @media (forced-colors: active) {
+                stroke: currentColor;
+            }
         }
     }
     .threshold.threshold--mouseover {
         cursor:pointer;
         .threshold__line {
             stroke: $govuk-text-colour;
+            @media (forced-colors: active) {
+                stroke: currentColor;
+            }
         }
     }
     .threshold:not(.threshold--selected) .threshold__bg,
@@ -210,12 +267,18 @@
     .threshold--alert {
         .threshold__line {
             stroke: $govuk-border-colour;
+            @media (forced-colors: active) {
+                stroke: currentColor;
+            }
         }
     }
     .threshold.threshold--selected.threshold--alert,
     .threshold.threshold--mouseover.threshold--alert {
         .threshold__line {
             stroke: $govuk-text-colour;
+            @media (forced-colors: active) {
+                stroke: currentColor;
+            }
         }
     }
 }
