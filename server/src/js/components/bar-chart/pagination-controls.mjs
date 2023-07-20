@@ -1,17 +1,17 @@
 
 export function createPaginationControls () {
   const pagination = document.createElement('div')
-  pagination.className = 'defra-chart-pagination'
+  pagination.className = 'defra-chart-pagination-controls'
   const paginationInner = document.createElement('div')
   paginationInner.style.display = 'none'
-  paginationInner.className = 'defra-chart-pagination_inner'
+  paginationInner.className = 'defra-chart-pagination-controls_inner'
   const pageBack = document.createElement('button')
-  pageBack.className = 'defra-chart-pagination__button defra-chart-pagination__button--back'
+  pageBack.className = 'defra-chart-pagination-controls__button defra-chart-pagination-controls__button--back'
   pageBack.setAttribute('data-direction', 'back')
   pageBack.setAttribute('aria-controls', 'bar-chart')
   pageBack.setAttribute('aria-describedby', 'page-back-description')
   const pageBackText = document.createElement('span')
-  pageBackText.className = 'defra-chart-pagination__text'
+  pageBackText.className = 'defra-chart-pagination-controls__text'
   pageBack.appendChild(pageBackText)
   const pageBackDescription = document.createElement('span')
   pageBackDescription.id = 'page-back-description'
@@ -19,12 +19,12 @@ export function createPaginationControls () {
   pageBackDescription.setAttribute('aria-live', 'polite')
   pageBack.appendChild(pageBackDescription)
   const pageForward = document.createElement('button')
-  pageForward.className = 'defra-chart-pagination__button defra-chart-pagination__button--forward'
+  pageForward.className = 'defra-chart-pagination-controls__button defra-chart-pagination-controls__button--forward'
   pageForward.setAttribute('data-direction', 'forward')
   pageForward.setAttribute('aria-controls', 'bar-chart')
   pageForward.setAttribute('aria-describedby', 'page-forward-description')
   const pageForwardText = document.createElement('span')
-  pageForwardText.className = 'defra-chart-pagination__text'
+  pageForwardText.className = 'defra-chart-pagination-controls__text'
   pageForward.appendChild(pageForwardText)
   const pageForwardDescription = document.createElement('span')
   pageForwardDescription.id = 'page-forward-description'
