@@ -6,7 +6,7 @@ module.exports = (env, argv) => ({
   mode: !inDev ? 'production' : 'development',
   devtool: !inDev ? false : 'source-map',
   entry: {
-    core: './server/src/js/core',
+    core: './server/src/js/core.mjs',
     'alerts-and-warnings': './server/src/js/pages/alerts-and-warnings',
     impacts: './server/src/js/pages/impacts',
     national: './server/src/js/pages/national',

@@ -1,8 +1,8 @@
 'use strict'
 // "flood" represents the global namespace for
 // client-side javascript across all our pages
-import 'core-js/modules/es6.promise'
-import 'core-js/modules/es6.array.iterator'
+import 'core-js/modules/es6.promise.js'
+import 'core-js/modules/es6.array.iterator.js'
 
 window.flood = {
   utils: {
