@@ -90,8 +90,8 @@ experiment('BarChart', () => {
     chartContainer.querySelector('.defra-chart-resolution-controls__button[data-period="minutes"]').click()
 
     // Assert
-    const outerContainer = document.querySelector('.defra-chart-pagination')
-    const innerContainer = outerContainer.querySelector('.defra-chart-pagination_inner')
+    const outerContainer = document.querySelector('.defra-chart-pagination-controls')
+    const innerContainer = outerContainer.querySelector('.defra-chart-pagination-controls_inner')
     expect(outerContainer).not.to.equal(null)
     expect(innerContainer.style.display).to.equal('inline-block')
     expect(innerContainer.children).to.have.length(2)
@@ -113,8 +113,8 @@ experiment('BarChart', () => {
     chartContainer.querySelector('.defra-chart-resolution-controls__button[data-period="hours"]').click()
 
     // Assert
-    const outerContainer = document.querySelector('.defra-chart-pagination')
-    const innerContainer = outerContainer.querySelector('.defra-chart-pagination_inner')
+    const outerContainer = document.querySelector('.defra-chart-pagination-controls')
+    const innerContainer = outerContainer.querySelector('.defra-chart-pagination-controls_inner')
     expect(outerContainer).not.to.equal(null)
     expect(innerContainer.style.display).to.equal('none')
   })
@@ -130,7 +130,7 @@ experiment('BarChart', () => {
     // Act
     window.flood.charts.createBarChart('bar-chart-container', chartId, telemetry)
     chartContainer.querySelector('.defra-chart-resolution-controls__button[data-period="minutes"]').click()
-    chartContainer.querySelector('.defra-chart-pagination__button--back').click()
+    chartContainer.querySelector('.defra-chart-pagination-controls__button--back').click()
 
     // Assert
     const description = chartContainer.querySelector('#bar-chart-description').textContent
