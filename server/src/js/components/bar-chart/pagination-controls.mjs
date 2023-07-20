@@ -71,8 +71,8 @@ export function updatePagination ({
   pageBack.setAttribute('data-journey-click', 'Rainfall:Chart Interaction:Rainfall - Previous 24hrs')
   pageForward.setAttribute('data-journey-click', 'Rainfall:Chart Interaction:Rainfall - Next 24hrs')
   pageBack.setAttribute('aria-disabled', !(previousStart && previousEnd))
-  pageForwardText.innerText = `Next ${durationHours > 1 ? durationHours : duration} ${durationHours > 1 ? 'hours' : 'minutes'}`
-  pageBackText.innerText = `Previous ${durationHours > 1 ? durationHours : duration} ${durationHours > 1 ? 'hours' : 'minutes'}`
+  pageForwardText.innerText = 'Forward'
+  pageBackText.innerText = 'Back'
   pageForwardDescription.innerText = ''
   pageBackDescription.innerText = ''
 }
