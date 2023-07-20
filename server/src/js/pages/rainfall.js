@@ -1,6 +1,6 @@
 'use strict'
 import 'elm-pep'
-import '../components/bar-chart'
+import '../components/bar-chart/index.mjs'
 import '../components/nunjucks'
 import '../components/map/maps'
 import '../components/map/styles'
