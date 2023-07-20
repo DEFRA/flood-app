@@ -7,7 +7,8 @@ import { timeFormat } from 'd3-time-format'
 import { select, pointer } from 'd3-selection'
 import { max } from 'd3-array'
 import { timeMinute } from 'd3-time'
-import { updatePagination, updateSegmentedControl } from './controls.mjs'
+import { createSegmentedControl, updateSegmentedControl } from './segmented-controls.mjs'
+import { createPaginationControls, updatePagination } from './pagination-controls.mjs'
 // const { xhr } = window.flood.utils
 const { forEach } = window.flood.utils
 
@@ -381,23 +382,7 @@ function BarChart (containerId, stationId, data) {
   const bands = [{ period: 'minutes', label: 'Minutes', days: 1 }, { period: 'hours', label: 'Hours', days: 5 }]
 
   // Add time scale buttons
-  const segmentedControl = document.createElement('div')
-  segmentedControl.className = 'defra-chart-segmented-control'
-  for (let i = bands.length - 1; i >= 0; i--) {
-    const control = document.createElement('div')
-    control.className = 'defra-chart-segmented-control__segment'
-    control.style.display = 'none'
-    let start = new Date()
-    let end = new Date()
-    start.setHours(start.getHours() - (bands.find(x => x.period === bands[i].period).days * 24))
-    start = start.toISOString().replace(/.\d+Z$/g, 'Z')
-    end = end.toISOString().replace(/.\d+Z$/g, 'Z')
-    control.innerHTML = `
-      <input class="defra-chart-segmented-control__input" name="time" type="radio" id="time${bands[i].label}" data-period="${bands[i].period}" data-start="${start}" data-end="${end}" aria-controls="bar-chart"/>
-      <label for="time${bands[i].label}">${bands[i].label}</label>
-    `
-    segmentedControl.appendChild(control)
-  }
+  const segmentedControl = createSegmentedControl({ bands })
   controls.appendChild(segmentedControl)
 
   // Create chart container elements
@@ -431,40 +416,17 @@ function BarChart (containerId, stationId, data) {
   const tooltipDescription = tooltipText.append('tspan').attr('class', 'tooltip-text__small')
 
   // Add paging control
-  const pagination = document.createElement('div')
-  pagination.className = 'defra-chart-pagination'
-  const paginationInner = document.createElement('div')
-  paginationInner.style.display = 'none'
-  paginationInner.className = 'defra-chart-pagination_inner'
-  const pageBack = document.createElement('button')
-  pageBack.className = 'defra-chart-pagination__button defra-chart-pagination__button--back'
-  pageBack.setAttribute('data-direction', 'back')
-  pageBack.setAttribute('aria-controls', 'bar-chart')
-  pageBack.setAttribute('aria-describedby', 'page-back-description')
-  const pageBackText = document.createElement('span')
-  pageBackText.className = 'defra-chart-pagination__text'
-  pageBack.appendChild(pageBackText)
-  const pageBackDescription = document.createElement('span')
-  pageBackDescription.id = 'page-back-description'
-  pageBackDescription.className = 'govuk-visually-hidden'
-  pageBackDescription.setAttribute('aria-live', 'polite')
-  pageBack.appendChild(pageBackDescription)
-  const pageForward = document.createElement('button')
-  pageForward.className = 'defra-chart-pagination__button defra-chart-pagination__button--forward'
-  pageForward.setAttribute('data-direction', 'forward')
-  pageForward.setAttribute('aria-controls', 'bar-chart')
-  pageForward.setAttribute('aria-describedby', 'page-forward-description')
-  const pageForwardText = document.createElement('span')
-  pageForwardText.className = 'defra-chart-pagination__text'
-  pageForward.appendChild(pageForwardText)
-  const pageForwardDescription = document.createElement('span')
-  pageForwardDescription.id = 'page-forward-description'
-  pageForwardDescription.className = 'govuk-visually-hidden'
-  pageForwardDescription.setAttribute('aria-live', 'polite')
-  pageForward.appendChild(pageForwardDescription)
-  paginationInner.appendChild(pageBack)
-  paginationInner.appendChild(pageForward)
-  pagination.appendChild(paginationInner)
+  const {
+    pagination,
+    paginationInner,
+    pageForward,
+    pageForwardText,
+    pageForwardDescription,
+    pageBack,
+    pageBackText,
+    pageBackDescription
+  } = createPaginationControls()
+
   container.appendChild(pagination)
 
   // Set defaults
