@@ -41,14 +41,14 @@ experiment('BarChart', () => {
     expect(controlsContainer).not.to.equal(null)
     expect(controls).to.have.length(2)
 
-    expect(controls[0].children[1].textContent).to.equal('Hours')
+    expect(controls[0].children[1].textContent).to.equal('5 days')
     expect({ ...controls[0].children[0].dataset }).to.equal({
       period: 'hours',
       start: '2023-07-14T00:00:00Z',
       end: '2023-07-19T00:00:00Z'
     })
 
-    expect(controls[1].children[1].textContent).to.equal('Minutes')
+    expect(controls[1].children[1].textContent).to.equal('24 hours')
     expect({ ...controls[1].children[0].dataset }).to.equal({
       period: 'minutes',
       start: '2023-07-18T00:00:00Z',
