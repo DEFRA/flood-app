@@ -4,6 +4,7 @@
 }
 .defra-chart-segmented-control {
   margin: auto;
+  display: inline-block;
   &__segment {
     display: inline-block;
     position: relative;
@@ -45,7 +46,8 @@
   }
 }
 .defra-chart-pagination {
-  display: block;
+  display: inline-block;
+  float: right;
   padding-bottom: 15px;
   &__button {
     border: 0px;
