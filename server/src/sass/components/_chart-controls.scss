@@ -4,11 +4,18 @@
   overflow: auto;
   margin: -3px -3px 0 -3px;
   padding: 3px 3px 0 3px;
-}
-.defra-chart-resolution-controls {
-  margin: auto;
-  display: inline-block;
-  padding-bottom: 4px;
+
+  &__group {
+    margin: auto;
+    display: inline-block;
+    padding-bottom: 4px;
+  }
+
+  &__group--pagination {
+    float: right;
+    margin-right: 10px;
+  }
+
   &__button {
     @extend .defra-button-text-s;
     touch-action: manipulation;
@@ -17,11 +24,11 @@
     position: relative;
     text-align: center;
     text-decoration: none;
-    margin-right: 15px;
     margin-bottom: -4px;
     cursor: pointer;
     color: govuk-colour('blue');
   }
+
   &__button:hover {
     color: $govuk-link-hover-colour;
   }
@@ -33,50 +40,14 @@
     background-color: $govuk-focus-colour;
     color: govuk-colour('black');
   }
-}
-.defra-chart-pagination-controls {
-  display: inline-block;
-  float: right;
-  padding-bottom: 15px;
-  &__button {
-    border: 0px;
-    background-color: white;
-    margin: 0px;
-    padding: 0px;
-    width: auto;
-    outline: 3px solid transparent;
-    color: $govuk-link-colour;
-    cursor: pointer;
-    touch-action: manipulation;
-    @include govuk-font($size: 16);
-    .defra-chart-pagination-controls__text {
-      pointer-events: none;
-    }
-    &[aria-disabled="true"],
-    &[aria-disabled="true"]:after,
-    &[aria-disabled="true"]:before {
-      color: govuk-colour('mid-grey');
-    }
-    &--back {
-      margin-right: 10px;
-    }
-    @include mq ($from: tablet) {
-      margin-top: 5px;
-    }
+  &__button[aria-disabled="true"],
+  &__button[aria-disabled="true"]:after,
+  &__button[aria-disabled="true"]:before {
+    color: govuk-colour('mid-grey');
   }
-  &__button[aria-disabled="true"] {
-    cursor: not-allowed;
-  }
-  &__button:hover:not([aria-disabled="true"]) {
-    color: $govuk-link-hover-colour;
-    &:after, &:before {
-      color: $govuk-link-hover-colour;
-    }
-  }
-  &__button--forward:after,
-  &__button--back:before {
+  &__button:after,
+  &__button:before {
     display: inline-block;
-    content: '';
     border-width: 0 2px 2px 0;
     width: 8px;
     height: 8px;
@@ -85,25 +56,16 @@
     margin-right: 2px;
     margin-left: 2px;
   }
-  &__button--forward:after {
+  &__button[data-direction="forward"]:after {
+    content: '';
     -webkit-transform: rotate(-45deg);
     -ms-transform: rotate(-45deg);
     transform: rotate(-45deg);
   }
-  &__button--back:before {
+  &__button[data-direction="back"]:before {
+    content: '';
     -webkit-transform: rotate(135deg);
     -ms-transform: rotate(135deg);
     transform: rotate(135deg);
-  }
-  &__button:focus:not([aria-disabled="true"]) {
-    color: $govuk-focus-text-colour;
-    background-color: $govuk-focus-colour;
-    box-shadow: 0 -2px $govuk-focus-colour, 0 4px govuk-colour('black');
-    &:after, &:before {
-      color: $govuk-focus-text-colour;
-    }
-  }
-  &__button:focus[aria-disabled="true"] {
-    box-shadow: 0px 0px 0px 2px govuk-colour('black'), 0px 0px 0px 5px $govuk-focus-colour;
   }
 }
