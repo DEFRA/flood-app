@@ -475,10 +475,10 @@ function BarChart (containerId, stationId, data) {
   })
 
   container.addEventListener('click', (e) => {
-    const classNames = ['defra-chart-resolution-controls__button', 'defra-chart-pagination__button']
+    const classNames = ['defra-chart-resolution-controls__button', 'defra-chart-pagination-controls__button']
     if (!classNames.some(className => e.target.classList.contains(className))) return
     if (e.target.getAttribute('aria-disabled') === 'true') {
-      const container = e.target.classList.contains('defra-chart-pagination__button--back') ? pageBackDescription : pageForwardDescription
+      const container = e.target.classList.contains('defra-chart-pagination-controls__button--back') ? pageBackDescription : pageForwardDescription
       container.innerText = ''
       window.setTimeout(() => {
         container.innerText = container === pageBackDescription ? 'No previous data' : 'No more data'
