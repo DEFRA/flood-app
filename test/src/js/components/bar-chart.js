@@ -35,21 +35,21 @@ experiment('BarChart', () => {
     // Act
     window.flood.charts.createBarChart('bar-chart-container', chartId, telemetry)
     const controlsContainer = chartContainer.querySelector('.defra-chart-segmented-control')
-    const controls = [...controlsContainer.children]
+    const [fiveDaysControl, twentyFourHoursControl] = controlsContainer.children
 
     // Assert
     expect(controlsContainer).not.to.equal(null)
-    expect(controls).to.have.length(2)
+    expect(controlsContainer.children).to.have.length(2)
 
-    expect(controls[0].children[1].textContent).to.equal('5 days')
-    expect({ ...controls[0].children[0].dataset }).to.equal({
+    expect(fiveDaysControl.innerText).to.equal('5 days')
+    expect({ ...fiveDaysControl.dataset }).to.equal({
       period: 'hours',
       start: '2023-07-14T00:00:00Z',
       end: '2023-07-19T00:00:00Z'
     })
 
-    expect(controls[1].children[1].textContent).to.equal('24 hours')
-    expect({ ...controls[1].children[0].dataset }).to.equal({
+    expect(twentyFourHoursControl.innerText).to.equal('24 hours')
+    expect({ ...twentyFourHoursControl.dataset }).to.equal({
       period: 'minutes',
       start: '2023-07-18T00:00:00Z',
       end: '2023-07-19T00:00:00Z'
@@ -59,7 +59,7 @@ experiment('BarChart', () => {
     expect(description).to.startWith('\n    Showing 5 days\n    from 14 July 2023 at 2:00AM to 18 July 2023 at 4:00PM in hourly totals.')
   })
 
-  test('The minutes control switches the chart to 24 hour range', async () => {
+  test('The 24 hours control switches the chart to 24 hour range', async () => {
     // Arrange
     const chartId = 'example-chart-id'
     const telemetry = telemetryFixture
@@ -67,10 +67,10 @@ experiment('BarChart', () => {
     chartContainer.setAttribute('id', 'bar-chart-container')
     document.body.appendChild(chartContainer)
     window.flood.charts.createBarChart('bar-chart-container', chartId, telemetry)
-    const minutesControl = chartContainer.querySelector('.defra-chart-segmented-control').children[1]
+    const twentyFourHoursControl = chartContainer.querySelector('.defra-chart-segmented-control').children[1]
 
     // Act
-    minutesControl.children[0].click()
+    twentyFourHoursControl.click()
 
     // Assert
     const description = chartContainer.querySelector('#bar-chart-description').textContent
@@ -87,7 +87,7 @@ experiment('BarChart', () => {
 
     // Act
     window.flood.charts.createBarChart('bar-chart-container', chartId, telemetry)
-    chartContainer.querySelector('.defra-chart-segmented-control__segment input[data-period="minutes"]').click()
+    chartContainer.querySelector('.defra-chart-segmented-control__segment[data-period="minutes"]').click()
 
     // Assert
     const outerContainer = document.querySelector('.defra-chart-pagination')
@@ -110,7 +110,7 @@ experiment('BarChart', () => {
 
     // Act
     window.flood.charts.createBarChart('bar-chart-container', chartId, telemetry)
-    chartContainer.querySelector('.defra-chart-segmented-control__segment input[data-period="hours"]').click()
+    chartContainer.querySelector('.defra-chart-segmented-control__segment[data-period="hours"]').click()
 
     // Assert
     const outerContainer = document.querySelector('.defra-chart-pagination')
@@ -129,7 +129,7 @@ experiment('BarChart', () => {
 
     // Act
     window.flood.charts.createBarChart('bar-chart-container', chartId, telemetry)
-    chartContainer.querySelector('.defra-chart-segmented-control__segment input[data-period="minutes"]').click()
+    chartContainer.querySelector('.defra-chart-segmented-control__segment[data-period="minutes"]').click()
     chartContainer.querySelector('.defra-chart-pagination__button--back').click()
 
     // Assert
