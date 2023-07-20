@@ -475,7 +475,7 @@ function BarChart (containerId, stationId, data) {
   })
 
   container.addEventListener('click', (e) => {
-    const classNames = ['defra-chart-segmented-control__input', 'defra-chart-pagination__button']
+    const classNames = ['defra-chart-segmented-control__segment', 'defra-chart-pagination__button']
     if (!classNames.some(className => e.target.classList.contains(className))) return
     if (e.target.getAttribute('aria-disabled') === 'true') {
       const container = e.target.classList.contains('defra-chart-pagination__button--back') ? pageBackDescription : pageForwardDescription
