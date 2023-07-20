@@ -34,7 +34,7 @@ experiment('BarChart', () => {
 
     // Act
     window.flood.charts.createBarChart('bar-chart-container', chartId, telemetry)
-    const controlsContainer = chartContainer.querySelector('.defra-chart-segmented-control')
+    const controlsContainer = chartContainer.querySelector('.defra-chart-resolution-controls')
     const [fiveDaysControl, twentyFourHoursControl] = controlsContainer.children
 
     // Assert
@@ -67,7 +67,7 @@ experiment('BarChart', () => {
     chartContainer.setAttribute('id', 'bar-chart-container')
     document.body.appendChild(chartContainer)
     window.flood.charts.createBarChart('bar-chart-container', chartId, telemetry)
-    const twentyFourHoursControl = chartContainer.querySelector('.defra-chart-segmented-control').children[1]
+    const twentyFourHoursControl = chartContainer.querySelector('.defra-chart-resolution-controls').children[1]
 
     // Act
     twentyFourHoursControl.click()
@@ -87,7 +87,7 @@ experiment('BarChart', () => {
 
     // Act
     window.flood.charts.createBarChart('bar-chart-container', chartId, telemetry)
-    chartContainer.querySelector('.defra-chart-segmented-control__segment[data-period="minutes"]').click()
+    chartContainer.querySelector('.defra-chart-resolution-controls__button[data-period="minutes"]').click()
 
     // Assert
     const outerContainer = document.querySelector('.defra-chart-pagination')
@@ -110,7 +110,7 @@ experiment('BarChart', () => {
 
     // Act
     window.flood.charts.createBarChart('bar-chart-container', chartId, telemetry)
-    chartContainer.querySelector('.defra-chart-segmented-control__segment[data-period="hours"]').click()
+    chartContainer.querySelector('.defra-chart-resolution-controls__button[data-period="hours"]').click()
 
     // Assert
     const outerContainer = document.querySelector('.defra-chart-pagination')
@@ -129,7 +129,7 @@ experiment('BarChart', () => {
 
     // Act
     window.flood.charts.createBarChart('bar-chart-container', chartId, telemetry)
-    chartContainer.querySelector('.defra-chart-segmented-control__segment[data-period="minutes"]').click()
+    chartContainer.querySelector('.defra-chart-resolution-controls__button[data-period="minutes"]').click()
     chartContainer.querySelector('.defra-chart-pagination__button--back').click()
 
     // Assert

@@ -1,9 +1,9 @@
 
 const { forEach } = window.flood.utils
 
-export function createSegmentedControl ({ bands }) {
+export function createResolutionControls ({ bands }) {
   const segmentedControl = document.createElement('div')
-  segmentedControl.className = 'defra-chart-segmented-control'
+  segmentedControl.className = 'defra-chart-resolution-controls'
   for (let i = bands.length - 1; i >= 0; i--) {
     const band = bands[i]
     const control = document.createElement('button')
@@ -12,7 +12,7 @@ export function createSegmentedControl ({ bands }) {
     const end = new Date()
     start.setHours(start.getHours() - (bands.find(({ period }) => period === band.period).days * 24))
 
-    control.className = 'defra-chart-segmented-control__segment'
+    control.className = 'defra-chart-resolution-controls__button'
     control.style.display = 'none'
     control.innerText = band.label
     control.setAttribute('data-period', band.period)
@@ -25,7 +25,7 @@ export function createSegmentedControl ({ bands }) {
   return segmentedControl
 }
 
-export function updateSegmentedControl ({ bands, dataCache, dataStart, period, segmentedControl }) {
+export function updateResolutionControls ({ bands, dataCache, dataStart, period, segmentedControl }) {
   const now = new Date()
   const dataDurationDays = (new Date(now.getTime() - dataStart.getTime())) / (1000 * 60 * 60 * 24)
   // Check there are at least 2 telemetry arrays
@@ -34,11 +34,11 @@ export function updateSegmentedControl ({ bands, dataCache, dataStart, period, s
     numBands += Object.getOwnPropertyDescriptor(dataCache, bands[i].period) ? 1 : 0
   }
   // Determine which controls to display
-  forEach(segmentedControl.querySelectorAll('.defra-chart-segmented-control__segment'), button => {
+  forEach(segmentedControl.querySelectorAll('.defra-chart-resolution-controls__button'), button => {
     const isBand = period === button.getAttribute('data-period')
     const band = bands.find(x => x.period === button.getAttribute('data-period'))
     button.checked = isBand
     button.style.display = (band.days <= dataDurationDays) && numBands > 1 ? 'inline-block' : 'none'
-    button.classList.toggle('defra-chart-segmented-control__segment--selected', isBand)
+    button.classList.toggle('defra-chart-resolution-controls__button--selected', isBand)
   })
 }
