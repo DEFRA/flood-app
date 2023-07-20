@@ -1,46 +1,35 @@
 .defra-chart-controls {
   position: relative;
   z-index: 1;
+  overflow: auto;
+  margin: -3px -3px 0 -3px;
+  padding: 3px 3px 0 3px;
 }
 .defra-chart-segmented-control {
   margin: auto;
   display: inline-block;
+  padding-bottom: 4px;
   &__segment {
+    @extend .defra-button-text-s;
+    touch-action: manipulation;
+    padding: 7.5px;
     display: inline-block;
     position: relative;
     text-align: center;
+    text-decoration: none;
     margin-right: 15px;
-  }
-  input {
-    position: absolute;
-    opacity: 0;
-    margin: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    margin-bottom: -4px;
     cursor: pointer;
-  }
-  label {
-    cursor: pointer;
-    display: block;
-    @include govuk-font($size: 16);
-    padding: 5px 0;
-    border-bottom: 5px solid transparent;
-    position: relative;
-    outline: 3px solid transparent;
     color: govuk-colour('blue');
   }
-  input:hover + label {
+  &__segment:hover {
     color: $govuk-link-hover-colour;
   }
-  input:checked + label {
-    border-bottom: 5px solid govuk-colour('blue');
+  &__segment--selected {
+    border-bottom: 4px solid govuk-colour('blue');
   }
-  input:focus + label {
-    border-bottom: 5px solid govuk-colour('black');
+  &__segment:focus {
+    border-bottom: 4px solid govuk-colour('black');
     background-color: $govuk-focus-colour;
     color: govuk-colour('black');
   }

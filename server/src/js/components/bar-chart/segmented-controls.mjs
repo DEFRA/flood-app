@@ -5,18 +5,21 @@ export function createSegmentedControl ({ bands }) {
   const segmentedControl = document.createElement('div')
   segmentedControl.className = 'defra-chart-segmented-control'
   for (let i = bands.length - 1; i >= 0; i--) {
-    const control = document.createElement('div')
+    const band = bands[i]
+    const control = document.createElement('button')
+
+    const start = new Date()
+    const end = new Date()
+    start.setHours(start.getHours() - (bands.find(({ period }) => period === band.period).days * 24))
+
     control.className = 'defra-chart-segmented-control__segment'
     control.style.display = 'none'
-    let start = new Date()
-    let end = new Date()
-    start.setHours(start.getHours() - (bands.find(x => x.period === bands[i].period).days * 24))
-    start = start.toISOString().replace(/.\d+Z$/g, 'Z')
-    end = end.toISOString().replace(/.\d+Z$/g, 'Z')
-    control.innerHTML = `
-      <input class="defra-chart-segmented-control__input" name="time" type="radio" id="time${bands[i].label}" data-period="${bands[i].period}" data-start="${start}" data-end="${end}" aria-controls="bar-chart"/>
-      <label for="time${bands[i].label}">${bands[i].label}</label>
-    `
+    control.innerText = band.label
+    control.setAttribute('data-period', band.period)
+    control.setAttribute('data-start', start.toISOString().replace(/.\d+Z$/g, 'Z'))
+    control.setAttribute('data-end', end.toISOString().replace(/.\d+Z$/g, 'Z'))
+    control.setAttribute('aria-controls', 'bar-chart')
+
     segmentedControl.appendChild(control)
   }
   return segmentedControl
@@ -31,11 +34,11 @@ export function updateSegmentedControl ({ bands, dataCache, dataStart, period, s
     numBands += Object.getOwnPropertyDescriptor(dataCache, bands[i].period) ? 1 : 0
   }
   // Determine which controls to display
-  forEach(segmentedControl.querySelectorAll('.defra-chart-segmented-control input'), input => {
-    const isBand = period === input.getAttribute('data-period')
-    const band = bands.find(x => x.period === input.getAttribute('data-period'))
-    input.checked = isBand
-    input.parentNode.style.display = (band.days <= dataDurationDays) && numBands > 1 ? 'inline-block' : 'none'
-    input.parentNode.classList.toggle('defra-chart-segmented-control__segment--selected', isBand)
+  forEach(segmentedControl.querySelectorAll('.defra-chart-segmented-control__segment'), button => {
+    const isBand = period === button.getAttribute('data-period')
+    const band = bands.find(x => x.period === button.getAttribute('data-period'))
+    button.checked = isBand
+    button.style.display = (band.days <= dataDurationDays) && numBands > 1 ? 'inline-block' : 'none'
+    button.classList.toggle('defra-chart-segmented-control__segment--selected', isBand)
   })
 }
