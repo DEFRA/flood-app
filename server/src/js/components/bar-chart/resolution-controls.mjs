@@ -2,8 +2,8 @@
 const { forEach } = window.flood.utils
 
 export function createResolutionControls ({ bands }) {
-  const segmentedControl = document.createElement('div')
-  segmentedControl.className = 'defra-chart-resolution-controls'
+  const resolutionControlGroup = document.createElement('div')
+  resolutionControlGroup.classList.add('defra-chart-controls__group', 'defra-chart-controls__group--resolution')
   for (let i = bands.length - 1; i >= 0; i--) {
     const band = bands[i]
     const control = document.createElement('button')
@@ -12,20 +12,24 @@ export function createResolutionControls ({ bands }) {
     const end = new Date()
     start.setHours(start.getHours() - (bands.find(({ period }) => period === band.period).days * 24))
 
-    control.className = 'defra-chart-resolution-controls__button'
+    control.className = 'defra-chart-controls__button'
     control.style.display = 'none'
-    control.innerText = band.label
     control.setAttribute('data-period', band.period)
     control.setAttribute('data-start', start.toISOString().replace(/.\d+Z$/g, 'Z'))
     control.setAttribute('data-end', end.toISOString().replace(/.\d+Z$/g, 'Z'))
     control.setAttribute('aria-controls', 'bar-chart')
 
-    segmentedControl.appendChild(control)
+    const text = document.createElement('span')
+    text.className = 'defra-chart-controls__text'
+    text.innerText = band.label
+
+    control.appendChild(text)
+    resolutionControlGroup.appendChild(control)
   }
-  return segmentedControl
+  return resolutionControlGroup
 }
 
-export function updateResolutionControls ({ bands, dataCache, dataStart, period, segmentedControl }) {
+export function updateResolutionControls ({ bands, dataCache, dataStart, period, resolutionControlGroup }) {
   const now = new Date()
   const dataDurationDays = (new Date(now.getTime() - dataStart.getTime())) / (1000 * 60 * 60 * 24)
   // Check there are at least 2 telemetry arrays
@@ -34,11 +38,11 @@ export function updateResolutionControls ({ bands, dataCache, dataStart, period,
     numBands += Object.getOwnPropertyDescriptor(dataCache, bands[i].period) ? 1 : 0
   }
   // Determine which controls to display
-  forEach(segmentedControl.querySelectorAll('.defra-chart-resolution-controls__button'), button => {
+  forEach(resolutionControlGroup.querySelectorAll('.defra-chart-controls__button'), button => {
     const isBand = period === button.getAttribute('data-period')
     const band = bands.find(x => x.period === button.getAttribute('data-period'))
     button.checked = isBand
     button.style.display = (band.days <= dataDurationDays) && numBands > 1 ? 'inline-block' : 'none'
-    button.classList.toggle('defra-chart-resolution-controls__button--selected', isBand)
+    button.classList.toggle('defra-chart-controls__button--selected', isBand)
   })
 }
