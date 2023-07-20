@@ -34,7 +34,7 @@
     color: govuk-colour('black');
   }
 }
-.defra-chart-pagination {
+.defra-chart-pagination-controls {
   display: inline-block;
   float: right;
   padding-bottom: 15px;
@@ -49,7 +49,7 @@
     cursor: pointer;
     touch-action: manipulation;
     @include govuk-font($size: 16);
-    .defra-chart-pagination__text {
+    .defra-chart-pagination-controls__text {
       pointer-events: none;
     }
     &[aria-disabled="true"],
