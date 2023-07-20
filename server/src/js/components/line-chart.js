@@ -126,7 +126,7 @@ function LineChart (containerId, stationId, data, options = {}) {
         .attr('class', 'threshold__remove')
         .attr('tabindex', 0)
         .attr('data-threshold-remove', '')
-        .attr('aria-label', 'Remove threshold (Visual only)')
+        .attr('aria-label', `Remove ${threshold.level}m threshold (Visual only)`)
         .attr('aria-controls', `${containerId}-visualisation`)
         .attr('transform', 'translate(20,0)')
       remove.append('circle').attr('class', 'threshold__remove-bg').attr('r', 16).attr('x1', -5).attr('y1', -5)
@@ -449,8 +449,7 @@ function LineChart (containerId, stationId, data, options = {}) {
   //
 
   const defaults = {
-    btnAddThresholdClass: 'defra-button-text-s',
-    btnAddThresholdText: 'Show on chart <span class="govuk-visually-hidden">(Visual only)</span>'
+    btnAddThresholdClass: 'defra-button-text-s'
   }
   options = Object.assign({}, defaults, options)
 
@@ -514,7 +513,7 @@ function LineChart (containerId, stationId, data, options = {}) {
   document.querySelectorAll('[data-threshold-add]').forEach(container => {
     const button = document.createElement('button')
     button.className = options.btnAddThresholdClass
-    button.innerHTML = options.btnAddThresholdText
+    button.innerHTML = `Show<span class="govuk-visually-hidden"> ${container.getAttribute('data-level')}m threshold</span> on chart <span class="govuk-visually-hidden">(Visual only)</span>`
     button.setAttribute('aria-controls', `${containerId}-visualisation`)
     button.setAttribute('data-id', container.getAttribute('data-id'))
     button.setAttribute('data-threshold-add', '')
