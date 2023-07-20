@@ -300,14 +300,13 @@ function BarChart (containerId, stationId, data) {
       dataItem = direction === 'forward' ? dataPage[positiveDataItems[positiveDataItems.length - 1]] : dataPage[positiveDataItems[0]]
     }
     // Update html control properties
-    updateResolutionControls({ bands, dataCache, dataStart, period, segmentedControl })
+    updateResolutionControls({ bands, dataCache, dataStart, period, resolutionControlGroup })
     updatePagination({
       start: pageStart,
       end: pageEnd,
       duration: pageDuration,
-      durationHours: pageDurationHours,
       dataStart,
-      paginationInner,
+      paginationControlGroup: pagination,
       pageForward,
       pageForwardText,
       pageForwardDescription,
@@ -319,14 +318,6 @@ function BarChart (containerId, stationId, data) {
     const pageValueStart = new Date(new Date(dataPage[dataPage.length - 1].dateTime).getTime() - valueDuration)
     const pageValueEnd = new Date(dataPage[0].dateTime)
     updateGrid(positiveDataItems.length, totalPageRainfall, pageDurationHours, pageDurationDays, pageValueStart, pageValueEnd)
-  }
-
-  const changePage = (event) => {
-    const target = event.target
-    direction = target.getAttribute('data-direction')
-    pageStart = new Date(target.getAttribute('data-start'))
-    pageEnd = new Date(target.getAttribute('data-end'))
-    initChart()
   }
 
   const scaleBandInvert = (scale) => {
@@ -385,8 +376,8 @@ function BarChart (containerId, stationId, data) {
   ]
 
   // Add time scale buttons
-  const segmentedControl = createResolutionControls({ bands })
-  controls.appendChild(segmentedControl)
+  const resolutionControlGroup = createResolutionControls({ bands })
+  controls.appendChild(resolutionControlGroup)
 
   // Create chart container elements
   const svg = select(`#${containerId}`).append('svg')
@@ -421,7 +412,6 @@ function BarChart (containerId, stationId, data) {
   // Add paging control
   const {
     pagination,
-    paginationInner,
     pageForward,
     pageForwardText,
     pageForwardDescription,
@@ -475,17 +465,20 @@ function BarChart (containerId, stationId, data) {
   })
 
   container.addEventListener('click', (e) => {
-    const classNames = ['defra-chart-resolution-controls__button', 'defra-chart-pagination-controls__button']
-    if (!classNames.some(className => e.target.classList.contains(className))) return
-    if (e.target.getAttribute('aria-disabled') === 'true') {
-      const container = e.target.classList.contains('defra-chart-pagination-controls__button--back') ? pageBackDescription : pageForwardDescription
-      container.innerText = ''
+    const button = e.target.closest('.defra-chart-controls__button')
+    if (!button) return
+    if (button.getAttribute('aria-disabled') === 'true') {
+      const description = button.querySelector('.govuk-visually-hidden')
+      description.innerText = ''
       window.setTimeout(() => {
-        container.innerText = container === pageBackDescription ? 'No previous data' : 'No more data'
+        description.innerText = button.dataset.direction === 'back' ? 'No previous data' : 'No more data'
       }, 100)
       return
     }
-    changePage(e)
+    direction = button.getAttribute('data-direction')
+    pageStart = new Date(button.getAttribute('data-start'))
+    pageEnd = new Date(button.getAttribute('data-end'))
+    initChart()
   })
 
   document.addEventListener('keyup', (e) => {

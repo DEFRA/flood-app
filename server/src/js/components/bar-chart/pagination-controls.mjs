@@ -1,43 +1,48 @@
 
 export function createPaginationControls () {
   const pagination = document.createElement('div')
-  pagination.className = 'defra-chart-pagination-controls'
-  const paginationInner = document.createElement('div')
-  paginationInner.style.display = 'none'
-  paginationInner.className = 'defra-chart-pagination-controls_inner'
+  pagination.classList.add('defra-chart-controls__group', 'defra-chart-controls__group--pagination')
+  pagination.style.display = 'none'
+
   const pageBack = document.createElement('button')
-  pageBack.className = 'defra-chart-pagination-controls__button defra-chart-pagination-controls__button--back'
+  pageBack.className = 'defra-chart-controls__button'
   pageBack.setAttribute('data-direction', 'back')
   pageBack.setAttribute('aria-controls', 'bar-chart')
   pageBack.setAttribute('aria-describedby', 'page-back-description')
+
   const pageBackText = document.createElement('span')
-  pageBackText.className = 'defra-chart-pagination-controls__text'
-  pageBack.appendChild(pageBackText)
+  pageBackText.className = 'defra-chart-controls__button-text'
+
   const pageBackDescription = document.createElement('span')
   pageBackDescription.id = 'page-back-description'
   pageBackDescription.className = 'govuk-visually-hidden'
   pageBackDescription.setAttribute('aria-live', 'polite')
+
+  pageBack.appendChild(pageBackText)
   pageBack.appendChild(pageBackDescription)
+
   const pageForward = document.createElement('button')
-  pageForward.className = 'defra-chart-pagination-controls__button defra-chart-pagination-controls__button--forward'
+  pageForward.className = 'defra-chart-controls__button'
   pageForward.setAttribute('data-direction', 'forward')
   pageForward.setAttribute('aria-controls', 'bar-chart')
   pageForward.setAttribute('aria-describedby', 'page-forward-description')
+
   const pageForwardText = document.createElement('span')
-  pageForwardText.className = 'defra-chart-pagination-controls__text'
-  pageForward.appendChild(pageForwardText)
+  pageForwardText.className = 'defra-chart-controls__text'
+
   const pageForwardDescription = document.createElement('span')
   pageForwardDescription.id = 'page-forward-description'
   pageForwardDescription.className = 'govuk-visually-hidden'
   pageForwardDescription.setAttribute('aria-live', 'polite')
+
+  pageForward.appendChild(pageForwardText)
   pageForward.appendChild(pageForwardDescription)
-  paginationInner.appendChild(pageBack)
-  paginationInner.appendChild(pageForward)
-  pagination.appendChild(paginationInner)
+
+  pagination.appendChild(pageBack)
+  pagination.appendChild(pageForward)
 
   return {
     pagination,
-    paginationInner,
     pageForward,
     pageForwardText,
     pageForwardDescription,
@@ -47,7 +52,7 @@ export function createPaginationControls () {
   }
 }
 export function updatePagination ({
-  start, end, duration, durationHours, dataStart, paginationInner,
+  start, end, duration, dataStart, paginationControlGroup,
   pageForward, pageForwardText, pageForwardDescription,
   pageBack, pageBackText, pageBackDescription
 }) {
@@ -62,7 +67,7 @@ export function updatePagination ({
   previousStart = previousStart.getTime() >= dataStart.getTime() ? previousStart.toISOString().replace(/.\d+Z$/g, 'Z') : null
   previousEnd = previousStart ? previousEnd.toISOString().replace(/.\d+Z$/g, 'Z') : null
   // Set properties
-  paginationInner.style.display = (nextStart || previousEnd) ? 'inline-block' : 'none'
+  paginationControlGroup.style.display = (nextStart || previousEnd) ? 'inline-block' : 'none'
   pageForward.setAttribute('data-start', nextStart)
   pageForward.setAttribute('data-end', nextEnd)
   pageBack.setAttribute('data-start', previousStart)
