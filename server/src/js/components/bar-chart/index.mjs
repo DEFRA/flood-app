@@ -430,7 +430,7 @@ function BarChart (containerId, stationId, data) {
     pageBackDescription
   } = createPaginationControls()
 
-  container.appendChild(pagination)
+  controls.appendChild(pagination)
 
   // Set defaults
   let width, height, xScale, yScale, dataStart, dataPage, dataItem, latestDateTime, period, positiveDataItems, direction, interfaceType
