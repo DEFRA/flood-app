@@ -7,7 +7,7 @@ import { timeFormat } from 'd3-time-format'
 import { select, pointer } from 'd3-selection'
 import { max } from 'd3-array'
 import { timeMinute } from 'd3-time'
-import { createSegmentedControl, updateSegmentedControl } from './segmented-controls.mjs'
+import { createResolutionControls, updateResolutionControls } from './resolution-controls.mjs'
 import { createPaginationControls, updatePagination } from './pagination-controls.mjs'
 // const { xhr } = window.flood.utils
 const { forEach } = window.flood.utils
@@ -300,7 +300,7 @@ function BarChart (containerId, stationId, data) {
       dataItem = direction === 'forward' ? dataPage[positiveDataItems[positiveDataItems.length - 1]] : dataPage[positiveDataItems[0]]
     }
     // Update html control properties
-    updateSegmentedControl({ bands, dataCache, dataStart, period, segmentedControl })
+    updateResolutionControls({ bands, dataCache, dataStart, period, segmentedControl })
     updatePagination({
       start: pageStart,
       end: pageEnd,
@@ -385,7 +385,7 @@ function BarChart (containerId, stationId, data) {
   ]
 
   // Add time scale buttons
-  const segmentedControl = createSegmentedControl({ bands })
+  const segmentedControl = createResolutionControls({ bands })
   controls.appendChild(segmentedControl)
 
   // Create chart container elements
@@ -475,7 +475,7 @@ function BarChart (containerId, stationId, data) {
   })
 
   container.addEventListener('click', (e) => {
-    const classNames = ['defra-chart-segmented-control__segment', 'defra-chart-pagination__button']
+    const classNames = ['defra-chart-resolution-controls__button', 'defra-chart-pagination__button']
     if (!classNames.some(className => e.target.classList.contains(className))) return
     if (e.target.getAttribute('aria-disabled') === 'true') {
       const container = e.target.classList.contains('defra-chart-pagination__button--back') ? pageBackDescription : pageForwardDescription

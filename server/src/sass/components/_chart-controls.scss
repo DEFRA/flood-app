@@ -5,11 +5,11 @@
   margin: -3px -3px 0 -3px;
   padding: 3px 3px 0 3px;
 }
-.defra-chart-segmented-control {
+.defra-chart-resolution-controls {
   margin: auto;
   display: inline-block;
   padding-bottom: 4px;
-  &__segment {
+  &__button {
     @extend .defra-button-text-s;
     touch-action: manipulation;
     padding: 7.5px;
@@ -22,13 +22,13 @@
     cursor: pointer;
     color: govuk-colour('blue');
   }
-  &__segment:hover {
+  &__button:hover {
     color: $govuk-link-hover-colour;
   }
-  &__segment--selected {
+  &__button--selected {
     border-bottom: 4px solid govuk-colour('blue');
   }
-  &__segment:focus {
+  &__button:focus {
     border-bottom: 4px solid govuk-colour('black');
     background-color: $govuk-focus-colour;
     color: govuk-colour('black');
