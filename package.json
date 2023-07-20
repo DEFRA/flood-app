@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "start": "pm2 start config/pm2.json",
+    "start:local": "nodemon -r dotenv/config index.js",
     "build:clean": "build/clean-src",
     "build:cp-assets": "build/cp-assets",
     "build:js": "build/build-js",
@@ -81,7 +82,11 @@
     ]
   },
   "devDependencies": {
+    "dotenv": "^16.3.1",
     "husky": "^8.0.3",
-    "node-html-parser": "^6.1.1"
+    "jsdom": "^22.1.0",
+    "mockdate": "^3.0.5",
+    "node-html-parser": "^6.1.1",
+    "nodemon": "^3.0.1"
   }
 }
