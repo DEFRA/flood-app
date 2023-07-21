@@ -24,19 +24,22 @@
   @include mq ($from: desktop) {
     height:450px;
   }
-  .axis.y { 
+  .axis.y {
     @include govuk-font($size: 14, $tabular: true);
   }
-  .axis.x { 
-    @include govuk-font($size: 14); 
+  .axis.x {
+    @include govuk-font($size: 14);
   }
   .axis.y text,
   .axis.x text {
     fill: $govuk-secondary-text-colour;
+    @media (forced-colors: active) {
+      fill: currentColor;
+    }
   }
   .axis.y .tick line,
   .axis.y path,
-  .grid.y path.domain { 
+  .grid.y path.domain {
     display: none;
   }
   .axis path,
@@ -45,6 +48,9 @@
     stroke: $govuk-border-colour;
     stroke-width: 1;
     shape-rendering: crispEdges;
+    @media (forced-colors: active) {
+      stroke: currentColor;
+    }
   }
   .bar {
     pointer-events: none;
@@ -55,12 +61,21 @@
   }
   .bar__fill {
     fill: govuk-colour('blue');
+    @media (forced-colors: active) {
+      fill: currentColor;
+    }
   }
   .bar--selected .bar__fill {
     fill: govuk-colour('dark-blue');
+    @media (forced-colors: active) {
+      fill: currentColor;
+    }
   }
   .bar--incomplete .bar__fill {
     fill: govuk-colour('mid-grey');
+    @media (forced-colors: active) {
+      fill: currentColor;
+    }
   }
   .grid {
     pointer-events: none;
@@ -77,9 +92,15 @@
     stroke: govuk-colour('dark-grey');
     stroke-dasharray: 3 3;
     shape-rendering: crispEdges;
+    @media (forced-colors: active) {
+      stroke: currentColor;
+    }
   }
   .bar--selected .latest-line {
     stroke: govuk-colour('black');
+    @media (forced-colors: active) {
+      stroke: currentColor;
+    }
   }
   // Locator line
   .locator {
@@ -94,6 +115,9 @@
     &__background--visible {
       visibility: visible;
       fill: $govuk-focus-colour;
+      @media (forced-colors: active) {
+        fill: currentColor;
+      }
     }
     &__line {
       visibility: hidden;
@@ -113,13 +137,17 @@
       visibility: visible;
   }
   .tooltip-bg {
-      fill:white;
+      fill: window;
       stroke-width: 1;
       stroke: $govuk-secondary-text-colour;
       shape-rendering: geometricPrecision;
+      @media (forced-colors: active) {
+        stroke: currentColor;
+      }
   }
   .tooltip-text {
       @include govuk-font($size: 16);
+      fill: currentColor;
   }
   .tooltip-text__strong {
       @include govuk-font($size: 19, $weight:bold);
