@@ -33,7 +33,7 @@
   .axis.y text,
   .axis.x text {
     fill: $govuk-secondary-text-colour;
-    @media (forced-colors: active) {
+    @include high-contrast-mode-only {
       fill: currentColor;
     }
   }
@@ -48,7 +48,7 @@
     stroke: $govuk-border-colour;
     stroke-width: 1;
     shape-rendering: crispEdges;
-    @media (forced-colors: active) {
+    @include high-contrast-mode-only {
       stroke: currentColor;
     }
   }
@@ -61,19 +61,19 @@
   }
   .bar__fill {
     fill: govuk-colour('blue');
-    @media (forced-colors: active) {
+    @include high-contrast-mode-only {
       fill: currentColor;
     }
   }
   .bar--selected .bar__fill {
     fill: govuk-colour('dark-blue');
-    @media (forced-colors: active) {
+    @include high-contrast-mode-only {
       fill: currentColor;
     }
   }
   .bar--incomplete .bar__fill {
     fill: govuk-colour('mid-grey');
-    @media (forced-colors: active) {
+    @include high-contrast-mode-only {
       fill: currentColor;
     }
   }
@@ -92,13 +92,13 @@
     stroke: govuk-colour('dark-grey');
     stroke-dasharray: 3 3;
     shape-rendering: crispEdges;
-    @media (forced-colors: active) {
+    @include high-contrast-mode-only {
       stroke: currentColor;
     }
   }
   .bar--selected .latest-line {
     stroke: govuk-colour('black');
-    @media (forced-colors: active) {
+    @include high-contrast-mode-only {
       stroke: currentColor;
     }
   }
@@ -115,7 +115,7 @@
     &__background--visible {
       visibility: visible;
       fill: $govuk-focus-colour;
-      @media (forced-colors: active) {
+      @include high-contrast-mode-only {
         fill: currentColor;
       }
     }
@@ -141,7 +141,7 @@
       stroke-width: 1;
       stroke: $govuk-secondary-text-colour;
       shape-rendering: geometricPrecision;
-      @media (forced-colors: active) {
+      @include high-contrast-mode-only {
         stroke: currentColor;
       }
   }

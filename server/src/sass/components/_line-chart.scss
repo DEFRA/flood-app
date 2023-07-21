@@ -78,7 +78,7 @@
     }
     .observed-area {
         fill: rgba($govuk-link-colour, 0.1);
-        @media screen and (-ms-high-contrast: active), screen and (forced-colors: active) {
+        @include high-contrast-mode-only {
             fill: none;
         }
     }
@@ -92,7 +92,7 @@
     }
     .forecast-area {
         fill: rgba($govuk-border-colour, 0.1);
-        @media screen and (-ms-high-contrast: active), screen and (forced-colors: active) {
+        @include high-contrast-mode-only {
             fill: none;
         }
     }
@@ -119,7 +119,7 @@
         color: $govuk-secondary-text-colour;
         stroke: currentColor;
     }
-    @media screen and (-ms-high-contrast: active), screen and (forced-colors: active) {
+    @include high-contrast-mode-only {
         .locator-point {
             fill: window;
         }
@@ -147,7 +147,7 @@
     .tooltip-text__strong {
         @include govuk-font($size: 19, $weight:bold);
     }
-    @media screen and (-ms-high-contrast: active), screen and (forced-colors: active) {
+    @include high-contrast-mode-only {
         .tooltip-bg {
             fill: window;
         }
@@ -227,7 +227,7 @@
         color: $govuk-text-colour;
         fill: currentColor;
     }
-    @media screen and (-ms-high-contrast: active), screen and (forced-colors: active) {
+    @include high-contrast-mode-only {
         .threshold__line {
             stroke: currentColor;
         }
@@ -256,7 +256,7 @@
         .threshold__remove line {
             stroke: $govuk-text-colour;
         }
-        @media screen and (-ms-high-contrast: active), screen and (forced-colors: active) {
+        @include high-contrast-mode-only {
             .threshold__line {
                 stroke: currentColor;
             }
