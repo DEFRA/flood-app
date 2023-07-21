@@ -179,7 +179,7 @@
       left: 4px;
       top: 4px;
       color: govuk-colour('black');
-      @media (forced-colors: active) {
+      @include high-contrast-mode-only {
         color: currentColor;
       }
       @include mq ($from: tablet) {

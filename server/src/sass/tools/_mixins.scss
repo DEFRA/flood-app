@@ -15,6 +15,15 @@
     white-space: nowrap !important;
 }
 
+@mixin high-contrast-mode-only() {
+    @media
+    screen and (forced-colors: active),
+    screen and (-ms-high-contrast: active)
+    {
+        @content
+    }
+}
+
 
 //
 // Function to create an optimized svg url

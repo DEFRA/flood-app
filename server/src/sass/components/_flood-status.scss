@@ -38,7 +38,7 @@ $amber: #f18700;
     margin-top:0;
     margin-bottom:10px;
 
-    @media (forced-colors: active) {
+    @include high-contrast-mode-only {
         border-top-width: 1px;
         border-bottom-width: 1px;
         border-right-width: 1px;
