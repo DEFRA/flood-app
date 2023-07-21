@@ -187,7 +187,7 @@
       color: $govuk-link-hover-colour;
       svg {
         color: $govuk-link-hover-colour;
-        @media (forced-colors: active) {
+        @include high-contrast-mode-only {
           color: currentColor;
         }
       }
