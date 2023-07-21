@@ -9,7 +9,7 @@
         margin-left:5px;
         vertical-align: middle;
         top:-1px;
-        @media (forced-colors: active) {
+        @include high-contrast-mode-only {
             color: currentColor;
         }
     }
@@ -54,7 +54,7 @@ button.defra-button-secondary {
             left: 10px;
             top: 50%;
             margin-top: -11px;
-            @media (forced-colors: active) {
+            @include high-contrast-mode-only {
                 color: currentColor;
             }
         }
@@ -110,20 +110,20 @@ button.defra-button-secondary {
             margin-right: 8px;
             top: 4px;
         }
-        @media (forced-colors: active) {
+        @include high-contrast-mode-only {
             color: currentColor;
         }
     }
     &:hover svg {
         color: $govuk-link-hover-colour;
-        @media (forced-colors: active) {
+        @include high-contrast-mode-only {
             color: currentColor;
         }
     }
     &:focus svg,
     &:active svg {
         color: govuk-colour('black');
-        @media (forced-colors: active) {
+        @include high-contrast-mode-only {
             color: currentColor;
         }
     }

@@ -39,7 +39,7 @@
     border-bottom: 4px solid govuk-colour('black');
     background-color: $govuk-focus-colour;
     color: govuk-colour('black');
-    @media (forced-colors: active) {
+    @include high-contrast-mode-only {
       outline: 3px solid transparent;
       margin-bottom: 1px;
       border: none;
