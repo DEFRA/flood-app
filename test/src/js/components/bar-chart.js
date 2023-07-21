@@ -6,16 +6,18 @@ const telemetryFixture = require('../../../data/telemetry.json')
 const { cleanupDOM, setupDOM } = require('../../../dom')
 
 const { experiment, test, before, after, beforeEach } = exports.lab = Lab.script()
-
+const initialTimezone = process.env.TZ
 experiment('BarChart', () => {
   before(async () => {
     setupDOM()
+    process.env.TZ = 'Etc/UTC'
     mockdate.set('2023-07-19T00:00:00.000Z')
     await import('../../../../server/src/js/core.mjs')
     await import('../../../../server/src/js/components/bar-chart/index.mjs')
   })
 
   after(() => {
+    process.env.TZ = initialTimezone
     cleanupDOM()
     mockdate.reset()
   })
@@ -56,7 +58,8 @@ experiment('BarChart', () => {
     })
 
     const description = chartContainer.querySelector('#bar-chart-description').textContent
-    expect(description).to.startWith('\n    Showing 5 days\n    from 14 July 2023 at 2:00AM to 18 July 2023 at 4:00PM in hourly totals.')
+    expect(description).to.contain('Showing 5 days')
+    expect(description).to.contain('from 14 July 2023 at 1:00AM to 18 July 2023 at 3:00PM in hourly totals.')
   })
 
   test('The 24 hours control switches the chart to 24 hour range', async () => {
@@ -74,7 +77,8 @@ experiment('BarChart', () => {
 
     // Assert
     const description = chartContainer.querySelector('#bar-chart-description').textContent
-    expect(description).to.startWith('\n    Showing 24 hours\n    from 18 July 2023 at 1:15AM to 18 July 2023 at 3:45PM in 15 minute totals.')
+    expect(description).to.contain('Showing 24 hours')
+    expect(description).to.contain('from 18 July 2023 at 12:15AM to 18 July 2023 at 2:45PM in 15 minute totals.')
   })
 
   test('The pagination buttons are shown when the chart is in the 24 hour range', async () => {
@@ -132,6 +136,7 @@ experiment('BarChart', () => {
 
     // Assert
     const description = chartContainer.querySelector('#bar-chart-description').textContent
-    expect(description).to.startWith('\n    Showing 24 hours\n    from 17 July 2023 at 1:15AM to 18 July 2023 at 1:15AM in 15 minute totals')
+    expect(description).to.contain('Showing 24 hours')
+    expect(description).to.contain('from 17 July 2023 at 12:15AM to 18 July 2023 at 12:15AM in 15 minute totals')
   })
 })
