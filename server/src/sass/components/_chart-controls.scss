@@ -39,11 +39,18 @@
     border-bottom: 4px solid govuk-colour('black');
     background-color: $govuk-focus-colour;
     color: govuk-colour('black');
+    @media (forced-colors: active) {
+      outline: 3px solid transparent;
+      margin-bottom: 1px;
+      border: none;
+    }
   }
   &__button[aria-disabled="true"],
   &__button[aria-disabled="true"]:after,
   &__button[aria-disabled="true"]:before {
     color: govuk-colour('mid-grey');
+    cursor: not-allowed;
+    forced-color-adjust: none;
   }
   &__button:after,
   &__button:before {
