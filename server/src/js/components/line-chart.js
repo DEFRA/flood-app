@@ -212,13 +212,6 @@ function LineChart (containerId, stationId, data, options = {}) {
     nextCell.focus()
     dataPoint = significantPoints[nextIndex]
     // Below needed to change zIndex of focussed point
-    // svg.select('.focussed-cell').remove()
-    // svg.insert('use', '.significant + *')
-    //   .attr('aria-hidden', true)
-    //   .attr('focusable', false)
-    //   .attr('tabindex', -1)
-    //   .attr('class', 'focussed-cell')
-    //   .attr('xlink:href', '#focussed-cell')
   }
 
   const getDataPointByX = (x) => {
@@ -271,7 +264,7 @@ function LineChart (containerId, stationId, data, options = {}) {
   const showTooltip = (tooltipY = 10) => {
     if (!dataPoint) return
     // Hide threshold label
-    // thresholdsContainer.select('.threshold--selected .threshold-label').style('visibility', 'hidden')
+    thresholdsContainer.select('.threshold--selected .threshold-label').style('visibility', 'hidden')
     // Set tooltip text
     const value = dataCache.type === 'river' && (Math.round(dataPoint.value * 100) / 100) <= 0 ? '0' : dataPoint.value.toFixed(2) // *DBL below zero addition
     tooltipValue.text(`${value}m`) // *DBL below zero addition
@@ -304,7 +297,7 @@ function LineChart (containerId, stationId, data, options = {}) {
     thresholds.forEach(x => { x.isSelected = false })
     threshold.isSelected = true
     thresholds.push(threshold)
-    thresholds.sort((a, b) => (a.level < b.level) ? 1 : -1)
+    thresholds.sort((a, b) => (a.level <= b.level) ? 1 : -1)
     // Re-render
     renderChart()
   }
@@ -543,22 +536,6 @@ function LineChart (containerId, stationId, data, options = {}) {
   // XMLHttpRequest to get data if hasn't already been passed through
   const dataCache = data
   initChart()
-  // if (dataCache) {
-  //   initChart()
-  // } else {
-  //   const cacheStart = pageStart
-  //   const cacheEnd = pageEnd
-  //   xhr(`/service/telemetry/${stationId}/${cacheStart}/${cacheEnd}`, (err, response) => {
-  //     if (err) {
-  //       console.log('Error: ' + err)
-  //     } else {
-  //       dataCache = response
-  //       initChart()
-  //     }
-  //   }, 'json')
-  // }
-
-  // renderChart()
 
   //
   // Public methods
@@ -679,7 +656,6 @@ function LineChart (containerId, stationId, data, options = {}) {
     // Hide significant points
     significantContainer.node().parentNode.classList.remove('significant--visible')
     // Remove focussed significant point
-    // svg.select('.focussed-cell').remove()
   }, true)
 
   container.addEventListener('mouseleave', (e) => {
@@ -716,11 +692,6 @@ function LineChart (containerId, stationId, data, options = {}) {
 
   svg.on('touchstart', (e) => {
     interfaceType = 'touch'
-    // const touchEvent = e.targetTouches[0]
-    // if (!xScale) return
-    // getDataPointByX(pointer(touchEvent)[0])
-    // hideThreshold()
-    // showTooltip()
   })
 
   svg.on('touchmove', (e) => {
