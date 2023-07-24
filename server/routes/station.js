@@ -56,8 +56,13 @@ module.exports = {
     // Check if it's a forecast station
     if (thresholds.length && station.status !== 'Suspended') {
       // Forecast station
-      const values = await request.server.methods.flood.getStationForecastData(station.wiski_id)
-      const forecast = { thresholds, values }
+      let forecast
+      try {
+        const values = await request.server.methods.flood.getStationForecastData(station.wiski_id)
+        forecast = { thresholds, values }
+      } catch {
+        console.log(`Error: forecast station with no forecast (${station.rloi_id}/${station.wiski_id})`)
+      }
       const model = new ViewModel({ station, telemetry, forecast, imtdThresholds, impacts, river, warningsAlerts })
       return h.view('station', { model })
     } else {
