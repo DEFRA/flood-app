@@ -28,8 +28,7 @@ class ViewModel {
     let situation = fallbackText
     if (flood && flood.situation) {
       flood.situation = flood.situation.trim()
-      // const message = flood.situation
-      const message = 'This Flood Alert has been removed.  \n\n\n\n\n\n\nRiver levels have now fallen below the flood risk threshold.  There is no longer a threat of flooding, though standing water and debris may still remain.  No further rainfall is forecast.  \nWe continue to monitor the situation.  \nPlease plan driving routes to avoid low-lying roads near rivers, which may be flooded and see the GOV.UK website for a 5 day flood forecast.\n '
+      const message = flood.situation
 
       situation = messageValidator(message)
     }
