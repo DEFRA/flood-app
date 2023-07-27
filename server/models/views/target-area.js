@@ -88,7 +88,7 @@ class ViewModel {
 }
 
 function messageValidator (message) {
-  const strippedMessage = message.replace(/\n+/g, '\n')
+  const strippedMessage = message.replace(/(\r?\n)+/g, '\n')
   return strippedMessage.split('\n').map(p => `<p>${p}</p>`).join(' ')
 }
 module.exports = ViewModel
