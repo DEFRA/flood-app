@@ -1,0 +1,22 @@
+# Check for flooding 6.7.4 Wednesday 2nd August 2023
+
+# Release
+
+6.7.4
+
+https://eaflood.atlassian.net/projects/FSR/versions/16621/tab/release-report-all-issues
+
+# Tickets
+
+https://eaflood.atlassian.net/browse/FSR-962 'How to recover after a flood': change PHE references
+https://eaflood.atlassian.net/browse/FSR-977 Investigate the removal of line spacing between FWS and CFF
+
+# Instructions
+
+Application, service and database build for release
+
+Straight forward application build for release
+
+1 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
