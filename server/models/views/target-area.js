@@ -30,7 +30,7 @@ class ViewModel {
       flood.situation = flood.situation.trim()
       const message = flood.situation
 
-      situation = `<p>${message}</p>`
+      situation = messageValidator(message)
     }
 
     const dateSituationChanged = flood
@@ -59,17 +59,17 @@ class ViewModel {
     const metaCanonical = `/target-area/${area.code}`
 
     Object.assign(this, {
-      pageTitle: pageTitle,
-      metaDescription: metaDescription,
-      metaCanonical: metaCanonical,
+      pageTitle,
+      metaDescription,
+      metaCanonical,
       placeName: area.name,
       placeCentre: JSON.parse(area.centroid).coordinates,
       featureId: area.id,
       severity: severityLevel,
       situationChanged,
-      situation: situation,
-      parentAreaAlert: parentAreaAlert,
-      areaDescription: areaDescription,
+      situation,
+      parentAreaAlert,
+      areaDescription,
       targetArea: area.code,
       feedback: false,
       mapTitle,
@@ -87,4 +87,8 @@ class ViewModel {
   }
 }
 
+function messageValidator (message) {
+  const strippedMessage = message.replace(/(\r?\n)+/g, '\n')
+  return strippedMessage.split('\n').map(p => `<p>${p}</p>`).join(' ')
+}
 module.exports = ViewModel
