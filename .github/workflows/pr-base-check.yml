@@ -1,0 +1,25 @@
+name: "PR Base Branch Check"
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+jobs:
+  check-base-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check valid base branch
+        run: |
+          BASE_BRANCH="${{ github.event.pull_request.base.label }}"
+          SOURCE_BRANCH="${{ github.event.pull_request.head.label }}"
+          echo "Attempting to merge ${SOURCE_BRANCH} into ${BASE_BRANCH}"
+          if [ "$BASE_BRANCH" = "DEFRA:master" ]; then
+            echo base is master
+            if [[ "$SOURCE_BRANCH" != "DEFRA:release/"* ]] && [[ "$SOURCE_BRANCH" != "DEFRA:hotfix/"* ]]; then
+              echo Source is neither a "release" nor a "hotfix" branch, so cannot be merged to master.
+              exit 1
+            fi
+          fi
+          echo "Branches ok to be merged"
+      
+              
+
