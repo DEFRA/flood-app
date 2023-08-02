@@ -49,13 +49,21 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <nav aria-label="Related levels" class="govuk-!-margin-top-0">
-      <span id="map"></span>
-        <a data-journey-click="Rainfall:Station navigation:Rainfall - Nearby levels" href="/river-and-sea-levels/rainfall/{{model.stationId }}" class="defra-flood-nav__link">Nearby levels</a>
-      </a>
+    <nav class="defra-navbar defra-navbar--secondary" aria-label="Related levels" >
+      <div class="defra-navbar__inner">
+        <span id="map"></span>
+          <div class="defra-navbar__group">
+            <ul class="defra-navbar__list">
+              <li class="defra-navbar__item">
+                <a data-journey-click="Rainfall:Station navigation:Rainfall - Nearby levels" href="/river-and-sea-levels/rainfall/{{model.stationId }}">Nearby levels</a>
+              </li>
+            </ul>
+          </div>
+      </div>
     </nav>
   </div>
 </div>
+
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">

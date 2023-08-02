@@ -10,6 +10,7 @@
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
+  overflow-y: hidden;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
@@ -28,17 +29,13 @@
   &__inner {
     flex: 0 0 auto;
     padding: 3px 15px 4px 15px;
-    // @include mq ($from: tablet) {
-    //   padding-left: 0px;
-    //   padding-right: 0px;
-    // }
   }
   &__group {
     float: left;
   }
   &__list {
     list-style: none;
-    margin: 0px 0px -1px;
+    margin: 0px;
     padding: 0px;
   }
   &__list:after {
@@ -70,6 +67,12 @@
     border: 0px;
     box-shadow: 0 4px 0 govuk-colour('black');
     outline: 3px solid transparent;
+    outline-offset: 0px;
+  }
+  a:not([keyboard-focus]):focus {
+    background-color: white;
+    box-shadow: none;
+    text-decoration: underline;
   }
   // Overides
   .defra-link-icon-s {
@@ -81,20 +84,12 @@
     margin-right: 10px;
     &:not([keyboard-focus]):focus {
       background-color: white;
-      // border-color: govuk-colour('mid-grey');
       border: 0px;
       color: govuk-colour('black');
       box-shadow: none;
       text-decoration: underline;
     }
     &:hover {
-      color: govuk-colour('black');
-      background-color: transparent;
-      svg {
-        color: currentColor;
-      }
-    }
-    &:active {
       color: govuk-colour('black');
     }
   }
@@ -139,9 +134,9 @@
       float: left;
       border: 0px;
       color: $govuk-link-colour;
-      margin: 0px 7.5px 4px 0px;
-      padding-top: 7.5px;
-      padding-bottom: 7.5px;
+      margin: 0px 7px 3px 0px;
+      padding-top: 7px;
+      padding-bottom: 7px;
       text-decoration: none;
       &:visited {
         color: $govuk-link-colour;
@@ -159,6 +154,7 @@
         color: $govuk-link-colour;
         box-shadow: none;
         border: 0px;
+        text-decoration: none;
       }
       &:after {
         content: 'Map';
@@ -166,19 +162,23 @@
       svg {
         position: relative;
         display: inline-block;
+        color: currentColor;
         vertical-align: top;
         left: 0px;
         margin: 0px 7px -3px 1px;
         top: -1px;
       }
-      span {
+      .defra-button-secondary__icon {
+        color: govuk-colour('black');
+      }
+      .defra-button-secondary__text {
         @include defra-visually-hidden();
       }
     }
     .defra-navbar__item a {
       color: $govuk-link-colour;
       text-decoration: none;
-      padding: 7.5px;
+      padding: 7px 6px;
     }
     .defra-navbar__item a:visited {
       color: $govuk-link-colour;
@@ -187,21 +187,35 @@
       color: $govuk-link-hover-colour;
       svg {
         color: $govuk-link-hover-colour;
-        @include high-contrast-mode-only {
-          color: currentColor;
-        }
+      }
+    }
+    .defra-navbar__item--selected a{
+      background-color: transparent;
+      color: $govuk-link-colour;
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0px;
+        right: 0px;
+        border-bottom: 4px solid currentColor;
       }
     }
     .defra-navbar__item a:focus {
       color: govuk-colour('black');
+      background-color: $govuk-focus-colour;
+      text-decoration: none;
+      box-shadow: 0 4px 0 govuk-colour('black');
+      outline: 3px solid transparent;
+      outline-offset: 0px;
       svg {
-        color: currentColor;
+        color: govuk-colour('black');
       }
     }
-    .defra-navbar__item--selected a:not(:focus) {
-      background-color: transparent;
-      border-bottom: 4px solid currentColor;
+    .defra-navbar__item a:not([keyboard-focus]):focus {
+      background-color: white;
       color: $govuk-link-colour;
-    }  
+      box-shadow: none;
+    }
   }
 }

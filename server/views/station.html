@@ -26,7 +26,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-0">
       {% if model.station.isGroundwater %}Groundwater{% elif model.station.isCoastal %}Sea{% else %} {{ model.station.river }} {% endif %}
       level {% if model.station.isMulti %} {% if model.station.isDownstream %}downstream{% else %}upstream{% endif %}{% endif %} at {{ model.station.name }}
     </h1>
@@ -35,11 +35,27 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <nav aria-label="Related levels" class="govuk-!-margin-top-0">
-      <span id="map"></span>
-      {% if model.station.riverNavigation.up %}<a href="/station/{{model.station.riverNavigation.up}}" class="defra-flood-nav__link defra-flood-nav__link--upstream">Upstream</a>{% endif %}
-      {% if model.station.riverNavigation.down %}<a href="/station/{{model.station.riverNavigation.down}}" class="defra-flood-nav__link defra-flood-nav__link--downstream">Downstream</a>{% endif %}
-      <a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/{{model.station.id}}" class="defra-flood-nav__link">Nearby levels</a>
+    <nav class="defra-navbar defra-navbar--secondary" aria-label="Related levels">
+      <div class="defra-navbar__inner">
+        <span id="map"></span>
+        <div class="defra-navbar__group">
+          <ul class="defra-navbar__list">
+          {% if model.station.riverNavigation.up %}
+            <li class="defra-navbar__item">
+              <a href="/station/{{model.station.riverNavigation.up}}">Upstream</a>
+            </li>
+          {% endif %}
+          {% if model.station.riverNavigation.down %}
+            <li class="defra-navbar__item">
+              <a href="/station/{{model.station.riverNavigation.down}}">Downstream</a>
+            </li>
+          {% endif %}
+            <li class="defra-navbar__item">
+              <a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/{{model.station.id}}">Nearby levels</a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </nav>
   </div>
 </div>
@@ -49,9 +65,9 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         {% if model.station.isDownstream %}
-        <p class="govuk-!-margin-bottom-8">This measuring station takes 2 measurements. You're viewing the downstream level. <a data-journey-click="Station:Station navigation:Station - Upstream" href="/station/{{ model.station.id }}">View the upstream level.</a></p>
+        <p>This measuring station takes 2 measurements. You're viewing the downstream level. <a data-journey-click="Station:Station navigation:Station - Upstream" href="/station/{{ model.station.id }}">View the upstream level.</a></p>
         {% else %}
-        <p class="govuk-!-margin-bottom-8">This measuring station takes 2 measurements. You're viewing the upstream level. <a data-journey-click="Station:Station navigation:Station - Downstream" href="/station/{{ model.station.id }}/downstream">View the downstream level.</a></p>
+        <p>This measuring station takes 2 measurements. You're viewing the upstream level. <a data-journey-click="Station:Station navigation:Station - Downstream" href="/station/{{ model.station.id }}/downstream">View the downstream level.</a></p>
         {% endif %}
       </div>
   </div>
@@ -265,7 +281,7 @@
           {% endif %}
         </dt>
         {% for threshold in band.values %}
-        <dd class="defra-flood-impact-list__value"  {% if threshold.type === 'historical' %} data-toggle-list-display-item="impact" {% endif %} data-id="{{ threshold.id }}" data-level="{{ threshold.value }}" data-name="{{ threshold.shortname }}">
+        <dd class="defra-flood-impact-list__value{% if threshold.id == 'latest' %} defra-flood-impact-list__value--latest{% endif %}"  {% if threshold.type === 'historical' %} data-toggle-list-display-item="impact" {% endif %} data-id="{{ threshold.id }}" data-level="{{ threshold.value }}" data-name="{{ threshold.shortname }}">
           <div class="defra-flood-impact-list__container">
             {{ threshold.description | safe }}
             {% if threshold.id != 'latest' %}
