@@ -15,7 +15,7 @@
     }
 }
 
-// Secondary button
+// Secondoary button
 a.defra-button-secondary,
 button.defra-button-secondary {
     position: relative;
@@ -26,12 +26,12 @@ button.defra-button-secondary {
     border: 1px solid govuk-colour('mid-grey');
     box-shadow: none;
     background-color: white;
-    padding: 9px 10px 10px;
+    padding: 10px;
     cursor: pointer;
-    color: $govuk-text-colour;
+    color: govuk-colour('black');
     text-decoration: none;
     &:visited {
-        color: $govuk-text-colour;
+        color: govuk-colour('black');
     }
     &:hover {
         background-color: govuk-colour('light-grey');
@@ -40,23 +40,25 @@ button.defra-button-secondary {
         background-color: $govuk-focus-colour;
         border-color: $govuk-focus-colour;
         box-shadow: 0 2px 0 govuk-colour('black');
-        outline: 3px solid transparent;
+        outline-offset: 0;
+        outline: 2px solid transparent;
     }
     &:not([keyboard-focus]):focus {
         background-color: white;
         border: 1px solid govuk-colour('mid-grey');
         box-shadow: none;
     }
-    &--icon {
-        padding-left: 31px;
-        svg {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            margin-top: -11px;
-            @include high-contrast-mode-only {
-                color: currentColor;
-            }
+    &__icon {
+        color: govuk-colour('black');
+    }
+    svg {
+        color: currentColor;
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 8px;
+        @include mq ($from: tablet) {
+            top: -1px;
         }
     }
 }
