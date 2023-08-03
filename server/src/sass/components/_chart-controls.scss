@@ -45,6 +45,12 @@
       border: none;
     }
   }
+  &__button[aria-disabled="true"]:focus {
+    @include high-contrast-mode-only {
+      background-color: transparent;
+      box-shadow: none;
+    }
+  }
   &__button[aria-disabled="true"],
   &__button[aria-disabled="true"]:after,
   &__button[aria-disabled="true"]:before {
