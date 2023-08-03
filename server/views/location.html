@@ -53,7 +53,7 @@
         {% if model.bannerMainLink%}
         <div class="defra-flood-status-item defra-flood-status-item--{{model.severity}}">
           <span class="defra-flood-status-item__icon">
-            {{ model.severeIcon | safe }}
+            {{ model.mainIcon | safe }}
             <span class="govuk-visually-hidden">{{model.severityTitle}}</span>
           </span>
           <div class="defra-flood-status-item__text">
@@ -88,7 +88,7 @@
       <p>This service tells you your risk of flooding from rivers, the sea and groundwater. <a data-journey-click="Location:Surface water:Location - Contact local council"        href="https://www.gov.uk/find-local-council">Contact your local council about surface water flooding</a> (also known as flash flooding).</p>
     {% endif %}
 
-    <p><a data-journey-click="Location:Get warnings:Location - Get warnings" href="https://www.gov.uk/sign-up-for-flood-warnings">Get flood warnings by phone, text or email</a></p>
+    {% include "partials/sign-up-for-flood-warnings.html" %}
 
     {% if model.hasActiveFloods %}
       <span id="map"></span>
