@@ -1,0 +1,22 @@
+# Check for flooding 7.0.0 Tuesday 8th August 2023
+
+# Release
+
+7.0.0
+
+https://eaflood.atlassian.net/projects/FSR/versions/16607/tab/release-report-all-issues
+
+# Tickets
+
+https://eaflood.atlassian.net/browse/FSR-777 Node version upgrade Service/App
+
+
+# Instructions
+
+Application, service and database build for release
+
+Straight forward application build for release
+
+1 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
