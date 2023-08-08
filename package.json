@@ -47,7 +47,7 @@
     "@hapi/yar": "^10.1.1",
     "@turf/polygon-smooth": "^6.5.0",
     "@turf/turf": "^6.5.0",
-    "accessible-autocomplete": "2.0.3",
+    "accessible-autocomplete": "2.0.4",
     "assert": "^2.0.0",
     "babel-loader": "^8.2.3",
     "body-scroll-lock": "^3.1.5",
