@@ -82,6 +82,6 @@
   },
   "devDependencies": {
     "husky": "^8.0.3",
-    "node-html-parser": "^6.1.1"
+    "node-html-parser": "^6.1.5"
   }
 }
