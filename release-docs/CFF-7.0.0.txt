@@ -1,4 +1,4 @@
-# Check for flooding 7.0.0 Tuesday 8th August 2023
+# Check for flooding 7.0.0 Tuesday 15th August 2023
 
 # Release
 
