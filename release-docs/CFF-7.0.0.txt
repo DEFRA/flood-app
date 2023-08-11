@@ -13,10 +13,6 @@ https://eaflood.atlassian.net/browse/FSR-777 Node version upgrade Service/App
 
 # Instructions
 
-Application, service and database build for release
-
-Straight forward application build for release
-
 1 - Run ansible playbook to update Node to v18
 
 2 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
