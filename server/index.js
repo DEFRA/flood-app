@@ -33,7 +33,7 @@ async function createServer () {
       cors: true,
       security: true
     },
-    cache: cache
+    cache
   })
 
   // Register the plugins

@@ -19,8 +19,8 @@ module.exports = {
     return h.view('cookies', {
       pageTitle: 'Cookies - Check for flooding',
       metaDescription: description,
-      analyticsCookiesSet: analyticsCookiesSet,
-      referer: requestHeadersReferer
+      referer: requestHeadersReferer,
+      analyticsCookiesSet
     })
   }
 }

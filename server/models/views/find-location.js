@@ -1,4 +1,3 @@
-
 class ViewModel {
   constructor ({ location, err }) {
     Object.assign(this, {

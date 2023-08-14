@@ -18,18 +18,18 @@ module.exports = {
     }
 
     if (location.match(/^scotland$|^ireland$|^wales$/i)) {
-      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location })
+      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
     }
 
     const [place] = await locationService.find(util.cleanseLocation(location))
 
     if (!place) {
-      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location })
+      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
     }
 
     if (!place.isEngland.is_england) {
       console.error('Location search error: Valid response but location not in England.')
-      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location })
+      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
     }
 
     const { tabs, outOfDate, dataError } = await createOutlookTabs(place, request)
@@ -65,7 +65,7 @@ module.exports = {
         if (!location) {
           return h.redirect('/').takeover()
         } else {
-          return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: location }).takeover()
+          return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location }).takeover()
         }
       }
     }

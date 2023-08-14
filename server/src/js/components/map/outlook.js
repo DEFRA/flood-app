@@ -94,11 +94,11 @@ function OutlookMap (mapId, options) {
 
   // Options to pass to the MapContainer constructor
   const containerOptions = {
-    view: view,
+    view,
     layers: [topography, areasOfConcern, places],
     controls: [dayControl],
     queryParamKeys: ['v'],
-    interactions: interactions,
+    interactions,
     originalTitle: options.originalTitle,
     title: options.title,
     heading: options.heading,
@@ -167,10 +167,10 @@ function OutlookMap (mapId, options) {
       })
     }
     const model = {
-      numFeatures: numFeatures,
-      features: features
+      numFeatures,
+      features
     }
-    const html = window.nunjucks.render('description-outlook.html', { model: model })
+    const html = window.nunjucks.render('description-outlook.html', { model })
     viewportDescription.innerHTML = html
   }
 
@@ -213,7 +213,7 @@ function OutlookMap (mapId, options) {
   const setFeatureHtml = (feature) => {
     const model = feature.getProperties()
     model.id = feature.getId()
-    const html = window.nunjucks.render('info-outlook.html', { model: model })
+    const html = window.nunjucks.render('info-outlook.html', { model })
     feature.set('html', html)
   }
 
