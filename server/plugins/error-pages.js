@@ -23,7 +23,7 @@ module.exports = {
           // return the `429` view
           if (statusCode === 429) {
             request.log('error', {
-              statusCode: statusCode,
+              statusCode,
               path: request.path,
               situation: response.message
             })
@@ -32,7 +32,7 @@ module.exports = {
 
           // gets captured in pm2 log file, details sent to error file below
           request.log('error', {
-            statusCode: statusCode,
+            statusCode,
             situation: response.message
           })
 

@@ -20,11 +20,11 @@ class Floods {
         })
       return {
         name: item.id,
-        count: count,
         severity: item,
         title: `${count} ${count === 1 ? item.title : item.pluralisedTitle}`,
-        floods: floods,
-        description: item.subTitle
+        description: item.subTitle,
+        count,
+        floods
       }
     })
 

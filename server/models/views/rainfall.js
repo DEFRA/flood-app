@@ -7,7 +7,7 @@ class ViewModel {
   constructor (rainfallStationTelemetry, rainfallStation) {
     const stationName = rainfallStation[0].station_name.replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase())
     Object.assign(this, {
-      stationName: stationName,
+      stationName,
       pageTitle: 'Rainfall at ' + stationName + ' gauge',
       postTitle: 'Latest rainfall information at ' + stationName + ' gauge',
       metaDescription: 'Check the latest recorded rainfall at ' + stationName + ' gauge',

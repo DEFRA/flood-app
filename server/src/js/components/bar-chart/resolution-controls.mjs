@@ -1,4 +1,3 @@
-
 const { forEach } = window.flood.utils
 
 export function createResolutionControls ({ bands }) {

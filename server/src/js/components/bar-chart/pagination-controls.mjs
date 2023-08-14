@@ -1,4 +1,3 @@
-
 export function createPaginationControls () {
   const pagination = document.createElement('div')
   pagination.classList.add('defra-chart-controls__group', 'defra-chart-controls__group--pagination')
