@@ -72,7 +72,7 @@
     "standard": "^17.1.0",
     "uglify-js": "^3.14.4",
     "webpack": "^5.88.1",
-    "webpack-cli": "^4.9.1"
+    "webpack-cli": "^5.1.4"
   },
   "standard": {
     "ignore": [
