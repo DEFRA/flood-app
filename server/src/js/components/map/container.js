@@ -69,7 +69,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
     target: containerElement,
     layers: options.layers,
     view: options.view,
-    controls: controls,
+    controls,
     interactions: options.interactions
   })
 

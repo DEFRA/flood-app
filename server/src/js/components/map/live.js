@@ -76,10 +76,10 @@ function LiveMap (mapId, options) {
   // Options to pass to the MapContainer constructor
   const containerOptions = {
     maxBigZoom: maps.liveMaxBigZoom,
-    view: view,
-    layers: layers,
+    view,
+    layers,
     queryParamKeys: ['v', 'lyr', 'ext', 'fid'],
-    interactions: interactions,
+    interactions,
     originalTitle: options.originalTitle,
     title: options.title,
     heading: options.heading,
@@ -285,7 +285,7 @@ function LiveMap (mapId, options) {
           id: feature.getId(),
           name: featureName(feature),
           state: layer.get('ref'), // Used to style the overlay
-          isBigZoom: isBigZoom,
+          isBigZoom,
           centre: feature.getGeometry().getCoordinates()
         })
       })
@@ -324,12 +324,12 @@ function LiveMap (mapId, options) {
     }
     // Show non-visual feature details
     const model = {
-      numFeatures: numFeatures,
-      numWarnings: numWarnings,
+      numFeatures,
+      numWarnings,
       mumMeasurements: numMeasurements,
-      features: features
+      features
     }
-    const html = window.nunjucks.render('description-live.html', { model: model })
+    const html = window.nunjucks.render('description-live.html', { model })
     viewportDescription.innerHTML = html
   }
 
@@ -414,7 +414,7 @@ function LiveMap (mapId, options) {
       ? null
       : (Math.round(model.day_total * 10) / 10).toFixed(1)
 
-    const html = window.nunjucks.render('info-live.html', { model: model })
+    const html = window.nunjucks.render('info-live.html', { model })
     feature.set('html', html)
   }
 

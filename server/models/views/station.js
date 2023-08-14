@@ -426,8 +426,8 @@ function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationTyp
     latestDateTime: telemetryRawData[0].ts,
     dataStartDateTime: moment(telemetryRawData[0].ts).subtract(5, 'days').toISOString().replace(/.\d+Z$/g, 'Z'),
     dataEndDateTime: moment().toISOString().replace(/.\d+Z$/g, 'Z'),
-    observed: observed,
-    forecast: forecastData
+    forecast: forecastData,
+    observed
   }
 }
 

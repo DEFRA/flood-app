@@ -14,7 +14,7 @@ class OutlookTabsGroupMessages {
         }
         mapMessages.set(item.source, true) // set any value to Map
         uniqueArray.push({
-          day: day,
+          day,
           source: item.source,
           messageId: item.messageId,
           riskLevel: item.riskLevel
