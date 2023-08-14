@@ -43,7 +43,7 @@
     "@hapi/joi": "^17.1.1",
     "@hapi/lab": "^25.1.3",
     "@hapi/vision": "^7.0.3",
-    "@hapi/wreck": "^17.1.0",
+    "@hapi/wreck": "^18.0.1",
     "@hapi/yar": "^10.1.1",
     "@turf/polygon-smooth": "^6.5.0",
     "@turf/turf": "^6.5.0",
