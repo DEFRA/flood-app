@@ -1,6 +1,6 @@
 const floodServices = require('./flood')
 const config = require('../config')
-const cacheType = config.localCache ? '' : 'redis_cache'
+const cacheType = config.localCache ? undefined : 'redis_cache'
 
 // Cache method wrapper for hapi server
 // If we have any service calls we want to store in elasticache (in memory cache if localCache)
