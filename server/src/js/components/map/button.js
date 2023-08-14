@@ -1,4 +1,3 @@
-
 export function createMapButton (buttonContainer, uri, options) {
   const mapId = buttonContainer.id
 

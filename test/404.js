@@ -1,4 +1,3 @@
-
 const hapi = require('@hapi/hapi')
 const config = require('../server/config')
 const Lab = require('@hapi/lab')
