@@ -1,0 +1,31 @@
+# Check for flooding 7.1.0 Wednesday 23rd August 2023
+
+# Release
+
+7.1.0
+
+# Tickets
+
+https://eaflood.atlassian.net/browse/FSR-981 (TA Area update May 2023)
+
+
+# Instructions
+
+!Important for webops
+
+This release is target area updates
+
+Steps
+
+1 - Update LFW_{STAGE}_99_LOAD_FLOOD_ALERT_AREAS jenkins job with the following properties update for the updated database name for production:
+
+DB_NAME=floodprdg
+###### OR ########
+DB_NAME=floodprdb
+
+2 - Execute LFW_{STAGE}_99_LOAD_FLOOD_ALERT_AREAS  ##NOTE if above property update not made this job will fail.
+
+3 - Execute LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+
+Execute smoke tests and forward results
