@@ -1,6 +1,7 @@
 // const hoek = require('@hapi/hoek')
 const moment = require('moment-timezone')
 const config = require('../../config')
+const severity = require('../severity')
 const Station = require('./station-data')
 const Forecast = require('./station-forecast')
 const util = require('../../util')
@@ -13,6 +14,7 @@ class ViewModel {
 
     this.station = new Station(station)
     this.station.riverNavigation = river
+    this.id = station.id
 
     this.twitterEvent = 'Station:Share Page:Station - Share to Twitter'
     this.facebookEvent = 'Station:Share Page:Station - Share to Facebook'
@@ -63,7 +65,6 @@ class ViewModel {
         this.isAlertLinkRendered = true
       }
     }
-
     switch (numWarnings) {
       case 0:
         break
@@ -114,11 +115,14 @@ class ViewModel {
       this.isSevereLinkRenedered = true
       this.isWarningLinkRendered = false
       this.isAlertLinkRendered = false
+      this.mainIcon = getBannerIcon(3)
     } else if (numWarnings && numAlerts) {
       this.isWarningLinkRendered = true
       this.isAlertLinkRendered = false
+      this.mainIcon = getBannerIcon(2)
     } else {
       this.isAlertLinkRendered = true
+      this.mainIcon = getBannerIcon(1)
     }
     this.id = this.station.id
     this.telemetry = telemetry || []
@@ -171,7 +175,7 @@ class ViewModel {
 
       oneHourAgo.setHours(oneHourAgo.getHours() - 1)
 
-      // check if recent value is over one hour old
+      // check if recent value is over one hour old0
       this.dataOverHourOld = new Date(this.recentValue.ts) < oneHourAgo
 
       this.recentValue.dateWhen = 'on ' + moment.tz(this.recentValue.ts, tz).format('D/MM/YY')
@@ -179,35 +183,6 @@ class ViewModel {
         this.recentValue.dateWhen = 'today'
       } else if (moment.tz(this.recentValue.ts, tz).isSame(yesterday, 'd')) {
         this.recentValue.dateWhen = 'yesterday'
-      }
-
-      // FFOI processing
-      if (forecast) {
-        // Note: thresolds from forecasting is probably now redundant (thresholds now come from the IMTD API
-        // We still process the thresolds but the discard them in favour of the IMTD ones
-        // Need to remove the redundant threshold prcessing code as a tech debt item.
-        const { thresholds } = forecast
-
-        // In the absence of thresholds, need to decide what would be an indicator of a forecast station
-        // Options would be:
-        // * presence of forecast on s3
-        // * entry in ffoi_stations
-        // * some other option
-        this.isFfoi = thresholds.length > 0
-        if (this.isFfoi) {
-          this.ffoi = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
-          this.hasForecast = this.ffoi.hasForecastData
-
-          const highestPoint = this.ffoi.maxValue || null
-          if (highestPoint !== null) {
-            const forecastHighestPoint = parseFloat(highestPoint._).toFixed(2)
-            const forecastHighestPointTime = highestPoint.formattedTimestamp
-
-            this.forecastDetails = `The highest level in our forecast is ${forecastHighestPoint}m at ${forecastHighestPointTime}. Forecasts come from a computer model and can change.`
-          }
-        }
-
-        this.phase = this.isFfoi ? 'beta' : false
       }
 
       if (this.station.percentile5 && this.station.percentile95) {
@@ -234,20 +209,14 @@ class ViewModel {
       }
     }
 
-    // Set Lat long
+    // // Set Lat long
     const coordinates = JSON.parse(this.station.coordinates).coordinates
-    coordinates.reverse()
+
+    this.centre = coordinates.join(',')
 
     // Set pageTitle, metaDescription
-    let stationType
+    const stationType = stationTypeCalculator(this.station.type)
     const stationLocation = this.station.name
-    if (this.station.type === 'c') {
-      stationType = 'Sea'
-    } else if (this.station.type === 'g') {
-      stationType = 'Groundwater'
-    } else {
-      stationType = 'River'
-    }
 
     if (this.station.type === 'g') {
       this.pageTitle = `Groundwater level at ${stationLocation}`
@@ -385,6 +354,80 @@ class ViewModel {
     // Set canonical url
     this.metaCanonical = `/station/${this.station.id}${this.station.direction === 'upstream' ? '' : '/downstream'}`
     this.liveServiceUrl = `/station/${this.station.id}${this.station.direction === 'downstream' ? '?direction=d' : ''}`
+
+    // Map
+    this.zoom = 14
+
+    // Forecast Data Calculations
+
+    let forecastData
+    if (forecast) {
+      const { thresholds } = forecast
+      this.isFfoi = thresholds.length > 0
+      if (this.isFfoi) {
+        forecastData = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
+        this.isForecast = forecastData.hasForecastData
+        const highestPoint = forecastData.maxValue || null
+
+        if (highestPoint !== null) {
+          const forecastHighestPoint = parseFloat(highestPoint._).toFixed(2)
+          const forecastHighestPointTime = `${moment.tz(highestPoint.ts, tz).format('D MMMM')} at ${moment.tz(highestPoint.ts, tz).format('h:mma')}`
+
+          this.forecastHighest = forecastHighestPoint
+          this.forecastHighestTime = forecastHighestPointTime
+          this.forecastDetails = `The highest level in our forecast is ${forecastHighestPoint}m at ${forecastHighestPointTime}. Forecasts come from a computer model and can change.`
+        }
+      }
+    }
+    let telemetryData
+    if (telemetry.length) {
+      telemetryData = telemetryForecastBuilder(this.telemetry, forecastData, this.station.type)
+    }
+    this.telemetryRefined = telemetryData || []
+  }
+}
+
+function getBannerIcon (id) {
+  return severity.find(item => item.id === id)?.icon
+}
+
+function stationTypeCalculator (stationTypeData) {
+  let stationType
+  if (stationTypeData === 'c') {
+    stationType = 'Sea'
+  } else if (stationTypeData === 'g') {
+    stationType = 'Groundwater'
+  } else {
+    stationType = 'River'
+  }
+  return stationType
+}
+function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationType) {
+  const observed = telemetryRawData.map(function (telemetry) {
+    return {
+      dateTime: telemetry.ts,
+      value: telemetry._
+    }
+  })
+
+  let forecastData = []
+
+  if (forecastRawData) {
+    forecastData = forecastRawData.processedValues.map(function (forecast) {
+      return {
+        dateTime: forecast.ts,
+        value: Number(forecast._)
+      }
+    })
+  }
+
+  return {
+    type: stationTypeCalculator(stationType).toLowerCase(),
+    latestDateTime: telemetryRawData[0].ts,
+    dataStartDateTime: moment(telemetryRawData[0].ts).subtract(5, 'days').toISOString().replace(/.\d+Z$/g, 'Z'),
+    dataEndDateTime: moment().toISOString().replace(/.\d+Z$/g, 'Z'),
+    observed: observed,
+    forecast: forecastData
   }
 }
 

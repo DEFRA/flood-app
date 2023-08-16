@@ -7,6 +7,8 @@ import { timeFormat } from 'd3-time-format'
 import { select, pointer } from 'd3-selection'
 import { max } from 'd3-array'
 import { timeMinute } from 'd3-time'
+import { createResolutionControls, updateResolutionControls } from './resolution-controls.mjs'
+import { createPaginationControls, updatePagination } from './pagination-controls.mjs'
 // const { xhr } = window.flood.utils
 const { forEach } = window.flood.utils
 
@@ -237,52 +239,6 @@ function BarChart (containerId, stationId, data) {
     locatorLine.classed('locator__line--visible', false)
     locatorBackground.classed('locator__background--visible', false)
   }
-
-  const updateSegmentedControl = () => {
-    const now = new Date()
-    const dataDurationDays = (new Date(now.getTime() - dataStart.getTime())) / (1000 * 60 * 60 * 24)
-    // Check there are at least 2 telemetry arrays
-    let numBands = 0
-    for (let i = 0; i < bands.length; i++) {
-      numBands += Object.getOwnPropertyDescriptor(dataCache, bands[i].period) ? 1 : 0
-    }
-    // Determine which controls to display
-    forEach(segmentedControl.querySelectorAll('.defra-chart-segmented-control input'), input => {
-      const isBand = period === input.getAttribute('data-period')
-      const band = bands.find(x => x.period === input.getAttribute('data-period'))
-      input.checked = isBand
-      input.parentNode.style.display = (band.days <= dataDurationDays) && numBands > 1 ? 'inline-block' : 'none'
-      input.parentNode.classList.toggle('defra-chart-segmented-control__segment--selected', isBand)
-    })
-  }
-
-  const updatePagination = (start, end, duration, durationHours) => {
-    // Set paging values and ensure they are within data range
-    const now = new Date()
-    let nextStart = new Date(start.getTime() + duration)
-    let nextEnd = new Date(end.getTime() + duration)
-    let previousStart = new Date(start.getTime() - duration)
-    let previousEnd = new Date(end.getTime() - duration)
-    nextEnd = nextEnd.getTime() <= now.getTime() ? nextEnd.toISOString().replace(/.\d+Z$/g, 'Z') : null
-    nextStart = nextEnd ? nextStart.toISOString().replace(/.\d+Z$/g, 'Z') : null
-    previousStart = previousStart.getTime() >= dataStart.getTime() ? previousStart.toISOString().replace(/.\d+Z$/g, 'Z') : null
-    previousEnd = previousStart ? previousEnd.toISOString().replace(/.\d+Z$/g, 'Z') : null
-    // Set properties
-    paginationInner.style.display = (nextStart || previousEnd) ? 'inline-block' : 'none'
-    pageForward.setAttribute('data-start', nextStart)
-    pageForward.setAttribute('data-end', nextEnd)
-    pageBack.setAttribute('data-start', previousStart)
-    pageBack.setAttribute('data-end', previousEnd)
-    pageForward.setAttribute('aria-disabled', !(nextStart && nextEnd))
-    pageBack.setAttribute('data-journey-click', 'Rainfall:Chart Interaction:Rainfall - Previous 24hrs')
-    pageForward.setAttribute('data-journey-click', 'Rainfall:Chart Interaction:Rainfall - Next 24hrs')
-    pageBack.setAttribute('aria-disabled', !(previousStart && previousEnd))
-    pageForwardText.innerText = `Next ${durationHours > 1 ? durationHours : duration} ${durationHours > 1 ? 'hours' : 'minutes'}`
-    pageBackText.innerText = `Previous ${durationHours > 1 ? durationHours : duration} ${durationHours > 1 ? 'hours' : 'minutes'}`
-    pageForwardDescription.innerText = ''
-    pageBackDescription.innerText = ''
-  }
-
   const updateGrid = (colcount, total, hours, days, start, end) => {
     // Update grid properites
     grid.attr('aria-rowcount', 1)
@@ -344,20 +300,24 @@ function BarChart (containerId, stationId, data) {
       dataItem = direction === 'forward' ? dataPage[positiveDataItems[positiveDataItems.length - 1]] : dataPage[positiveDataItems[0]]
     }
     // Update html control properties
-    updateSegmentedControl()
-    updatePagination(pageStart, pageEnd, pageDuration, pageDurationHours)
+    updateResolutionControls({ bands, dataCache, dataStart, period, resolutionControlGroup })
+    updatePagination({
+      start: pageStart,
+      end: pageEnd,
+      duration: pageDuration,
+      dataStart,
+      paginationControlGroup: pagination,
+      pageForward,
+      pageForwardText,
+      pageForwardDescription,
+      pageBack,
+      pageBackText,
+      pageBackDescription
+    })
     const totalPageRainfall = dataPage.reduce((a, b) => { return a + b.value }, 0)
     const pageValueStart = new Date(new Date(dataPage[dataPage.length - 1].dateTime).getTime() - valueDuration)
     const pageValueEnd = new Date(dataPage[0].dateTime)
     updateGrid(positiveDataItems.length, totalPageRainfall, pageDurationHours, pageDurationDays, pageValueStart, pageValueEnd)
-  }
-
-  const changePage = (event) => {
-    const target = event.target
-    direction = target.getAttribute('data-direction')
-    pageStart = new Date(target.getAttribute('data-start'))
-    pageEnd = new Date(target.getAttribute('data-end'))
-    initChart()
   }
 
   const scaleBandInvert = (scale) => {
@@ -410,27 +370,14 @@ function BarChart (containerId, stationId, data) {
   container.appendChild(controls)
 
   // Data resolutions in days, ascending order
-  const bands = [{ period: 'minutes', label: 'Minutes', days: 1 }, { period: 'hours', label: 'Hours', days: 5 }]
+  const bands = [
+    { period: 'minutes', label: '24 hours', days: 1 },
+    { period: 'hours', label: '5 days', days: 5 }
+  ]
 
   // Add time scale buttons
-  const segmentedControl = document.createElement('div')
-  segmentedControl.className = 'defra-chart-segmented-control'
-  for (let i = bands.length - 1; i >= 0; i--) {
-    const control = document.createElement('div')
-    control.className = 'defra-chart-segmented-control__segment'
-    control.style.display = 'none'
-    let start = new Date()
-    let end = new Date()
-    start.setHours(start.getHours() - (bands.find(x => x.period === bands[i].period).days * 24))
-    start = start.toISOString().replace(/.\d+Z$/g, 'Z')
-    end = end.toISOString().replace(/.\d+Z$/g, 'Z')
-    control.innerHTML = `
-      <input class="defra-chart-segmented-control__input" name="time" type="radio" id="time${bands[i].label}" data-period="${bands[i].period}" data-start="${start}" data-end="${end}" aria-controls="bar-chart"/>
-      <label for="time${bands[i].label}">${bands[i].label}</label>
-    `
-    segmentedControl.appendChild(control)
-  }
-  controls.appendChild(segmentedControl)
+  const resolutionControlGroup = createResolutionControls({ bands })
+  controls.appendChild(resolutionControlGroup)
 
   // Create chart container elements
   const svg = select(`#${containerId}`).append('svg')
@@ -463,41 +410,17 @@ function BarChart (containerId, stationId, data) {
   const tooltipDescription = tooltipText.append('tspan').attr('class', 'tooltip-text__small')
 
   // Add paging control
-  const pagination = document.createElement('div')
-  pagination.className = 'defra-chart-pagination'
-  const paginationInner = document.createElement('div')
-  paginationInner.style.display = 'none'
-  paginationInner.className = 'defra-chart-pagination_inner'
-  const pageBack = document.createElement('button')
-  pageBack.className = 'defra-chart-pagination__button defra-chart-pagination__button--back'
-  pageBack.setAttribute('data-direction', 'back')
-  pageBack.setAttribute('aria-controls', 'bar-chart')
-  pageBack.setAttribute('aria-describedby', 'page-back-description')
-  const pageBackText = document.createElement('span')
-  pageBackText.className = 'defra-chart-pagination__text'
-  pageBack.appendChild(pageBackText)
-  const pageBackDescription = document.createElement('span')
-  pageBackDescription.id = 'page-back-description'
-  pageBackDescription.className = 'govuk-visually-hidden'
-  pageBackDescription.setAttribute('aria-live', 'polite')
-  pageBack.appendChild(pageBackDescription)
-  const pageForward = document.createElement('button')
-  pageForward.className = 'defra-chart-pagination__button defra-chart-pagination__button--forward'
-  pageForward.setAttribute('data-direction', 'forward')
-  pageForward.setAttribute('aria-controls', 'bar-chart')
-  pageForward.setAttribute('aria-describedby', 'page-forward-description')
-  const pageForwardText = document.createElement('span')
-  pageForwardText.className = 'defra-chart-pagination__text'
-  pageForward.appendChild(pageForwardText)
-  const pageForwardDescription = document.createElement('span')
-  pageForwardDescription.id = 'page-forward-description'
-  pageForwardDescription.className = 'govuk-visually-hidden'
-  pageForwardDescription.setAttribute('aria-live', 'polite')
-  pageForward.appendChild(pageForwardDescription)
-  paginationInner.appendChild(pageBack)
-  paginationInner.appendChild(pageForward)
-  pagination.appendChild(paginationInner)
-  container.appendChild(pagination)
+  const {
+    pagination,
+    pageForward,
+    pageForwardText,
+    pageForwardDescription,
+    pageBack,
+    pageBackText,
+    pageBackDescription
+  } = createPaginationControls()
+
+  controls.appendChild(pagination)
 
   // Set defaults
   let width, height, xScale, yScale, dataStart, dataPage, dataItem, latestDateTime, period, positiveDataItems, direction, interfaceType
@@ -542,17 +465,20 @@ function BarChart (containerId, stationId, data) {
   })
 
   container.addEventListener('click', (e) => {
-    const classNames = ['defra-chart-segmented-control__input', 'defra-chart-pagination__button']
-    if (!classNames.some(className => e.target.classList.contains(className))) return
-    if (e.target.getAttribute('aria-disabled') === 'true') {
-      const container = e.target.classList.contains('defra-chart-pagination__button--back') ? pageBackDescription : pageForwardDescription
-      container.innerText = ''
+    const button = e.target.closest('.defra-chart-controls__button')
+    if (!button) return
+    if (button.getAttribute('aria-disabled') === 'true') {
+      const description = button.querySelector('.govuk-visually-hidden')
+      description.innerText = ''
       window.setTimeout(() => {
-        container.innerText = container === pageBackDescription ? 'No previous data' : 'No more data'
+        description.innerText = button.dataset.direction === 'back' ? 'No previous data' : 'No more data'
       }, 100)
       return
     }
-    changePage(e)
+    direction = button.getAttribute('data-direction')
+    pageStart = new Date(button.getAttribute('data-start'))
+    pageEnd = new Date(button.getAttribute('data-end'))
+    initChart()
   })
 
   document.addEventListener('keyup', (e) => {

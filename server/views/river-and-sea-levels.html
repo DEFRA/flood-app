@@ -1,126 +1,137 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<!-- ** Prefix meta title with search term -->
+  <!-- ** Prefix meta title with search term -->
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">
-      Find river, sea, groundwater and rainfall levels
-    </h1>
-    {% if model.distStatement %}<p class="govuk-body">{{ model.distStatement }}</p>{% endif %} 
-
-    <div class="defra-search govuk-form-group govuk-!-margin-bottom-2">
-      <form method="post" action="/river-and-sea-levels">
-        <label class="govuk-label defra-search__label" for="location">Search river, town or postcode </label>
-        <div class="defra-search__container">
-          <input class="defra-search__input" id="location" name="location" type="search" spellcheck="false" value="{% if not model.distStatement %}{{ model.q }}{% endif %}">
-          <div class="defra-search__submit-container">
-            <button class="defra-search__button">
-              <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="0" y="0" width="50" height="50" style="fill:none;"/><path d="M12.316,14.791c-1.242,0.79 -2.716,1.248 -4.296,1.248c-4.426,0 -8.02,-3.593 -8.02,-8.019c0,-4.426 3.594,-8.02 8.02,-8.02c4.426,0 8.019,3.594 8.019,8.02c0,1.58 -0.458,3.054 -1.248,4.296l5.209,5.209l-2.475,2.475l-5.209,-5.209Zm-4.296,-12.771c3.311,0 6,2.688 6,6c0,3.311 -2.689,6 -6,6c-3.312,0 -6,-2.689 -6,-6c0,-3.312 2.688,-6 6,-6Z" style="fill:currentColor;"/></svg>
-              <span class="govuk-visually-hidden">Search</span>
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
-    {% if not model.stations | length or model.isMultilpleMatch %}
-      <span id="map"></span>
-    {% endif %}
-  </div>
-</div>
-
-{% if model.q and not model.stations | length and model.q and not model.rivers | length or model.isEngland === false and not model.rivers  %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <h2 class="govuk-heading-m govuk-!-margin-top-7">
-        No results for '{{ model.q }}', England
-      </h2>
-      <p class="govuk-body">If you searched for a river or place in England, you should:</p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>check the spelling</li>
-        <li>enter a broader location</li>
-      </ul>
-      <p class="govuk-body">If you want to search for a place outside England, you should go to:</p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li><a href="https://www.sepa.org.uk/environment/water/flooding/">Scottish Environment Protection Agency</a></li>
-        <li><a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">Northern Ireland Direct</a></li>
-        <li><a href="https://naturalresources.wales/flooding">Natural Resources Wales</a></li>
-      </ul>
-    </div>
-  </div>
-{% else %}
-  {% if model.stations | length %}
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <div class="defra-navbar defra-navbar--border defra-navbar--search-categories">
-          <div class="defra-navbar__inner">
-            <span id="map"></span>
-            <div class="defra-navbar__group">
-              <ul class="defra-navbar__list" id="filter" data-controls="results">
-                {% for filter in model.filters %}
-                <li class="defra-navbar__item{% if filter.type == model.queryGroup %} defra-navbar__item--selected{% endif %}">
-                  <a href="/river-and-sea-levels?q={{ model.q }}&group={{ filter.type }}" data-group-type="{{ filter.type }}">{{ filter.type | capitalize }} ({{ filter.count }})</a>
-                </li>
-                {% endfor %}
-              </ul>
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">
+        Find river, sea, groundwater and rainfall levels
+      </h1>
+      {% if model.distStatement %}
+        <p class="govuk-body">{{ model.distStatement }}</p>
+      {% endif %}
+
+      <div class="defra-search govuk-form-group govuk-!-margin-bottom-2">
+        <form method="post" action="/river-and-sea-levels">
+          <label class="govuk-label defra-search__label" for="location">Search river, town or postcode
+          </label>
+          <div class="defra-search__container">
+            <input class="defra-search__input" id="location" name="location" type="search" spellcheck="false" value="{% if not model.distStatement %}{{ model.q }}{% endif %}">
+            <div class="defra-search__submit-container">
+              <button class="defra-search__button">
+                <svg aria-hidden="true" focusable="false" width="20" height="20" viewbox="0 0 20 20" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><rect x="0" y="0" width="50" height="50" style="fill:none;"/><path d="M12.316,14.791c-1.242,0.79 -2.716,1.248 -4.296,1.248c-4.426,0 -8.02,-3.593 -8.02,-8.019c0,-4.426 3.594,-8.02 8.02,-8.02c4.426,0 8.019,3.594 8.019,8.02c0,1.58 -0.458,3.054 -1.248,4.296l5.209,5.209l-2.475,2.475l-5.209,-5.209Zm-4.296,-12.771c3.311,0 6,2.688 6,6c0,3.311 -2.689,6 -6,6c-3.312,0 -6,-2.689 -6,-6c0,-3.312 2.688,-6 6,-6Z" style="fill:currentColor;"/></svg>
+                <span class="govuk-visually-hidden">Search</span>
+              </button>
             </div>
           </div>
-        </div>
+        </form>
       </div>
+      {% if not model.stations | length or model.isMultilpleMatch %}
+        <span id="map"></span>
+      {% endif %}
     </div>
+  </div>
+
+  {% if model.q and not model.stations | length and model.q and not model.rivers | length or model.isEngland === false and not model.rivers %}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
-        <table class="defra-flood-levels-table" role="table" aria-labelledby="flood-table-caption" id="results">
-          <caption id="flood-table-caption" class="govuk-visually-hidden">
-            Results for {{ model.q }}, showing <span>{{ model.queryGroup }}</span> levels
-          </caption>
-          <thead class="defra-flood-levels-table__head" role="rowgroup">
-            {%- set hideHeader -%}
-            {% if model.queryGroup == 'rainfall' %}style="display:none"{% endif %}
-            {%- endset -%}
-            {%- set hideRainfallHeader -%}
-            {% if model.queryGroup != 'rainfall' %}style="display:none"{% endif %}
-            {%- endset -%}
-            <tr role="row" data-group-type="rainfall" {{ hideRainfallHeader | safe }}>
-              <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--location" scope="col" role="columnheader">Measuring station</th>
-              <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" scope="col" role="columnheader">1 hour</th>
-              <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" scope="col" role="columnheader">6 hours</th>
-              <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" scope="col" role="columnheader">24 hours</th>
-            </tr>
-            <tr role="row" data-group-type="river,sea,groundwater" {{ hideHeader | safe }}>
-              <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--location" scope="col" role="columnheader">Measuring station</th>
-              <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--height" scope="col" role="columnheader">Height</th>
-              <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--trend" scope="col" role="columnheader">Trend</th>
-              <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--state" scope="col" role="columnheader">State</th>
-            </tr>
-          </thead>
-          <tbody class="defra-flood-levels-table__body" role="rowgroup">
-          {% for item in model.stations %}
-          {% include "partials/level-row.html" %}
-          {% endfor %}
-          </tbody>
-        </table>
+        <h2 class="govuk-heading-m govuk-!-margin-top-7">
+          No results for '{{ model.q }}', England
+        </h2>
+        <p class="govuk-body">If you searched for a river or place in England, you should:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>check the spelling</li>
+          <li>enter a broader location</li>
+        </ul>
+        <p class="govuk-body">If you want to search for a place outside England, you should go to:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>
+            <a href="https://www.sepa.org.uk/environment/water/flooding/">Scottish Environment Protection Agency</a>
+          </li>
+          <li>
+            <a href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">Northern Ireland Direct</a>
+          </li>
+          <li>
+            <a href="https://naturalresources.wales/flooding">Natural Resources Wales</a>
+          </li>
+        </ul>
       </div>
     </div>
+  {% else %}
+    {% if model.stations | length %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <nav class="defra-navbar defra-navbar--search-categories" aria-label="Levels by type">
+            <div class="defra-navbar__inner">
+              <span id="map"></span>
+              <div class="defra-navbar__group">
+                <ul class="defra-navbar__list" id="filter" data-controls="results">
+                  {% for filter in model.filters %}
+                    <li class="defra-navbar__item{% if filter.type == model.queryGroup %} defra-navbar__item--selected{% endif %}">
+                      <a href="/river-and-sea-levels?q={{ model.q }}&group={{ filter.type }}" data-group-type="{{ filter.type }}">{{ filter.type | capitalize }} ({{ filter.count }})</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <table class="defra-flood-levels-table" role="table" aria-labelledby="flood-table-caption" id="results">
+            <caption id="flood-table-caption" class="govuk-visually-hidden">
+              Results for
+              {{ model.q }}, showing
+              <span>{{ model.queryGroup }}</span>
+              levels
+            </caption>
+            <thead class="defra-flood-levels-table__head" role="rowgroup">
+              {%- set hideHeader -%}
+              {% if model.queryGroup == 'rainfall' %}style="display:none"{% endif %}
+              {%- endset -%}
+              {%- set hideRainfallHeader -%}
+              {% if model.queryGroup != 'rainfall' %}style="display:none"{% endif %}
+              {%- endset -%}
+              <tr role="row" data-group-type="rainfall" {{ hideRainfallHeader | safe }}>
+                <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--location" scope="col" role="columnheader">Measuring station</th>
+                <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" scope="col" role="columnheader">1 hour</th>
+                <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" scope="col" role="columnheader">6 hours</th>
+                <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" scope="col" role="columnheader">24 hours</th>
+              </tr>
+              <tr role="row" data-group-type="river,sea,groundwater" {{ hideHeader | safe }}>
+                <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--location" scope="col" role="columnheader">Measuring station</th>
+                <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--height" scope="col" role="columnheader">Height</th>
+                <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--trend" scope="col" role="columnheader">Trend</th>
+                <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--state" scope="col" role="columnheader">State</th>
+              </tr>
+            </thead>
+            <tbody class="defra-flood-levels-table__body" role="rowgroup">
+              {% for item in model.stations %}
+                {% include "partials/level-row.html" %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% endif %}
   {% endif %}
-{% endif %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    {% include "partials/context-footer.html" %}
-    {% include "partials/related-content.html" %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {% include "partials/context-footer.html" %}
+      {% include "partials/related-content.html" %}
+    </div>
   </div>
-</div>
-
 
 {% endblock %}
 
 {% block bodyEnd %}
-{{ super() }}
-<script>
-  window.flood.model = {{ model.clientModel | dump(2) | safe }}
-</script>
-<script src="{{assetPath}}/js/templates.js"></script>
-<script src="{{assetPath}}/js/river-and-sea-levels.js"></script>
+  {{ super() }}
+  <script>
+    window.flood.model = {{ model.clientModel | dump(2) | safe }}
+  </script>
+  <script src="{{assetPath}}/js/templates.js"></script>
+  <script src="{{assetPath}}/js/river-and-sea-levels.js"></script>
 {% endblock %}

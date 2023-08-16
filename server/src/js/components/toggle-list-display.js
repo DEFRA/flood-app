@@ -8,7 +8,7 @@ const ToggleListDisplay = (container, options) => {
   const list = document.querySelector('.defra-flood-impact-list')
   const items = list.querySelectorAll(`[data-toggle-list-display-item="${options.type}"]`)
   const button = document.createElement('button')
-  button.className = 'defra-button-text govuk-!-margin-bottom-2'
+  button.className = 'defra-button-text-s govuk-!-margin-bottom-2'
   button.setAttribute('aria-controls', list.id)
   container.appendChild(button)
 
