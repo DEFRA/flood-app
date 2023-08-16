@@ -1,6 +1,6 @@
 'use strict'
 import 'elm-pep'
-import '../components/bar-chart'
+import '../components/bar-chart/index.mjs'
 import '../components/nunjucks'
 import '../components/map/maps'
 import '../components/map/styles'
@@ -12,7 +12,7 @@ import '../components/toggletip'
 // Create LiveMap
 if (document.getElementById('map')) {
   window.flood.maps.createLiveMap('map', {
-    btnText: 'View map',
+    btnText: 'Map',
     btnClasses: 'defra-link-icon-s',
     btnType: 'link',
     data: {

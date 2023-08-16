@@ -49,13 +49,21 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <nav aria-label="Related levels" class="govuk-!-margin-top-0">
-      <span id="map"></span>
-        <a data-journey-click="Rainfall:Station navigation:Rainfall - Nearby levels" href="/river-and-sea-levels/rainfall/{{model.stationId }}" class="defra-flood-nav__link">Nearby levels</a>
-      </a>
+    <nav class="defra-navbar defra-navbar--secondary" aria-label="Related levels" >
+      <div class="defra-navbar__inner">
+        <span id="map"></span>
+          <div class="defra-navbar__group">
+            <ul class="defra-navbar__list">
+              <li class="defra-navbar__item">
+                <a data-journey-click="Rainfall:Station navigation:Rainfall - Nearby levels" href="/river-and-sea-levels/rainfall/{{model.stationId }}">Nearby levels</a>
+              </li>
+            </ul>
+          </div>
+      </div>
     </nav>
   </div>
 </div>
+
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
@@ -105,15 +113,15 @@
   <div class="govuk-grid-column-full">
     <h2 class="govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-4">Rainfall over the last 5 days in millimetres</h2>
     <div id="bar-chart" class="defra-bar-chart"></div>
-      <a data-journey-click="Rainfall:Station data:Rainfall - Download csv" href="/rainfall-station-csv/{{model.stationId}}" class="defra-button-secondary defra-button-secondary--icon"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download rainfall data CSV (12KB)</a>
+      <a data-journey-click="Rainfall:Station data:Rainfall - Download csv" href="/rainfall-station-csv/{{model.stationId}}" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV (12KB)</a>
   </div>
 </div>
 {% endif %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    {% include "partials/context-footer.html" %}
     {% include "partials/social.html" %}
+    {% include "partials/context-footer.html" %}
     {% include "partials/related-content.html" %}
   </div>
 </div>

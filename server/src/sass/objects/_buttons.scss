@@ -9,6 +9,9 @@
         margin-left:5px;
         vertical-align: middle;
         top:-1px;
+        @include high-contrast-mode-only {
+            color: currentColor;
+        }
     }
 }
 
@@ -23,12 +26,12 @@ button.defra-button-secondary {
     border: 1px solid govuk-colour('mid-grey');
     box-shadow: none;
     background-color: white;
-    padding: 9px 10px 10px;
+    padding: 10px;
     cursor: pointer;
-    color: $govuk-text-colour;
+    color: govuk-colour('black');
     text-decoration: none;
     &:visited {
-        color: $govuk-text-colour;
+        color: govuk-colour('black');
     }
     &:hover {
         background-color: govuk-colour('light-grey');
@@ -37,21 +40,25 @@ button.defra-button-secondary {
         background-color: $govuk-focus-colour;
         border-color: $govuk-focus-colour;
         box-shadow: 0 2px 0 govuk-colour('black');
-        outline: 3px solid transparent;
+        outline-offset: 0;
+        outline: 2px solid transparent;
     }
     &:not([keyboard-focus]):focus {
         background-color: white;
         border: 1px solid govuk-colour('mid-grey');
         box-shadow: none;
     }
-    &--icon {
-        padding-left: 31px;
-        svg {
-            color: govuk-colour('black');
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            margin-top: -11px;
+    &__icon {
+        color: govuk-colour('black');
+    }
+    svg {
+        color: currentColor;
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 8px;
+        @include mq ($from: tablet) {
+            top: -1px;
         }
     }
 }
@@ -105,13 +112,22 @@ button.defra-button-secondary {
             margin-right: 8px;
             top: 4px;
         }
+        @include high-contrast-mode-only {
+            color: currentColor;
+        }
     }
     &:hover svg {
         color: $govuk-link-hover-colour;
+        @include high-contrast-mode-only {
+            color: currentColor;
+        }
     }
     &:focus svg,
     &:active svg {
         color: govuk-colour('black');
+        @include high-contrast-mode-only {
+            color: currentColor;
+        }
     }
 }
 .defra-link-icon-s {
