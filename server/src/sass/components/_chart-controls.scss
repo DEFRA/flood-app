@@ -1,91 +1,66 @@
 .defra-chart-controls {
   position: relative;
   z-index: 1;
-}
-.defra-chart-segmented-control {
-  margin: auto;
-  &__segment {
+  overflow: auto;
+  margin: -3px -3px 0 -3px;
+  padding: 3px 3px 0 3px;
+
+  &__group {
+    margin: auto;
+    display: inline-block;
+    padding-bottom: 4px;
+  }
+
+  &__group--pagination {
+    float: right;
+    margin-right: 10px;
+  }
+
+  &__button {
+    @extend .defra-button-text-s;
+    touch-action: manipulation;
+    padding: 7.5px;
     display: inline-block;
     position: relative;
     text-align: center;
-    margin-right: 15px;
-  }
-  input {
-    position: absolute;
-    opacity: 0;
-    margin: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    text-decoration: none;
+    margin-bottom: -4px;
     cursor: pointer;
-  }
-  label {
-    cursor: pointer;
-    display: block;
-    @include govuk-font($size: 16);
-    padding: 5px 0;
-    border-bottom: 5px solid transparent;
-    position: relative;
-    outline: 3px solid transparent;
     color: govuk-colour('blue');
   }
-  input:hover + label {
+
+  &__button:hover {
     color: $govuk-link-hover-colour;
   }
-  input:checked + label {
-    border-bottom: 5px solid govuk-colour('blue');
+  &__button--selected {
+    border-bottom: 4px solid govuk-colour('blue');
   }
-  input:focus + label {
-    border-bottom: 5px solid govuk-colour('black');
+  &__button:focus {
+    border-bottom: 4px solid govuk-colour('black');
     background-color: $govuk-focus-colour;
     color: govuk-colour('black');
-  }
-}
-.defra-chart-pagination {
-  display: block;
-  padding-bottom: 15px;
-  &__button {
-    border: 0px;
-    background-color: white;
-    margin: 0px;
-    padding: 0px;
-    width: auto;
-    outline: 3px solid transparent;
-    color: $govuk-link-colour;
-    cursor: pointer;
-    touch-action: manipulation;
-    @include govuk-font($size: 16);
-    .defra-chart-pagination__text {
-      pointer-events: none;
-    }
-    &[aria-disabled="true"],
-    &[aria-disabled="true"]:after,
-    &[aria-disabled="true"]:before {
-      color: govuk-colour('mid-grey');
-    }
-    &--back {
-      margin-right: 10px;
-    }
-    @include mq ($from: tablet) {
-      margin-top: 5px;
+    @include high-contrast-mode-only {
+      outline: 3px solid transparent;
+      margin-bottom: 1px;
+      border: none;
     }
   }
-  &__button[aria-disabled="true"] {
+  &__button[aria-disabled="true"]:focus {
+    @include high-contrast-mode-only {
+      background-color: transparent;
+      box-shadow: none;
+    }
+  }
+  &__button[aria-disabled="true"],
+  &__button[aria-disabled="true"]:after,
+  &__button[aria-disabled="true"]:before {
+    color: govuk-colour('mid-grey');
     cursor: not-allowed;
+    forced-color-adjust: none;
   }
-  &__button:hover:not([aria-disabled="true"]) {
-    color: $govuk-link-hover-colour;
-    &:after, &:before {
-      color: $govuk-link-hover-colour;
-    }
-  }
-  &__button--forward:after,
-  &__button--back:before {
+  &__button:after,
+  &__button:before {
     display: inline-block;
-    content: '';
     border-width: 0 2px 2px 0;
     width: 8px;
     height: 8px;
@@ -94,25 +69,16 @@
     margin-right: 2px;
     margin-left: 2px;
   }
-  &__button--forward:after {
+  &__button[data-direction="forward"]:after {
+    content: '';
     -webkit-transform: rotate(-45deg);
     -ms-transform: rotate(-45deg);
     transform: rotate(-45deg);
   }
-  &__button--back:before {
+  &__button[data-direction="back"]:before {
+    content: '';
     -webkit-transform: rotate(135deg);
     -ms-transform: rotate(135deg);
     transform: rotate(135deg);
-  }
-  &__button:focus:not([aria-disabled="true"]) {
-    color: $govuk-focus-text-colour;
-    background-color: $govuk-focus-colour;
-    box-shadow: 0 -2px $govuk-focus-colour, 0 4px govuk-colour('black');
-    &:after, &:before {
-      color: $govuk-focus-text-colour;
-    }
-  }
-  &__button:focus[aria-disabled="true"] {
-    box-shadow: 0px 0px 0px 2px govuk-colour('black'), 0px 0px 0px 5px $govuk-focus-colour;
   }
 }

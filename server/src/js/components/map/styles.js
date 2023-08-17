@@ -55,9 +55,9 @@ window.flood.maps.styles = {
     }
     zIndex = isSelected ? zIndex + 2 : zIndex
 
-    const selectedStroke = new Style({ stroke: new Stroke({ color: '#FFDD00', width: 16 }), zIndex: zIndex })
-    const stroke = new Style({ stroke: new Stroke({ color: strokeColour, width: 2 }), zIndex: zIndex })
-    const fill = new Style({ fill: new Fill({ color: fillColour }), zIndex: zIndex })
+    const selectedStroke = new Style({ stroke: new Stroke({ color: '#FFDD00', width: 16 }), zIndex })
+    const stroke = new Style({ stroke: new Stroke({ color: strokeColour, width: 2 }), zIndex })
+    const fill = new Style({ fill: new Fill({ color: fillColour }), zIndex })
 
     return isSelected ? [selectedStroke, stroke, fill] : [stroke, fill]
   },
@@ -147,12 +147,12 @@ window.flood.maps.styles = {
       fillColour = outlookPolygonPattern('high')
     }
     const isSelected = feature.get('isSelected')
-    const selectedStroke = new Style({ stroke: new Stroke({ color: '#FFDD00', width: 16 }), zIndex: zIndex })
+    const selectedStroke = new Style({ stroke: new Stroke({ color: '#FFDD00', width: 16 }), zIndex })
     const style = new Style({
       stroke: new Stroke({ color: strokeColour, width: 1 }),
       fill: new Fill({ color: fillColour }),
-      lineDash: lineDash,
-      zIndex: zIndex
+      lineDash,
+      zIndex
     })
     return isSelected ? [selectedStroke, style] : style
   },

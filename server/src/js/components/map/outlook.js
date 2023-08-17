@@ -7,6 +7,7 @@ import { Point } from 'ol/geom'
 import { getCenter } from 'ol/extent'
 import { unByKey } from 'ol/Observable'
 import { Control } from 'ol/control'
+import { createMapButton } from './button'
 
 const { addOrUpdateParameter, getParameterByName, forEach } = window.flood.utils
 const maps = window.flood.maps
@@ -94,11 +95,11 @@ function OutlookMap (mapId, options) {
 
   // Options to pass to the MapContainer constructor
   const containerOptions = {
-    view: view,
+    view,
     layers: [topography, areasOfConcern, places],
     controls: [dayControl],
     queryParamKeys: ['v'],
-    interactions: interactions,
+    interactions,
     originalTitle: options.originalTitle,
     title: options.title,
     heading: options.heading,
@@ -167,10 +168,10 @@ function OutlookMap (mapId, options) {
       })
     }
     const model = {
-      numFeatures: numFeatures,
-      features: features
+      numFeatures,
+      features
     }
-    const html = window.nunjucks.render('description-outlook.html', { model: model })
+    const html = window.nunjucks.render('description-outlook.html', { model })
     viewportDescription.innerHTML = html
   }
 
@@ -213,7 +214,7 @@ function OutlookMap (mapId, options) {
   const setFeatureHtml = (feature) => {
     const model = feature.getProperties()
     model.id = feature.getId()
-    const html = window.nunjucks.render('info-outlook.html', { model: model })
+    const html = window.nunjucks.render('info-outlook.html', { model })
     feature.set('html', html)
   }
 
@@ -413,15 +414,12 @@ maps.createOutlookMap = (mapId, options = {}) => {
     window.history.replaceState(data, title, uri)
   }
 
-  // Create map button
+  // Build default uri
+  let uri = window.location.href
+  uri = addOrUpdateParameter(uri, 'v', mapId)
+
   const btnContainer = document.getElementById(mapId)
-  const button = document.createElement('button')
-  button.id = mapId + '-btn'
-  button.innerHTML = `<svg width="15" height="20" viewBox="0 0 15 20" focusable="false"><path d="M15,7.5c0.009,3.778 -4.229,9.665 -7.5,12.5c-3.271,-2.835 -7.509,-8.722 -7.5,-12.5c0,-4.142 3.358,-7.5 7.5,-7.5c4.142,0 7.5,3.358 7.5,7.5Zm-7.5,5.461c3.016,0 5.461,-2.445 5.461,-5.461c0,-3.016 -2.445,-5.461 -5.461,-5.461c-3.016,0 -5.461,2.445 -5.461,5.461c0,3.016 2.445,5.461 5.461,5.461Z" fill="currentColor"/></svg><span>${options.btnText || 'View map'}</span><span class="govuk-visually-hidden">(Visual only)</span>`
-  button.className = options.btnClasses || 'defra-button-secondary defra-button-secondary--icon'
-  if (options.data && options.data.button) {
-    button.setAttribute('data-journey-click', options.data.button)
-  }
+  const button = createMapButton(btnContainer, uri, options)
   btnContainer.parentNode.replaceChild(button, btnContainer)
 
   // Detect keyboard interaction

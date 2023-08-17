@@ -8,7 +8,7 @@ if (!config.localCache) {
   cache = [{
     name: 'redis_cache',
     provider: {
-      constructor: CatboxRedis,
+      constructor: CatboxRedis.Engine,
       options: {
         host: config.redisHost,
         port: config.redisPort,
@@ -33,7 +33,7 @@ async function createServer () {
       cors: true,
       security: true
     },
-    cache: cache
+    cache
   })
 
   // Register the plugins
