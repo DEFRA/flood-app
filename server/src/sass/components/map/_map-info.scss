@@ -37,12 +37,9 @@
   &__buttons {
     margin: 15px -51px 0px -15px;
     padding: 0px 15px 0px;
-    button {
-      padding-left: 26px;
-    }
-    button svg {
-      left:6px;
-      margin-top: -10px;
+    svg {
+      margin-right: 4px !important;
+      top: -1px;
     }
   }
 

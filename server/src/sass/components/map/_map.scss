@@ -100,9 +100,9 @@
 }
 
 // Map controls - exit
-.defra-map__exit,
-.defra-map__back {
+.defra-map__exit {
   float:left;
+  position:relative;
   margin:10px 0px 0px 10px;
   border:0;
   padding:0;
@@ -113,27 +113,37 @@
   color: govuk-colour('black');
   font-size:16px;
   line-height:40px;
-  background-image: svg-url('<svg width="20" height="20" viewBox="0 0 20 20"><path d="M4.828,11L12.314,18.485L10.899,19.899L1,10L10.899,0.101L12.314,1.515L4.828,9L19,9L19,11L4.828,11Z" style="fill:#0b0c0c;stroke:#0b0c0c;stroke-width:0.1px"/></svg>');
-  background-size: 20px;
-  background-position: 10px 10px;
-  background-repeat: no-repeat;
-  text-indent:-5000px;
+  color: govuk-colour('black');
+  svg {
+    display: inline-block;
+    margin:10px;
+    vertical-align: top;
+  }
+  span {
+    vertical-align: top;
+    @include mq ($until: desktop) {
+      // Visually hidden
+      clip: rect(0 0 0 0); 
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap; 
+      width: 1px;
+    }
+  }
   @include mq ($from: desktop) {
-    text-indent:0px;
     width:auto;
-    padding-left:38px;
     padding-right:11px;
   }
   &:hover {
-    background-color:$govuk-border-colour;
+    background-color: govuk-colour('light-grey');
   }
   &:focus {
     outline: none;
   }
-  &:focus[keyboard-focus] {
-    background-color: $govuk-focus-colour;
-    color: $govuk-text-colour;
-    outline:none;
+  &:focus[keyboard-focus]:after {
+    @include focus;
   }
   &::-moz-focus-inner {
     border: 0;
@@ -144,14 +154,6 @@
   -moz-user-select: none;
   -ms-user-select: none;
   pointer-events: auto;
-}
-.defra-map__exit {
-  background-image: svg-url('<svg width="14" height="14" viewBox="0 0 14 14"><path d="M7,5.6L12.6,0L14,1.4L8.4,7L14,12.6L12.6,14L7,8.4L1.4,14L0,12.6L5.6,7L0,1.4L1.4,0L7,5.6Z" style="fill:#0b0c0c;stroke:#0b0c0c;stroke-width:0.1px"/></svg>');
-  background-size: 14px;
-  background-position: 13px;
-  &:focus[keyboard-focus] {
-    outline:none;
-  }
 }
 
 // Map controls - open key
@@ -341,28 +343,29 @@
 // Map controls - reset location
 .defra-map-reset {
   float:right;
+  position:relative;
   border:0;
   height:40px;
   width:40px;
   padding:0;
   cursor:pointer;
-  background-image: svg-url('<svg width="30" height="30" viewBox="0 0 30 30"><path d="M7.054,12.871l3.196,-6.464l4,6.928l-7.196,-0.464Z" style="fill:#0b0c0c;"/><path d="M12.25,9.871c0.956,-0.554 2.066,-0.871 3.25,-0.871c3.587,0 6.5,2.913 6.5,6.5c0,3.587 -2.913,6.5 -6.5,6.5c-3.587,0 -6.5,-2.913 -6.5,-6.5" style="fill:none;stroke:#0b0c0c;stroke-width:2px;"/></svg>');
-  background-color:white;
-  background-size:30px;
-  background-position:5px 5px;
-  overflow: hidden;
-  text-indent: -5000px;
+  background-color: white;
+  color: govuk-colour('black');
+  svg {
+    display: block;
+    margin: 10px;
+  }
   &::-moz-focus-inner {
     border: 0;
   }
   &:hover {
-    background-color: $govuk-border-colour;
+    background-color: govuk-colour('light-grey');
   }
   &:focus {
-    outline:none;
+    outline: none;
   }
-  &:focus[keyboard-focus] {
-    background-color: $govuk-focus-colour;
+  &:focus[keyboard-focus]:after {
+    @include focus;
   }
   &[disabled] {
     display: none;
@@ -383,38 +386,35 @@
   &-in,
   &-out {
     display:block;
+    position:relative;
     border:0;
     height:40px;
     width:40px;
     padding:0;
     cursor:pointer;
-    background-color:white;
-    background-size:30px;
-    background-position:5px 5px;
-    overflow: hidden;
-    text-indent: -5000px;
+    background-color: white;
+    color: govuk-colour('black');
+  }
+  &-in svg,
+  &-out svg {
+    display: block;
+    margin: 10px;
   }
   &-in::-moz-focus-inner,
   &-out::-moz-focus-inner {
     border: 0;
   }
-  &-in {
-    background-image: svg-url('<svg width="30" height="30" viewBox="0 0 30 30"><rect width="14" height="2" x="8" y="14" style="fill:#0b0c0c"/><rect width="2" height="14" x="14" y="8" style="fill:#0b0c0c"/></svg>');
-  }
-  &-out {
-    background-image: svg-url('<svg width="30" height="30" viewBox="0 0 30 30"><rect width="14" height="2" x="8" y="14" style="fill:#0b0c0c"/></svg>');
-  }
   &-in:hover,
   &-out:hover {
-    background-color: $govuk-border-colour;
+    background-color: govuk-colour('light-grey');
   }
   &-in:focus,
   &-out:focus {
-    outline:none;
+    outline: none;
   }
-  &-in:focus[keyboard-focus],
-  &-out:focus[keyboard-focus] {
-    background-color: $govuk-focus-colour;
+  &-in:focus[keyboard-focus]:after,
+  &-out:focus[keyboard-focus]:after {
+    @include focus;
   }
 }
 
@@ -422,6 +422,7 @@
 .defra-map-attribution {
   float:right;
   clear: both;
+  position: relative;
   @include govuk-font($size: 19);
   border:0;
   height:40px;
@@ -430,22 +431,22 @@
   margin-top: 5px;
   cursor:pointer;
   background-color:white;
-  background-image: svg-url('<svg width="15" height="15" viewBox="0 0 15 15" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M7.5,-0c1.286,-0 2.52,0.323 3.701,0.969c1.182,0.647 2.11,1.569 2.786,2.766c0.675,1.198 1.013,2.453 1.013,3.765c0,1.305 -0.331,2.551 -0.994,3.735c-0.662,1.185 -1.586,2.109 -2.771,2.771c-1.184,0.663 -2.43,0.994 -3.735,0.994c-1.305,-0 -2.551,-0.331 -3.735,-0.994c-1.185,-0.662 -2.109,-1.586 -2.771,-2.771c-0.663,-1.184 -0.994,-2.43 -0.994,-3.735c0,-1.312 0.338,-2.567 1.013,-3.765c0.676,-1.197 1.604,-2.119 2.786,-2.766c1.181,-0.646 2.415,-0.969 3.701,-0.969Zm0,1.478c-1.031,0 -2.022,0.258 -2.972,0.774c-0.949,0.516 -1.695,1.255 -2.237,2.218c-0.542,0.962 -0.813,1.973 -0.813,3.03c0,1.044 0.266,2.043 0.798,2.996c0.532,0.953 1.275,1.696 2.228,2.228c0.953,0.532 1.952,0.798 2.996,0.798c1.044,-0 2.043,-0.266 2.996,-0.798c0.953,-0.532 1.696,-1.275 2.228,-2.228c0.532,-0.953 0.798,-1.952 0.798,-2.996c-0,-1.051 -0.271,-2.059 -0.813,-3.025c-0.542,-0.967 -1.288,-1.707 -2.237,-2.223c-0.95,-0.516 -1.941,-0.774 -2.972,-0.774Zm1.821,7.138l1.577,0.529c-0.249,0.822 -0.66,1.452 -1.234,1.89c-0.575,0.437 -1.26,0.656 -2.056,0.656c-1.116,-0 -2.027,-0.366 -2.732,-1.097c-0.705,-0.731 -1.057,-1.74 -1.057,-3.025c-0,-0.842 0.156,-1.593 0.47,-2.252c0.313,-0.66 0.765,-1.153 1.356,-1.479c0.59,-0.326 1.251,-0.489 1.982,-0.489c0.803,-0 1.474,0.19 2.012,0.572c0.539,0.382 0.958,0.984 1.259,1.807l-1.587,0.372c-0.182,-0.477 -0.419,-0.823 -0.709,-1.038c-0.291,-0.215 -0.635,-0.323 -1.033,-0.323c-0.594,-0 -1.081,0.223 -1.459,0.671c-0.379,0.447 -0.568,1.147 -0.568,2.1c-0,0.953 0.186,1.654 0.558,2.105c0.372,0.45 0.819,0.675 1.341,0.675c0.438,0 0.816,-0.128 1.136,-0.386c0.32,-0.258 0.568,-0.687 0.744,-1.288Z" style="fill:#0b0c0c;fill-rule:nonzero;"/></svg>');
-  background-size: 15px;
-  background-repeat: no-repeat;
-  background-position: center center;
+  color: govuk-colour('black');
+  svg {
+    display: block;
+    margin: 10px;
+  }
   &::-moz-focus-inner {
     border: 0;
   }
-  &:hover, &:active {
-    background-color: $govuk-border-colour;
-    color: $govuk-text-colour;
+  &:hover {
+    background-color: govuk-colour('light-grey');
   }
   &:focus {
-    outline:none;
+    outline: none;
   }
-  &:focus[keyboard-focus] {
-    background-color: $govuk-focus-colour;
+  &:focus[keyboard-focus]:after {
+    @include focus;
   }
 }
 
