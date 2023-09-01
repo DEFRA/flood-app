@@ -10,6 +10,9 @@ $govuk-breakpoints: (
 // GOV.UK Frontend
 @import "../../../node_modules/govuk-frontend/govuk/all";
 
+// Flood Webchat
+@import "@defra/flood-webchat/main";
+
 //
 // ITCSS
 // https://designnotes.blog.gov.uk/2018/02/19/developing-new-typography-and-spacing-for-gov-uk-frontend/

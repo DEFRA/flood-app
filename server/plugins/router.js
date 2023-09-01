@@ -32,6 +32,10 @@ const routes = [].concat(
   require('../routes/rainfall-station-csv')
 )
 
+if (process.env.WEBCHAT_ENABLED === 'true') {
+  routes.push(require('../routes/api/webchat-availability'))
+}
+
 // Non production end points
 if (process.env.NODE_ENV !== 'production') {
   routes.push(

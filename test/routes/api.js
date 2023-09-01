@@ -410,4 +410,40 @@ lab.experiment('API routes test', () => {
     Code.expect(payload.severity).to.equal(3)
     Code.expect(payload.message).to.equal('There is currently one severe flood warning in force.')
   })
+
+  lab.test('GET /api/webchat/availability', async () => {
+    const getAvailability = async () => ({ availability: 'AVAILABLE', date: new Date('2022-09-25T00:00:00.000Z') })
+
+    const webchatService = require('../../server/services/webchat')
+    sandbox.stub(webchatService, 'getAvailability').callsFake(getAvailability)
+
+    // Fake the cached rainfall data
+    webchatService.rainfallGeojson = await webchatService.getAvailability()
+
+    const route = {
+      plugin: {
+        name: 'rainfall',
+        register: (server) => {
+          server.route(require('../../server/routes/api/webchat-availability'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/session'))
+    await server.register(route)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/api/webchat/availability'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('{"availability":"AVAILABLE","date":"2022-09-25T00:00:00.000Z"}')
+  })
 })

@@ -1,5 +1,6 @@
 const floodServices = require('./flood')
 const locationService = require('./location')
+const webchatServices = require('./webchat')
 const config = require('../config')
 const cacheType = config.localCache ? undefined : 'redis_cache'
 
@@ -237,6 +238,14 @@ module.exports = server => {
       cache: cacheType,
       expiresIn: minutes(15),
       generateTimeout: seconds(10)
+    }
+  })
+
+  server.method('webchat.getAvailability', webchatServices.getAvailability, {
+    cache: {
+      cache: cacheType,
+      expiresIn: 1 * 60 * 1000, // 1 minute
+      generateTimeout: 10 * 1000 // 10 seconds
     }
   })
 }
