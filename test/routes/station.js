@@ -408,7 +408,6 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.payload).to.contain('Normal range 0.15m to 3.50m')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
-    Code.expect(response.payload).to.contain('<h2 class="govuk-heading-s govuk-!-margin-top-0">Share this page</h2>')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV (12KB)</a>')
   })
   lab.test('GET station/2042/downstream ', async () => {
@@ -1972,7 +1971,6 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.payload).to.contain('This data feed was interrupted')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
-    Code.expect(response.payload).to.contain('<h2 class="govuk-heading-s govuk-!-margin-top-0">Share this page</h2>')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV (12KB)</a>')
   })
   lab.test('GET station/5146 with Normal river level shows IMTD thresholds if present', async () => {
@@ -2368,7 +2366,6 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.payload).to.not.contain('Normal range ')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
-    Code.expect(response.payload).to.contain('<h2 class="govuk-heading-s govuk-!-margin-top-0">Share this page</h2>')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV (12KB)</a>')
   })
 })

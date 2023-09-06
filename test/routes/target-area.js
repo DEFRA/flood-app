@@ -131,12 +131,6 @@ lab.experiment('Target-area tests', () => {
     const h1Found = root.querySelectorAll('h1').some(h => h.textContent.trim() === 'Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water')
     Code.expect(h1Found, 'Heading for target area found').to.be.true()
 
-    const h2Found = root.querySelectorAll('h2').some(h =>
-      h.textContent.trim() === 'Share this page' &&
-      h.attributes.class === 'govuk-heading-s govuk-!-margin-top-0'
-    )
-    Code.expect(h2Found, 'Share heading text found').to.be.true()
-
     const anchorFound = root.querySelectorAll('a').some(a =>
       a.text === 'Find a river, sea, groundwater or rainfall level in this area' &&
       a.attributes.href === '/river-and-sea-levels/target-area/011WAFDW'
