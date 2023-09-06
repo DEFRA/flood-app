@@ -3,6 +3,7 @@
 Sets up the window.flood.maps styles objects
 */
 import { Style, Icon, Fill, Stroke, Text, Circle } from 'ol/style'
+import { asString as colorAsString } from 'ol/color'
 
 window.flood.maps.styles = {
 
@@ -10,7 +11,7 @@ window.flood.maps.styles = {
   // Vector styles live
   //
 
-  targetAreaPolygons: (feature) => {
+  targetAreaPolygons: (feature, resolution) => {
     // Use corresposnding warning feature propeties for styling
     const warningsSource = window.flood.maps.warningsSource
     let warningId = feature.getId()
@@ -23,43 +24,45 @@ window.flood.maps.styles = {
     }
     const warning = warningsSource.getFeatureById(warningId)
     if (!warning || warning.get('isVisible') !== 'true') { return new Style() }
+    const alpha = resolution <= 14 ? resolution >= 4 ? (Math.floor(resolution) / 20) : 0.2 : 0.7
     const severity = warning.get('severity_value')
     const isSelected = warning.get('isSelected')
     const isGroundwater = warning.getId().substring(6, 9) === 'FAG'
 
     // Defaults
-    let strokeColour = 'transparent'
+    const strokeColour = isSelected ? colorAsString([11, 12, 12, 0.65]) : 'transparent'
     let fillColour = 'transparent'
     let zIndex = 1
 
     switch (severity) {
       case 3: // Severe warning
-        strokeColour = '#D4351C'
-        fillColour = targetAreaPolygonPattern('severe')
+        fillColour = colorAsString([140, 20, 25, alpha])
         zIndex = 11
         break
       case 2: // Warning
-        strokeColour = '#D4351C'
-        fillColour = targetAreaPolygonPattern('warning')
+        fillColour = colorAsString([227, 0, 15, alpha])
         zIndex = 10
         break
       case 1: // Alert
-        strokeColour = '#F47738'
-        fillColour = targetAreaPolygonPattern('alert')
+        fillColour = colorAsString([241, 135, 0, alpha])
         zIndex = isGroundwater ? 4 : 7
         break
       default: // Removed or inactive
-        strokeColour = '#626A6E'
-        fillColour = targetAreaPolygonPattern('removed')
+        fillColour = colorAsString([130, 151, 167, alpha])
         zIndex = 1
     }
     zIndex = isSelected ? zIndex + 2 : zIndex
 
-    const selectedStroke = new Style({ stroke: new Stroke({ color: '#FFDD00', width: 16 }), zIndex })
-    const stroke = new Style({ stroke: new Stroke({ color: strokeColour, width: 2 }), zIndex })
-    const fill = new Style({ fill: new Fill({ color: fillColour }), zIndex })
-
-    return isSelected ? [selectedStroke, stroke, fill] : [stroke, fill]
+    return new Style({
+      stroke: new Stroke({
+        color: strokeColour,
+        width: 2
+      }),
+      fill: new Fill({
+        color: fillColour
+      }),
+      zIndex
+    })
   },
 
   warnings: (feature, resolution) => {
@@ -193,93 +196,6 @@ window.flood.maps.styles = {
     })
   }
 
-}
-
-//
-// SVG fill paterns
-//
-
-const targetAreaPolygonPattern = (style) => {
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')
-  const dpr = window.devicePixelRatio || 1
-  canvas.width = 8 * dpr
-  canvas.height = 8 * dpr
-  ctx.scale(dpr, dpr)
-  switch (style) {
-    case 'severe':
-      ctx.fillStyle = '#D4351C'
-      ctx.fillRect(0, 0, 8, 8)
-      ctx.beginPath()
-      ctx.fillStyle = '#ffffff'
-      ctx.moveTo(0, 3.3)
-      ctx.lineTo(4.7, 8)
-      ctx.lineTo(3.3, 8)
-      ctx.lineTo(0, 4.7)
-      ctx.closePath()
-      ctx.moveTo(3.3, 0)
-      ctx.lineTo(4.7, 0)
-      ctx.lineTo(8, 3.3)
-      ctx.lineTo(8, 4.7)
-      ctx.closePath()
-      ctx.fill()
-      break
-    case 'warning':
-      ctx.fillStyle = '#D4351C'
-      ctx.fillRect(0, 0, 8, 8)
-      ctx.beginPath()
-      ctx.fillStyle = '#ffffff'
-      ctx.moveTo(3.3, 0)
-      ctx.lineTo(4.7, 0)
-      ctx.lineTo(0, 4.7)
-      ctx.lineTo(0, 3.3)
-      ctx.closePath()
-      ctx.moveTo(3.3, 8)
-      ctx.lineTo(4.7, 8)
-      ctx.lineTo(8, 4.7)
-      ctx.lineTo(8, 3.3)
-      ctx.closePath()
-      ctx.moveTo(4.7, 0)
-      ctx.lineTo(8, 3.3)
-      ctx.lineTo(7.3, 4)
-      ctx.lineTo(4, 0.7)
-      ctx.closePath()
-      ctx.moveTo(0, 4.7)
-      ctx.lineTo(3.3, 8)
-      ctx.lineTo(4, 7.3)
-      ctx.lineTo(0.7, 4)
-      ctx.closePath()
-      ctx.fill()
-      break
-    case 'alert':
-      ctx.fillStyle = '#ffffff'
-      ctx.fillRect(0, 0, 8, 8)
-      ctx.beginPath()
-      ctx.fillStyle = '#F47738'
-      ctx.moveTo(0, 3.3)
-      ctx.lineTo(0, 4.7)
-      ctx.lineTo(4.7, 0)
-      ctx.lineTo(3.3, 0)
-      ctx.closePath()
-      ctx.moveTo(3.3, 8)
-      ctx.lineTo(4.7, 8)
-      ctx.lineTo(8, 4.7)
-      ctx.lineTo(8, 3.3)
-      ctx.closePath()
-      ctx.fill()
-      break
-    case 'removed':
-      ctx.fillStyle = '#ffffff'
-      ctx.fillRect(0, 0, 8, 8)
-      ctx.beginPath()
-      ctx.fillStyle = '#626A6E'
-      ctx.arc(4, 4, 1, 0, 2 * Math.PI)
-      ctx.closePath()
-      ctx.fill()
-      break
-  }
-  ctx.restore()
-  return ctx.createPattern(canvas, 'repeat')
 }
 
 const outlookPolygonPattern = (style) => {

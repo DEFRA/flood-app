@@ -232,9 +232,15 @@ function LiveMap (mapId, options) {
 
   // Toggle key symbols based on resolution
   const toggleKeySymbol = () => {
-    forEach(containerElement.querySelectorAll('.defra-map-key__symbol'), (symbol) => {
+    forEach(containerElement.querySelectorAll('.defra-map-key__symbol[data-display="toggle-image"]'), (symbol) => {
       const isBigZoom = map.getView().getResolution() <= maps.liveMaxBigZoom
-      isBigZoom ? symbol.classList.add('defra-map-key__symbol--big') : symbol.classList.remove('defra-map-key__symbol--big')
+      if (isBigZoom) {
+        symbol.classList.add('defra-map-key__symbol--big')
+        symbol.classList.remove('defra-map-key__symbol--small')
+      } else {
+        symbol.classList.add('defra-map-key__symbol--small')
+        symbol.classList.remove('defra-map-key__symbol--big')
+      }
     })
   }
 
