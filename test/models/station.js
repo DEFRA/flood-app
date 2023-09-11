@@ -236,7 +236,7 @@ lab.experiment('Station model test', () => {
 
     const Result = viewModel
 
-    Code.expect(Result.infoHeight).to.equal('This station measures height from a fixed point on or close to the riverbed. This point is 5.6m above sea level.')
+    Code.expect(Result.infoHeight).to.equal('This station measures height from a fixed point on or close to the riverbed. This point is 5.63m above sea level.')
     Code.expect(Result.infoTrend).to.equal('The last 2 readings indicate the trend.')
     Code.expect(Result.infoState).to.equal('There are 3 states: low, normal and high. The latest level is above the normal range. We calculate the normal range using an average of past measurements and other local factors.')
   })

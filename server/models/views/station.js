@@ -303,7 +303,7 @@ class ViewModel {
           return 'This station measures height from a fixed point on or close to the riverbed.' +
           ' A reading of 0 metres can be normal for some stations because of natural changes to the riverbed.'
         } else {
-          return `This station measures height from a fixed point on or close to the riverbed. This point is ${station.stage_datum}m above sea level.`
+          return `This station measures height from a fixed point on or close to the riverbed. This point is ${this.station.stageDatum}m above sea level.`
         }
       })()
       this.infoState = (() => {
