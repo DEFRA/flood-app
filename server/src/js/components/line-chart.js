@@ -378,7 +378,7 @@ function LineChart (containerId, stationId, data, options = {}) {
       dataCache.observed = simplify(dataCache.observed, dataCache.type === 'tide' ? 10000000 : 1000000)
       const errorFilter = l => !l.err
       const errorAndNegativeFilter = l => !l.err && l.value >= 0// *DBL below zero addition
-      const filterNegativeValues = ['groundwater', 'tide'].includes(dataCache.type) ? errorFilter : errorAndNegativeFilter
+      const filterNegativeValues = ['groundwater', 'tide', 'sea'].includes(dataCache.type) ? errorFilter : errorAndNegativeFilter
       lines = dataCache.observed.filter(filterNegativeValues).map(l => ({ ...l, type: 'observed' })).reverse()
       dataPoint = lines[lines.length - 1] || null
     }
