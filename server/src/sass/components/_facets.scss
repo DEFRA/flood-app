@@ -67,7 +67,7 @@
       background-color: transparent;
   }
   &__summary:focus &__summary-text {
-      @extend .govuk-link:focus;
+      @extend .govuk-link, :focus;
       text-decoration: none;
   }
   ul {

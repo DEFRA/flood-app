@@ -8,7 +8,7 @@ $govuk-breakpoints: (
 ) !default;
 
 // GOV.UK Frontend
-@import "node_modules/govuk-frontend/govuk/all";
+@import "../../../node_modules/govuk-frontend/govuk/all";
 
 //
 // ITCSS
@@ -73,5 +73,5 @@ $govuk-breakpoints: (
 @import "utilities/summary-list";
 
 // Datatables
-@import "node_modules/datatables.net-dt/css/jquery.dataTables";
-@import "node_modules/datatables.net-buttons-dt/css/buttons.dataTables";
+@import "../../../node_modules/datatables.net-dt/css/jquery.dataTables";
+@import "../../../node_modules/datatables.net-buttons-dt/css/buttons.dataTables";
