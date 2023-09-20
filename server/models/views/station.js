@@ -16,9 +16,6 @@ class ViewModel {
     this.station.riverNavigation = river
     this.id = station.id
 
-    this.twitterEvent = 'Station:Share Page:Station - Share to Twitter'
-    this.facebookEvent = 'Station:Share Page:Station - Share to Facebook'
-    this.emailEvent = 'Station:Share Page:Station - Share to email'
     this.station.trend = river.trend
 
     Object.assign(this, {
@@ -30,9 +27,6 @@ class ViewModel {
       recoverAfter: 'Station:Related-content:Recover-after-a-flood',
       longTerm: 'Station:Related-content:Check-long-term-risk',
       reportFlood: 'Station:Related-content:Report-a-flood',
-      twitterEvent: 'Station:Share Page:Station - Share to Twitter',
-      facebookEvent: 'Station:Share Page:Station - Share to Facebook',
-      emailEvent: 'Station:Share Page:Station - Share to email',
       floodRiskUrl: config.floodRiskUrl,
       trend: river.trend
     })

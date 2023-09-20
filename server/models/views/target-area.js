@@ -80,10 +80,7 @@ class ViewModel {
       whatToDo: 'Target Area:Related-content:What-to-do-in-a-flood',
       recoverAfter: 'Target Area:Related-content:Recover-after-a-flood',
       longTerm: 'Target Area:Related-content:Check-long-term-risk',
-      reportFlood: 'Target Area:Related-content:Report-a-flood',
-      twitterEvent: 'Target Area:Share Page:TA - Share to Twitter',
-      facebookEvent: 'Target Area:Share Page:TA - Share to Facebook',
-      emailEvent: 'Target Area:Share Page:TA - Share to email'
+      reportFlood: 'Target Area:Related-content:Report-a-flood'
     }, options)
   }
 }

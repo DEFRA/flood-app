@@ -23,10 +23,7 @@ class ViewModel {
       whatToDo: 'Rainfall:Related-content:What-to-do-in-a-flood',
       recoverAfter: 'Rainfall:Related-content:Recover-after-a-flood',
       longTerm: 'Rainfall:Related-content:Check-long-term-risk',
-      reportFlood: 'Rainfall:Related-content:Report-a-flood',
-      twitterEvent: 'Rainfall:Share Page:Rainfall - Share to Twitter',
-      facebookEvent: 'Rainfall:Share Page:Rainfall - Share to Facebook',
-      emailEvent: 'Rainfall:Share Page:Rainfall - Share to email'
+      reportFlood: 'Rainfall:Related-content:Report-a-flood'
     })
 
     if (this.telemetry.length) {
