@@ -6,14 +6,12 @@
         <p>Telephone: 0345 988 1188<br>Textphone: 0345 602 6340<br>Open 24 hours a day, 7 days a week<br><a
                 href="https://gov.uk/call-charges">Find out more about call charges</a></p>
         {% if webchat.enabled %}
-        <p class="govuk-!-margin-bottom-0"><strong>Talk to a Floodline adviser over webchat</strong><br>We're running
-            webchat as a trial.</p>
-        <div id="wc-availability"
-             data-cxone-brand-id={{webchat.brandId}}
-             data-cxone-channel-id={{webchat.channelId}}
-             data-cxone-environment-name={{webchat.environmentName}}
-             data-audio-url="{{ assetPath }}/audio/notification.mp3"
-        >
+        <p class="govuk-!-margin-bottom-0">
+            <strong>Talk to a Floodline adviser over webchat</strong>
+            <br>
+            We're running webchat as a trial.
+        </p>
+        <div id="wc-availability">
             <p>Webchat is not supported with your browser</p>
         </div>
         {% endif %}

@@ -39,10 +39,7 @@ module.exports = {
       assetPath: '/assets',
       serviceName: 'Check for flooding',
       webchat: {
-        enabled: process.env.WEBCHAT_ENABLED === 'true',
-        brandId: process.env.CXONE_BRANDID,
-        channelId: process.env.CXONE_CHANNELID,
-        environmentName: process.env.CXONE_ENVIRONMENT_NAME
+        enabled: process.env.WEBCHAT_ENABLED === 'true'
       },
       floodFisUrl,
       gaFourAccId,

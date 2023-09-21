@@ -11,7 +11,7 @@ $govuk-breakpoints: (
 @import "../../../node_modules/govuk-frontend/govuk/all";
 
 // Flood Webchat
-@import "node_modules/@defra/flood-webchat/main";
+@import "@defra/flood-webchat/main";
 
 //
 // ITCSS

@@ -1,4 +1,4 @@
-const floodWebchat = import('@defra/flood-webchat')
+const getAvailability = require('@defra/flood-webchat')
 
 const webchatConfig = {
   clientId: process.env.CXONE_CLIENT_ID,
@@ -10,7 +10,4 @@ const webchatConfig = {
   maxQueueCount: process.env.CXONE_MAX_QUEUE_COUNT
 }
 
-exports.getAvailability = async () => {
-  const { default: getAvailability } = await floodWebchat
-  return getAvailability(webchatConfig)
-}
+exports.getAvailability = () => getAvailability(webchatConfig)
