@@ -398,7 +398,7 @@ function stationTypeCalculator (stationTypeData) {
 }
 function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationType) {
   const observed = telemetryRawData
-    .filter(telemetry => telemetry._) // Filters out records with no telemetry._ value
+    .filter(telemetry => telemetry._ !== null) // Filter out records where telemetry._ is null
     .map(telemetry => ({
       dateTime: telemetry.ts,
       value: telemetry._
