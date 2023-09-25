@@ -240,4 +240,14 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.infoTrend).to.equal('The last 2 readings indicate the trend.')
     Code.expect(Result.infoState).to.equal('There are 3 states: low, normal and high. The latest level is above the normal range. We calculate the normal range using an average of past measurements and other local factors.')
   })
+
+  lab.test('Test null telemetry values are removed', async () => {
+    const stationData = data.nullTelemetry
+
+    const viewModel = new ViewModel(stationData)
+
+    const Result = viewModel
+
+    Code.expect(Result.telemetryRefined.observed.length).to.equal(4)
+  })
 })

@@ -1,0 +1,108 @@
+{
+  "station": {
+    "rloi_id": 1001,
+    "station_type": "S",
+    "qualifier": "u",
+    "telemetry_context_id": "1364571",
+    "telemetry_id": "E9140",
+    "wiski_id": "253110011",
+    "post_process": true,
+    "subtract": "0.66",
+    "region": "Southern",
+    "area": "Solent and South Downs",
+    "catchment": "Adur",
+    "display_region": "South East",
+    "display_area": "Solent and South Downs",
+    "display_catchment": "Adur and Ouse",
+    "agency_name": "Beeding Bridge",
+    "external_name": "Beeding Bridge",
+    "location_info": "Upper Beeding",
+    "x_coord_actual": 519204,
+    "y_coord_actual": 110626,
+    "actual_ngr": "",
+    "x_coord_display": 519204,
+    "y_coord_display": 110626,
+    "site_max": "4",
+    "wiski_river_name": "River Adur",
+    "date_open": "1998-01-01T00:00:00.000Z",
+    "stage_datum": "5.6278",
+    "period_of_record": "to date",
+    "por_max_value": "3.35",
+    "date_por_max": "2013-12-06T01:45:00.000Z",
+    "highest_level": "4.007",
+    "date_highest_level": "2013-12-06T02:00:00.000Z",
+    "por_min_value": "0",
+    "date_por_min": "2005-03-21T04:30:00.000Z",
+    "percentile_5": "2.84",
+    "percentile_95": "0.353",
+    "comments": "",
+    "status": "Active",
+    "status_reason": "",
+    "status_date": "2019-01-16T12:22:00.000Z",
+    "coordinates": "{\"type\":\"Point\",\"coordinates\":[-0.306835309255374,50.8828385361225]}",
+    "geography": "0101000020E6100000CCA1A09030A3D3BFB42568DA00714940",
+    "centroid": "0101000020E6100000CCA1A09030A3D3BFB42568DA00714940"
+  },
+  "telemetry": [
+    {
+      "_": 3.805,
+      "err": false,
+      "ts": "2020-07-13T12:00Z"
+    },
+    {
+      "_": 0.00,
+      "err": false,
+      "ts": "2020-07-13T11:45Z"
+    },
+    {
+      "_": 0,
+      "err": false,
+      "ts": "2020-07-13T11:30Z"
+    },
+    {
+      "_": null,
+      "err": false,
+      "ts": "2020-07-13T11:15Z"
+    },
+    {
+      "_": null,
+      "err": false,
+      "ts": "2020-07-13T11:00Z"
+    },
+    {
+      "_": 0.805,
+      "err": false,
+      "ts": "2020-07-13T10:45Z"
+    }
+  ],
+  "impacts": [],
+  "river": {
+    "river_id": "river-adur",
+    "river_name": "River Adur",
+    "navigable": true,
+    "view_rank": 3,
+    "rank": 2,
+    "rloi_id": 1001,
+    "up": 1006,
+    "down": 1032,
+    "telemetry_id": "E9140",
+    "region": "Southern",
+    "catchment": "Adur",
+    "wiski_river_name": "River Adur",
+    "agency_name": "Beeding Bridge",
+    "external_name": "Beeding Bridge",
+    "station_type": "S",
+    "status": "Active",
+    "qualifier": "u",
+    "iswales": false,
+    "value": "0.805",
+    "value_timestamp": "2020-07-13T12:00:00.000Z",
+    "value_erred": false,
+    "percentile_5": "2.84",
+    "percentile_95": "0.353",
+    "centroid": "0101000020E6100000CCA1A09030A3D3BFB42568DA00714940",
+    "lon": -0.306835309255374,
+    "lat": 50.8828385361225
+  },
+  "warningsAlerts": []
+}
