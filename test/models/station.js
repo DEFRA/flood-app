@@ -248,6 +248,6 @@ lab.experiment('Station model test', () => {
 
     const Result = viewModel
 
-    Code.expect(Result.telemetryRefined.observed.length).to.equal(3)
+    Code.expect(Result.telemetryRefined.observed.length).to.equal(4)
   })
 })
