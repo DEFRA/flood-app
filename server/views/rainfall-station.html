@@ -1,143 +1,142 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-0">
       Rainfall at {{ model.stationName }} gauge
   </div>
-</div>
+    </div>
 
-{# Latest Status #}
-{% if model.outOfDate === 'offline' %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <div class="defra-service-error govuk-!-margin-bottom-8">
-      <h2 class="defra-service-error__title" id="error-summary-title">This measuring station is offline</h2>
-      <p class="govuk-body govuk-!-margin-bottom-0">
+    {# Latest Status #}
+    {% if model.outOfDate === 'offline' %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <div class="defra-service-error govuk-!-margin-bottom-8">
+            <h2 class="defra-service-error__title" id="error-summary-title">This measuring station is offline</h2>
+            <p class="govuk-body govuk-!-margin-bottom-0">
         We are working to get it back online. You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a>.
       </p>
-    </div>
-  </div>
-</div>
-{% endif %}
-{% if model.outOfDate === 'problem' %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <div class="defra-service-error govuk-!-margin-bottom-8">
-      <h2 class="defra-service-error__title" id="error-summary-title">There's a problem with the latest measurement</h2>
-      <p class="govuk-body govuk-!-margin-bottom-0">
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    {% if model.outOfDate === 'problem' %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <div class="defra-service-error govuk-!-margin-bottom-8">
+            <h2 class="defra-service-error__title" id="error-summary-title">There's a problem with the latest measurement</h2>
+            <p class="govuk-body govuk-!-margin-bottom-0">
         The latest measurement is unreliable. This could be due to a fault with the measuring equipment.
       </p>
-    </div>
-  </div>
-</div>
-{% endif %}
-{% if model.outOfDate === 'closed' %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <div class="defra-service-error govuk-!-margin-bottom-8">
-      <h2 class="defra-service-error__title" id="error-summary-title">This measuring station is closed</h2>
-      <p class="govuk-body govuk-!-margin-bottom-0">
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    {% if model.outOfDate === 'closed' %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <div class="defra-service-error govuk-!-margin-bottom-8">
+            <h2 class="defra-service-error__title" id="error-summary-title">This measuring station is closed</h2>
+            <p class="govuk-body govuk-!-margin-bottom-0">
         No data is available. You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a>.
       </p>
-    </div>
-  </div>
-</div>
-{% endif %}
-
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <nav class="defra-navbar defra-navbar--secondary" aria-label="Related levels" >
-      <div class="defra-navbar__inner">
-        <span id="map"></span>
-          <div class="defra-navbar__group">
-            <ul class="defra-navbar__list">
-              <li class="defra-navbar__item">
-                <a data-journey-click="Rainfall:Station navigation:Rainfall - Nearby levels" href="/river-and-sea-levels/rainfall/{{model.stationId }}">Nearby levels</a>
-              </li>
-            </ul>
           </div>
+        </div>
       </div>
-    </nav>
-  </div>
-</div>
+    {% endif %}
 
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <nav class="defra-navbar defra-navbar--secondary" aria-label="Related levels" >
+          <div class="defra-navbar__inner">
+            <span id="map"></span>
+            <div class="defra-navbar__group">
+              <ul class="defra-navbar__list">
+                <li class="defra-navbar__item">
+                  <a data-journey-click="Rainfall:Station navigation:Rainfall - Nearby levels" href="/river-and-sea-levels/rainfall/{{model.stationId }}">Nearby levels</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <div class="defra-flood-statistics defra-flood-statistics--border">
-      <div class="govuk-!-margin-top-4" data-toggletip data-toggletip-label="More information" data-toggletip-content="We get readings more often as the risk of flooding increases.">
-        <h2 class="govuk-heading-s govuk-!-margin-bottom-0">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <div class="defra-flood-statistics defra-flood-statistics--border">
+          <div class="govuk-!-margin-top-4" data-toggletip data-toggletip-label="More information" data-toggletip-content="We get readings more often as the risk of flooding increases.">
+            <h2 class="govuk-heading-s govuk-!-margin-bottom-0">
         Totals up to {{ model.latestTimeFormatted }} on {{ model.latestDayFormatted }}
-        </h2>
-      </div>
-      <dl class="defra-flood-statistics__list" aria-label="Recent totals">
-        <div class="defra-flood-statistics__item"> 
-          <dt class="defra-flood-statistics__key">
+            </h2>
+          </div>
+          <dl class="defra-flood-statistics__list" aria-label="Recent totals">
+            <div class="defra-flood-statistics__item">
+              <dt class="defra-flood-statistics__key">
             1 hour
           </dt>
-          <dd class="defra-flood-statistics__value">
-            <span data-toggletip data-toggletip-label="More information about the 1 hour total" data-toggletip-content="Total for the hour up to {{ model.latestTimeFormatted }} on {{ model.latestDayFormatted }}">
-              {{ model.telemetryRainfall.latest1hr }}mm
+              <dd class="defra-flood-statistics__value">
+                <span data-toggletip data-toggletip-label="More information about the 1 hour total" data-toggletip-content="Total for the hour up to {{ model.latestTimeFormatted }} on {{ model.latestDayFormatted }}">
+                  {{ model.telemetryRainfall.latest1hr }}mm
               </span>
-          </dd>
-        </div>
-        <div class="defra-flood-statistics__item"> 
-          <dt class="defra-flood-statistics__key">
+              </dd>
+            </div>
+            <div class="defra-flood-statistics__item">
+              <dt class="defra-flood-statistics__key">
             6 hours
           </dt>
-          <dd class="defra-flood-statistics__value">
-            <span data-toggletip data-toggletip-label="More information about the 6 hour total" data-toggletip-content="Total for the 6 hours up to {{ model.latestTimeFormatted }} on {{ model.latestDayFormatted }}">
-              {{ model.telemetryRainfall.latest6hr }}mm
+              <dd class="defra-flood-statistics__value">
+                <span data-toggletip data-toggletip-label="More information about the 6 hour total" data-toggletip-content="Total for the 6 hours up to {{ model.latestTimeFormatted }} on {{ model.latestDayFormatted }}">
+                  {{ model.telemetryRainfall.latest6hr }}mm
               </span>
-          </dd>
-        </div>
-        <div class="defra-flood-statistics__item"> 
-          <dt class="defra-flood-statistics__key">
+              </dd>
+            </div>
+            <div class="defra-flood-statistics__item">
+              <dt class="defra-flood-statistics__key">
             24 hours
           </dt>
-          <dd class="defra-flood-statistics__value">
-            <span data-toggletip data-toggletip-label="More information about the 24 hour total" data-toggletip-content="Total for the 24 hours up to {{ model.latestTimeFormatted }} on {{ model.latestDayFormatted }}">
-              {{ model.telemetryRainfall.latest24hr }}mm
+              <dd class="defra-flood-statistics__value">
+                <span data-toggletip data-toggletip-label="More information about the 24 hour total" data-toggletip-content="Total for the 24 hours up to {{ model.latestTimeFormatted }} on {{ model.latestDayFormatted }}">
+                  {{ model.telemetryRainfall.latest24hr }}mm
               </span>
-          </dd>
+              </dd>
+            </div>
+          </dl>
         </div>
-      </dl>
+      </div>
     </div>
-  </div>
-</div>
-{% if model.outOfDate === '' %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <h2 class="govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-4">Rainfall over the last 5 days in millimetres</h2>
-    <div id="bar-chart" class="defra-bar-chart"></div>
-      <a data-journey-click="Rainfall:Station data:Rainfall - Download csv" href="/rainfall-station-csv/{{model.stationId}}" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV (12KB)</a>
-  </div>
-</div>
-{% endif %}
+    {% if model.outOfDate === '' %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-4">Rainfall over the last 5 days in millimetres</h2>
+          <div id="bar-chart" class="defra-bar-chart"></div>
+          <a data-journey-click="Rainfall:Station data:Rainfall - Download csv" href="/rainfall-station-csv/{{model.stationId}}" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-0">
+            <svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV (12KB)</a>
+        </div>
+      </div>
+    {% endif %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    {% include "partials/context-footer.html" %}
-    {% include "partials/related-content.html" %}
-  </div>
-</div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        {% include "partials/context-footer.html" %}
+        {% include "partials/related-content.html" %}
+      </div>
+    </div>
 
-{% endblock %}
+  {% endblock %}
 
-{% block bodyEnd %}
-{{ super() }}
-<script>
-  window.flood.model = {
-    id: {{ model.id | dump | safe }},
-    centroid: {{ model.centroid | dump | safe }},
-    bingMaps: {{ model.bingMaps | dump | safe }},
-    stationId: {{ model.stationId | dump | safe }},
-    telemetry: {{ model.telemetryRainfall | dump | safe }}
-  }
-</script>
-<script src="{{assetPath}}/js/templates.js"></script>
-<script src="{{assetPath}}/js/rainfall.js"></script>
-{% endblock %}
+  {% block bodyEnd %}
+    {{ super() }}
+    <script>
+      window.flood.model = {
+        id: {{ model.id | dump | safe }},
+        centroid: {{ model.centroid | dump | safe }},
+        bingMaps: {{ model.bingMaps | dump | safe }},
+        stationId: {{ model.stationId | dump | safe }},
+        telemetry: {{ model.telemetryRainfall | dump | safe }}
+      }
+    </script>
+    <script src="{{assetPath}}/js/templates.js"></script>
+    <script src="{{assetPath}}/js/rainfall.js"></script>
+  {% endblock %}
