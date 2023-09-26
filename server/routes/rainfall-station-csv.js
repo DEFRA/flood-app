@@ -1,6 +1,7 @@
-const floodService = require('../services/flood')
 const moment = require('moment-timezone')
 const util = require('../../server/util')
+const boom = require('@hapi/boom')
+const floodService = require('../services/flood')
 
 module.exports = {
   method: 'GET',
@@ -8,12 +9,24 @@ module.exports = {
   handler: async (request, h) => {
     const { id } = request.params
 
-    const [rainfallStation, rainfallStationTelemetry] = await Promise.all([
+    const [
+      rainfallStation,
+      rainfallStationTelemetry
+    ] = await Promise.all([
       floodService.getRainfallStation(id),
       floodService.getRainfallStationTelemetry(id)
     ])
 
-    const stationName = rainfallStation[0].station_name.replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase())
+    if (!rainfallStation) {
+      return boom.notFound('Rainfall station not found')
+    }
+    if (!rainfallStationTelemetry) {
+      return boom.notFound('No rainfall station telemetry data found')
+    }
+
+    const stationName = rainfallStation
+      .station_name
+      .replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase())
 
     const valueDuration = rainfallStationTelemetry[0].period === '15 min' ? 15 : 45
 

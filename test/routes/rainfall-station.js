@@ -63,25 +63,23 @@ lab.experiment('Test - /rainfall-station', () => {
       }
     ]
 
-    const fakeRainfallStationData = () => [
-      {
-        telemetry_station_id: '950',
-        station_reference: 'E24195',
-        region: 'Anglian',
-        station_name: 'LAVENHAM',
-        centroid: '0101000020E610000010159197A4D6E93FB7D290B8370Q3T30',
-        data_type: 'Total',
-        period: '15 min',
-        units: 'mm',
-        telemetry_value_parent_id: '96504866',
-        value: '0',
-        value_timestamp: '2022-02-08T09:15:00.000Z',
-        day_total: '15.00',
-        six_hr_total: '55.00',
-        one_hr_total: '65.27',
-        type: 'R'
-      }
-    ]
+    const fakeRainfallStationData = () => ({
+      telemetry_station_id: '950',
+      station_reference: 'E24195',
+      region: 'Anglian',
+      station_name: 'LAVENHAM',
+      centroid: '0101000020E610000010159197A4D6E93FB7D290B8370Q3T30',
+      data_type: 'Total',
+      period: '15 min',
+      units: 'mm',
+      telemetry_value_parent_id: '96504866',
+      value: '0',
+      value_timestamp: '2022-02-08T09:15:00.000Z',
+      day_total: '15.00',
+      six_hr_total: '55.00',
+      one_hr_total: '65.27',
+      type: 'R'
+    })
 
     sandbox.stub(floodService, 'getRainfallStationTelemetry').callsFake(fakeRainfallStationTelemetryData)
     sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeRainfallStationData)
@@ -128,25 +126,23 @@ lab.experiment('Test - /rainfall-station', () => {
       }
     ]
 
-    const fakeRainfallStationData = () => [
-      {
-        telemetry_station_id: '950',
-        station_reference: 'E24195',
-        region: 'Anglian',
-        station_name: 'LAVENHAM',
-        centroid: '0101000020E610000010159197A4D6E93FB7D290B8370Q3T30',
-        data_type: 'Total',
-        period: '15 min',
-        units: 'mm',
-        telemetry_value_parent_id: '96504866',
-        value: '0',
-        value_timestamp: '2022-02-08T09:15:00.000Z',
-        day_total: '15.00',
-        six_hr_total: '55.00',
-        one_hr_total: '65.27',
-        type: 'R'
-      }
-    ]
+    const fakeRainfallStationData = () => ({
+      telemetry_station_id: '950',
+      station_reference: 'E24195',
+      region: 'Anglian',
+      station_name: 'LAVENHAM',
+      centroid: '0101000020E610000010159197A4D6E93FB7D290B8370Q3T30',
+      data_type: 'Total',
+      period: '15 min',
+      units: 'mm',
+      telemetry_value_parent_id: '96504866',
+      value: '0',
+      value_timestamp: '2022-02-08T09:15:00.000Z',
+      day_total: '15.00',
+      six_hr_total: '55.00',
+      one_hr_total: '65.27',
+      type: 'R'
+    })
 
     sandbox.stub(floodService, 'getRainfallStationTelemetry').callsFake(fakeRainfallStationTelemetryData)
     sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeRainfallStationData)
@@ -188,25 +184,23 @@ lab.experiment('Test - /rainfall-station', () => {
       }
     ]
 
-    const fakeRainfallStationData = () => [
-      {
-        telemetry_station_id: '950',
-        station_reference: 'E24195',
-        region: 'Anglian',
-        station_name: 'LAVENHAM',
-        centroid: '0101000020E610000010159197A4D6E93FB7D290B8370Q3T30',
-        data_type: 'Total',
-        period: '15 min',
-        units: 'mm',
-        telemetry_value_parent_id: '96504866',
-        value: '0',
-        value_timestamp: '2022-02-08T09:15:00.000Z',
-        day_total: '15.00',
-        six_hr_total: '55.00',
-        one_hr_total: '65.27',
-        type: 'R'
-      }
-    ]
+    const fakeRainfallStationData = () => ({
+      telemetry_station_id: '950',
+      station_reference: 'E24195',
+      region: 'Anglian',
+      station_name: 'LAVENHAM',
+      centroid: '0101000020E610000010159197A4D6E93FB7D290B8370Q3T30',
+      data_type: 'Total',
+      period: '15 min',
+      units: 'mm',
+      telemetry_value_parent_id: '96504866',
+      value: '0',
+      value_timestamp: '2022-02-08T09:15:00.000Z',
+      day_total: '15.00',
+      six_hr_total: '55.00',
+      one_hr_total: '65.27',
+      type: 'R'
+    })
 
     sandbox.stub(floodService, 'getRainfallStationTelemetry').callsFake(fakeRainfallStationTelemetryData)
     sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeRainfallStationData)
@@ -249,25 +243,23 @@ lab.experiment('Test - /rainfall-station', () => {
       }
     ]
 
-    const fakeRainfallStationData = () => [
-      {
-        telemetry_station_id: '950',
-        station_reference: 'E24195',
-        region: 'Anglian',
-        station_name: 'LAVENHAM',
-        centroid: '0101000020E610000010159197A4D6E93FB7D290B8370Q3T30',
-        data_type: 'Total',
-        period: '15 min',
-        units: 'mm',
-        telemetry_value_parent_id: '96504866',
-        value: '0',
-        value_timestamp: '2022-02-08T09:15:00.000Z',
-        day_total: '15.00',
-        six_hr_total: '55.00',
-        one_hr_total: '65.27',
-        type: 'R'
-      }
-    ]
+    const fakeRainfallStationData = () => ({
+      telemetry_station_id: '950',
+      station_reference: 'E24195',
+      region: 'Anglian',
+      station_name: 'LAVENHAM',
+      centroid: '0101000020E610000010159197A4D6E93FB7D290B8370Q3T30',
+      data_type: 'Total',
+      period: '15 min',
+      units: 'mm',
+      telemetry_value_parent_id: '96504866',
+      value: '0',
+      value_timestamp: '2022-02-08T09:15:00.000Z',
+      day_total: '15.00',
+      six_hr_total: '55.00',
+      one_hr_total: '65.27',
+      type: 'R'
+    })
 
     sandbox.stub(floodService, 'getRainfallStationTelemetry').callsFake(fakeRainfallStationTelemetryData)
     sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeRainfallStationData)
@@ -297,5 +289,48 @@ lab.experiment('Test - /rainfall-station', () => {
     const response = await server.inject(options)
 
     Code.expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is closed</h2>')
+  })
+
+  lab.test('GET /rainfall-station produces not found', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeRainfallStationTelemetryData = () => [
+      {
+        period: '15 min',
+        value: '0',
+        value_timestamp: moment().subtract(40, 'days').format()
+      }
+    ]
+
+    const fakeRainfallStationData = () => {}
+
+    sandbox.stub(floodService, 'getRainfallStationTelemetry').callsFake(fakeRainfallStationTelemetryData)
+    sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeRainfallStationData)
+
+    const rainfallPlugin = {
+      plugin: {
+        name: 'rainfall-station',
+        register: (server, options) => {
+          server.route(require('../../server/routes/rainfall-station'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(rainfallPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/rainfall-station/E24195'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('{"statusCode":404,"error":"Not Found","message":"Rainfall station not found"}')
   })
 })
