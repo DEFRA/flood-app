@@ -1,4 +1,3 @@
-// const hoek = require('@hapi/hoek')
 const moment = require('moment-timezone')
 const config = require('../../config')
 const severity = require('../severity')
@@ -7,6 +6,7 @@ const Forecast = require('./station-forecast')
 const util = require('../../util')
 const tz = 'Europe/London'
 const processImtdThresholds = require('./lib/process-imtd-thresholds')
+const filterImtdThresholds = require('./lib/find-min-threshold')
 
 class ViewModel {
   constructor (options) {
@@ -31,7 +31,6 @@ class ViewModel {
       trend: river.trend
     })
     // Group warnings/alerts by severity level
-
     const warningsAlertsGroups = util.groupBy(warningsAlerts, 'severity_value')
     const numAlerts = warningsAlertsGroups['1'] ? warningsAlertsGroups['1'].length : 0
     const numWarnings = warningsAlertsGroups['2'] ? warningsAlertsGroups['2'].length : 0
@@ -248,8 +247,12 @@ class ViewModel {
       })
     }
 
+    this.imtdThresholds = imtdThresholds?.length > 0
+      ? filterImtdThresholds(imtdThresholds)
+      : []
+
     const processedImtdThresholds = processImtdThresholds(
-      imtdThresholds,
+      this.imtdThresholds,
       this.station.stageDatum,
       this.station.subtract,
       this.station.post_process

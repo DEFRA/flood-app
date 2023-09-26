@@ -94,52 +94,16 @@
       "fwis_type": "A",
       "direction": "u",
       "value": "3.5",
-      "threshold_type": "FW ACTCON FAL"
+      "threshold_type": "FW ATCON FAL"
     },
     {
       "station_threshold_id": "1503832",
       "station_id": "1001",
       "fwis_code": "065WAF434",
-      "fwis_type": "A",
+      "fwis_type": "W",
       "direction": "u",
       "value": "3.88",
-      "threshold_type": "FW RES FAL"
-    },
-    {
-      "station_threshold_id": "1503833",
-      "station_id": "1001",
-      "fwis_code": "065FWF5402",
-      "fwis_type": "W",
-      "direction": "u",
-      "value": "3.9",
-      "threshold_type": "FW ACTCON FW"
-    },
-    {
-      "station_threshold_id": "1503834",
-      "station_id": "1001",
-      "fwis_code": "065FWF5402",
-      "fwis_type": "W",
-      "direction": "u",
-      "value": "4",
-      "threshold_type": "FW ACTCON FW"
-    },
-    {
-      "station_threshold_id": "1503835",
-      "station_id": "1001",
-      "fwis_code": "065FWF5402",
-      "fwis_type": "W",
-      "direction": "u",
-      "value": "4.2",
-      "threshold_type": "FW ACT FW"
-    },
-    {
-      "station_threshold_id": "1503836",
-      "station_id": "1001",
-      "fwis_code": "065FWF5402",
-      "fwis_type": "W",
-      "direction": "u",
-      "value": "4.3",
-      "threshold_type": "FW RES FW"
+      "threshold_type": "FW ATCON FW"
     }
   ]
 }
