@@ -5,7 +5,10 @@ const util = require('../../util')
 
 class ViewModel {
   constructor (rainfallStationTelemetry, rainfallStation) {
-    const stationName = rainfallStation[0].station_name.replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase())
+    const stationName = rainfallStation
+      .station_name
+      .replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase())
+
     Object.assign(this, {
       stationName,
       pageTitle: 'Rainfall at ' + stationName + ' gauge',
@@ -15,9 +18,9 @@ class ViewModel {
       telemetry: rainfallStationTelemetry || [],
       floodRiskUrl: config.floodRiskUrl,
       bingMaps: config.bingKeyMaps,
-      stationId: rainfallStation[0].station_reference,
-      centroid: [rainfallStation[0].lon, rainfallStation[0].lat],
-      region: rainfallStation[0].region,
+      stationId: rainfallStation.station_reference,
+      centroid: [rainfallStation.lon, rainfallStation.lat],
+      region: rainfallStation.region,
       getWarnings: 'Rainfall:Related-content:Get-warnings',
       planAhead: 'Rainfall:Related-content:Plan-ahead-for-flooding',
       whatToDo: 'Rainfall:Related-content:What-to-do-in-a-flood',
@@ -37,9 +40,9 @@ class ViewModel {
       const rangeStartDateTime = fiveDaysAgo
       const dataEndDateTime = now
       const rangeEndDateTime = now
-      const latest1hr = util.formatValue(rainfallStation[0].one_hr_total)
-      const latest6hr = util.formatValue(rainfallStation[0].six_hr_total)
-      const latest24hr = util.formatValue(rainfallStation[0].day_total)
+      const latest1hr = util.formatValue(rainfallStation.one_hr_total)
+      const latest6hr = util.formatValue(rainfallStation.six_hr_total)
+      const latest24hr = util.formatValue(rainfallStation.day_total)
       const valueDuration = this.telemetry[0].period === '15 min' ? 15 : 45
       this.id = `${this.stationId}.${this.region}`
       const latestHourDateTime = moment(latestDateTime).add(45, 'minutes').minutes(0).seconds(0).milliseconds(0).toDate()

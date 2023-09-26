@@ -8,15 +8,19 @@ module.exports = {
   handler: async (request, h) => {
     const { id } = request.params
 
-    const rainfallStationTelemetry = await request.server.methods.flood.getRainfallStationTelemetry(id)
-    const rainfallStation = await request.server.methods.flood.getRainfallStation(id)
+    const [
+      rainfallStation,
+      rainfallStationTelemetry
+    ] = await Promise.all([
+      request.server.methods.flood.getRainfallStation(id),
+      request.server.methods.flood.getRainfallStationTelemetry(id)
+    ])
 
-    // Null rainfallStationTelemetry, but in this case service should return a 404 error so i don't think this ever gets hit, defensive programming though
+    if (!rainfallStation) {
+      return boom.notFound('Rainfall station not found')
+    }
     if (!rainfallStationTelemetry) {
       return boom.notFound('No rainfall station telemetry data found')
-    }
-    if (!rainfallStation) {
-      return boom.notFound('No rainfall station data found')
     }
 
     const model = new ViewModel(rainfallStationTelemetry, rainfallStation)

@@ -20,7 +20,7 @@ lab.experiment('Rainfall model test', () => {
 
   lab.test('Test Rainfall viewModel puts stationName as Title Case', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
-    const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'E24195' })
+    const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'E24195')
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
     const Result = viewModel
 
@@ -30,7 +30,7 @@ lab.experiment('Rainfall model test', () => {
   })
   lab.test('Test Rainfall viewModel puts stationName as Title Case with multiple words in string', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
-    const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'N24195' })
+    const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'N24195')
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
 
     const Result = viewModel
@@ -41,7 +41,7 @@ lab.experiment('Rainfall model test', () => {
   })
   lab.test('Test Rainfall viewModel returns telemetryRainfall data', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
-    const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'E24195' })
+    const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'E24195')
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
 
     const Result = viewModel
@@ -59,7 +59,7 @@ lab.experiment('Rainfall model test', () => {
   })
   lab.test('Test dates are formatted correctly for the view', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
-    const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'E24195' })
+    const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'E24195')
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
 
     const Result = viewModel
@@ -69,7 +69,7 @@ lab.experiment('Rainfall model test', () => {
   })
   lab.test('Test station id constructed correctly', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
-    const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'E24195' })
+    const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'E24195')
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
 
     const Result = viewModel
@@ -78,7 +78,7 @@ lab.experiment('Rainfall model test', () => {
   })
   lab.test('Test lat/long are populated in centroid', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
-    const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'E24195' })
+    const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'E24195')
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
     const Result = viewModel
 
@@ -102,7 +102,7 @@ lab.experiment('Rainfall model test', () => {
   })
   lab.test('Test metadata and social details returned correctly', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
-    const rainfallStationData = data.rainfallStation.filter(function (rainfallStation) { return rainfallStation.station_reference === 'E24195' })
+    const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'E24195')
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
 
     const Result = viewModel
@@ -113,7 +113,7 @@ lab.experiment('Rainfall model test', () => {
   })
   lab.test('Test getWarnings has appropriate Value', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
-    const rainfallStationData = data.rainfallStation.filter((rainfallStation) => rainfallStation.station_reference === 'E24195')
+    const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'E24195')
 
     const result = new ViewModel(rainfallTelemetryData, rainfallStationData)
 
