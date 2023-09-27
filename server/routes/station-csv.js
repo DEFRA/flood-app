@@ -1,5 +1,6 @@
 const floodService = require('../services/flood')
 const moment = require('moment-timezone')
+const boom = require('@hapi/boom')
 
 module.exports = {
   method: 'GET',
@@ -12,85 +13,69 @@ module.exports = {
 
     const station = await floodService.getStationById(id, direction)
 
+    if (!station) {
+      return boom.notFound('Station not found')
+    }
+
     const stationName = station.external_name.replace(/[^a-zA-Z0-9]+/g, '-')
 
-    const [telemetry, thresholds] = await Promise.all([
+    const [rawTelemetry, thresholds] = await Promise.all([
       floodService.getStationTelemetry(id, direction),
       floodService.getStationForecastThresholds(id)
     ])
 
-    this.telemetry = telemetry
-
-    this.telemetry.forEach(function (item) {
-      item.type = 'observed'
-      item.ts = moment.utc(item.ts).format()
-    })
+    const telemetry = rawTelemetry.map(item => ({
+      ...item,
+      type: 'observed',
+      ts: moment.utc(item.ts).format()
+    }))
 
     // Forecast station
-    if (thresholds.length) {
-      const values = await floodService.getStationForecastData(station.wiski_id)
+    const includeForecast = !!thresholds.length
+    if (includeForecast && telemetry.length) {
+      const forecastStart = moment(telemetry[0].ts)
+      const truncateDate = moment(forecastStart).add(36, 'hours')
+      const { SetofValues: [{ Value: forecast } = { Value: [] }] = [] } = await floodService.getStationForecastData(station.wiski_id)
 
-      const forecast = values.SetofValues[0].Value
-
-      const forecastData = forecast.map(item => {
+      for (const item of forecast) {
         const itemDate = item.$.date
         const itemTime = item.$.time
-        const date = moment(`${itemDate} ${itemTime}`).format('YYYY-MM-DDTHH:mm') + 'Z'
-        return { ts: date, _: item._, type: 'forecast' }
-      })
+        const date = moment(`${itemDate}T${itemTime}Z`)
 
-      // Truncate forecast data to be 36 hours from forecast creation
-      const forecastStart = moment(this.telemetry[0].ts)
-
-      this.truncateDate = moment(forecastStart).add(36, 'hours')
-
-      forecastData.forEach(function (value) {
-        value.ts = moment(value.ts)
-
-        if (value.ts.isBefore(forecastStart) || value.ts.isAfter(this.truncateDate)) {
-          return
+        if (!date.isBefore(forecastStart) && !date.isAfter(truncateDate)) {
+          telemetry.push({
+            ts: moment.utc(date).format(),
+            _: item._,
+            type: 'forecast'
+          })
         }
-        value.ts = moment.utc(value.ts).format()
-
-        this.telemetry.push(value)
-      }, this)
+      }
     }
 
-    this.telemetry.sort(function (a, b) {
-      return new Date(a.ts) - new Date(b.ts)
-    })
-
-    if (thresholds.length) {
-      this.csvString = [
-        [
-          'Timestamp (UTC)',
-          'Height (m)',
-          'Type(observed/forecast)'
-        ],
-        ...this.telemetry.map(item => [
+    const csvString = [
+      [
+        'Timestamp (UTC)',
+        'Height (m)',
+        'Type(observed/forecast)'
+      ],
+      ...telemetry
+        .sort((a, b) => new Date(a.ts) - new Date(b.ts))
+        .map(item => [
           item.ts,
           item._,
           item.type
         ])
-      ]
-        .map(e => e.join(','))
-        .join('\n')
-    } else {
-      this.csvString = [
-        [
-          'Timestamp (UTC)',
-          'Height (m)'
-        ],
-        ...this.telemetry.map(item => [
-          item.ts,
-          item._
-        ])
-      ]
-        .map(e => e.join(','))
-        .join('\n')
-    }
+    ]
+      .reduce((acc, [ts, height, type]) => {
+        acc += `${ts},${height}`
+        if (includeForecast) {
+          acc += `,${type}`
+        }
+        return `${acc}\n`
+      }, '')
+      .trim()
 
-    const response = h.response(this.csvString)
+    const response = h.response(csvString)
     response.type('text/csv')
     response.header('Content-disposition', `attachment; filename=${stationName}-height-data.csv`)
     return response
