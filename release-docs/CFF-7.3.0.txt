@@ -1,0 +1,26 @@
+# Check for flooding 7.3.0 Monday 2nd October 2023
+
+# Release
+
+7.3.0
+
+https://eaflood.atlassian.net/projects/FSR/versions/16684/tab/release-report-all-issues
+
+# Tickets
+
+https://eaflood.atlassian.net/browse/FSR-989 - Add site datum to height tooltip
+https://eaflood.atlassian.net/browse/FSR-1022 - Remove station and TA sharing links
+https://eaflood.atlassian.net/browse/FSR-1027 - Bug fix | CYLTFR link fix
+https://eaflood.atlassian.net/browse/FSR-1029 - Upgrade gov-uk frontend package to v4.x
+https://eaflood.atlassian.net/browse/FSR-1031 - Bug fix | coastal stations not showing negative values
+https://eaflood.atlassian.net/browse/FSR-1034 - Bug fix | graph not displaying for river stations with only negative values
+https://eaflood.atlassian.net/browse/FSR-1042 - Bug fix | graph not displaying correctly if null value received in telemetry
+https://eaflood.atlassian.net/browse/FSR-1043 - Bug fix | unhandled 500 errors for non existent rainfall stations
+https://eaflood.atlassian.net/browse/FSR-1047 - Bug fix | extra white space removed under rainfall station heading and csv button
+
+
+# Instructions
+
+1 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
