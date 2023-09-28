@@ -1,4 +1,5 @@
 const { bingKeyMaps } = require('../../config')
+const config = require('../../config')
 
 class ViewModel {
   constructor ({ location, place, floods, station, error }) {
@@ -13,7 +14,8 @@ class ViewModel {
       error: error ? true : null,
       getWarnings: 'Alerts-and-warnings:Related-content:Get-warnings',
       isEngland: place ? place.isEngland.is_england : null,
-      isDummyData: floods ? floods.isDummyData : false
+      isDummyData: floods ? floods.isDummyData : false,
+      floodRiskUrl: config.floodRiskUrl
     })
 
     if (error) {
