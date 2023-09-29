@@ -77,10 +77,9 @@ module.exports = [{
   path: `/${route}/rainfall/{rainfallid}`,
   handler: async (request, h) => {
     const { rainfallid } = request.params
-    const rainfallStations = await request.server.methods.flood.getRainfallStation(rainfallid)
+    const rainfallStation = await request.server.methods.flood.getRainfallStation(rainfallid)
 
-    if (rainfallStations.length > 0) {
-      const rainfallStation = rainfallStations[0]
+    if (rainfallStation) {
       const radius = 8000 // metres
       const distanceInMiles = Math.round(radius / 1609.344)
       const referencePoint = {

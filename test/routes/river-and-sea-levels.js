@@ -1686,7 +1686,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const fakeStationsData = () => data.stationsWithinRadius
 
-    const originalStation = () => data.rainfallStation.filter(function (rainfallStation) {
+    const originalStation = () => data.rainfallStation.find(function (rainfallStation) {
       return rainfallStation.station_reference === 'GKHLETOY'
     })
 
