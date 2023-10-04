@@ -101,6 +101,7 @@ window.flood.maps.layers = {
   targetAreaPolygons: () => {
     return new VectorLayer({
       ref: 'targetAreaPolygons',
+      className: 'defra-map-vl-layer',
       source: targetAreaPolygonsSource,
       style: window.flood.maps.styles.targetAreaPolygons,
       visible: false,
