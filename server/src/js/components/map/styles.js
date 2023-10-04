@@ -199,7 +199,6 @@ window.flood.maps.styles = {
 
 }
 
-
 //
 // Style caching, improves render performance
 //
