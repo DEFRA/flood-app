@@ -138,19 +138,20 @@ window.flood.maps.styles = {
     const zIndex = feature.get('z-index')
     const lineDash = [2, 3]
     let strokeColour = '#85994b'
-    let fillColour = outlookPolygonPattern('veryLow')
+    let fillColour = '#85994b'
     if (feature.get('risk-level') === 2) {
       strokeColour = '#ffdd00'
-      fillColour = outlookPolygonPattern('low')
+      fillColour = '#ffdd00'
     } else if (feature.get('risk-level') === 3) {
       strokeColour = '#F47738'
-      fillColour = outlookPolygonPattern('medium')
+      fillColour = '#F47738'
     } else if (feature.get('risk-level') === 4) {
       strokeColour = '#D4351C'
-      fillColour = outlookPolygonPattern('high')
+      fillColour = '#D4351C'
     }
     const isSelected = feature.get('isSelected')
-    const selectedStroke = new Style({ stroke: new Stroke({ color: '#FFDD00', width: 16 }), zIndex })
+    const selectedStroke = new Style({ stroke: new Stroke({ color: '#0b0c0c', width: 4 }), zIndex })
+
     const style = new Style({
       stroke: new Stroke({ color: strokeColour, width: 1 }),
       fill: new Fill({ color: fillColour }),
@@ -198,88 +199,6 @@ window.flood.maps.styles = {
 
 }
 
-const outlookPolygonPattern = (style) => {
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')
-  const dpr = window.devicePixelRatio || 1
-  canvas.width = 8 * dpr
-  canvas.height = 8 * dpr
-  ctx.scale(dpr, dpr)
-  switch (style) {
-    case 'high':
-      ctx.fillStyle = '#D4351C'
-      ctx.fillRect(0, 0, 8, 8)
-      ctx.beginPath()
-      ctx.fillStyle = '#ffffff'
-      ctx.moveTo(0, 3.3)
-      ctx.lineTo(4.7, 8)
-      ctx.lineTo(3.3, 8)
-      ctx.lineTo(0, 4.7)
-      ctx.closePath()
-      ctx.moveTo(3.3, 0)
-      ctx.lineTo(4.7, 0)
-      ctx.lineTo(8, 3.3)
-      ctx.lineTo(8, 4.7)
-      ctx.closePath()
-      ctx.fill()
-      break
-    case 'medium':
-      ctx.fillStyle = '#F47738'
-      ctx.fillRect(0, 0, 8, 8)
-      ctx.beginPath()
-      ctx.fillStyle = '#ffffff'
-      ctx.moveTo(3.3, 0)
-      ctx.lineTo(4.7, 0)
-      ctx.lineTo(0, 4.7)
-      ctx.lineTo(0, 3.3)
-      ctx.closePath()
-      ctx.moveTo(3.3, 8)
-      ctx.lineTo(4.7, 8)
-      ctx.lineTo(8, 4.7)
-      ctx.lineTo(8, 3.3)
-      ctx.closePath()
-      ctx.moveTo(4.7, 0)
-      ctx.lineTo(8, 3.3)
-      ctx.lineTo(7.3, 4)
-      ctx.lineTo(4, 0.7)
-      ctx.closePath()
-      ctx.moveTo(0, 4.7)
-      ctx.lineTo(3.3, 8)
-      ctx.lineTo(4, 7.3)
-      ctx.lineTo(0.7, 4)
-      ctx.closePath()
-      ctx.fill()
-      break
-    case 'low':
-      ctx.fillStyle = '#ffdd00'
-      ctx.fillRect(0, 0, 8, 8)
-      ctx.beginPath()
-      ctx.fillStyle = '#ffffff'
-      ctx.moveTo(0, 3.3)
-      ctx.lineTo(0, 4.7)
-      ctx.lineTo(4.7, 0)
-      ctx.lineTo(3.3, 0)
-      ctx.closePath()
-      ctx.moveTo(3.3, 8)
-      ctx.lineTo(4.7, 8)
-      ctx.lineTo(8, 4.7)
-      ctx.lineTo(8, 3.3)
-      ctx.closePath()
-      ctx.fill()
-      break
-    case 'veryLow':
-      ctx.fillStyle = '#85994b'
-      ctx.fillRect(0, 0, 8, 8)
-      ctx.beginPath()
-      ctx.fillStyle = '#ffffff'
-      ctx.arc(4, 4, 1, 0, 2 * Math.PI)
-      ctx.closePath()
-      ctx.fill()
-      break
-  }
-  ctx.restore()
-  return ctx.createPattern(canvas, 'repeat')
-}
 
 //
 // Style caching, improves render performance

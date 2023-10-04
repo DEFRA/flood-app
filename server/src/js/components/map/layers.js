@@ -42,6 +42,7 @@ window.flood.maps.layers = {
   topography: () => {
     return new TileLayer({
       ref: 'road',
+      className: 'defra-map-bg-canvas',
       source: new BingMaps({
         key: window.flood.model.bingMaps + '&c4w=1&cstl=rd&src=h&st=me|lv:0_trs|v:0_pt|v:0',
         imagerySet: 'RoadOnDemand'
@@ -82,6 +83,7 @@ window.flood.maps.layers = {
   places: () => {
     return new VectorLayer({
       ref: 'places',
+      className: 'defra-map-vl-layer',
       source: new VectorSource({
         format: new GeoJSON(),
         projection: 'EPSG:3857',
@@ -160,7 +162,6 @@ window.flood.maps.layers = {
         url: '/api/outlook.geojson'
       }),
       style: window.flood.maps.styles.outlookPolygons,
-      opacity: 0.6,
       zIndex: 4
     })
   },

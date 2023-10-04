@@ -530,3 +530,8 @@
     width:360px;
   }
 }
+
+// Layer blur
+#map-outlook .ol-layer canvas {
+  opacity: 0.6;
+}
