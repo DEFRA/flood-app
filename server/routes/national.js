@@ -10,9 +10,12 @@ module.exports = {
 
     let outlook = {}
     try {
-      outlook = new OutlookModel(await request.server.methods.flood.getOutlook())
+      outlook = new OutlookModel(await request.server.methods.flood.getOutlook(), request.logger)
     } catch (err) {
-      console.error(err)
+      request.log('warn', {
+        situation: 'outlook error',
+        stack: err.stack
+      })
       outlook.dataError = true
     }
 
