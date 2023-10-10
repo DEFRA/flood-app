@@ -80,5 +80,6 @@ const value = result.value
 // Add some helper props
 value.isDev = value.env !== 'production'
 value.isProd = value.env === 'production'
+value.jsonLogging = value.env !== 'development'
 
 module.exports = value
