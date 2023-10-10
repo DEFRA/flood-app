@@ -23,74 +23,47 @@ module.exports = {
     }
 
     // test backend services
-    let service, serviceStart, serviceEnd
-    try {
-      serviceStart = new Date()
-      service = await floodService.getServiceHealth()
-      serviceEnd = new Date()
-    } catch (err) {
-      service = null
-      serviceEnd = new Date()
-    }
+    const {
+      result: service,
+      durationMs: servicems
+    } = await getDataWithDefaultAndDuration(floodService.getServiceHealth)
 
     // test geoserver
-    let geoserver, geoserverStart, geoserverEnd
-    try {
-      geoserverStart = new Date()
-      geoserver = await floodService.getGeoserverHealth()
-      geoserverEnd = new Date()
-    } catch (err) {
-      geoserver = null
-      geoserverEnd = new Date()
-    }
+    const {
+      result: geoserver,
+      durationMs: geoserverms
+    } = await getDataWithDefaultAndDuration(floodService.getGeoserverHealth)
 
     // station health
-    let stations, stationsStart, stationsEnd
-    try {
-      stationsStart = new Date()
-      stations = await floodService.getStationsHealth()
-      stationsEnd = new Date()
-    } catch (err) {
-      stations = {
-        count: 0,
-        timestamp: null
-      }
-      stationsEnd = new Date()
-    }
+    const {
+      result: stations,
+      durationMs: stationsms
+    } = await getDataWithDefaultAndDuration(floodService.getStationsHealth, {
+      count: 0,
+      timestamp: null
+    })
 
     // telemetry health
-    let telemetry
-    try {
-      telemetry = await floodService.getTelemetryHealth()
-    } catch (err) {
-      telemetry = null
-    }
+    const {
+      result: telemetry
+    } = await getDataWithDefaultAndDuration(floodService.getTelemetryHealth)
 
     // FFOI health
-    let ffoi
-    try {
-      ffoi = await floodService.getFfoiHealth()
-    } catch (err) {
-      ffoi = null
-    }
+    const {
+      result: ffoi
+    } = await getDataWithDefaultAndDuration(floodService.getFfoiHealth)
 
     // outlook
-    let outlook
-    try {
-      outlook = new OutlookModel(await floodService.getOutlook(), request.logger)
-    } catch (err) {
-      outlook = null
-    }
+    const {
+      result: outlook
+    } = await getDataWithDefaultAndDuration(async () => new OutlookModel(await floodService.getOutlook(), request.logger))
 
     // floods
-    let floods
-    try {
-      floods = new FloodsModel(await floodService.getFloods())
-    } catch (err) {
-      floods = null
-    }
+    const {
+      result: floods
+    } = await getDataWithDefaultAndDuration(async () => new FloodsModel(await floodService.getFloods()))
 
-    const model = {
+    return h.view('status', {
       now: new Date(),
       pageTitle: 'Status',
       fwisDate: new Date(parseInt(floods.timestamp) * 1000),
@@ -101,17 +74,35 @@ module.exports = {
       locationService: place ? 'Successful' : 'Failed',
       locationServicems: locationEnd - locationStart,
       service: service ? 'Successful' : 'Failed',
-      servicems: serviceEnd - serviceStart,
       geoserver: geoserver ? 'Successful' : 'Failed',
-      geoserverms: geoserverEnd - geoserverStart,
       database: stations ? 'Successful' : 'Failed',
-      databasems: stationsEnd - stationsStart,
+      databasems: stationsms,
       stationsTimestamp: new Date(parseInt(stations.timestamp) * 1000),
       stationsAgeDays: parseInt((new Date() - new Date(parseInt(stations.timestamp) * 1000)) / (1000 * 60 * 60 * 24)),
       stationsCount: stations.count || 0,
+      servicems,
+      geoserverms,
       telemetry,
       ffoi
-    }
-    return h.view('status', model)
+    })
+  }
+}
+
+async function getDataWithDefaultAndDuration (fn, defaultValue = null) {
+  const start = Date.now()
+  let result
+  let end
+
+  try {
+    result = await fn()
+  } catch (err) {
+    result = defaultValue
+  } finally {
+    end = Date.now()
+  }
+
+  return {
+    result,
+    durationMs: end - start
   }
 }

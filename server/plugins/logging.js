@@ -7,9 +7,10 @@ const pinoOptions = {
   timestamp: pino.stdTimeFunctions.isoTime,
   base: {},
   formatters: {
-    level (label, number) {
-      return { logLevel: label.toUpperCase(), level: number }
-    }
+    level: (label, number) => ({
+      logLevel: label.toUpperCase(),
+      level: number
+    })
   }
 }
 const pinoTransport = pino.transport({
@@ -26,21 +27,14 @@ module.exports = {
     logRequestComplete: false,
     instance: pino(pinoOptions, pinoTransport),
     serializers: {
-      req (req) {
-        const retVal = {
-          method: req.method.toUpperCase(),
-          url: req.url
-        }
-        if (req.query.length) {
-          retVal.query = req.query
-        }
-        return retVal
-      },
-      res (res) {
-        return {
-          statusCode: res.statusCode
-        }
-      }
+      req: req => ({
+        method: req.method.toUpperCase(),
+        url: req.url,
+        query: Object.keys(req.query || {}).length ? req.query : undefined
+      }),
+      res: res => ({
+        statusCode: res.statusCode
+      })
     }
   }
 }
