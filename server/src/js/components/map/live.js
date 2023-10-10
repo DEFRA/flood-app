@@ -269,6 +269,8 @@ function LiveMap (mapId, options) {
       name = `Flood warning: ${feature.get('ta_name')}`
     } else if (feature.get('severity_value') === 1) {
       name = `Flood alert: ${feature.get('ta_name')}`
+    } else if (feature.get('severity_value') === 4) {
+      name = `Warning no longer in force: ${feature.get('ta_name')}`
     }
     return name
   }

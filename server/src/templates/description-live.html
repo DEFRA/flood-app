@@ -1,12 +1,13 @@
 {% if model.numFeatures > 9 %}
 <p>{{ model.numWarnings }} flood alerts or warnings and {{ model.mumMeasurements }} water level measurements in the current map area. To list these zoom in to nine or fewer.</p>
 {% elif model.numFeatures >= 1 %}
-<p>{{ model.numWarnings }} flood alerts or warnings and {{ model.mumMeasurements }} water level measurements in the current map area. Use number keys to select.</p>
-<ol>
-    {% for feature in model.features %}
-    <li>{{ feature.name }}</li>
-    {% endfor %}
-</ol>
+<p>
+{{ model.numWarnings }} flood alerts or warnings and {{ model.mumMeasurements }} water level measurements in the current map area. Use number keys to select.
+
+{% for feature in model.features %}
+    {{loop.index}}: {{ feature.name }};
+{% endfor %}
+</p>
 {% else %}
 <p>No flood alerts, warnings or water level measurements in the current map area.</p>
 {% endif %}
