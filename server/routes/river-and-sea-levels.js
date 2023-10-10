@@ -134,8 +134,10 @@ module.exports = [{
         'target-area': joi.string(),
         riverId: joi.string()
       }),
-      failAction: (_request, h) => {
-        console.error('River and Sea levels search error: Invalid or no string input.')
+      failAction: (request, h) => {
+        request.log('warn', {
+          situation: 'River and Sea levels search error: Invalid or no string input.'
+        })
 
         return h.redirect()
       }

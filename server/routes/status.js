@@ -6,7 +6,7 @@ const FloodsModel = require('../models/floods')
 module.exports = {
   method: 'GET',
   path: '/status',
-  handler: async (_request, h) => {
+  handler: async (request, h) => {
     // test location services
     let place, locationStart, locationEnd
     try {
@@ -14,8 +14,10 @@ module.exports = {
       place = await locationService.find('Warrington')
       locationEnd = new Date()
     } catch (err) {
-      console.error(`Location search error: [${err.name}] [${err.message}]`)
-      console.error(err)
+      request.log('warn', {
+        situation: `Location search error: [${err.name}] [${err.message}]`,
+        stack: err.stack
+      })
       place = null
       locationEnd = new Date()
     }
@@ -75,7 +77,7 @@ module.exports = {
     // outlook
     let outlook
     try {
-      outlook = new OutlookModel(await floodService.getOutlook())
+      outlook = new OutlookModel(await floodService.getOutlook(), request.logger)
     } catch (err) {
       outlook = null
     }

@@ -29,8 +29,10 @@ module.exports = [{
       try {
         [place] = await locationService.find(util.cleanseLocation(location))
       } catch (error) {
-        console.error(`Location search error: [${error.name}] [${error.message}]`)
-        console.error(error)
+        request.log('warn', {
+          situation: `Location search error: [${error.name}] [${error.message}]`,
+          stack: error.stack
+        })
         const floods = new Floods(await request.server.methods.flood.getFloods())
         model = new ViewModel({ location, place, floods, station, error })
         return h.view('alerts-and-warnings', { model })
