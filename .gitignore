@@ -1,9 +1,9 @@
 .DS_Store
 .vscode
 node_modules
-npm-debug.log
 logs
 server/dist
 coverage
 lcov.info
+*.log
 *.env
