@@ -31,7 +31,9 @@ const schema = joi.object({
   rateLimitEnabled: joi.boolean().default(false),
   rateLimitRequests: joi.number().integer().when('rateLimitEnabled', { is: true, then: joi.required() }),
   rateLimitExpiresIn: joi.number().integer().when('rateLimitEnabled', { is: true, then: joi.required() }),
-  rateLimitWhitelist: joi.array().items(joi.string()).default([])
+  rateLimitWhitelist: joi.array().items(joi.string()).default([]),
+  logLevel: joi.string().default('info'),
+  isPM2: joi.boolean().default(false)
 })
 
 // Build config
@@ -61,7 +63,9 @@ const config = {
   rateLimitEnabled: process.env.FLOOD_APP_RATE_LIMIT_ENABLED,
   rateLimitRequests: process.env.FLOOD_APP_RATE_LIMIT_REQUESTS,
   rateLimitExpiresIn: process.env.FLOOD_APP_RATE_LIMIT_EXPIRES_IN,
-  rateLimitWhitelist: process.env.FLOOD_APP_RATE_LIMIT_WHITELIST ? process.env.FLOOD_APP_RATE_LIMIT_WHITELIST.split(':') : []
+  rateLimitWhitelist: process.env.FLOOD_APP_RATE_LIMIT_WHITELIST ? process.env.FLOOD_APP_RATE_LIMIT_WHITELIST.split(':') : [],
+  logLevel: process.env.LOG_LEVEL,
+  isPM2: !!process.env.PM2_HOME
 }
 
 // Validate config
@@ -80,6 +84,5 @@ const value = result.value
 // Add some helper props
 value.isDev = value.env !== 'production'
 value.isProd = value.env === 'production'
-value.jsonLogging = value.env !== 'development'
 
 module.exports = value
