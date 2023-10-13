@@ -15,6 +15,11 @@ import { Vector as VectorSource } from 'ol/source'
 import moment from 'moment-timezone'
 import { createMapButton } from './button'
 
+import { polygon, multiPolygon } from '@turf/helpers'
+import simplify from '@turf/simplify'
+import intersect from '@turf/intersect'
+import union from '@turf/union'
+
 const { addOrUpdateParameter, getParameterByName, forEach } = window.flood.utils
 const maps = window.flood.maps
 const { setExtentFromLonLat, getLonLatFromExtent } = window.flood.maps
@@ -178,9 +183,9 @@ function LiveMap (mapId, options) {
         (props.severity_value && props.severity_value === 1 && lyrCodes.includes('ta')) ||
         (props.severity_value && props.severity_value === 4 && lyrCodes.includes('tr')) ||
         // Rivers
-        (ref === 'stations' && ['S', 'M'].includes(props.type) && lyrCodes.includes('ri')) ||
+        (ref === 'stations' && (['S', 'M'].includes(props.type) || ['C'].includes(props.type) && props.river_name !== 'Sea Levels') && lyrCodes.includes('ri')) ||
         // Tide
-        (ref === 'stations' && props.type === 'C' && lyrCodes.includes('ti')) ||
+        (ref === 'stations' && props.type === 'C' && props.river_name === 'Sea Levels' && lyrCodes.includes('ti')) ||
         // Ground
         (ref === 'stations' && props.type === 'G' && lyrCodes.includes('gr')) ||
         // Rainfall
@@ -283,6 +288,7 @@ function LiveMap (mapId, options) {
     const extent = map.getView().calculateExtent(map.getSize())
     const isBigZoom = resolution <= maps.liveMaxBigZoom
     const layers = dataLayers.filter(layer => lyrs.some(lyr => layer.get('featureCodes').includes(lyr)))
+    // Add target area if it isn't an active alert or warning
     if (!layers.includes(warnings) && targetArea.pointFeature) {
       layers.push(warnings)
     }
