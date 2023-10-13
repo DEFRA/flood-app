@@ -10,13 +10,16 @@ module.exports = {
         const response = request.response
 
         if (!response.isBoom) {
+          request.logger.debug({
+            statusCode: response.statusCode
+          })
           return h.continue
         }
-        let statusCode = response.output.statusCode
 
+        const viewModel = {}
         let view = '500'
         let logLevel = 'error'
-        const viewModel = {}
+        let statusCode = response.output.statusCode
 
         if (statusCode === 500 && response.name === 'LocationSearchError') {
           view = 'location-error'
@@ -30,7 +33,7 @@ module.exports = {
           logLevel = 'debug'
         }
 
-        request.log(logLevel, {
+        request.logger[logLevel]({
           statusCode,
           situation: response.message,
           stack: response.stack

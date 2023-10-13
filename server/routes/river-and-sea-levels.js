@@ -135,7 +135,7 @@ module.exports = [{
         riverId: joi.string()
       }),
       failAction: (request, h) => {
-        request.log('warn', {
+        request.logger.warn({
           situation: 'River and Sea levels search error: Invalid or no string input.'
         })
 

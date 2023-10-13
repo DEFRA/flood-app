@@ -12,7 +12,7 @@ module.exports = {
     try {
       outlook = new OutlookModel(await request.server.methods.flood.getOutlook(), request.logger)
     } catch (err) {
-      request.log('warn', {
+      request.logger.warn({
         situation: 'outlook error',
         stack: err.stack
       })

@@ -31,6 +31,7 @@ lab.experiment('Missing resource test', () => {
     await server.register(require('@hapi/inert'))
     await server.register(require('@hapi/h2o2'))
     await server.register(require('../server/plugins/views'))
+    await server.register(require('../server/plugins/logging'))
     await server.register(routerPlugin)
     await server.register(require('../server/plugins/error-pages'))
     await server.register(require('../server/plugins/on-post-handler'))

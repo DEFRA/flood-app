@@ -5,24 +5,23 @@ const { join } = require('path')
 const logDir = join(__dirname, '../../logs')
 
 const transport = pino.transport({
-  targets: [
-    {
-      target: isPM2 ? 'pino/file' : 'pino-pretty',
-      level: 'error',
-      options: {
-        destination: isPM2 ? join(logDir, '.pino.err.log') : 2,
-        mkdir: true
+  dedupe: true,
+  targets: Object.entries(pino.levels.labels)
+    .filter(([level]) => level !== 'silent')
+    .map(([level, label]) => {
+      let destination = isPM2 ? join(logDir, '.pino.out.log') : 1
+      if (parseInt(level) >= pino.levels.values.error) {
+        destination = isPM2 ? join(logDir, '.pino.err.log') : 2
       }
-    },
-    {
-      target: isPM2 ? 'pino/file' : 'pino-pretty',
-      options: {
-        destination: isPM2 ? join(logDir, '.pino.out.log') : 1,
-        mkdir: true
+      return {
+        target: isPM2 ? 'pino/file' : 'pino-pretty',
+        level: label,
+        options: {
+          destination,
+          mkdir: true
+        }
       }
-    }
-  ],
-  dedupe: true
+    })
 })
 
 module.exports = pino({
