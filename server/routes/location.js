@@ -28,7 +28,7 @@ module.exports = {
     }
 
     if (!place.isEngland.is_england) {
-      request.log('warn', {
+      request.logger.warn({
         situation: 'Location search error: Valid response but location not in England.'
       })
       return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
@@ -62,7 +62,7 @@ module.exports = {
         v: joi.string()
       }).or('q', 'location'), // q or location must be present in request.query
       failAction: (request, h) => {
-        request.log('warn', {
+        request.logger.warn({
           situation: 'Location search error: Invalid or no string input.'
         })
         const location = request.query.q || request.query.location
@@ -90,7 +90,7 @@ const createOutlookTabs = async (place, request) => {
 
   if (outlook && Object.keys(outlook).length > 0 && !dataError) {
     if (!outlook.issued_at) {
-      request.log('warn', {
+      request.logger.warn({
         situation: `Outlook FGS issued_at date error [${outlook.issued_at}]`
       })
       dataError = true
@@ -119,7 +119,7 @@ const getOutlook = async request => {
   try {
     outlook = await request.server.methods.flood.getOutlook()
   } catch (err) {
-    request.log('warn', {
+    request.logger.warn({
       situation: 'Outlook FGS data error'
     })
     dataError = true

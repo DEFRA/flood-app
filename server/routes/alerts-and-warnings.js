@@ -29,7 +29,7 @@ module.exports = [{
       try {
         [place] = await locationService.find(util.cleanseLocation(location))
       } catch (error) {
-        request.log('warn', {
+        request.logger.warn({
           situation: `Location search error: [${error.name}] [${error.message}]`,
           stack: error.stack
         })

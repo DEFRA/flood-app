@@ -9,11 +9,15 @@ const sinon = require('sinon')
 lab.experiment('error-pages plugin test', () => {
   let sandbox
   let server
-  let logSpy
+  let logSpies
   let fakeResponse
 
   lab.beforeEach(async () => {
-    logSpy = sinon.spy()
+    logSpies = {
+      error: sinon.spy(),
+      debug: sinon.spy(),
+      warn: sinon.spy()
+    }
     sandbox = await sinon.createSandbox()
     server = Hapi.server({
       port: 3000,
@@ -23,6 +27,7 @@ lab.experiment('error-pages plugin test', () => {
     await server.register(require('@hapi/h2o2'))
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(require('../../server/plugins/error-pages'))
     await server.register({
       plugin: {
@@ -31,7 +36,7 @@ lab.experiment('error-pages plugin test', () => {
           method: 'GET',
           path: '/some/root',
           handler: (request) => {
-            request.log = logSpy
+            request.logger = logSpies
             return fakeResponse
           }
         })
@@ -53,8 +58,7 @@ lab.experiment('error-pages plugin test', () => {
     fakeResponse = boom.notFound('something went wrong')
 
     const response = await server.inject(options)
-
-    expect(logSpy.lastCall.args[0]).to.equal('debug')
+    expect(logSpies.debug.called).to.equal(true)
     expect(response.statusCode).to.equal(404)
     expect(response.payload).to.include('Page not found')
   })
@@ -68,7 +72,7 @@ lab.experiment('error-pages plugin test', () => {
 
     const response = await server.inject(options)
 
-    expect(logSpy.lastCall.args[0]).to.equal('debug')
+    expect(logSpies.debug.called).to.equal(true)
     expect(response.statusCode).to.equal(404)
     expect(response.payload).to.include('Page not found')
   })
@@ -82,7 +86,7 @@ lab.experiment('error-pages plugin test', () => {
 
     const response = await server.inject(options)
 
-    expect(logSpy.lastCall.args[0]).to.equal('warn')
+    expect(logSpies.warn.called).to.equal(true)
     expect(response.statusCode).to.equal(429)
     expect(response.payload).to.include('Too many requests made for this page')
   })
@@ -96,7 +100,7 @@ lab.experiment('error-pages plugin test', () => {
 
     const response = await server.inject(options)
 
-    expect(logSpy.lastCall.args[0]).to.equal('error')
+    expect(logSpies.error.called).to.equal(true)
     expect(response.statusCode).to.equal(500)
     expect(response.payload).to.include('Sorry, there is a problem with the service')
   })

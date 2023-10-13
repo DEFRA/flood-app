@@ -14,7 +14,7 @@ module.exports = {
       place = await locationService.find('Warrington')
       locationEnd = new Date()
     } catch (err) {
-      request.log('warn', {
+      request.logger.warn({
         situation: `Location search error: [${err.name}] [${err.message}]`,
         stack: err.stack
       })

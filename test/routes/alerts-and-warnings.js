@@ -72,6 +72,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(warningsPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -105,6 +106,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(warningsPlugin)
 
     await server.initialize()
@@ -143,6 +145,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(warningsPlugin)
 
     await server.initialize()
@@ -189,6 +192,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(warningsPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -244,6 +248,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(warningsPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -289,6 +294,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(warningsPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -351,6 +357,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(warningsPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -394,6 +401,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(warningsPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -430,6 +438,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(warningsPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -467,6 +476,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(warningsPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
