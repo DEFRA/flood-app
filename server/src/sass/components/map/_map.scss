@@ -62,7 +62,6 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-
   &:focus[keyboard-focus]:after {
     @include focus($glow: 5px, $strong: 2px, $background: 0px, $inset: 1px);
   }
@@ -74,7 +73,7 @@
   position: absolute;
   z-index: 2;
   touch-action: none;
-
+  max-width: 100%;
   @include mq ($from: desktop) {
     display: block;
     right: 0px;
@@ -95,15 +94,7 @@
   }
 
   &:focus[open="true"][keyboard-focus]:after {
-    position: absolute;
-    pointer-events: none;
-    content: '';
-    left: 3px;
-    right: 3px;
-    top: 3px;
-    bottom: 3px;
-    outline: 3px solid $govuk-focus-colour;
-    z-index: 99;
+    @include focus($glow: 5px, $strong: 2px, $background: 0px, $inset: 1px);
   }
 }
 

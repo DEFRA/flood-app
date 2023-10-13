@@ -159,9 +159,9 @@ function LiveMap (mapId, options) {
       } else if (props.type === 'C') {
         // Tide
         if (props.status === 'Suspended' || props.status === 'Closed' || (!props.value && !props.iswales)) {
-          state = 'tideError'
+          state = 'seaError'
         } else {
-          state = 'tide'
+          state = 'sea'
         }
       } else if (props.type === 'R') {
         // Rainfall
@@ -183,7 +183,13 @@ function LiveMap (mapId, options) {
         (props.severity_value && props.severity_value === 1 && lyrCodes.includes('ta')) ||
         (props.severity_value && props.severity_value === 4 && lyrCodes.includes('tr')) ||
         // Rivers
-        (ref === 'stations' && (['S', 'M'].includes(props.type) || ['C'].includes(props.type) && props.river_name !== 'Sea Levels') && lyrCodes.includes('ri')) ||
+        (
+          ref === 'stations' &&
+          (
+            (['S', 'M'].includes(props.type) || (['C'].includes(props.type) && props.river_name !== 'Sea Levels'))
+          ) &&
+          lyrCodes.includes('ri')
+        ) ||
         // Tide
         (ref === 'stations' && props.type === 'C' && props.river_name === 'Sea Levels' && lyrCodes.includes('ti')) ||
         // Ground
@@ -261,7 +267,7 @@ function LiveMap (mapId, options) {
   const featureName = (feature) => {
     let name = ''
     if (feature.get('type') === 'C') {
-      name = `Tide level: ${feature.get('name')}`
+      name = `Sea level: ${feature.get('name')}`
     } else if (feature.get('type') === 'S' || feature.get('type') === 'M') {
       name = `River level: ${feature.get('name')}, ${feature.get('river')}`
     } else if (feature.get('type') === 'G') {

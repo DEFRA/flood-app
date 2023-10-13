@@ -100,10 +100,10 @@ window.flood.maps.styles = {
       case 'riverError':
         return isSelected ? (isSymbol ? styleCache.riverErrorSelected : styleCache.measurementErrorSelected) : (isSymbol ? styleCache.riverError : styleCache.measurementError)
       // Tide
-      case 'tide':
-        return isSelected ? (isSymbol ? styleCache.tideSelected : styleCache.measurementSelected) : (isSymbol ? styleCache.tide : styleCache.measurement)
-      case 'tideError':
-        return isSelected ? (isSymbol ? styleCache.tideErrorSelected : styleCache.measurementErrorSelected) : (isSymbol ? styleCache.tideError : styleCache.measurementError)
+      case 'sea':
+        return isSelected ? (isSymbol ? styleCache.seaSelected : styleCache.measurementSelected) : (isSymbol ? styleCache.sea : styleCache.measurement)
+      case 'seaError':
+        return isSelected ? (isSymbol ? styleCache.seaErrorSelected : styleCache.measurementErrorSelected) : (isSymbol ? styleCache.seaError : styleCache.measurementError)
       // Ground
       case 'groundHigh':
         return isSelected ? (isSymbol ? styleCache.groundHighSelected : styleCache.measurementAlertSelected) : (isSymbol ? styleCache.groundHigh : styleCache.measurementAlert)
@@ -277,10 +277,10 @@ const styleCache = {
   riverError: createIconStyle({ offset: [0, 700], zIndex: 1 }),
   riverErrorSelected: createIconStyle({ offset: [100, 700], zIndex: 10 }),
   // Tide
-  tide: createIconStyle({ offset: [0, 800], zIndex: 2 }),
-  tideSelected: createIconStyle({ offset: [100, 800], zIndex: 10 }),
-  tideError: createIconStyle({ offset: [0, 900], zIndex: 1 }),
-  tideErrorSelected: createIconStyle({ offset: [100, 900], zIndex: 10 }),
+  sea: createIconStyle({ offset: [0, 800], zIndex: 2 }),
+  seaSelected: createIconStyle({ offset: [100, 800], zIndex: 10 }),
+  seaError: createIconStyle({ offset: [0, 900], zIndex: 1 }),
+  seaErrorSelected: createIconStyle({ offset: [100, 900], zIndex: 10 }),
   // Groundwater
   ground: createIconStyle({ offset: [0, 1100], zIndex: 2 }),
   groundSelected: createIconStyle({ offset: [100, 1100], zIndex: 10 }),
