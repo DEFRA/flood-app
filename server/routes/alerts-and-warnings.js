@@ -1,7 +1,6 @@
 const joi = require('@hapi/joi')
 const ViewModel = require('../models/views/alerts-and-warnings')
 const Floods = require('../models/floods')
-const locationService = require('../services/location')
 const util = require('../util')
 
 module.exports = [{
@@ -27,7 +26,7 @@ module.exports = [{
       return h.view('alerts-and-warnings', { model })
     } else {
       try {
-        [place] = await locationService.find(util.cleanseLocation(location))
+        [place] = await request.server.methods.location.find(util.cleanseLocation(location))
       } catch (error) {
         request.logger.warn({
           situation: `Location search error: [${error.name}] [${error.message}]`,

@@ -1,4 +1,5 @@
 const floodServices = require('./flood')
+const locationService = require('./location')
 const config = require('../config')
 const cacheType = config.localCache ? undefined : 'redis_cache'
 
@@ -224,6 +225,14 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: 1 * 60 * 1000, // 1 minute
+      generateTimeout: 10 * 1000 // 10 seconds
+    }
+  })
+
+  server.method('location.find', locationService.find, {
+    cache: {
+      cache: cacheType,
+      expiresIn: 15 * 60 * 1000, // 15 minute
       generateTimeout: 10 * 1000 // 10 seconds
     }
   })
