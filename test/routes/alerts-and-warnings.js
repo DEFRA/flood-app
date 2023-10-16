@@ -6,19 +6,28 @@ const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const data = require('../data')
+const outlookData = require('../data/outlook.json')
 
 lab.experiment('Test - /alerts-warnings', () => {
-  let sandbox
   let server
+  let sandbox
+  let stubs
 
   lab.beforeEach(async () => {
-    delete require.cache[require.resolve('../../server/util.js')]
-    delete require.cache[require.resolve('../../server/services/location.js')]
-    delete require.cache[require.resolve('../../server/services/flood.js')]
-    delete require.cache[require.resolve('../../server/services/server-methods.js')]
-    delete require.cache[require.resolve('../../server/routes/location.js')]
-    delete require.cache[require.resolve('../../server/routes/alerts-and-warnings.js')]
+    const floodService = require('../../server/services/flood')
+    const util = require('../../server/util')
     sandbox = await sinon.createSandbox()
+    stubs = {
+      getJson: sandbox.stub(util, 'getJson'),
+      getIsEngland: sandbox.stub(floodService, 'getIsEngland'),
+      getFloods: sandbox.stub(floodService, 'getFloods'),
+      getFloodsWithin: sandbox.stub(floodService, 'getFloodsWithin'),
+      getStationsWithin: sandbox.stub(floodService, 'getStationsWithin'),
+      getImpactsWithin: sandbox.stub(floodService, 'getImpactsWithin'),
+      getStationById: sandbox.stub(floodService, 'getStationById'),
+      getOutlook: sandbox.stub(floodService, 'getOutlook'),
+      getWarningsAlertsWithinStationBuffer: sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer')
+    }
     server = Hapi.server({
       port: 3000,
       host: 'localhost',
@@ -31,54 +40,38 @@ lab.experiment('Test - /alerts-warnings', () => {
         }
       }
     })
-  })
-
-  lab.afterEach(async () => {
-    await server.stop()
-    await sandbox.restore()
-  })
-
-  lab.test('GET /alerts-and-warnings with query parameters of Warrington and no warnings or alerts', async () => {
-    const floodService = require('../../server/services/flood')
-
-    const fakeIsEngland = () => {
-      return { is_england: true }
-    }
-
-    const fakeFloodsData = () => {
-      return { floods: [] }
-    }
-    const fakeStationsData = () => []
-    const fakeImpactsData = () => []
-
-    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-
-    const fakeGetJson = () => data.warringtonGetJson
-
-    const util = require('../../server/util')
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
-
-    const warningsPlugin = {
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
+    require('../../server/services/server-methods')(server)
+    await server.register({
       plugin: {
         name: 'warnings',
         register: (server, options) => {
           server.route(require('../../server/routes/alerts-and-warnings'))
         }
       }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(warningsPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
+    })
 
     await server.initialize()
+  })
+
+  lab.afterEach(async () => {
+    await sandbox.restore()
+    await server.stop()
+    delete require.cache[require.resolve('../../server/services/server-methods.js')]
+    delete require.cache[require.resolve('../../server/routes/alerts-and-warnings.js')]
+    delete require.cache[require.resolve('../../server/services/location.js')]
+    delete require.cache[require.resolve('../../server/services/flood.js')]
+    delete require.cache[require.resolve('../../server/util')]
+  })
+
+  lab.test('GET /alerts-and-warnings with query parameters of Warrington and no warnings or alerts', async () => {
+    stubs.getJson.callsFake(() => data.warringtonGetJson)
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+    stubs.getFloodsWithin.callsFake(() => ({ floods: [] }))
+    stubs.getStationsWithin.callsFake(() => [])
+    stubs.getImpactsWithin.callsFake(() => [])
     const options = {
       method: 'GET',
       url: '/alerts-and-warnings?q=Warrington'
@@ -90,29 +83,8 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /alerts-and-warnings TYPO or non location "afdv vdaf adfv  fda" ', async () => {
-    const fakeGetJson = () => data.nonLocationGetJson
+    stubs.getJson.callsFake(() => data.nonLocationGetJson)
 
-    const util = require('../../server/util')
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
-
-    const warningsPlugin = {
-      plugin: {
-        name: 'warnings',
-        register: (server, options) => {
-          server.route(require('../../server/routes/alerts-and-warnings'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(warningsPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
     const options = {
       method: 'GET',
       url: '/alerts-and-warnings?q=wefwe%20we%20fwef%20str'
@@ -124,37 +96,8 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /alerts-and-warnings with query parameters of Kinghorn, Scotland', async () => {
-    const floodService = require('../../server/services/flood')
-
-    const fakeIsEngland = () => {
-      return { is_england: false }
-    }
-
-    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-
-    const fakeGetJson = () => data.scotlandGetJson
-
-    const util = require('../../server/util')
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
-
-    const warningsPlugin = {
-      plugin: {
-        name: 'warnings',
-        register: (server, options) => {
-          server.route(require('../../server/routes/alerts-and-warnings'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(warningsPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
+    stubs.getIsEngland.callsFake(() => ({ is_england: false }))
+    stubs.getJson.callsFake(() => data.scotlandGetJson)
     const options = {
       method: 'GET',
       url: '/alerts-and-warnings?q=kinghorn'
@@ -166,45 +109,11 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /alerts-and-warnings with query parameters, show alert, warnings and severe', async () => {
-    const floodService = require('../../server/services/flood')
-
-    const fakeIsEngland = () => {
-      return { is_england: true }
-    }
-
-    const fakeFloodsData = () => data.fakeFloodsData
-
-    const fakeStationsData = () => []
-    const fakeImpactsData = () => []
-
-    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-
-    const fakeGetJson = () => data.warringtonGetJson
-
-    const util = require('../../server/util')
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
-
-    const warningsPlugin = {
-      plugin: {
-        name: 'warnings',
-        register: (server, options) => {
-          server.route(require('../../server/routes/alerts-and-warnings'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(warningsPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
+    stubs.getJson.callsFake(() => data.warringtonGetJson)
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+    stubs.getFloodsWithin.callsFake(() => data.fakeFloodsData)
+    stubs.getStationsWithin.callsFake(() => [])
+    stubs.getImpactsWithin.callsFake(() => [])
     const options = {
       method: 'GET',
       url: '/alerts-and-warnings?q=Warrington'
@@ -222,45 +131,11 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /alerts-and-warnings with query parameters of WA4 1HT', async () => {
-    const floodService = require('../../server/services/flood')
-
-    const fakeIsEngland = () => {
-      return { is_england: true }
-    }
-
-    const fakeFloodsData = () => data.floodsByPostCode
-
-    const fakeStationsData = () => []
-    const fakeImpactsData = () => []
-
-    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-
-    const fakeGetJson = () => data.warringtonGetJson
-
-    const util = require('../../server/util')
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
-
-    const warningsPlugin = {
-      plugin: {
-        name: 'warnings',
-        register: (server, options) => {
-          server.route(require('../../server/routes/alerts-and-warnings'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(warningsPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
+    stubs.getJson.callsFake(() => data.warringtonGetJson)
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+    stubs.getFloodsWithin.callsFake(() => data.floodsByPostCode)
+    stubs.getStationsWithin.callsFake(() => [])
+    stubs.getImpactsWithin.callsFake(() => [])
     const options = {
       method: 'GET',
       url: '/alerts-and-warnings?q=WA4%201HT'
@@ -273,40 +148,12 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.statusCode).to.equal(200)
   })
   lab.test('GET /alerts-and-warnings Bing returns error', async () => {
-    const floodService = require('../../server/services/flood')
-
-    const fakeGetJson = () => {
+    stubs.getJson.callsFake(() => {
       throw new Error('Bing error')
-    }
-
-    const fakeFloodsData = () => {
-      return {
-        floods: []
-      }
-    }
-
-    const util = require('../../server/util')
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodsData)
-
-    const warningsPlugin = {
-      plugin: {
-        name: 'warnings',
-        register: (server, options) => {
-          server.route(require('../../server/routes/alerts-and-warnings'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(warningsPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
+    })
+    stubs.getFloods.callsFake(() => ({
+      floods: []
+    }))
     const options = {
       method: 'GET',
       url: '/alerts-and-warnings?q=WA4%201HT'
@@ -320,56 +167,27 @@ lab.experiment('Test - /alerts-warnings', () => {
   })
   lab.test('GET /alerts-and-warnings - England parameter query', async () => {
     // Create dummy flood data in place of cached data
-    const fakeFloodData = () => {
-      return {
-        floods: [
-          {
-            ta_code: '013FWFCH29',
-            id: 4558714,
-            ta_name: 'Wider area at risk from Sankey Brook at Dallam',
-            quick_dial: '305027',
-            region: 'Midlands',
-            area: 'Central',
-            floodtype: 'f',
-            severity_value: 2,
-            severitydescription: 'Flood Warning',
-            warningkey: 1,
-            message_received: '2020-01-08T13:09:09.628Z',
-            severity_changed: '2020-01-08T13:09:09.628Z',
-            situation_changed: '2020-01-08T13:09:09.628Z',
-            situation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elits nibh.'
-          }
-        ]
-      }
-    }
-
-    const fakeOutlookData = () => {
-      const outlook = require('../data/outlook.json')
-      return outlook.statements[0]
-    }
-
-    const floodService = require('../../server/services/flood')
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-
-    const warningsPlugin = {
-      plugin: {
-        name: 'warnings',
-        register: (server, options) => {
-          server.route(require('../../server/routes/alerts-and-warnings'))
+    stubs.getFloods.callsFake(() => ({
+      floods: [
+        {
+          ta_code: '013FWFCH29',
+          id: 4558714,
+          ta_name: 'Wider area at risk from Sankey Brook at Dallam',
+          quick_dial: '305027',
+          region: 'Midlands',
+          area: 'Central',
+          floodtype: 'f',
+          severity_value: 2,
+          severitydescription: 'Flood Warning',
+          warningkey: 1,
+          message_received: '2020-01-08T13:09:09.628Z',
+          severity_changed: '2020-01-08T13:09:09.628Z',
+          situation_changed: '2020-01-08T13:09:09.628Z',
+          situation: 'Lorem ipsum dolor sit amet, consectetur adipiscing elits nibh.'
         }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(warningsPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-    await server.initialize()
-
+      ]
+    }))
+    stubs.getOutlook.callsFake(() => outlookData.statements[0])
     const options = {
       method: 'GET',
       url: '/alerts-and-warnings?q=England'
@@ -381,76 +199,23 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.payload).to.contain('1 flood warning')
   })
   lab.test('GET /alerts-and-warnings ', async () => {
-    const floodService = require('../../server/services/flood')
-
-    const fakeFloodsData = () => {
-      return {
-        floods: []
-      }
-    }
-
-    const fakeStationsData = () => []
-    const fakeImpactsData = () => []
-
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodsData)
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-
-    const warningsPlugin = {
-      plugin: {
-        name: 'warnings',
-        register: (server, options) => {
-          server.route(require('../../server/routes/alerts-and-warnings'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(warningsPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
+    stubs.getFloods.callsFake(() => ({
+      floods: []
+    }))
+    stubs.getStationsWithin.callsFake(() => [])
+    stubs.getImpactsWithin.callsFake(() => [])
     const options = {
       method: 'GET',
       url: '/alerts-and-warnings'
     }
 
     const response = await server.inject(options)
-    Code.expect(response.payload).to.contain('No flood alerts or warnings')
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('No flood alerts or warnings')
   })
   lab.test('GET /alerts-and-warnings?station=1001 ', async () => {
-    const floodService = require('../../server/services/flood')
-
-    const fakeStationById = () => data.fakeGetStationById
-
-    const fakeAlertsWithinBuffer = () => []
-
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationById)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeAlertsWithinBuffer)
-
-    const warningsPlugin = {
-      plugin: {
-        name: 'warnings',
-        register: (server, options) => {
-          server.route(require('../../server/routes/alerts-and-warnings'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(warningsPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
+    stubs.getStationById.callsFake(() => data.fakeGetStationById)
+    stubs.getWarningsAlertsWithinStationBuffer.callsFake(() => [])
     const options = {
       method: 'GET',
       url: '/alerts-and-warnings?station=1001'
@@ -458,37 +223,12 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('Beeding Bridge - flood alerts and warnings - GOV.UK')
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('Beeding Bridge - flood alerts and warnings - GOV.UK')
   })
   lab.test('GET /alerts-and-warnings with unknown parameter e.g. facebook click id ', async () => {
-    const floodService = require('../../server/services/flood')
-
-    const fakeStationById = () => data.fakeGetStationById
-
-    const fakeAlertsWithinBuffer = () => []
-
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationById)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeAlertsWithinBuffer)
-
-    const warningsPlugin = {
-      plugin: {
-        name: 'warnings',
-        register: (server, options) => {
-          server.route(require('../../server/routes/alerts-and-warnings'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(warningsPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
+    stubs.getStationById.callsFake(() => data.fakeGetStationById)
+    stubs.getWarningsAlertsWithinStationBuffer.callsFake(() => [])
     const options = {
       method: 'GET',
       url: '/alerts-and-warnings?station=1001&fbclid=76896789uyuioyuioy&&&'
