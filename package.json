@@ -58,7 +58,7 @@
     "geojson": "0.5.0",
     "govuk-frontend": "^4.6.0",
     "hapi-pino": "^12.1.0",
-    "hapi-rate-limit": "^6.0.0",
+    "hapi-rate-limit": "^7.1.0",
     "jquery": "^3.6.0",
     "lodash.isequal": "^4.5.0",
     "moment-timezone": "^0.5.34",
