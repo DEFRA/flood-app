@@ -5,7 +5,7 @@ createServer()
   .then((server) => {
     server.listener.requestTimeout = 0
     server.listener.headersTimeout = 0
-    server.start()
+    return server.start()
   })
   .catch(err => {
     pino.fatal({
