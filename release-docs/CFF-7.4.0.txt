@@ -1,0 +1,21 @@
+# Check for flooding 7.4.0 19th October 2023
+
+# Release
+
+7.4.0
+
+https://eaflood.atlassian.net/projects/FSR/versions/16684/tab/release-report-all-issues
+
+# Tickets
+
+https://eaflood.atlassian.net/browse/FSR-1037 - Switch logging to use pino rather than console
+https://eaflood.atlassian.net/browse/FSR-1061 - Add caching to calls to Bing location API and fix issue with request timeouts
+
+
+# Instructions
+
+1 - Configure the cloudwatch agent to pull logs from logs/.pino.err.log and logs/.pino.out.log into appropriate LogGroups
+{stage}LDNLFW-nodejs-flood-app-pino-err and {stage}LDNLFW-nodejs-flood-app-pino-out respectively.
+2 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
