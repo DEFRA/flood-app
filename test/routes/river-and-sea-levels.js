@@ -59,6 +59,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(require('../../server/plugins/error-pages'))
     await server.register(riversPlugin)
     // Add Cache methods to server
@@ -115,6 +116,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -160,6 +162,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(require('../../server/plugins/error-pages'))
     await server.register(riversPlugin)
     // Add Cache methods to server
@@ -226,6 +229,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -322,6 +326,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -452,6 +457,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -595,6 +601,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -679,6 +686,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -753,6 +761,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -827,6 +836,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -932,6 +942,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1015,6 +1026,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1090,6 +1102,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1169,6 +1182,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1209,6 +1223,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1251,6 +1266,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1326,6 +1342,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1436,6 +1453,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1532,6 +1550,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1576,6 +1595,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1618,6 +1638,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1666,6 +1687,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1711,6 +1733,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1748,6 +1771,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1785,6 +1809,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(require('../../server/plugins/error-pages'))
     await server.register(riversPlugin)
     // Add Cache methods to server
@@ -1863,6 +1888,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1993,6 +2019,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -2118,6 +2145,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -2234,6 +2262,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -2339,6 +2368,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -2378,6 +2408,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -2416,6 +2447,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -2460,6 +2492,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -2503,6 +2536,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(riversPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')

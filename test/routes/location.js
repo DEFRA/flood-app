@@ -49,6 +49,7 @@ lab.experiment('Routes test - location - 2', () => {
       }
     }
 
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -94,8 +95,9 @@ lab.experiment('Routes test - location - 2', () => {
       }
     }
 
-    await server.register(require('../../server/plugins/session'))
     await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -141,8 +143,9 @@ lab.experiment('Routes test - location - 2', () => {
       }
     }
 
-    await server.register(require('../../server/plugins/session'))
     await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -194,6 +197,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -221,6 +225,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -248,6 +253,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -275,6 +281,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -326,6 +333,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -376,6 +384,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -426,6 +435,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -461,6 +471,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -548,6 +559,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -689,6 +701,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -777,6 +790,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -855,6 +869,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -905,6 +920,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -954,6 +970,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1091,6 +1108,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1180,6 +1198,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1232,6 +1251,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1321,6 +1341,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1370,6 +1391,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
 
     await server.initialize()
@@ -1468,6 +1490,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1524,6 +1547,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1580,6 +1604,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1636,6 +1661,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1712,6 +1738,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1788,6 +1815,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1823,6 +1851,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1858,6 +1887,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -1891,8 +1921,9 @@ lab.experiment('Routes test - location - 2', () => {
       }
     }
 
-    await server.register(require('../../server/plugins/session'))
     await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(require('../../server/plugins/error-pages'))
     await server.register(locationPlugin)
     // Add Cache methods to server

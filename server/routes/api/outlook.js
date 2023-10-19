@@ -6,7 +6,7 @@ module.exports = {
   options: {
     description: 'Get outlook geojson data from cache',
     handler: async request => {
-      const { geoJson } = new OutlookModel(await request.server.methods.flood.getOutlook())
+      const { geoJson } = new OutlookModel(await request.server.methods.flood.getOutlook(), request.logger)
       return geoJson
     },
     app: {

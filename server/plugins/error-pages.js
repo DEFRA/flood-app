@@ -9,52 +9,36 @@ module.exports = {
       server.ext('onPreResponse', (request, h) => {
         const response = request.response
 
-        if (response.isBoom) {
-          // An error was raised during
-          // processing the request
-          const statusCode = response.output.statusCode
-
-          // In the event of 404
-          // return the `404` view
-          if (statusCode === 404) {
-            return h.view('404').code(404)
-          }
-          // In the event of 429 (rate limit exceeded)
-          // return the `429` view
-          if (statusCode === 429) {
-            request.log('error', {
-              statusCode,
-              path: request.path,
-              situation: response.message
-            })
-            return h.view('429').code(429)
-          }
-
-          // gets captured in pm2 log file, details sent to error file below
-          request.log('error', {
-            statusCode,
-            situation: response.message
+        if (!response.isBoom) {
+          request.logger.debug({
+            statusCode: response.statusCode
           })
-
-          // gets captured in pm2 error file
-          console.error(response)
-
-          // 400 && params input is joi error
-          if (statusCode === 400 && response.message === 'Invalid request params input') {
-            return h.view('404').code(404)
-          }
-
-          if (statusCode === 500 && response.name === 'LocationSearchError') {
-            return h.view('location-error', {
-              pageTitle: 'Sorry, there is a problem with the search - Check for flooding'
-            }).code(statusCode)
-          }
-
-          // The return the `500` view
-          return h.view('500').code(statusCode)
+          return h.continue
         }
 
-        return h.continue
+        const viewModel = {}
+        let view = '500'
+        let logLevel = 'error'
+        let statusCode = response.output.statusCode
+
+        if (statusCode === 500 && response.name === 'LocationSearchError') {
+          view = 'location-error'
+          viewModel.pageTitle = 'Sorry, there is a problem with the search - Check for flooding'
+        } else if (statusCode === 429) {
+          view = '429'
+          logLevel = 'warn'
+        } else if (statusCode === 404 || (statusCode === 400 && response.message === 'Invalid request params input')) {
+          statusCode = 404
+          view = '404'
+          logLevel = 'debug'
+        }
+
+        request.logger[logLevel]({
+          statusCode,
+          situation: response.message,
+          stack: response.stack
+        })
+        return h.view(view, viewModel).code(statusCode)
       })
     }
   }

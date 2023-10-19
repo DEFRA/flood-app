@@ -1,7 +1,6 @@
 const Joi = require('@hapi/joi')
 const Floods = require('../../models/floods')
 const floodsMessage = require('../../models/floods-message')
-const locationService = require('../../services/location')
 const util = require('../../util')
 
 module.exports = {
@@ -13,7 +12,7 @@ module.exports = {
       const location = util.cleanseLocation(request.query.location)
       let data, place
       if (location) {
-        [place] = await locationService.find(util.cleanseLocation(location))
+        [place] = await request.server.methods.location.find(util.cleanseLocation(location))
       }
 
       if (place) {

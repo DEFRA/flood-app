@@ -1,12 +1,18 @@
 const createServer = require('./server')
-const pkg = require('./package.json')
+const pino = require('./server/lib/pino')
 
 createServer()
   .then((server) => {
+    server.listener.requestTimeout = 0
+    server.listener.headersTimeout = 0
     server.start()
-    console.log('flood-app (%s) running on %s', pkg.version, server.info.uri)
   })
   .catch(err => {
-    console.log(err)
+    pino.fatal({
+      data: {
+        situation: 'UNEXPECTED_FATAL_ERROR',
+        stack: err.stack
+      }
+    })
     process.exit(1)
   })

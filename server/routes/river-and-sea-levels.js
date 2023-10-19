@@ -10,7 +10,6 @@ const {
   disambiguationModel,
   emptyResultsModel
 } = require('../models/views/river-and-sea-levels')
-const locationService = require('../services/location')
 const util = require('../util')
 const route = 'river-and-sea-levels'
 
@@ -134,8 +133,10 @@ module.exports = [{
         'target-area': joi.string(),
         riverId: joi.string()
       }),
-      failAction: (_request, h) => {
-        console.error('River and Sea levels search error: Invalid or no string input.')
+      failAction: (request, h) => {
+        request.logger.warn({
+          situation: 'River and Sea levels search error: Invalid or no string input.'
+        })
 
         return h.redirect()
       }
@@ -169,7 +170,7 @@ async function locationQueryHandler (request, h) {
   const cleanLocation = util.cleanseLocation(location)
   if (cleanLocation && cleanLocation.length > 1 && !cleanLocation.match(/^england$/i)) {
     if (includeTypes.includes('place')) {
-      places = await findPlaces(cleanLocation)
+      places = await findPlaces(request, cleanLocation)
     }
     if (includeTypes.includes('river')) {
       rivers = await request.server.methods.flood.getRiversByName(cleanLocation)
@@ -196,9 +197,9 @@ async function locationQueryHandler (request, h) {
 
 const inUk = place => place?.isUK && !place?.isScotlandOrNorthernIreland
 
-async function findPlaces (location) {
+async function findPlaces (request, location) {
   // NOTE: at the moment locationService.find just returns a single place
   // using the [] for no results and with a nod to upcoming work to return >1 result
-  const [place] = await locationService.find(location)
+  const [place] = await request.server.methods.location.find(location)
   return inUk(place) ? [place] : []
 }
