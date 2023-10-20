@@ -161,6 +161,29 @@ window.flood.maps.styles = {
     return isSelected ? [selectedStroke, style] : style
   },
 
+  labels: (feature, resolution) => {
+    let offsetY = resolution >= window.flood.maps.liveMaxBigZoom ? 30 : 35
+    if (feature.get('type') === 'TA') {
+      offsetY = resolution >= window.flood.maps.liveMaxBigZoom ? 37 : 0
+    }
+    return new Style({
+      text: new Text({
+        font: 'Bold 16px GDS Transport, Arial, sans-serif',
+        text: feature.getId().toString(),
+        offsetY: -Math.abs(offsetY)
+      }),
+      zIndex: feature.get('type') === 'warning' ? 0 : 1,
+      image: new Icon({
+        src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30"%3E%3Cpath d="M1,4c0,-1.656 1.344,-3 3,-3c-0,0 22,0 22,0c1.656,0 3,1.344 3,3l-0,22c-0,1.649 -1.334,2.99 -2.981,3l-22.019,0c-1.656,0 -3,-1.344 -3,-3l0,-22Z" style="fill:%23fff;stroke:%23000;stroke-width:2px;"/%3E%3Cpath d="M29,25c0,1.656 -1.344,3 -3,3l-22,0c-1.656,0 -3,-1.344 -3,-3" style="fill:none;stroke:%23000;stroke-width:2px;"/%3E%3C/svg%3E%0A',
+        size: [30, 30],
+        anchorYUnits: 'pixels',
+        anchor: [0.5, offsetY + 15],
+        offset: [0, 0],
+        scale: 1
+      })
+    })
+  },
+
   places: (feature, resolution) => {
     // Hide places that are not appropriate for resolution
     const d = parseInt(feature.get('d'))

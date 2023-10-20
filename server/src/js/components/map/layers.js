@@ -176,5 +176,18 @@ window.flood.maps.layers = {
       }),
       zIndex: 10
     })
+  },
+  labels: () => {
+    return new VectorLayer({
+      ref: 'labels',
+      source: new VectorSource({
+        format: new GeoJSON(),
+        projection: 'EPSG:3857'
+      }),
+      style: window.flood.maps.styles.labels,
+      visible: false,
+      zIndex: 11,
+      declutter: true
+    })
   }
 }
