@@ -103,12 +103,12 @@ const mergePolygons = (features, extent) => {
   return mergedPolygons
 }
 
-// Get VectorTile Features Intersecting Extent
+// Get Warning Polygons Features Intersecting Extent
 const getWarningPolygonsIntersectingExtent = ({ extent, targetAreaPolygons, warnings }) => {
   const warningsPolygons = []
   targetAreaPolygons.getSource().getFeaturesInExtent(extent).forEach(feature => {
     const warning = warnings.getSource().getFeatureById(feature.getId().replace(/^flood_warning_alert./, 'flood.'))
-    if (warning && warning.get('isVisible') === 'true') {
+    if (warning && warning.get('isVisible')) {
       const warningsPolygon = new Feature({
         geometry: feature.getGeometry(),
         name: warning.get('ta_name'),
@@ -128,7 +128,7 @@ const addPointFeaturesToLabels = ({ layers, extent, container, isBigZoom, labels
     if (labels.getSource().getFeatures().length > 9) break
     const pointFeatures = layer.getSource().getFeaturesInExtent(extent)
     for (const feature of pointFeatures) {
-      if (layer.get('ref') !== 'warnings' || (layer.get('ref') === 'warnings' && !isBigZoom && feature.get('isVisible') === 'true')) {
+      if (feature.get('isVisible') && layer.get('ref') !== 'warnings' || (layer.get('ref') === 'warnings' && !isBigZoom)) {
         const pointFeature = new Feature({
           geometry: feature.getGeometry(),
           name: feature.get('name'),

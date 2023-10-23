@@ -248,10 +248,9 @@
   &:focus {
     outline: none;
   }
-
-  &:focus[keyboard-focus] {
-    background-color: $govuk-focus-colour;
-    color: $govuk-text-colour;
+  
+  &:focus[keyboard-focus]:after {
+    @include focus;
   }
 
   &::-moz-focus-inner {
@@ -521,21 +520,16 @@
   &:focus {
     outline: none;
   }
-
   &:focus[keyboard-focus]:after {
-    position: absolute;
-    pointer-events: none;
-    content: '';
-    left: 3px;
-    right: 3px;
-    top: 3px;
-    bottom: 3px;
-    outline: 3px solid $govuk-focus-colour;
-    z-index: 99;
+    @include mq ($until: tablet) {
+      @include focus($glow: 5px, $strong: 2px, $background: 0px, $inset: 1px);
+    }
+    @include mq ($from: tablet) {
+      @include focus();
+    }
   }
-
   &__container {
-    margin-right: 36px;
+    margin-right:36px;
   }
 }
 
@@ -600,4 +594,9 @@
 // Layer blur
 #map-outlook .ol-layer canvas {
   opacity: 0.6;
+}
+
+// Layer blend modes
+.defra-map-vl-layer canvas {
+  mix-blend-mode: darken;
 }

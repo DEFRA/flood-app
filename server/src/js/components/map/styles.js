@@ -23,8 +23,8 @@ window.flood.maps.styles = {
       warningId = 'flood.' + feature.getId()
     }
     const warning = warningsSource.getFeatureById(warningId)
-    if (!warning || warning.get('isVisible') !== 'true') { return new Style() }
-    const alpha = resolution <= 14 ? resolution >= 4 ? (Math.floor(resolution) / 20) : 0.2 : 0.7
+    if (!warning || !warning.get('isVisible')) { return new Style() }
+    const alpha = resolution <= 14 ? resolution >= 4 ? (Math.floor(resolution) / 20) : 0.4 : 0.7
     const severity = warning.get('severity_value')
     const isSelected = warning.get('isSelected')
     const isGroundwater = warning.getId().substring(6, 9) === 'FAG'
@@ -67,7 +67,7 @@ window.flood.maps.styles = {
 
   warnings: (feature, resolution) => {
     // Hide warning symbols or hide when polygon is shown
-    if (feature.get('isVisible') !== 'true' || resolution < window.flood.maps.liveMaxBigZoom) {
+    if (!feature.get('isVisible') || resolution < window.flood.maps.liveMaxBigZoom) {
       return
     }
     const severity = feature.get('severity_value')
@@ -85,7 +85,7 @@ window.flood.maps.styles = {
   },
 
   stations: (feature, resolution) => {
-    if (feature.get('isVisible') !== 'true') {
+    if (!feature.get('isVisible')) {
       return
     }
     const state = feature.get('state')
@@ -115,7 +115,7 @@ window.flood.maps.styles = {
   },
 
   rainfall: (feature, resolution) => {
-    if (feature.get('isVisible') !== 'true') {
+    if (!feature.get('isVisible')) {
       return
     }
     const state = feature.get('state')

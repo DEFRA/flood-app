@@ -14,6 +14,7 @@ const { xhr } = window.flood.utils
 
 const targetAreaPolygonsSource = new VectorSource({
   format: new GeoJSON(),
+  className: 'defra-map-vl-canvas',
   projection: 'EPSG:3857',
   // Custom loader to only send get request if below resolution cutoff
   loader: (extent, resolution) => {

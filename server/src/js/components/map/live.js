@@ -183,7 +183,7 @@ function LiveMap (mapId, options) {
         (props.severity_value && props.severity_value === 4 && lyrCodes.includes('tr')) ||
         // Rivers
         (ref === 'stations' && ['S', 'M'].includes(props.type) && lyrCodes.includes('ri')) ||
-        // Tide
+        // Sea
         (ref === 'stations' && props.type === 'C' && lyrCodes.includes('ti')) ||
         // Ground
         (ref === 'stations' && props.type === 'G' && lyrCodes.includes('gr')) ||
@@ -193,7 +193,7 @@ function LiveMap (mapId, options) {
         (targetArea.pointFeature && targetArea.pointFeature.getId() === feature.getId())
       )
       // WebGl: Feature properties must be strings or numbers
-      feature.set('isVisible', Boolean(isVisible).toString())
+      feature.set('isVisible', isVisible)
     })
   }
 
