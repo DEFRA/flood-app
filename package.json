@@ -68,7 +68,7 @@
     "pino": "^8.15.7",
     "pino-pretty": "^10.2.3",
     "regenerator-runtime": "^0.14.0",
-    "sass": "^1.66.1",
+    "sass": "^1.69.4",
     "sinon": "^15.2.0",
     "standard": "^17.1.0",
     "uglify-js": "^3.14.4",
