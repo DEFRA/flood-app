@@ -25,7 +25,7 @@ lab.experiment('logging plugin', () => {
       }
     })
   })
-  lab.test('req serializer without query', async () => {
+  lab.test('req serializer with empty query', async () => {
     const req = {
       url: '/some/url',
       method: 'get',
@@ -43,8 +43,25 @@ lab.experiment('logging plugin', () => {
       query: undefined
     })
   })
+  lab.test('req serializer without query', async () => {
+    const req = {
+      url: '/some/url',
+      method: 'get',
+      header: {
+        'x-api-key': '12345'
+      }
+    }
 
-  lab.test('res serializer with query', async () => {
+    const actual = loggingPlugin.options.serializers.req(req)
+
+    expect(actual).to.equal({
+      url: '/some/url',
+      method: 'GET',
+      query: undefined
+    })
+  })
+
+  lab.test('res serializer', async () => {
     const res = {
       statusCode: 200,
       header: {
