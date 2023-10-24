@@ -128,7 +128,7 @@ const addPointFeaturesToLabels = ({ layers, extent, container, isBigZoom, labels
     if (labels.getSource().getFeatures().length > 9) break
     const pointFeatures = layer.getSource().getFeaturesInExtent(extent)
     for (const feature of pointFeatures) {
-      if (feature.get('isVisible') && layer.get('ref') !== 'warnings' || (layer.get('ref') === 'warnings' && !isBigZoom)) {
+      if ((feature.get('isVisible') && layer.get('ref') !== 'warnings') || (layer.get('ref') === 'warnings' && !isBigZoom)) {
         const pointFeature = new Feature({
           geometry: feature.getGeometry(),
           name: feature.get('name'),
