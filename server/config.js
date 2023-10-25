@@ -1,4 +1,5 @@
 const joi = require('@hapi/joi')
+const pkg = require('../package.json')
 
 const defaultPort = 3009
 
@@ -33,7 +34,14 @@ const schema = joi.object({
   rateLimitExpiresIn: joi.number().integer().when('rateLimitEnabled', { is: true, then: joi.required() }),
   rateLimitWhitelist: joi.array().items(joi.string()).default([]),
   logLevel: joi.string().default('info'),
-  isPM2: joi.boolean().default(false)
+  isPM2: joi.boolean().default(false),
+  version: joi.string().default(pkg.version),
+  errbit: joi.object({
+    enabled: joi.boolean().default(false),
+    host: joi.string().default('https://errbit-prd.aws-int.defra.cloud'),
+    projectId: joi.number().default(1),
+    projectKey: joi.string()
+  })
 })
 
 // Build config
@@ -65,7 +73,13 @@ const config = {
   rateLimitExpiresIn: process.env.FLOOD_APP_RATE_LIMIT_EXPIRES_IN,
   rateLimitWhitelist: process.env.FLOOD_APP_RATE_LIMIT_WHITELIST ? process.env.FLOOD_APP_RATE_LIMIT_WHITELIST.split(':') : [],
   logLevel: process.env.LOG_LEVEL,
-  isPM2: !!process.env.PM2_HOME
+  isPM2: !!process.env.PM2_HOME,
+  errbit: {
+    enabled: process.env.ERRBIT_ENABLED === 'true',
+    host: process.env.ERRBIT_HOST,
+    projectId: process.env.ERRBIT_PROJECT_ID,
+    projectKey: process.env.ERRBIT_PROJECT_KEY
+  }
 }
 
 // Validate config

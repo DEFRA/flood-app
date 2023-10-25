@@ -1,5 +1,5 @@
 const createServer = require('./server')
-const pino = require('./server/lib/pino')
+const pino = require('./server/lib/logging/pino')
 
 module.exports = createServer()
   .then((server) => {
@@ -9,8 +9,9 @@ module.exports = createServer()
   })
   .catch(err => {
     pino.fatal({
-      situation: 'UNEXPECTED_FATAL_ERROR',
-      stack: err.stack
+      err
     })
-    process.exit(1)
+    pino.flush(() => {
+      process.exit(1)
+    })
   })
