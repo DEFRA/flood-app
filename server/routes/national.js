@@ -14,7 +14,7 @@ module.exports = {
     } catch (err) {
       request.logger.warn({
         situation: 'outlook error',
-        stack: err.stack
+        err
       })
       outlook.dataError = true
     }
