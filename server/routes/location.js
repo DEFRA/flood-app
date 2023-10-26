@@ -119,7 +119,8 @@ const getOutlook = async request => {
     outlook = await request.server.methods.flood.getOutlook()
   } catch (err) {
     request.logger.warn({
-      situation: 'Outlook FGS data error'
+      situation: 'Outlook FGS data error',
+      err
     })
     dataError = true
   }
