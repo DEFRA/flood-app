@@ -1,38 +1,43 @@
 'use strict'
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const { experiment, test, beforeEach, afterEach } = exports.lab = Lab.script()
+const { experiment, test, beforeEach, afterEach, after } = exports.lab = Lab.script()
 const { stub } = require('sinon')
 const proxyquire = require('proxyquire')
 const { once } = require('node:events')
 
 const stubs = {
-  Notifier: stub(),
-  addFilter: stub(),
-  notify: stub(),
-  flush: stub()
+  Errbit: stub(),
+  send: stub(),
+  close: stub(),
+  consoleError: stub(console, 'error')
 }
 
 const errbitTransport = proxyquire('../../../server/lib/logging/errbit-transport', {
-  '@airbrake/node': { Notifier: stubs.Notifier }
+  './errbit': stubs.Errbit
 })
 
 experiment('errbit transport', () => {
   beforeEach(() => {
-    stubs.Notifier.callsFake(() => ({
-      notify: stubs.notify,
-      addFilter: stubs.addFilter,
-      flush: stubs.flush
+    stubs.Errbit.callsFake(() => ({
+      send: stubs.send,
+      close: stubs.close
     }))
-    stubs.flush.callsFake(() => Promise.resolve())
   })
   afterEach(() => {
     for (const stub of Object.values(stubs)) {
       stub.reset()
     }
   })
+  after(() => {
+    for (const stub of Object.values(stubs)) {
+      if (stub.restore) {
+        stub.restore()
+      }
+    }
+  })
 
-  test('it skips creating an errbit connection if errbit is disabled', async () => {
+  test('it sends messages containing an err to errbit', async () => {
     const stream = errbitTransport({
       severity: 'comical',
       enabled: false,
@@ -42,9 +47,10 @@ experiment('errbit transport', () => {
       environment: 'unit-test',
       version: '0.0.0'
     })
+    stubs.send.resolves()
+    stubs.close.resolves()
 
     stream.write(JSON.stringify({
-      logLevel: 'error',
       err: {
         name: 'some-name',
         message: 'some-message',
@@ -55,127 +61,106 @@ experiment('errbit transport', () => {
     stream.end()
     await once(stream, 'close')
 
-    expect(stubs.Notifier.callCount).to.equal(0)
-    expect(stubs.notify.callCount).to.equal(0)
-  })
-
-  test('a filter is added which adds the severity, environment and version to each notice', () => {
-    errbitTransport({
-      severity: 'comical',
-      enabled: true,
-      host: 'some-host',
-      projectId: 'some-project-id',
-      projectKey: 'some-project-key',
-      environment: 'unit-test',
-      version: '0.0.0'
-    })
-    const filter = stubs.addFilter.lastCall.args[0]
-
-    const filtered = filter({
-      error: 'some-error',
-      context: {},
-      params: {
-        some: 'param'
-      }
-    })
-
-    expect(filtered).to.equal({
-      error: 'some-error',
-      context: {
-        severity: 'comical',
-        environment: 'unit-test',
-        version: '0.0.0'
-      },
-      params: {
-        some: 'param'
-      }
-    })
-  })
-
-  test('log lines without an err key are ignored', async () => {
-    const stream = errbitTransport({
-      severity: 'comical',
-      enabled: true,
-      host: 'some-host',
-      projectId: 'some-project-id',
-      projectKey: 'some-project-key',
-      environment: 'unit-test',
-      version: '0.0.0'
-    })
-
-    stream.write(JSON.stringify({
-      logLevel: 'error',
-      message: 'boom'
-    }))
-    stream.end()
-    await once(stream, 'close')
-
-    expect(stubs.notify.callCount).to.equal(0)
-  })
-
-  test('log lines with req/res information have it added to the errbit notice', async () => {
-    const stream = errbitTransport({
-      severity: 'comical',
-      enabled: true,
-      host: 'some-host',
-      projectId: 'some-project-id',
-      projectKey: 'some-project-key',
-      environment: 'unit-test',
-      version: '0.0.0'
-    })
-
-    stream.write(JSON.stringify({
-      logLevel: 'error',
+    expect(stubs.send.callCount).to.equal(1)
+    expect(stubs.send.lastCall.args[0]).to.equal({
       err: {
         name: 'some-name',
         message: 'some-message',
         stack: 'some-stack',
         code: 1234
-      },
-      req: {
-        url: '/some/path',
-        method: 'GET',
-        query: {
-          a: 1
-        }
-      },
-      res: {
-        statusCode: 418
-      }
-    }))
-    stream.end()
-    await once(stream, 'close')
-
-    expect(stubs.notify.lastCall.args[0].context.httpMethod).to.equal('GET')
-    expect(stubs.notify.lastCall.args[0].context.route).to.equal('/some/path')
-    expect(stubs.notify.lastCall.args[0].params).to.equal({
-      request: {
-        url: '/some/path',
-        method: 'GET',
-        query: {
-          a: 1
-        }
-      },
-      response: {
-        statusCode: 418
       }
     })
   })
-
-  test('the airbrake connection is flushed when the stream is closed', async () => {
+  test('it handles when sending a message to errbit fails', async () => {
     const stream = errbitTransport({
       severity: 'comical',
-      enabled: true,
+      enabled: false,
       host: 'some-host',
       projectId: 'some-project-id',
       projectKey: 'some-project-key',
       environment: 'unit-test',
       version: '0.0.0'
     })
+    stubs.send.rejects(new Error('not sent'))
+    stubs.close.resolves()
+
+    let err
+    stream.on('error', (error) => {
+      err = error
+    })
+    stream.write(JSON.stringify({
+      err: {
+        name: 'some-name',
+        message: 'some-message',
+        stack: 'some-stack',
+        code: 1234
+      }
+    }))
+    stream.end()
+    await once(stream, 'close')
+
+    expect(err).to.equal(undefined)
+    expect(stubs.consoleError.lastCall.args[0]).to.equal(new Error('not sent'))
+  })
+  test('it skips messages not containing an err key', async () => {
+    const stream = errbitTransport({
+      severity: 'comical',
+      enabled: false,
+      host: 'some-host',
+      projectId: 'some-project-id',
+      projectKey: 'some-project-key',
+      environment: 'unit-test',
+      version: '0.0.0'
+    })
+    stubs.send.resolves()
+    stubs.close.resolves()
+
+    stream.write(JSON.stringify({
+      message: 'Hello Worlds'
+    }))
+    stream.end()
+    await once(stream, 'close')
+
+    expect(stubs.send.callCount).to.equal(0)
+  })
+
+  test('it closes errbit on close', async () => {
+    const stream = errbitTransport({
+      severity: 'comical',
+      enabled: false,
+      host: 'some-host',
+      projectId: 'some-project-id',
+      projectKey: 'some-project-key',
+      environment: 'unit-test',
+      version: '0.0.0'
+    })
+    stubs.close.resolves()
 
     stream.end()
     await once(stream, 'close')
 
-    expect(stubs.flush.callCount).to.equal(1)
+    expect(stubs.close.callCount).to.equal(1)
+  })
+  test('it handles errors from errbit close', async () => {
+    const stream = errbitTransport({
+      severity: 'comical',
+      enabled: false,
+      host: 'some-host',
+      projectId: 'some-project-id',
+      projectKey: 'some-project-key',
+      environment: 'unit-test',
+      version: '0.0.0'
+    })
+    stubs.close.rejects(new Error('bang!'))
+
+    let err
+    stream.on('error', (error) => {
+      err = error
+    })
+    stream.end()
+    await once(stream, 'close')
+
+    expect(err).to.equal(undefined)
+    expect(stubs.consoleError.lastCall.args[0]).to.equal(new Error('bang!'))
   })
 })
