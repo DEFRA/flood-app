@@ -235,7 +235,7 @@
             </span>
             <div class="defra-flood-status-item__text">
               <span class="govuk-visually-hidden">Information:</span>
-              <p class="govuk-body-s govuk-!-margin-bottom-0">The dotted line on the graph is made by a computer. It shows what the river might do based on weather conditions. The line will change as weather conditions change, and usually updates every 3 hours. Forecasts are more uncertain after 2 to 3 hours. The highest level in the model is {{ model.forecastHighest | round(2) }}m at {{ model.forecastHighestTime }}.</p>
+              <p class="govuk-body-s govuk-!-margin-bottom-0">This station includes an automated model which may change based on weather conditions. This model and others are used to decide when to issue flood warnings. The highest level in the model is {{ model.forecastHighest | round(2) }}m at {{ model.forecastHighestTime }}.</p>
             </div>
           </div>
         </div>
