@@ -14,6 +14,7 @@ const { xhr } = window.flood.utils
 
 const targetAreaPolygonsSource = new VectorSource({
   format: new GeoJSON(),
+  className: 'defra-map-vl-canvas',
   projection: 'EPSG:3857',
   // Custom loader to only send get request if below resolution cutoff
   loader: (extent, resolution) => {
@@ -42,6 +43,7 @@ window.flood.maps.layers = {
   topography: () => {
     return new TileLayer({
       ref: 'road',
+      className: 'defra-map-bg-canvas',
       source: new BingMaps({
         key: window.flood.model.bingMaps + '&c4w=1&cstl=rd&src=h&st=me|lv:0_trs|v:0_pt|v:0',
         imagerySet: 'RoadOnDemand'
@@ -82,6 +84,7 @@ window.flood.maps.layers = {
   places: () => {
     return new VectorLayer({
       ref: 'places',
+      className: 'defra-map-vl-layer',
       source: new VectorSource({
         format: new GeoJSON(),
         projection: 'EPSG:3857',
@@ -99,6 +102,7 @@ window.flood.maps.layers = {
   targetAreaPolygons: () => {
     return new VectorLayer({
       ref: 'targetAreaPolygons',
+      className: 'defra-map-vl-layer',
       source: targetAreaPolygonsSource,
       style: window.flood.maps.styles.targetAreaPolygons,
       visible: false,
@@ -160,7 +164,6 @@ window.flood.maps.layers = {
         url: '/api/outlook.geojson'
       }),
       style: window.flood.maps.styles.outlookPolygons,
-      opacity: 0.6,
       zIndex: 4
     })
   },
@@ -173,6 +176,19 @@ window.flood.maps.layers = {
         projection: 'EPSG:3857'
       }),
       zIndex: 10
+    })
+  },
+  labels: () => {
+    return new VectorLayer({
+      ref: 'labels',
+      source: new VectorSource({
+        format: new GeoJSON(),
+        projection: 'EPSG:3857'
+      }),
+      style: window.flood.maps.styles.labels,
+      visible: false,
+      zIndex: 11,
+      declutter: true
     })
   }
 }

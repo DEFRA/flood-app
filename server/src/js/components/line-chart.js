@@ -368,7 +368,7 @@ function LineChart (containerId, stationId, data, options = {}) {
     }
 
     // To follow
-    // Determin which resolution and range to display
+    // Determine which resolution and range to display
     // Using raw data for now
 
     // Setup array to combine observed and forecast points and identify startPoint for locator

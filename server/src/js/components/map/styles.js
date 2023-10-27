@@ -3,6 +3,7 @@
 Sets up the window.flood.maps styles objects
 */
 import { Style, Icon, Fill, Stroke, Text, Circle } from 'ol/style'
+import { asString as colorAsString } from 'ol/color'
 
 window.flood.maps.styles = {
 
@@ -10,7 +11,7 @@ window.flood.maps.styles = {
   // Vector styles live
   //
 
-  targetAreaPolygons: (feature) => {
+  targetAreaPolygons: (feature, resolution) => {
     // Use corresposnding warning feature propeties for styling
     const warningsSource = window.flood.maps.warningsSource
     let warningId = feature.getId()
@@ -22,49 +23,51 @@ window.flood.maps.styles = {
       warningId = 'flood.' + feature.getId()
     }
     const warning = warningsSource.getFeatureById(warningId)
-    if (!warning || warning.get('isVisible') !== 'true') { return new Style() }
+    if (!warning || !warning.get('isVisible')) { return new Style() }
+    const alpha = resolution <= 14 ? resolution >= 4 ? (Math.floor(resolution) / 20) : 0.4 : 0.7
     const severity = warning.get('severity_value')
     const isSelected = warning.get('isSelected')
     const isGroundwater = warning.getId().substring(6, 9) === 'FAG'
 
     // Defaults
-    let strokeColour = 'transparent'
+    const strokeColour = isSelected ? colorAsString([11, 12, 12, 0.65]) : 'transparent'
     let fillColour = 'transparent'
     let zIndex = 1
 
     switch (severity) {
       case 3: // Severe warning
-        strokeColour = '#D4351C'
-        fillColour = targetAreaPolygonPattern('severe')
+        fillColour = colorAsString([140, 20, 25, alpha])
         zIndex = 11
         break
       case 2: // Warning
-        strokeColour = '#D4351C'
-        fillColour = targetAreaPolygonPattern('warning')
+        fillColour = colorAsString([227, 0, 15, alpha])
         zIndex = 10
         break
       case 1: // Alert
-        strokeColour = '#F47738'
-        fillColour = targetAreaPolygonPattern('alert')
+        fillColour = colorAsString([241, 135, 0, alpha])
         zIndex = isGroundwater ? 4 : 7
         break
       default: // Removed or inactive
-        strokeColour = '#626A6E'
-        fillColour = targetAreaPolygonPattern('removed')
+        fillColour = colorAsString([130, 151, 167, alpha])
         zIndex = 1
     }
     zIndex = isSelected ? zIndex + 2 : zIndex
 
-    const selectedStroke = new Style({ stroke: new Stroke({ color: '#FFDD00', width: 16 }), zIndex })
-    const stroke = new Style({ stroke: new Stroke({ color: strokeColour, width: 2 }), zIndex })
-    const fill = new Style({ fill: new Fill({ color: fillColour }), zIndex })
-
-    return isSelected ? [selectedStroke, stroke, fill] : [stroke, fill]
+    return new Style({
+      stroke: new Stroke({
+        color: strokeColour,
+        width: 2
+      }),
+      fill: new Fill({
+        color: fillColour
+      }),
+      zIndex
+    })
   },
 
   warnings: (feature, resolution) => {
     // Hide warning symbols or hide when polygon is shown
-    if (feature.get('isVisible') !== 'true' || resolution < window.flood.maps.liveMaxBigZoom) {
+    if (!feature.get('isVisible') || resolution < window.flood.maps.liveMaxBigZoom) {
       return
     }
     const severity = feature.get('severity_value')
@@ -82,7 +85,7 @@ window.flood.maps.styles = {
   },
 
   stations: (feature, resolution) => {
-    if (feature.get('isVisible') !== 'true') {
+    if (!feature.get('isVisible')) {
       return
     }
     const state = feature.get('state')
@@ -97,10 +100,10 @@ window.flood.maps.styles = {
       case 'riverError':
         return isSelected ? (isSymbol ? styleCache.riverErrorSelected : styleCache.measurementErrorSelected) : (isSymbol ? styleCache.riverError : styleCache.measurementError)
       // Tide
-      case 'tide':
-        return isSelected ? (isSymbol ? styleCache.tideSelected : styleCache.measurementSelected) : (isSymbol ? styleCache.tide : styleCache.measurement)
-      case 'tideError':
-        return isSelected ? (isSymbol ? styleCache.tideErrorSelected : styleCache.measurementErrorSelected) : (isSymbol ? styleCache.tideError : styleCache.measurementError)
+      case 'sea':
+        return isSelected ? (isSymbol ? styleCache.seaSelected : styleCache.measurementSelected) : (isSymbol ? styleCache.sea : styleCache.measurement)
+      case 'seaError':
+        return isSelected ? (isSymbol ? styleCache.seaErrorSelected : styleCache.measurementErrorSelected) : (isSymbol ? styleCache.seaError : styleCache.measurementError)
       // Ground
       case 'groundHigh':
         return isSelected ? (isSymbol ? styleCache.groundHighSelected : styleCache.measurementAlertSelected) : (isSymbol ? styleCache.groundHigh : styleCache.measurementAlert)
@@ -112,7 +115,7 @@ window.flood.maps.styles = {
   },
 
   rainfall: (feature, resolution) => {
-    if (feature.get('isVisible') !== 'true') {
+    if (!feature.get('isVisible')) {
       return
     }
     const state = feature.get('state')
@@ -135,19 +138,20 @@ window.flood.maps.styles = {
     const zIndex = feature.get('z-index')
     const lineDash = [2, 3]
     let strokeColour = '#85994b'
-    let fillColour = outlookPolygonPattern('veryLow')
+    let fillColour = '#85994b'
     if (feature.get('risk-level') === 2) {
       strokeColour = '#ffdd00'
-      fillColour = outlookPolygonPattern('low')
+      fillColour = '#ffdd00'
     } else if (feature.get('risk-level') === 3) {
       strokeColour = '#F47738'
-      fillColour = outlookPolygonPattern('medium')
+      fillColour = '#F47738'
     } else if (feature.get('risk-level') === 4) {
       strokeColour = '#D4351C'
-      fillColour = outlookPolygonPattern('high')
+      fillColour = '#D4351C'
     }
     const isSelected = feature.get('isSelected')
-    const selectedStroke = new Style({ stroke: new Stroke({ color: '#FFDD00', width: 16 }), zIndex })
+    const selectedStroke = new Style({ stroke: new Stroke({ color: '#0b0c0c', width: 4 }), zIndex })
+
     const style = new Style({
       stroke: new Stroke({ color: strokeColour, width: 1 }),
       fill: new Fill({ color: fillColour }),
@@ -155,6 +159,29 @@ window.flood.maps.styles = {
       zIndex
     })
     return isSelected ? [selectedStroke, style] : style
+  },
+
+  labels: (feature, resolution) => {
+    let offsetY = resolution >= window.flood.maps.liveMaxBigZoom ? 30 : 35
+    if (feature.get('type') === 'TA') {
+      offsetY = resolution >= window.flood.maps.liveMaxBigZoom ? 37 : 0
+    }
+    return new Style({
+      text: new Text({
+        font: 'Bold 16px GDS Transport, Arial, sans-serif',
+        text: feature.getId().toString(),
+        offsetY: -Math.abs(offsetY)
+      }),
+      zIndex: feature.get('type') === 'warning' ? 0 : 1,
+      image: new Icon({
+        src: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30"%3E%3Cpath d="M1,4c0,-1.656 1.344,-3 3,-3c-0,0 22,0 22,0c1.656,0 3,1.344 3,3l-0,22c-0,1.649 -1.334,2.99 -2.981,3l-22.019,0c-1.656,0 -3,-1.344 -3,-3l0,-22Z" style="fill:%23fff;stroke:%23000;stroke-width:2px;"/%3E%3Cpath d="M29,25c0,1.656 -1.344,3 -3,3l-22,0c-1.656,0 -3,-1.344 -3,-3" style="fill:none;stroke:%23000;stroke-width:2px;"/%3E%3C/svg%3E%0A',
+        size: [30, 30],
+        anchorYUnits: 'pixels',
+        anchor: [0.5, offsetY + 15],
+        offset: [0, 0],
+        scale: 1
+      })
+    })
   },
 
   places: (feature, resolution) => {
@@ -193,176 +220,6 @@ window.flood.maps.styles = {
     })
   }
 
-}
-
-//
-// SVG fill paterns
-//
-
-const targetAreaPolygonPattern = (style) => {
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')
-  const dpr = window.devicePixelRatio || 1
-  canvas.width = 8 * dpr
-  canvas.height = 8 * dpr
-  ctx.scale(dpr, dpr)
-  switch (style) {
-    case 'severe':
-      ctx.fillStyle = '#D4351C'
-      ctx.fillRect(0, 0, 8, 8)
-      ctx.beginPath()
-      ctx.fillStyle = '#ffffff'
-      ctx.moveTo(0, 3.3)
-      ctx.lineTo(4.7, 8)
-      ctx.lineTo(3.3, 8)
-      ctx.lineTo(0, 4.7)
-      ctx.closePath()
-      ctx.moveTo(3.3, 0)
-      ctx.lineTo(4.7, 0)
-      ctx.lineTo(8, 3.3)
-      ctx.lineTo(8, 4.7)
-      ctx.closePath()
-      ctx.fill()
-      break
-    case 'warning':
-      ctx.fillStyle = '#D4351C'
-      ctx.fillRect(0, 0, 8, 8)
-      ctx.beginPath()
-      ctx.fillStyle = '#ffffff'
-      ctx.moveTo(3.3, 0)
-      ctx.lineTo(4.7, 0)
-      ctx.lineTo(0, 4.7)
-      ctx.lineTo(0, 3.3)
-      ctx.closePath()
-      ctx.moveTo(3.3, 8)
-      ctx.lineTo(4.7, 8)
-      ctx.lineTo(8, 4.7)
-      ctx.lineTo(8, 3.3)
-      ctx.closePath()
-      ctx.moveTo(4.7, 0)
-      ctx.lineTo(8, 3.3)
-      ctx.lineTo(7.3, 4)
-      ctx.lineTo(4, 0.7)
-      ctx.closePath()
-      ctx.moveTo(0, 4.7)
-      ctx.lineTo(3.3, 8)
-      ctx.lineTo(4, 7.3)
-      ctx.lineTo(0.7, 4)
-      ctx.closePath()
-      ctx.fill()
-      break
-    case 'alert':
-      ctx.fillStyle = '#ffffff'
-      ctx.fillRect(0, 0, 8, 8)
-      ctx.beginPath()
-      ctx.fillStyle = '#F47738'
-      ctx.moveTo(0, 3.3)
-      ctx.lineTo(0, 4.7)
-      ctx.lineTo(4.7, 0)
-      ctx.lineTo(3.3, 0)
-      ctx.closePath()
-      ctx.moveTo(3.3, 8)
-      ctx.lineTo(4.7, 8)
-      ctx.lineTo(8, 4.7)
-      ctx.lineTo(8, 3.3)
-      ctx.closePath()
-      ctx.fill()
-      break
-    case 'removed':
-      ctx.fillStyle = '#ffffff'
-      ctx.fillRect(0, 0, 8, 8)
-      ctx.beginPath()
-      ctx.fillStyle = '#626A6E'
-      ctx.arc(4, 4, 1, 0, 2 * Math.PI)
-      ctx.closePath()
-      ctx.fill()
-      break
-  }
-  ctx.restore()
-  return ctx.createPattern(canvas, 'repeat')
-}
-
-const outlookPolygonPattern = (style) => {
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')
-  const dpr = window.devicePixelRatio || 1
-  canvas.width = 8 * dpr
-  canvas.height = 8 * dpr
-  ctx.scale(dpr, dpr)
-  switch (style) {
-    case 'high':
-      ctx.fillStyle = '#D4351C'
-      ctx.fillRect(0, 0, 8, 8)
-      ctx.beginPath()
-      ctx.fillStyle = '#ffffff'
-      ctx.moveTo(0, 3.3)
-      ctx.lineTo(4.7, 8)
-      ctx.lineTo(3.3, 8)
-      ctx.lineTo(0, 4.7)
-      ctx.closePath()
-      ctx.moveTo(3.3, 0)
-      ctx.lineTo(4.7, 0)
-      ctx.lineTo(8, 3.3)
-      ctx.lineTo(8, 4.7)
-      ctx.closePath()
-      ctx.fill()
-      break
-    case 'medium':
-      ctx.fillStyle = '#F47738'
-      ctx.fillRect(0, 0, 8, 8)
-      ctx.beginPath()
-      ctx.fillStyle = '#ffffff'
-      ctx.moveTo(3.3, 0)
-      ctx.lineTo(4.7, 0)
-      ctx.lineTo(0, 4.7)
-      ctx.lineTo(0, 3.3)
-      ctx.closePath()
-      ctx.moveTo(3.3, 8)
-      ctx.lineTo(4.7, 8)
-      ctx.lineTo(8, 4.7)
-      ctx.lineTo(8, 3.3)
-      ctx.closePath()
-      ctx.moveTo(4.7, 0)
-      ctx.lineTo(8, 3.3)
-      ctx.lineTo(7.3, 4)
-      ctx.lineTo(4, 0.7)
-      ctx.closePath()
-      ctx.moveTo(0, 4.7)
-      ctx.lineTo(3.3, 8)
-      ctx.lineTo(4, 7.3)
-      ctx.lineTo(0.7, 4)
-      ctx.closePath()
-      ctx.fill()
-      break
-    case 'low':
-      ctx.fillStyle = '#ffdd00'
-      ctx.fillRect(0, 0, 8, 8)
-      ctx.beginPath()
-      ctx.fillStyle = '#ffffff'
-      ctx.moveTo(0, 3.3)
-      ctx.lineTo(0, 4.7)
-      ctx.lineTo(4.7, 0)
-      ctx.lineTo(3.3, 0)
-      ctx.closePath()
-      ctx.moveTo(3.3, 8)
-      ctx.lineTo(4.7, 8)
-      ctx.lineTo(8, 4.7)
-      ctx.lineTo(8, 3.3)
-      ctx.closePath()
-      ctx.fill()
-      break
-    case 'veryLow':
-      ctx.fillStyle = '#85994b'
-      ctx.fillRect(0, 0, 8, 8)
-      ctx.beginPath()
-      ctx.fillStyle = '#ffffff'
-      ctx.arc(4, 4, 1, 0, 2 * Math.PI)
-      ctx.closePath()
-      ctx.fill()
-      break
-  }
-  ctx.restore()
-  return ctx.createPattern(canvas, 'repeat')
 }
 
 //
@@ -443,10 +300,10 @@ const styleCache = {
   riverError: createIconStyle({ offset: [0, 700], zIndex: 1 }),
   riverErrorSelected: createIconStyle({ offset: [100, 700], zIndex: 10 }),
   // Tide
-  tide: createIconStyle({ offset: [0, 800], zIndex: 2 }),
-  tideSelected: createIconStyle({ offset: [100, 800], zIndex: 10 }),
-  tideError: createIconStyle({ offset: [0, 900], zIndex: 1 }),
-  tideErrorSelected: createIconStyle({ offset: [100, 900], zIndex: 10 }),
+  sea: createIconStyle({ offset: [0, 800], zIndex: 2 }),
+  seaSelected: createIconStyle({ offset: [100, 800], zIndex: 10 }),
+  seaError: createIconStyle({ offset: [0, 900], zIndex: 1 }),
+  seaErrorSelected: createIconStyle({ offset: [100, 900], zIndex: 10 }),
   // Groundwater
   ground: createIconStyle({ offset: [0, 1100], zIndex: 2 }),
   groundSelected: createIconStyle({ offset: [100, 1100], zIndex: 10 }),
