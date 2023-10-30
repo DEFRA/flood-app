@@ -8,29 +8,6 @@ import intersect from '@turf/intersect'
 
 const { getParameterByName, getSummaryList } = window.flood.utils
 
-// Generate feature name
-const featureName = (feature) => {
-  let name = ''
-  if (feature.get('type') === 'C') {
-    name = `Sea level: ${feature.get('name')}`
-  } else if (feature.get('type') === 'S' || feature.get('type') === 'M') {
-    name = `River level: ${feature.get('name')}, ${feature.get('river')}`
-  } else if (feature.get('type') === 'G') {
-    name = `Groundwater level: ${feature.get('name')}`
-  } else if (feature.get('type') === 'R') {
-    name = `Rainfall: ${feature.get('name')}`
-  } else if (feature.get('severity_value') === 3) {
-    name = `Severe flood warning: ${feature.get('ta_name')}`
-  } else if (feature.get('severity_value') === 2) {
-    name = `Flood warning: ${feature.get('ta_name')}`
-  } else if (feature.get('severity_value') === 1) {
-    name = `Flood alert: ${feature.get('ta_name')}`
-  } else if (feature.get('severity_value') === 4) {
-    name = `Warning no longer in force: ${feature.get('ta_name')}`
-  }
-  return name
-}
-
 // Get features visible in the current viewport
 export const toggleVisibleFeatures = ({ labels, container, dataLayers, maps, targetAreaPolygons, warnings, bigZoom, targetArea, viewportDescription }) => {
   labels.getSource().clear()
@@ -56,18 +33,18 @@ export const toggleVisibleFeatures = ({ labels, container, dataLayers, maps, tar
   // Build model
   const numWarnings = features.filter(feature => [1, 2].includes(feature.get('severity'))).length
   const numAlerts = features.filter(feature => feature.get('severity') === 3).length
-  const mumLevels = features.length - numWarnings - numAlerts
+  const numLevels = features.length - numWarnings - numAlerts
   const model = {
     numFeatures: features.length,
     summary: getSummaryList([
       { count: numWarnings, text: 'flood warning' },
       { count: numAlerts, text: 'flood alert' },
-      { count: mumLevels, text: 'water level measurement' }
+      { count: numLevels, text: 'water level measurement' }
     ]),
     features: features.map((feature, i) => ({
       type: feature.get('type'),
       severity: feature.get('severity'),
-      name: featureName(feature),
+      name: feature.get('name'),
       river: feature.get('river')
     }))
   }
@@ -134,7 +111,7 @@ const addPointFeaturesToLabels = ({ layers, extent, container, isBigZoom, labels
           name: feature.get('name'),
           type: feature.get('type'),
           severity: feature.get('severity'),
-          river: feature.get('riverName')
+          river: feature.get('river_name')
         })
         pointFeature.setId(feature.getId())
         if (labels.getSource().getFeatures().length > 9) break
