@@ -56,9 +56,9 @@ lab.experiment('util / outbound request helpers : request', () => {
     expect(postResult).to.equal(mockResponse.payload)
   })
 
-  lab.test('request adds the method and url to wreck request errors', async () => {
+  lab.test('request adds the method and url (with query strings removed) to wreck request errors', async () => {
     const method = 'get'
-    const url = '/some/get/url'
+    const url = '/some/get/url?a=1&b=2&key=secret&c=4'
     const requestOptions = {
       headers: {
         'some-header': 'some-value'

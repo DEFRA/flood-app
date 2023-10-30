@@ -15,7 +15,7 @@ async function request (method, url, options, ext = false) {
     payload = response.payload
   } catch (error) {
     if (error?.message?.startsWith('Response Error:')) {
-      error.message += ` on ${method.toUpperCase()} ${url}`
+      error.message += ` on ${method.toUpperCase()} ${url.replace(/\?.*$/, '')}`
     }
     throw error
   }
