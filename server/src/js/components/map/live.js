@@ -5,7 +5,7 @@
 
 // It uses the MapContainer
 
-import { View, Overlay, Feature } from 'ol'
+import { View, Feature } from 'ol'
 import { transform, transformExtent } from 'ol/proj'
 import { unByKey } from 'ol/Observable'
 import { defaults as defaultInteractions } from 'ol/interaction'
@@ -14,6 +14,8 @@ import { buffer, containsExtent, getCenter } from 'ol/extent'
 import { Vector as VectorSource } from 'ol/source'
 import moment from 'moment-timezone'
 import { createMapButton } from './button'
+
+import { toggleVisibleFeatures, toggleSelectedFeature } from './labels'
 
 const { addOrUpdateParameter, getParameterByName, forEach } = window.flood.utils
 const maps = window.flood.maps
@@ -52,12 +54,14 @@ function LiveMap (mapId, options) {
   const stations = maps.layers.stations()
   const rainfall = maps.layers.rainfall()
   const selected = maps.layers.selected()
+  const labels = maps.layers.labels()
 
   // These layers are static
   const defaultLayers = [
     road,
     satellite,
-    selected
+    selected,
+    labels
   ]
 
   // These layers can be manipulated
@@ -154,9 +158,9 @@ function LiveMap (mapId, options) {
       } else if (props.type === 'C') {
         // Tide
         if (props.status === 'Suspended' || props.status === 'Closed' || (!props.value && !props.iswales)) {
-          state = 'tideError'
+          state = 'seaError'
         } else {
-          state = 'tide'
+          state = 'sea'
         }
       } else if (props.type === 'R') {
         // Rainfall
@@ -179,7 +183,7 @@ function LiveMap (mapId, options) {
         (props.severity_value && props.severity_value === 4 && lyrCodes.includes('tr')) ||
         // Rivers
         (ref === 'stations' && ['S', 'M'].includes(props.type) && lyrCodes.includes('ri')) ||
-        // Tide
+        // Sea
         (ref === 'stations' && props.type === 'C' && lyrCodes.includes('ti')) ||
         // Ground
         (ref === 'stations' && props.type === 'G' && lyrCodes.includes('gr')) ||
@@ -189,7 +193,7 @@ function LiveMap (mapId, options) {
         (targetArea.pointFeature && targetArea.pointFeature.getId() === feature.getId())
       )
       // WebGl: Feature properties must be strings or numbers
-      feature.set('isVisible', Boolean(isVisible).toString())
+      feature.set('isVisible', isVisible)
     })
   }
 
@@ -232,9 +236,15 @@ function LiveMap (mapId, options) {
 
   // Toggle key symbols based on resolution
   const toggleKeySymbol = () => {
-    forEach(containerElement.querySelectorAll('.defra-map-key__symbol'), (symbol) => {
+    forEach(containerElement.querySelectorAll('.defra-map-key__symbol[data-display="toggle-image"]'), (symbol) => {
       const isBigZoom = map.getView().getResolution() <= maps.liveMaxBigZoom
-      isBigZoom ? symbol.classList.add('defra-map-key__symbol--big') : symbol.classList.remove('defra-map-key__symbol--big')
+      if (isBigZoom) {
+        symbol.classList.add('defra-map-key__symbol--big')
+        symbol.classList.remove('defra-map-key__symbol--small')
+      } else {
+        symbol.classList.add('defra-map-key__symbol--small')
+        symbol.classList.remove('defra-map-key__symbol--big')
+      }
     })
   }
 
@@ -244,99 +254,6 @@ function LiveMap (mapId, options) {
     const uri = addOrUpdateParameter(window.location.href, key, value)
     const title = document.title
     window.history.replaceState(data, title, uri)
-  }
-
-  // Generate feature name
-  const featureName = (feature) => {
-    let name = ''
-    if (feature.get('type') === 'C') {
-      name = `Tide level: ${feature.get('name')}`
-    } else if (feature.get('type') === 'S' || feature.get('type') === 'M') {
-      name = `River level: ${feature.get('name')}, ${feature.get('river')}`
-    } else if (feature.get('type') === 'G') {
-      name = `Groundwater level: ${feature.get('name')}`
-    } else if (feature.get('type') === 'R') {
-      name = `Rainfall: ${feature.get('name')}`
-    } else if (feature.get('severity_value') === 3) {
-      name = `Severe flood warning: ${feature.get('ta_name')}`
-    } else if (feature.get('severity_value') === 2) {
-      name = `Flood warning: ${feature.get('ta_name')}`
-    } else if (feature.get('severity_value') === 1) {
-      name = `Flood alert: ${feature.get('ta_name')}`
-    }
-    return name
-  }
-
-  // Get features visible in the current viewport
-  const getVisibleFeatures = () => {
-    const features = []
-    const lyrs = getParameterByName('lyr') ? getParameterByName('lyr').split(',') : []
-    const resolution = map.getView().getResolution()
-    const extent = map.getView().calculateExtent(map.getSize())
-    const isBigZoom = resolution <= maps.liveMaxBigZoom
-    const layers = dataLayers.filter(layer => lyrs.some(lyr => layer.get('featureCodes').includes(lyr)))
-    if (!layers.includes(warnings) && targetArea.pointFeature) {
-      layers.push(warnings)
-    }
-    layers.forEach((layer) => {
-      layer.getSource().forEachFeatureIntersectingExtent(extent, (feature) => {
-        if (!feature.get('isVisible')) { return false }
-        features.push({
-          id: feature.getId(),
-          name: featureName(feature),
-          state: layer.get('ref'), // Used to style the overlay
-          isBigZoom,
-          centre: feature.getGeometry().getCoordinates()
-        })
-      })
-    })
-    return features
-  }
-
-  // Show overlays
-  const showOverlays = () => {
-    state.visibleFeatures = getVisibleFeatures()
-    const numFeatures = state.visibleFeatures.length
-    const numWarnings = state.visibleFeatures.filter((feature) => feature.state === 'warnings').length
-    const numStations = state.visibleFeatures.filter((feature) => feature.state === 'stations').length
-    const numRainfall = state.visibleFeatures.filter((feature) => feature.state === 'rainfall').length
-    const numMeasurements = numStations + numRainfall
-    const features = state.visibleFeatures.slice(0, 9)
-    // Show visual overlays
-    hideOverlays()
-    if (maps.isKeyboard && numFeatures >= 1 && numFeatures <= 9) {
-      state.hasOverlays = true
-      features.forEach((feature, i) => {
-        const overlayElement = document.createElement('span')
-        overlayElement.setAttribute('aria-hidden', true)
-        overlayElement.innerText = i + 1
-        const selected = feature.id === state.selectedFeatureId ? 'defra-key-symbol--selected' : ''
-        map.addOverlay(
-          new Overlay({
-            id: feature.id,
-            element: overlayElement,
-            position: feature.centre,
-            className: `defra-key-symbol defra-key-symbol--${feature.state}${feature.isBigZoom ? '-bigZoom' : ''} ${selected}`,
-            offset: [0, 0]
-          })
-        )
-      })
-    }
-    // Show non-visual feature details
-    const model = {
-      numFeatures,
-      numWarnings,
-      mumMeasurements: numMeasurements,
-      features
-    }
-    const html = window.nunjucks.render('description-live.html', { model })
-    viewportDescription.innerHTML = html
-  }
-
-  // Hide overlays
-  const hideOverlays = () => {
-    state.hasOverlays = false
-    map.getOverlays().clear()
   }
 
   // Set target area polygon opacity
@@ -504,7 +421,7 @@ function LiveMap (mapId, options) {
             if (!warnings.getSource().getFeatureById(targetArea.pointFeature.getId())) {
               // Add point feature
               warnings.getSource().addFeature(targetArea.pointFeature)
-              // VectorSource: Add polygon not required if VectorTileSource
+              // VectorSource: Add polygon not required if targetAreaPolygonsource
               if (targetArea.polygonFeature && targetAreaPolygons.getSource() instanceof VectorSource) {
                 targetAreaPolygons.getSource().addFeature(targetArea.polygonFeature)
               }
@@ -526,7 +443,7 @@ function LiveMap (mapId, options) {
         // Attempt to set selected feature when layer is ready
         setSelectedFeature(state.selectedFeatureId)
         // Show overlays
-        showOverlays()
+        // showOverlays()
       }
     })
   })
@@ -546,7 +463,7 @@ function LiveMap (mapId, options) {
     timer = setTimeout(() => {
       if (!container.map) return
       // Show overlays for visible features
-      showOverlays()
+      toggleVisibleFeatures({ labels, container, dataLayers, maps, targetAreaPolygons, warnings, bigZoom: maps.liveMaxBigZoom, targetArea, viewportDescription })
       // Update url (history state) to reflect new extent
       const ext = getLonLatFromExtent(map.getView().calculateExtent(map.getSize()))
       replaceHistory('ext', ext.join(','))
@@ -571,10 +488,6 @@ function LiveMap (mapId, options) {
   // Set selected feature if map is clicked
   // Clear overlays if non-keyboard interaction
   map.addEventListener('click', (e) => {
-    // Hide overlays if non-keyboard interaction
-    if (!maps.isKeyboard) {
-      hideOverlays()
-    }
     // Get mouse coordinates and check for feature
     const featureId = map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
       if (!defaultLayers.includes(layer)) {
@@ -592,7 +505,7 @@ function LiveMap (mapId, options) {
   // Show overlays on first tab in from browser controls
   viewport.addEventListener('focus', (e) => {
     if (maps.isKeyboard) {
-      showOverlays()
+      toggleVisibleFeatures({ labels, container, dataLayers, maps, targetAreaPolygons, warnings, bigZoom: maps.liveMaxBigZoom, targetArea, viewportDescription })
     }
   })
 
@@ -616,7 +529,7 @@ function LiveMap (mapId, options) {
       targetAreaPolygons.setStyle(maps.styles.targetAreaPolygons)
       lyrs = lyrs.join(',')
       replaceHistory('lyr', lyrs)
-      showOverlays()
+      toggleVisibleFeatures({ labels, container, dataLayers, maps, targetAreaPolygons, warnings, bigZoom: maps.liveMaxBigZoom, targetArea, viewportDescription })
     }
   })
 
@@ -639,17 +552,19 @@ function LiveMap (mapId, options) {
 
   // Handle all liveMap specific key presses
   containerElement.addEventListener('keyup', (e) => {
-    // Show overlays when any key is pressed other than Escape
-    if (e.key !== 'Escape') {
-      showOverlays()
-    }
     // Clear selected feature when pressing escape
     if (e.key === 'Escape' && state.selectedFeatureId !== '') {
-      setSelectedFeature()
+      toggleSelectedFeature({ replaceHistory, dataLayers, selected, container, setFeatureHtml, state, targetAreaPolygons, maps })
     }
     // Set selected feature on [1-9] key presss
-    if (!isNaN(e.key) && e.key >= 1 && e.key <= state.visibleFeatures.length && state.visibleFeatures.length <= 9) {
-      setSelectedFeature(state.visibleFeatures[e.key - 1].id)
+    const visibleFeatures = labels.getSource().getFeatures()
+    if (!isNaN(e.key) && e.key >= 1 && e.key <= visibleFeatures.length && visibleFeatures.length <= 9) {
+      const featureId = labels.getSource().getFeatureById(e.key).get('featureId')
+      toggleSelectedFeature({ newFeatureId: featureId, replaceHistory, dataLayers, selected, container, setFeatureHtml, state, targetAreaPolygons, maps })
+    }
+    // Show overlays when any key is pressed other than Escape
+    if (e.key !== 'Escape' && visibleFeatures.length > 9) {
+      toggleVisibleFeatures({ labels, container, dataLayers, maps, targetAreaPolygons, warnings, bigZoom: maps.liveMaxBigZoom, targetArea, viewportDescription })
     }
   })
 

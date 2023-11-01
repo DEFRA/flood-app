@@ -235,7 +235,7 @@
             </span>
             <div class="defra-flood-status-item__text">
               <span class="govuk-visually-hidden">Information:</span>
-              <p class="govuk-body-s govuk-!-margin-bottom-0">This station includes an automated model which you should consider alongside other factors. The highest level in the model is {{ model.forecastHighest | round(2) }}m at {{ model.forecastHighestTime }}.</p>
+              <p class="govuk-body-s govuk-!-margin-bottom-0">This station includes an automated model. The highest level in the model is {{ model.forecastHighest | round(2) }}m on {{ model.forecastHighestTime }}. <a href="/how-we-measure-river-sea-groundwater-levels#how-we-forecast-river-levels">Read more about how we forecast river levels</a>.</p>
             </div>
           </div>
         </div>
@@ -319,7 +319,7 @@
     mapButtonText: 'Map',
     mapButtonClass: 'defra-link-icon-s',
     mapButtonType: 'link',
-    mapLayers: 'mv,ri,se,gr,rl',
+    mapLayers: 'mv,ri,ti,gr,rl',
     id: {{ model.station.id | dump | safe }},
     zoom: {{ model.zoom | dump | safe }},
     centre: {{ model.centre | dump | safe }},

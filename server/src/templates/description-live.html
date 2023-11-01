@@ -1,12 +1,9 @@
 {% if model.numFeatures > 9 %}
-<p>{{ model.numWarnings }} flood alerts or warnings and {{ model.mumMeasurements }} water level measurements in the current map area. To list these zoom in to nine or fewer.</p>
+<p>{{ model.numFeatures }} features in the current map area. To list these zoom in to nine or fewer.</p>
 {% elif model.numFeatures >= 1 %}
-<p>{{ model.numWarnings }} flood alerts or warnings and {{ model.mumMeasurements }} water level measurements in the current map area. Use number keys to select.</p>
-<ol>
-    {% for feature in model.features %}
-    <li>{{ feature.name }}</li>
-    {% endfor %}
-</ol>
+<p>{{ model.summary }} in the current map area. Use number keys to select.
+{% for feature in model.features %}
+{{loop.index}}: {% if feature.severity == 3 %}Severe flood warning for {{ feature.name }}{% elif feature.severity == 2 %}Flood warning for {{ feature.name }}{% elif feature.severity == 1 %}Flood alert for {{ feature.name }}{% elif feature.type == 'R' %}Rainfall at {{ feature.name }}{% elif feature.type == 'G' %}Groundwater level at {{ feature.name }} borehole{% elif feature.type == 'C' and not feature.riverId %}Sea level at {{ feature.name }}{% else %}{{ feature.river }} level at {{ feature.name }}{% endif %}{% if not loop.last %};{% endif %}{% endfor %}</p>
 {% else %}
 <p>No flood alerts, warnings or water level measurements in the current map area.</p>
 {% endif %}
