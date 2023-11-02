@@ -1,9 +1,14 @@
 const turf = require('@turf/turf')
 
+const RISK_LEVELS = new Map([
+  [1, new Map([[1, 1], [2, 1], [3, 1], [4, 1]])],
+  [2, new Map([[1, 1], [2, 1], [3, 2], [4, 2]])],
+  [3, new Map([[1, 2], [2, 2], [3, 3], [4, 3]])],
+  [4, new Map([[1, 2], [2, 3], [3, 4], [4, 4]])]
+])
 module.exports = class OutlookPolys {
   constructor (outlook, place) {
     this.polys = []
-    const lookup = [[1, 1, 1, 1], [1, 1, 2, 2], [2, 2, 3, 3], [2, 3, 3, 4]]
 
     const locationCoords = turf.polygon([[
       [place.bbox2k[0], place.bbox2k[1]],
@@ -23,8 +28,8 @@ module.exports = class OutlookPolys {
 
           for (const day of riskAreaBlock.days) {
             for (const [key, [impact, likelihood]] of Object.entries(riskAreaBlock.risk_levels)) {
-              const riskLevel = lookup[impact - 1][likelihood - 1]
               if (impact > 1 && !(impact === 2 && likelihood === 1)) {
+                const riskLevel = RISK_LEVELS.get(impact).get(likelihood)
                 this.polys.push({
                   riskLevel,
                   impact,
