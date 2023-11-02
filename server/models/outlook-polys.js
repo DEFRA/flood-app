@@ -16,37 +16,24 @@ module.exports = class OutlookPolys {
     for (const riskArea of outlook.risk_areas) {
       for (const riskAreaBlock of riskArea.risk_area_blocks) {
         for (const poly of riskAreaBlock.polys) {
-          let polyCoords
-          // if linestring ( i.e. coastal ) add buffer and change geometry for use with turf
-          if (poly.poly_type === 'coastal') {
-            polyCoords = turf.polygon(turf.buffer({
-              type: 'Feature',
-              properties: { polyType: 'coastal' },
-              geometry: {
-                type: 'LineString',
-                coordinates: poly.coordinates
-              }
-            }, 1, { units: 'miles' }).geometry.coordinates)
-          } else {
-            polyCoords = turf.polygon(poly.coordinates)
+          // build array of polys that intersect
+          if (!turf.intersect(getPolyCoords(poly), locationCoords)) {
+            continue
           }
 
-          // build array of polys that intersect
-          if (turf.intersect(polyCoords, locationCoords)) {
-            for (const day of riskAreaBlock.days) {
-              for (const [key, [impact, likelihood]] of Object.entries(riskAreaBlock.risk_levels)) {
-                const riskLevel = lookup[impact - 1][likelihood - 1]
-                if (impact > 1 && !(impact === 2 && likelihood === 1)) {
-                  this.polys.push({
-                    riskLevel,
-                    impact,
-                    likelihood,
-                    day,
-                    polyId: poly.id,
-                    source: key,
-                    messageId: `${riskLevel}-i${impact}-l${likelihood}`
-                  })
-                }
+          for (const day of riskAreaBlock.days) {
+            for (const [key, [impact, likelihood]] of Object.entries(riskAreaBlock.risk_levels)) {
+              const riskLevel = lookup[impact - 1][likelihood - 1]
+              if (impact > 1 && !(impact === 2 && likelihood === 1)) {
+                this.polys.push({
+                  riskLevel,
+                  impact,
+                  likelihood,
+                  day,
+                  polyId: poly.id,
+                  source: key,
+                  messageId: `${riskLevel}-i${impact}-l${likelihood}`
+                })
               }
             }
           }
@@ -55,6 +42,21 @@ module.exports = class OutlookPolys {
     }
     this.polys.sort(sortPolys)
   }
+}
+
+function getPolyCoords (poly) {
+  // if linestring ( i.e. coastal ) add buffer and change geometry for use with turf
+  if (poly.poly_type === 'coastal') {
+    return turf.polygon(turf.buffer({
+      type: 'Feature',
+      properties: { polyType: 'coastal' },
+      geometry: {
+        type: 'LineString',
+        coordinates: poly.coordinates
+      }
+    }, 1, { units: 'miles' }).geometry.coordinates)
+  }
+  return turf.polygon(poly.coordinates)
 }
 
 // Sort array of polygons that intersect with the location bounding box by:
