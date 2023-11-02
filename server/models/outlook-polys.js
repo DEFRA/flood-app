@@ -4,7 +4,7 @@ const RISK_LEVELS = new Map([
   [1, new Map([[1, 1], [2, 1], [3, 1], [4, 1]])],
   [2, new Map([[1, 1], [2, 1], [3, 2], [4, 2]])],
   [3, new Map([[1, 2], [2, 2], [3, 3], [4, 3]])],
-  [4, new Map([[1, 2], [2, 3], [3, 4], [4, 4]])]
+  [4, new Map([[1, 2], [2, 3], [3, 3], [4, 4]])]
 ])
 module.exports = class OutlookPolys {
   constructor (outlook, place) {
