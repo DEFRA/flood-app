@@ -13,7 +13,8 @@ const webchat = [{
       accessSecret: process.env.CXONE_ACCESS_SECRET,
       skillEndpoint: process.env.CXONE_SKILL_ENDPOINT,
       hoursEndpoint: process.env.CXONE_HOURS_ENDPOINT,
-      maxQueueCount: process.env.CXONE_MAX_QUEUE_COUNT
+      maxQueueCount: process.env.CXONE_MAX_QUEUE_COUNT,
+      wellKnownUri: process.env.CXONE_WELL_KNOWN_URI
     })
     return response
   }
