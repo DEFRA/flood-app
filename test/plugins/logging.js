@@ -1,31 +1,61 @@
 'use strict'
 
 const Lab = require('@hapi/lab')
-const Hapi = require('@hapi/hapi')
+const { expect } = require('@hapi/code')
+const loggingPlugin = require('../../server/plugins/logging')
 const lab = exports.lab = Lab.script()
-const sinon = require('sinon')
 
-lab.experiment('router logging test', () => {
-  let sandbox
-  let server
+lab.experiment('logging plugin', () => {
+  lab.test('req serializer with query', async () => {
+    const req = {
+      url: '/some/url',
+      method: 'get',
+      query: {
+        q: 'hi'
+      }
+    }
 
-  lab.beforeEach(async () => {
-    sandbox = await sinon.createSandbox()
-    server = Hapi.server({
-      port: 3000,
-      host: 'localhost'
+    const actual = loggingPlugin.options.serializers.req(req)
+
+    expect(actual).to.equal({
+      url: '/some/url',
+      method: 'GET',
+      query: {
+        q: 'hi'
+      }
     })
-    await server.register(require('@hapi/inert'))
-    await server.register(require('@hapi/h2o2'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.initialize()
+  })
+  lab.test('req serializer without query', async () => {
+    const req = {
+      url: '/some/url',
+      method: 'get',
+      header: {
+        'x-api-key': '12345'
+      },
+      query: {}
+    }
+
+    const actual = loggingPlugin.options.serializers.req(req)
+
+    expect(actual).to.equal({
+      url: '/some/url',
+      method: 'GET',
+      query: undefined
+    })
   })
 
-  lab.afterEach(async () => {
-    await server.stop()
-    await sandbox.restore()
-  })
+  lab.test('res serializer with query', async () => {
+    const res = {
+      statusCode: 200,
+      header: {
+        'x-api-key': '12345'
+      }
+    }
 
-  lab.test('Plugin logging successfully loads', async () => {
+    const actual = loggingPlugin.options.serializers.res(res)
+
+    expect(actual).to.equal({
+      statusCode: 200
+    })
   })
 })

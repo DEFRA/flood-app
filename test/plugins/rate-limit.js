@@ -23,6 +23,7 @@ lab.experiment('rate-limit plugin test', () => {
     sandbox.stub(config, 'rateLimitRequests').value(1)
     sandbox.stub(config, 'rateLimitWhitelist').value(['1.1.1.1', '2.2.2.2'])
     await server.register(require('../../server/plugins/rate-limit'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(require('../../server/plugins/error-pages'))
     await server.initialize()
   })

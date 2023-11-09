@@ -45,6 +45,7 @@ lab.experiment('Error route test', () => {
     }
     await server.register(route)
     await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/logging'))
     await server.register(errorPages)
     await server.initialize()
 

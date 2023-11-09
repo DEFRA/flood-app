@@ -7,20 +7,25 @@ const wreck = require('@hapi/wreck').defaults({
 const LocationSearchError = require('./location-search-error')
 const ALLOWED_SEARCH_CHARS = 'a-zA-Z0-9\',-.& ()'
 
-function request (method, url, options, ext = false) {
-  return wreck[method](url, options)
-    .then(response => {
-      const res = response.res
-      const payload = response.payload
-      if (res.headers['x-ms-bm-ws-info'] === '1') {
-        throw new LocationSearchError('Empty location search response indicated by header check of x-ms-bm-ws-info')
-      }
-      if (res.statusCode !== 200) {
-        const err = (payload || new Error('Unknown error'))
-        throw err
-      }
-      return payload
-    })
+async function request (method, url, options, ext = false) {
+  let res, payload
+  try {
+    const response = await wreck[method](url, options)
+    res = response.res
+    payload = response.payload
+  } catch (error) {
+    if (error?.message?.startsWith('Response Error:')) {
+      error.message += ` on ${method.toUpperCase()} ${url}`
+    }
+    throw error
+  }
+  if (res.headers['x-ms-bm-ws-info'] === '1') {
+    throw new LocationSearchError('Empty location search response indicated by header check of x-ms-bm-ws-info')
+  }
+  if (res.statusCode !== 200) {
+    throw (payload || new Error('Unknown error'))
+  }
+  return payload
 }
 
 function get (url, options, ext = false) {

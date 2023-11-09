@@ -38,7 +38,14 @@ module.exports = {
     }
 
     // batching all the service calls together, greatly improves page performance
-    const [telemetry, thresholds, imtdThresholds, impacts, warningsAlerts, river] = await Promise.all([
+    const [
+      telemetry,
+      thresholds,
+      imtdThresholds,
+      impacts,
+      warningsAlerts,
+      river
+    ] = await Promise.all([
       request.server.methods.flood.getStationTelemetry(id, direction),
       request.server.methods.flood.getStationForecastThresholds(id),
       request.server.methods.flood.getStationImtdThresholds(id, direction),

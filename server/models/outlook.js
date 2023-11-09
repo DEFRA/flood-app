@@ -2,7 +2,7 @@ const turf = require('@turf/turf')
 const messageContent = require('./outlook-content.json')
 
 class Outlook {
-  constructor (outlook) {
+  constructor (outlook, logger = console) {
     if (!outlook || Object.keys(outlook).length === 0 || this.dataError) {
       this.dataError = true
       return
@@ -30,7 +30,10 @@ class Outlook {
       // Issued date
       this._timestampOutlook = (new Date(outlook.issued_at)).getTime()
     } catch (err) {
-      console.error('Outlook FGS data error - outlook: ', err)
+      logger.warn({
+        situation: 'Outlook FGS data error - outlook: ' + err.message,
+        stack: err.stack
+      })
       this.dataError = true
       return
     }

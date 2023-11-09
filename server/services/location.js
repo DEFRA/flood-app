@@ -12,7 +12,6 @@ async function find (location) {
   try {
     bingData = await getJson(url, true)
   } catch (err) {
-    console.error(err)
     throw new LocationSearchError(`Bing error: ${err}`)
   }
 
