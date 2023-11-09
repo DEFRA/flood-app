@@ -60,7 +60,7 @@ lab.experiment('Station model test', () => {
     ])
   })
   lab.test('Test station viewModel river station 1001 only has FW ATCON thresholds', async () => {
-    const stationData = data.stationRiverATCON
+    const stationData = data.stationRiverACTCON
     const viewModel = new ViewModel(stationData)
 
     const Result = viewModel

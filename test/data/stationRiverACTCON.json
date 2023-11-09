@@ -94,7 +94,7 @@
       "fwis_type": "A",
       "direction": "u",
       "value": "3.5",
-      "threshold_type": "FW ATCON FAL"
+      "threshold_type": "FW ACTCON FAL"
     },
     {
       "station_threshold_id": "1503832",
@@ -103,7 +103,7 @@
       "fwis_type": "W",
       "direction": "u",
       "value": "3.88",
-      "threshold_type": "FW ATCON FW"
+      "threshold_type": "FW ACTCON FW"
     }
   ]
 }

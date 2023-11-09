@@ -11,12 +11,12 @@ function findMinValueByLogic (arr, type) {
     // Logic for Type A
     return getMinFromType(arr, 'FW RES FAL') ||
           getMinFromType(arr, 'FW ACT FAL') ||
-          getMinFromType(arr, 'FW ATCON FAL')
+          getMinFromType(arr, 'FW ACTCON FAL')
   } else if (type === 'W') {
     // Logic for Type W
     return getMinFromType(arr, 'FW RES FW') ||
           getMinFromType(arr, 'FW ACT FW') ||
-          getMinFromType(arr, 'FW ATCON FW')
+          getMinFromType(arr, 'FW ACTCON FW')
   }
   return null
 }
