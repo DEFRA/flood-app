@@ -39,7 +39,7 @@ module.exports = {
       assetPath: '/assets',
       serviceName: 'Check for flooding',
       webchat: {
-        enabled: process.env.WEBCHAT_ENABLED === 'true'
+        enabled: config.webchat.enabled
       },
       floodFisUrl,
       gaFourAccId,
