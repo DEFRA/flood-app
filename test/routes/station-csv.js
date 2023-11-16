@@ -310,4 +310,34 @@ lab.experiment('Routes test - station-csv', () => {
     Code.expect(response.result).to.equal('Timestamp (UTC),Height (m)\n2020-03-13T01:30:00Z,1.354')
     Code.expect(response.headers['content-type']).to.include('text/csv')
   })
+
+  lab.test('GET /station-csv/1337 station not found', async () => {
+    const options = {
+      method: 'GET',
+      url: '/station-csv/1337'
+    }
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationData = () => {}
+
+    const fakeTelemetryData = () => [
+      {
+        ts: '2020-03-13T01:30Z',
+        _: 1.354,
+        err: false
+      }
+    ]
+
+    const fakeThresholdsData = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(404)
+    Code.expect(response.result.statusCode).to.equal(404)
+    Code.expect(response.result.error).to.equal('Not Found')
+    Code.expect(response.result.message).to.equal('Station not found')
+  })
 })
