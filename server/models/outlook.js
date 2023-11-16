@@ -32,7 +32,7 @@ class Outlook {
     } catch (err) {
       logger.warn({
         situation: 'Outlook FGS data error - outlook: ' + err.message,
-        stack: err.stack
+        err
       })
       this.dataError = true
       return

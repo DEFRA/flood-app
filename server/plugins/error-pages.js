@@ -11,7 +11,7 @@ module.exports = {
 
         if (!response.isBoom) {
           request.logger.debug({
-            statusCode: response.statusCode
+            res: response
           })
           return h.continue
         }
@@ -34,9 +34,8 @@ module.exports = {
         }
 
         request.logger[logLevel]({
-          statusCode,
-          situation: response.message,
-          stack: response.stack
+          res: response,
+          err: response
         })
         return h.view(view, viewModel).code(statusCode)
       })

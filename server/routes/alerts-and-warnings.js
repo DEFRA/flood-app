@@ -30,7 +30,7 @@ module.exports = [{
       } catch (error) {
         request.logger.warn({
           situation: `Location search error: [${error.name}] [${error.message}]`,
-          stack: error.stack
+          err: error
         })
         const floods = new Floods(await request.server.methods.flood.getFloods())
         model = new ViewModel({ location, place, floods, station, error })

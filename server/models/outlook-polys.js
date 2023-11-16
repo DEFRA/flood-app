@@ -1,9 +1,14 @@
 const turf = require('@turf/turf')
 
-class OutlookPolys {
+const RISK_LEVELS = new Map([
+  [1, new Map([[1, 1], [2, 1], [3, 1], [4, 1]])],
+  [2, new Map([[1, 1], [2, 1], [3, 2], [4, 2]])],
+  [3, new Map([[1, 2], [2, 2], [3, 3], [4, 3]])],
+  [4, new Map([[1, 2], [2, 3], [3, 3], [4, 4]])]
+])
+module.exports = class OutlookPolys {
   constructor (outlook, place) {
-    const polys = []
-    const lookup = [[1, 1, 1, 1], [1, 1, 2, 2], [2, 2, 3, 3], [2, 3, 3, 4]]
+    this.polys = []
 
     const locationCoords = turf.polygon([[
       [place.bbox2k[0], place.bbox2k[1]],
@@ -13,85 +18,69 @@ class OutlookPolys {
       [place.bbox2k[0], place.bbox2k[1]]
     ]])
 
-    outlook.risk_areas.forEach(riskArea => {
-      riskArea.risk_area_blocks.forEach(riskAreaBlock => {
-        riskAreaBlock.polys.forEach(poly => {
-          // if linestring ( i.e. coastal ) add buffer and change geometry for use with turf
-          if (poly.poly_type === 'coastal') {
-            const feature = {
-              type: 'Feature',
-              properties: { polyType: 'coastal' },
-              geometry: {
-                type: 'LineString',
-                coordinates: poly.coordinates
+    for (const riskArea of outlook.risk_areas) {
+      for (const riskAreaBlock of riskArea.risk_area_blocks) {
+        for (const poly of riskAreaBlock.polys) {
+          // build array of polys that intersect
+          if (!turf.intersect(getPolyCoords(poly), locationCoords)) {
+            continue
+          }
+
+          for (const day of riskAreaBlock.days) {
+            for (const [key, [impact, likelihood]] of Object.entries(riskAreaBlock.risk_levels)) {
+              if (impact > 1 && !(impact === 2 && likelihood === 1)) {
+                const riskLevel = RISK_LEVELS.get(impact).get(likelihood)
+                this.polys.push({
+                  riskLevel,
+                  impact,
+                  likelihood,
+                  day,
+                  polyId: poly.id,
+                  source: key,
+                  messageId: `${riskLevel}-i${impact}-l${likelihood}`
+                })
               }
             }
-
-            const buffer = turf.buffer(feature, 1, { units: 'miles' })
-            const coordinates = buffer.geometry.coordinates
-            feature.geometry.type = 'Polygon'
-            feature.geometry.coordinates = coordinates
-            poly.coordinates = coordinates
           }
-
-          // test if poly intersects
-          const polyCoords = turf.polygon(poly.coordinates)
-
-          const intersection = turf.intersect(polyCoords, locationCoords)
-
-          // build array of polys that intersect
-          if (intersection) {
-            const riskLevels = riskAreaBlock.risk_levels
-
-            riskAreaBlock.days.forEach(day => {
-              Object.keys(riskLevels).forEach(key => {
-                const impact = riskLevels[key][0]
-                const likelihood = riskLevels[key][1]
-                const riskLevel = lookup[impact - 1][likelihood - 1]
-                const polyId = poly.id
-
-                if (impact > 1 && !(impact === 2 && likelihood === 1)) {
-                  polys.push({
-                    riskLevel,
-                    impact,
-                    likelihood,
-                    day,
-                    polyId,
-                    source: key,
-                    messageId: `${riskLevel}-i${impact}-l${likelihood}`
-                  })
-                }
-              })
-            })
-          }
-        })
-      })
-    })
-
-    // Sort array of polygons that intersect with the location bounding box by:
-    // day if day is the same by messageId if messageId is the same by source
-
-    polys.sort((a, b) => {
-      if (a.day !== b.day) {
-        return a.day < b.day
-          ? -1
-          : 1
+        }
       }
-      if (a.messageId !== b.messageId) {
-        return a.messageId > b.messageId
-          ? -1
-          : 1
-      }
-      const r = a.source < b.source
-        ? 1
-        : 0
-      return a.source > b.source
-        ? -1
-        : r
-    })
-
-    this.polys = polys
+    }
+    this.polys.sort(sortPolys)
   }
 }
 
-module.exports = OutlookPolys
+function getPolyCoords (poly) {
+  // if linestring ( i.e. coastal ) add buffer and change geometry for use with turf
+  if (poly.poly_type === 'coastal') {
+    return turf.polygon(turf.buffer({
+      type: 'Feature',
+      properties: { polyType: 'coastal' },
+      geometry: {
+        type: 'LineString',
+        coordinates: poly.coordinates
+      }
+    }, 1, { units: 'miles' }).geometry.coordinates)
+  }
+  return turf.polygon(poly.coordinates)
+}
+
+// Sort array of polygons that intersect with the location bounding box by:
+// day if day is the same by messageId if messageId is the same by source
+function sortPolys (a, b) {
+  if (a.day !== b.day) {
+    return a.day < b.day
+      ? -1
+      : 1
+  }
+  if (a.messageId !== b.messageId) {
+    return a.messageId > b.messageId
+      ? -1
+      : 1
+  }
+  if (a.source > b.source) {
+    return -1
+  }
+  return a.source < b.source
+    ? 1
+    : 0
+}
