@@ -16,7 +16,7 @@ module.exports = {
     } catch (err) {
       request.logger.warn({
         situation: `Location search error: [${err.name}] [${err.message}]`,
-        stack: err.stack
+        err
       })
       place = null
       locationEnd = new Date()
