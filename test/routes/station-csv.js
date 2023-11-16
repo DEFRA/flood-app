@@ -70,6 +70,7 @@ lab.experiment('Routes test - station-csv', () => {
         ffoi_station_threshold_id: 133,
         ffoi_station_id: 19,
         fwis_code: '031WAF213',
+        fwis_type: 'FW ACTCON FAL',
         value: 2,
         fwa_name: 'River Leadon Catchment',
         fwa_type: 'a',
