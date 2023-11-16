@@ -1,0 +1,36 @@
+# Check for flooding 7.6.0 Wednesday 22nd November 2023
+
+# Release
+
+7.6.0
+
+# Tickets
+
+https://eaflood.atlassian.net/browse/FSR-1044 - Bug: 500 Error in station-csv Route
+https://eaflood.atlassian.net/browse/FSR-1052 - Integrate Errbit Logging in Flood App and Service
+https://eaflood.atlassian.net/browse/FSR-1058 - IMTD Alert and Warning threshold logic changes into Live
+https://eaflood.atlassian.net/browse/FSR-1063 - Switch logging on flood-service to hapi pino
+https://eaflood.atlassian.net/browse/FSR-1070 - IMTD Threshold logic ACTCONs
+
+https://eaflood.atlassian.net/browse/FSR-1056 (TA Area update November 2023)
+
+
+# Instructions
+
+!Important for webops
+
+This release includes target area updates
+
+Steps
+
+1 - Update LFW_{STAGE}_99_LOAD_FLOOD_ALERT_AREAS jenkins job with the following properties update for the updated database name for production:
+
+DB_NAME=floodprdg
+###### OR ########
+DB_NAME=floodprdb
+
+2 - Execute LFW_{STAGE}_99_LOAD_FLOOD_ALERT_AREAS  ##NOTE if above property update not made this job will fail.
+
+3 - Execute LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
