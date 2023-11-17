@@ -31,6 +31,9 @@ DB_NAME=floodprdb
 
 2 - Execute LFW_{STAGE}_99_LOAD_FLOOD_ALERT_AREAS  ##NOTE if above property update not made this job will fail.
 
-3 - Execute LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+3 - Configure the cloudwatch agent to pull logs from flood-service's logs/.pino.err.log and logs/.pino.out.log into appropriate LogGroups
+{stage}LDNLFW-nodejs-flood-service-pino-err and {stage}LDNLFW-nodejs-flood-service-pino-out respectively.
+
+4 - Execute LFW_{stage}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
 
 Execute smoke tests and forward results
