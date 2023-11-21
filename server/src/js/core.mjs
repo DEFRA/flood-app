@@ -4,14 +4,6 @@
 import 'core-js/modules/es6.promise.js'
 import 'core-js/modules/es6.array.iterator.js'
 
-import * as floodWebchat from '@defra/flood-webchat'
-
-if (floodWebchat?.init) {
-  floodWebchat.init(document.querySelector('#wc-availability'), {
-    availabilityEndpoint: '/webchat-availability'
-  })
-}
-
 // Math.log2 Polyfil
 if (!Math.log2) {
   Math.log2 = (x) => {
