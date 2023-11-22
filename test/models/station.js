@@ -34,20 +34,57 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.pageTitle).to.equal('River Adur level at Beeding Bridge')
     Code.expect(Result.dataOverHourOld).to.equal(true)
     Code.expect(Result.postTitle).to.equal('Latest river level information for the River Adur at Beeding Bridge ')
-    Code.expect(Result.thresholds[2].values).to.equal([
+    Code.expect(Result.thresholds[0].values).to.equal([
       {
         id: 'warningThreshold',
-        value: '1.45',
         description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
-        shortname: 'Possible flood warnings'
+        shortname: 'Possible flood warnings',
+        value: '3.64'
+      }
+    ])
+    Code.expect(Result.thresholds[2].values).to.equal([
+      {
+        id: 'alertThreshold',
+        description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
+        shortname: 'Possible flood alerts',
+        value: '3.22'
       }
     ])
     Code.expect(Result.thresholds[4].values).to.equal([
       {
+        id: 'latest',
+        value: '0.81',
+        description: 'Latest level',
+        shortname: ''
+      }
+    ])
+  })
+  lab.test('Test station viewModel river station 1001 only has FW ATCON thresholds', async () => {
+    const stationData = data.stationRiverACTCON
+    const viewModel = new ViewModel(stationData)
+
+    const Result = viewModel
+
+    Code.expect(Result.thresholds[1].values).to.equal([
+      {
+        id: 'warningThreshold',
+        description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
+        shortname: 'Possible flood warnings',
+        value: '3.22'
+      }
+    ])
+    Code.expect(Result.thresholds[2].values).to.equal([
+      {
         id: 'alertThreshold',
-        value: '0.56',
         description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
-        shortname: 'Possible flood alerts'
+        shortname: 'Possible flood alerts',
+        value: '2.84'
+      },
+      {
+        description: 'This is the top of the normal range',
+        id: 'pc5',
+        shortname: 'Top of normal range',
+        value: '2.84'
       }
     ])
   })
@@ -142,7 +179,7 @@ lab.experiment('Station model test', () => {
     const viewModel = new ViewModel(data.stationCoastal)
     Code.expect(viewModel.station.plotNegativeValues).to.equal(true)
   })
-  lab.test('Test station viewModel FFOI station with Impacts', async () => {
+  lab.test('Test station viewModel FFOI station with Impacts ', async () => {
     const stationData = data.stationForecastData
 
     const today = moment().format('YYYY-MM-DD')
@@ -183,7 +220,28 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.station.id).to.equal(7177)
     Code.expect(Result.station.hasImpacts).to.equal(true)
     Code.expect(Result.station.formattedPorMaxDate).to.equal('10/02/09')
-    Code.expect(Result.thresholds[0].level).to.equal('44.91')
+
+    // Should have FW ACT FAL 3.88 and FW ACT FW 4.20 thresholds as the are no FW RES FAL and FW RES FW in imtdThresholds
+    Code.expect(Result.thresholds[0].values).to.equal(
+      [
+        {
+          description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
+          id: 'warningThreshold',
+          shortname: 'Possible flood warnings',
+          value: '4.20'
+        }
+      ]
+    )
+    Code.expect(Result.thresholds[1].values).to.equal(
+      [
+        {
+          id: 'alertThreshold',
+          description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
+          shortname: 'Possible flood alerts',
+          value: '3.88'
+        }
+      ]
+    )
     Code.expect(Result.isUpstream).to.equal(true)
     Code.expect(Result.isDownstream).to.equal(false)
     Code.expect(Result.severeBanner).to.equal('Severe flood warning for Coast from Fleetwood to Blackpool')
