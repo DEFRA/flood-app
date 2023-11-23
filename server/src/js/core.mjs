@@ -234,7 +234,7 @@ if (cookieButtons) {
     window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
     calledGTag = true
     window.flood.utils.setGTagAnalyticsCookies()
-
+    window.flood.utils.setGoogleAnalyticsEvent()
     document.getElementById('cookie-message').style.display = 'none'
     document.getElementById('cookie-confirmation-type').innerText = 'accepted'
     document.getElementById('cookie-confirmation').style.display = ''
@@ -347,28 +347,6 @@ if (!calledGTag) {
     calledGTag = true
     window.flood.utils.setGTagAnalyticsCookies()
   }
-}
-
-async function deleteOldCookies () {
-  if (document.cookie.includes('cookies_update=true')) {
-    // "cookies_update" cookie exists, no further action needed
-    return
-  } else {
-    const cookies = document.cookie.split(';')
-
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim()
-      const name = cookie.split('=')[0]
-      deleteCookie(name)
-      window.flood.utils.disableGoogleAnalytics()
-    }
-  }
-  setCookie('cookies_update', 'true', 30)
-}
-
-// Call the function to delete old cookies and set the "cookie_update" cookie
-window.onload = async function () {
-  await deleteOldCookies()
 }
 
 window.flood.utils.setGoogleAnalyticsEvent()
