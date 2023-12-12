@@ -42,7 +42,8 @@ module.exports = {
         enabled: config.webchat.enabled,
         brandId: config.webchat.brandId,
         channelId: config.webchat.channelId,
-        environment: config.webchat.environment
+        environment: config.webchat.environment,
+        audioUrl: config.webchat.audioUrl
       },
       floodFisUrl,
       gaFourAccId,

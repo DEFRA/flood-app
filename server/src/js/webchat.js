@@ -7,6 +7,7 @@ if (availabilityElement) {
     availabilityEndpoint: '/api/webchat/availability',
     brandId: availabilityElement.dataset.brandId,
     channelId: availabilityElement.dataset.channelId,
-    environment: availabilityElement.dataset.environment
+    environment: availabilityElement.dataset.environment,
+    audioUrl: availabilityElement.dataset.audioUrl
   })
 }
