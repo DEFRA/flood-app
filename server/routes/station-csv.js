@@ -1,10 +1,19 @@
 const floodService = require('../services/flood')
 const moment = require('moment-timezone')
 const boom = require('@hapi/boom')
+const joi = require('@hapi/joi')
 
 module.exports = {
   method: 'GET',
   path: '/station-csv/{id}/{direction?}',
+  options: {
+    validate: {
+      params: joi.object({
+        id: joi.number().greater(999).less(100000).required(),
+        direction: joi.string().valid('downstream', 'upstream')
+      })
+    }
+  },
   handler: async (request, h) => {
     const { id } = request.params
     let { direction } = request.params
