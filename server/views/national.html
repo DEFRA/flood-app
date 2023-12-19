@@ -5,13 +5,22 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">
-      Check for flooding in England
+      Check for flooding
     </h1>
   </div>
 </div>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    {% include "partials/search.html" %}
+    <!-- TODO: this is the location of the header in the prototype, check whether it should be here or in the block below -->
+    <!-- <h2 class="govuk-heading-m">Flood risk today</h2> -->
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-m govuk-!-margin-top-2" id="flood-risk-today">Flood risk today</h2>
     <div class="defra-flood-status">
       {% if not model.hasActiveFloods %}
       <div class="defra-flood-status-item">
