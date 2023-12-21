@@ -3,50 +3,59 @@ const FloodsModel = require('../models/floods')
 const ViewModel = require('../models/views/national')
 const joi = require('@hapi/joi')
 
-module.exports = [{
-  method: 'GET',
-  path: '/',
-  handler: async (request, h) => {
-    const floods = new FloodsModel(await request.server.methods.flood.getFloods())
+async function getModel (request, location) {
+  const floods = new FloodsModel(await request.server.methods.flood.getFloods())
 
-    let outlook = {}
-    try {
-      outlook = new OutlookModel(await request.server.methods.flood.getOutlook(), request.logger)
-    } catch (err) {
-      request.logger.warn({
-        situation: 'outlook error',
-        err
-      })
-      outlook.dataError = true
-    }
-
-    const model = new ViewModel(floods, outlook)
-
-    return h.view('national', { model })
+  let outlook = {}
+  try {
+    outlook = new OutlookModel(await request.server.methods.flood.getOutlook(), request.logger)
+  } catch (err) {
+    request.logger.warn({
+      situation: 'outlook error',
+      err
+    })
+    outlook.dataError = true
   }
-}, {
-  method: 'POST',
-  path: '/',
-  handler: async (request, h) => {
-    const { location } = request.payload
-    if (location) {
-      return h.redirect(`/location?q=${encodeURIComponent(location)}`)
+
+  return new ViewModel(floods, outlook, location)
+}
+
+module.exports = [
+  {
+    method: 'GET',
+    path: '/',
+    handler: async (request, h) => {
+      const model = await getModel(request)
+
+      return h.view('national', { model })
     }
-    //  TODO: decide if we need to use redirect or view here. Would need to extract the model building in GET to a method
-    return h.redirect('/')
   },
-  options: {
-    validate: {
-      payload: joi.object({
-        // TODO: check list of allowed characters
-        location: joi.string().allow('').regex(/^[ a-zA-Z0-9-!]+$/).min(2).required()
-      }),
-      failAction: (request, h, err) => {
-        request.logger.warn({ situation: 'location search failed validation', err })
-        // const model = new ViewModel({ err })
-        // model.referer = request.headers.referer
-        // return h.view('/', { model }).takeover()
+  {
+    method: 'POST',
+    path: '/',
+    handler: async (request, h) => {
+      const { location } = request.payload
+      return h.redirect(`/location?q=${encodeURIComponent(location)}`)
+    },
+    options: {
+      validate: {
+        payload: joi.object({
+          location: joi
+            .string()
+            .messages({
+              'string.base': 'The search term must be a string',
+              'string.empty': 'The search term can not be empty'
+            })
+        }),
+        failAction: async (request, h, err) => {
+          // we deliberately swallow the errors and redisplay the page
+          request.logger.warn({ situation: 'location search failed validation', err })
+          const model = await getModel(request, err._original.location)
+          // TODO: finesse the error handling and design if we decide to use it
+          // model.err = err
+          return h.view('national', { model }).takeover()
+        }
       }
     }
   }
-}]
+]
