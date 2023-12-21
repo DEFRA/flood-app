@@ -373,6 +373,34 @@ lab.experiment('Routes test - national view', () => {
         Code.expect(response.statusCode).to.equal(200)
         Code.expect(response.request.url.pathname).to.equal('/')
       })
+      lab.test('the search term England will not result in a redirect away from the page', async () => {
+        const options = {
+          method: 'POST',
+          url: '/',
+          payload: {
+            location: 'England'
+          }
+        }
+
+        const response = await server.inject(options)
+
+        Code.expect(response.statusCode).to.equal(200)
+        Code.expect(response.request.url.pathname).to.equal('/')
+      })
+      lab.test('the search term England with spaces will not result in a redirect away from the page', async () => {
+        const options = {
+          method: 'POST',
+          url: '/',
+          payload: {
+            location: ' England  '
+          }
+        }
+
+        const response = await server.inject(options)
+
+        Code.expect(response.statusCode).to.equal(200)
+        Code.expect(response.request.url.pathname).to.equal('/')
+      })
       lab.test('a non-empty location will result in a redirect to the location page', async () => {
         const options = {
           method: 'POST',

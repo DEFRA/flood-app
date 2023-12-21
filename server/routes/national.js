@@ -20,6 +20,13 @@ async function getModel (request, location) {
   return new ViewModel(floods, outlook, location)
 }
 
+function customValidator (value, helpers) {
+  if (value.trim() === 'England') {
+    return helpers.error('string can not be England')
+  }
+  return value
+}
+
 module.exports = [
   {
     method: 'GET',
@@ -42,6 +49,7 @@ module.exports = [
         payload: joi.object({
           location: joi
             .string()
+            .custom(customValidator, 'search term check')
             .messages({
               'string.base': 'The search term must be a string',
               'string.empty': 'The search term can not be empty'
