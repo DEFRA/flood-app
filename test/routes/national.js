@@ -328,4 +328,98 @@ lab.experiment('Routes test - national view', () => {
       Code.expect(response.payload).to.contain('<p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>')
     })
   })
+  lab.experiment('POST', () => {
+    lab.test('an empty location will not result in a redirect away from the page', async () => {
+      const locationPlugin = {
+        plugin: {
+          name: 'national',
+          register: (server, options) => {
+            server.route(require('../../server/routes/national'))
+          }
+        }
+      }
+      const floodService = require('../../server/services/flood')
+      // Create dummy flood data in place of cached data
+      const fakeFloodData = () => {
+        return {
+          floods: []
+        }
+      }
+
+      const fakeOutlookData = () => {
+        return {}
+      }
+
+      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+      await server.register(require('../../server/plugins/views'))
+      await server.register(require('../../server/plugins/session'))
+      await server.register(require('../../server/plugins/logging'))
+      await server.register(locationPlugin)
+      // Add Cache methods to server
+      const registerServerMethods = require('../../server/services/server-methods')
+      registerServerMethods(server)
+      await server.initialize()
+
+      const options = {
+        method: 'POST',
+        url: '/',
+        payload: {
+          location: ''
+        }
+      }
+
+      const response = await server.inject(options)
+
+      Code.expect(response.statusCode).to.equal(200)
+      Code.expect(response.request.url.pathname).to.equal('/')
+    })
+    lab.test('a non-empty location will result in a redirect to the location page', async () => {
+      const locationPlugin = {
+        plugin: {
+          name: 'national',
+          register: (server, options) => {
+            server.route(require('../../server/routes/national'))
+          }
+        }
+      }
+      const floodService = require('../../server/services/flood')
+      // Create dummy flood data in place of cached data
+      const fakeFloodData = () => {
+        return {
+          floods: []
+        }
+      }
+
+      const fakeOutlookData = () => {
+        return {}
+      }
+
+      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+      await server.register(require('../../server/plugins/views'))
+      await server.register(require('../../server/plugins/session'))
+      await server.register(require('../../server/plugins/logging'))
+      await server.register(locationPlugin)
+      // Add Cache methods to server
+      const registerServerMethods = require('../../server/services/server-methods')
+      registerServerMethods(server)
+      await server.initialize()
+
+      const options = {
+        method: 'POST',
+        url: '/',
+        payload: {
+          location: 'test'
+        }
+      }
+
+      const response = await server.inject(options)
+
+      Code.expect(response.statusCode).to.equal(302)
+      Code.expect(response.headers.location).to.equal('/location?q=test')
+    })
+  })
 })
