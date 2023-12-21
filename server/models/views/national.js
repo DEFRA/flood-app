@@ -37,7 +37,6 @@ class ViewModel {
       planAhead: 'National:Related-content:Plan-ahead-for-flooding',
       whatToDo: 'National:Related-content:What-to-do-in-a-flood',
       recoverAfter: 'National:Related-content:Recover-after-a-flood',
-      longTerm: 'National:Related-content:Check-long-term-risk',
       reportFlood: 'National:Related-content:Report-a-flood'
     })
 

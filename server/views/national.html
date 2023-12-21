@@ -70,10 +70,6 @@
       <svg focusable="false" aria-hidden="true" width="13" height="15" viewBox="0 0 13 15"><path d="M0.325,0l4.875,0l7.5,7.5l-7.5,7.5l-4.875,0l7.5,-7.5l-7.5,-7.5Z" fill="currentColor"></path></svg>
     </a>
 
-    <h2 class="govuk-heading-m">Latest river, sea, groundwater and rainfall levels</h2>
-    <p>There are around 3,500 measuring stations and most are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
-    <p><a data-journey-click="National:station list:National-view station list" href="/river-and-sea-levels">Find a river, sea, groundwater or rainfall level</a></p>
-
     <h2 class="govuk-heading-m govuk-!-margin-top-2" id="outlook">Flood forecast for the next 5 days</h2>
     {% if model.outlookOutOfDate or model.dataError %}
       <div class="defra-service-error govuk-!-margin-bottom-3">
@@ -94,6 +90,15 @@
         Updated at <time datetime="{{ model.outlook.outlookUTC }}">{{ model.outlook.outlookTimestamp }}</time><br>
         Produced by the Met Office and Environment Agency</p>
     {% endif %}
+
+    <h2 class="govuk-heading-m">Long term flood risk</h2>
+    <p>You may be at long term flood risk from rivers, the sea, surface water or groundwater.</p>
+    <p><a data-journey-click="National:Related-content:Check-long-term-risk" href="https://www.gov.uk/check-long-term-flood-risk">Check your long term flood risk</a></p>
+
+    <h2 class="govuk-heading-m">River, sea and rainfall levels</h2>
+    <p>There are around 3,500 measuring stations and most are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
+    <p><a data-journey-click="National:station list:National-view station list" href="/river-and-sea-levels">Find a river, sea, groundwater or rainfall level</a></p>
+
     {% include "partials/context-footer.html" %}
   </div>
  
