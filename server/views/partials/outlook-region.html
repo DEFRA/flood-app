@@ -1,3 +1,5 @@
+{% import "partials/macros.html" as macros %}
+
 {% if model.tabs.lowForFive %}
 <p class="govuk-body">The flood risk for the next 5 days is very low.</p>
 {% else %}
@@ -105,6 +107,5 @@
 </div>
 <span id="map-outlook"></span>
 {% endif %}
-<p class="defra-flood-meta">
-    Updated <time datetime="{{ model.tabs.issueUTC }}">{{ model.tabs.formattedIssueDate }}</time>.</br>Produced by the Met Office and Environment Agency
-</p>
+
+{{ macros.displayUpdateInfo(model.tabs.issueUTC, model.tabs.formattedIssueDate, true, "Produced by the Met Office and Environment Agency") }}
