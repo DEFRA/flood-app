@@ -2,9 +2,11 @@
 
 {% block content %}
 
+{% import "partials/macros.html" as macros %}
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">
       Check for flooding
     </h1>
   </div>
@@ -18,7 +20,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-m govuk-!-margin-top-2" id="flood-risk-today">Flood risk today</h2>
+    <h2 class="govuk-heading-m" id="flood-risk-today">Flood risk today</h2>
     <div class="defra-flood-status">
       {% if not model.hasActiveFloods %}
       <div class="defra-flood-status-item">
@@ -60,13 +62,8 @@
     {% if model.hasActiveFloods %}
       <span id="map-live"></span>
     {% endif %}
-    <p class="defra-flood-meta {% if model.hasActiveFloods or model.hasWarningsRemoved %} defra-flood-meta--border govuk-!-margin-top-3{% endif %} govuk-!-margin-top-0 govuk-!-margin-bottom-6">      Updated at <time datetime="{{model.dateUTC}}">{{model.dateFormatted}}</time>
-    </p> 
 
-    <a data-journey-click="National:Location search:National - Location search" href="/find-location" class="defra-button-start govuk-button govuk-button--secondary govuk-!-margin-bottom-7" data-module="govuk-button" role="button">
-      Check for flooding near you
-      <svg focusable="false" aria-hidden="true" width="13" height="15" viewBox="0 0 13 15"><path d="M0.325,0l4.875,0l7.5,7.5l-7.5,7.5l-4.875,0l7.5,-7.5l-7.5,-7.5Z" fill="currentColor"></path></svg>
-    </a>
+    {{ macros.displayUpdateInfo(model.dateUTC, model.dateFormatted, model.hasActiveFloods or model.hasWarningsRemoved) }}
 
     <h2 class="govuk-heading-m govuk-!-margin-top-2" id="outlook">Flood forecast for the next 5 days</h2>
     {% if model.outlookOutOfDate or model.dataError %}
@@ -84,10 +81,10 @@
       <span id="map-outlook"></span>
       {% endif %}
 
-      <p class="defra-flood-meta defra-flood-meta--border govuk-!-margin-top-6 govuk-!-margin-bottom-4">
-        Updated at <time datetime="{{ model.outlook.outlookUTC }}">{{ model.outlook.outlookTimestamp }}</time><br>
-        Produced by the Met Office and Environment Agency</p>
+      {{ macros.displayUpdateInfo(model.outlook.outlookUTC, model.outlook.outlookTimestamp, true, "Produced by the Met Office and Environment Agency") }}
+
     {% endif %}
+        
 
     <h2 class="govuk-heading-m">Long term flood risk</h2>
     <p>You may be at long term flood risk from rivers, the sea, surface water or groundwater.</p>
