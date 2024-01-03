@@ -208,7 +208,7 @@ lab.experiment('Routes test - location - 2', () => {
       const fakeOutlookData = () => []
       setup(fakeIsEngland, fakeFloodsData, fakeStationsData, fakeImpactsData, fakeOutlookData)
     })
-    lab.test('response should be 200 and link should use location query', async () => {
+    lab.test('response should be 200', async () => {
       const options = {
         method: 'GET',
         url: '/location?q=Woolston, Warrington'
@@ -216,8 +216,15 @@ lab.experiment('Routes test - location - 2', () => {
 
       const response = await server.inject(options)
       Code.expect(response.statusCode).to.equal(200)
+    })
+    lab.test('river levels link should use location query', async () => {
+      const options = {
+        method: 'GET',
+        url: '/location?q=Woolston, Warrington'
+      }
 
-      // check query parameter in link is correctly populated
+      const response = await server.inject(options)
+
       const root = parse(response.payload)
       const targetText = 'Find a river, sea, groundwater or rainfall level in this area'
       const anchor = root.querySelectorAll('a').find(a => a.text.trim() === targetText)
