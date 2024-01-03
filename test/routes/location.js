@@ -8,6 +8,7 @@ const lab = exports.lab = Lab.script()
 const data = require('../data')
 const moment = require('moment')
 const LocationSearchError = require('../../server/location-search-error')
+const { parse } = require('node-html-parser')
 
 lab.experiment('Routes test - location - 2', () => {
   let sandbox
@@ -206,11 +207,15 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location?q=Woolston, Warrington'
     }
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
+    const root = parse(response.payload)
+    const targetText = 'Find a river, sea, groundwater or rainfall level in this area'
+    const anchor = root.querySelectorAll('a').find(a => a.text.trim() === targetText)
+    Code.expect(anchor.getAttribute('href')).to.equal('/river-and-sea-levels?q=Woolston, Warrington')
   })
 
   lab.test('GET /location returns not found page when entering Wales', async () => {
