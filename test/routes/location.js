@@ -162,60 +162,67 @@ lab.experiment('Routes test - location - 2', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('We couldn\'t find')
   })
-  lab.test('GET /location with query parameters giving defined location', async () => {
-    const floodService = require('../../server/services/flood')
+  lab.experiment('GET /location with query parameters giving defined location', () => {
+    async function setup (fakeIsEngland, fakeFloodsData, fakeStationsData, fakeImpactsData, fakeOutlookData) {
+      const floodService = require('../../server/services/flood')
+      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+      sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+      sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
-    const fakeIsEngland = () => {
-      return { is_england: true }
-    }
+      const fakeGetJson = () => data.warringtonGetJson
 
-    const fakeFloodsData = () => {
-      return { floods: [] }
-    }
-    const fakeStationsData = () => []
-    const fakeImpactsData = () => []
-    const fakeOutlookData = () => []
+      const util = require('../../server/util')
+      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
 
-    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-
-    const fakeGetJson = () => data.warringtonGetJson
-
-    const util = require('../../server/util')
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
-
-    const locationPlugin = {
-      plugin: {
-        name: 'location',
-        register: (server, options) => {
-          server.route(require('../../server/routes/location'))
+      const locationPlugin = {
+        plugin: {
+          name: 'location',
+          register: (server, options) => {
+            server.route(require('../../server/routes/location'))
+          }
         }
       }
+
+      await server.register(require('../../server/plugins/views'))
+      await server.register(require('../../server/plugins/session'))
+      await server.register(require('../../server/plugins/logging'))
+      await server.register(locationPlugin)
+      // Add Cache methods to server
+      const registerServerMethods = require('../../server/services/server-methods')
+      registerServerMethods(server)
+
+      await server.initialize()
     }
+    lab.beforeEach(async () => {
+      const fakeIsEngland = () => {
+        return { is_england: true }
+      }
 
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(locationPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
+      const fakeFloodsData = () => {
+        return { floods: [] }
+      }
+      const fakeStationsData = () => []
+      const fakeImpactsData = () => []
+      const fakeOutlookData = () => []
+      setup(fakeIsEngland, fakeFloodsData, fakeStationsData, fakeImpactsData, fakeOutlookData)
+    })
+    lab.test('response should be 200 and link should use location query', async () => {
+      const options = {
+        method: 'GET',
+        url: '/location?q=Woolston, Warrington'
+      }
 
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/location?q=Woolston, Warrington'
-    }
+      const response = await server.inject(options)
+      Code.expect(response.statusCode).to.equal(200)
 
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    const root = parse(response.payload)
-    const targetText = 'Find a river, sea, groundwater or rainfall level in this area'
-    const anchor = root.querySelectorAll('a').find(a => a.text.trim() === targetText)
-    Code.expect(anchor.getAttribute('href')).to.equal('/river-and-sea-levels?q=Woolston, Warrington')
+      // check query parameter in link is correctly populated
+      const root = parse(response.payload)
+      const targetText = 'Find a river, sea, groundwater or rainfall level in this area'
+      const anchor = root.querySelectorAll('a').find(a => a.text.trim() === targetText)
+      Code.expect(anchor.getAttribute('href')).to.equal('/river-and-sea-levels?q=Woolston, Warrington')
+    })
   })
 
   lab.test('GET /location returns not found page when entering Wales', async () => {
