@@ -1,7 +1,6 @@
 const OutlookModel = require('../models/outlook')
 const FloodsModel = require('../models/floods')
 const ViewModel = require('../models/views/national')
-const joi = require('@hapi/joi')
 
 async function getModel (request, location) {
   const floods = new FloodsModel(await request.server.methods.flood.getFloods())
@@ -20,13 +19,6 @@ async function getModel (request, location) {
   return new ViewModel(floods, outlook, location)
 }
 
-function customValidator (value, helpers) {
-  if (value.trim() === 'England') {
-    return helpers.error('string can not be England')
-  }
-  return value
-}
-
 module.exports = [
   {
     method: 'GET',
@@ -42,27 +34,17 @@ module.exports = [
     path: '/',
     handler: async (request, h) => {
       const { location } = request.payload
+      const l = location?.trim().toLowerCase()
+      if (l === 'england' || l === '') {
+        const model = await getModel(request, location)
+        return h.view('national', { model })
+      }
       return h.redirect(`/location?q=${encodeURIComponent(location)}`)
     },
     options: {
       validate: {
-        payload: joi.object({
-          location: joi
-            .string()
-            .custom(customValidator, 'search term check')
-            .messages({
-              'string.base': 'The search term must be a string',
-              'string.empty': 'The search term can not be empty'
-            })
-        }),
-        failAction: async (request, h, err) => {
-          // we deliberately swallow the errors and redisplay the page
-          request.logger.warn({ situation: 'location search failed validation', err })
-          const model = await getModel(request, err._original.location)
-          // TODO: finesse the error handling and design if we decide to use it
-          // model.err = err
-          return h.view('national', { model }).takeover()
-        }
+        // all validation is now done in the handler
+        // left this block here as a placeholder should we ever need any validation in future
       }
     }
   }
