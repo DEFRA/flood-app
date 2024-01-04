@@ -45,7 +45,6 @@ async function find (location) {
 
   const {
     bbox,
-    address: { formattedAddress: address },
     point: { coordinates: center }
   } = data
 
@@ -71,7 +70,6 @@ async function find (location) {
     center,
     bbox2k,
     bbox10k,
-    address,
     isEngland,
     isUK,
     isScotlandOrNorthernIreland

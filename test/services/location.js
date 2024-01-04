@@ -100,7 +100,7 @@ lab.experiment('location service test', () => {
 
     Code.expect(result).to.be.a.array()
     Code.expect(result.length).to.be.equal(1)
-    Code.expect(result[0].address).to.equal('United Kingdom')
+    Code.expect(result[0].name).to.equal('United Kingdom')
     // Test that bounding box for location has been given 2km buffer
     Code.expect(result[0].bbox2k).to.equal(JSON.parse('[-18.316484081675988,49.939891170718475,12.576484310557825,60.79964993825727]'))
     // Test that bounding box for location has been given 10km buffer
@@ -494,7 +494,7 @@ lab.experiment('location service test', () => {
     })
 
     Code.expect(result).to.be.a.object()
-    Code.expect(result.address).to.equal('Terenure Park, Dublin, County Dublin, D6W, Ireland')
+    Code.expect(result.name).to.equal('Terenure Park, Dublin, County Dublin, D6W, Ireland')
     Code.expect(result.isUK).to.equal(false)
     Code.expect(result.isScotlandOrNorthernIreland).to.equal(false)
   })
@@ -578,7 +578,7 @@ lab.experiment('location service test', () => {
     })
 
     Code.expect(result).to.be.a.object()
-    Code.expect(result.address).to.equal('Newry, Newry and Mourne')
+    Code.expect(result.name).to.equal('Newry, Newry and Mourne')
     Code.expect(result.isUK).to.equal(true)
     Code.expect(result.isScotlandOrNorthernIreland).to.equal(true)
   })
@@ -662,7 +662,6 @@ lab.experiment('location service test', () => {
       Code.expect(result.Error).to.be.undefined()
       // TODO: determine if we need both name and address
       Code.expect(result.name).to.equal('Nidd, Harrogate, North Yorkshire')
-      Code.expect(result.address).to.equal('Nidd, Harrogate, North Yorkshire')
     })
     lab.test('Should be bing name without property identifier when the location is of type Address', async () => {
       const util = require('../../server/util')
