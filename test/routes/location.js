@@ -14,6 +14,36 @@ lab.experiment('Routes test - location - 2', () => {
   let sandbox
   let server
 
+  async function setup (fakeIsEngland, fakeFloodsData, fakeStationsData, fakeImpactsData, fakeOutlookData, fakeGetJson) {
+    const floodService = require('../../server/services/flood')
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
+    await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+  }
   lab.beforeEach(async () => {
     delete require.cache[require.resolve('../../server/util.js')]
     delete require.cache[require.resolve('../../server/services/location.js')]
@@ -163,36 +193,6 @@ lab.experiment('Routes test - location - 2', () => {
     Code.expect(response.payload).to.contain('We couldn\'t find')
   })
   lab.experiment('GET /location with query parameters giving defined location', () => {
-    async function setup (fakeIsEngland, fakeFloodsData, fakeStationsData, fakeImpactsData, fakeOutlookData, fakeGetJson) {
-      const floodService = require('../../server/services/flood')
-      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-      sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-      sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-
-      const util = require('../../server/util')
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
-
-      const locationPlugin = {
-        plugin: {
-          name: 'location',
-          register: (server, options) => {
-            server.route(require('../../server/routes/location'))
-          }
-        }
-      }
-
-      await server.register(require('../../server/plugins/views'))
-      await server.register(require('../../server/plugins/session'))
-      await server.register(require('../../server/plugins/logging'))
-      await server.register(locationPlugin)
-      // Add Cache methods to server
-      const registerServerMethods = require('../../server/services/server-methods')
-      registerServerMethods(server)
-
-      await server.initialize()
-    }
     lab.beforeEach(async () => {
       const fakeIsEngland = () => {
         return { is_england: true }
