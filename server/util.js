@@ -125,18 +125,39 @@ function rainfallTelemetryPadOut (values, valueDuration) {
   return values
 }
 
-function formatName (name = '', addressLine = undefined) {
-  // Note: We assume Bing is consitent in it's capitalisation of terms so we don't lower case them
-  // (i.e. 'Durham, durham' will not occur in the real world)
+function removePropertyIdentifier (inputString) {
+  return /^\d/.test(inputString)
+    ? inputString.replace(/^\d+[a-zA-Z]?\s*/, '') // leading digits with or without a letter
+    : inputString.replace(/^[^,]+,\s*/, '') // house name
+}
 
-  return name
-    .split(/,\s*/)
-  // Strip out addressLine to make name returned more ambiguous as we're not giving property specific information
-    .filter(part => !(addressLine && part === addressLine))
-  // remove repeated words
-    .filter((part, index, allParts) => part !== allParts[index + 1])
-    .filter(part => part !== 'United Kingdom')
-    .join(', ')
+function removeRepeatingEntries (inputString) {
+  const itemsArray = inputString.split(',').map(item => item.trim())
+  const uniqueItemsArray = [...new Set(itemsArray)]
+  const uniqueString = uniqueItemsArray.join(', ')
+  return uniqueString
+}
+
+function hasCityQualifier (itemsArray) {
+  const regex = new RegExp(`^(Greater|City Of) ${itemsArray[0]}$`, 'i')
+  return regex.test(itemsArray[1])
+}
+
+function removeCityQualifiers (inputString) {
+  const itemsArray = inputString.split(', ')
+  if (itemsArray.length === 2 && hasCityQualifier(itemsArray)) {
+    return itemsArray[0]
+  }
+  return inputString
+}
+
+function formatName (name, entityType = 'PopulatedPlace') {
+  if (!name) {
+    return ''
+  }
+  return entityType === 'Address'
+    ? removePropertyIdentifier(name)
+    : removeCityQualifiers(removeRepeatingEntries(name))
 }
 
 module.exports = {

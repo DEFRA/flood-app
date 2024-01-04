@@ -240,7 +240,7 @@ lab.experiment('location service test', () => {
       return error
     })
 
-    Code.expect(result.name).to.equal('Nidd')
+    Code.expect(result.name).to.equal('Nidd, Harrogate, North Yorkshire')
   })
 
   lab.test('Check for Bing call returning no data resources and hence no results', async () => {
@@ -401,136 +401,6 @@ lab.experiment('location service test', () => {
     const result = await Code.expect(rejects()).to.reject()
     Code.expect(result.name).to.equal('LocationSearchError')
     Code.expect(result.message).to.equal('Missing or corrupt contents from location search')
-  })
-  lab.test('remove the duplicate city/town name in locality', async () => {
-    const util = require('../../server/util')
-
-    const fakeLocationData = () => {
-      return {
-        authenticationResultCode: 'ValidCredentials 6',
-        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
-        copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
-        resourceSets: [
-          {
-            estimatedTotal: 1,
-            resources: [
-              {
-                __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [53.36753845214843, -2.639558076858520, 53.42084121704101, -2.535300016403198],
-                name: 'Test address line',
-                point: {
-                  type: 'Point',
-                  coordinates: [53.39387130737304, -2.589349985122680]
-                },
-                address: {
-                  addressLine: 'Test address line',
-                  adminDistrict: 'England',
-                  adminDistrict2: 'Warrington',
-                  countryRegion: 'United Kingdom',
-                  formattedAddress: 'Warrington',
-                  locality: 'Warrington, Warrington',
-                  countryRegionIso2: 'GB'
-                },
-                confidence: 'High',
-                entityType: 'PopulatedPlace',
-                geocodePoints: [
-                  {
-                    type: 'Point',
-                    coordinates: [53.39387130737304, -2.589349985122680],
-                    calculationMethod: 'Rooftop',
-                    usageTypes: ['Display']
-                  }
-                ],
-                matchCodes: ['Good']
-              }
-            ]
-          }
-        ],
-        statusCode: 200,
-        statusDescription: 'OK',
-        traceId: 'b755f46d8f4e48a88e6e8a76c94aa775|DU00000D65|7.7.0.0|Ref A: 2D76360D146B4861AB917B06CE6569DE Ref B: DB3EDGE1113 Ref C: 2019-08-01T11:08:17Z'
-      }
-    }
-
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
-    sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
-
-    const location = require('../../server/services/location')
-
-    const [result] = await location.find('').then((resolvedValue) => {
-      return resolvedValue
-    }, (error) => {
-      return error
-    })
-
-    Code.expect(result).to.be.a.object()
-    Code.expect(result.Error).to.be.undefined()
-    Code.expect(result.name).to.equal('Warrington')
-  })
-  lab.test('additional city/town name after a , in locality not removed if not duplicate', async () => {
-    const util = require('../../server/util')
-
-    const fakeLocationData = () => {
-      return {
-        authenticationResultCode: 'ValidCredentials 6',
-        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
-        copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
-        resourceSets: [
-          {
-            estimatedTotal: 1,
-            resources: [
-              {
-                __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [53.36753845214843, -2.639558076858520, 53.42084121704101, -2.535300016403198],
-                name: 'Test address line, Warrington, Warrington',
-                point: {
-                  type: 'Point',
-                  coordinates: [53.393871307373047, -2.5893499851226807]
-                },
-                address: {
-                  addressLine: 'Test address line',
-                  adminDistrict: 'England',
-                  adminDistrict2: 'Warrington',
-                  countryRegion: 'United Kingdom',
-                  formattedAddress: 'Warrington, Warrington',
-                  locality: 'Warrington, TEST',
-                  countryRegionIso2: 'GB'
-                },
-                confidence: 'High',
-                entityType: 'PopulatedPlace',
-                geocodePoints: [
-                  {
-                    type: 'Point',
-                    coordinates: [53.393871307373047, -2.5893499851226807],
-                    calculationMethod: 'Rooftop',
-                    usageTypes: ['Display']
-                  }
-                ],
-                matchCodes: ['Good']
-              }
-            ]
-          }
-        ],
-        statusCode: 200,
-        statusDescription: 'OK',
-        traceId: 'b755f46d8f4e48a88e6e8a76c94aa775|DU00000D65|7.7.0.0|Ref A: 2D76360D146B4861AB917B06CE6569DE Ref B: DB3EDGE1113 Ref C: 2019-08-01T11:08:17Z'
-      }
-    }
-
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
-    sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
-
-    const location = require('../../server/services/location')
-
-    const [result] = await location.find('').then((resolvedValue) => {
-      return resolvedValue
-    }, (error) => {
-      return error
-    })
-
-    Code.expect(result).to.be.a.object()
-    Code.expect(result.Error).to.be.undefined()
-    Code.expect(result.name).to.equal('Warrington, TEST')
   })
   lab.test('Check for location outside of the UK', async () => {
     const util = require('../../server/util')
@@ -712,99 +582,8 @@ lab.experiment('location service test', () => {
     Code.expect(result.isUK).to.equal(true)
     Code.expect(result.isScotlandOrNorthernIreland).to.equal(true)
   })
-  lab.test('location with same name as address removed for anomimity', async () => {
-    const util = require('../../server/util')
-
-    const fakeLocationData = () => {
-      return {
-        authenticationResultCode: 'ValidCredentials',
-        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
-        copyright: 'Copyright © 2020 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
-        resourceSets: [
-          {
-            estimatedTotal: 1,
-            resources: [
-              {
-                __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [
-                  51.49968,
-                  -0.13594331,
-                  51.507404,
-                  -0.119396694
-                ],
-                name: 'Richard Taunton House',
-                point: {
-                  type: 'Point',
-                  coordinates: [
-                    51.50354,
-                    -0.12767
-                  ]
-                },
-                address: {
-                  addressLine: 'Richard Taunton House',
-                  adminDistrict: 'England',
-                  adminDistrict2: 'London',
-                  countryRegion: 'United Kingdom',
-                  formattedAddress: 'London SW1A 2AA',
-                  locality: 'Richard Taunton House',
-                  postalCode: 'SW1A 2AA',
-                  countryRegionIso2: 'GB'
-                },
-                confidence: 'High',
-                entityType: 'Address',
-                geocodePoints: [
-                  {
-                    type: 'Point',
-                    coordinates: [
-                      51.50354,
-                      -0.12767
-                    ],
-                    calculationMethod: 'Rooftop',
-                    usageTypes: [
-                      'Display'
-                    ]
-                  },
-                  {
-                    type: 'Point',
-                    coordinates: [
-                      51.503223,
-                      -0.12770759
-                    ],
-                    calculationMethod: 'Rooftop',
-                    usageTypes: [
-                      'Route'
-                    ]
-                  }
-                ],
-                matchCodes: [
-                  'Good'
-                ]
-              }
-            ]
-          }
-        ],
-        statusCode: 200,
-        statusDescription: 'OK',
-        traceId: 'af2702421c21415694695e07e8d01df5|DU00000D65|0.0.0.1|Ref A: 5EAB714B92AC412D8DB79686DB92BFD4 Ref B: DB3EDGE1519 Ref C: 2020-08-03T14:01:18Z'
-      }
-    }
-
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
-    sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
-
-    const location = require('../../server/services/location')
-
-    const [result] = await location.find('Richard Taunton House').then((resolvedValue) => {
-      return resolvedValue
-    }, (error) => {
-      return error
-    })
-
-    Code.expect(result).to.be.a.object()
-    Code.expect(result.address).to.equal('London SW1A 2AA')
-  })
   lab.experiment('Location name', () => {
-    lab.test('Should be local name when the location is of type PopulatedPlace', async () => {
+    lab.test('Should be bing name when the location is of type PopulatedPlace', async () => {
       const util = require('../../server/util')
 
       const fakeLocationData = () => {
@@ -881,76 +660,11 @@ lab.experiment('location service test', () => {
 
       Code.expect(result).to.be.a.object()
       Code.expect(result.Error).to.be.undefined()
-      Code.expect(result.name).to.equal('Nidd')
+      // TODO: determine if we need both name and address
+      Code.expect(result.name).to.equal('Nidd, Harrogate, North Yorkshire')
       Code.expect(result.address).to.equal('Nidd, Harrogate, North Yorkshire')
     })
-    lab.test('Should be full name when the location is not of type PopulatedPlace', async () => {
-      const util = require('../../server/util')
-
-      const fakeLocationData = () => {
-        return {
-          authenticationResultCode: 'ValidCredentials',
-          brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
-          copyright: 'Copyright © 2022 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
-          resourceSets: [
-            {
-              estimatedTotal: 1,
-              resources: [
-                {
-                  __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                  bbox: [
-                    51.01221466064453,
-                    -1.076861023902893,
-                    51.53178405761719,
-                    0.2668609917163849
-                  ],
-                  name: 'Surrey',
-                  point: { type: 'Point', coordinates: [51.23641968, -0.57029098] },
-                  address: {
-                    adminDistrict: 'England',
-                    adminDistrict2: 'Surrey',
-                    countryRegion: 'United Kingdom',
-                    formattedAddress: 'Surrey',
-                    countryRegionIso2: 'GB'
-                  },
-                  confidence: 'High',
-                  entityType: 'AdminDivision2',
-                  geocodePoints: [
-                    {
-                      type: 'Point',
-                      coordinates: [51.23641968, -0.57029098],
-                      calculationMethod: 'Rooftop',
-                      usageTypes: ['Display']
-                    }
-                  ],
-                  matchCodes: ['Good']
-                }
-              ]
-            }
-          ],
-          statusCode: 200,
-          statusDescription: 'OK',
-          traceId: 'a48ffc83bc8a48358339d74b8e9c611e|DU0000274B|0.0.0.1|Ref A: 579C16D23F584B96B21473585991BF94 Ref B: DB3EDGE3113 Ref C: 2022-10-17T16:59:49Z'
-        }
-      }
-
-      sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
-      sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
-
-      const location = require('../../server/services/location')
-
-      const [result] = await location.find('').then((resolvedValue) => {
-        return resolvedValue
-      }, (error) => {
-        return error
-      })
-
-      Code.expect(result).to.be.a.object()
-      Code.expect(result.Error).to.be.undefined()
-      Code.expect(result.name).to.equal('Surrey')
-      Code.expect(result.address).to.equal('Surrey')
-    })
-    lab.test('Should remove location name from address', async () => {
+    lab.test('Should be bing name without property identifier when the location is of type Address', async () => {
       const util = require('../../server/util')
 
       const fakeLocationData = () => {
@@ -970,20 +684,20 @@ lab.experiment('location service test', () => {
                     50.93484661818468,
                     -1.39426923563231
                   ],
-                  name: 'Richard Taunton Place, Southampton Test, Southampton, SO17 1',
+                  name: '1 Richard Taunton Place, Southampton Test, Southampton, SO17 1',
                   point: { type: 'Point', coordinates: [50.9309839, -1.4024403] },
                   address: {
-                    addressLine: 'Richard Taunton Place',
+                    addressLine: '1 Richard Taunton Place',
                     adminDistrict: 'England',
                     adminDistrict2: 'Southampton',
                     countryRegion: 'United Kingdom',
-                    formattedAddress: 'Richard Taunton Place, Southampton Test, Southampton, SO17 1',
+                    formattedAddress: '1 Richard Taunton Place, Southampton Test, Southampton, SO17 1',
                     locality: 'Southampton',
                     postalCode: 'SO17 1',
                     countryRegionIso2: 'GB'
                   },
                   confidence: 'Medium',
-                  entityType: 'RoadBlock',
+                  entityType: 'Address',
                   geocodePoints: [
                     {
                       type: 'Point',
@@ -1016,7 +730,7 @@ lab.experiment('location service test', () => {
 
       Code.expect(result).to.be.a.object()
       Code.expect(result.Error).to.be.undefined()
-      Code.expect(result.name).to.equal('Southampton Test, Southampton, SO17 1')
+      Code.expect(result.name).to.equal('Richard Taunton Place, Southampton Test, Southampton, SO17 1')
     })
   })
 })
