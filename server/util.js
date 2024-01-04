@@ -134,8 +134,7 @@ function removePropertyIdentifier (inputString) {
 function removeRepeatingEntries (inputString) {
   const itemsArray = inputString.split(',').map(item => item.trim())
   const uniqueItemsArray = [...new Set(itemsArray)]
-  const uniqueString = uniqueItemsArray.join(', ')
-  return uniqueString
+  return uniqueItemsArray.join(', ')
 }
 
 function hasCityQualifier (itemsArray) {
