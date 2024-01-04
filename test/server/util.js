@@ -53,6 +53,18 @@ lab.experiment('util', () => {
       lab.test('Similar parts are not removed', async () => {
         Code.expect(formatName('Durham, County Durham', 'PopulatedPlace')).to.equal('Durham, County Durham')
       })
+      lab.test('City qualifier "City Of" is removed', async () => {
+        Code.expect(formatName('Bristol, City Of Bristol', 'PopulatedPlace')).to.equal('Bristol')
+      })
+      lab.test('City qualifier "City of" is removed (ie case insensitive)', async () => {
+        Code.expect(formatName('Bristol, City of Bristol', 'PopulatedPlace')).to.equal('Bristol')
+      })
+      lab.test('City qualifier "Greater" is removed', async () => {
+        Code.expect(formatName('London, Greater London', 'PopulatedPlace')).to.equal('London')
+      })
+      lab.test('City qualifier removed from neighbourhood', async () => {
+        Code.expect(formatName('Camberwell, London, Greater London', 'PopulatedPlace')).to.equal('Camberwell, London')
+      })
     })
     lab.experiment('Error handling', () => {
       lab.test('Fails gracefully with undefined name', async () => {
