@@ -5,6 +5,12 @@ const formatDate = require('../util').formatDate
 const moment = require('moment-timezone')
 const tz = 'Europe/London'
 
+function rejectWithoutBingSearch (searchTerm) {
+  const mustNotMatch = /^scotland$|^ireland$|^wales$|^united kingdom$|^northern ireland$/i
+  const mustMatch = /[a-zA-Z0-9]/
+  return searchTerm.match(mustNotMatch) || !searchTerm.match(mustMatch)
+}
+
 module.exports = {
   method: 'GET',
   path: '/location',
@@ -15,7 +21,7 @@ module.exports = {
       return h.redirect('/')
     }
 
-    if (location.match(/^scotland$|^ireland$|^wales$/i)) {
+    if (rejectWithoutBingSearch(location)) {
       return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
     }
 
