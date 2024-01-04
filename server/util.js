@@ -144,9 +144,14 @@ function hasCityQualifier (itemsArray) {
 }
 
 function removeCityQualifiers (inputString) {
-  const itemsArray = inputString.split(', ')
-  if (itemsArray.length === 2 && hasCityQualifier(itemsArray)) {
-    return itemsArray[0]
+  // remove qualifiers such as Greater London and City Of Portsmouth from the final entry in a place name
+  // e.g. Camberwell, London, Greater London => Camberwell, London
+  // e.g. London, Greater London => London
+  const splitToken = ', '
+  const itemsArray = inputString.split(splitToken)
+  const length = itemsArray.length
+  if (length >= 2 && hasCityQualifier(itemsArray.slice(-2))) {
+    return itemsArray.slice(0, -1).join(splitToken)
   }
   return inputString
 }
