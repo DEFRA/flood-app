@@ -49,8 +49,7 @@ async function find (location) {
     point: { coordinates: center }
   } = data
 
-  let name = data.entityType === 'PopulatedPlace' ? data.address.locality : data.name
-  name = formatName(name, data.address.addressLine)
+  const name = formatName(data.name, data.entityType)
 
   // Reverse as Bing returns as [y (lat), x (long)]
   bbox.reverse()

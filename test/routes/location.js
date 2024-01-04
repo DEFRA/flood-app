@@ -163,15 +163,13 @@ lab.experiment('Routes test - location - 2', () => {
     Code.expect(response.payload).to.contain('We couldn\'t find')
   })
   lab.experiment('GET /location with query parameters giving defined location', () => {
-    async function setup (fakeIsEngland, fakeFloodsData, fakeStationsData, fakeImpactsData, fakeOutlookData) {
+    async function setup (fakeIsEngland, fakeFloodsData, fakeStationsData, fakeImpactsData, fakeOutlookData, fakeGetJson) {
       const floodService = require('../../server/services/flood')
       sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
       sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
       sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
       sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
       sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-
-      const fakeGetJson = () => data.warringtonGetJson
 
       const util = require('../../server/util')
       sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
@@ -206,7 +204,9 @@ lab.experiment('Routes test - location - 2', () => {
       const fakeStationsData = () => []
       const fakeImpactsData = () => []
       const fakeOutlookData = () => []
-      setup(fakeIsEngland, fakeFloodsData, fakeStationsData, fakeImpactsData, fakeOutlookData)
+      const fakeGetJson = () => data.woolstonGetJson
+
+      setup(fakeIsEngland, fakeFloodsData, fakeStationsData, fakeImpactsData, fakeOutlookData, fakeGetJson)
     })
     lab.test('response should be 200', async () => {
       const options = {

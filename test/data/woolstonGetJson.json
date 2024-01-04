@@ -1,0 +1,58 @@
+{
+  "authenticationResultCode": "ValidCredentials",
+  "brandLogoUri": "https://dev.virtualearth.net/Branding/logo_powered_by.png",
+  "copyright": "Copyright © 2024 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.",
+  "resourceSets": [
+    {
+      "estimatedTotal": 1,
+      "resources": [
+        {
+          "__type": "Location:http://schemas.microsoft.com/search/local/ws/rest/v1",
+          "bbox": [
+            53.38360595703125,
+            -2.5524446964263916,
+            53.41832733154297,
+            -2.477041482925415
+          ],
+          "name": "Woolston, Warrington, Warrington",
+          "point": {
+            "type": "Point",
+            "coordinates": [
+              53.4013176,
+              -2.53333545
+            ]
+          },
+          "address": {
+            "adminDistrict": "England",
+            "adminDistrict2": "Warrington",
+            "countryRegion": "United Kingdom",
+            "formattedAddress": "Woolston, Warrington, Warrington",
+            "locality": "Warrington",
+            "countryRegionIso2": "GB"
+          },
+          "confidence": "High",
+          "entityType": "Neighborhood",
+          "geocodePoints": [
+            {
+              "type": "Point",
+              "coordinates": [
+                53.4013176,
+                -2.53333545
+              ],
+              "calculationMethod": "Rooftop",
+              "usageTypes": [
+                "Display"
+              ]
+            }
+          ],
+          "matchCodes": [
+            "Good"
+          ]
+        }
+      ]
+    }
+  ],
+  "statusCode": 200,
+  "statusDescription": "OK",
+  "traceId": "11b010960660454f982dd4e420460f3e|DU00003041|0.0.0.1|Ref A: 7C53D7E3980F4A26929FC0BFB8E3BA16 Ref B: DB3EDGE1911 Ref C: 2024-01-03T20:59:32Z"
+}
