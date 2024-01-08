@@ -155,7 +155,7 @@ lab.experiment('Get Cookies test', () => {
       method: 'GET',
       url: '/cookies',
       headers: {
-        referer: `${siteUrl}/find-location`,
+        referer: `${siteUrl}/`,
         cookie: 'session=Fe26.2**befad4d774227dd9d530ab6d7d5fdd6ffa6acdc214808232c97896b54f393546*-42Hz0QDpHukVQ9pk3f8Xg*ZSSkETU1Dyh8sN30OT57kimJ8BFq_LYlmoZqKM_zOgcGpzdoC0sPhf4i6lQkTtfxqfF44bdZ4Sgw4sQIVRj9Zg**aa0291c36455798c20a3b5acca584f1347f77283d8e5b23d7fb70b20d1a46969*S4qqQ9wA8ohva--5hkBmy4TlqtFvcxVuMb82g0laWlA; seen_cookie_message=true; set_cookie_usage=true; _ga=GA1.1.1682777723.1629978783; _gid=GA1.1.1507300460.1629978783'
       }
 
