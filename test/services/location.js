@@ -57,26 +57,46 @@ lab.experiment('location service test', () => {
             resources: [
               {
                 __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [49.957805633544922, -18.279674530029297, 60.782192230224609, 12.539674758911133],
-                name: 'United Kingdom',
-                point: { type: 'Point', coordinates: [53.9438362121582, -2.5505640506744385] },
+                bbox: [
+                  51.12405776977539,
+                  0.8380475640296936,
+                  51.17716598510742,
+                  0.9264887571334839
+                ],
+                name: 'Ashford, Kent',
+                point: {
+                  type: 'Point',
+                  coordinates: [
+                    51.14772797,
+                    0.87279475
+                  ]
+                },
                 address: {
+                  adminDistrict: 'England',
+                  adminDistrict2: 'Kent',
                   countryRegion: 'United Kingdom',
-                  formattedAddress: 'United Kingdom',
+                  formattedAddress: 'Ashford, Kent',
+                  locality: 'Ashford',
                   countryRegionIso2: 'GB'
                 },
                 confidence: 'High',
-                entityType: '',
-                // entityType: 'CountryRegion',
+                entityType: 'PopulatedPlace',
                 geocodePoints: [
                   {
                     type: 'Point',
-                    coordinates: [53.9438362121582, -2.5505640506744385],
+                    coordinates: [
+                      51.14772797,
+                      0.87279475
+                    ],
                     calculationMethod: 'Rooftop',
-                    usageTypes: ['Display']
+                    usageTypes: [
+                      'Display'
+                    ]
                   }
                 ],
-                matchCodes: ['UpHierarchy']
+                matchCodes: [
+                  'Good'
+                ]
               }
             ]
           }
@@ -100,11 +120,12 @@ lab.experiment('location service test', () => {
 
     Code.expect(result).to.be.a.array()
     Code.expect(result.length).to.be.equal(1)
-    Code.expect(result[0].name).to.equal('United Kingdom')
+    Code.expect(result[0].name).to.equal('Ashford, Kent')
     // Test that bounding box for location has been given 2km buffer
-    Code.expect(result[0].bbox2k).to.equal(JSON.parse('[-18.316484081675988,49.939891170718475,12.576484310557825,60.79964993825727]'))
+    Code.expect(result[0].bbox2k).to.equal(JSON.parse('[0.80935719234919,51.106071366450024,0.9551791288139874,51.19515238842755]'))
+
     // Test that bounding box for location has been given 10km buffer
-    Code.expect(result[0].bbox10k).to.equal(JSON.parse('[-18.46371955596045,49.86823323015424,12.723719784842281,60.86947435757287]'))
+    Code.expect(result[0].bbox10k).to.equal(JSON.parse('[0.6945958802395501,51.034125753112406,1.0699404409236273,51.267098001671634]'))
   })
 
   lab.test('Check for Bing call returning low confidence and hence no results', async () => {
@@ -444,7 +465,7 @@ lab.experiment('location service test', () => {
                   countryRegionIso2: 'IE'
                 },
                 confidence: 'High',
-                entityType: 'RoadBlock',
+                entityType: 'PopulatedPlace',
                 geocodePoints: [
                   {
                     type: 'Point',
@@ -662,74 +683,6 @@ lab.experiment('location service test', () => {
       Code.expect(result.Error).to.be.undefined()
       // TODO: determine if we need both name and address
       Code.expect(result.name).to.equal('Nidd, Harrogate, North Yorkshire')
-    })
-    lab.test('Should be bing name without property identifier when the location is of type Address', async () => {
-      const util = require('../../server/util')
-
-      const fakeLocationData = () => {
-        return {
-          authenticationResultCode: 'ValidCredentials',
-          brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
-          copyright: 'Copyright © 2022 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
-          resourceSets: [
-            {
-              estimatedTotal: 1,
-              resources: [
-                {
-                  __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                  bbox: [
-                    50.927121183043326,
-                    -1.4106113633013098,
-                    50.93484661818468,
-                    -1.39426923563231
-                  ],
-                  name: '1 Richard Taunton Place, Southampton Test, Southampton, SO17 1',
-                  point: { type: 'Point', coordinates: [50.9309839, -1.4024403] },
-                  address: {
-                    addressLine: '1 Richard Taunton Place',
-                    adminDistrict: 'England',
-                    adminDistrict2: 'Southampton',
-                    countryRegion: 'United Kingdom',
-                    formattedAddress: '1 Richard Taunton Place, Southampton Test, Southampton, SO17 1',
-                    locality: 'Southampton',
-                    postalCode: 'SO17 1',
-                    countryRegionIso2: 'GB'
-                  },
-                  confidence: 'Medium',
-                  entityType: 'Address',
-                  geocodePoints: [
-                    {
-                      type: 'Point',
-                      coordinates: [50.9309839, -1.4024403],
-                      calculationMethod: 'Interpolation',
-                      usageTypes: ['Display']
-                    }
-                  ],
-                  matchCodes: ['UpHierarchy']
-                }
-              ]
-            }
-          ],
-          statusCode: 200,
-          statusDescription: 'OK',
-          traceId: 'c29dd05c394b483eb55bd92fee1c2275|DU00002749|0.0.0.1|Ref A: BB7F66F3C3214CACA66A7614B0393AD1 Ref B: DB3EDGE2121 Ref C: 2022-10-18T10:19:08Z'
-        }
-      }
-
-      sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
-      sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
-
-      const location = require('../../server/services/location')
-
-      const [result] = await location.find('').then((resolvedValue) => {
-        return resolvedValue
-      }, (error) => {
-        return error
-      })
-
-      Code.expect(result).to.be.a.object()
-      Code.expect(result.Error).to.be.undefined()
-      Code.expect(result.name).to.equal('Richard Taunton Place, Southampton Test, Southampton, SO17 1')
     })
   })
 })

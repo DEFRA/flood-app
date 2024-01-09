@@ -270,14 +270,14 @@ lab.experiment('Routes test - location - 2', () => {
       const fakeStationsData = () => []
       const fakeImpactsData = () => []
       const fakeOutlookData = () => []
-      const fakeGetJson = () => data.woolstonGetJson
+      const fakeGetJson = () => data.warringtonGetJson
 
       setup(fakeIsEngland, fakeFloodsData, fakeStationsData, fakeImpactsData, fakeOutlookData, fakeGetJson)
     })
     lab.test('response should be 200', async () => {
       const options = {
         method: 'GET',
-        url: '/location?q=Woolston, Warrington'
+        url: '/location?q=Warrington'
       }
 
       const response = await server.inject(options)
@@ -286,7 +286,7 @@ lab.experiment('Routes test - location - 2', () => {
     lab.test('river levels link should use location query', async () => {
       const options = {
         method: 'GET',
-        url: '/location?q=Woolston, Warrington'
+        url: '/location?q=Warrington'
       }
 
       const response = await server.inject(options)
@@ -294,7 +294,7 @@ lab.experiment('Routes test - location - 2', () => {
       const root = parse(response.payload)
       const targetText = 'Find a river, sea, groundwater or rainfall level in this area'
       const anchor = root.querySelectorAll('a').find(a => a.text.trim() === targetText)
-      Code.expect(anchor.getAttribute('href')).to.equal('/river-and-sea-levels?q=Woolston, Warrington')
+      Code.expect(anchor.getAttribute('href')).to.equal('/river-and-sea-levels?q=Warrington')
     })
   })
 
