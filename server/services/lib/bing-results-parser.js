@@ -6,9 +6,13 @@ async function bingResultsParser (bingData, getIsEngland) {
     return []
   }
 
-  const data = set.resources[0]
+  const disallowedConfidences = ['low']
+  const allowedTypes = ['populatedplace', 'postcode1', 'postcode3']
+  const data = set.resources
+    .filter(r => !disallowedConfidences.includes(r.confidence.toLowerCase()))
+    .filter(r => allowedTypes.includes(r.entityType.toLowerCase()))[0]
 
-  if (data.confidence.toLowerCase() === 'low') {
+  if (!data) {
     return []
   }
 
