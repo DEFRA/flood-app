@@ -125,12 +125,6 @@ function rainfallTelemetryPadOut (values, valueDuration) {
   return values
 }
 
-function removePropertyIdentifier (inputString) {
-  return /^\d/.test(inputString)
-    ? inputString.replace(/^\d+[a-zA-Z]?\s*/, '') // leading digits with or without a letter
-    : inputString.replace(/^[^,]+,\s*/, '') // house name
-}
-
 function removeRepeatingEntries (inputString) {
   const itemsArray = inputString.split(',').map(item => item.trim())
   const uniqueItemsArray = [...new Set(itemsArray)]
@@ -155,13 +149,11 @@ function removeCityQualifiers (inputString) {
   return inputString
 }
 
-function formatName (name, entityType = 'PopulatedPlace') {
+function formatName (name) {
   if (!name) {
     return ''
   }
-  return entityType === 'Address'
-    ? removePropertyIdentifier(name)
-    : removeCityQualifiers(removeRepeatingEntries(name))
+  return removeCityQualifiers(removeRepeatingEntries(name))
 }
 
 module.exports = {

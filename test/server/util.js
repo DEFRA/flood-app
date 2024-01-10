@@ -38,41 +38,27 @@ lab.experiment('util', () => {
     })
   })
   lab.experiment('formatName', () => {
-    lab.experiment('Addresses', () => {
-      lab.test('Property name removed from addresses', async () => {
-        Code.expect(formatName('The Big House, The Avenue, Durham', 'Address')).to.equal('The Avenue, Durham')
-      })
-      lab.test('Property number removed from addresses', async () => {
-        Code.expect(formatName('10 The Avenue, Durham', 'Address')).to.equal('The Avenue, Durham')
-      })
+    lab.test('Repeating parts are removed', async () => {
+      Code.expect(formatName('Middlesbrough, Middlesbrough')).to.equal('Middlesbrough')
     })
-    lab.experiment('PopulatedPlaces', () => {
-      lab.test('Repeating parts are removed', async () => {
-        Code.expect(formatName('Middlesbrough, Middlesbrough', 'PopulatedPlace')).to.equal('Middlesbrough')
-      })
-      lab.test('Similar parts are not removed', async () => {
-        Code.expect(formatName('Durham, County Durham', 'PopulatedPlace')).to.equal('Durham, County Durham')
-      })
-      lab.test('City qualifier "City Of" is removed', async () => {
-        Code.expect(formatName('Bristol, City Of Bristol', 'PopulatedPlace')).to.equal('Bristol')
-      })
-      lab.test('City qualifier "City of" is removed (ie case insensitive)', async () => {
-        Code.expect(formatName('Bristol, City of Bristol', 'PopulatedPlace')).to.equal('Bristol')
-      })
-      lab.test('City qualifier "Greater" is removed', async () => {
-        Code.expect(formatName('London, Greater London', 'PopulatedPlace')).to.equal('London')
-      })
-      lab.test('City qualifier removed from neighbourhood', async () => {
-        Code.expect(formatName('Camberwell, London, Greater London', 'PopulatedPlace')).to.equal('Camberwell, London')
-      })
+    lab.test('Similar parts are not removed', async () => {
+      Code.expect(formatName('Durham, County Durham')).to.equal('Durham, County Durham')
+    })
+    lab.test('City qualifier "City Of" is removed', async () => {
+      Code.expect(formatName('Bristol, City Of Bristol')).to.equal('Bristol')
+    })
+    lab.test('City qualifier "City of" is removed (ie case insensitive)', async () => {
+      Code.expect(formatName('Bristol, City of Bristol')).to.equal('Bristol')
+    })
+    lab.test('City qualifier "Greater" is removed', async () => {
+      Code.expect(formatName('London, Greater London')).to.equal('London')
+    })
+    lab.test('City qualifier removed from neighbourhood', async () => {
+      Code.expect(formatName('Camberwell, London, Greater London')).to.equal('Camberwell, London')
     })
     lab.experiment('Error handling', () => {
       lab.test('Fails gracefully with undefined name', async () => {
         Code.expect(formatName()).to.equal('')
-      })
-      lab.test('Defaults entity type to PopulatedPlace', async () => {
-        // if this was treated like an address the Linthorpe would be stripped off
-        Code.expect(formatName('Linthorpe, Middlesbrough')).to.equal('Linthorpe, Middlesbrough')
       })
     })
   })
