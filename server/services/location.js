@@ -33,7 +33,7 @@ async function find (location) {
     throw new LocationSearchError('Invalid geocode results (no resourceSets)')
   }
 
-  return await bingResultsParser(bingData, floodServices.getIsEngland)
+  return bingResultsParser(bingData, floodServices.getIsEngland)
 }
 
 module.exports = { find }

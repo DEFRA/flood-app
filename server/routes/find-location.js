@@ -3,8 +3,7 @@
 module.exports = [{
   method: 'GET',
   path: '/find-location',
-  handler: async (request, h) => {
-    // note: this handler can be removed once the redirect is added at the infrastructure level
-    return h.redirect('/').code(301)
-  }
+  // note: this handler can be removed once the redirect is added at the infrastructure level
+  handler: async (_request, h) => h.redirect('/').code(301)
+
 }]
