@@ -6,7 +6,7 @@ const moment = require('moment-timezone')
 const tz = 'Europe/London'
 
 function rejectWithoutBingSearch (searchTerm) {
-  const mustNotMatch = /^scotland$|^ireland$|^wales$|^united kingdom$|^northern ireland$/i
+  const mustNotMatch = /[<>]|^scotland$|^ireland$|^wales$|^united kingdom$|^northern ireland$/i
   const mustMatch = /[a-zA-Z0-9]/
   return searchTerm.match(mustNotMatch) || !searchTerm.match(mustMatch)
 }
