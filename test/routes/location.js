@@ -257,6 +257,19 @@ lab.experiment('Routes test - location - 2', () => {
       const h1 = root.querySelector('h1.govuk-heading-xl')
       Code.expect(h1.text).to.contain("We couldn't find '%%%', England")
     })
+    lab.test('returns not found page when entering a query containing angle brackets', async () => {
+      const options = {
+        method: 'GET',
+        url: '/location?q=<script>'
+      }
+
+      const response = await server.inject(options)
+      Code.expect(response.statusCode).to.equal(200)
+
+      const root = parse(response.payload)
+      const h1 = root.querySelector('h1.govuk-heading-xl')
+      Code.expect(h1.text).to.contain("We couldn't find '<script>', England")
+    })
   })
   lab.experiment('GET /location with query parameters giving defined location', () => {
     lab.beforeEach(async () => {
