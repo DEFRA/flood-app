@@ -1,3 +1,4 @@
+const joi = require('@hapi/joi')
 const OutlookModel = require('../models/outlook')
 const FloodsModel = require('../models/floods')
 const ViewModel = require('../models/views/national')
@@ -43,8 +44,9 @@ module.exports = [
     },
     options: {
       validate: {
-        // all validation is now done in the handler
-        // left this block here as a placeholder should we ever need any validation in future
+        payload: joi.object({
+          location: joi.string().required().allow('').max(200)
+        })
       }
     }
   }
