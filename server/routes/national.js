@@ -35,8 +35,7 @@ module.exports = [
     path: '/',
     handler: async (request, h) => {
       const { location } = request.payload
-      const l = location?.trim().toLowerCase()
-      if (l === 'england' || l === '') {
+      if (location.toLowerCase() === 'england' || location === '') {
         const model = await getModel(request, location)
         return h.view('national', { model })
       }
@@ -45,7 +44,7 @@ module.exports = [
     options: {
       validate: {
         payload: joi.object({
-          location: joi.string().required().allow('').max(200).truncate()
+          location: joi.string().required().trim().allow('').max(200).truncate()
         })
       }
     }
