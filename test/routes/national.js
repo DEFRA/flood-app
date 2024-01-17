@@ -5,7 +5,6 @@ const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const moment = require('moment')
-const { parse } = require('node-html-parser')
 
 lab.experiment('Routes test - national view', () => {
   let sandbox
@@ -428,10 +427,8 @@ lab.experiment('Routes test - national view', () => {
 
         const response = await server.inject(options)
 
-        Code.expect(response.statusCode).to.equal(400)
-        const root = parse(response.payload)
-        const h1 = root.querySelector('h1.govuk-heading-xl')
-        Code.expect(h1.text).to.contain('Sorry, there is a problem with the service')
+        Code.expect(response.statusCode).to.equal(302)
+        Code.expect(response.headers.location).to.equal(`/location?q=${'a'.repeat(200)}`)
       })
     })
   })
