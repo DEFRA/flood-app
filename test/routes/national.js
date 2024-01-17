@@ -5,6 +5,7 @@ const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const moment = require('moment')
+const { parse } = require('node-html-parser')
 
 lab.experiment('Routes test - national view', () => {
   let sandbox
@@ -347,6 +348,7 @@ lab.experiment('Routes test - national view', () => {
       await server.register(require('../../server/plugins/views'))
       await server.register(require('../../server/plugins/session'))
       await server.register(require('../../server/plugins/logging'))
+      await server.register(require('../../server/plugins/error-pages'))
       await server.register(locationPlugin)
       // Add Cache methods to server
       const registerServerMethods = require('../../server/services/server-methods')
@@ -414,6 +416,22 @@ lab.experiment('Routes test - national view', () => {
 
         Code.expect(response.statusCode).to.equal(302)
         Code.expect(response.headers.location).to.equal('/location?q=test')
+      })
+      lab.test('a location of length >200 should generate the error page', async () => {
+        const options = {
+          method: 'POST',
+          url: '/',
+          payload: {
+            location: 'a'.repeat(201)
+          }
+        }
+
+        const response = await server.inject(options)
+
+        Code.expect(response.statusCode).to.equal(400)
+        const root = parse(response.payload)
+        const h1 = root.querySelector('h1.govuk-heading-xl')
+        Code.expect(h1.text).to.contain('Sorry, there is a problem with the service')
       })
     })
   })
