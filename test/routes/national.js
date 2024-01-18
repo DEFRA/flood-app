@@ -5,6 +5,19 @@ const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const moment = require('moment')
+const { parse } = require('node-html-parser')
+
+const fgs = require('../data/fgs.json')
+const floods = require('../data/floods.json')
+
+function formatDate (date) {
+  const time = date.toLocaleString('en-GB', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase()
+    .replace(' ', '')
+  const dateString = date
+    .toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+    .replace(',', '')
+  return `${time} on ${dateString}`
+}
 
 lab.experiment('Routes test - national view', () => {
   let sandbox
@@ -56,6 +69,49 @@ lab.experiment('Routes test - national view', () => {
   })
 
   lab.experiment('GET', () => {
+    lab.experiment('with flood and outlook data', () => {
+      const context = {}
+
+      lab.beforeEach(async () => {
+        const fakeFloodData = () => { return floods }
+        const fakeOutlookData = () => {
+          context.now = new Date()
+          return { ...fgs, issued_at: context.now.toISOString() }
+        }
+        setup(fakeFloodData, fakeOutlookData)
+      })
+      lab.test('national view should display updated time and date for flood warnings', async () => {
+        const options = {
+          method: 'GET',
+          url: '/'
+        }
+
+        const response = await server.inject(options)
+
+        Code.expect(response.statusCode).to.equal(200)
+        const root = parse(response.payload)
+        const updateParagraphs = root.querySelectorAll('p.defra-flood-meta')
+        Code.expect(updateParagraphs.length).to.equal(2)
+        // note: it is possible for the expectation below to fail if the minute ticks over between to setting of
+        // context.now and the use of moment() within the code to set the flood update string
+        Code.expect(updateParagraphs[0].text).to.contain(`Updated at ${formatDate(context.now)}`)
+      })
+      lab.test('national view should display updated time and date for outlook', async () => {
+        const options = {
+          method: 'GET',
+          url: '/'
+        }
+
+        const response = await server.inject(options)
+
+        Code.expect(response.statusCode).to.equal(200)
+        const root = parse(response.payload)
+        const updateParagraphs = root.querySelectorAll('p.defra-flood-meta')
+        Code.expect(updateParagraphs.length).to.equal(2)
+        Code.expect(updateParagraphs[1].text).to.contain(`Updated at ${formatDate(context.now)}`)
+        Code.expect(updateParagraphs[1].text).to.contain('Produced by the Met Office and Environment Agency')
+      })
+    })
     lab.test('GET /national view no outlook data', async () => {
       const locationPlugin = {
         plugin: {
