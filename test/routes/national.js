@@ -10,6 +10,32 @@ lab.experiment('Routes test - national view', () => {
   let sandbox
   let server
 
+  async function setup (fakeFloodData, fakeOutlookData) {
+    const locationPlugin = {
+      plugin: {
+        name: 'national',
+        register: (server, options) => {
+          server.route(require('../../server/routes/national'))
+        }
+      }
+    }
+    const floodService = require('../../server/services/flood')
+    // Create dummy flood data in place of cached data
+
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
+    await server.register(require('../../server/plugins/error-pages'))
+    await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+    await server.initialize()
+  }
+
   lab.beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
@@ -329,31 +355,6 @@ lab.experiment('Routes test - national view', () => {
     })
   })
   lab.experiment('POST', () => {
-    async function setup (fakeFloodData, fakeOutlookData) {
-      const locationPlugin = {
-        plugin: {
-          name: 'national',
-          register: (server, options) => {
-            server.route(require('../../server/routes/national'))
-          }
-        }
-      }
-      const floodService = require('../../server/services/flood')
-      // Create dummy flood data in place of cached data
-
-      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-
-      await server.register(require('../../server/plugins/views'))
-      await server.register(require('../../server/plugins/session'))
-      await server.register(require('../../server/plugins/logging'))
-      await server.register(require('../../server/plugins/error-pages'))
-      await server.register(locationPlugin)
-      // Add Cache methods to server
-      const registerServerMethods = require('../../server/services/server-methods')
-      registerServerMethods(server)
-      await server.initialize()
-    }
     lab.experiment('No flood or outlook data', () => {
       lab.beforeEach(async () => {
         const fakeFloodData = () => { return { floods: [] } }
