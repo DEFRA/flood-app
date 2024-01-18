@@ -44,7 +44,7 @@ module.exports = [
     options: {
       validate: {
         payload: joi.object({
-          location: joi.string().required().trim().allow('').max(200).truncate()
+          location: joi.string().required().trim().allow('').max(190).truncate()
         })
       }
     }

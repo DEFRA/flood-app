@@ -402,7 +402,7 @@ lab.experiment('Routes test - national view', () => {
         Code.expect(response.statusCode).to.equal(200)
         Code.expect(response.request.url.pathname).to.equal('/')
       })
-      lab.test('a non-empty location will result in a redirect to the location page', async () => {
+      lab.test('a non-empty location should result in a redirect to the location page', async () => {
         const options = {
           method: 'POST',
           url: '/',
@@ -416,19 +416,19 @@ lab.experiment('Routes test - national view', () => {
         Code.expect(response.statusCode).to.equal(302)
         Code.expect(response.headers.location).to.equal('/location?q=test')
       })
-      lab.test('a location of length >200 should generate the error page', async () => {
+      lab.test('a location of length >190 should result in the location being truncated and redirect to the location page', async () => {
         const options = {
           method: 'POST',
           url: '/',
           payload: {
-            location: 'a'.repeat(201)
+            location: 'a'.repeat(191)
           }
         }
 
         const response = await server.inject(options)
 
         Code.expect(response.statusCode).to.equal(302)
-        Code.expect(response.headers.location).to.equal(`/location?q=${'a'.repeat(200)}`)
+        Code.expect(response.headers.location).to.equal(`/location?q=${'a'.repeat(190)}`)
       })
     })
   })
