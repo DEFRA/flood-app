@@ -2,8 +2,6 @@
 
 {% block content %}
 
-{% import "partials/macros.html" as macros %}
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">
@@ -68,7 +66,9 @@
       <span id="map-live"></span>
     {% endif %}
 
-    {{ macros.displayUpdateInfo(model.dateUTC, model.dateFormatted, model.hasActiveFloods or model.hasWarningsRemoved) }}
+    <p class="defra-flood-meta {% if not model.hasActiveFloods and not model.hasWarningsRemoved %} defra-flood-meta--no-border {% endif %}">
+      Updated at <time datetime="{{model.dateUTC}}">{{model.dateFormatted}}</time>
+    </p> 
 
     <h2 class="govuk-heading-m govuk-!-margin-top-2" id="outlook">Flood forecast for the next 5 days</h2>
     {% if model.outlookOutOfDate or model.dataError %}
@@ -86,7 +86,9 @@
       <span id="map-outlook"></span>
       {% endif %}
 
-      {{ macros.displayUpdateInfo(model.outlook.outlookUTC, model.outlook.outlookTimestamp, true, "Produced by the Met Office and Environment Agency") }}
+      <p class="defra-flood-meta">Updated at <time datetime="{{model.outlook.outlookUTC}}">{{model.outlook.outlookTimestamp}}</time>
+        <br>Produced by the Met Office and Environment Agency
+      </p> 
 
     {% endif %}
         
