@@ -1,6 +1,0 @@
-{% macro displayUpdateInfo(date, dateFormatted, displayBorder, credits) %}
-  <p class="defra-flood-meta {% if not displayBorder %} defra-flood-meta--no-border {% endif %}">
-    Updated at <time datetime="{{date}}">{{dateFormatted}}</time>
-    {% if credits %}<br>{{credits}}{% endif %}
-  </p> 
-{% endmacro %}
