@@ -27,8 +27,8 @@ class ViewModel {
       planAhead: 'Location:Related-content:Plan-ahead-for-flooding',
       whatToDo: 'Location:Related-content:What-to-do-in-a-flood',
       recoverAfter: 'Location:Related-content:Recover-after-a-flood',
-      longTerm: 'Location:Related-content:Check-long-term-risk',
-      reportFlood: 'Location:Related-content:Report-a-flood'
+      reportFlood: 'Location:Related-content:Report-a-flood',
+      getWarnings: 'Location:Related-content:Get-warnings'
     })
 
     const hasFloods = !!floods.length
