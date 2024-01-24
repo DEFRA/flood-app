@@ -71,7 +71,7 @@ module.exports = {
         .sort((a, b) => new Date(a.ts) - new Date(b.ts))
         .map(item => [
           item.ts,
-          item._,
+          isNaN(parseFloat(item._)) ? NaN : parseFloat(item._).toFixed(2), // Fix: Parse as float and round to 2 decimal places, handle NaN case
           item.type
         ])
     ]
