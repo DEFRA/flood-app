@@ -46,78 +46,77 @@ lab.experiment('location service test', () => {
   lab.test('Check for valid location', async () => {
     const util = require('../../server/util')
 
-    const fakeLocationData = () => {
-      return {
-        authenticationResultCode: 'ValidCredentials 1',
-        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
-        copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
-        resourceSets: [
-          {
-            estimatedTotal: 1,
-            resources: [
-              {
-                __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
-                bbox: [
-                  51.12405776977539,
-                  0.8380475640296936,
-                  51.17716598510742,
-                  0.9264887571334839
-                ],
-                name: 'Ashford, Kent',
-                point: {
+    const fakeLocationData = {
+      authenticationResultCode: 'ValidCredentials 1',
+      brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+      copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
+      resourceSets: [
+        {
+          estimatedTotal: 1,
+          resources: [
+            {
+              __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+              bbox: [
+                51.12405776977539,
+                0.8380475640296936,
+                51.17716598510742,
+                0.9264887571334839
+              ],
+              name: 'Ashford, Kent',
+              point: {
+                type: 'Point',
+                coordinates: [
+                  51.14772797,
+                  0.87279475
+                ]
+              },
+              address: {
+                adminDistrict: 'England',
+                adminDistrict2: 'Kent',
+                countryRegion: 'United Kingdom',
+                formattedAddress: 'Ashford, Kent',
+                locality: 'Ashford',
+                countryRegionIso2: 'GB'
+              },
+              confidence: 'High',
+              entityType: 'PopulatedPlace',
+              geocodePoints: [
+                {
                   type: 'Point',
                   coordinates: [
                     51.14772797,
                     0.87279475
+                  ],
+                  calculationMethod: 'Rooftop',
+                  usageTypes: [
+                    'Display'
                   ]
-                },
-                address: {
-                  adminDistrict: 'England',
-                  adminDistrict2: 'Kent',
-                  countryRegion: 'United Kingdom',
-                  formattedAddress: 'Ashford, Kent',
-                  locality: 'Ashford',
-                  countryRegionIso2: 'GB'
-                },
-                confidence: 'High',
-                entityType: 'PopulatedPlace',
-                geocodePoints: [
-                  {
-                    type: 'Point',
-                    coordinates: [
-                      51.14772797,
-                      0.87279475
-                    ],
-                    calculationMethod: 'Rooftop',
-                    usageTypes: [
-                      'Display'
-                    ]
-                  }
-                ],
-                matchCodes: [
-                  'Good'
-                ]
-              }
-            ]
-          }
-        ],
-        statusCode: 200,
-        statusDescription: 'OK',
-        traceId: '8e730b29a377433eb4b5f7a0ede6810b|DU00000B74|7.7.0.0|Ref A: BB9C9D05115F48BDA6C70C0A40AB8304 Ref B: DB3EDGE1510 Ref C: 2019-07-31T14:43:28Z'
-      }
+                }
+              ],
+              matchCodes: [
+                'Good'
+              ]
+            }
+          ]
+        }
+      ],
+      statusCode: 200,
+      statusDescription: 'OK',
+      traceId: '8e730b29a377433eb4b5f7a0ede6810b|DU00000B74|7.7.0.0|Ref A: BB9C9D05115F48BDA6C70C0A40AB8304 Ref B: DB3EDGE1510 Ref C: 2019-07-31T14:43:28Z'
     }
 
-    sandbox.stub(util, 'getJson').callsFake(fakeLocationData)
+    const getJsonStub = sandbox.stub(util, 'getJson').returns(fakeLocationData)
     sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
 
     const location = require('../../server/services/location')
 
-    const result = await location.find('Preston').then((resolvedValue) => {
+    const result = await location.find('Ashford').then((resolvedValue) => {
       return resolvedValue
     }, (error) => {
       return error
     })
 
+    Code.expect(getJsonStub.args[0][0]).to.contain('query=Ashford,GB')
     Code.expect(result).to.be.a.array()
     Code.expect(result.length).to.be.equal(1)
     Code.expect(result[0].name).to.equal('Ashford, Kent')
@@ -126,6 +125,96 @@ lab.experiment('location service test', () => {
 
     // Test that bounding box for location has been given 10km buffer
     Code.expect(result[0].bbox10k).to.equal(JSON.parse('[0.6945958802395501,51.034125753112406,1.0699404409236273,51.267098001671634]'))
+  })
+  lab.test('Check for truncation of search term', async () => {
+    const util = require('../../server/util')
+
+    const fakeLocationData = {
+      authenticationResultCode: 'ValidCredentials 1',
+      brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+      copyright: 'Copyright © 2019 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.',
+      resourceSets: [
+        {
+          estimatedTotal: 1,
+          resources: [
+            {
+              __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+              bbox: [
+                51.12405776977539,
+                0.8380475640296936,
+                51.17716598510742,
+                0.9264887571334839
+              ],
+              name: 'Ashford, Kent',
+              point: {
+                type: 'Point',
+                coordinates: [
+                  51.14772797,
+                  0.87279475
+                ]
+              },
+              address: {
+                adminDistrict: 'England',
+                adminDistrict2: 'Kent',
+                countryRegion: 'United Kingdom',
+                formattedAddress: 'Ashford, Kent',
+                locality: 'Ashford',
+                countryRegionIso2: 'GB'
+              },
+              confidence: 'High',
+              entityType: 'PopulatedPlace',
+              geocodePoints: [
+                {
+                  type: 'Point',
+                  coordinates: [
+                    51.14772797,
+                    0.87279475
+                  ],
+                  calculationMethod: 'Rooftop',
+                  usageTypes: [
+                    'Display'
+                  ]
+                }
+              ],
+              matchCodes: [
+                'Good'
+              ]
+            }
+          ]
+        }
+      ],
+      statusCode: 200,
+      statusDescription: 'OK',
+      traceId: '8e730b29a377433eb4b5f7a0ede6810b|DU00000B74|7.7.0.0|Ref A: BB9C9D05115F48BDA6C70C0A40AB8304 Ref B: DB3EDGE1510 Ref C: 2019-07-31T14:43:28Z'
+    }
+
+    const getJsonStub = sandbox.stub(util, 'getJson').returns(fakeLocationData)
+    sandbox.stub(floodService, 'getIsEngland').callsFake(isEngland)
+
+    const location = require('../../server/services/location')
+
+    await location.find('a'.repeat(200)).then((resolvedValue) => {
+      return resolvedValue
+    }, (error) => {
+      return error
+    })
+
+    Code.expect(getJsonStub.args[0][0]).to.contain(`query=${'a'.repeat(190)},GB`)
+  })
+  lab.test('Check for error with non string input', async () => {
+    // Note: not sure when a non-string could be passed in the wild but this test
+    // is here to show the code behaviour should it happen
+
+    const location = require('../../server/services/location')
+
+    const rejects = async () => {
+      await location.find(1).then((resolvedValue) => {
+        return resolvedValue
+      })
+    }
+    const result = await Code.expect(rejects()).to.reject()
+    Code.expect(result).to.be.a.object()
+    Code.expect(result.message).to.equal('ValidationError: location search term (1) "value" must be a string')
   })
 
   lab.test('Check for Bing call returning low confidence and hence no results', async () => {

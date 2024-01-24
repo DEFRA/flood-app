@@ -1,3 +1,4 @@
+const joi = require('@hapi/joi')
 const { bingKeyLocation, bingUrl } = require('../config')
 const { getJson } = require('../util')
 const util = require('util')
@@ -5,8 +6,16 @@ const bingResultsParser = require('./lib/bing-results-parser')
 const LocationSearchError = require('../location-search-error')
 const floodServices = require('./flood')
 
+// bing will throw a 400 error for search terms longer than 197
+const schema = joi.string().trim().max(190).truncate().allow('')
+
 async function find (location) {
-  const query = encodeURIComponent(location)
+  const { error, value: validatedLocation } = schema.validate(location)
+  if (error) {
+    throw new LocationSearchError(`ValidationError: location search term (${location}) ${error.message}`)
+  }
+
+  const query = encodeURIComponent(validatedLocation)
   const url = util.format(bingUrl, query, bingKeyLocation)
 
   let bingData
