@@ -5,6 +5,7 @@ const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
 const floodService = require('../../server/services/flood')
+const config = require('../../server/config')
 
 const isEngland = () => {
   return { is_england: true }
@@ -16,6 +17,8 @@ lab.experiment('location service test', () => {
   lab.beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/location')]
     sandbox = await sinon.createSandbox()
+    sandbox.stub(config, 'bingUrl').value('http://bing?query=%s&key=%s')
+    sandbox.stub(config, 'bingKeyLocation').value('12345')
   })
 
   lab.afterEach(async () => {
@@ -116,7 +119,7 @@ lab.experiment('location service test', () => {
       return error
     })
 
-    Code.expect(getJsonStub.args[0][0]).to.contain('query=Ashford,GB')
+    Code.expect(getJsonStub.args[0][0]).to.equal('http://bing?query=Ashford&key=12345')
     Code.expect(result).to.be.a.array()
     Code.expect(result.length).to.be.equal(1)
     Code.expect(result[0].name).to.equal('Ashford, Kent')
@@ -199,7 +202,7 @@ lab.experiment('location service test', () => {
       return error
     })
 
-    Code.expect(getJsonStub.args[0][0]).to.contain(`query=${'a'.repeat(190)},GB`)
+    Code.expect(getJsonStub.args[0][0]).to.equal(`http://bing?query=${'a'.repeat(190)}&key=12345`)
   })
   lab.test('Check for error with non string input', async () => {
     // Note: not sure when a non-string could be passed in the wild but this test
