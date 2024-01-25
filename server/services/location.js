@@ -9,10 +9,20 @@ const floodServices = require('./flood')
 // bing will throw a 400 error for search terms longer than 197
 const schema = joi.string().trim().max(190).truncate().allow('')
 
+function bingSearchNotNeeded (searchTerm) {
+  const mustNotMatch = /[<>]|^england$|^scotland$|^wales$|^united kingdom$|^northern ireland$/i
+  const mustMatch = /[a-zA-Z0-9]/
+  return searchTerm.match(mustNotMatch) || !searchTerm.match(mustMatch)
+}
+
 async function find (location) {
   const { error, value: validatedLocation } = schema.validate(location)
   if (error) {
     throw new LocationSearchError(`ValidationError: location search term (${location}) ${error.message}`)
+  }
+
+  if (bingSearchNotNeeded(validatedLocation)) {
+    return []
   }
 
   const query = encodeURIComponent(validatedLocation)
