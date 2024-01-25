@@ -7,11 +7,8 @@ async function bingResultsParser (bingData, getIsEngland) {
   }
 
   const allowedConfidences = ['medium', 'high']
-  // Note: generally we don't want admindivision1 results as they are mostly the home nations
-  // however they also include greater london so we have to include them and treat home nation names
-  // as a special search case in the location.find service
   const allowedTypes = [
-    'populatedplace', 'postcode1', 'postcode3', 'admindivision1', 'admindivision2', 'neighborhood'
+    'populatedplace', 'postcode1', 'postcode3', 'admindivision2', 'neighborhood'
   ]
   const data = set.resources
     .filter(r => allowedConfidences.includes(r.confidence.toLowerCase()))
