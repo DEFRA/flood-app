@@ -7,7 +7,7 @@ const { expect } = require('@hapi/code')
 const { afterEach, beforeEach, describe, it } = exports.lab = Lab.script()
 const config = require('../../server/config')
 const populatedPlace = require('./data/location/ashford-kent.json')
-const adminDivision1 = require('./data/location/greater-london.json')
+const adminDivision1 = require('./data/location/wales.json')
 
 function setupStubs (context, locationData, isEngland = true) {
   context.stubs.getJson.onFirstCall().returns(locationData)
@@ -101,12 +101,11 @@ describe('location service', () => {
     expect(context.stubs.getJson.callCount).to.equal(0)
     expect(result.length).to.equal(0)
   })
-  it('should query Bing for metropolitan area', async () => {
+  it('should filter out countries if Bing returns one', async () => {
     setupStubs(context, adminDivision1)
-    const result = await findLocation('Greater London')
+    const result = await findLocation('.wales')
     expect(context.stubs.getJson.callCount).to.equal(1)
-    expect(result.length).to.equal(1)
-    expect(result[0].name).to.equal('Greater London')
+    expect(result.length).to.equal(0)
   })
   describe('home nations test', () => {
     ['england', 'scotland', 'wales', 'northern ireland', 'united kingdom'].forEach(nation => {

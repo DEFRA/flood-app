@@ -232,18 +232,6 @@ lab.experiment('Routes test - location - 2', () => {
       const h1 = root.querySelector('h1.govuk-heading-xl')
       Code.expect(h1.text).to.contain("We couldn't find 'Scotland', England")
     })
-    lab.test('returns not found page when entering Ireland', async () => {
-      const options = {
-        method: 'GET',
-        url: '/location?q=Ireland'
-      }
-
-      const response = await server.inject(options)
-      Code.expect(response.statusCode).to.equal(200)
-      const root = parse(response.payload)
-      const h1 = root.querySelector('h1.govuk-heading-xl')
-      Code.expect(h1.text).to.contain("We couldn't find 'Ireland', England")
-    })
     lab.test('returns not found page when entering non-alphanumeric only search', async () => {
       const options = {
         method: 'GET',
