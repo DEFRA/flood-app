@@ -76,15 +76,28 @@ describe('location service', () => {
       isEngland: { is_england: true }
     })
   })
-  it('should truncate queries to below the 197 characters limit enforced by Bing', async () => {
+  it('should query bing using the provided search term', async () => {
     setupStubs(context, populatedPlace)
-    await findLocation('a'.repeat(200))
+    const searchTerm = 'ashford'
+    await findLocation(searchTerm)
     expect(context.stubs.getJson.callCount).to.equal(1)
-    expect(context.stubs.getJson.args[0][0]).to.equal(`http://bing?query=${'a'.repeat(190)}&key=12345`)
+    expect(context.stubs.getJson.args[0][0]).to.equal(`http://bing?query=${searchTerm}&key=12345`)
+  })
+  it('should not query Bing if search term is longer than 60 characters', async () => {
+    setupStubs(context, {})
+    const result = await findLocation('a'.repeat(61))
+    expect(context.stubs.getJson.callCount).to.equal(0)
+    expect(result.length).to.equal(0)
   })
   it('should not query Bing if search term contains only special characters', async () => {
     setupStubs(context, {})
     const result = await findLocation('!@£$%^&')
+    expect(context.stubs.getJson.callCount).to.equal(0)
+    expect(result.length).to.equal(0)
+  })
+  it('should not query Bing if search term is empty', async () => {
+    setupStubs(context, {})
+    const result = await findLocation('')
     expect(context.stubs.getJson.callCount).to.equal(0)
     expect(result.length).to.equal(0)
   })
@@ -97,7 +110,7 @@ describe('location service', () => {
   })
   describe('home nations test', () => {
     ['england', 'scotland', 'wales', 'northern ireland', 'united kingdom'].forEach(nation => {
-      it(`should not query Bing for nation name ${nation}`, async () => {
+      it(`should not query Bing for search term '${nation}'`, async () => {
         setupStubs(context, {})
         const result = await findLocation(nation)
         expect(context.stubs.getJson.callCount).to.equal(0)
