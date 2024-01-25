@@ -6,19 +6,35 @@ const bingResultsParser = require('./lib/bing-results-parser')
 const LocationSearchError = require('../location-search-error')
 const floodServices = require('./flood')
 
-const schema = joi.string().trim().allow('')
-
 function bingSearchNotNeeded (searchTerm) {
   const mustNotMatch = /[<>]|^england$|^scotland$|^wales$|^united kingdom$|^northern ireland$/i
   const mustMatch = /[a-zA-Z0-9]/
   return searchTerm.match(mustNotMatch) || !searchTerm.match(mustMatch) || searchTerm.length > 60
 }
 
-async function find (location) {
-  const { error, value: validatedLocation } = schema.validate(location)
+function validateSearchTerm (searchTerm) {
+  const searchTermSchema = joi.string().trim().allow('')
+  const { error, value: validatedLocation } = searchTermSchema.validate(searchTerm)
   if (error) {
-    throw new LocationSearchError(`ValidationError: location search term (${location}) ${error.message}`)
+    throw new LocationSearchError(`ValidationError: location search term (${searchTerm}) ${error.message}`)
   }
+  return validatedLocation
+}
+
+function validateBingResponse (response) {
+  const bingSchema = joi.object({
+    statusCode: joi.number().valid(200).required(),
+    resourceSets: joi.array().items(joi.object()).min(1).required()
+  }).unknown()
+
+  const { error } = bingSchema.validate(response, { abortEarly: false })
+  if (error) {
+    throw new LocationSearchError(`Bing response (${JSON.stringify(response)}) does not match expected schema: ${error.message}`)
+  }
+}
+
+async function find (location) {
+  const validatedLocation = validateSearchTerm(location)
 
   if (bingSearchNotNeeded(validatedLocation)) {
     return []
@@ -34,22 +50,7 @@ async function find (location) {
     throw new LocationSearchError(`Bing error: ${err}`)
   }
 
-  // At this point we expect to have received a 200 status code from location search api call
-  // but check status code within payload to ensure valid.
-
-  if (!bingData || bingData.length === 0) {
-    throw new LocationSearchError('Missing or corrupt contents from location search')
-  }
-
-  // Check for OK status returned
-  if (bingData.statusCode !== 200) {
-    throw new LocationSearchError(`Location search returned status: ${bingData.statusCode || 'unknown'}, message: ${bingData.statusDescription || 'not set'}`)
-  }
-
-  // Check that the json is relevant
-  if (!bingData.resourceSets || !bingData.resourceSets.length) {
-    throw new LocationSearchError('Invalid geocode results (no resourceSets)')
-  }
+  validateBingResponse(bingData)
 
   return bingResultsParser(bingData, floodServices.getIsEngland)
 }
