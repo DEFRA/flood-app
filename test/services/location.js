@@ -434,7 +434,7 @@ lab.experiment('location service test', () => {
     const location = require('../../server/services/location')
 
     const rejects = async () => {
-      await location.find('').then((resolvedValue) => {
+      await location.find('test').then((resolvedValue) => {
         return resolvedValue
       })
     }
@@ -466,7 +466,7 @@ lab.experiment('location service test', () => {
     const location = require('../../server/services/location')
 
     const rejects = async () => {
-      await location.find('').then((resolvedValue) => {
+      await location.find('test').then((resolvedValue) => {
         return resolvedValue
       })
     }
@@ -485,7 +485,7 @@ lab.experiment('location service test', () => {
     const location = require('../../server/services/location')
 
     const rejects = async () => {
-      await location.find()
+      await location.find('test')
     }
 
     const result = await Code.expect(rejects()).to.reject()
@@ -506,7 +506,7 @@ lab.experiment('location service test', () => {
     const location = require('../../server/services/location')
 
     const rejects = async () => {
-      await location.find('').then((resolvedValue) => {
+      await location.find('test').then((resolvedValue) => {
         return resolvedValue
       })
     }
@@ -765,7 +765,7 @@ lab.experiment('location service test', () => {
 
       const location = require('../../server/services/location')
 
-      const [result] = await location.find('').then((resolvedValue) => {
+      const [result] = await location.find('Nidd').then((resolvedValue) => {
         return resolvedValue
       }, (error) => {
         return error
