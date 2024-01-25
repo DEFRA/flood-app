@@ -6,13 +6,12 @@ const bingResultsParser = require('./lib/bing-results-parser')
 const LocationSearchError = require('../location-search-error')
 const floodServices = require('./flood')
 
-// bing will throw a 400 error for search terms longer than 197
-const schema = joi.string().trim().max(190).truncate().allow('')
+const schema = joi.string().trim().allow('')
 
 function bingSearchNotNeeded (searchTerm) {
   const mustNotMatch = /[<>]|^england$|^scotland$|^wales$|^united kingdom$|^northern ireland$/i
   const mustMatch = /[a-zA-Z0-9]/
-  return searchTerm.match(mustNotMatch) || !searchTerm.match(mustMatch)
+  return searchTerm.match(mustNotMatch) || !searchTerm.match(mustMatch) || searchTerm.length > 60
 }
 
 async function find (location) {
