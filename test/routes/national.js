@@ -10,15 +10,21 @@ const { parse } = require('node-html-parser')
 const fgs = require('../data/fgs.json')
 const floods = require('../data/floods.json')
 
+// function provided by chatgpt
 function formatDate (date) {
-  const time = date.toLocaleString('en-GB', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase()
-    .replace(' ', '')
+  const hours24 = date.getHours()
+  const hours12 = hours24 === 0 ? 12 : (hours24 > 12 ? hours24 - 12 : hours24)
+  const minutes = date.getMinutes()
+  const ampm = hours24 >= 12 ? 'pm' : 'am'
+
+  const time = `${hours12}:${minutes.toString().padStart(2, '0')}${ampm}`
+
   const dateString = date
     .toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
     .replace(',', '')
+
   return `${time} on ${dateString}`
 }
-
 lab.experiment('Routes test - national view', () => {
   let sandbox
   let server
