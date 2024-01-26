@@ -6,6 +6,7 @@ const RISK_LEVELS = new Map([
   [3, new Map([[1, 2], [2, 2], [3, 3], [4, 3]])],
   [4, new Map([[1, 2], [2, 3], [3, 3], [4, 4]])]
 ])
+
 module.exports = class OutlookPolys {
   constructor (outlook, place) {
     this.polys = []
@@ -25,27 +26,30 @@ module.exports = class OutlookPolys {
           if (!turf.intersect(getPolyCoords(poly), locationCoords)) {
             continue
           }
-
           for (const day of riskAreaBlock.days) {
-            for (const [key, [impact, likelihood]] of Object.entries(riskAreaBlock.risk_levels)) {
-              if (impact > 1 && !(impact === 2 && likelihood === 1)) {
-                const riskLevel = RISK_LEVELS.get(impact).get(likelihood)
-                this.polys.push({
-                  riskLevel,
-                  impact,
-                  likelihood,
-                  day,
-                  polyId: poly.id,
-                  source: key,
-                  messageId: `${riskLevel}-i${impact}-l${likelihood}`
-                })
-              }
-            }
+            this.processRiskAreaBlocks(riskAreaBlock, day, poly)
           }
         }
       }
     }
     this.polys.sort(sortPolys)
+  }
+
+  processRiskAreaBlocks(riskAreaBlock, day, poly) {
+    for (const [key, [impact, likelihood]] of Object.entries(riskAreaBlock.risk_levels)) {
+      if (impact > 1 && !(impact === 2 && likelihood === 1)) {
+        const riskLevel = RISK_LEVELS.get(impact).get(likelihood)
+        this.polys.push({
+          riskLevel,
+          impact,
+          likelihood,
+          day,
+          polyId: poly.id,
+          source: key,
+          messageId: `${riskLevel}-i${impact}-l${likelihood}`
+        })
+      }
+    }
   }
 }
 
