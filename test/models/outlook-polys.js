@@ -8,18 +8,18 @@ const outlookOverlaping = require('../data/fgsOverlaping.json')
 const outlook = require('../data/fgs.json')
 
 const liverpool = {
-  "name": "Liverpool",
-  "center": [-2.97715402, 53.40906906],
-  "bbox2k": [-3.14143417419422, 53.29325861688157, -2.7431380933381284, 53.56857304799508],
-  "bbox10k": [-3.2625314463031407, 53.2213132254306, -2.6220408212292075, 53.640518437630426],
-  "address": "Liverpool, Merseyside",
-  "isEngland": { "is_england": true },
-  "isUK": true,
-  "isScotlandOrNorthernIreland": false
+  name: 'Liverpool',
+  center: [-2.97715402, 53.40906906],
+  bbox2k: [-3.14143417419422, 53.29325861688157, -2.7431380933381284, 53.56857304799508],
+  bbox10k: [-3.2625314463031407, 53.2213132254306, -2.6220408212292075, 53.640518437630426],
+  address: 'Liverpool, Merseyside',
+  isEngland: { is_england: true },
+  isUK: true,
+  isScotlandOrNorthernIreland: false
 }
 const london = {
   name: 'London',
-  center: [ -0.12611847, 51.50682449 ],
+  center: [-0.12611847, 51.50682449],
   bbox2k: [
     -0.5378394001378515,
     51.26815821078414,
@@ -40,7 +40,7 @@ const london = {
 
 const newcastle = {
   name: 'Newcastle Upon Tyne',
-  center: [ -1.6086086, 54.97790527 ],
+  center: [-1.6086086, 54.97790527],
   bbox2k: [
     -1.8055123625086742,
     54.940929335641925,
@@ -85,7 +85,7 @@ lab.experiment('OutlookPolys test', () => {
         }
       ]
     }
-    
+
     expect(result).to.equal(expected)
   })
   lab.test('Should have surface, groud, coastal and river', () => {
@@ -158,12 +158,10 @@ lab.experiment('OutlookPolys test', () => {
         }
       ]
     }
-    
+
     expect(result).to.equal(expected)
   })
   lab.test('Should produce surface and river over two days', () => {
-
-
     const result = new OutlookPolys(outlook, london)
 
     const expected = {
@@ -224,7 +222,7 @@ lab.experiment('OutlookPolys test', () => {
         }
       ]
     }
-    
+
     expect(result).to.equal(expected)
   })
   lab.test('Should be a location that will produce an empty array', () => {
@@ -233,7 +231,7 @@ lab.experiment('OutlookPolys test', () => {
     const expected = {
       polys: []
     }
-    
+
     expect(result).to.equal(expected)
   })
 })

@@ -35,7 +35,7 @@ module.exports = class OutlookPolys {
     this.polys.sort(sortPolys)
   }
 
-  processRiskAreaBlocks(riskAreaBlock, day, poly) {
+  processRiskAreaBlocks (riskAreaBlock, day, poly) {
     for (const [key, [impact, likelihood]] of Object.entries(riskAreaBlock.risk_levels)) {
       if (impact > 1 && !(impact === 2 && likelihood === 1)) {
         const riskLevel = RISK_LEVELS.get(impact).get(likelihood)
