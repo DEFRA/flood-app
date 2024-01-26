@@ -21,14 +21,14 @@ module.exports = class OutlookPolys {
       ]
     ])
 
-    outlook.risk_areas.forEach((riskArea) => {
-      riskArea.risk_area_blocks.forEach((riskAreaBlock) => {
-        riskAreaBlock.polys.forEach((poly) => {
+    outlook.risk_areas.forEach(riskArea => {
+      riskArea.risk_area_blocks.forEach(riskAreaBlock => {
+        riskAreaBlock.polys.forEach(poly => {
           // build array of polys that intersect
           if (!turf.intersect(getPolyCoords(poly), locationCoords)) {
             return
           }
-          riskAreaBlock.days.forEach((day) => {
+          riskAreaBlock.days.forEach(day => {
             this.processRiskAreaBlocks(riskAreaBlock, day, poly)
           })
         })
