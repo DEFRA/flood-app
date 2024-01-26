@@ -11,27 +11,30 @@ module.exports = class OutlookPolys {
   constructor (outlook, place) {
     this.polys = []
 
-    const locationCoords = turf.polygon([[
-      [place.bbox2k[0], place.bbox2k[1]],
-      [place.bbox2k[0], place.bbox2k[3]],
-      [place.bbox2k[2], place.bbox2k[3]],
-      [place.bbox2k[2], place.bbox2k[1]],
-      [place.bbox2k[0], place.bbox2k[1]]
-    ]])
+    const locationCoords = turf.polygon([
+      [
+        [place.bbox2k[0], place.bbox2k[1]],
+        [place.bbox2k[0], place.bbox2k[3]],
+        [place.bbox2k[2], place.bbox2k[3]],
+        [place.bbox2k[2], place.bbox2k[1]],
+        [place.bbox2k[0], place.bbox2k[1]]
+      ]
+    ])
 
-    for (const riskArea of outlook.risk_areas) {
-      for (const riskAreaBlock of riskArea.risk_area_blocks) {
-        for (const poly of riskAreaBlock.polys) {
+    outlook.risk_areas.forEach((riskArea) => {
+      riskArea.risk_area_blocks.forEach((riskAreaBlock) => {
+        riskAreaBlock.polys.forEach((poly) => {
           // build array of polys that intersect
           if (!turf.intersect(getPolyCoords(poly), locationCoords)) {
-            continue
+            return
           }
-          for (const day of riskAreaBlock.days) {
+          riskAreaBlock.days.forEach((day) => {
             this.processRiskAreaBlocks(riskAreaBlock, day, poly)
-          }
-        }
-      }
-    }
+          })
+        })
+      })
+    })
+
     this.polys.sort(sortPolys)
   }
 
