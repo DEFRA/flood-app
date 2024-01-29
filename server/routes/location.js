@@ -1,6 +1,7 @@
 const joi = require('@hapi/joi')
 const ViewModel = require('../models/views/location')
 const OutlookTabsModel = require('../models/outlook-tabs')
+const locationService = require('../services/location')
 const formatDate = require('../util').formatDate
 const moment = require('moment-timezone')
 const tz = 'Europe/London'
@@ -15,7 +16,7 @@ module.exports = {
       return h.redirect('/')
     }
 
-    const [place] = await request.server.methods.location.find(location)
+    const [place] = await locationService.find(location)
 
     if (!place?.name) {
       return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
