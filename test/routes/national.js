@@ -28,7 +28,7 @@ lab.experiment('Routes test - national view', () => {
   let server
 
   async function setup (fakeFloodData, fakeOutlookData) {
-    const locationPlugin = {
+    const nationalPlugin = {
       plugin: {
         name: 'national',
         register: (server, options) => {
@@ -37,16 +37,36 @@ lab.experiment('Routes test - national view', () => {
       }
     }
     const floodService = require('../../server/services/flood')
+    const locationService = require('../../server/services/location')
     // Create dummy flood data in place of cached data
 
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+    sandbox.stub(locationService, 'find').returns([{
+      name: 'Ashford, Kent',
+      center: [0.87279475, 51.14772797],
+      bbox2k: [
+        0.80935719234919,
+        51.106071366450024,
+        0.9551791288139874,
+        51.19515238842755
+      ],
+      bbox10k: [
+        0.6945958802395501,
+        51.034125753112406,
+        1.0699404409236273,
+        51.267098001671634
+      ],
+      isUK: true,
+      isScotlandOrNorthernIreland: false,
+      isEngland: { is_england: true }
+    }])
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(require('../../server/plugins/logging'))
     await server.register(require('../../server/plugins/error-pages'))
-    await server.register(locationPlugin)
+    await server.register(nationalPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
@@ -54,6 +74,7 @@ lab.experiment('Routes test - national view', () => {
   }
 
   lab.beforeEach(async () => {
+    delete require.cache[require.resolve('../../server/services/location.js')]
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
     delete require.cache[require.resolve('../../server/util.js')]
@@ -516,14 +537,14 @@ lab.experiment('Routes test - national view', () => {
           method: 'POST',
           url: '/',
           payload: {
-            location: 'test'
+            location: 'ashford, kent'
           }
         }
 
         const response = await server.inject(options)
 
         Code.expect(response.statusCode).to.equal(302)
-        Code.expect(response.headers.location).to.equal('/location?q=test')
+        Code.expect(response.headers.location).to.equal('/location/ashford-kent')
       })
     })
   })
