@@ -6,6 +6,7 @@ const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const moment = require('moment')
 const { parse } = require('node-html-parser')
+const flushAppRequireCache = require('../lib/flush-app-require-cache')
 
 const fgs = require('../data/fgs.json')
 const floods = require('../data/floods.json')
@@ -30,7 +31,38 @@ lab.experiment('Routes test - national view', () => {
   let server
 
   async function setup (fakeFloodData, fakeOutlookData) {
-    const locationPlugin = {
+    flushAppRequireCache()
+
+    const config = require('../../server/config')
+    sandbox.stub(config, 'floodRiskUrl').value('http://server/cyltfr')
+
+    const floodService = require('../../server/services/flood')
+    const locationService = require('../../server/services/location')
+    // Create dummy flood data in place of cached data
+
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+    sandbox.stub(locationService, 'find').returns([{
+      name: 'Ashford, Kent',
+      center: [0.87279475, 51.14772797],
+      bbox2k: [
+        0.80935719234919,
+        51.106071366450024,
+        0.9551791288139874,
+        51.19515238842755
+      ],
+      bbox10k: [
+        0.6945958802395501,
+        51.034125753112406,
+        1.0699404409236273,
+        51.267098001671634
+      ],
+      isUK: true,
+      isScotlandOrNorthernIreland: false,
+      isEngland: { is_england: true }
+    }])
+
+    const nationalPlugin = {
       plugin: {
         name: 'national',
         register: (server, options) => {
@@ -38,17 +70,12 @@ lab.experiment('Routes test - national view', () => {
         }
       }
     }
-    const floodService = require('../../server/services/flood')
-    // Create dummy flood data in place of cached data
-
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(require('../../server/plugins/logging'))
     await server.register(require('../../server/plugins/error-pages'))
-    await server.register(locationPlugin)
+    await server.register(nationalPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
@@ -56,11 +83,6 @@ lab.experiment('Routes test - national view', () => {
   }
 
   lab.beforeEach(async () => {
-    delete require.cache[require.resolve('../../server/services/flood.js')]
-    delete require.cache[require.resolve('../../server/services/server-methods.js')]
-    delete require.cache[require.resolve('../../server/util.js')]
-    delete require.cache[require.resolve('../../server/routes/national.js')]
-
     sandbox = await sinon.createSandbox()
 
     server = Hapi.server({
@@ -85,6 +107,25 @@ lab.experiment('Routes test - national view', () => {
           return { ...fgs, issued_at: context.now.toISOString() }
         }
         setup(fakeFloodData, fakeOutlookData)
+      })
+      lab.test('national view should display CYLTFR link taken from the floodRiskUrl config value', async () => {
+        const options = {
+          method: 'GET',
+          url: '/'
+        }
+
+        const response = await server.inject(options)
+
+        Code.expect(response.statusCode).to.equal(200)
+        const root = parse(response.payload)
+        const anchors = root
+          .querySelectorAll('a')
+          .filter((element) => {
+            return element.text.trim() === 'Check your long term flood risk'
+          })
+        Code.expect(anchors.length).to.equal(1)
+        Code.expect(anchors[0].text).to.contain('Check your long term flood risk')
+        Code.expect(anchors[0].getAttribute('href')).to.equal('http://server/cyltfr')
       })
       lab.test('national view should display updated time and date for flood warnings', async () => {
         const options = {
@@ -470,14 +511,14 @@ lab.experiment('Routes test - national view', () => {
           method: 'POST',
           url: '/',
           payload: {
-            location: 'test'
+            location: 'ashford, kent'
           }
         }
 
         const response = await server.inject(options)
 
         Code.expect(response.statusCode).to.equal(302)
-        Code.expect(response.headers.location).to.equal('/location?q=test')
+        Code.expect(response.headers.location).to.equal('/location/ashford-kent')
       })
     })
   })

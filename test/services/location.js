@@ -5,12 +5,12 @@ const sinon = require('sinon')
 
 const { expect } = require('@hapi/code')
 const { afterEach, beforeEach, describe, it } = exports.lab = Lab.script()
-const config = require('../../server/config')
 const populatedPlace = require('./data/location/ashford-kent.json')
 const adminDivision1 = require('./data/location/wales.json')
 const ukButNotEngland = require('./data/location/cardiff.json')
 const notUk = require('./data/location/dublin.json')
 const LocationSearchError = require('../../server/location-search-error')
+const flushAppRequireCache = require('../lib/flush-app-require-cache')
 
 function setupStubs (context, locationData, isEngland = true) {
   context.stubs.getJson.onFirstCall().returns(locationData)
@@ -20,18 +20,8 @@ function setupStubs (context, locationData, isEngland = true) {
 describe('location service', () => {
   let location, util, floodServices, context
   beforeEach(() => {
-    // Deleting the requires and re-requiring is a bit hacky but was necessary as the tests
-    // using callCount on the getJson stub were failing when running after any of the
-    // location route tests
-    // e.g  npx lab --verbose --id 3,33 --require dotenv/config test/routes/location.js test/services/location-2.js
-    // Not got to the bottom of why that would be but this fixes it in the short term
-    // Also, the order of doing the requires is important, you need to set up the stubs on the
-    // dependent modules before requiring the subject under test (i.e. location)
-    // This doesn't apply to config, probably because the stubs are fully set up here rather than
-    // in the individual tests
-    delete require.cache[require.resolve('../../server/services/flood')]
-    delete require.cache[require.resolve('../../server/services/location')]
-    delete require.cache[require.resolve('../../server/util')]
+    flushAppRequireCache()
+    const config = require('../../server/config')
     sinon.stub(config, 'bingUrl').value('http://bing?query=%s&key=%s')
     sinon.stub(config, 'bingKeyLocation').value('12345')
     util = require('../../server/util')

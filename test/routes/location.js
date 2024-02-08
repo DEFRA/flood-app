@@ -81,6 +81,9 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     await server.register(require('../../server/plugins/logging'))
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/error-pages'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -93,8 +96,8 @@ lab.experiment('Routes test - location - 2', () => {
       url: '/location'
     }
     const response = await server.inject(options)
-    Code.expect(response.headers.location).to.equal('/')
-    Code.expect(response.payload).to.equal('')
+    Code.expect(response.statusCode).to.equal(404)
+    Code.expect(response.payload).to.contain('Page not found')
   })
   lab.test('GET /location with query parameters giving undefined location', async () => {
     const fakeGetJson = () => {
@@ -129,6 +132,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(require('../../server/plugins/logging'))
+    await server.register(require('../../server/plugins/error-pages'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -137,12 +141,12 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=xxxxxx'
+      url: '/location/xxxxxx'
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('We couldn\'t find')
+    Code.expect(response.statusCode).to.equal(404)
+    Code.expect(response.payload).to.contain('Page not found')
   })
   lab.test('GET /location with query parameters giving undefined location parameter set as location', async () => {
     const fakeGetJson = () => {
@@ -177,6 +181,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(require('../../server/plugins/logging'))
+    await server.register(require('../../server/plugins/error-pages'))
     await server.register(locationPlugin)
     // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
@@ -185,12 +190,12 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?location=xxxxxx'
+      url: '/location/xxxxxx'
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('We couldn\'t find')
+    Code.expect(response.statusCode).to.equal(404)
+    Code.expect(response.payload).to.contain('Page not found')
   })
   lab.experiment('GET /location with rejected query', () => {
     lab.beforeEach(async () => {
@@ -211,52 +216,38 @@ lab.experiment('Routes test - location - 2', () => {
     lab.test('returns not found page when entering Wales', async () => {
       const options = {
         method: 'GET',
-        url: '/location?q=Wales'
+        url: '/location/Wales'
       }
 
       const response = await server.inject(options)
-      Code.expect(response.statusCode).to.equal(200)
-      const root = parse(response.payload)
-      const h1 = root.querySelector('h1.govuk-heading-xl')
-      Code.expect(h1.text).to.contain("We couldn't find 'Wales', England")
+      Code.expect(response.statusCode).to.equal(404)
     })
     lab.test('returns not found page when entering Scotland', async () => {
       const options = {
         method: 'GET',
-        url: '/location?q=Scotland'
+        url: '/location/Scotland'
       }
 
       const response = await server.inject(options)
-      Code.expect(response.statusCode).to.equal(200)
-      const root = parse(response.payload)
-      const h1 = root.querySelector('h1.govuk-heading-xl')
-      Code.expect(h1.text).to.contain("We couldn't find 'Scotland', England")
+      Code.expect(response.statusCode).to.equal(404)
     })
     lab.test('returns not found page when entering non-alphanumeric only search', async () => {
       const options = {
         method: 'GET',
-        url: '/location?q=%%%'
+        url: '/location/,-+'
       }
 
       const response = await server.inject(options)
-      Code.expect(response.statusCode).to.equal(200)
-
-      const root = parse(response.payload)
-      const h1 = root.querySelector('h1.govuk-heading-xl')
-      Code.expect(h1.text).to.contain("We couldn't find '%%%', England")
+      Code.expect(response.statusCode).to.equal(404)
     })
     lab.test('returns not found page when entering a query containing angle brackets', async () => {
       const options = {
         method: 'GET',
-        url: '/location?q=<script>'
+        url: '/location/<script>'
       }
 
       const response = await server.inject(options)
-      Code.expect(response.statusCode).to.equal(200)
-
-      const root = parse(response.payload)
-      const h1 = root.querySelector('h1.govuk-heading-xl')
-      Code.expect(h1.text).to.contain("We couldn't find '<script>', England")
+      Code.expect(response.statusCode).to.equal(404)
     })
   })
   lab.experiment('GET /location with query parameters giving defined location', () => {
@@ -278,7 +269,7 @@ lab.experiment('Routes test - location - 2', () => {
     lab.test('response should be 200', async () => {
       const options = {
         method: 'GET',
-        url: '/location?q=Warrington'
+        url: '/location/Warrington'
       }
 
       const response = await server.inject(options)
@@ -287,7 +278,7 @@ lab.experiment('Routes test - location - 2', () => {
     lab.test('river levels link should use location query', async () => {
       const options = {
         method: 'GET',
-        url: '/location?q=Warrington'
+        url: '/location/Warrington'
       }
 
       const response = await server.inject(options)
@@ -344,7 +335,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington&fbclid=*()*()*890890890'
+      url: '/location/Warrington?fbclid=*()*()*890890890'
     }
 
     const response = await server.inject(options)
@@ -395,7 +386,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?location=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
@@ -446,13 +437,13 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('There are no flood warnings or alerts in this area.')
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('There are no flood warnings or alerts in this area.')
   })
   lab.test('GET /location with no query', async () => {
     const fakeGetJson = () => {
@@ -487,8 +478,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers.location).to.equal('/')
+    Code.expect(response.statusCode).to.equal(404)
   })
   lab.test('GET /location with query parameters check for 1 alert 1 nlif', async () => {
     const floodService = require('../../server/services/flood')
@@ -570,7 +560,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
@@ -712,7 +702,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=coxwold'
+      url: '/location/coxwold-north-yorkshire'
     }
 
     const response = await server.inject(options)
@@ -801,7 +791,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
@@ -880,7 +870,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
@@ -931,13 +921,12 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('We couldn\'t find')
+    Code.expect(response.statusCode).to.equal(404)
   })
   lab.test('GET /location with query parameters for location-1sw-2w-1a', async () => {
     const floodService = require('../../server/services/flood')
@@ -981,7 +970,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
@@ -1119,7 +1108,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
@@ -1209,7 +1198,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
@@ -1262,7 +1251,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
@@ -1352,7 +1341,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
@@ -1399,7 +1388,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=England'
+      url: '/location/England'
     }
 
     const response = await server.inject(options)
@@ -1501,7 +1490,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
@@ -1558,7 +1547,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
@@ -1615,7 +1604,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
@@ -1672,7 +1661,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
@@ -1749,7 +1738,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
@@ -1826,7 +1815,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=Warrington'
+      url: '/location/Warrington'
     }
 
     const response = await server.inject(options)
@@ -1863,7 +1852,7 @@ lab.experiment('Routes test - location - 2', () => {
     await server.initialize()
     const options = {
       method: 'GET',
-      url: '/location?q=liverpool'
+      url: '/location/liverpool'
     }
 
     const response = await server.inject(options)
