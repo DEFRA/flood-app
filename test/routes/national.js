@@ -7,6 +7,7 @@ const lab = exports.lab = Lab.script()
 const moment = require('moment-timezone')
 const { parse } = require('node-html-parser')
 const { linkChecker } = require('../lib/helpers/html-expectations')
+const flushAppRequireCache = require('../lib/flush-app-require-cache')
 
 const fgs = require('../data/fgs.json')
 const floods = require('../data/floods.json')
@@ -28,14 +29,11 @@ lab.experiment('Routes test - national view', () => {
   let server
 
   async function setup (fakeFloodData, fakeOutlookData) {
-    const nationalPlugin = {
-      plugin: {
-        name: 'national',
-        register: (server, options) => {
-          server.route(require('../../server/routes/national'))
-        }
-      }
-    }
+    flushAppRequireCache()
+
+    const config = require('../../server/config')
+    sandbox.stub(config, 'floodRiskUrl').value('http://server/cyltfr')
+
     const floodService = require('../../server/services/flood')
     const locationService = require('../../server/services/location')
     // Create dummy flood data in place of cached data
@@ -62,6 +60,15 @@ lab.experiment('Routes test - national view', () => {
       isEngland: { is_england: true }
     }])
 
+    const nationalPlugin = {
+      plugin: {
+        name: 'national',
+        register: (server, options) => {
+          server.route(require('../../server/routes/national'))
+        }
+      }
+    }
+
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(require('../../server/plugins/logging'))
@@ -74,12 +81,6 @@ lab.experiment('Routes test - national view', () => {
   }
 
   lab.beforeEach(async () => {
-    delete require.cache[require.resolve('../../server/services/location.js')]
-    delete require.cache[require.resolve('../../server/services/flood.js')]
-    delete require.cache[require.resolve('../../server/services/server-methods.js')]
-    delete require.cache[require.resolve('../../server/util.js')]
-    delete require.cache[require.resolve('../../server/routes/national.js')]
-
     sandbox = await sinon.createSandbox()
 
     server = Hapi.server({
@@ -104,6 +105,25 @@ lab.experiment('Routes test - national view', () => {
           return { ...fgs, issued_at: context.now.toISOString() }
         }
         setup(fakeFloodData, fakeOutlookData)
+      })
+      lab.test('national view should display CYLTFR link taken from the floodRiskUrl config value', async () => {
+        const options = {
+          method: 'GET',
+          url: '/'
+        }
+
+        const response = await server.inject(options)
+
+        Code.expect(response.statusCode).to.equal(200)
+        const root = parse(response.payload)
+        const anchors = root
+          .querySelectorAll('a')
+          .filter((element) => {
+            return element.text.trim() === 'Check your long term flood risk'
+          })
+        Code.expect(anchors.length).to.equal(1)
+        Code.expect(anchors[0].text).to.contain('Check your long term flood risk')
+        Code.expect(anchors[0].getAttribute('href')).to.equal('http://server/cyltfr')
       })
       lab.test('national view should display updated time and date for flood warnings', async () => {
         const options = {
