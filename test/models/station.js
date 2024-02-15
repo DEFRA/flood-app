@@ -273,7 +273,7 @@ lab.experiment('Station model test', () => {
     const Result = viewModel
 
     Code.expect(Result.infoHeight).to.equal('This station measures height from sea level.')
-    Code.expect(Result.infoTrend).to.equal('The last 2 readings indicate the trend.')
+    Code.expect(Result.infoTrend).to.equal('The trend is based on the last 5 readings.')
     Code.expect(Result.infoState).to.equal('There are 3 states: low, normal and high. The latest level is within the normal range. We calculate the normal range using an average of past measurements and other local factors.')
   })
   lab.test('Test station viewModel returns Below Zero Height ToggleTip', async () => {
@@ -284,7 +284,7 @@ lab.experiment('Station model test', () => {
     const Result = viewModel
 
     Code.expect(Result.infoHeight).to.equal('This station measures height from a fixed point on or close to the riverbed. A reading of 0 metres can be normal for some stations because of natural changes to the riverbed.')
-    Code.expect(Result.infoTrend).to.equal('The last 2 readings indicate the trend.')
+    Code.expect(Result.infoTrend).to.equal('The trend is based on the last 5 readings.')
     Code.expect(Result.infoState).to.equal('There are 3 states: low, normal and high. The latest level is below the normal range. We calculate the normal range using an average of past measurements and other local factors.')
   })
   lab.test('Test station viewModel returns River Bed Height ToggleTip', async () => {
@@ -295,7 +295,7 @@ lab.experiment('Station model test', () => {
     const Result = viewModel
 
     Code.expect(Result.infoHeight).to.equal('This station measures height from a fixed point on or close to the riverbed. This point is 5.63m above sea level.')
-    Code.expect(Result.infoTrend).to.equal('The last 2 readings indicate the trend.')
+    Code.expect(Result.infoTrend).to.equal('The trend is based on the last 5 readings.')
     Code.expect(Result.infoState).to.equal('There are 3 states: low, normal and high. The latest level is above the normal range. We calculate the normal range using an average of past measurements and other local factors.')
   })
 

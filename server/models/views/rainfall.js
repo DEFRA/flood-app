@@ -11,9 +11,9 @@ class ViewModel {
 
     Object.assign(this, {
       stationName,
-      pageTitle: 'Rainfall at ' + stationName + ' gauge',
-      postTitle: 'Latest rainfall information at ' + stationName + ' gauge',
-      metaDescription: 'Check the latest recorded rainfall at ' + stationName + ' gauge',
+      pageTitle: `Rainfall at ${stationName} gauge`,
+      postTitle: `Latest rainfall information at ${stationName} gauge`,
+      metaDescription: `Check the latest recorded rainfall at ${stationName} gauge`,
       metaCanonical: '/',
       telemetry: rainfallStationTelemetry || [],
       floodRiskUrl: config.floodRiskUrl,

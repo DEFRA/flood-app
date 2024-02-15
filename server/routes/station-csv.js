@@ -1,10 +1,19 @@
 const floodService = require('../services/flood')
 const moment = require('moment-timezone')
 const boom = require('@hapi/boom')
+const joi = require('@hapi/joi')
 
 module.exports = {
   method: 'GET',
   path: '/station-csv/{id}/{direction?}',
+  options: {
+    validate: {
+      params: joi.object({
+        id: joi.number().greater(999).less(100000).required(),
+        direction: joi.string().valid('downstream', 'upstream')
+      })
+    }
+  },
   handler: async (request, h) => {
     const { id } = request.params
     let { direction } = request.params
@@ -62,7 +71,7 @@ module.exports = {
         .sort((a, b) => new Date(a.ts) - new Date(b.ts))
         .map(item => [
           item.ts,
-          item._,
+          isNaN(parseFloat(item._)) ? NaN : parseFloat(item._).toFixed(2), // Fix: Parse as float and round to 2 decimal places, handle NaN case
           item.type
         ])
     ]

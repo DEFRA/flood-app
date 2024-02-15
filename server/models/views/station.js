@@ -319,7 +319,7 @@ class ViewModel {
         'We calculate the normal range using an average of past measurements and other local factors.'
       })()
     }
-    this.infoTrend = 'The last 2 readings indicate the trend.'
+    this.infoTrend = 'The trend is based on the last 5 readings.'
 
     // Group and sort thresholds
     thresholds = thresholds.reduce(
