@@ -1,0 +1,22 @@
+# Check for flooding 7.8.0 Wednesday 21st February 2024
+
+# Release
+
+7.8.0
+
+# Tickets
+
+https://eaflood.atlassian.net/browse/FSR-1139 - Update govuk-frontend to version 4.8.0 (includes updated crown)
+
+# Instructions
+
+# Steps
+
+1 - Execute: LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+2 - Ensure that the service down (aka failover) assets[1] are copied to the appropriate S3 bucket
+
+Execute smoke tests and forward results
+
+# Refs
+
+[1] https://github.com/DEFRA/flood-app/tree/master/service-down
