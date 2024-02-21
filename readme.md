@@ -15,6 +15,10 @@ Running flood-service: https://github.com/DEFRA/flood-service
 Node.js v16.x.x
 
 ### Testing the application
+
+Before running tests, ensure that your environment variables are set.
+
+
 ```
 $ npm i
 $ npm run test
@@ -24,7 +28,7 @@ Functional testing: https://github.com/DEFRA/flood-service-tests-v2
 
 ### Running the application
 
-Once the environment variables below are set, you are now ready to start:
+Before running the applciation, ensure that your environment variables are set.
 
 ```
 $ npm i
@@ -41,7 +45,9 @@ If your changes are not reflected in the browser/console, you should check this 
 
 # Environment variables
 
-DEFRA employees can find examples of environment variables stored in our private gitlab repository
+Create a .env file at the root of the project to set your environment variables locally, which is especially useful during development. The [dotenv](https://www.npmjs.com/package/dotenv) package facilitates this by automatically loading these variables at application start. This approach is recommended as a simpler alternative to global settings, like those in .bashrc. 
+
+For DEFRA employees, examples of these environment variables are available in our private lfwconfig repository.
 
 | name     | description      | required | default |            valid            |             notes             |
 |----------|------------------|:--------:|---------|:---------------------------:|:-----------------------------:|
