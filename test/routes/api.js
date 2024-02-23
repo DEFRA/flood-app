@@ -417,12 +417,9 @@ lab.experiment('API routes test', () => {
     const webchatService = require('../../server/services/webchat')
     sandbox.stub(webchatService, 'getAvailability').callsFake(getAvailability)
 
-    // Fake the cached rainfall data
-    webchatService.rainfallGeojson = await webchatService.getAvailability()
-
     const route = {
       plugin: {
-        name: 'rainfall',
+        name: 'webchat',
         register: (server) => {
           server.route(require('../../server/routes/api/webchat-availability'))
         }
