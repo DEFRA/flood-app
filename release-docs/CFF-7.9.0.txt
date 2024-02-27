@@ -1,4 +1,4 @@
-# Check for flooding 7.9.0 Wednesday 21st February 2024
+# Check for flooding 7.9.0 Wednesday 28th February 2024
 
 # Release
 
