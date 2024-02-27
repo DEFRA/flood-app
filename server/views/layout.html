@@ -32,10 +32,18 @@
   {% if metaCanonical %}
     <link rel="canonical" href="{{fullUrl}}"/>
   {% endif %}
-  
+
+  <script>
+    if (window.location.hash === '#webchat' && window.matchMedia('(max-width: 640px)').matches) {
+      document.body.classList.add('wc-hidden')
+    }
+  </script>
+
 {% endblock %}
 
 {% block header %}
+
+<div id="webchat-skip-link-container"></div>
 
 {%  include "partials/cookie-banner.html" %}
 
@@ -90,6 +98,9 @@
     <script src="{{ assetPath }}/js/all.js"></script>
     <script>window.GOVUKFrontend.initAll()</script>
     <script src="{{ assetPath }}/js/core.js"></script>
+    {% if webchat.enabled %}
+    <script src="{{ assetPath }}/js/webchat.js"></script>
+    {% endif %}
 {% endblock %}
 
 {% block footer %}

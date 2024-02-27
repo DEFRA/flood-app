@@ -1,3 +1,5 @@
+'use strict'
+
 const routes = [].concat(
   require('../routes/find-location'),
   require('../routes/location'),
@@ -31,6 +33,10 @@ const routes = [].concat(
   require('../routes/rainfall-station'),
   require('../routes/rainfall-station-csv')
 )
+
+if (process.env.WEBCHAT_ENABLED === 'true') {
+  routes.push(require('../routes/api/webchat-availability'))
+}
 
 // Non production end points
 if (process.env.NODE_ENV !== 'production') {

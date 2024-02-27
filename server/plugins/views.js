@@ -38,6 +38,13 @@ module.exports = {
       appVersion: pkg.version,
       assetPath: '/assets',
       serviceName: 'Check for flooding',
+      webchat: {
+        enabled: config.webchat.enabled,
+        brandId: config.webchat.brandId,
+        channelId: config.webchat.channelId,
+        environment: config.webchat.environment,
+        audioUrl: config.webchat.audioUrl
+      },
       floodFisUrl,
       gaFourAccId,
       gtmAccId

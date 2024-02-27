@@ -1,7 +1,19 @@
 <div class="defra-context-footer">
-  <div>
-    <h2 class="govuk-visually-hidden">Speak to someone</h2>
-    <p><strong>Call Floodline for advice{% if model.isNationalPage %} about flooding from rivers, the sea and groundwater{% endif %}</strong></p>
-    <p>Telephone: 0345 988 1188<br>Textphone: 0345 602 6340<br>Open 24 hours a day, 7 days a week<br><a href="https://gov.uk/call-charges">Find out more about call charges</a></p>
-  </div>
+    <div>
+        <h2 class="govuk-visually-hidden">Speak to someone</h2>
+        <p><strong>Call Floodline for advice{% if model.isNationalPage %} about flooding from rivers, the sea and
+            groundwater{% endif %}</strong></p>
+        <p>Telephone: 0345 988 1188<br>Textphone: 0345 602 6340<br>Open 24 hours a day, 7 days a week<br><a
+                href="https://gov.uk/call-charges">Find out more about call charges</a></p>
+        {% if webchat.enabled %}
+        <p class="govuk-!-margin-bottom-0">
+            <strong>Talk to a Floodline adviser over webchat</strong>
+            <br>
+            We're running webchat as a trial.
+        </p>
+        <div id="wc-availability" data-brand-id="{{webchat.brandId}}" data-environment="{{webchat.environment}}" data-channel-id="{{webchat.channelId}}" data-audio-url="{{webchat.audioUrl}}">
+            <p>Webchat is not supported with your browser</p>
+        </div>
+        {% endif %}
+    </div>
 </div>
