@@ -1,0 +1,81 @@
+# Check for flooding 8.0.0 Tuesday 12 March 2024
+
+# Release
+
+8.0.0
+
+# Tickets
+
+[FSR-984](https://eaflood.atlassian.net/browse/FSR-984) Webchat Story One - Locate Webchat Service
+
+[FSR-985](https://eaflood.atlassian.net/browse/FSR-985) Webchat Story Two – Pre-Chat Screen
+
+[FSR-990](https://eaflood.atlassian.net/browse/FSR-990) Webchat Story Three – Request Chat Screen
+
+[FSR-991](https://eaflood.atlassian.net/browse/FSR-991) Webchat Story Four – Request Chat Screen \(Open Waiting\)
+
+[FSR-992](https://eaflood.atlassian.net/browse/FSR-992) Webchat Story Five – Chat in Progress \(Open Response\)
+
+[FSR-993](https://eaflood.atlassian.net/browse/FSR-993) Webchat Story Six – End Chat
+
+[FSR-994](https://eaflood.atlassian.net/browse/FSR-994) Webchat Story Seven – Download Webchat Transcript
+
+[FSR-995](https://eaflood.atlassian.net/browse/FSR-995) Webchat Story Eight – Leave Feedback on Service
+
+[FSR-996](https://eaflood.atlassian.net/browse/FSR-996) Webchat Story Nine – Settings Button \(Audio & Scrolling\)
+
+[FSR-1046](https://eaflood.atlassian.net/browse/FSR-1046) Webchat Story 1.a - Locate Webchat Service \[existing chat\]
+
+[FSR-1148](https://eaflood.atlassian.net/browse/FSR-1148) Cross browser testing for webchat
+
+[FSR-1149](https://eaflood.atlassian.net/browse/FSR-1149) non functional testing Webchat
+
+[FSR-1150](https://eaflood.atlassian.net/browse/FSR-1150) performance testing Webchat
+
+### Task
+
+[FSR-1092](https://eaflood.atlassian.net/browse/FSR-1092) Webchat - 1b
+
+[FSR-1101](https://eaflood.atlassian.net/browse/FSR-1101) Update Privacy notice to reflect webchat
+
+[FSR-1103](https://eaflood.atlassian.net/browse/FSR-1103) Add privacy link to webchat question screen
+
+[FSR-1114](https://eaflood.atlassian.net/browse/FSR-1114) Webchat - Skiplink
+
+[FSR-1115](https://eaflood.atlassian.net/browse/FSR-1115) Webchat - Keyboard focus
+
+[FSR-1116](https://eaflood.atlassian.net/browse/FSR-1116) Webchat - Live regions
+
+[FSR-1117](https://eaflood.atlassian.net/browse/FSR-1117) Webchat - CSS and Markup
+
+[FSR-1118](https://eaflood.atlassian.net/browse/FSR-1118) Webchat Story - a11y Browser history
+
+[FSR-1120](https://eaflood.atlassian.net/browse/FSR-1120) Web chat - Remove unique ID from chat transcript
+
+[FSR-1143](https://eaflood.atlassian.net/browse/FSR-1143) Point webchat at CXOne prod environment
+
+[FSR-1144](https://eaflood.atlassian.net/browse/FSR-1144) Webchat release prep
+
+[FSR-1147](https://eaflood.atlassian.net/browse/FSR-1147) Webchat content and layout changes
+
+[FSR-1154](https://eaflood.atlassian.net/browse/FSR-1154) Unit tests needed in flood-app to cover webchat additions
+
+### Bug
+
+[FSR-1121](https://eaflood.atlassian.net/browse/FSR-1121) CXone does not clear value that is added after a space in the Name field after the chat has been ended. When a new chat is started CXone attaches the previous chat name to new chat name. 
+
+[FSR-1122](https://eaflood.atlassian.net/browse/FSR-1122) Unread message count appears when user clicks on ‘show chat’ whilst chat is open
+
+[FSR-1129](https://eaflood.atlassian.net/browse/FSR-1129) Webchat buttons are currently not operable by space bar as per accessibility guidelines. Buttons should be operable using the Space bar like the Enter button
+
+[FSR-1137](https://eaflood.atlassian.net/browse/FSR-1137) Webchat Skip Link Issue
+
+[FSR-1138](https://eaflood.atlassian.net/browse/FSR-1138) Webchat Closed Chat
+
+# Instructions
+
+# Steps
+
+1 - Execute: LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+
+Execute smoke tests and forward results
