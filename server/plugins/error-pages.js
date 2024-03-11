@@ -24,10 +24,12 @@ module.exports = {
         if (statusCode === 500 && response.name === 'LocationSearchError') {
           view = 'location-error'
           viewModel.pageTitle = 'Sorry, there is a problem with the search - Check for flooding'
-        } else if (statusCode === 429) {
+        }
+        if (statusCode === 429) {
           view = '429'
           logLevel = 'warn'
-        } else if (statusCode === 404 || (statusCode === 400 && response.message === 'Invalid request params input')) {
+        }
+        if (statusCode === 404 || (statusCode === 400 && response.message === 'Invalid request params input')) {
           statusCode = 404
           view = '404'
           logLevel = 'debug'
