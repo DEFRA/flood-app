@@ -157,8 +157,8 @@ class ViewModel {
       this.recentValue.formattedTime = moment.tz(this.recentValue.ts, tz).format('h:mma')
       this.recentValue.latestDayFormatted = moment.tz(this.recentValue.ts, tz).format('D MMMM')
 
-      const today = moment().startOf('day')
-      const yesterday = moment().subtract(1, 'days').startOf('day')
+      // const today = moment().startOf('day')
+      // const yesterday = moment().subtract(1, 'days').startOf('day')
 
       const oneHourAgo = new Date()
 
@@ -167,12 +167,16 @@ class ViewModel {
       // check if recent value is over one hour old0
       this.dataOverHourOld = new Date(this.recentValue.ts) < oneHourAgo
 
-      this.recentValue.dateWhen = 'on ' + moment.tz(this.recentValue.ts, tz).format('D/MM/YY')
-      if (moment.tz(this.recentValue.ts, tz).isSame(today, 'd')) {
-        this.recentValue.dateWhen = 'today'
-      } else if (moment.tz(this.recentValue.ts, tz).isSame(yesterday, 'd')) {
-        this.recentValue.dateWhen = 'yesterday'
-      }
+      // Not sure this code is used any more
+
+      // this.recentValue.dateWhen = 'on ' + moment.tz(this.recentValue.ts, tz).format('D/MM/YY')
+      // if (moment.tz(this.recentValue.ts, tz).isSame(today, 'd')) {
+      //   this.recentValue.dateWhen = 'today'
+      // } else if (moment.tz(this.recentValue.ts, tz).isSame(yesterday, 'd')) {
+      //   this.recentValue.dateWhen = 'yesterday'
+      // } else {
+      //   this.recentValue.dateWhen = ''
+      // }
 
       if (this.station.percentile5 && this.station.percentile95) {
         if (isNaN(this.station.percentile5) || isNaN(this.station.percentile95)) {
