@@ -17,22 +17,27 @@ module.exports = {
         }
 
         const viewModel = {}
-        let view = '500'
-        let logLevel = 'error'
-        let statusCode = response.output.statusCode
+        let view
+        let logLevel
+        let statusCode
 
-        if (statusCode === 500 && response.name === 'LocationSearchError') {
+        if (response.output.statusCode === 500 && response.name === 'LocationSearchError') {
           view = 'location-error'
+          statusCode = response.output.statusCode
+          logLevel = 'error'
           viewModel.pageTitle = 'Sorry, there is a problem with the search - Check for flooding'
-        }
-        if (statusCode === 429) {
+        } else if (response.output.statusCode === 429) {
           view = '429'
           logLevel = 'warn'
-        }
-        if (statusCode === 404 || (statusCode === 400 && response.message === 'Invalid request params input')) {
+          statusCode = response.output.statusCode
+        } else if (response.output.statusCode === 404 || (response.output.statusCode === 400 && response.message === 'Invalid request params input')) {
           statusCode = 404
           view = '404'
           logLevel = 'debug'
+        } else {
+          view = '500'
+          logLevel = 'error'
+          statusCode = response.output.statusCode
         }
 
         request.logger[logLevel]({
