@@ -21,6 +21,8 @@ module.exports = {
         let logLevel
         let statusCode
 
+        const HTTP_NOT_FOUND = 404
+
         if (response.output.statusCode === 500 && response.name === 'LocationSearchError') {
           view = 'location-error'
           statusCode = response.output.statusCode
@@ -30,7 +32,7 @@ module.exports = {
           view = '429'
           logLevel = 'warn'
           statusCode = response.output.statusCode
-        } else if (response.output.statusCode === 404 || (response.output.statusCode === 400 && response.message === 'Invalid request params input')) {
+        } else if (response.output.statusCode === HTTP_NOT_FOUND || (response.output.statusCode === 400 && response.message === 'Invalid request params input')) {
           statusCode = 404
           view = '404'
           logLevel = 'debug'
