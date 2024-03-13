@@ -143,7 +143,8 @@ function removeCityQualifiers (inputString) {
   const splitToken = ', '
   const itemsArray = inputString.split(splitToken)
   const length = itemsArray.length
-  if (length >= 2 && hasCityQualifier(itemsArray.slice(-2))) {
+  const penultimate = -2
+  if (length >= 2 && hasCityQualifier(itemsArray.slice(penultimate))) {
     return itemsArray.slice(0, -1).join(splitToken)
   }
   return inputString
