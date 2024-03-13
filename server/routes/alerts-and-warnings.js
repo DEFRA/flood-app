@@ -43,7 +43,7 @@ module.exports = [{
         return h.view('alerts-and-warnings', { model })
       }
 
-      if (typeof place === 'undefined' || !place.isEngland.is_england) {
+      if (!place?.isEngland.is_england) {
         // If no place return empty floods
         model = new ViewModel({ location, place, floods, station })
         return h.view('alerts-and-warnings', { model })
