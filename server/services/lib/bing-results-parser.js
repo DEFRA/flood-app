@@ -35,10 +35,14 @@ async function bingResultsParser (bingData, getIsEngland) {
 
   const isEngland = await getIsEngland(center[0], center[1])
 
-  // add on 2000m buffer to place.bbox for warnings and alerts search
-  const bbox2k = addBufferToBbox(bbox, 2000)
-  // add on 10000m buffer to place.bbox for stations search
-  const bbox10k = addBufferToBbox(bbox, 10000)
+  const distanceInMetres = {
+    '2k': 2000,
+    '10k': 10000
+  }
+
+  // add buffer to place.bbox for stations search
+  const bbox2k = addBufferToBbox(bbox, distanceInMetres['2k'])
+  const bbox10k = addBufferToBbox(bbox, distanceInMetres['10k'])
 
   return [{
     name,
