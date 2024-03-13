@@ -7,8 +7,11 @@ const wreck = require('@hapi/wreck').defaults({
 const LocationSearchError = require('./location-search-error')
 const ALLOWED_SEARCH_CHARS = 'a-zA-Z0-9\',-.& ()'
 
-async function request (method, url, options, ext = false) {
+async function request (method, url, options) {
   let res, payload
+
+  const HTTP_STATUS_CODE_OK = 200
+
   try {
     const response = await wreck[method](url, options)
     res = response.res
@@ -22,7 +25,7 @@ async function request (method, url, options, ext = false) {
   if (res.headers['x-ms-bm-ws-info'] === '1') {
     throw new LocationSearchError('Empty location search response indicated by header check of x-ms-bm-ws-info')
   }
-  if (res.statusCode !== 200) {
+  if (res.statusCode !== HTTP_STATUS_CODE_OK) {
     throw (payload || new Error('Unknown error'))
   }
   return payload
@@ -52,7 +55,7 @@ function formatDate (value, format = 'D/M/YY h:mma') {
 
 function toFixed (value, dp) {
   if (value) {
-    return Number(Math.round(value + 'e' + dp) + 'e-' + dp).toFixed(dp)
+    return Number(Math.round(`${value}e` + dp) + `e-${dp}`).toFixed(dp)
   } else {
     return value
   }
@@ -72,6 +75,8 @@ function cleanseLocation (location) {
     const re = new RegExp(`[^${ALLOWED_SEARCH_CHARS}]`, 'g')
     return location.replace(re, '')
   }
+
+  return location
 }
 
 function removeSpikes (data) {
@@ -114,7 +119,11 @@ function formatRainfallTelemetry (telemetry, valueDuration) {
 
 function rainfallTelemetryPadOut (values, valueDuration) {
   // Extend telemetry upto latest interval, could be 15 or 60 minute intervals
-  const intervals = valueDuration === 15 ? 480 : 120
+  const fifteenMinutes = 15
+  const twoHours = 120
+  const eightHours = 480
+
+  const intervals = valueDuration === fifteenMinutes ? eightHours : twoHours
   while (values.length < intervals) {
     const nextDateTime = moment(values[0].dateTime).add(valueDuration, 'minutes').toDate()
     values.unshift({
