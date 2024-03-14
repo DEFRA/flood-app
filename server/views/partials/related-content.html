@@ -24,10 +24,13 @@
           How to recover after a flood
         </a>
       </li>
+      {% if model.longTerm %}
       <li>
         <a data-journey-click="{% if model.longTerm %}{{ model.longTerm }}{% endif %}" class="govuk-link" href={{model.floodRiskUrl}}>
           Check your long term flood risk
         </a>
+      </li>
+      {% endif %}
       <li>
         <a data-journey-click="{% if model.reportFlood %}{{ model.reportFlood }}{% endif %}"  class="govuk-link" href="https://www.gov.uk/report-flood-cause">
           Report a flood

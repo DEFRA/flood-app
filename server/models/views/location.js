@@ -16,7 +16,6 @@ class ViewModel {
       floodRiskUrl,
       tabs,
       outOfDate,
-      location: encodeURIComponent(title),
       pageTitle: `Check for flooding in ${title}`,
       metaDescription: `View current flood warnings and alerts for the ${title} area,` +
         ' and the regional flood forecast for the next 5 days. Also check local river, sea, groundwater and rainfall levels.',
@@ -28,8 +27,8 @@ class ViewModel {
       planAhead: 'Location:Related-content:Plan-ahead-for-flooding',
       whatToDo: 'Location:Related-content:What-to-do-in-a-flood',
       recoverAfter: 'Location:Related-content:Recover-after-a-flood',
-      longTerm: 'Location:Related-content:Check-long-term-risk',
-      reportFlood: 'Location:Related-content:Report-a-flood'
+      reportFlood: 'Location:Related-content:Report-a-flood',
+      getWarnings: 'Location:Related-content:Get-warnings'
     })
 
     const hasFloods = !!floods.length

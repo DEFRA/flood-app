@@ -13,6 +13,7 @@ class ViewModel {
       timestamp: Date.now(),
       error: error ? true : null,
       getWarnings: 'Alerts-and-warnings:Related-content:Get-warnings',
+      longTerm: 'Alerts-and-warnings:Related-content:Check-long-term-risk',
       isEngland: place ? place.isEngland.is_england : null,
       isDummyData: floods ? floods.isDummyData : false,
       floodRiskUrl: config.floodRiskUrl
