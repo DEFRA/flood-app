@@ -11,6 +11,9 @@ import { bisector, extent } from 'd3-array'
 const { simplify } = window.flood.utils
 
 function LineChart (containerId, stationId, data, options = {}) {
+  
+
+  
   const renderChart = () => {
     // Set scales
     setScaleX()
@@ -29,11 +32,14 @@ function LineChart (containerId, stationId, data, options = {}) {
     xScale.range([0, width])
     yScale.range([height, 0])
 
+    // This sets the default value to be shown as the start point of a days data on the xAxis using the 24 hour clock
+    const DISPLAYED_HOUR_ON_X_AXIS = 6
+
     // Draw axis
     const xAxis = axisBottom().tickSizeOuter(0)
 
     // DB: Time offset
-    xAxis.scale(xScale).ticks(timeHour.filter(d => { return d.getHours() === 6 })).tickFormat('')
+    xAxis.scale(xScale).ticks(timeHour.filter(d => { return d.getHours() === DISPLAYED_HOUR_ON_X_AXIS })).tickFormat('')
 
     yAxis = axisLeft().ticks(5).tickFormat(d => {
       return parseFloat(d).toFixed(1)
@@ -49,14 +55,14 @@ function LineChart (containerId, stationId, data, options = {}) {
 
     // Position y ticks
     svg.select('.y.axis').style('text-anchor', 'start')
-    svg.selectAll('.y.axis .tick line').attr('x2', 6)
+    svg.selectAll('.y.axis .tick line').attr('x2', DISPLAYED_HOUR_ON_X_AXIS)
     svg.selectAll('.y.axis .tick text').attr('x', 9)
 
     // DB: Time offset
     svg.select('.x.grid')
       .attr('transform', 'translate(0,' + height + ')')
       .call(axisBottom(xScale)
-        .ticks(timeHour.filter(d => { return d.getHours() === 6 }))
+        .ticks(timeHour.filter(d => { return d.getHours() === DISPLAYED_HOUR_ON_X_AXIS }))
         .tickSize(-height, 0, 0)
         .tickFormat('')
       )
