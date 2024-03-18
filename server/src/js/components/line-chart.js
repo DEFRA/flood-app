@@ -11,9 +11,6 @@ import { bisector, extent } from 'd3-array'
 const { simplify } = window.flood.utils
 
 function LineChart (containerId, stationId, data, options = {}) {
-  
-
-  
   const renderChart = () => {
     // Set scales
     setScaleX()
