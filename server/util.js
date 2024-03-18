@@ -31,8 +31,8 @@ async function request (method, url, options) {
   return payload
 }
 
-function get (url, options, ext = false) {
-  return request('get', url, options, ext)
+function get (url, options) {
+  return request('get', url, options)
 }
 
 function post (url, options) {
@@ -45,8 +45,8 @@ function postJson (url, options) {
   return post(url, options)
 }
 
-function getJson (url, ext = false) {
-  return get(url, { json: true }, ext)
+function getJson (url) {
+  return get(url, { json: true })
 }
 
 function formatDate (value, format = 'D/M/YY h:mma') {
