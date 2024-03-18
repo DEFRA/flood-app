@@ -1,0 +1,61 @@
+#!/bin/bash
+
+VERSION=$1
+RELEASE_DATE=$2
+JIRA_RELEASE_ID=$3
+
+JIRA_RELEASE_LINK="https:\\/\\/eaflood.atlassian.net\\/projects\\/FSR\\/versions\\/${JIRA_RELEASE_ID}\\/tab\\/release-report-all-issues"
+RELEASE_BRANCH="release/$VERSION"
+RELEASE_NOTES_FILE="./release-docs/CFF-${VERSION}.txt"
+
+git switch development
+git pull
+git switch -c $RELEASE_BRANCH 
+npm version --no-git-tag-version $VERSION
+
+JIRA_TICKETS=$(git show ${RELEASE_BRANCH}...master --oneline --no-patch --pretty=%s -10 | grep -e '^FSR-')
+
+TEMP_FILE=$(mktemp)
+
+sed \
+  -e "s/{version}/${VERSION}/g" \
+  -e "s/{date}/${RELEASE_DATE}/g" \
+  -e "s/{releaselink}/${JIRA_RELEASE_LINK}/g" \
+  -e "s/{ticketlist}/${JIRA_TICKETS}/g" \
+./release-docs/template.txt > $TEMP_FILE
+
+# Open the temporary file in the default editor
+"${EDITOR:-vi}" "$TEMP_FILE"
+
+echo "Waiting for user to save and close the file..."
+while [ ! -s "$TEMP_FILE" ]; do
+    sleep 1
+done
+
+mv "$TEMP_FILE" "$RELEASE_NOTES_FILE"
+
+git add "$RELEASE_NOTES_FILE" package.json package-lock.json
+
+git commit -m "Add release notes and bump version number to ${VERSION}" --no-edit
+
+git push -u origin "$RELEASE_BRANCH"
+
+gh pr create --base master --fill --title "Release $VERSION" --body "$JIRA_TICKETS"
+gh release create "$VERSION" --draft --title "Release $VERSION" --notes "[${JIRA_RELEASE_LINK}](${JIRA_RELEASE_LINK})"
+
+git switch development
+
+pushd ../flood-service
+
+git switch development
+git pull
+git switch -c $RELEASE_BRANCH 
+npm version --no-git-tag-version $VERSION
+git add package.json package-lock.json
+git commit -m "Bump version number to ${VERSION}" --no-edit
+git push -u origin "$RELEASE_BRANCH"
+gh pr create --base master --fill --title "Release $VERSION" --body "$JIRA_TICKETS"
+gh release create "$VERSION" --draft --title "Release $VERSION" --notes "[${JIRA_RELEASE_LINK}](${JIRA_RELEASE_LINK})"
+git switch development
+
+popd
