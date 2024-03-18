@@ -2,12 +2,18 @@ module.exports = {
   HTTP_BAD_REQUEST: 400,
   HTTP_NOT_FOUND: 404,
   HTTP_TOO_MANY_REQUESTS: 429,
-  HTTP_INTERNAL_SERVER_ERROR: 500,
-
+  INTERNAL_SERVER_ERROR: 500,
+  floodSeverity: {
+    floodAlert: 1,
+    floowWarning: 2,
+    floodSevereWarning: 3,
+    nlif: 4
+  },
   rainfall: {
     telemetryDaysAgo: 5,
     valueDuration15: 15,
     valueDuration45: 45,
+    latestHourDateTimeMinutesToAdd: 45,
     batchDataMinutes: 15,
     batchDataDateTimeMinutesToAdd: 45,
     lastDataRefreshProblemMax: 6,

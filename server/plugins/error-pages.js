@@ -2,6 +2,8 @@
 * Add an `onPreResponse` listener to return error pages
 */
 
+const constants = require('../constants')
+
 module.exports = {
   plugin: {
     name: 'error-pages',
@@ -21,10 +23,12 @@ module.exports = {
         let logLevel
         let statusCode
 
-        const HTTP_BAD_REQUEST = 400
-        const HTTP_NOT_FOUND = 404
-        const HTTP_TOO_MANY_REQUESTS = 429
-        const INTERNAL_SERVER_ERROR = 500
+        const {
+          HTTP_BAD_REQUEST,
+          HTTP_NOT_FOUND,
+          HTTP_TOO_MANY_REQUESTS,
+          INTERNAL_SERVER_ERROR
+        } = constants
 
         if (response.output.statusCode === INTERNAL_SERVER_ERROR && response.name === 'LocationSearchError') {
           view = 'location-error'
