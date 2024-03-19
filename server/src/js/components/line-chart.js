@@ -10,6 +10,9 @@ import { select, selectAll, pointer } from 'd3-selection'
 import { bisector, extent } from 'd3-array'
 const { simplify } = window.flood.utils
 
+// This sets the default value to be shown as the start point of a days data on the xAxis using the 24 hour clock
+const DISPLAYED_HOUR_ON_X_AXIS = 6
+
 function LineChart (containerId, stationId, data, options = {}) {
   const renderChart = () => {
     // Set scales
@@ -28,9 +31,6 @@ function LineChart (containerId, stationId, data, options = {}) {
     // Calculate new xScale and yScales height and width
     xScale.range([0, width])
     yScale.range([height, 0])
-
-    // This sets the default value to be shown as the start point of a days data on the xAxis using the 24 hour clock
-    const DISPLAYED_HOUR_ON_X_AXIS = 6
 
     // Draw axis
     const xAxis = axisBottom().tickSizeOuter(0)
