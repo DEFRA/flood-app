@@ -429,7 +429,7 @@ function LineChart (containerId, stationId, data, options = {}) {
   const formatLabelsX = (d, i, nodes) => {
     // Format X Axis labels
     const element = select(nodes[i])
-    const formattedTime = timeFormat('%-I%p')(new Date(d.setHours(6, 0, 0, 0))).toLocaleLowerCase()
+    const formattedTime = timeFormat('%-I%p')(new Date(d.setHours(DISPLAYED_HOUR_ON_X_AXIS, 0, 0, 0))).toLocaleLowerCase()
     const formattedDate = timeFormat('%-e %b')(new Date(d))
     element.append('tspan').text(formattedTime)
     element.append('tspan').attr('x', 0).attr('dy', '15').text(formattedDate)
