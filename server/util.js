@@ -55,7 +55,7 @@ function formatDate (value, format = 'D/M/YY h:mma') {
 
 function toFixed (value, dp) {
   if (value) {
-    return Number(Math.round(`${value}e${dp}`) + `e-${dp}`).toFixed(dp)
+    return Number(Math.round(Number(`${value}e${dp}`)) + `e-${dp}`).toFixed(dp)
   } else {
     return value
   }
