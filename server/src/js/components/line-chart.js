@@ -5,10 +5,13 @@ import { area as d3Area, line as d3Line, curveMonotoneX } from 'd3-shape'
 import { axisBottom, axisLeft } from 'd3-axis'
 import { scaleLinear, scaleTime } from 'd3-scale'
 import { timeFormat } from 'd3-time-format'
-import { timeDay } from 'd3-time'
+import { timeHour } from 'd3-time'
 import { select, selectAll, pointer } from 'd3-selection'
 import { bisector, extent } from 'd3-array'
 const { simplify } = window.flood.utils
+
+// This sets the default value to be shown as the start point of a days data on the xAxis using the 24 hour clock
+const DISPLAYED_HOUR_ON_X_AXIS = 6
 
 function LineChart (containerId, stationId, data, options = {}) {
   const renderChart = () => {
@@ -17,7 +20,6 @@ function LineChart (containerId, stationId, data, options = {}) {
     setScaleY()
 
     // Set right margin depending on length of labels
-    // const numChars = yScale.domain()[1].toFixed(2).length - 1
     const numChars = yScale.domain()[1].toFixed(1).length - 2
     margin = { top: 5, bottom: 45, left: 15, right: (isMobile ? 31 : 36) + (numChars * 9) }
 
@@ -32,9 +34,11 @@ function LineChart (containerId, stationId, data, options = {}) {
 
     // Draw axis
     const xAxis = axisBottom().tickSizeOuter(0)
-    xAxis.scale(xScale).ticks(timeDay).tickFormat(d => { return '' })
+
+    // DB: Time offset
+    xAxis.scale(xScale).ticks(timeHour.filter(d => { return d.getHours() === DISPLAYED_HOUR_ON_X_AXIS })).tickFormat('')
+
     yAxis = axisLeft().ticks(5).tickFormat(d => {
-      // return parseFloat(d).toFixed(2) + 'm'
       return parseFloat(d).toFixed(1)
     }).tickSizeOuter(0)
     yAxis.scale(yScale)
@@ -48,17 +52,18 @@ function LineChart (containerId, stationId, data, options = {}) {
 
     // Position y ticks
     svg.select('.y.axis').style('text-anchor', 'start')
-    svg.selectAll('.y.axis .tick line').attr('x2', 6)
+    svg.selectAll('.y.axis .tick line').attr('x2', DISPLAYED_HOUR_ON_X_AXIS)
     svg.selectAll('.y.axis .tick text').attr('x', 9)
 
-    // Update grid lines
+    // DB: Time offset
     svg.select('.x.grid')
       .attr('transform', 'translate(0,' + height + ')')
       .call(axisBottom(xScale)
-        .ticks(timeDay)
+        .ticks(timeHour.filter(d => { return d.getHours() === DISPLAYED_HOUR_ON_X_AXIS }))
         .tickSize(-height, 0, 0)
         .tickFormat('')
       )
+
     svg.select('.y.grid')
       .attr('transform', 'translate(0,' + 0 + ')')
       .call(axisLeft(yScale)
@@ -424,7 +429,7 @@ function LineChart (containerId, stationId, data, options = {}) {
   const formatLabelsX = (d, i, nodes) => {
     // Format X Axis labels
     const element = select(nodes[i])
-    const formattedTime = timeFormat('%-I%p')(new Date(d)).toLocaleLowerCase()
+    const formattedTime = timeFormat('%-I%p')(new Date(d.setHours(DISPLAYED_HOUR_ON_X_AXIS, 0, 0, 0))).toLocaleLowerCase()
     const formattedDate = timeFormat('%-e %b')(new Date(d))
     element.append('tspan').text(formattedTime)
     element.append('tspan').attr('x', 0).attr('dy', '15').text(formattedDate)
