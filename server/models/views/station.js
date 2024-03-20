@@ -423,7 +423,7 @@ function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationTyp
   return {
     type: stationTypeCalculator(stationType).toLowerCase(),
     latestDateTime: telemetryRawData[0].ts,
-    dataStartDateTime: moment(telemetryRawData[0].ts).subtract(dataStartDateTimeDaysToSubtract, 'days').toISOString().replace(/.\d+Z$/g, 'Z'),
+    dataStartDateTime: moment(telemetryRawData[0].ts).subtract(dataStartDateTimeDaysToSubtract, 'days').toISOString().split('.')[0] + 'Z',
     dataEndDateTime: moment().toISOString().replace(/.\d+Z$/g, 'Z'),
     forecast: forecastData,
     observed
