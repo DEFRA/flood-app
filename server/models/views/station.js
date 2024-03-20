@@ -8,7 +8,9 @@ const tz = 'Europe/London'
 const processImtdThresholds = require('./lib/process-imtd-thresholds')
 const filterImtdThresholds = require('./lib/find-min-threshold')
 
-const constants = require('../../constants')
+const bannerIconId3 = 3
+const outOfDateMax = 5
+const dataStartDateTimeDaysToSubtract = 5
 
 class ViewModel {
   constructor (options) {
@@ -106,7 +108,7 @@ class ViewModel {
       this.isSevereLinkRenedered = true
       this.isWarningLinkRendered = false
       this.isAlertLinkRendered = false
-      this.mainIcon = getBannerIcon(constants.station.bannerIconId3)
+      this.mainIcon = getBannerIcon(bannerIconId3)
     } else if (numWarnings && numAlerts) {
       this.isWarningLinkRendered = true
       this.isAlertLinkRendered = false
@@ -120,7 +122,7 @@ class ViewModel {
     this.catchments = []
     this.date = new Date()
     this.status = this.station.status
-    this.outOfDate = util.dateDiff(Date.now(), this.station.statusDate) <= constants.station.outOfDateMax
+    this.outOfDate = util.dateDiff(Date.now(), this.station.statusDate) <= outOfDateMax
     this.porMaxValueIsProvisional = false
     this.station.hasPercentiles = true
     this.station.hasImpacts = false
@@ -421,7 +423,7 @@ function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationTyp
   return {
     type: stationTypeCalculator(stationType).toLowerCase(),
     latestDateTime: telemetryRawData[0].ts,
-    dataStartDateTime: moment(telemetryRawData[0].ts).subtract(constants.station.dataStartDateTimeDaysToSubtract, 'days').toISOString().replace(/.\d+Z$/g, 'Z'),
+    dataStartDateTime: moment(telemetryRawData[0].ts).subtract(dataStartDateTimeDaysToSubtract, 'days').toISOString().replace(/.\d+Z$/g, 'Z'),
     dataEndDateTime: moment().toISOString().replace(/.\d+Z$/g, 'Z'),
     forecast: forecastData,
     observed
