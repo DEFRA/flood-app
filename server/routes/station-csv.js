@@ -3,13 +3,15 @@ const moment = require('moment-timezone')
 const boom = require('@hapi/boom')
 const joi = require('@hapi/joi')
 
+const maxId = 999
+
 module.exports = {
   method: 'GET',
   path: '/station-csv/{id}/{direction?}',
   options: {
     validate: {
       params: joi.object({
-        id: joi.number().greater(999).less(100000).required(),
+        id: joi.number().greater(maxId).less(100000).required(),
         direction: joi.string().valid('downstream', 'upstream')
       })
     }
@@ -41,9 +43,11 @@ module.exports = {
 
     // Forecast station
     const includeForecast = !!thresholds.length
+    const truncateDateHoursToAdd = 36
+
     if (includeForecast && telemetry.length) {
       const forecastStart = moment(telemetry[0].ts)
-      const truncateDate = moment(forecastStart).add(36, 'hours')
+      const truncateDate = moment(forecastStart).add(truncateDateHoursToAdd, 'hours')
       const { SetofValues: [{ Value: forecast } = { Value: [] }] = [] } = await floodService.getStationForecastData(station.wiski_id)
 
       for (const item of forecast) {

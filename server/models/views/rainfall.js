@@ -3,7 +3,16 @@ const tz = 'Europe/London'
 const config = require('../../config')
 const util = require('../../util')
 
-const constants = require('../../constants')
+const telemetryDaysAgo = 5
+const valueDuration15 = 15
+const valueDuration45 = 45
+const latestHourDateTimeMinutesToAdd = 45
+const batchDataMinutes = 15
+const batchDataDateTimeMinutesToAdd = 45
+const lastDataRefreshProblemMax = 6
+const lastDataRefreshOfflineMin = 5
+const lastDataRefreshOfflineMax = 31
+const lastDataRefreshClosedMin = 30
 
 class ViewModel {
   constructor (rainfallStationTelemetry, rainfallStation) {
@@ -29,7 +38,7 @@ class ViewModel {
 
     if (this.telemetry.length) {
       const now = moment().tz(tz).format()
-      const fiveDaysAgo = moment().subtract(constants.rainfall.telemetryDaysAgo, 'days').format()
+      const fiveDaysAgo = moment().subtract(telemetryDaysAgo, 'days').format()
       const latestDateTime = this.telemetry[0].value_timestamp
       this.latestDayFormatted = moment(latestDateTime).tz(tz).format('D MMMM')
       this.latestTimeFormatted = moment(latestDateTime).tz(tz).format('h:mma')
@@ -41,9 +50,9 @@ class ViewModel {
       const latest1hr = util.formatValue(rainfallStation.one_hr_total)
       const latest6hr = util.formatValue(rainfallStation.six_hr_total)
       const latest24hr = util.formatValue(rainfallStation.day_total)
-      const valueDuration = this.telemetry[0].period === '15 min' ? constants.rainfall.valueDuration15 : constants.rainfall.valueDuration45
+      const valueDuration = this.telemetry[0].period === '15 min' ? valueDuration15 : valueDuration45
       this.id = `${this.stationId}.${this.region}`
-      const latestHourDateTime = moment(latestDateTime).add(constants.rainfall.latestHourDateTimeMinutesToAdd, 'minutes').minutes(0).seconds(0).milliseconds(0).toDate()
+      const latestHourDateTime = moment(latestDateTime).add(latestHourDateTimeMinutesToAdd, 'minutes').minutes(0).seconds(0).milliseconds(0).toDate()
 
       const values = util.formatRainfallTelemetry(this.telemetry, valueDuration)
 
@@ -51,7 +60,7 @@ class ViewModel {
 
       const hours = []
 
-      const duration = valueDuration === constants.rainfall.valueDuration45 ? values : hours
+      const duration = valueDuration === valueDuration45 ? values : hours
 
       values.sort((a, b) => b.dateTime - a.dateTime)
 
@@ -70,7 +79,7 @@ class ViewModel {
         }
       }
 
-      if (valueDuration === constants.rainfall.valueDuration15) {
+      if (valueDuration === valueDuration15) {
         batchData(values, hours)
         this.telemetryRainfall.minutes = {
           latestDateTime,
@@ -86,8 +95,8 @@ function batchData (values, hours) {
   values.forEach(item => {
     const minutes = moment(item.dateTime).minutes()
     batchTotal += item.value
-    if (minutes === constants.rainfall.batchDataMinutes) {
-      const batchDateTime = moment(item.dateTime).add(constants.rainfall.batchDataDateTimeMinutesToAdd, 'minutes').toDate()
+    if (minutes === batchDataMinutes) {
+      const batchDateTime = moment(item.dateTime).add(batchDataDateTimeMinutesToAdd, 'minutes').toDate()
       hours.push({
         dateTime: batchDateTime,
         value: Math.round(batchTotal * 100) / 100
@@ -100,11 +109,11 @@ function batchData (values, hours) {
 function lastDataRefresh (lastDate) {
   const days = util.dateDiff(Date.now(), lastDate)
 
-  if (days > 1 && days < constants.rainfall.lastDataRefreshProblemMax) {
+  if (days > 1 && days < lastDataRefreshProblemMax) {
     return 'problem'
-  } else if (days > constants.rainfall.lastDataRefreshOfflineMin && days < constants.rainfall.lastDataRefreshOfflineMax) {
+  } else if (days > lastDataRefreshOfflineMin && days < lastDataRefreshOfflineMax) {
     return 'offline'
-  } else if (days > constants.rainfall.lastDataRefreshClosedMin) {
+  } else if (days > lastDataRefreshClosedMin) {
     return 'closed'
   } else {
     return ''
