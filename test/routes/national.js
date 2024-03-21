@@ -158,18 +158,25 @@ lab.experiment('Routes test - national view', () => {
 
       const response = await server.inject(options)
 
-      Code.expect(response.statusCode).to.equal(200)
-      Code.expect(response.payload).to.contain('No flood alerts or warnings')
-      Code.expect(response.payload).to.contain('Call Floodline for advice')
-      Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
-    })
-    lab.test('GET /national view no alerts or warnings', async () => {
-      // Create dummy flood data in place of cached data
-      const fakeFloodData = () => {
-        return {
-          floods: []
-        }
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('No flood alerts or warnings')
+    Code.expect(response.payload).to.contain('Call Floodline for advice')
+    Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+    Code.expect(response.payload).to.contain('https://www.gov.uk/sign-up-for-flood-warnings')
+    Code.expect(response.payload).to.contain('Get flood warnings by phone, text or email')
+    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/prepare-for-flooding">\s*Prepare for flooding\s*<\/a>/)
+    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do">\s*What to do before or during a flood\s*<\/a>/)
+    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/after-flood">\s*What to do after a flood\s*<\/a>/)
+    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/check-long-term-flood-risk">\s*Check your long term flood risk\s*<\/a>/)
+    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/report-flood-cause">\s*Report a flood\s*<\/a>/)
+  })
+  lab.test('GET /national view no alerts or warnings', async () => {
+    // Create dummy flood data in place of cached data
+    const fakeFloodData = () => {
+      return {
+        floods: []
       }
+    }
 
       const fakeOutlookData = () => {
         const outlook = require('../data/outlook.json')
