@@ -1,8 +1,8 @@
 'use strict'
 // "flood" represents the global namespace for
 // client-side javascript across all our pages
-import 'core-js/modules/es6.promise.js'
-import 'core-js/modules/es6.array.iterator.js'
+import 'core-js/modules/es.promise.js'
+import 'core-js/modules/es.array.iterator.js'
 
 // Math.log2 Polyfil
 if (!Math.log2) {
