@@ -18,7 +18,7 @@ jobs:
 
       - name: Check PAT token is still valid
         run: |
-          gh workflow list --repo defra/flood-service
+          gh workflow list --repo "$GITHUB_REPOSITORY_OWNER/flood-service"
         env:
           # if this fails the create/regenerate classic PAT and then populate it using `gh secret set GH_WORKFLOW`
           GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
@@ -74,7 +74,7 @@ jobs:
           git push
 
       - name: Trigger Merge Release Branch for flood-service
-        run: gh workflow run --repo defra/flood-service merge.yml -f version="$VERSION" --ref development
+        run: gh workflow run --repo  "$GITHUB_REPOSITORY_OWNER/flood-service" merge.yml -f version="$VERSION" --ref development
         env:
           # use PAT token with repo scope (github.token didn't work)
           GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
