@@ -16,7 +16,6 @@ class ViewModel {
       floodRiskUrl,
       tabs,
       outOfDate,
-      location: encodeURIComponent(title),
       pageTitle: `Check for flooding in ${title}`,
       metaDescription: `View current flood warnings and alerts for the ${title} area,` +
         ' and the regional flood forecast for the next 5 days. Also check local river, sea, groundwater and rainfall levels.',

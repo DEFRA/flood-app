@@ -786,7 +786,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('No data is available. You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a>.\n')
+    Code.expect(response.payload).to.contain('No data is available. You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a> or call Floodline for advice.\n')
     Code.expect(response.payload).to.contain('This measuring station is closed\n')
   })
   lab.test('GET station/5146 with Low Level ', async () => {

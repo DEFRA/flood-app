@@ -20,7 +20,7 @@ button.defra-button-secondary {
     display: inline-block;
     @include govuk-font($size: 16);
     width: auto;
-    margin: 0px 0px 5px;
+    margin: 0px 0px 20px 0px;
     border: 1px solid govuk-colour('mid-grey');
     box-shadow: none;
     background-color: white;

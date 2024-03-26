@@ -8,11 +8,42 @@ const lab = exports.lab = Lab.script()
 const data = require('../data')
 const moment = require('moment')
 const LocationSearchError = require('../../server/location-search-error')
+const { parse } = require('node-html-parser')
 
 lab.experiment('Routes test - location - 2', () => {
   let sandbox
   let server
 
+  async function setup (fakeIsEngland, fakeFloodsData, fakeStationsData, fakeImpactsData, fakeOutlookData, fakeGetJson) {
+    const floodService = require('../../server/services/flood')
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
+    await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+  }
   lab.beforeEach(async () => {
     delete require.cache[require.resolve('../../server/util.js')]
     delete require.cache[require.resolve('../../server/services/location.js')]
@@ -161,147 +192,119 @@ lab.experiment('Routes test - location - 2', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('We couldn\'t find')
   })
-  lab.test('GET /location with query parameters giving defined location', async () => {
-    const floodService = require('../../server/services/flood')
-
-    const fakeIsEngland = () => {
-      return { is_england: true }
-    }
-
-    const fakeFloodsData = () => {
-      return { floods: [] }
-    }
-    const fakeStationsData = () => []
-    const fakeImpactsData = () => []
-    const fakeOutlookData = () => []
-
-    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-
-    const fakeGetJson = () => data.warringtonGetJson
-
-    const util = require('../../server/util')
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
-
-    const locationPlugin = {
-      plugin: {
-        name: 'location',
-        register: (server, options) => {
-          server.route(require('../../server/routes/location'))
-        }
+  lab.experiment('GET /location with rejected query', () => {
+    lab.beforeEach(async () => {
+      const fakeIsEngland = () => {
+        return { is_england: true }
       }
-    }
 
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(locationPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/location?q=Warrington'
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).not.to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/sign-up-for-flood-warnings">\s*Get flood warnings by phone, text or email\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/prepare-for-flooding">\s*Prepare for flooding\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do">\s*What to do before or during a flood\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/after-flood">\s*What to do after a flood\s*<\/a>/)
-    Code.expect(response.payload).not.to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/check-long-term-flood-risk">\s*Check your long term flood risk\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/report-flood-cause">\s*Report a flood\s*<\/a>/)
-  })
-  lab.test('GET /location returns not found page when entering Wales', async () => {
-    const locationPlugin = {
-      plugin: {
-        name: 'location',
-        register: (server, options) => {
-          server.route(require('../../server/routes/location'))
-        }
+      const fakeFloodsData = () => {
+        return { floods: [] }
       }
-    }
+      const fakeStationsData = () => []
+      const fakeImpactsData = () => []
+      const fakeOutlookData = () => []
+      const fakeGetJson = () => {}
 
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(locationPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/location?q=Wales'
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('We couldn\'t find')
-  })
-  lab.test('GET /location returns not found when entering Scotland', async () => {
-    const locationPlugin = {
-      plugin: {
-        name: 'location',
-        register: (server, options) => {
-          server.route(require('../../server/routes/location'))
-        }
+      setup(fakeIsEngland, fakeFloodsData, fakeStationsData, fakeImpactsData, fakeOutlookData, fakeGetJson)
+    })
+    lab.test('returns not found page when entering Wales', async () => {
+      const options = {
+        method: 'GET',
+        url: '/location?q=Wales'
       }
-    }
 
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(locationPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/location?q=Scotland'
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('We couldn\'t find')
-  })
-  lab.test('GET /location returns not found when entering Ireland', async () => {
-    const locationPlugin = {
-      plugin: {
-        name: 'location',
-        register: (server, options) => {
-          server.route(require('../../server/routes/location'))
-        }
+      const response = await server.inject(options)
+      Code.expect(response.statusCode).to.equal(200)
+      const root = parse(response.payload)
+      const h1 = root.querySelector('h1.govuk-heading-xl')
+      Code.expect(h1.text).to.contain("We couldn't find 'Wales', England")
+    })
+    lab.test('returns not found page when entering Scotland', async () => {
+      const options = {
+        method: 'GET',
+        url: '/location?q=Scotland'
       }
-    }
 
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(locationPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
+      const response = await server.inject(options)
+      Code.expect(response.statusCode).to.equal(200)
+      const root = parse(response.payload)
+      const h1 = root.querySelector('h1.govuk-heading-xl')
+      Code.expect(h1.text).to.contain("We couldn't find 'Scotland', England")
+    })
+    lab.test('returns not found page when entering non-alphanumeric only search', async () => {
+      const options = {
+        method: 'GET',
+        url: '/location?q=%%%'
+      }
 
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/location?q=Ireland'
-    }
+      const response = await server.inject(options)
+      Code.expect(response.statusCode).to.equal(200)
 
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('We couldn\'t find')
+      const root = parse(response.payload)
+      const h1 = root.querySelector('h1.govuk-heading-xl')
+      Code.expect(h1.text).to.contain("We couldn't find '%%%', England")
+    })
+    lab.test('returns not found page when entering a query containing angle brackets', async () => {
+      const options = {
+        method: 'GET',
+        url: '/location?q=<script>'
+      }
+
+      const response = await server.inject(options)
+      Code.expect(response.statusCode).to.equal(200)
+
+      const root = parse(response.payload)
+      const h1 = root.querySelector('h1.govuk-heading-xl')
+      Code.expect(h1.text).to.contain("We couldn't find '<script>', England")
+    })
   })
+  lab.experiment('GET /location with query parameters giving defined location', () => {
+    lab.beforeEach(async () => {
+      const fakeIsEngland = () => {
+        return { is_england: true }
+      }
+
+      const fakeFloodsData = () => {
+        return { floods: [] }
+      }
+      const fakeStationsData = () => []
+      const fakeImpactsData = () => []
+      const fakeOutlookData = () => []
+      const fakeGetJson = () => data.warringtonGetJson
+
+      setup(fakeIsEngland, fakeFloodsData, fakeStationsData, fakeImpactsData, fakeOutlookData, fakeGetJson)
+    })
+    lab.test('response should be 200', async () => {
+      const options = {
+        method: 'GET',
+        url: '/location?q=Warrington'
+      }
+
+      const response = await server.inject(options)
+      Code.expect(response.statusCode).to.equal(200)
+    })
+    lab.test('river levels link should use location query', async () => {
+      const options = {
+        method: 'GET',
+        url: '/location?q=Warrington'
+      }
+
+      const response = await server.inject(options)
+
+      const root = parse(response.payload)
+      const targetText = 'Find a river, sea, groundwater or rainfall level in this area'
+      const anchor = root.querySelectorAll('a').find(a => a.text.trim() === targetText)
+      Code.expect(anchor.getAttribute('href')).to.equal('/river-and-sea-levels?q=Warrington')
+      Code.expect(response.payload).not.to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/sign-up-for-flood-warnings">\s*Get flood warnings by phone, text or email\s*<\/a>/)
+      Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/prepare-for-flooding">\s*Prepare for flooding\s*<\/a>/)
+      Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do">\s*What to do before or during a flood\s*<\/a>/)
+      Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/after-flood">\s*What to do after a flood\s*<\/a>/)
+      Code.expect(response.payload).not.to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/check-long-term-flood-risk">\s*Check your long term flood risk\s*<\/a>/)
+      Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/report-flood-cause">\s*Report a flood\s*<\/a>/)
+    })
+  })
+
   lab.test('GET /location with query parameters known and unknown e.g. facebook click id', async () => {
     const floodService = require('../../server/services/flood')
 
@@ -403,6 +406,12 @@ lab.experiment('Routes test - location - 2', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).not.to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/sign-up-for-flood-warnings">\s*Get flood warnings by phone, text or email\s*<\/a>/)
+    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/prepare-for-flooding">\s*Prepare for flooding\s*<\/a>/)
+    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do">\s*What to do before or during a flood\s*<\/a>/)
+    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/after-flood">\s*What to do after a flood\s*<\/a>/)
+    Code.expect(response.payload).not.to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/check-long-term-flood-risk">\s*Check your long term flood risk\s*<\/a>/)
+    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/report-flood-cause">\s*Report a flood\s*<\/a>/)
   })
   lab.test('GET /location with query parameters with no flood service data', async () => {
     const floodService = require('../../server/services/flood')
@@ -1843,78 +1852,6 @@ lab.experiment('Routes test - location - 2', () => {
     Code.expect(response.payload).to.contain('The flood risk for the next 5 days is very low.')
   })
 
-  lab.test('GET /location joi validation error, ok location but bad other', async () => {
-    const fakeGetJson = () => {
-      throw new Error('test error')
-    }
-
-    const util = require('../../server/util')
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
-
-    const locationPlugin = {
-      plugin: {
-        name: 'location',
-        register: (server, options) => {
-          server.route(require('../../server/routes/location'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(locationPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/location?q=warringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdf'
-    }
-
-    const response = await server.inject(options)
-
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('Error: Find location - Check for flooding')
-  })
-  lab.test('GET /location joi validation error, ok location but bad other', async () => {
-    const fakeGetJson = () => {
-      throw new Error('test error')
-    }
-
-    const util = require('../../server/util')
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
-
-    const locationPlugin = {
-      plugin: {
-        name: 'location',
-        register: (server, options) => {
-          server.route(require('../../server/routes/location'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(locationPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/location?location=warringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdfwarringtonsadfsdfsdfsdfsdfsdfsdf'
-    }
-
-    const response = await server.inject(options)
-
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('Error: Find location - Check for flooding')
-  })
   lab.test('GET /location with no response from Bing', async () => {
     const fakeGetJson = () => {
       throw new LocationSearchError('Missing or corrupt contents from location search')

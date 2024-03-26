@@ -1,35 +1,11 @@
 'use strict'
 
-const joi = require('@hapi/joi')
-const ViewModel = require('../models/views/find-location')
+const HTTP_MOVED_PERMANENTLY = 301
 
 module.exports = [{
   method: 'GET',
   path: '/find-location',
-  handler: async (request, h) => {
-    const err = {}
-    const location = ''
-    const model = new ViewModel({ location, err })
-    model.referer = request.headers.referer
-    return h.view('find-location', { model })
-  }
-}, {
-  method: 'POST',
-  path: '/find-location',
-  handler: async (request, h) => {
-    const { location } = request.payload
-    return h.redirect(`/location?q=${encodeURIComponent(location)}`)
-  },
-  options: {
-    validate: {
-      payload: joi.object({
-        location: joi.string().required()
-      }),
-      failAction: (request, h, err) => {
-        const model = new ViewModel({ err })
-        model.referer = request.headers.referer
-        return h.view('find-location', { model }).takeover()
-      }
-    }
-  }
+  // note: this handler can be removed once the redirect is added at the infrastructure level
+  handler: async (_request, h) => h.redirect('/').code(HTTP_MOVED_PERMANENTLY)
+
 }]

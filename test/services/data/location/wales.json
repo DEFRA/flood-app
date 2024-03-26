@@ -1,0 +1,56 @@
+{
+  "authenticationResultCode": "ValidCredentials",
+  "brandLogoUri": "https://dev.virtualearth.net/Branding/logo_powered_by.png",
+  "copyright": "Copyright © 2024 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.",
+  "resourceSets": [
+    {
+      "estimatedTotal": 1,
+      "resources": [
+        {
+          "__type": "Location:http://schemas.microsoft.com/search/local/ws/rest/v1",
+          "bbox": [
+            51.37403106689453,
+            -5.6693339347839355,
+            53.43545913696289,
+            -2.6485254764556885
+          ],
+          "name": "Wales",
+          "point": {
+            "type": "Point",
+            "coordinates": [
+              52.1180687,
+              -3.59757638
+            ]
+          },
+          "address": {
+            "adminDistrict": "Wales",
+            "countryRegion": "United Kingdom",
+            "formattedAddress": "Wales",
+            "countryRegionIso2": "GB"
+          },
+          "confidence": "High",
+          "entityType": "AdminDivision1",
+          "geocodePoints": [
+            {
+              "type": "Point",
+              "coordinates": [
+                52.1180687,
+                -3.59757638
+              ],
+              "calculationMethod": "Rooftop",
+              "usageTypes": [
+                "Display"
+              ]
+            }
+          ],
+          "matchCodes": [
+            "Good"
+          ]
+        }
+      ]
+    }
+  ],
+  "statusCode": 200,
+  "statusDescription": "OK",
+  "traceId": "b90634595a283af9bf4d6fce44de3733|DU00003083|0.0.0.1|Ref A: E1F394C6DE59461894DDBD7C9BE76323 Ref B: DB3EDGE2209 Ref C: 2024-01-25T14:43:11Z"
+}

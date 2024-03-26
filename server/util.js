@@ -125,18 +125,36 @@ function rainfallTelemetryPadOut (values, valueDuration) {
   return values
 }
 
-function formatName (name = '', addressLine = undefined) {
-  // Note: We assume Bing is consitent in it's capitalisation of terms so we don't lower case them
-  // (i.e. 'Durham, durham' will not occur in the real world)
+function removeRepeatingEntries (inputString) {
+  const itemsArray = inputString.split(',').map(item => item.trim())
+  const uniqueItemsArray = [...new Set(itemsArray)]
+  return uniqueItemsArray.join(', ')
+}
 
-  return name
-    .split(/,\s*/)
-  // Strip out addressLine to make name returned more ambiguous as we're not giving property specific information
-    .filter(part => !(addressLine && part === addressLine))
-  // remove repeated words
-    .filter((part, index, allParts) => part !== allParts[index + 1])
-    .filter(part => part !== 'United Kingdom')
-    .join(', ')
+function hasCityQualifier (itemsArray) {
+  const regex = new RegExp(`^(Greater|City Of) ${itemsArray[0]}$`, 'i')
+  return regex.test(itemsArray[1])
+}
+
+function removeCityQualifiers (inputString) {
+  // remove qualifiers such as Greater London and City Of Portsmouth from the final entry in a place name
+  // e.g. Camberwell, London, Greater London => Camberwell, London
+  // e.g. London, Greater London => London
+  const splitToken = ', '
+  const itemsArray = inputString.split(splitToken)
+  const length = itemsArray.length
+  const penultimate = -2
+  if (length >= 2 && hasCityQualifier(itemsArray.slice(penultimate))) {
+    return itemsArray.slice(0, -1).join(splitToken)
+  }
+  return inputString
+}
+
+function formatName (name) {
+  if (!name) {
+    return ''
+  }
+  return removeCityQualifiers(removeRepeatingEntries(name))
 }
 
 module.exports = {
