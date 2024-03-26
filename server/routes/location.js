@@ -1,7 +1,7 @@
 const joi = require('@hapi/joi')
 const ViewModel = require('../models/views/location')
 const OutlookTabsModel = require('../models/outlook-tabs')
-const util = require('../util')
+const locationService = require('../services/location')
 const formatDate = require('../util').formatDate
 const moment = require('moment-timezone')
 const tz = 'Europe/London'
@@ -16,13 +16,9 @@ module.exports = {
       return h.redirect('/')
     }
 
-    if (location.match(/^scotland$|^ireland$|^wales$/i)) {
-      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
-    }
+    const [place] = await locationService.find(location)
 
-    const [place] = await request.server.methods.location.find(util.cleanseLocation(location))
-
-    if (!place) {
+    if (!place?.name) {
       return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
     }
 
@@ -50,8 +46,8 @@ module.exports = {
   options: {
     validate: {
       query: joi.object({
-        q: joi.string().trim().max(200),
-        location: joi.string().trim().max(200),
+        q: joi.string(),
+        location: joi.string(),
         cz: joi.string(),
         l: joi.string(),
         btn: joi.string(),

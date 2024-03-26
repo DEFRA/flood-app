@@ -1,0 +1,80 @@
+name: Merge Release Branch and Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        description: version for release
+
+jobs:
+  merge_release_branch_and_create_release:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Display inputs
+        run: echo "${{ github.event.inputs.version }}"
+
+      - name: Check PAT token is still valid
+        run: |
+          gh workflow list --repo "$GITHUB_REPOSITORY_OWNER/flood-service"
+        env:
+          # if this fails the create/regenerate classic PAT and then populate it using `gh secret set GH_WORKFLOW`
+          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: development
+          fetch-depth: 0
+
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Setup version env vars
+        run: |
+          version=${{ github.event.inputs.version }}
+          echo VERSION=$version >> "$GITHUB_ENV"
+          echo RELEASE_BRANCH="release/$version" >> "$GITHUB_ENV"
+          echo TAG_VERSION="v$version" >> "$GITHUB_ENV"
+          echo RELEASE_NOTES_FILE="./release-docs/CFF-${version}.md" >> "$GITHUB_ENV"
+
+      - name: Check branch exists
+        run: |
+          if ! git ls-remote --exit-code origin "refs/heads/${RELEASE_BRANCH}"; then
+            echo "Error: Branch ${RELEASE_BRANCH} does not exist." >&2
+            exit 1
+          fi
+
+      - name: Merge release branch into master
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git switch $RELEASE_BRANCH
+          git switch master
+          git merge --ff-only $RELEASE_BRANCH
+          git push
+
+      - name: Create GitHub Release
+        run: gh release create $TAG_VERSION --title "Release $VERSION" --notes "[release notes](/$RELEASE_NOTES_FILE)"
+        env:
+          # create classic PAT and then run `gh secret set GH_WORKFLOW`
+          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
+
+      - name: Merge release branch into development
+        run: |
+          git switch development
+          git merge --ff-only $RELEASE_BRANCH
+          git push
+
+      - name: Trigger Merge Release Branch for flood-service
+        run: gh workflow run --repo  "$GITHUB_REPOSITORY_OWNER/flood-service" merge.yml -f version="$VERSION"
+        env:
+          # use PAT token with repo scope (github.token didn't work)
+          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}

@@ -1,0 +1,14 @@
+{
+  "authenticationResultCode": "ValidCredentials",
+  "brandLogoUri": "https://dev.virtualearth.net/Branding/logo_powered_by.png",
+  "copyright": "Copyright © 2024 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.",
+  "resourceSets": [
+    {
+      "estimatedTotal": 0,
+      "resources": []
+    }
+  ],
+  "statusCode": 200,
+  "statusDescription": "OK",
+  "traceId": "503a45e26b5443298ec4b51ca8df10ca|DU00003063|0.0.0.1|Ref A: 35CAD0EED58E4803A8E5EE7189148751 Ref B: DB3EDGE2218 Ref C: 2024-01-09T16:12:38Z"
+}

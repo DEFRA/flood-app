@@ -12,10 +12,9 @@
     </span>
   </p>
 </div>
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <a href="/find-location" class="defra-flood-location-link">Check another location</a>
+    <a href="/" class="defra-flood-location-link">Check another location</a>
   </div>
 </div>
 
@@ -31,9 +30,9 @@
   </div>
 </div>
 
+<h2 class="govuk-heading-m">Flood risk today</h2>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-   
     <div class="defra-flood-status govuk-!-margin-bottom-1">
       {% if model.hasActiveFloods %}
         {% if model.bannerSevereMainLink %}
@@ -67,7 +66,7 @@
       {% else %}
       <div class="defra-flood-status-item">
         <div class="defra-flood-status-item__text">
-          There are no flood warnings or alerts in this area{% if model.hasHighLevels %} but some <a href="/river-and-sea-levels?q={{ model.q }}">river and sea levels</a> are high{% endif %}.
+          There are no flood warnings or alerts in this area{% if model.hasHighLevels %} but some <a href="/river-and-sea-levels?q={{ model.place.name }}">river and sea levels</a> are high{% endif %}.
         </div>
       </div>
       {% endif %}
@@ -88,30 +87,37 @@
       <p>This service tells you your risk of flooding from rivers, the sea and groundwater. <a data-journey-click="Location:Surface water:Location - Contact local council"        href="https://www.gov.uk/find-local-council">Contact your local council about surface water flooding</a> (also known as flash flooding).</p>
     {% endif %}
 
-    {% include "partials/sign-up-for-flood-warnings.html" %}
-
     {% if model.hasActiveFloods %}
       <span id="map"></span>
     {% endif %}
 
-    <p class="defra-flood-meta defra-flood-meta--border govuk-!-margin-top-0 govuk-!-margin-bottom-4">
+    {% include "partials/sign-up-for-flood-warnings.html" %}
+
+    <p class="defra-flood-meta govuk-!-margin-top-0 govuk-!-margin-bottom-4">
       <time datetime="{{model.issueUTC}}">{{model.dateFormatted}}</time>
     </p>
 
-    <!-- River and sea levels -->
-    <h2 class="govuk-heading-m">Latest river, sea, groundwater and rainfall levels</h2>
-    <p>There are around 3,500 measuring stations, and most are along main rivers and the coast. These levels can help you understand your flood risk now and over the next few days.</p>
-    <p><a data-journey-click="Location:Station list:Location - View station list" href="/river-and-sea-levels?q={{ model.location }}">Find a river, sea, groundwater or rainfall level in this area</a></p> 
-    <!-- end river and sea levels -->
     <h2 class="govuk-heading-m">Flood forecast for the next 5 days</h2>
     {% if model.outOfDate or model.dataError %}
     <div class="defra-service-error govuk-!-margin-bottom-3">
       <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>
       <p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>
     </div> 
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
     {% else %}
       {% include "partials/outlook-region.html" %}
     {% endif %}
+
+    <h2 class="govuk-heading-m">Long term flood risk</h2>
+    <p>You may be at long term flood risk from rivers, the sea, surface water or groundwater.</p>
+    <p><a href="{{model.floodRiskUrl}}">Check your long term flood risk</a></p>
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+    <!-- River and sea levels -->
+    <h2 class="govuk-heading-m">River, sea, groundwater and rainfall levels</h2>
+    <p>Measuring stations provide the latest river, sea, groundwater and rainfall levels. These levels can help you understand your flood risk now and over the next few days.</p>
+    <p><a data-journey-click="Location:Station list:Location - View station list" href="/river-and-sea-levels?q={{ model.place.name }}">Find a river, sea, groundwater or rainfall level in this area</a></p> 
+    <!-- end river and sea levels -->
     {% include "partials/context-footer.html" %}
 
   </div>

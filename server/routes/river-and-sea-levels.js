@@ -10,6 +10,7 @@ const {
   disambiguationModel,
   emptyResultsModel
 } = require('../models/views/river-and-sea-levels')
+const locationService = require('../services/location')
 const util = require('../util')
 const route = 'river-and-sea-levels'
 
@@ -170,7 +171,7 @@ async function locationQueryHandler (request, h) {
   const cleanLocation = util.cleanseLocation(location)
   if (cleanLocation && cleanLocation.length > 1 && !cleanLocation.match(/^england$/i)) {
     if (includeTypes.includes('place')) {
-      places = await findPlaces(request, cleanLocation)
+      places = await findPlaces(cleanLocation)
     }
     if (includeTypes.includes('river')) {
       rivers = await request.server.methods.flood.getRiversByName(cleanLocation)
@@ -197,9 +198,9 @@ async function locationQueryHandler (request, h) {
 
 const inUk = place => place?.isUK && !place?.isScotlandOrNorthernIreland
 
-async function findPlaces (request, location) {
+async function findPlaces (location) {
   // NOTE: at the moment locationService.find just returns a single place
   // using the [] for no results and with a nod to upcoming work to return >1 result
-  const [place] = await request.server.methods.location.find(location)
+  const [place] = await locationService.find(location)
   return inUk(place) ? [place] : []
 }

@@ -4,7 +4,7 @@ const { bingKeyMaps, floodRiskUrl } = require('../../config')
 const tz = 'Europe/London'
 
 class ViewModel {
-  constructor (floods, outlook) {
+  constructor (floods, outlook, location) {
     const now = moment().tz(tz).valueOf()
     if (!outlook) {
       outlook = { _timestampOutlook: now, dataError: true }
@@ -15,6 +15,7 @@ class ViewModel {
     const outlookOutOfDate = (now - issueDate) > hours48
 
     Object.assign(this, {
+      location,
       outlookOutOfDate,
       floodRiskUrl,
       pageTitle: 'Check for flooding in England',
@@ -36,7 +37,6 @@ class ViewModel {
       planAhead: 'National:Related-content:Plan-ahead-for-flooding',
       whatToDo: 'National:Related-content:What-to-do-in-a-flood',
       recoverAfter: 'National:Related-content:Recover-after-a-flood',
-      longTerm: 'National:Related-content:Check-long-term-risk',
       reportFlood: 'National:Related-content:Report-a-flood'
     })
 

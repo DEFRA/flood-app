@@ -44,7 +44,7 @@ lab.experiment('Routes test - find-location', () => {
       }
     })
   })
-  lab.test('GET /find-location', async () => {
+  lab.test('GET /find-location should redirect to the root (ie aka national) page', async () => {
     const options = {
       method: 'GET',
       url: '/find-location'
@@ -52,57 +52,7 @@ lab.experiment('Routes test - find-location', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.headers['content-type']).to.include('text/html')
-  })
-  lab.test('GET /find-location with unknown querystring parameter e.g. facebook click id', async () => {
-    const options = {
-      method: 'GET',
-      url: '/find-location?q=LEEDS&fbclid=21hjkhhj&*(&*(&&&&'
-    }
-
-    const response = await server.inject(options)
-
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.headers['content-type']).to.include('text/html')
-    Code.expect(response.payload).to.include('Where do you want to check')
-  })
-  lab.test('POST- payload of warrington', async () => {
-    const options = {
-      method: 'POST',
-      url: '/find-location',
-      payload: {
-        location: 'warrington'
-      }
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(302)
-  })
-  lab.test('POST- blank payload, error message displayed /find-location', async () => {
-    const options = {
-      method: 'POST',
-      url: '/find-location',
-      payload: {
-        location: ''
-      }
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.include('Enter a town, city or postcode')
-  })
-  lab.test('POST- England, display national page', async () => {
-    const options = {
-      method: 'POST',
-      url: '/find-location',
-      payload: {
-        location: 'England'
-      }
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers.location).to.equal('/location?q=England')
+    Code.expect(response.statusCode).to.equal(301)
+    Code.expect(response.headers.location).to.equal('/')
   })
 })

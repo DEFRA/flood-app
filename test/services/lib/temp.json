@@ -1,0 +1,186 @@
+{
+  "authenticationResultCode": "ValidCredentials",
+  "brandLogoUri": "https://dev.virtualearth.net/Branding/logo_powered_by.png",
+  "copyright": "Copyright © 2024 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.",
+  "resourceSets": [
+    {
+      "estimatedTotal": 4,
+      "resources": [
+        {
+          "__type": "Location:http://schemas.microsoft.com/search/local/ws/rest/v1",
+          "bbox": [
+            51.12405776977539,
+            0.8380475640296936,
+            51.17716598510742,
+            0.9264887571334839
+          ],
+          "name": "Ashford, Kent",
+          "point": {
+            "type": "Point",
+            "coordinates": [
+              51.14772797,
+              0.87279475
+            ]
+          },
+          "address": {
+            "adminDistrict": "England",
+            "adminDistrict2": "Kent",
+            "countryRegion": "United Kingdom",
+            "formattedAddress": "Ashford, Kent",
+            "locality": "Ashford",
+            "countryRegionIso2": "GB"
+          },
+          "confidence": "High",
+          "entityType": "PopulatedPlace",
+          "geocodePoints": [
+            {
+              "type": "Point",
+              "coordinates": [
+                51.14772797,
+                0.87279475
+              ],
+              "calculationMethod": "Rooftop",
+              "usageTypes": [
+                "Display"
+              ]
+            }
+          ],
+          "matchCodes": [
+            "Good"
+          ]
+        },
+        {
+          "__type": "Location:http://schemas.microsoft.com/search/local/ws/rest/v1",
+          "bbox": [
+            51.02236557006836,
+            -0.4873929023742676,
+            51.44563293457031,
+            1.0504722595214844
+          ],
+          "name": "Ashford, Surrey",
+          "point": {
+            "type": "Point",
+            "coordinates": [
+              51.43230057,
+              -0.46049938
+            ]
+          },
+          "address": {
+            "adminDistrict": "England",
+            "adminDistrict2": "Surrey",
+            "countryRegion": "United Kingdom",
+            "formattedAddress": "Ashford, Surrey",
+            "locality": "Ashford",
+            "countryRegionIso2": "GB"
+          },
+          "confidence": "Medium",
+          "entityType": "PopulatedPlace",
+          "geocodePoints": [
+            {
+              "type": "Point",
+              "coordinates": [
+                51.43230057,
+                -0.46049938
+              ],
+              "calculationMethod": "Rooftop",
+              "usageTypes": [
+                "Display"
+              ]
+            }
+          ],
+          "matchCodes": [
+            "Good"
+          ]
+        },
+        {
+          "__type": "Location:http://schemas.microsoft.com/search/local/ws/rest/v1",
+          "bbox": [
+            50.89913783233948,
+            -1.8659905171462143,
+            50.957078598324586,
+            -1.7434982085160171
+          ],
+          "name": "Ashford, Fordingbridge, Hampshire",
+          "point": {
+            "type": "Point",
+            "coordinates": [
+              50.92810822,
+              -1.80474436
+            ]
+          },
+          "address": {
+            "adminDistrict": "England",
+            "adminDistrict2": "Hampshire",
+            "countryRegion": "United Kingdom",
+            "formattedAddress": "Ashford, Fordingbridge, Hampshire",
+            "locality": "Ashford",
+            "countryRegionIso2": "GB"
+          },
+          "confidence": "Medium",
+          "entityType": "PopulatedPlace",
+          "geocodePoints": [
+            {
+              "type": "Point",
+              "coordinates": [
+                50.92810822,
+                -1.80474436
+              ],
+              "calculationMethod": "Rooftop",
+              "usageTypes": [
+                "Display"
+              ]
+            }
+          ],
+          "matchCodes": [
+            "Good"
+          ]
+        },
+        {
+          "__type": "Location:http://schemas.microsoft.com/search/local/ws/rest/v1",
+          "bbox": [
+            50.9887580871582,
+            0.5919979214668274,
+            51.26953887939453,
+            1.030938744544983
+          ],
+          "name": "Ashford",
+          "point": {
+            "type": "Point",
+            "coordinates": [
+              51.13436127,
+              0.83433753
+            ]
+          },
+          "address": {
+            "adminDistrict": "England",
+            "adminDistrict2": "Kent",
+            "countryRegion": "United Kingdom",
+            "formattedAddress": "Ashford",
+            "countryRegionIso2": "GB"
+          },
+          "confidence": "Low",
+          "entityType": "AdminDivision3",
+          "geocodePoints": [
+            {
+              "type": "Point",
+              "coordinates": [
+                51.13436127,
+                0.83433753
+              ],
+              "calculationMethod": "Rooftop",
+              "usageTypes": [
+                "Display"
+              ]
+            }
+          ],
+          "matchCodes": [
+            "Good"
+          ]
+        }
+      ]
+    }
+  ],
+  "statusCode": 200,
+  "statusDescription": "OK",
+  "traceId": "a8254a2972744a2e88c641bb490ac461|DU00003086|0.0.0.1|Ref A: BE9E42C7D489438580FEC542558FEE87 Ref B: DB3EDGE1919 Ref C: 2024-01-09T17:40:40Z"
+}

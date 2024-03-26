@@ -4,14 +4,19 @@ const { bingKeyMaps, floodRiskUrl } = require('../../config')
 const pageTitle = 'Find river, sea, groundwater and rainfall levels'
 const metaDescription = 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height, trend and state recorded by the measuring station.'
 
-const getWarningsString = 'Rivers-and-sea-levels:Related-content:Get-warnings'
+function getDataJourneyClickStrings () {
+  return {
+    getWarnings: 'Rivers-and-sea-levels:Related-content:Get-warnings',
+    longTerm: 'Rivers-and-sea-levels:Related-content:Check-long-term-risk'
+  }
+}
 
 function emptyResultsModel (q) {
   return {
     q,
     metaDescription,
     floodRiskUrl,
-    getWarnings: getWarningsString,
+    ...getDataJourneyClickStrings(),
     pageTitle: formatTitle(q),
     clientModel: getClientModel()
   }
@@ -26,7 +31,7 @@ function disambiguationModel (q, places, rivers) {
     q,
     metaDescription,
     rivers,
-    getWarnings: getWarningsString,
+    ...getDataJourneyClickStrings(),
     pageTitle: `${q} - ${pageTitle}`,
     place: places[0],
     clientModel: getClientModel()
@@ -51,7 +56,7 @@ function riverViewModel (stations) {
     queryGroup,
     floodRiskUrl,
     metaDescription,
-    getWarnings: getWarningsString,
+    ...getDataJourneyClickStrings(),
     pageTitle: `${qualifiedRiverName} - ${pageTitle}`,
     q: qualifiedRiverName,
     clientModel: getClientModel(bbox)
@@ -75,7 +80,7 @@ function areaViewModel (areaName, stations) {
     floodRiskUrl,
     pageTitle,
     metaDescription,
-    getWarnings: getWarningsString,
+    ...getDataJourneyClickStrings(),
     clientModel: getClientModel(bbox),
     distStatement: `Showing levels within 5 miles of ${areaName}.`
   }
@@ -101,7 +106,7 @@ function referencedStationViewModel (referencePoint, stations) {
     floodRiskUrl,
     pageTitle,
     metaDescription,
-    getWarnings: getWarningsString,
+    ...getDataJourneyClickStrings(),
     clientModel: getClientModel(bbox),
     distStatement: referencePoint.distStatement
   }
@@ -140,7 +145,7 @@ function placeViewModel ({ location, place, stations = [], queryGroup }) {
     clientModel: getClientModel(isEngland ? place.bbox10k : []),
     queryGroup: activeFilter,
     placeAddress: place.address,
-    getWarnings: getWarningsString,
+    ...getDataJourneyClickStrings(),
     pageTitle: title,
     metaDescription: description
   }

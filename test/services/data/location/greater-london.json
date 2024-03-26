@@ -1,0 +1,56 @@
+{
+  "authenticationResultCode": "ValidCredentials",
+  "brandLogoUri": "https://dev.virtualearth.net/Branding/logo_powered_by.png",
+  "copyright": "Copyright © 2024 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.",
+  "resourceSets": [
+    {
+      "estimatedTotal": 1,
+      "resources": [
+        {
+          "__type": "Location:http://schemas.microsoft.com/search/local/ws/rest/v1",
+          "bbox": [
+            51.286746978759766,
+            -0.5103660821914673,
+            51.69188690185547,
+            0.3340538740158081
+          ],
+          "name": "Greater London",
+          "point": {
+            "type": "Point",
+            "coordinates": [
+              51.50049591,
+              -0.10939135
+            ]
+          },
+          "address": {
+            "adminDistrict": "Greater London",
+            "countryRegion": "United Kingdom",
+            "formattedAddress": "Greater London",
+            "countryRegionIso2": "GB"
+          },
+          "confidence": "High",
+          "entityType": "AdminDivision1",
+          "geocodePoints": [
+            {
+              "type": "Point",
+              "coordinates": [
+                51.50049591,
+                -0.10939135
+              ],
+              "calculationMethod": "Rooftop",
+              "usageTypes": [
+                "Display"
+              ]
+            }
+          ],
+          "matchCodes": [
+            "Good"
+          ]
+        }
+      ]
+    }
+  ],
+  "statusCode": 200,
+  "statusDescription": "OK",
+  "traceId": "9d97c9e834764c9eb95828640b1cdc14|DU00003046|0.0.0.1|Ref A: 043E9923685043BDB04AD17DBB582BE6 Ref B: DB3EDGE2907 Ref C: 2024-01-25T11:36:01Z"
+}

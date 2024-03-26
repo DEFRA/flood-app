@@ -27,30 +27,7 @@ lab.experiment('util', () => {
       Code.expect(cleanseLocation('This is some (text) to be cleansed <script>alert(\'TEST\')</script>', '(')).to.equal('This is some (text) to be cleansed scriptalert(\'TEST\')script')
     })
   })
-  lab.experiment('formatName', () => {
-    lab.test('Repeating parts are removed', async () => {
-      Code.expect(formatName('Durham, Durham')).to.equal('Durham')
-    })
-    lab.test('Similar parts are not removed', async () => {
-      Code.expect(formatName('Durham, County Durham')).to.equal('Durham, County Durham')
-    })
-    lab.test('United Kingdom removed', async () => {
-      Code.expect(formatName('Durham, United Kingdom')).to.equal('Durham')
-    })
-    lab.test('Address part removed', async () => {
-      Code.expect(formatName('The Big House, Durham', 'The Big House')).to.equal('Durham')
-    })
-    lab.test('Duplicate but not repeating parts are not removed', async () => {
-      // Note: not sure of an example which would occur in the real world example but included here for completeness
-      Code.expect(formatName('Newcastle, Northumberland, Newcastle')).to.equal('Newcastle, Northumberland, Newcastle')
-    })
-    lab.test('Case mismatch is not considered duplicate', async () => {
-      // Note: not expected to occur in the real world, see comments in formatName
-      Code.expect(formatName('Durham, durham')).to.equal('Durham, durham')
-    })
-    lab.test('Fails gracefully with undefined name', async () => {
-      Code.expect(formatName()).to.equal('')
-    })
+  lab.experiment('remove spikes in telem', () => {
     lab.test('Removes spike in telem over 300m, should be 479 values returned', async () => {
       const telem = removeSpikes(spikeTelem)
       Code.expect(telem.length).to.equal(479)
@@ -58,6 +35,31 @@ lab.experiment('util', () => {
     lab.test('No spikes in telem all values under 300m, 480 values returned', async () => {
       const telem = removeSpikes(nonSpikeTelem)
       Code.expect(telem.length).to.equal(480)
+    })
+  })
+  lab.experiment('formatName', () => {
+    lab.test('Repeating parts are removed', async () => {
+      Code.expect(formatName('Middlesbrough, Middlesbrough')).to.equal('Middlesbrough')
+    })
+    lab.test('Similar parts are not removed', async () => {
+      Code.expect(formatName('Durham, County Durham')).to.equal('Durham, County Durham')
+    })
+    lab.test('City qualifier "City Of" is removed', async () => {
+      Code.expect(formatName('Bristol, City Of Bristol')).to.equal('Bristol')
+    })
+    lab.test('City qualifier "City of" is removed (ie case insensitive)', async () => {
+      Code.expect(formatName('Bristol, City of Bristol')).to.equal('Bristol')
+    })
+    lab.test('City qualifier "Greater" is removed', async () => {
+      Code.expect(formatName('London, Greater London')).to.equal('London')
+    })
+    lab.test('City qualifier removed from neighbourhood', async () => {
+      Code.expect(formatName('Camberwell, London, Greater London')).to.equal('Camberwell, London')
+    })
+    lab.experiment('Error handling', () => {
+      lab.test('Fails gracefully with undefined name', async () => {
+        Code.expect(formatName()).to.equal('')
+      })
     })
   })
 })

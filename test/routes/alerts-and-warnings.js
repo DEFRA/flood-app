@@ -14,6 +14,12 @@ lab.experiment('Test - /alerts-warnings', () => {
   let stubs
 
   lab.beforeEach(async () => {
+    delete require.cache[require.resolve('../../server/services/server-methods.js')]
+    delete require.cache[require.resolve('../../server/routes/alerts-and-warnings.js')]
+    delete require.cache[require.resolve('../../server/services/location.js')]
+    delete require.cache[require.resolve('../../server/services/flood.js')]
+    delete require.cache[require.resolve('../../server/util')]
+
     const floodService = require('../../server/services/flood')
     const util = require('../../server/util')
     sandbox = await sinon.createSandbox()
@@ -79,8 +85,8 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('No alerts or warnings')
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('No alerts or warnings')
   })
   lab.test('GET /alerts-and-warnings TYPO or non location "afdv vdaf adfv  fda" ', async () => {
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
