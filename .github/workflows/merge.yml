@@ -74,7 +74,7 @@ jobs:
           git push
 
       - name: Trigger Merge Release Branch for flood-service
-        run: gh workflow run --repo  "$GITHUB_REPOSITORY_OWNER/flood-service" merge.yml -f version="$VERSION" --ref development
+        run: gh workflow run --repo  "$GITHUB_REPOSITORY_OWNER/flood-service" merge.yml -f version="$VERSION"
         env:
           # use PAT token with repo scope (github.token didn't work)
           GH_TOKEN: ${{ secrets.GH_WORKFLOW }}

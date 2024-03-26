@@ -114,7 +114,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
 
       - name: Trigger release creation for flood-service
-        run: gh workflow run --repo "$GITHUB_REPOSITORY_OWNER/flood-service" release.yml -f increment="${{ github.event.inputs.increment }}" -f proposed_release_date="${{ github.event.inputs.proposed_release_date }}" -f jira_release_id="${{ github.event.inputs.jira_release_id }}" --ref development
+        run: gh workflow run --repo "$GITHUB_REPOSITORY_OWNER/flood-service" release.yml -f increment="${{ github.event.inputs.increment }}" -f proposed_release_date="${{ github.event.inputs.proposed_release_date }}" -f jira_release_id="${{ github.event.inputs.jira_release_id }}"
         env:
           # use PAT token with repo scope (github.token didn't work)
           GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
