@@ -5,6 +5,9 @@ const locationService = require('../services/location')
 const formatDate = require('../util').formatDate
 const moment = require('moment-timezone')
 const tz = 'Europe/London'
+const HTTP_NOT_FOUND = 404
+const LOCATION_NOT_FOUND_VIEW = 'location-not-found'
+const LOCATION_NOT_FOUND_TITLE = 'Error: Find location - Check for flooding'
 
 module.exports = {
   method: 'GET',
@@ -19,14 +22,14 @@ module.exports = {
     const [place] = await locationService.find(location)
 
     if (!place?.name) {
-      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location }).code(404)
+      return h.view(LOCATION_NOT_FOUND_VIEW, { pageTitle: LOCATION_NOT_FOUND_TITLE, location }).code(HTTP_NOT_FOUND)
     }
 
     if (!place.isEngland.is_england) {
       request.logger.warn({
         situation: 'Location search error: Valid response but location not in England.'
       })
-      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
+      return h.view(LOCATION_NOT_FOUND_VIEW, { pageTitle: LOCATION_NOT_FOUND_TITLE, location })
     }
 
     const { tabs, outOfDate, dataError } = await createOutlookTabs(place, request)
@@ -64,7 +67,7 @@ module.exports = {
         if (!location) {
           return h.redirect('/').takeover()
         } else {
-          return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location }).takeover()
+          return h.view(LOCATION_NOT_FOUND_VIEW, { pageTitle: LOCATION_NOT_FOUND_TITLE, location }).code(HTTP_NOT_FOUND).takeover()
         }
       }
     }

@@ -93,6 +93,7 @@ lab.experiment('Routes test - location - 2', () => {
       url: '/location'
     }
     const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(302)
     Code.expect(response.headers.location).to.equal('/')
     Code.expect(response.payload).to.equal('')
   })
