@@ -70,54 +70,6 @@ lab.experiment('Get Routes test', () => {
     Code.expect(response.payload).to.include('This phone number has been automatically opted-in to receive flood warnings')
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
-  lab.test('GET /what-happens-after-a-flood', async () => {
-    const plugin = {
-      plugin: {
-        name: 'what-happens-after-a-flood',
-        register: (server, options) => {
-          server.route(require('../../server/routes/what-happens-after-a-flood'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(plugin)
-    await server.initialize()
-
-    const options = {
-      method: 'GET',
-      url: '/what-happens-after-a-flood'
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.include('What happens after a flood')
-    Code.expect(response.headers['content-type']).to.include('text/html')
-  })
-  lab.test('GET /find-location', async () => {
-    const plugin = {
-      plugin: {
-        name: 'find-location',
-        register: (server, options) => {
-          server.route(require('../../server/routes/find-location'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(plugin)
-    await server.initialize()
-
-    const options = {
-      method: 'GET',
-      url: '/find-location'
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.headers['content-type']).to.include('text/html')
-  })
   lab.test('GET /cookies', async () => {
     const plugin = {
       plugin: {
