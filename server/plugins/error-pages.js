@@ -2,6 +2,8 @@
 * Add an `onPreResponse` listener to return error pages
 */
 
+const constants = require('../constants')
+
 module.exports = {
   plugin: {
     name: 'error-pages',
@@ -17,20 +19,34 @@ module.exports = {
         }
 
         const viewModel = {}
-        let view = '500'
-        let logLevel = 'error'
-        let statusCode = response.output.statusCode
+        let view
+        let logLevel
+        let statusCode
 
-        if (statusCode === 500 && response.name === 'LocationSearchError') {
+        const {
+          HTTP_BAD_REQUEST,
+          HTTP_NOT_FOUND,
+          HTTP_TOO_MANY_REQUESTS,
+          INTERNAL_SERVER_ERROR
+        } = constants
+
+        if (response.output.statusCode === INTERNAL_SERVER_ERROR && response.name === 'LocationSearchError') {
           view = 'location-error'
+          statusCode = response.output.statusCode
+          logLevel = 'error'
           viewModel.pageTitle = 'Sorry, there is a problem with the search - Check for flooding'
-        } else if (statusCode === 429) {
+        } else if (response.output.statusCode === HTTP_TOO_MANY_REQUESTS) {
           view = '429'
           logLevel = 'warn'
-        } else if (statusCode === 404 || (statusCode === 400 && response.message === 'Invalid request params input')) {
+          statusCode = response.output.statusCode
+        } else if (response.output.statusCode === HTTP_NOT_FOUND || (response.output.statusCode === HTTP_BAD_REQUEST && response.message === 'Invalid request params input')) {
           statusCode = 404
           view = '404'
           logLevel = 'debug'
+        } else {
+          view = '500'
+          logLevel = 'error'
+          statusCode = response.output.statusCode
         }
 
         request.logger[logLevel]({

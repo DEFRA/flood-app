@@ -29,39 +29,39 @@
 
   <!-- Rainfall -->
   {% if item.group_type == 'rainfall' %}
-  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" role="cell">
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall">
     {{ item.one_hr_total }}mm
   </td>
-  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" role="cell">
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall">
     {{ item.six_hr_total }}mm
   </td>
-  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall" role="cell">
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--rainfall">
     {{ item.day_total }}mm
   </td>
 
   <!-- Sea or tide -->
   {% elif item.type == 'tide' %}
-  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--height" role="cell">
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--height">
     {% if item.formattedValue %}
     <span class="defra-flood-levels-table-numeric">{{ item.formattedValue }}</span>
     {% else %}
     <span class="defra-flood-levels-table-na">n/a</a>
     {% endif %}
   </td>
-  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--state" role="cell">
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--state">
     <span class="defra-flood-levels-table-na">n/a</a>
   </td>
 
   <!-- River or groundwater -->
   {% else %}
-  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--height" role="cell">
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--height">
     {% if item.formattedValue %}
     <span class="defra-flood-levels-table-numeric">{{ item.formattedValue }}</span>
     {% else %}
     <span class="defra-flood-levels-table-na">n/a</a>
     {% endif %}
   </td>
-  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--trend" role="cell">
+  <td class="defra-flood-levels-table__cell defra-flood-levels-table__cell--trend">
     {% if item.trend %}
       <span class="defra-flood-levels-table-trend">
         <span class="defra-flood-levels-table-trend__icon defra-flood-levels-tables-trend__icon--{{ item.trend }}">

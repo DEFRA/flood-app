@@ -1,16 +1,21 @@
 const floodServices = require('./flood')
 const webchatServices = require('./webchat')
 const config = require('../config')
+
 const cacheType = config.localCache ? undefined : 'redis_cache'
 
 const seconds = secs => secs * 1000
 const minutes = min => seconds(min * 60)
 
+const expiresIn15 = 15
+const floodGetOutlookGenerateTimeout = 30
+const floodGetStationsGeoJsonGenerateTimeout = 30
+
 // Cache method wrapper for hapi server
 // If we have any service calls we want to store in elasticache (in memory cache if localCache)
 // add them to the server.method with appropriate cache settings
 // Anything to do with flood data needs a maximum of 1 minute cache age
-// Anything to do with telemetry needs a maximum of 15 minute cache age
+// Anything to do with telemetry needs a maximum of expiresIn minute cache age
 
 module.exports = server => {
   server.method('flood.getFloods', floodServices.getFloods, {
@@ -33,7 +38,7 @@ module.exports = server => {
   server.method('flood.getFloodArea', floodServices.getFloodArea, {
     cache: {
       cache: cacheType,
-      expiresIn: minutes(15),
+      expiresIn: minutes(expiresIn15),
       generateTimeout: seconds(10)
     }
   })
@@ -41,15 +46,15 @@ module.exports = server => {
   server.method('flood.getOutlook', floodServices.getOutlook, {
     cache: {
       cache: cacheType,
-      expiresIn: minutes(15),
-      generateTimeout: seconds(30)
+      expiresIn: minutes(expiresIn15),
+      generateTimeout: seconds(floodGetOutlookGenerateTimeout)
     }
   })
 
   server.method('flood.getStationById', floodServices.getStationById, {
     cache: {
       cache: cacheType,
-      expiresIn: minutes(15),
+      expiresIn: minutes(expiresIn15),
       generateTimeout: seconds(10)
     }
   })
@@ -146,15 +151,15 @@ module.exports = server => {
   server.method('flood.getStationsGeoJson', floodServices.getStationsGeoJson, {
     cache: {
       cache: cacheType,
-      expiresIn: minutes(15),
-      generateTimeout: seconds(30)
+      expiresIn: minutes(expiresIn15),
+      generateTimeout: seconds(floodGetStationsGeoJsonGenerateTimeout)
     }
   })
 
   server.method('flood.getRainfallGeojson', floodServices.getRainfallGeojson, {
     cache: {
       cache: cacheType,
-      expiresIn: minutes(15),
+      expiresIn: minutes(expiresIn15),
       generateTimeout: seconds(30)
     }
   })

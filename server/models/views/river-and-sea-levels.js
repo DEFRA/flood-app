@@ -203,8 +203,9 @@ function getFormattedTime (station) {
     } else {
       return `Latest at ${formattedTime} on ${formattedDate} `
     }
+  } else {
+    return null
   }
-  return null
 }
 
 function formatValue (station, val) {

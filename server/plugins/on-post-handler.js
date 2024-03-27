@@ -15,11 +15,11 @@ module.exports = {
             })
           }
 
-          const requestHeadersReferer = request.headers.referer && request.headers.referer.startsWith(siteUrl) ? request.headers.referer : ''
+          const requestHeadersReferer = request.headers.referer?.startsWith(siteUrl) || ''
 
           if (request.response.source.context) {
             request.response.source.context.fullUrl = encodeURI(fullUrl)
-            request.response.source.context.isDummyData = request.response.source.context.model && request.response.source.context.model.isDummyData
+            request.response.source.context.isDummyData = request.response.source.context.model?.isDummyData
             request.response.source.context.setCookieUsage = request.state.set_cookie_usage
             request.response.source.context.seenCookieMessage = request.state.seen_cookie_message
             request.response.source.context.isfakeBingCall = fakeBingCall

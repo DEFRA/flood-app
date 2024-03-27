@@ -26,7 +26,7 @@ class ViewModel {
     }
 
     let situation = fallbackText
-    if (flood && flood.situation) {
+    if (flood?.situation) {
       flood.situation = flood.situation.trim()
       const message = flood.situation
 
