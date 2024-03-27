@@ -19,7 +19,7 @@ module.exports = {
     const [place] = await locationService.find(location)
 
     if (!place?.name) {
-      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
+      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location }).code(404)
     }
 
     if (!place.isEngland.is_england) {

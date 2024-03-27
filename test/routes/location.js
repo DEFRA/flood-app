@@ -141,7 +141,7 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.statusCode).to.equal(404)
     Code.expect(response.payload).to.contain('We couldn\'t find')
   })
   lab.test('GET /location with query parameters giving undefined location parameter set as location', async () => {
@@ -189,7 +189,7 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.statusCode).to.equal(404)
     Code.expect(response.payload).to.contain('We couldn\'t find')
   })
   lab.experiment('GET /location with rejected query', () => {
@@ -215,7 +215,7 @@ lab.experiment('Routes test - location - 2', () => {
       }
 
       const response = await server.inject(options)
-      Code.expect(response.statusCode).to.equal(200)
+      Code.expect(response.statusCode).to.equal(404)
       const root = parse(response.payload)
       const h1 = root.querySelector('h1.govuk-heading-xl')
       Code.expect(h1.text).to.contain("We couldn't find 'Wales', England")
@@ -227,7 +227,7 @@ lab.experiment('Routes test - location - 2', () => {
       }
 
       const response = await server.inject(options)
-      Code.expect(response.statusCode).to.equal(200)
+      Code.expect(response.statusCode).to.equal(404)
       const root = parse(response.payload)
       const h1 = root.querySelector('h1.govuk-heading-xl')
       Code.expect(h1.text).to.contain("We couldn't find 'Scotland', England")
@@ -239,7 +239,7 @@ lab.experiment('Routes test - location - 2', () => {
       }
 
       const response = await server.inject(options)
-      Code.expect(response.statusCode).to.equal(200)
+      Code.expect(response.statusCode).to.equal(404)
 
       const root = parse(response.payload)
       const h1 = root.querySelector('h1.govuk-heading-xl')
@@ -252,7 +252,7 @@ lab.experiment('Routes test - location - 2', () => {
       }
 
       const response = await server.inject(options)
-      Code.expect(response.statusCode).to.equal(200)
+      Code.expect(response.statusCode).to.equal(404)
 
       const root = parse(response.payload)
       const h1 = root.querySelector('h1.govuk-heading-xl')
