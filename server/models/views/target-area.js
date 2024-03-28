@@ -79,7 +79,6 @@ class ViewModel {
       planAhead: 'Target Area:Related-content:Plan-ahead-for-flooding',
       whatToDo: 'Target Area:Related-content:What-to-do-in-a-flood',
       recoverAfter: 'Target Area:Related-content:Recover-after-a-flood',
-      longTerm: 'Target Area:Related-content:Check-long-term-risk',
       reportFlood: 'Target Area:Related-content:Report-a-flood'
     }, options)
   }

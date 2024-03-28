@@ -25,7 +25,6 @@ class ViewModel {
       planAhead: 'Rainfall:Related-content:Plan-ahead-for-flooding',
       whatToDo: 'Rainfall:Related-content:What-to-do-in-a-flood',
       recoverAfter: 'Rainfall:Related-content:Recover-after-a-flood',
-      longTerm: 'Rainfall:Related-content:Check-long-term-risk',
       reportFlood: 'Rainfall:Related-content:Report-a-flood'
     })
 
