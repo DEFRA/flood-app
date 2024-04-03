@@ -16,7 +16,6 @@ const routes = [].concat(
   require('../routes/api/outlook'),
   require('../routes/start-page'),
   require('../routes/sms-auto-opt-in-info'),
-  require('../routes/what-happens-after-a-flood'),
   require('../routes/alerts-and-warnings'),
   require('../routes/river-and-sea-levels'),
   require('../routes/cookies'),
