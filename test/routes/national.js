@@ -12,19 +12,21 @@ const floods = require('../data/floods.json')
 
 // function provided by chatgpt
 function formatDate (date) {
-  const hours24 = date.getHours()
-  const hours12 = hours24 === 0 ? 12 : (hours24 > 12 ? hours24 - 12 : hours24)
-  const minutes = date.getMinutes()
+  // Ensure the timeZone is set to 'Europe/London' for BST and GMT handling
+  const options = { timeZone: 'Europe/London', hour12: false }
+  const hours24 = new Intl.DateTimeFormat('en-GB', { ...options, hour: 'numeric' }).format(date)
+  const minutes = new Intl.DateTimeFormat('en-GB', { ...options, minute: 'numeric' }).format(date)
+
+  const hours12 = hours24 === 0 || hours24 === '0' ? 12 : (hours24 > 12 ? hours24 - 12 : hours24)
   const ampm = hours24 >= 12 ? 'pm' : 'am'
 
   const time = `${hours12}:${minutes.toString().padStart(2, '0')}${ampm}`
 
-  const dateString = date
-    .toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
-    .replace(',', '')
+  const dateString = date.toLocaleString('en-GB', { ...options, day: 'numeric', month: 'long', year: 'numeric' }).replace(',', '')
 
   return `${time} on ${dateString}`
 }
+
 lab.experiment('Routes test - national view', () => {
   let sandbox
   let server
