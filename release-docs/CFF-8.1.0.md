@@ -13,7 +13,9 @@
   - FSR-1090 | Add search to national page ([#603](https://github.com/DEFRA/flood-app/pull/603))
 
   - FSR-1090 | Remove includeEntityTypes from Bing URL as it was behaving unpredictably ([#30](https://gitlab-dev.aws-int.defra.cloud/flood/lfwconfig/-/merge_requests/30))
-  
+
+  - FSR-1125 | Remove caching for bing responses (#610)
+
 
 ## Instructions
 
