@@ -20,6 +20,9 @@ on:
         - minor
         - patch
 
+env:
+  TZ: 'Europe/London'
+
 jobs:
   create_release_branch_and_draft_pr:
     runs-on: ubuntu-latest
