@@ -237,14 +237,6 @@ module.exports = server => {
     }
   })
 
-  server.method('location.find', locationService.find, {
-    cache: {
-      cache: cacheType,
-      expiresIn: minutes(expiresIn15),
-      generateTimeout: seconds(10)
-    }
-  })
-
   server.method('webchat.getAvailability', webchatServices.getAvailability, {
     cache: {
       cache: cacheType,
