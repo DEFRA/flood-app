@@ -4,13 +4,24 @@
 * Proposed Release Date: {{ date }}
 * Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/{{ id }}/tab/release-report-all-issues
 
+## Sense Check
+
+* Cross check the list of Jira tickets below with those in the Jira release linked to above and update where needed
+* Add additional Jira tickets from the related release notes:
+  * [flood-service](https://github.com/DEFRA/flood-service/blob/release/{{ version }}/release-docs/CFF-{{ version }}.md)
+{% if dbChanges %}
+  * [flood-db](https://github.com/DEFRA/flood-db/blob/release{{ version }}/release-docs/CFF-{{ version }}.md)
+{% endif %}
+* Add any required infrastructure changes such as redirects to the infrastructure changes section below
+* Once this sense check is done, delete this section
+
 ## Tickets
 
 {% if tickets.length == 0 %}
   No flood-app feature tickets included in this release
 {% else %}
   {% for ticket in tickets %}
-  - {{ ticket }}
+  * {{ ticket }}
   {% endfor %}
 {% endif %}
 
@@ -24,3 +35,7 @@
 {% endif %}
 
 Execute smoke tests and forward results
+
+## Related Infrastructure Changes Required
+
+* None
