@@ -1,6 +1,10 @@
 name: CI
 
 on: [push, pull_request]
+
+env:
+  TZ: 'Europe/London'
+
 jobs:
     build:
         runs-on: ubuntu-latest
