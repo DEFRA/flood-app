@@ -4,28 +4,23 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
-const moment = require('moment')
+const moment = require('moment-timezone')
 const { parse } = require('node-html-parser')
 
 const fgs = require('../data/fgs.json')
 const floods = require('../data/floods.json')
 
-// function provided by chatgpt
 function formatDate (date) {
-  // Ensure the timeZone is set to 'Europe/London' for BST and GMT handling
-  const options = { timeZone: 'Europe/London', hour12: false }
-  const hours24 = new Intl.DateTimeFormat('en-GB', { ...options, hour: 'numeric' }).format(date)
-  const minutes = new Intl.DateTimeFormat('en-GB', { ...options, minute: 'numeric' }).format(date)
-
-  const hours12 = hours24 === 0 || hours24 === '0' ? 12 : (hours24 > 12 ? hours24 - 12 : hours24)
-  const ampm = hours24 >= 12 ? 'pm' : 'am'
-
-  const time = `${hours12}:${minutes.toString().padStart(2, '0')}${ampm}`
-
-  const dateString = date.toLocaleString('en-GB', { ...options, day: 'numeric', month: 'long', year: 'numeric' }).replace(',', '')
-
-  return `${time} on ${dateString}`
+  return moment.tz(date, 'Europe/London').format('h:mma [on] D MMMM YYYY')
 }
+
+lab.experiment('formatDate test', () => {
+  lab.test('before midday', async () => { Code.expect(formatDate(new Date('2024-04-10T09:00:00'))).to.equal('9:00am on 10 April 2024') })
+  lab.test('midday', async () => { Code.expect(formatDate(new Date('2024-04-10T12:00:00'))).to.equal('12:00pm on 10 April 2024') })
+  lab.test('after midday', async () => { Code.expect(formatDate(new Date('2024-04-10T19:00:00'))).to.equal('7:00pm on 10 April 2024') })
+  lab.test('midnight', async () => { Code.expect(formatDate(new Date('2024-04-10T00:00:00'))).to.equal('12:00am on 10 April 2024') })
+  lab.test('invalid date (documenting conterintuitive js date handling)', async () => { Code.expect(formatDate(new Date('2024-04-31T00:00:00'))).to.equal('12:00am on 1 May 2024') })
+})
 
 lab.experiment('Routes test - national view', () => {
   let sandbox
