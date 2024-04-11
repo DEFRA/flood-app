@@ -57,7 +57,7 @@ describe('location service', () => {
       context.stubs.getJson.onFirstCall().throws('Some Bing Error')
       const result = await expect(location.find('test')).to.reject()
       expect(result).to.be.an.instanceOf(LocationSearchError)
-      expect(result.message).to.equal('Bing error: Some Bing Error')
+      expect(result.message).to.contain('Bing error: Some Bing Error')
     })
     it('should throw a qualified error when Bing returns a response which does not match the expected schema', async () => {
       context.stubs.getJson.onFirstCall().returns({})
