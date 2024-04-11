@@ -76,7 +76,7 @@ class ViewModel {
       floodRiskUrl,
       bingMaps: bingKeyMaps,
       signUpForFloodWarnings: true,
-      longTerm: true
+      displayLongTermLink: true
     }, options)
   }
 }

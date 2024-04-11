@@ -21,8 +21,8 @@ class ViewModel {
       stationId: rainfallStation.station_reference,
       centroid: [rainfallStation.lon, rainfallStation.lat],
       region: rainfallStation.region,
-      getWarnings: true,
-      longTerm: true
+      displayGetWarningsLink: true,
+      displayLongTermLink: true
     })
 
     if (this.telemetry.length) {

@@ -6,8 +6,8 @@ const metaDescription = 'Find river, sea, groundwater and rainfall levels in Eng
 
 function getDataJourneyClickStrings () {
   return {
-    getWarnings: true,
-    longTerm: true
+    displayGetWarningsLink: true,
+    displayLongTermLink: true
   }
 }
 

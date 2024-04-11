@@ -111,13 +111,13 @@ lab.experiment('Rainfall model test', () => {
     Code.expect(Result.postTitle).to.equal('Latest rainfall information at Lavenham gauge')
     Code.expect(Result.metaDescription).to.equal('Check the latest recorded rainfall at Lavenham gauge')
   })
-  lab.test('Test getWarnings has appropriate Value', async () => {
+  lab.test('Test displayGetWarningsLink has appropriate Value', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
     const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'E24195')
 
     const result = new ViewModel(rainfallTelemetryData, rainfallStationData)
 
-    Code.expect(result.getWarnings).to.equal(true)
-    Code.expect(result.longTerm).to.equal(true)
+    Code.expect(result.displayGetWarningsLink).to.equal(true)
+    Code.expect(result.displayLongTermLink).to.equal(true)
   })
 })

@@ -19,7 +19,7 @@ const getCounts = (severeWarnings, warnings, alerts) => {
     if (counts.length > 0) {
       counts += `${alerts > 0 ? ', ' : ' and '}`
     }
-    counts += getWarnings(warnings)
+    counts += displayGetWarningsLink(warnings)
   }
   if (alerts > 0) {
     if (counts.length > 0) {
@@ -31,5 +31,5 @@ const getCounts = (severeWarnings, warnings, alerts) => {
 }
 
 const getSevereWarnings = severeWarnings => `${severeWarnings === 1 ? 'one' : severeWarnings} severe flood warning${severeWarnings > 1 ? 's' : ''}`
-const getWarnings = warnings => `${warnings === 1 ? 'one' : warnings} flood warning${warnings > 1 ? 's' : ''}`
+const displayGetWarningsLink = warnings => `${warnings === 1 ? 'one' : warnings} flood warning${warnings > 1 ? 's' : ''}`
 const getAlerts = alerts => `${alerts === 1 ? 'one' : alerts} flood alert${alerts > 1 ? 's' : ''}`

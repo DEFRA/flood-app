@@ -65,12 +65,12 @@ lab.experiment('river-and-sea-levels model test', () => {
       Code.expect(rainfallStation.formattedValue).to.equal('0m')
     })
 
-    lab.test('Test getWarnings has appropriate Value', async () => {
+    lab.test('Test displayGetWarningsLink has appropriate Value', async () => {
       const stationsData = data.riverAndSeaLevelData
 
       const result = placeViewModel(stationsData)
 
-      Code.expect(result.getWarnings).to.equal(true)
+      Code.expect(result.displayGetWarningsLink).to.equal(true)
     })
   })
 
@@ -91,7 +91,7 @@ lab.experiment('river-and-sea-levels model test', () => {
       Code.expect(model.stations[1].distance).to.be.greaterThan(model.stations[0].distance)
       Code.expect(model.stations[2].distance).to.be.greaterThan(model.stations[1].distance)
     })
-    lab.test('Test getWarnings has appropriate Value', async () => {
+    lab.test('Test displayGetWarningsLink has appropriate Value', async () => {
       const stationsData = data.riverAndSeaLevelDataUnordered
       const [rainfallStation] = data.rainfallStation553564
 
@@ -103,7 +103,7 @@ lab.experiment('river-and-sea-levels model test', () => {
 
       const result = referencedStationViewModel(referencePoint, stationsData.stations)
 
-      Code.expect(result.getWarnings).to.equal(true)
+      Code.expect(result.displayGetWarningsLink).to.equal(true)
     })
   })
 })

@@ -33,8 +33,8 @@ class ViewModel {
       outlookUTC: moment(outlook._timestampOutlook).tz(tz).format(),
       dataError: outlook.dataError,
       isDummyData: floods.isDummyData,
-      getWarnings: true,
-      longTerm: false
+      displayGetWarningsLink: true,
+      displayLongTermLink: false
     })
 
     // Strip out flood array as it is superflous to the view

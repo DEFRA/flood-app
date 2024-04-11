@@ -21,8 +21,8 @@ class ViewModel {
     Object.assign(this, {
       feedback: false,
       bingMaps: config.bingKeyMaps,
-      getWarnings: true,
-      longTerm: true,
+      displayGetWarningsLink: true,
+      displayLongTermLink: true,
       floodRiskUrl: config.floodRiskUrl,
       trend: river.trend
     })
