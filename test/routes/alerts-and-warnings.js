@@ -7,6 +7,8 @@ const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const data = require('../data')
 const outlookData = require('../data/outlook.json')
+const { parse } = require('node-html-parser')
+const { linkChecker } = require('../lib/html-expectations')
 
 lab.experiment('Test - /alerts-warnings', () => {
   let server
@@ -244,5 +246,29 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     Code.expect(response.payload).to.contain('Beeding Bridge - flood alerts and warnings - GOV.UK')
     Code.expect(response.statusCode).to.equal(200)
+  })
+  lab.test('GET /alerts-and-warnings check for related content links ', async () => {
+    stubs.getFloods.callsFake(() => ({
+      floods: []
+    }))
+    stubs.getStationsWithin.callsFake(() => [])
+    stubs.getImpactsWithin.callsFake(() => [])
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('No flood alerts or warnings')
+    const root = parse(response.payload)
+    const relatedContentLinks = root.querySelectorAll('.defra-related-items a')
+    Code.expect(relatedContentLinks.length, 'Should be 6 related content links').to.equal(6)
+    linkChecker(relatedContentLinks, 'Get flood warnings by phone, text or email', 'https://www.gov.uk/sign-up-for-flood-warnings')
+    linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
+    linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/guidance/flood-alerts-and-warnings-what-they-are-and-what-to-do')
+    linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
+    linkChecker(relatedContentLinks, 'Check your long term flood risk', 'https://ltf-dev.aws.defra.cloud')
+    linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
   })
 })

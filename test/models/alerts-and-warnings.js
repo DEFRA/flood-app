@@ -65,5 +65,6 @@ lab.test('Test getWarnings has appropriate Value', async () => {
 
   const Result = await new ViewModel(options)
 
-  Code.expect(Result.getWarnings).to.equal('Alerts-and-warnings:Related-content:Get-warnings')
+  Code.expect(Result.getWarnings, 'Get warnings flag should be true').to.equal(true)
+  Code.expect(Result.longTerm, 'Long term flood risk flag should be true').to.equal(true)
 })
