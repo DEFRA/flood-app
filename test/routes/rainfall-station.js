@@ -119,7 +119,7 @@ lab.experiment('Test - /rainfall-station', () => {
     Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/prepare-for-flooding">\s*Prepare for flooding\s*<\/a>/)
     Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do">\s*What to do before or during a flood\s*<\/a>/)
     Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/after-flood">\s*What to do after a flood\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<li>\s*<a class="govuk-link" href=https:\/\/ltf-dev\.aws\.defra\.cloud>\s*Check your long term flood risk\s*<\/a>\s*<\/li>/)
+    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href=https:\/\/ltf-dev\.aws\.defra\.cloud>\s*Check your long term flood risk\s*<\/a>/)
     Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/report-flood-cause">\s*Report a flood\s*<\/a>/)
   })
 
