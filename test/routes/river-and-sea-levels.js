@@ -7,6 +7,7 @@ const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const data = require('../data')
 const { parse } = require('node-html-parser')
+const { fullRelatedContentChecker } = require('../lib/helpers/html-expectations')
 
 lab.experiment('Test - /river-and-sea-levels', () => {
   let sandbox
@@ -2726,6 +2727,48 @@ lab.experiment('Test - /river-and-sea-levels', () => {
       Code.expect(searchBoxValue, 'Search box value').to.be.equal('River Nidd')
       const riversTab = root.querySelectorAll('ul#filter.defra-navbar__list li.defra-navbar__item--selected')[0].text.trim()
       Code.expect(riversTab).to.be.equal('River (6)')
+    })
+    lab.test('GET /river-and-sea-levels - Check for related content links', async () => {
+      const floodService = require('../../server/services/flood')
+
+      const fakeIsEngland = () => {
+        return { is_england: true }
+      }
+
+      const fakeStationsData = () => []
+
+      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+      sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
+
+      const riversPlugin = {
+        plugin: {
+          name: 'rivers',
+          register: (server, options) => {
+            server.route(require('../../server/routes/river-and-sea-levels'))
+          }
+        }
+      }
+
+      await server.register(require('../../server/plugins/views'))
+      await server.register(require('../../server/plugins/session'))
+      await server.register(require('../../server/plugins/logging'))
+      await server.register(riversPlugin)
+      // Add Cache methods to server
+      const registerServerMethods = require('../../server/services/server-methods')
+      registerServerMethods(server)
+
+      await server.initialize()
+      const options = {
+        method: 'GET',
+        url: '/river-and-sea-levels'
+      }
+
+      const response = await server.inject(options)
+      Code.expect(response.statusCode).to.equal(200)
+
+      const root = parse(response.payload)
+      Code.expect(root.querySelectorAll('h2').some(h => h.textContent.trim().startsWith('No results for'))).to.be.false()
+      fullRelatedContentChecker(root)
     })
   })
 })

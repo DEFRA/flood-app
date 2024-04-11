@@ -70,7 +70,7 @@ lab.experiment('river-and-sea-levels model test', () => {
 
       const result = placeViewModel(stationsData)
 
-      Code.expect(result.getWarnings).to.equal('Rivers-and-sea-levels:Related-content:Get-warnings')
+      Code.expect(result.getWarnings).to.equal(true)
     })
   })
 
@@ -103,7 +103,7 @@ lab.experiment('river-and-sea-levels model test', () => {
 
       const result = referencedStationViewModel(referencePoint, stationsData.stations)
 
-      Code.expect(result.getWarnings).to.equal('Rivers-and-sea-levels:Related-content:Get-warnings')
+      Code.expect(result.getWarnings).to.equal(true)
     })
   })
 })
