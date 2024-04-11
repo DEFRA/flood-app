@@ -25,6 +25,7 @@ class ViewModel {
       planAhead: 'Station:Related-content:Plan-ahead-for-flooding',
       whatToDo: 'Station:Related-content:What-to-do-in-a-flood',
       recoverAfter: 'Station:Related-content:Recover-after-a-flood',
+      longTerm: 'Station:Related-content:Check-long-term-risk',
       reportFlood: 'Station:Related-content:Report-a-flood',
       floodRiskUrl: config.floodRiskUrl,
       trend: river.trend
