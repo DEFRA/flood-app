@@ -117,6 +117,7 @@ lab.experiment('Rainfall model test', () => {
 
     const result = new ViewModel(rainfallTelemetryData, rainfallStationData)
 
-    Code.expect(result.getWarnings).to.equal('Rainfall:Related-content:Get-warnings')
+    Code.expect(result.getWarnings).to.equal(true)
+    Code.expect(result.longTerm).to.equal(true)
   })
 })
