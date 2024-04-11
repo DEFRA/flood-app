@@ -21,12 +21,8 @@ class ViewModel {
       stationId: rainfallStation.station_reference,
       centroid: [rainfallStation.lon, rainfallStation.lat],
       region: rainfallStation.region,
-      getWarnings: 'Rainfall:Related-content:Get-warnings',
-      planAhead: 'Rainfall:Related-content:Plan-ahead-for-flooding',
-      whatToDo: 'Rainfall:Related-content:What-to-do-in-a-flood',
-      recoverAfter: 'Rainfall:Related-content:Recover-after-a-flood',
-      longTerm: 'Station:Related-content:Check-long-term-risk',
-      reportFlood: 'Rainfall:Related-content:Report-a-flood'
+      getWarnings: true,
+      longTerm: true,
     })
 
     if (this.telemetry.length) {
