@@ -6,8 +6,8 @@ const metaDescription = 'Find river, sea, groundwater and rainfall levels in Eng
 
 function getDataJourneyClickStrings () {
   return {
-    getWarnings: 'Rivers-and-sea-levels:Related-content:Get-warnings',
-    longTerm: 'Rivers-and-sea-levels:Related-content:Check-long-term-risk'
+    displayGetWarningsLink: true,
+    displayLongTermLink: true
   }
 }
 

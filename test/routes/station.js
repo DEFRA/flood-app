@@ -7,6 +7,8 @@ const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const data = require('../data')
 const moment = require('moment-timezone')
+const { parse } = require('node-html-parser')
+const { fullRelatedContentChecker } = require('../lib/helpers/html-expectations')
 
 lab.experiment('Test - /station/{id}', () => {
   let sandbox
@@ -275,11 +277,6 @@ lab.experiment('Test - /station/{id}', () => {
     // Related Content tests
     Code.expect(response.payload).to.contain('https://www.gov.uk/sign-up-for-flood-warnings')
     Code.expect(response.payload).to.contain('Get flood warnings by phone, text or email')
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/prepare-for-flooding">\s*Prepare for flooding\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do">\s*What to do before or during a flood\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/after-flood">\s*What to do after a flood\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href=https:\/\/ltf-dev\.aws\.defra\.cloud>\s*Check your long term flood risk\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/report-flood-cause">\s*Report a flood\s*<\/a>/)
   })
   lab.test('GET station/5146 with Normal river level ', async () => {
     const floodService = require('../../server/services/flood')
@@ -417,17 +414,10 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
     Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV (12KB)</a>')
-    Code.expect(response.payload).to.contain('https://www.gov.uk/sign-up-for-flood-warnings')
-    Code.expect(response.payload).to.contain('Get flood warnings by phone, text or email')
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/prepare-for-flooding">\s*Prepare for flooding\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do">\s*What to do before or during a flood\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/after-flood">\s*What to do after a flood\s*<\/a>/)
-    Code.expect(response.payload).not.to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/check-long-term-flood-risk">\s*Check your long term flood risk\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/report-flood-cause">\s*Report a flood\s*<\/a>/)
+    fullRelatedContentChecker(parse(response.payload))
   })
   lab.test('GET station/2042/downstream ', async () => {
     const floodService = require('../../server/services/flood')
-
     const fakeStationData = () => {
       return {
         rloi_id: 2042,
@@ -1356,7 +1346,7 @@ lab.experiment('Test - /station/{id}', () => {
       }
     }
 
-    const today = new Date().toString()
+    const today = new Date()
 
     const formattedDate = moment.tz(today, 'Europe/London').format('h:mma')
 

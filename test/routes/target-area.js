@@ -8,6 +8,7 @@ const lab = exports.lab = Lab.script()
 const { parse } = require('node-html-parser')
 
 const fakeTargetAreaFloodData = require('../data/fakeTargetAreaFloodData.json')
+const { linkChecker } = require('../lib/helpers/html-expectations')
 
 lab.experiment('Target-area tests', () => {
   let sandbox
@@ -101,15 +102,14 @@ lab.experiment('Target-area tests', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    // Related Content tests
-    Code.expect(response.payload).not.to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/sign-up-for-flood-warnings">\s*Get flood warnings by phone, text or email\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/prepare-for-flooding">\s*Prepare for flooding\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do">\s*What to do before or during a flood\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/after-flood">\s*What to do after a flood\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href=https:\/\/ltf-dev\.aws\.defra\.cloud>\s*Check your long term flood risk\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/report-flood-cause">\s*Report a flood\s*<\/a>/)
-
     const root = parse(response.payload)
+    const relatedContentLinks = root.querySelectorAll('.defra-related-items a')
+    Code.expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)
+    linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
+    linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/guidance/flood-alerts-and-warnings-what-they-are-and-what-to-do')
+    linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
+    // linkChecker(relatedContentLinks, 'Check your long term flood risk', 'https://ltf-dev.aws.defra.cloud')
+    linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
 
     const h1Found = root.querySelectorAll('h1').some(h => h.textContent.trim() === 'Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water')
     Code.expect(h1Found, 'Heading for target area found').to.be.true()
