@@ -33,11 +33,8 @@ class ViewModel {
       outlookUTC: moment(outlook._timestampOutlook).tz(tz).format(),
       dataError: outlook.dataError,
       isDummyData: floods.isDummyData,
-      getWarnings: 'National:Related-content:Get-warnings',
-      planAhead: 'National:Related-content:Plan-ahead-for-flooding',
-      whatToDo: 'National:Related-content:What-to-do-in-a-flood',
-      recoverAfter: 'National:Related-content:Recover-after-a-flood',
-      reportFlood: 'National:Related-content:Report-a-flood'
+      getWarnings: true,
+      longTerm: false
     })
 
     // Strip out flood array as it is superflous to the view

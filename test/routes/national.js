@@ -6,6 +6,7 @@ const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const moment = require('moment-timezone')
 const { parse } = require('node-html-parser')
+const { linkChecker } = require('../lib/helpers/html-expectations')
 
 const fgs = require('../data/fgs.json')
 const floods = require('../data/floods.json')
@@ -157,14 +158,56 @@ lab.experiment('Routes test - national view', () => {
 
       Code.expect(response.statusCode).to.equal(200)
       Code.expect(response.payload).to.contain('No flood alerts or warnings')
-      Code.expect(response.payload).to.contain('Call Floodline for advice')
-      Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
-      Code.expect(response.payload).to.contain('https://www.gov.uk/sign-up-for-flood-warnings')
-      Code.expect(response.payload).to.contain('Get flood warnings by phone, text or email')
-      Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/prepare-for-flooding">\s*Prepare for flooding\s*<\/a>/)
-      Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do">\s*What to do before or during a flood\s*<\/a>/)
-      Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/after-flood">\s*What to do after a flood\s*<\/a>/)
-      Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/report-flood-cause">\s*Report a flood\s*<\/a>/)
+    })
+    lab.test('GET / - related content should include all links except CYLTFR', async () => {
+      const locationPlugin = {
+        plugin: {
+          name: 'national',
+          register: (server, options) => {
+            server.route(require('../../server/routes/national'))
+          }
+        }
+      }
+      const floodService = require('../../server/services/flood')
+      // Create dummy flood data in place of cached data
+      const fakeFloodData = () => {
+        return {
+          floods: []
+        }
+      }
+
+      const fakeOutlookData = () => {
+        return {}
+      }
+
+      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+      await server.register(require('../../server/plugins/views'))
+      await server.register(require('../../server/plugins/session'))
+      await server.register(require('../../server/plugins/logging'))
+      await server.register(locationPlugin)
+      // Add Cache methods to server
+      const registerServerMethods = require('../../server/services/server-methods')
+      registerServerMethods(server)
+      await server.initialize()
+
+      const options = {
+        method: 'GET',
+        url: '/'
+      }
+
+      const response = await server.inject(options)
+
+      Code.expect(response.statusCode).to.equal(200)
+      const root = parse(response.payload)
+      const relatedContentLinks = root.querySelectorAll('.defra-related-items a')
+      Code.expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)
+      linkChecker(relatedContentLinks, 'Get flood warnings by phone, text or email', 'https://www.gov.uk/sign-up-for-flood-warnings')
+      linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
+      linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/guidance/flood-alerts-and-warnings-what-they-are-and-what-to-do')
+      linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
+      linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
     })
     lab.test('GET /national view no alerts or warnings', async () => {
     // Create dummy flood data in place of cached data
