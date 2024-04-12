@@ -1,5 +1,5 @@
 const { expect } = require('@hapi/code')
-// const floodRiskUrl = process.env.FLOOD_RISK_URL
+const config = require('../../config')
 
 // Checks if an anchor with specific text and URL exists among provided anchors
 function linkChecker (anchors, targetText, url) {
@@ -16,11 +16,32 @@ function fullRelatedContentChecker (root) {
   linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
   linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/guidance/flood-alerts-and-warnings-what-they-are-and-what-to-do')
   linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
-  // linkChecker(relatedContentLinks, 'Check your long term flood risk', floodRiskUrl)
+  linkChecker(relatedContentLinks, 'Check your long term flood risk', 'https://ltf-dev.aws.defra.cloud')
   linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
+}
+
+// Runs a test function with a temporarily changed configuration, restoring it afterwards.
+async function tempConfigTestWrapper (changeObject, testFn) {
+  const originalConfig = {}
+
+  // Apply changes and save originals
+  for (const [key, newValue] of Object.entries(changeObject)) {
+    originalConfig[key] = config[key]
+    config[key] = newValue
+  }
+
+  try {
+    await testFn() // Execute test function with the temporary config
+  } finally {
+    // Restore original config values
+    for (const [key, originalValue] of Object.entries(originalConfig)) {
+      config[key] = originalValue
+    }
+  }
 }
 
 module.exports = {
   linkChecker,
-  fullRelatedContentChecker
+  fullRelatedContentChecker,
+  tempConfigTestWrapper
 }
