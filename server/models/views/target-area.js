@@ -45,8 +45,7 @@ class ViewModel {
     const description = area.description.endsWith('.') ? area.description.slice(0, -1) : area.description
     const areaDescription = `Flood ${type} area: ${description}.`
 
-    const parentAreaAlert = (!!(((flood && severityLevel.id === 4) && (type === 'warning')) || !flood) && (parentSeverityLevel.isActive))
-
+    const parentAreaAlert = (!!(((flood && severityLevel.id === 4) && (type === 'warning')) || !flood) && (parentSeverityLevel && parentSeverityLevel.isActive))
     let situationChanged = flood
       ? `Updated ${timeSituationChanged} on ${dateSituationChanged}`
       : `Up to date as of ${timeSituationChanged} on ${dateSituationChanged}`
