@@ -339,4 +339,64 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.match(/<div class="defra-flood-status-item__text">\s*<strong>Danger to life - <a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do#severe-flood-warning">\s*act now\s*<\/a><\/strong>\s*<\/div>/)
   })
+  lab.test('GET target-area 011WAFDW with no flood alerts active', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeFloodData = () => {
+      return {
+        floods: []
+      }
+    }
+
+    const fakeFloodArea = () => {
+      return fakeTargetAreaFloodData.area
+    }
+
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+
+    const targetAreaPlugin = {
+      plugin: {
+        name: 'target',
+        register: (server, options) => {
+          server.route(require('../../server/routes/target-area'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(targetAreaPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/target-area/011WAFDW'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    const root = parse(response.payload)
+    console.log('root: ', response.payload)
+    const relatedContentLinks = root.querySelectorAll('.defra-related-items a')
+    Code.expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)
+    linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
+    linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/guidance/flood-alerts-and-warnings-what-they-are-and-what-to-do')
+    linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
+    linkChecker(relatedContentLinks, 'Check your long term flood risk')
+    linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
+
+    const h1Found = root.querySelectorAll('h1').some(h => h.textContent.trim() === 'Upper River Derwent, Stonethwaite Beck and Derwent Water flood alert area')
+    Code.expect(h1Found, 'Heading for target area found').to.be.true()
+
+    const anchorFound = root.querySelectorAll('a').some(a =>
+      a.text === 'Find a river, sea, groundwater or rainfall level in this area' &&
+      a.attributes.href === '/river-and-sea-levels/target-area/011WAFDW'
+    )
+    Code.expect(anchorFound, 'Link to levels in the area found').to.be.true()
+  })
 })
