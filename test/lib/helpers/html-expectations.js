@@ -1,5 +1,4 @@
 const { expect } = require('@hapi/code')
-const floodRiskUrl = process.env.FLOOD_RISK_URL
 
 // Checks if an anchor with specific text and URL exists among provided anchors
 function linkChecker (anchors, targetText, url) {
@@ -16,7 +15,7 @@ function fullRelatedContentChecker (root) {
   linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
   linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/guidance/flood-alerts-and-warnings-what-they-are-and-what-to-do')
   linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
-  linkChecker(relatedContentLinks, 'Check your long term flood risk', floodRiskUrl)
+  linkChecker(relatedContentLinks, 'Check your long term flood risk', 'https://ltf-dev.aws.defra.cloud')
   linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
 }
 
