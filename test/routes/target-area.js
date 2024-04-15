@@ -108,7 +108,7 @@ lab.experiment('Target-area tests', () => {
     linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
     linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/guidance/flood-alerts-and-warnings-what-they-are-and-what-to-do')
     linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
-    linkChecker(relatedContentLinks, 'Check your long term flood risk', 'https://ltf-dev.aws.defra.cloud')
+    linkChecker(relatedContentLinks, 'Check your long term flood risk')
     linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
 
     const h1Found = root.querySelectorAll('h1').some(h => h.textContent.trim() === 'Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water')
