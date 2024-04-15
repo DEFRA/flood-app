@@ -24,7 +24,7 @@ lab.experiment('Missing resource test', () => {
       plugin: {
         name: 'router',
         register: (server, options) => {
-          server.route(require('../server/routes/find-location'))
+          server.route(require('../server/routes/national'))
         }
       }
     }

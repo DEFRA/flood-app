@@ -1,7 +1,6 @@
 'use strict'
 
 const routes = [].concat(
-  require('../routes/find-location'),
   require('../routes/location'),
   require('../routes/national'),
   require('../routes/target-area'),

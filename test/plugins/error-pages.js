@@ -31,7 +31,7 @@ lab.experiment('error-pages plugin test', () => {
     await server.register(require('../../server/plugins/error-pages'))
     await server.register({
       plugin: {
-        name: 'find-location',
+        name: 'national',
         register: (server) => server.route({
           method: 'GET',
           path: '/some/root',
