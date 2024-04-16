@@ -10,7 +10,7 @@ const { slugify } = require('./lib/utils')
 const qs = require('qs')
 
 function createQueryParametersString (queryObject) {
-  const { q: _, ...otherParameters } = queryObject
+  const { q, ...otherParameters } = queryObject
   // otherParameters has all parameters except q
   const queryString = qs.stringify(otherParameters, { addQueryPrefix: true, encode: false })
   return queryString

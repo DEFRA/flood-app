@@ -190,11 +190,11 @@ lab.experiment('Routes test - location - 2', () => {
 
     const options = {
       method: 'GET',
-      url: '/location?q=coxwold'
+      url: '/location?q=coxwold&lyr=mv,ts,tw,ta'
     }
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(301)
-    Code.expect(response.headers.location).to.equal('/location/coxwold-north-yorkshire')
+    Code.expect(response.headers.location).to.equal('/location/coxwold-north-yorkshire?lyr=mv,ts,tw,ta')
   })
   lab.test('GET /location with no query parameters', async () => {
     const locationPlugin = {
