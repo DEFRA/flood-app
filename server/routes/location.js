@@ -7,6 +7,24 @@ const formatDate = require('../util').formatDate
 const moment = require('moment-timezone')
 const tz = 'Europe/London'
 const { slugify } = require('./lib/utils')
+const qs = require('qs')
+
+function createQueryParametersString (queryObject) {
+  const { q: _, ...otherParameters } = queryObject
+  // otherParameters has all parameters except q
+  const queryString = qs.stringify(otherParameters, { addQueryPrefix: true, encode: false })
+  return queryString
+}
+
+async function legacyRouteHandler (request, h) {
+  const location = request.query.q
+  const [place] = await locationService.find(location)
+  const queryString = createQueryParametersString(request.query)
+  if (place) {
+    return h.redirect(`/location/${slugify(place?.name)}${queryString}`).permanent()
+  }
+  return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
+}
 
 async function routeHandler (request, h) {
   const { location } = request.params
@@ -65,6 +83,16 @@ const queryValidation = {
 }
 
 module.exports = [{
+  method: 'GET',
+  path: '/location',
+  handler: legacyRouteHandler,
+  options: {
+    validate: {
+      query: joi.object({ q: joi.string().required(), ...queryValidation }),
+      failAction: failActionHandler
+    }
+  }
+}, {
   method: 'GET',
   path: '/location/{location}',
   handler: routeHandler,

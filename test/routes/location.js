@@ -96,8 +96,8 @@ lab.experiment('Routes test - location - 2', () => {
       url: '/location'
     }
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(404)
-    Code.expect(response.payload).to.contain('Page not found')
+    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.headers.location).to.equal('/')
   })
   lab.test('GET /location with query parameters giving undefined location', async () => {
     const fakeGetJson = () => {
@@ -484,7 +484,8 @@ lab.experiment('Routes test - location - 2', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(404)
+    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.headers.location).to.equal('/')
   })
   lab.test('GET /location with query parameters check for 1 alert 1 nlif', async () => {
     const floodService = require('../../server/services/flood')

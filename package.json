@@ -75,6 +75,7 @@
     "pino": "^8.16.2",
     "pino-abstract-transport": "^1.1.0",
     "pino-pretty": "^10.2.3",
+    "qs": "^6.12.1",
     "regenerator-runtime": "^0.14.0",
     "sass": "^1.69.5",
     "sinon": "^17.0.1",
