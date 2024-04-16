@@ -23,7 +23,7 @@ async function legacyRouteHandler (request, h) {
   if (place) {
     return h.redirect(`/location/${slugify(place?.name)}${queryString}`).permanent()
   }
-  return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
+  return boom.notFound(`Location ${location} not found`)
 }
 
 async function routeHandler (request, h) {
@@ -42,7 +42,7 @@ async function routeHandler (request, h) {
     request.logger.warn({
       situation: 'Location search error: Valid response but location not in England.'
     })
-    return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
+    return boom.notFound(`Location ${location} not found`)
   }
 
   const { tabs, outOfDate, dataError } = await createOutlookTabs(place, request)
