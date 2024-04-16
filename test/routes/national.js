@@ -28,7 +28,7 @@ lab.experiment('Routes test - national view', () => {
   let sandbox
   let server
 
-  async function setup (fakeFloodData, fakeOutlookData) {
+  async function setup (fakeFloodData, fakeOutlookData, fakeSearchData) {
     flushAppRequireCache()
 
     const config = require('../../server/config')
@@ -40,25 +40,7 @@ lab.experiment('Routes test - national view', () => {
 
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-    sandbox.stub(locationService, 'find').returns([{
-      name: 'Ashford, Kent',
-      center: [0.87279475, 51.14772797],
-      bbox2k: [
-        0.80935719234919,
-        51.106071366450024,
-        0.9551791288139874,
-        51.19515238842755
-      ],
-      bbox10k: [
-        0.6945958802395501,
-        51.034125753112406,
-        1.0699404409236273,
-        51.267098001671634
-      ],
-      isUK: true,
-      isScotlandOrNorthernIreland: false,
-      isEngland: { is_england: true }
-    }])
+    sandbox.stub(locationService, 'find').callsFake(fakeSearchData)
 
     const nationalPlugin = {
       plugin: {
@@ -508,7 +490,30 @@ lab.experiment('Routes test - national view', () => {
       lab.beforeEach(async () => {
         const fakeFloodData = () => { return { floods: [] } }
         const fakeOutlookData = () => { return {} }
-        setup(fakeFloodData, fakeOutlookData)
+        const fakeSearchData = () => {
+          return [
+            {
+              name: 'Ashford, Kent',
+              center: [0.87279475, 51.14772797],
+              bbox2k: [
+                0.80935719234919,
+                51.106071366450024,
+                0.9551791288139874,
+                51.19515238842755
+              ],
+              bbox10k: [
+                0.6945958802395501,
+                51.034125753112406,
+                1.0699404409236273,
+                51.267098001671634
+              ],
+              isUK: true,
+              isScotlandOrNorthernIreland: false,
+              isEngland: { is_england: true }
+            }
+          ]
+        }
+        setup(fakeFloodData, fakeOutlookData, fakeSearchData)
       })
       lab.test('an empty location will not result in a redirect away from the page', async () => {
         const options = {
@@ -565,6 +570,74 @@ lab.experiment('Routes test - national view', () => {
 
         Code.expect(response.statusCode).to.equal(302)
         Code.expect(response.headers.location).to.equal('/location/ashford-kent')
+      })
+    })
+    lab.experiment('Scottish results', () => {
+      lab.beforeEach(async () => {
+        const fakeFloodData = () => { return { floods: [] } }
+        const fakeOutlookData = () => { return {} }
+        const fakeSearchData = () => {
+          return [
+            {
+              name: 'Glasgow',
+              center: [0.87279475, 51.14772797],
+              bbox2k: [
+                0.80935719234919,
+                51.106071366450024,
+                0.9551791288139874,
+                51.19515238842755
+              ],
+              bbox10k: [
+                0.6945958802395501,
+                51.034125753112406,
+                1.0699404409236273,
+                51.267098001671634
+              ],
+              isUK: true,
+              isScotlandOrNorthernIreland: true,
+              isEngland: { is_england: false }
+            }
+          ]
+        }
+        setup(fakeFloodData, fakeOutlookData, fakeSearchData)
+      })
+      lab.test('a scottish city should not result in a redirect to the location page', async () => {
+        const options = {
+          method: 'POST',
+          url: '/',
+          payload: {
+            location: 'glasgow'
+          }
+        }
+
+        const response = await server.inject(options)
+
+        Code.expect(response.statusCode).to.equal(200)
+        Code.expect(response.request.url.pathname).to.equal('/')
+        Code.expect(response.payload).to.contain("We couldn't find 'glasgow', England")
+      })
+    })
+    lab.experiment('Empty results', () => {
+      lab.beforeEach(async () => {
+        const fakeFloodData = () => { return { floods: [] } }
+        const fakeOutlookData = () => { return {} }
+        const fakeSearchData = () => { return [] }
+        setup(fakeFloodData, fakeOutlookData, fakeSearchData)
+      })
+      lab.test('no match should not result in a redirect to the location page', async () => {
+        const options = {
+          method: 'POST',
+          url: '/',
+          payload: {
+            location: 'fhfhsflkh'
+          }
+        }
+
+        const response = await server.inject(options)
+
+        Code.expect(response.statusCode).to.equal(200)
+        Code.expect(response.request.url.pathname).to.equal('/')
+        Code.expect(response.payload).to.contain("We couldn't find 'fhfhsflkh', England")
       })
     })
   })

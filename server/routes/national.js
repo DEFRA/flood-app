@@ -42,7 +42,7 @@ module.exports = [
         return h.view('national', { model })
       }
       const [place] = await locationService.find(location)
-      if (!place?.name) {
+      if (!place?.name || !place.isEngland.is_england) {
         return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
       }
       return h.redirect(`/location/${encodeURIComponent(slugify(place?.name))}`)
