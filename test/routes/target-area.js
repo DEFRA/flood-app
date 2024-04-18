@@ -455,4 +455,55 @@ lab.experiment('Target-area tests', () => {
     )
     Code.expect(anchorFound, 'Link to levels in the area found').to.be.true()
   })
+  lab.test('No floods alerts but a flood alert in the wider area message in banner', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeFloodData = () => {
+      return {
+        floods: fakeTargetAreaFloodData.multiFloods
+      }
+    }
+
+    const fakeFloodArea = () => {
+      return fakeTargetAreaFloodData.floodsInWiderAreaPlace
+    }
+
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+
+    const targetAreaPlugin = {
+      plugin: {
+        name: 'target',
+        register: (server, options) => {
+          server.route(require('../../server/routes/target-area'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(targetAreaPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/target-area/123FWF366'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    const root = parse(response.payload)
+    const relatedContentLinks = root.querySelectorAll('.defra-related-items a')
+    Code.expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)
+    linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
+    linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/guidance/flood-alerts-and-warnings-what-they-are-and-what-to-do')
+    linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
+    linkChecker(relatedContentLinks, 'Check your long term flood risk')
+    linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
+    Code.expect(response.payload).to.contain('There are no flood warnings in this area, but there is <a href="/target-area/123WAF984">a flood alert in the wider area</a>')
+  })
 })
