@@ -6,6 +6,8 @@ const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const moment = require('moment-timezone')
+const { parse } = require('node-html-parser')
+const { fullRelatedContentChecker } = require('../lib/helpers/html-expectations')
 
 lab.experiment('Test - /rainfall-station', () => {
   let sandbox
@@ -113,6 +115,7 @@ lab.experiment('Test - /rainfall-station', () => {
     Code.expect(response.payload).to.contain('65.3mm')
     Code.expect(response.payload).to.contain('Lavenham')
     Code.expect(response.statusCode).to.equal(200)
+    fullRelatedContentChecker(parse(response.payload))
   })
 
   lab.test('GET /rainfall-station produces problem error', async () => {

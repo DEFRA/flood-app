@@ -1,0 +1,88 @@
+{
+  "floods": [
+    {
+      "ta_id": 229,
+      "ta_code": "011WAFDW",
+      "ta_name": "Upper River Derwent, Stonethwaite Beck and Derwent Water",
+      "ta_description": "The Upper Derwent from Seathwaite to Derwent Water",
+      "situation": " The lake level has risen at the Lodore river gauge as a result of todays heavy rainfall. Consequently, flooding of roads and farmland is possible between 19:00 today 05/08/2020 and 05:00 tomorrow, 06/08/2020. Flooding is expected to affect low lying land and roads in the Seatoller, Stonethwaite, Rosthwaite, Grange-in-Borrowdale and Derwent Water shoreline areas. High river and lake levels are possible on the River Derwent, Stonethwaite Beck, Watendlath Beck, Derwent Water and their tributaries. Most of the rain has past through the area, with some showers remaining. The lake level is expected to peak at 1.5m at approximately 01:45 on 06/08/2020.",
+      "quick_dial": 141029,
+      "situation_changed": "2020-08-05T18:23:00.000Z",
+      "severity_changed": "2020-08-05T18:23:00.000Z",
+      "message_received": "2020-08-05T18:23:33.836Z",
+      "severity_value": 1,
+      "severity": "Flood alert",
+      "geometry": "{\"type\":\"Point\",\"coordinates\":[-3.14775299277944,54.5601419091569]}"
+    }
+  ],
+  "severeFlood": [
+    {
+      "ta_id": 229,
+      "ta_code": "011WAFDW",
+      "ta_name": "Upper River Derwent, Stonethwaite Beck and Derwent Water",
+      "ta_description": "The Upper Derwent from Seathwaite to Derwent Water",
+      "situation": " The lake level has risen at the Lodore river gauge as a result of todays heavy rainfall. Consequently, flooding of roads and farmland is possible between 19:00 today 05/08/2020 and 05:00 tomorrow, 06/08/2020. Flooding is expected to affect low lying land and roads in the Seatoller, Stonethwaite, Rosthwaite, Grange-in-Borrowdale and Derwent Water shoreline areas. High river and lake levels are possible on the River Derwent, Stonethwaite Beck, Watendlath Beck, Derwent Water and their tributaries. Most of the rain has past through the area, with some showers remaining. The lake level is expected to peak at 1.5m at approximately 01:45 on 06/08/2020.",
+      "quick_dial": 141029,
+      "situation_changed": "2020-08-05T18:23:00.000Z",
+      "severity_changed": "2020-08-05T18:23:00.000Z",
+      "message_received": "2020-08-05T18:23:33.836Z",
+      "severity_value": 3,
+      "severity": "Severe Flood alert",
+      "geometry": "{\"type\":\"Point\",\"coordinates\":[-3.14775299277944,54.5601419091569]}"
+    }
+  ],
+  "multiFloods": [
+    {
+      "ta_id": 229,
+      "ta_code": "011WAFDW",
+      "ta_name": "Upper River Derwent, Stonethwaite Beck and Derwent Water",
+      "ta_description": "The Upper Derwent from Seathwaite to Derwent Water",
+      "situation": " The lake level has risen at the Lodore river gauge as a result of todays heavy rainfall. Consequently, flooding of roads and farmland is possible between 19:00 today 05/08/2020 and 05:00 tomorrow, 06/08/2020. Flooding is expected to affect low lying land and roads in the Seatoller, Stonethwaite, Rosthwaite, Grange-in-Borrowdale and Derwent Water shoreline areas. High river and lake levels are possible on the River Derwent, Stonethwaite Beck, Watendlath Beck, Derwent Water and their tributaries. Most of the rain has past through the area, with some showers remaining. The lake level is expected to peak at 1.5m at approximately 01:45 on 06/08/2020.",
+      "quick_dial": 141029,
+      "situation_changed": "2020-08-05T18:23:00.000Z",
+      "severity_changed": "2020-08-05T18:23:00.000Z",
+      "message_received": "2020-08-05T18:23:33.836Z",
+      "severity_value": 3,
+      "severity": "Severe Flood alert",
+      "geometry": "{\"type\":\"Point\",\"coordinates\":[-3.14775299277944,54.5601419091569]}"
+    },
+    {
+      "ta_id":1,
+      "ta_code":"123WAF984",
+      "ta_name":"River Spen and Batley Beck catchments",
+      "ta_description":"The River Spen, Blacup Beck, Lands Beck and Canker Dyke in Cleckheaton and Liversedge, Batley Beck from Birstall to Dewsbury, and Chickenley Beck",
+      "situation":"Test data alert",
+      "quick_dial":137418,
+      "situation_changed":"2024-04-17T15:44:03.340Z",
+      "severity_changed":"2024-04-17T15:44:03.340Z",
+      "message_received":"2024-04-17T15:44:03.340Z",
+      "severity_value":1,"severity":"Flood Alert",
+      "geometry":"{\"type\":\"Point\",\"coordinates\":[-1.678501226,53.715091722]}"
+    }
+  ],
+   
+  "area": {
+    "id": 11473,
+    "area": "Cumbria and Lancashire",
+    "code": "011WAFDW",
+    "name": "Upper River Derwent, Stonethwaite Beck and Derwent Water",
+    "description": "The Upper Derwent from Seathwaite to Derwent Water",
+    "localauthorityname": "Cumbria",
+    "quickdialnumber": "141029",
+    "riverorsea": "Derwent, Stonethwaite Beck",
+    "geom": "{\"type\":\"MultiPolygon\",\"coordinates\":[]}",
+    "centroid": "{\"type\":\"Point\",\"coordinates\":[-3.14775299277944,54.5601419091569]}"
+  },
+  "floodsInWiderAreaPlace":{
+    "id":108824,
+    "area":"Yorkshire",
+    "code":"123FWF366",
+    "name":"Batley Beck from Monk Ings to Wilton Park",
+    "description":"Batley including Bradford Road, Bridge Street, lower section of Smithies Moor lane, Lea Road and towards Wilton Park entrance crossing Bradford Road",
+    "localauthorityname":"Kirklees",
+    "parent":"123WAF984",
+    "quickdialnumber":"137424",
+    "riverorsea":"Batley Beck",
+    "geom":"{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-1.659620326,53.728160514],[-1.659607781,53.727836906],[-1.659486531,53.727836562],[-1.65933555,53.727764228],[-1.659366733,53.72765646],[-1.659306108,53.727656288],[-1.659306689,53.727584384],[-1.659246355,53.72754826],[-1.659064336,53.727565719],[-1.65909523,53.727493902],[-1.658974562,53.727421654],[-1.659005311,53.727367813],[-1.658793126,53.72736721],[-1.658854041,53.727331431],[-1.658854622,53.727259527],[-1.658733956,53.727187279],[-1.658796034,53.727007694],[-1.658132962,53.726538424],[-1.658042319,53.726502213],[-1.657648853,53.726429185],[-1.657480826,53.726590492],[-1.657057634,53.726445472],[-1.656858927,53.726651631],[-1.656662487,53.726579163],[-1.656738778,53.726516465],[-1.656678302,53.726498316],[-1.656435004,53.726596488],[-1.656389684,53.726578382],[-1.656328475,53.726650112],[-1.65610209,53.726532617],[-1.656041467,53.726532443],[-1.655949873,53.726613074],[-1.655768517,53.726549636],[-1.655646391,53.726657143],[-1.654950989,53.72643943],[-1.654890072,53.726475207],[-1.654829596,53.726457057],[-1.654707761,53.726528611],[-1.654617121,53.726492397],[-1.654571139,53.726555182],[-1.654510737,53.726528043],[-1.654526481,53.726456184],[-1.654404425,53.726554702],[-1.654222998,53.72650025],[-1.654223662,53.726419359],[-1.653966752,53.726328737],[-1.653677171,53.726525639],[-1.653464842,53.726543002],[-1.653524949,53.726606093],[-1.653509424,53.726650988],[-1.653221833,53.726605217],[-1.65322235,53.726542301],[-1.653070645,53.726559839],[-1.652919235,53.726541424],[-1.65288922,53.726505385],[-1.652798137,53.726523098],[-1.652707795,53.726450931],[-1.652586549,53.72645058],[-1.652526371,53.726396477],[-1.65234465,53.726377974],[-1.652284472,53.726323871],[-1.652162782,53.726377447],[-1.652163375,53.726305544],[-1.652102752,53.726305368],[-1.652011225,53.726377007],[-1.651920588,53.726340792],[-1.651921033,53.726286864],[-1.651467106,53.726195665],[-1.651406929,53.726141561],[-1.651225359,53.726105081],[-1.65105954,53.725996741],[-1.651181676,53.725889239],[-1.651304332,53.725718822],[-1.651426541,53.725602331],[-1.651623116,53.725656831],[-1.651804833,53.725675335],[-1.652046727,53.725747942],[-1.652076741,53.725783982],[-1.65225831,53.725820461],[-1.652258014,53.725856412],[-1.652469599,53.725928931],[-1.652893658,53.725966111],[-1.652894249,53.725894208],[-1.653015937,53.725840631],[-1.65313659,53.725912885],[-1.653318161,53.725949363],[-1.653409759,53.725868735],[-1.653515626,53.725896005],[-1.653454265,53.725985709],[-1.653590075,53.726058006],[-1.653636058,53.725995222],[-1.653726844,53.72601346],[-1.65380299,53.72596874],[-1.653863465,53.72598689],[-1.653924677,53.725915162],[-1.654106396,53.725933663],[-1.654197624,53.725897973],[-1.654426871,53.725664943],[-1.654972541,53.725657526],[-1.655471863,53.725757831],[-1.656561008,53.726012622],[-1.656713295,53.725923177],[-1.656819091,53.725959432],[-1.656987191,53.725789139],[-1.657622481,53.725943752],[-1.657591732,53.725997593],[-1.658151323,53.726142999],[-1.658105273,53.726214773],[-1.658165604,53.726250897],[-1.658273004,53.726089417],[-1.658969072,53.72622622],[-1.658938106,53.726307025],[-1.658771612,53.726279587],[-1.658740864,53.726333428],[-1.658998002,53.726397077],[-1.658921497,53.72648674],[-1.659118086,53.726541228],[-1.659087484,53.726577093],[-1.659586609,53.726704344],[-1.659617283,53.726659491],[-1.659829029,53.72671402],[-1.65988929,53.726759132],[-1.660010682,53.7267415],[-1.660071016,53.726777623],[-1.660040269,53.726831465],[-1.660100603,53.726867588],[-1.66022185,53.726867932],[-1.660342518,53.726940178],[-1.66046391,53.726922546],[-1.660493354,53.727030487],[-1.66062954,53.727057836],[-1.660613878,53.727120709],[-1.660764715,53.727211017],[-1.660763847,53.727318872],[-1.661005477,53.727427412],[-1.661155738,53.727589623],[-1.661186267,53.727562745],[-1.661276843,53.727607941],[-1.661215785,53.727661697],[-1.661366769,53.727734028],[-1.661457851,53.727716309],[-1.661518187,53.727752432],[-1.661487442,53.727806274],[-1.661563079,53.727824464],[-1.661639148,53.727788726],[-1.661911384,53.727861398],[-1.661880639,53.72791524],[-1.661971288,53.727951448],[-1.661818861,53.728058876],[-1.661697466,53.72807651],[-1.661575639,53.728148071],[-1.661393763,53.728147558],[-1.661167428,53.728021085],[-1.661197885,53.728003195],[-1.660940518,53.727966515],[-1.660879459,53.728020271],[-1.660728619,53.727929963],[-1.660802304,53.728190827],[-1.659983426,53.728242437],[-1.659620326,53.728160514]]],[[[-1.670159467,53.733304191],[-1.670039116,53.733187015],[-1.669691534,53.733051236],[-1.670287128,53.732486625],[-1.671087764,53.732839359],[-1.670842499,53.733189222],[-1.67211306,53.733543238],[-1.672914358,53.733815068],[-1.672456814,53.734173344],[-1.670159467,53.733304191]]]]}",
+    "centroid":"{\"type\":\"Point\",\"coordinates\":[-1.659435622,53.727840034]}"}
+}

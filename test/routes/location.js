@@ -453,6 +453,12 @@ lab.experiment('Routes test - location - 2', () => {
 
     Code.expect(response.payload).to.contain('There are no flood warnings or alerts in this area.')
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).not.to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/sign-up-for-flood-warnings">\s*Get flood warnings by phone, text or email\s*<\/a>/)
+    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/prepare-for-flooding">\s*Prepare for flooding\s*<\/a>/)
+    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do">\s*What to do before or during a flood\s*<\/a>/)
+    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/after-flood">\s*What to do after a flood\s*<\/a>/)
+    Code.expect(response.payload).not.to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/check-long-term-flood-risk">\s*Check your long term flood risk\s*<\/a>/)
+    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/report-flood-cause">\s*Report a flood\s*<\/a>/)
   })
   lab.test('GET /location with no query', async () => {
     const fakeGetJson = () => {

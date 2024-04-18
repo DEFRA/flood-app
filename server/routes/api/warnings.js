@@ -27,7 +27,7 @@ module.exports = {
         address: place ? place.address : 'England',
         floods: floods.floods,
         severity: floods.highestSeverityId,
-        message: floodsMessage(floods, (!!place))
+        message: floodsMessage.formatFloodWarnings(floods, (!!place))
       }
     },
     app: {

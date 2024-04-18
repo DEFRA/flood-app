@@ -12,8 +12,8 @@ class ViewModel {
       placeCentre: place ? place.center : [],
       timestamp: Date.now(),
       error: error ? true : null,
-      getWarnings: 'Alerts-and-warnings:Related-content:Get-warnings',
-      longTerm: 'Alerts-and-warnings:Related-content:Check-long-term-risk',
+      displayGetWarningsLink: true,
+      displayLongTermLink: true,
       isEngland: place ? place.isEngland.is_england : null,
       isDummyData: floods ? floods.isDummyData : false,
       floodRiskUrl: config.floodRiskUrl

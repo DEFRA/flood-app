@@ -26,7 +26,7 @@ class ViewModel {
     }
 
     let situation = fallbackText
-    if (flood && flood.situation) {
+    if (flood?.situation) {
       flood.situation = flood.situation.trim()
       const message = flood.situation
 
@@ -45,16 +45,15 @@ class ViewModel {
     const description = area.description.endsWith('.') ? area.description.slice(0, -1) : area.description
     const areaDescription = `Flood ${type} area: ${description}.`
 
-    const parentAreaAlert = (!!(((flood && severityLevel.id === 4) && (type === 'warning')) || !flood) && (parentSeverityLevel && parentSeverityLevel.isActive))
-
+    const parentAreaAlert = (!!(((flood && severityLevel.id === 4) && (type === 'warning')) || !flood) && (parentSeverityLevel?.isActive))
     let situationChanged = flood
       ? `Updated ${timeSituationChanged} on ${dateSituationChanged}`
       : `Up to date as of ${timeSituationChanged} on ${dateSituationChanged}`
-    if (flood && severityLevel.id === 4) {
+    if (flood && flood?.severityLevel?.id === 4) {
       situationChanged = `Removed ${timeSituationChanged} on ${dateSituationChanged}`
     }
 
-    const pageTitle = (severityLevel && severityLevel.isActive ? severityLevel.title + ' for ' + area.name : `${area.name} flood ${type} area`)
+    const pageTitle = (severityLevel?.isActive ? `${severityLevel.title} for ${area.name}` : `${area.name} flood ${type} area`)
     const metaDescription = `Flooding information and advice for the area: ${area.description}.`
     const metaCanonical = `/target-area/${area.code}`
 
@@ -75,12 +74,8 @@ class ViewModel {
       mapTitle,
       floodRiskUrl,
       bingMaps: bingKeyMaps,
-      signUpForFloodWarnings: 'Target Area:Get Warnings:TA - Get warnings',
-      planAhead: 'Target Area:Related-content:Plan-ahead-for-flooding',
-      whatToDo: 'Target Area:Related-content:What-to-do-in-a-flood',
-      recoverAfter: 'Target Area:Related-content:Recover-after-a-flood',
-      longTerm: 'Target Area:Related-content:Check-long-term-risk',
-      reportFlood: 'Target Area:Related-content:Report-a-flood'
+      signUpForFloodWarnings: true,
+      displayLongTermLink: true
     }, options)
   }
 }

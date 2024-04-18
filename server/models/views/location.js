@@ -28,7 +28,7 @@ class ViewModel {
       whatToDo: 'Location:Related-content:What-to-do-in-a-flood',
       recoverAfter: 'Location:Related-content:Recover-after-a-flood',
       reportFlood: 'Location:Related-content:Report-a-flood',
-      getWarnings: 'Location:Related-content:Get-warnings'
+      displayGetWarningsLink: 'Location:Related-content:Get-warnings'
     })
 
     const hasFloods = !!floods.length
