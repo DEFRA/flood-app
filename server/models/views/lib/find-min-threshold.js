@@ -10,15 +10,16 @@ function findMinValueByLogic (arr, type) {
   if (type === 'A') {
     // Logic for Type A
     return getMinFromType(arr, 'FW RES FAL') ||
-          getMinFromType(arr, 'FW ACT FAL') ||
-          getMinFromType(arr, 'FW ACTCON FAL')
+      getMinFromType(arr, 'FW ACT FAL') ||
+      getMinFromType(arr, 'FW ACTCON FAL')
   } else if (type === 'W') {
     // Logic for Type W
     return getMinFromType(arr, 'FW RES FW') ||
-          getMinFromType(arr, 'FW ACT FW') ||
-          getMinFromType(arr, 'FW ACTCON FW')
+      getMinFromType(arr, 'FW ACT FW') ||
+      getMinFromType(arr, 'FW ACTCON FW')
+  } else {
+    return null
   }
-  return null
 }
 
 function filterImtdThresholds (imtdThresholds) {

@@ -8,6 +8,10 @@ const tz = 'Europe/London'
 const processImtdThresholds = require('./lib/process-imtd-thresholds')
 const filterImtdThresholds = require('./lib/find-min-threshold')
 
+const bannerIconId3 = 3
+const outOfDateMax = 5
+const dataStartDateTimeDaysToSubtract = 5
+
 class ViewModel {
   constructor (options) {
     const { station, telemetry, forecast, imtdThresholds, impacts, river, warningsAlerts } = options
@@ -104,7 +108,7 @@ class ViewModel {
       this.isSevereLinkRenedered = true
       this.isWarningLinkRendered = false
       this.isAlertLinkRendered = false
-      this.mainIcon = getBannerIcon(3)
+      this.mainIcon = getBannerIcon(bannerIconId3)
     } else if (numWarnings && numAlerts) {
       this.isWarningLinkRendered = true
       this.isAlertLinkRendered = false
@@ -118,7 +122,7 @@ class ViewModel {
     this.catchments = []
     this.date = new Date()
     this.status = this.station.status
-    this.outOfDate = util.dateDiff(Date.now(), this.station.statusDate) <= 5
+    this.outOfDate = util.dateDiff(Date.now(), this.station.statusDate) <= outOfDateMax
     this.porMaxValueIsProvisional = false
     this.station.hasPercentiles = true
     this.station.hasImpacts = false
@@ -172,6 +176,8 @@ class ViewModel {
         this.recentValue.dateWhen = 'today'
       } else if (moment.tz(this.recentValue.ts, tz).isSame(yesterday, 'd')) {
         this.recentValue.dateWhen = 'yesterday'
+      } else {
+        this.recentValue.dateWhen = ''
       }
 
       if (this.station.percentile5 && this.station.percentile95) {
@@ -417,7 +423,7 @@ function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationTyp
   return {
     type: stationTypeCalculator(stationType).toLowerCase(),
     latestDateTime: telemetryRawData[0].ts,
-    dataStartDateTime: moment(telemetryRawData[0].ts).subtract(5, 'days').toISOString().replace(/.\d+Z$/g, 'Z'),
+    dataStartDateTime: moment(telemetryRawData[0].ts).subtract(dataStartDateTimeDaysToSubtract, 'days').toISOString().split('.')[0] + 'Z',
     dataEndDateTime: moment().toISOString().replace(/.\d+Z$/g, 'Z'),
     forecast: forecastData,
     observed

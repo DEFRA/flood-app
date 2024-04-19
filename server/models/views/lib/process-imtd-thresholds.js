@@ -5,6 +5,8 @@ function processThreshold (threshold, stationStageDatum, stationSubtract, postPr
         threshold = threshold - stationStageDatum
       } else if (stationStageDatum <= 0 && stationSubtract > 0) {
         threshold = threshold - stationSubtract
+      } else {
+        return parseFloat(threshold).toFixed(2)
       }
     }
     return parseFloat(threshold).toFixed(2)
