@@ -49,7 +49,8 @@ class ViewModel {
     let situationChanged = flood
       ? `Updated ${timeSituationChanged} on ${dateSituationChanged}`
       : `Up to date as of ${timeSituationChanged} on ${dateSituationChanged}`
-    if (flood && flood?.severityLevel?.id === 4) {
+
+    if (severityLevel?.id === 4) {
       situationChanged = `Removed ${timeSituationChanged} on ${dateSituationChanged}`
     }
 
