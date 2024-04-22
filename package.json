@@ -72,7 +72,7 @@
     "node-schedule": "^2.1.0",
     "nunjucks": "^3.2.4",
     "ol": "^8.2.0",
-    "pino": "^8.16.2",
+    "pino": "^8.20.0",
     "pino-abstract-transport": "^1.1.0",
     "pino-pretty": "^10.2.3",
     "qs": "^6.12.1",
