@@ -55,15 +55,7 @@ function formatDate (value, format = 'D/M/YY h:mma') {
 
 function toFixed (value, dp) {
   if (value) {
-    const numberValue = parseFloat(value)
-
-    if (isNaN(numberValue)) {
-      return 'Invalid input. Please provide a valid number string.'
-    }
-
-    const roundedValue = numberValue.toFixed(dp)
-
-    return roundedValue.toString()
+    return Number(Math.round(value + 'e' + dp) + 'e-' + dp).toFixed(dp)
   } else {
     return value
   }
