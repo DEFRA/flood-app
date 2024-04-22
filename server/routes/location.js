@@ -1,75 +1,111 @@
 const joi = require('@hapi/joi')
+const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/location')
 const OutlookTabsModel = require('../models/outlook-tabs')
 const locationService = require('../services/location')
 const formatDate = require('../util').formatDate
 const moment = require('moment-timezone')
 const tz = 'Europe/London'
+const { slugify } = require('./lib/utils')
+const qs = require('qs')
 
-module.exports = {
-  method: 'GET',
-  path: '/location',
-  handler: async (request, h) => {
-    const location = request.query.q || request.query.location
+function createQueryParametersString (queryObject) {
+  const { q, ...otherParameters } = queryObject
+  // otherParameters has all parameters except q
+  const queryString = qs.stringify(otherParameters, { addQueryPrefix: true, encode: false })
+  return queryString
+}
 
-    if (location.match(/^england$/i)) {
-      return h.redirect('/')
-    }
+async function legacyRouteHandler (request, h) {
+  const location = request.query.q
+  const [place] = await locationService.find(location)
+  const queryString = createQueryParametersString(request.query)
+  if (place) {
+    return h.redirect(`/location/${slugify(place?.name)}${queryString}`).permanent()
+  }
+  return boom.notFound(`Location ${location} not found`)
+}
 
-    const [place] = await locationService.find(location)
+async function routeHandler (request, h) {
+  const { location } = request.params
+  if (location.match(/^england$/i)) {
+    return h.redirect('/')
+  }
 
-    if (!place?.name) {
-      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
-    }
+  const [place] = await locationService.find(location)
 
-    if (!place.isEngland.is_england) {
-      request.logger.warn({
-        situation: 'Location search error: Valid response but location not in England.'
-      })
-      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
-    }
+  if (slugify(place?.name) !== location) {
+    return boom.notFound(`Location ${location} not found`)
+  }
 
-    const { tabs, outOfDate, dataError } = await createOutlookTabs(place, request)
+  if (!place.isEngland.is_england) {
+    request.logger.warn({
+      situation: 'Location search error: Valid response but location not in England.'
+    })
+    return boom.notFound(`Location ${location} not found`)
+  }
 
-    const [
-      impacts,
-      { floods },
-      stations
-    ] = await Promise.all([
-      request.server.methods.flood.getImpactsWithin(place.bbox2k),
-      request.server.methods.flood.getFloodsWithin(place.bbox2k),
-      request.server.methods.flood.getStationsWithin(place.bbox10k)
-    ])
-    const model = new ViewModel({ location, place, floods, stations, impacts, tabs, outOfDate, dataError })
-    return h.view('location', { model })
-  },
-  options: {
-    validate: {
-      query: joi.object({
-        q: joi.string(),
-        location: joi.string(),
-        cz: joi.string(),
-        l: joi.string(),
-        btn: joi.string(),
-        ext: joi.string(),
-        fid: joi.string(),
-        lyr: joi.string(),
-        v: joi.string()
-      }).or('q', 'location'), // q or location must be present in request.query
-      failAction: (request, h) => {
-        request.logger.warn({
-          situation: 'Location search error: Invalid or no string input.'
-        })
-        const location = request.query.q || request.query.location
-        if (!location) {
-          return h.redirect('/').takeover()
-        } else {
-          return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location }).takeover()
-        }
-      }
-    }
+  const { tabs, outOfDate, dataError } = await createOutlookTabs(place, request)
+
+  const [
+    impacts,
+    { floods },
+    stations
+  ] = await Promise.all([
+    request.server.methods.flood.getImpactsWithin(place.bbox2k),
+    request.server.methods.flood.getFloodsWithin(place.bbox2k),
+    request.server.methods.flood.getStationsWithin(place.bbox10k)
+  ])
+  const model = new ViewModel({ location, place, floods, stations, impacts, tabs, outOfDate, dataError })
+  return h.view('location', { model })
+}
+
+const failActionHandler = (request, h) => {
+  request.logger.warn({
+    situation: 'Location search error: Invalid or no string input.'
+  })
+  const location = request.query.q || request.query.location
+  if (!location) {
+    return h.redirect('/').takeover()
+  } else {
+    return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location }).takeover()
   }
 }
+
+const queryValidation = {
+  cz: joi.string(),
+  l: joi.string(),
+  btn: joi.string(),
+  ext: joi.string(),
+  fid: joi.string(),
+  lyr: joi.string(),
+  v: joi.string()
+}
+
+module.exports = [{
+  method: 'GET',
+  path: '/location',
+  handler: legacyRouteHandler,
+  options: {
+    validate: {
+      query: joi.object({ q: joi.string().required(), ...queryValidation }),
+      failAction: failActionHandler
+    }
+  }
+}, {
+  method: 'GET',
+  path: '/location/{location}',
+  handler: routeHandler,
+  options: {
+    validate: {
+      params: joi.object({
+        location: joi.string().lowercase()
+      }),
+      query: joi.object(queryValidation),
+      failAction: failActionHandler
+    }
+  }
+}]
 
 const createOutlookTabs = async (place, request) => {
   let tabs = {}
