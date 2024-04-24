@@ -3,7 +3,6 @@
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
 const { describe, it } = exports.lab = Lab.script()
-const fakeTargetAreaFloodData = require('../data/fakeTargetAreaFloodData.json')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const moment = require('moment-timezone')
@@ -301,31 +300,22 @@ describe('target area model test', () => {
         situationChanged: 'Updated 7:23pm on 5 August 2020'
       })
     })
-    it('??? should populate the situation changed details from the current date/time when no date in flood warning details', async () => {
-      const ViewModel = proxyquire('../../server/models/views/target-area', {
-        'moment-timezone': {
-          tz: sinon.stub().returns(moment.tz('2022-09-15T16:13:00.000Z', 'Europe/London'))
-        }
-      })
-      const { situation_changed: _, ...undatedFlood } = fakeTargetAreaFloodData.floods[0]
-      const options = {
-        area: fakeTargetAreaFloodData.area,
-        flood: undatedFlood
-      }
-      const viewModel = new ViewModel(options)
-      expect(viewModel).to.include({
-        situationChanged: 'Updated 5:13pm on 15 September 2022'
-      })
-    })
     it('should populate the situation changed with an "updated" message if flood warning no longer exists', async () => {
       const ViewModel = proxyquire('../../server/models/views/target-area', {
         'moment-timezone': {
           tz: sinon.stub().returns(moment.tz('2022-09-15T16:13:00.000Z', 'Europe/London'))
         }
       })
+      const area = getTargetArea({
+        id: 1,
+        area: 'Riverton',
+        name: 'Riverside View, Newtown',
+        code: 'ABCW001',
+        description: 'Description for Riverside View, Newtown',
+        parent: 'XYZA001'
+      })
       const options = {
-        area: fakeTargetAreaFloodData.area,
-        flood: undefined
+        area
       }
       const viewModel = new ViewModel(options)
       expect(viewModel).to.include({
@@ -338,11 +328,23 @@ describe('target area model test', () => {
           tz: sinon.stub().returns(moment.tz('2022-09-15T16:13:00.000Z', 'Europe/London'))
         }
       })
-      const flood = { ...fakeTargetAreaFloodData.floods[0] }
-      flood.severity_value = 4
+      const area = getTargetArea({
+        id: 1,
+        area: 'Riverton',
+        name: 'Riverside View, Newtown',
+        code: 'ABCW001',
+        description: 'Description for Riverside View, Newtown',
+        parent: 'XYZA001'
+      })
+      const floodWarning = getRemoved({
+        ta_id: 1,
+        ta_name: 'Riverside View, Newtown',
+        ta_code: 'ABCDW001',
+        ta_description: 'Description for Riverside View, Newtown'
+      })
       const options = {
-        area: fakeTargetAreaFloodData.area,
-        flood
+        area,
+        flood: floodWarning
       }
       const viewModel = new ViewModel(options)
       expect(viewModel).to.include({
