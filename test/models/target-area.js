@@ -11,7 +11,7 @@ const Joi = require('joi')
 
 const warningBaseSchema = Joi.object({
   ta_id: Joi.number().integer().default(1),
-  ta_code: Joi.string().default('ABCDW001'),
+  ta_code: Joi.string(),
   ta_name: Joi.string().default('TA #1'),
   ta_description: Joi.string().default('Description for TA'),
   situation: Joi.string().default('Danger flood possible/likely'),
@@ -24,7 +24,7 @@ const targetAreaSchema = Joi.object({
   id: Joi.number().integer().default(1),
   area: Joi.string().default('Area #1'),
   name: Joi.string().default('TA #1'),
-  code: Joi.string().default('ABCW001'),
+  code: Joi.string(),
   description: Joi.string().default('Description for TA'),
   parent: Joi.string(),
   centroid: Joi.string().default('{"type":"Point","coordinates":[-3.590072619,54.550316408]}')
