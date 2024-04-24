@@ -8,7 +8,7 @@ const { describe, it, beforeEach } = exports.lab = Lab.script()
 const { parse } = require('node-html-parser')
 const proxyquire = require('proxyquire')
 
-const fakeTargetAreaFloodData = require('../data/fakeTargetAreaFloodData.json')
+const { getWarning, getTargetArea } = require('../lib/helpers/data-builders')
 const { linkChecker, headingChecker } = require('../lib/helpers/html-expectations')
 
 describe('target-area route', () => {
@@ -63,8 +63,12 @@ describe('target-area route', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.initialize()
-    server.method('flood.getFloodArea', sinon.stub().resolves(fakeTargetAreaFloodData.area))
-    server.method('flood.getFloods', sinon.stub().resolves(fakeTargetAreaFloodData))
+
+    const area = getTargetArea({ code: 'ABCDW001' })
+    const warning = getWarning({ ta_code: 'ABCDW001' })
+
+    server.method('flood.getFloodArea', sinon.stub().resolves(area))
+    server.method('flood.getFloods', sinon.stub().resolves({ floods: [warning] }))
   })
 
   it('should display heading', async () => {
@@ -113,17 +117,6 @@ describe('target-area route', () => {
       'Find a river, sea, groundwater or rainfall level in this area',
       `/river-and-sea-levels/target-area/${AREA_CODE}`
     )
-  })
-  it('should return 404 if no code provided', async () => {
-    setupFakeModel({})
-
-    const options = {
-      method: 'GET',
-      url: '/target-area/'
-    }
-
-    const response = await server.inject(options)
-    expect(response.statusCode).to.equal(404)
   })
   it('should return 404 if no code provided', async () => {
     setupFakeModel({})
