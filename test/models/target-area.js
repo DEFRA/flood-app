@@ -72,6 +72,52 @@ function getTargetAreaAndWarning (targetAreaValues, floodWarningValues) {
 }
 
 describe('target area model test', () => {
+  describe('Description handling', () => {
+    it('should populate meta details', async () => {
+      const ViewModel = proxyquire('../../server/models/views/target-area', {})
+      const targetAreaValues = {
+        code: 'ABCDW001',
+        name: 'TA #1',
+        description: 'A description.'
+      }
+      const floodWarningValues = {
+        ta_code: 'ABCDW001'
+      }
+      const options = getTargetAreaAndWarning(targetAreaValues, floodWarningValues)
+      const viewModel = new ViewModel(options)
+      expect(viewModel).to.include({
+        metaDescription: 'Flooding information and advice for the area: A description.',
+        metaCanonical: '/target-area/ABCDW001',
+        pageTitle: 'Flood warning for TA #1'
+      })
+    })
+    it('should remove spaces and terminate description with a single full stop', async () => {
+      const ViewModel = proxyquire('../../server/models/views/target-area', {})
+      const targetAreaValues = {
+        code: 'ABCDW001',
+        description: 'A description.  '
+      }
+      const floodWarningValues = {}
+      const options = getTargetAreaAndWarning(targetAreaValues, floodWarningValues)
+      const viewModel = new ViewModel(options)
+      expect(viewModel).to.include({
+        areaDescription: 'Flood warning area: A description.'
+      })
+    })
+    it('should add a full stop to the end of the description when one is not present', async () => {
+      const ViewModel = proxyquire('../../server/models/views/target-area', {})
+      const targetAreaValues = {
+        code: 'ABCDW001',
+        description: 'A description'
+      }
+      const floodWarningValues = {}
+      const options = getTargetAreaAndWarning(targetAreaValues, floodWarningValues)
+      const viewModel = new ViewModel(options)
+      expect(viewModel).to.include({
+        areaDescription: 'Flood warning area: A description.'
+      })
+    })
+  })
   describe('parentTargetArea assignment', () => {
     const ViewModel = proxyquire('../../server/models/views/target-area', {})
     it('parentAreaAlert should be false when no parent TA exists', async () => {
@@ -229,34 +275,6 @@ describe('target area model test', () => {
       })
       expect(viewModel).to.include({
         pageTitle: 'Flood warning for Riverside View, Newtown'
-      })
-    })
-  })
-  describe('Description handling', () => {
-    it('should remove spaces and terminate description with a single full stop', async () => {
-      const ViewModel = proxyquire('../../server/models/views/target-area', {})
-      const targetAreaValues = {
-        code: 'ABCDW001',
-        description: 'A description.  '
-      }
-      const floodWarningValues = {}
-      const options = getTargetAreaAndWarning(targetAreaValues, floodWarningValues)
-      const viewModel = new ViewModel(options)
-      expect(viewModel).to.include({
-        areaDescription: 'Flood warning area: A description.'
-      })
-    })
-    it('should add a full stop to the end of the description when one is not present', async () => {
-      const ViewModel = proxyquire('../../server/models/views/target-area', {})
-      const targetAreaValues = {
-        code: 'ABCDW001',
-        description: 'A description'
-      }
-      const floodWarningValues = {}
-      const options = getTargetAreaAndWarning(targetAreaValues, floodWarningValues)
-      const viewModel = new ViewModel(options)
-      expect(viewModel).to.include({
-        areaDescription: 'Flood warning area: A description.'
       })
     })
   })

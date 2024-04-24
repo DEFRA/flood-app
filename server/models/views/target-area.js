@@ -44,6 +44,7 @@ class ViewModel {
     area.description = area.description.trim()
     const description = area.description.endsWith('.') ? area.description.slice(0, -1) : area.description
     const areaDescription = `Flood ${type} area: ${description}.`
+    const metaDescription = `Flooding information and advice for the area: ${description}.`
 
     const parentAreaAlert = (!!(((flood && severityLevel.id === 4) && (type === 'warning')) || !flood) && (parentSeverityLevel?.isActive))
     let situationChanged = flood
@@ -55,7 +56,6 @@ class ViewModel {
     }
 
     const pageTitle = (severityLevel?.isActive ? `${severityLevel.title} for ${area.name}` : `${area.name} flood ${type} area`)
-    const metaDescription = `Flooding information and advice for the area: ${area.description}.`
     const metaCanonical = `/target-area/${area.code}`
 
     Object.assign(this, {
