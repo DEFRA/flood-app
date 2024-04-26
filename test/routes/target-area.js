@@ -5,8 +5,8 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
-const { parse } = require('node-html-parser')
 const config = require('../../server/config')
+const { parse } = require('node-html-parser')
 const fakeTargetAreaFloodData = require('../data/fakeTargetAreaFloodData.json')
 const { linkChecker } = require('../lib/helpers/html-expectations')
 const { validateFooterContent } = require('../lib/helpers/context-footer-checker')
@@ -19,7 +19,10 @@ lab.experiment('Target-area tests', () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
     delete require.cache[require.resolve('../../server/routes/target-area.js')]
+
     sandbox = await sinon.createSandbox()
+    sandbox.stub(config, 'webchat').value({ enabled: true })
+
     server = Hapi.server({
       port: 3000,
       host: 'localhost',

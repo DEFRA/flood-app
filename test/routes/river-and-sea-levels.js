@@ -22,7 +22,10 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
     delete require.cache[require.resolve('../../server/routes/location.js')]
     delete require.cache[require.resolve('../../server/routes/river-and-sea-levels.js')]
+
     sandbox = await sinon.createSandbox()
+    sandbox.stub(config, 'webchat').value({ enabled: true })
+
     server = Hapi.server({
       port: 3000,
       host: 'localhost',
@@ -248,7 +251,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('No results for \'WA4 1HT\'')
-    Code.expect(response.payload).to.contain('<header class="govuk-heading-m">Call Floodline for advice</header>')
+    Code.expect(response.payload).to.contain('<header class="govuk-heading-m">Contact Floodline for advice</header>')
   })
   lab.test('GET /rivers-and-sea-levels single character search should return no results', async () => {
     const floodService = require('../../server/services/flood')
@@ -345,7 +348,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('No results for \'e\'')
-    Code.expect(response.payload).to.contain('<header class="govuk-heading-m">Call Floodline for advice</header>')
+    Code.expect(response.payload).to.contain('<header class="govuk-heading-m">Contact Floodline for advice</header>')
   })
   lab.test('GET /river-and-sea-levels with levels Low, Normal, High', async () => {
     const floodService = require('../../server/services/flood')

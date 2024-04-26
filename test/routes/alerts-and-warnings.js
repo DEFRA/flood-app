@@ -36,7 +36,8 @@ lab.experiment('Test - /alerts-warnings', () => {
       getImpactsWithin: sandbox.stub(floodService, 'getImpactsWithin'),
       getStationById: sandbox.stub(floodService, 'getStationById'),
       getOutlook: sandbox.stub(floodService, 'getOutlook'),
-      getWarningsAlertsWithinStationBuffer: sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer')
+      getWarningsAlertsWithinStationBuffer: sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer'),
+      webchat: sandbox.stub(config, 'webchat').value({ enabled: true })
     }
     server = Hapi.server({
       port: 3000,
@@ -278,6 +279,7 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
+    sandbox.stub(config.webchat, 'enabled').value(true)
     validateFooterContent(response, config)
   })
 })

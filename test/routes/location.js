@@ -54,6 +54,8 @@ lab.experiment('Routes test - location - 2', () => {
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
 
     sandbox = await sinon.createSandbox()
+    sandbox.stub(config, 'webchat').value({ enabled: true })
+
     server = Hapi.server({
       port: 3000,
       host: 'localhost',

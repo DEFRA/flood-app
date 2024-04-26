@@ -4,9 +4,11 @@ const { expect } = require('@hapi/code')
 function validateFooterContent (response, config) {
   const root = parse(response.payload)
   const asideElement = root.querySelector('aside.defra-context-footer')
+  expect(asideElement, 'Aside element should exist in the footer.').to.exist()
+
   const contextFooterHTML = asideElement ? asideElement.innerHTML : ''
 
-  expect(contextFooterHTML).to.contain('<header class="govuk-heading-m">Call Floodline for advice</header>')
+  expect(contextFooterHTML).to.contain('<header class="govuk-heading-m">Contact Floodline for advice</header>')
   expect(contextFooterHTML).to.contain('<strong>Floodine helpline</strong>')
   expect(contextFooterHTML).to.contain('Telephone: 0345 988 1188')
   expect(contextFooterHTML).to.contain('Textphone: 0345 602 6340')
