@@ -4,15 +4,6 @@
 * Proposed Release Date: Wednesday 01 May 2024
 * Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/16986/tab/release-report-all-issues
 
-## Sense Check
-
-* Cross check the list of Jira tickets below with those in the Jira release linked to above and update where needed
-* Add additional Jira tickets from the related release notes:
-  * [flood-service](https://github.com/DEFRA/flood-service/blob/release/8.2.0/release-docs/CFF-8.2.0.md)
-
-* Add any required infrastructure changes such as redirects to the infrastructure changes section below
-* Once this sense check is done, delete this section
-
 ## Tickets
 
 
@@ -20,9 +11,7 @@
   * FSR-1192 | Add missing package used in release notes creation (#680)
   
   * FSR-1190 | search content change (#679)
-  
-  * FSR-596 | Fix &quot;Removed message&quot; bug (FSR-1191), refactor tests and improve coverage (#678)
-  
+ 
   * FSR-1134 | SEO improvements - return 404 for unknown locations (#612)
   
   * FSR-596 | Remove Flood Guidance Links, Update Redirects, Change Banner Links (#651)
@@ -49,4 +38,14 @@ Execute smoke tests and forward results
 
 ## Related Infrastructure Changes Required
 
-* None
+  Add redirects 
+  
+  * From Find Location page (https://check-for-flooding.service.gov.uk/find-location) to the Check for Flooding national page (https://check-for-flooding.service.gov.uk/). There is currently an internal redirect in place which needs to be removed.
+  
+  * From How to plan page (https://www.gov.uk/prepare-for-flooding/plan-ahead-for-flooding) to Prepare for flooding (https://www.gov.uk/prepare-for-flooding)
+
+  * From What to do in a flood page (https://www.gov.uk/prepare-for-flooding/what-to-do-in-a-flood) to Flood alerts & warnings (https://www.gov.uk/guidance/flood-alerts-and-warnings-what-they-are-and-what-to-do)
+  
+  * From How to recover from a flood page (https://check-for-flooding.service.gov.uk/recovering-after-a-flood) to What to do after a flood (https://www.gov.uk/after-flood)
+  
+  * From What happens after a flood (https://check-for-flooding.service.gov.uk/what-happens-after-a-flood) to What to do after a flood (https://www.gov.uk/after-flood)
