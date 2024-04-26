@@ -7,8 +7,10 @@ const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const data = require('../data')
 const outlookData = require('../data/outlook.json')
+const config = require('../../server/config')
 const { parse } = require('node-html-parser')
 const { fullRelatedContentChecker } = require('../lib/helpers/html-expectations')
+const { validateFooterContent } = require('../lib/helpers/context-footer-checker')
 
 lab.experiment('Test - /alerts-warnings', () => {
   let server
@@ -262,5 +264,20 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('No flood alerts or warnings')
     fullRelatedContentChecker(parse(response.payload))
+  })
+  lab.test('GET /alerts-and-warnings - context footer checks ', async () => {
+    stubs.getFloods.callsFake(() => ({
+      floods: []
+    }))
+    stubs.getStationsWithin.callsFake(() => [])
+    stubs.getImpactsWithin.callsFake(() => [])
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    validateFooterContent(response, config)
   })
 })
