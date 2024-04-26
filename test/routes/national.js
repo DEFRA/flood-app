@@ -12,6 +12,7 @@ const config = require('../../server/config')
 
 const fgs = require('../data/fgs.json')
 const floods = require('../data/floods.json')
+const { validateFooterContent } = require('../lib/helpers/context-footer-checker')
 
 function formatDate (date) {
   return moment.tz(date, 'Europe/London').format('h:mma [on] D MMMM YYYY')
@@ -273,20 +274,7 @@ lab.experiment('Routes test - national view', () => {
       const response = await server.inject(options)
 
       Code.expect(response.statusCode).to.equal(200)
-      const root = parse(response.payload)
-      const asideElement = root.querySelector('aside.defra-context-footer')
-      const asideHTML = asideElement ? asideElement.innerHTML : ''
-      Code.expect(asideHTML).to.contain('<header class="govuk-heading-m">Call Floodline for advice</header>')
-      Code.expect(asideHTML).to.contain('<strong>Floodine helpline</strong>')
-      Code.expect(asideHTML).to.contain('Telephone: 0345 988 1188')
-      Code.expect(asideHTML).to.contain('Textphone: 0345 602 6340')
-      Code.expect(asideHTML).to.contain('Open 24 hours a day, 7 days a week')
-      Code.expect(asideHTML).to.contain('<a href="https://gov.uk/call-charges">Find out more about call charges</a>')
-      // Check for the presence of "Talk to a Floodline adviser over webchat" only if webchat is enabled
-      if (config.webchat.enabled) {
-        Code.expect(asideHTML).to.contain('<strong>Talk to a Floodline adviser over webchat</strong>')
-        Code.expect(asideHTML).to.contain('We\'re running webchat as a trial.')
-      }
+      validateFooterContent(response, config)
     })
     lab.test('GET /national view no alerts or warnings', async () => {
     // Create dummy flood data in place of cached data
