@@ -8,6 +8,7 @@ const moment = require('moment-timezone')
 const { parse } = require('node-html-parser')
 const { linkChecker } = require('../lib/helpers/html-expectations')
 const flushAppRequireCache = require('../lib/flush-app-require-cache')
+const config = require('../../server/config')
 
 const fgs = require('../data/fgs.json')
 const floods = require('../data/floods.json')
@@ -231,6 +232,61 @@ lab.experiment('Routes test - national view', () => {
       linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/guidance/flood-alerts-and-warnings-what-they-are-and-what-to-do')
       linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
       linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
+    })
+    lab.test('GET / - context footer checks', async () => {
+      const locationPlugin = {
+        plugin: {
+          name: 'national',
+          register: (server, options) => {
+            server.route(require('../../server/routes/national'))
+          }
+        }
+      }
+      const floodService = require('../../server/services/flood')
+      // Create dummy flood data in place of cached data
+      const fakeFloodData = () => {
+        return {
+          floods: []
+        }
+      }
+
+      const fakeOutlookData = () => {
+        return {}
+      }
+
+      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+      await server.register(require('../../server/plugins/views'))
+      await server.register(require('../../server/plugins/session'))
+      await server.register(require('../../server/plugins/logging'))
+      await server.register(locationPlugin)
+      // Add Cache methods to server
+      const registerServerMethods = require('../../server/services/server-methods')
+      registerServerMethods(server)
+      await server.initialize()
+
+      const options = {
+        method: 'GET',
+        url: '/'
+      }
+      const response = await server.inject(options)
+
+      Code.expect(response.statusCode).to.equal(200)
+      const root = parse(response.payload)
+      const asideElement = root.querySelector('aside.defra-context-footer')
+      const asideHTML = asideElement ? asideElement.innerHTML : ''
+      Code.expect(asideHTML).to.contain('<header class="govuk-heading-m">Call Floodline for advice</header>')
+      Code.expect(asideHTML).to.contain('<strong>Floodine helpline</strong>')
+      Code.expect(asideHTML).to.contain('Telephone: 0345 988 1188')
+      Code.expect(asideHTML).to.contain('Textphone: 0345 602 6340')
+      Code.expect(asideHTML).to.contain('Open 24 hours a day, 7 days a week')
+      Code.expect(asideHTML).to.contain('<a href="https://gov.uk/call-charges">Find out more about call charges</a>')
+      // Check for the presence of "Talk to a Floodline adviser over webchat" only if webchat is enabled
+      if (config.webchat.enabled) {
+        Code.expect(asideHTML).to.contain('<strong>Talk to a Floodline adviser over webchat</strong>')
+        Code.expect(asideHTML).to.contain('We\'re running webchat as a trial.')
+      }
     })
     lab.test('GET /national view no alerts or warnings', async () => {
     // Create dummy flood data in place of cached data
