@@ -3,12 +3,12 @@ const Hapi = require('@hapi/hapi')
 const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const sinon = require('sinon')
+const config = require('../../server/config')
 const lab = exports.lab = Lab.script()
 const moment = require('moment-timezone')
 const { parse } = require('node-html-parser')
 const { linkChecker } = require('../lib/helpers/html-expectations')
 const flushAppRequireCache = require('../lib/flush-app-require-cache')
-const config = require('../../server/config')
 
 const fgs = require('../data/fgs.json')
 const floods = require('../data/floods.json')
@@ -33,7 +33,6 @@ lab.experiment('Routes test - national view', () => {
   async function setup (fakeFloodData, fakeOutlookData, fakeSearchData) {
     flushAppRequireCache()
 
-    const config = require('../../server/config')
     sandbox.stub(config, 'floodRiskUrl').value('http://server/cyltfr')
 
     const floodService = require('../../server/services/flood')
@@ -234,7 +233,7 @@ lab.experiment('Routes test - national view', () => {
       linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
       linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
     })
-    lab.test('GET / - context footer checks', async () => {
+    lab.test('GET / - context footer checks with webchat enabled', async () => {
       const locationPlugin = {
         plugin: {
           name: 'national',
@@ -257,6 +256,7 @@ lab.experiment('Routes test - national view', () => {
 
       sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
       sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      sandbox.stub(config.webchat, 'enabled').value(true)
 
       await server.register(require('../../server/plugins/views'))
       await server.register(require('../../server/plugins/session'))
@@ -320,7 +320,7 @@ lab.experiment('Routes test - national view', () => {
 
       Code.expect(response.statusCode).to.equal(200)
       Code.expect(response.payload).to.contain('No flood alerts or warnings')
-      Code.expect(response.payload).to.contain('Call Floodline for advice')
+      Code.expect(response.payload).to.contain('Contact Floodline for advice')
     })
     lab.test('GET /national view with incorrect outlook structure', async () => {
       // Create dummy flood data in place of cached data

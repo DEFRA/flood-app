@@ -6,9 +6,11 @@ const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const data = require('../data')
+const config = require('../../server/config')
 const moment = require('moment-timezone')
 const { parse } = require('node-html-parser')
 const { fullRelatedContentChecker } = require('../lib/helpers/html-expectations')
+const { validateFooterContent } = require('../lib/helpers/context-footer-checker')
 
 lab.experiment('Test - /station/{id}', () => {
   let sandbox
@@ -21,7 +23,10 @@ lab.experiment('Test - /station/{id}', () => {
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
     delete require.cache[require.resolve('../../server/routes/location.js')]
     delete require.cache[require.resolve('../../server/routes/station.js')]
+
     sandbox = await sinon.createSandbox()
+    sandbox.stub(config, 'webchat').value({ enabled: true })
+
     server = Hapi.server({
       port: 3000,
       host: 'localhost'
@@ -415,6 +420,7 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV (12KB)</a>')
     fullRelatedContentChecker(parse(response.payload))
+    validateFooterContent(response, config)
   })
   lab.test('GET station/2042/downstream ', async () => {
     const floodService = require('../../server/services/flood')
