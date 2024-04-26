@@ -8,6 +8,7 @@ const moment = require('moment-timezone')
 const { parse } = require('node-html-parser')
 const { linkChecker } = require('../lib/helpers/html-expectations')
 const flushAppRequireCache = require('../lib/flush-app-require-cache')
+const config = require('../../server/config')
 
 const fgs = require('../data/fgs.json')
 const floods = require('../data/floods.json')
@@ -281,8 +282,11 @@ lab.experiment('Routes test - national view', () => {
       Code.expect(asideHTML).to.contain('Textphone: 0345 602 6340')
       Code.expect(asideHTML).to.contain('Open 24 hours a day, 7 days a week')
       Code.expect(asideHTML).to.contain('<a href="https://gov.uk/call-charges">Find out more about call charges</a>')
-      Code.expect(asideHTML).to.contain('<strong>Talk to a Floodline adviser over webchat</strong>')
-      Code.expect(asideHTML).to.contain('We\'re running webchat as a trial.')
+      // Check for the presence of "Talk to a Floodline adviser over webchat" only if webchat is enabled
+      if (config.webchat.enabled) {
+        Code.expect(asideHTML).to.contain('<strong>Talk to a Floodline adviser over webchat</strong>')
+        Code.expect(asideHTML).to.contain('We\'re running webchat as a trial.')
+      }
     })
     lab.test('GET /national view no alerts or warnings', async () => {
     // Create dummy flood data in place of cached data
