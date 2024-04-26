@@ -15,7 +15,7 @@ async function executeNpmScript (scriptName) {
   }
 }
 describe('scripts', () => {
-  it('should run npm create-release-notes successfully', async () => {
+  it('should run help for create-release-notes successfully', async () => {
     // this test is to check that all the necessary modules are installed following the accidental
     // removal of nunjucks and yargs which wasn't picked up until the create release github action
     // was run
