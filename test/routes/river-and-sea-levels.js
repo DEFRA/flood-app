@@ -246,7 +246,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('No results for \'WA4 1HT\'')
-    Code.expect(response.payload).to.contain('<p><strong>Call Floodline for advice</strong></p>\n')
+    Code.expect(response.payload).to.contain('<header class="govuk-heading-m">Call Floodline for advice</header>')
   })
   lab.test('GET /rivers-and-sea-levels single character search should return no results', async () => {
     const floodService = require('../../server/services/flood')
@@ -343,7 +343,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('No results for \'e\'')
-    Code.expect(response.payload).to.contain('<p><strong>Call Floodline for advice</strong></p>\n')
+    Code.expect(response.payload).to.contain('<header class="govuk-heading-m">Call Floodline for advice</header>')
   })
   lab.test('GET /river-and-sea-levels with levels Low, Normal, High', async () => {
     const floodService = require('../../server/services/flood')
