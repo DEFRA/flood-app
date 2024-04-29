@@ -10,7 +10,7 @@
   
   * FSR-1192 | Add missing package used in release notes creation (#680)
   
-  * FSR-1190 | search content change (#679)
+  * FSR-1190 | Search content change (#679)
  
   * FSR-1134 | SEO improvements - return 404 for unknown locations (#612)
   
@@ -20,9 +20,9 @@
   
   * FSR-000 | Add sense check to release notes (#668)
   
-  * FSR-1133 | package updates (#624)
+  * FSR-1133 | Package updates (#624)
   
-  * FSR-000 | Fix issue in test code which was causing failing tests before 10:00 am (#667)
+  * FSR-000 | Fix issue in test code which was causing failing tests before 10:00am (#667)
   
   * FSR-1077 | Station line chart to display 6am on x axis (#625)
   
@@ -40,7 +40,7 @@ Execute smoke tests and forward results
 
   Add redirects 
   
-  * From Find Location page (https://check-for-flooding.service.gov.uk/find-location) to the Check for Flooding national page (https://check-for-flooding.service.gov.uk/). There is currently an internal redirect in place which needs to be removed.
+  * From Find Location page (https://check-for-flooding.service.gov.uk/find-location) to the Check for Flooding national page (https://check-for-flooding.service.gov.uk/)
   
   * From How to plan page (https://www.gov.uk/prepare-for-flooding/plan-ahead-for-flooding) to Prepare for flooding (https://www.gov.uk/prepare-for-flooding)
 
