@@ -36,7 +36,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        
+
       - name: Setup version env vars
         run: |
           version=${{ github.event.inputs.version }}
@@ -44,6 +44,26 @@ jobs:
           echo RELEASE_BRANCH="release/$version" >> "$GITHUB_ENV"
           echo TAG_VERSION="v$version" >> "$GITHUB_ENV"
           echo RELEASE_NOTES_FILE="./release-docs/CFF-${version}.md" >> "$GITHUB_ENV"
+
+      - name: Check PR's approved
+        run: |
+            function prCheck () {
+              REPO=$1
+              BASE=$2
+              gh pr list --repo $REPO --json title,mergeStateStatus,state,reviews --state OPEN --base $BASE --head $RELEASE_BRANCH --jq '.[] | [ select(.mergeStateStatus == "CLEAN" and .reviews[].state == "APPROVED") ]'
+              COUNT=$(gh pr list --repo $REPO --json title,mergeStateStatus,state,reviews --state OPEN --base $BASE --head $RELEASE_BRANCH --jq '.[] | [ select(.mergeStateStatus == "CLEAN" and .reviews[].state == "APPROVED") ] | length ')
+              if [ "$COUNT" -ne 1 ]; then
+                echo "Error: PR for merging $REPO $RELEASE_BRANCH into $BASE needs to be ready to merge and approved." >&2
+                exit 1
+              fi
+            }
+            prCheck $GITHUB_REPOSITORY_OWNER/flood-app master
+            prCheck $GITHUB_REPOSITORY_OWNER/flood-app development
+            prCheck $GITHUB_REPOSITORY_OWNER/flood-service master
+            prCheck $GITHUB_REPOSITORY_OWNER/flood-service development
+        env:
+          # create classic PAT and then run `gh secret set GH_WORKFLOW`
+          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
 
       - name: Check branch exists
         run: |
