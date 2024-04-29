@@ -58,8 +58,8 @@ jobs:
           git config --global user.name "GitHub Actions"
           git switch $RELEASE_BRANCH
           git switch master
-          git merge --ff-only $RELEASE_BRANCH
-          git push
+          git merge --no-edit $RELEASE_BRANCH
+          git push origin master
 
       - name: Create GitHub Release
         run: gh release create $TAG_VERSION --title "Release $VERSION" --notes "[release notes](/$RELEASE_NOTES_FILE)"
@@ -70,8 +70,8 @@ jobs:
       - name: Merge release branch into development
         run: |
           git switch development
-          git merge --ff-only $RELEASE_BRANCH
-          git push
+          git merge --no-edit $RELEASE_BRANCH
+          git push origin development
 
       - name: Trigger Merge Release Branch for flood-service
         run: gh workflow run --repo  "$GITHUB_REPOSITORY_OWNER/flood-service" merge.yml -f version="$VERSION"
