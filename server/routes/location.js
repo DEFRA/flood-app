@@ -11,7 +11,6 @@ const qs = require('qs')
 
 function createQueryParametersString (queryObject) {
   const { q, location, ...otherParameters } = queryObject
-  // otherParameters has all parameters except q
   const queryString = qs.stringify(otherParameters, { addQueryPrefix: true, encode: false })
   return queryString
 }
@@ -89,7 +88,7 @@ module.exports = [{
   options: {
     validate: {
       query: joi
-        .object({ location: joi.string().allow(''), q: joi.string().allow(''), ...queryValidation })
+        .object({ location: joi.string(), q: joi.string(), ...queryValidation })
         .or('q', 'location'),
       failAction: failActionHandler
     }
