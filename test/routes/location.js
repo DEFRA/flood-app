@@ -196,6 +196,84 @@ lab.experiment('Routes test - location - 2', () => {
     Code.expect(response.statusCode).to.equal(301)
     Code.expect(response.headers.location).to.equal('/location/coxwold-north-yorkshire?lyr=mv,ts,tw,ta')
   })
+  lab.test('GET /location with location query parameter', async () => {
+    const fakeGetJson = () => {
+      return {
+        authenticationResultCode: 'ValidCredentials',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright',
+        resourceSets: [
+          {
+            estimatedTotal: 1,
+            resources: [
+              {
+                __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+                bbox: [54.18498992919922, -1.1886399984359741, 54.1898307800293, -1.1779199838638306],
+                name: 'Coxwold, North Yorkshire',
+                point: {
+                  type: 'Point',
+                  coordinates: [54.187835693359375, -1.182824969291687]
+                },
+                address: {
+                  adminDistrict: 'England',
+                  adminDistrict2: 'North Yorkshire',
+                  countryRegion: 'United Kingdom',
+                  formattedAddress: 'Coxwold, North Yorkshire',
+                  locality: 'Coxwold',
+                  countryRegionIso2: 'GB'
+                },
+                confidence: 'High',
+                entityType: 'PopulatedPlace',
+                geocodePoints: [
+                  {
+                    type: 'Point',
+                    coordinates: [54.187835693359375, -1.182824969291687],
+                    calculationMethod: 'Rooftop',
+                    usageTypes: ['Display']
+                  }
+                ],
+                matchCodes: ['Good']
+              }
+            ]
+          }
+        ],
+        statusCode: 200,
+        tatusDescription: 'OK',
+        traceId: 'trace-id'
+      }
+    }
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/logging'))
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/error-pages'))
+    await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/location?location=coxwold'
+    }
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(301)
+    Code.expect(response.headers.location).to.equal('/location/coxwold-north-yorkshire')
+  })
   lab.test('GET /location with no query parameters', async () => {
     const locationPlugin = {
       plugin: {

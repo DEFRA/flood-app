@@ -10,14 +10,13 @@ const { slugify } = require('./lib/utils')
 const qs = require('qs')
 
 function createQueryParametersString (queryObject) {
-  const { q, ...otherParameters } = queryObject
-  // otherParameters has all parameters except q
+  const { q, location, ...otherParameters } = queryObject
   const queryString = qs.stringify(otherParameters, { addQueryPrefix: true, encode: false })
   return queryString
 }
 
 async function legacyRouteHandler (request, h) {
-  const location = request.query.q
+  const location = request.query.q || request.query.location
   const [place] = await locationService.find(location)
   const queryString = createQueryParametersString(request.query)
   if (place) {
@@ -88,7 +87,9 @@ module.exports = [{
   handler: legacyRouteHandler,
   options: {
     validate: {
-      query: joi.object({ q: joi.string().required(), ...queryValidation }),
+      query: joi
+        .object({ location: joi.string(), q: joi.string(), ...queryValidation })
+        .or('q', 'location'),
       failAction: failActionHandler
     }
   }
