@@ -5,11 +5,10 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
-const config = require('../../server/config')
 const { parse } = require('node-html-parser')
 const fakeTargetAreaFloodData = require('../data/fakeTargetAreaFloodData.json')
 const { linkChecker } = require('../lib/helpers/html-expectations')
-const { validateFooterContent } = require('../lib/helpers/context-footer-checker')
+const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
 
 lab.experiment('Target-area tests', () => {
   let sandbox
@@ -21,7 +20,6 @@ lab.experiment('Target-area tests', () => {
     delete require.cache[require.resolve('../../server/routes/target-area.js')]
 
     sandbox = await sinon.createSandbox()
-    sandbox.stub(config, 'webchat').value({ enabled: true })
 
     server = Hapi.server({
       port: 3000,
@@ -115,7 +113,7 @@ lab.experiment('Target-area tests', () => {
     linkChecker(relatedContentLinks, 'Check your long term flood risk')
     linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
     // context footer check
-    validateFooterContent(response, config)
+    validateFooterPresent(response)
     const h1Found = root.querySelectorAll('h1').some(h => h.textContent.trim() === 'Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water')
     Code.expect(h1Found, 'Heading for target area found').to.be.true()
 
@@ -394,7 +392,7 @@ lab.experiment('Target-area tests', () => {
     linkChecker(relatedContentLinks, 'Check your long term flood risk')
     linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
     // context footer check
-    validateFooterContent(response, config)
+    validateFooterPresent(response)
 
     const h1Found = root.querySelectorAll('h1').some(h => h.textContent.trim() === 'Upper River Derwent, Stonethwaite Beck and Derwent Water flood alert area')
     Code.expect(h1Found, 'Heading for target area found').to.be.true()
@@ -455,7 +453,7 @@ lab.experiment('Target-area tests', () => {
     linkChecker(relatedContentLinks, 'Check your long term flood risk')
     linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
     // context footer check
-    validateFooterContent(response, config)
+    validateFooterPresent(response)
     Code.expect(response.payload).to.contain('Severe flood warning for Upper River Derwent, Stonethwaite Beck and Derwent Water')
 
     const anchorFound = root.querySelectorAll('a').some(a =>
@@ -514,7 +512,7 @@ lab.experiment('Target-area tests', () => {
     linkChecker(relatedContentLinks, 'Check your long term flood risk')
     linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
     // context footer check
-    validateFooterContent(response, config)
+    validateFooterPresent(response)
     Code.expect(response.payload).to.contain('There are no flood warnings in this area, but there is <a href="/target-area/123WAF984">a flood alert in the wider area</a>')
   })
 })

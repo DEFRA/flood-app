@@ -7,10 +7,9 @@ const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const data = require('../data')
 const outlookData = require('../data/outlook.json')
-const config = require('../../server/config')
 const { parse } = require('node-html-parser')
 const { fullRelatedContentChecker } = require('../lib/helpers/html-expectations')
-const { validateFooterContent } = require('../lib/helpers/context-footer-checker')
+const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
 
 lab.experiment('Test - /alerts-warnings', () => {
   let server
@@ -36,8 +35,7 @@ lab.experiment('Test - /alerts-warnings', () => {
       getImpactsWithin: sandbox.stub(floodService, 'getImpactsWithin'),
       getStationById: sandbox.stub(floodService, 'getStationById'),
       getOutlook: sandbox.stub(floodService, 'getOutlook'),
-      getWarningsAlertsWithinStationBuffer: sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer'),
-      webchat: sandbox.stub(config, 'webchat').value({ enabled: true })
+      getWarningsAlertsWithinStationBuffer: sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer')
     }
     server = Hapi.server({
       port: 3000,
@@ -492,7 +490,6 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
-    sandbox.stub(config.webchat, 'enabled').value(true)
-    validateFooterContent(response, config)
+    validateFooterPresent(response)
   })
 })
