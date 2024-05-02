@@ -6,10 +6,9 @@ const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const moment = require('moment-timezone')
-const config = require('../../server/config')
 const { parse } = require('node-html-parser')
 const { fullRelatedContentChecker } = require('../lib/helpers/html-expectations')
-const { validateFooterContent } = require('../lib/helpers/context-footer-checker')
+const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
 
 lab.experiment('Test - /rainfall-station', () => {
   let sandbox
@@ -24,7 +23,6 @@ lab.experiment('Test - /rainfall-station', () => {
     delete require.cache[require.resolve('../../server/routes/rainfall-station.js')]
 
     sandbox = await sinon.createSandbox()
-    sandbox.stub(config, 'webchat').value({ enabled: true })
 
     server = Hapi.server({
       port: 3000,
@@ -121,7 +119,7 @@ lab.experiment('Test - /rainfall-station', () => {
     Code.expect(response.payload).to.contain('Lavenham')
     Code.expect(response.statusCode).to.equal(200)
     fullRelatedContentChecker(parse(response.payload))
-    validateFooterContent(response, config)
+    validateFooterPresent(response)
   })
 
   lab.test('GET /rainfall-station produces problem error', async () => {

@@ -9,10 +9,11 @@ const moment = require('moment-timezone')
 const { parse } = require('node-html-parser')
 const { linkChecker } = require('../lib/helpers/html-expectations')
 const flushAppRequireCache = require('../lib/flush-app-require-cache')
+const proxyquire = require('proxyquire')
 
 const fgs = require('../data/fgs.json')
 const floods = require('../data/floods.json')
-const { validateFooterContent } = require('../lib/helpers/context-footer-checker')
+const { validateFloodlineContactDetails, validateWebChatFooterPresent, validateWebChatFooterNotPresent } = require('../lib/helpers/context-footer-checker')
 
 function formatDate (date) {
   return moment.tz(date, 'Europe/London').format('h:mma [on] D MMMM YYYY')
@@ -256,9 +257,10 @@ lab.experiment('Routes test - national view', () => {
 
       sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
       sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-      sandbox.stub(config.webchat, 'enabled').value(true)
 
-      await server.register(require('../../server/plugins/views'))
+      await server.register(proxyquire('../../server/plugins/views', {
+        '../../server/config': { webchat: { enabled: true } }
+      }))
       await server.register(require('../../server/plugins/session'))
       await server.register(require('../../server/plugins/logging'))
       await server.register(locationPlugin)
@@ -274,7 +276,53 @@ lab.experiment('Routes test - national view', () => {
       const response = await server.inject(options)
 
       Code.expect(response.statusCode).to.equal(200)
-      validateFooterContent(response, config)
+      validateFloodlineContactDetails(response)
+      validateWebChatFooterPresent(response)
+    })
+    lab.test('GET / - context footer checks with webchat disabled', async () => {
+      const locationPlugin = {
+        plugin: {
+          name: 'national',
+          register: (server, options) => {
+            server.route(require('../../server/routes/national'))
+          }
+        }
+      }
+      const floodService = require('../../server/services/flood')
+      // Create dummy flood data in place of cached data
+      const fakeFloodData = () => {
+        return {
+          floods: []
+        }
+      }
+
+      const fakeOutlookData = () => {
+        return {}
+      }
+
+      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+      await server.register(proxyquire('../../server/plugins/views', {
+        '../../server/config': { webchat: { enabled: false } }
+      }))
+      await server.register(require('../../server/plugins/session'))
+      await server.register(require('../../server/plugins/logging'))
+      await server.register(locationPlugin)
+      // Add Cache methods to server
+      const registerServerMethods = require('../../server/services/server-methods')
+      registerServerMethods(server)
+      await server.initialize()
+
+      const options = {
+        method: 'GET',
+        url: '/'
+      }
+      const response = await server.inject(options)
+
+      Code.expect(response.statusCode).to.equal(200)
+      validateFloodlineContactDetails(response)
+      validateWebChatFooterNotPresent(response)
     })
     lab.test('GET /national view no alerts or warnings', async () => {
     // Create dummy flood data in place of cached data

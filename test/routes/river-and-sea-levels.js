@@ -6,10 +6,9 @@ const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const data = require('../data')
-const config = require('../../server/config')
 const { parse } = require('node-html-parser')
 const { fullRelatedContentChecker } = require('../lib/helpers/html-expectations')
-const { validateFooterContent } = require('../lib/helpers/context-footer-checker')
+const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
 
 lab.experiment('Test - /river-and-sea-levels', () => {
   let sandbox
@@ -24,7 +23,6 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     delete require.cache[require.resolve('../../server/routes/river-and-sea-levels.js')]
 
     sandbox = await sinon.createSandbox()
-    sandbox.stub(config, 'webchat').value({ enabled: true })
 
     server = Hapi.server({
       port: 3000,
@@ -2812,7 +2810,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
       const response = await server.inject(options)
       Code.expect(response.statusCode).to.equal(200)
-      validateFooterContent(response, config)
+      validateFooterPresent(response)
     })
   })
 })

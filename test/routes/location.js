@@ -6,11 +6,10 @@ const Code = require('@hapi/code')
 const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const data = require('../data')
-const config = require('../../server/config')
 const moment = require('moment')
 const LocationSearchError = require('../../server/location-search-error')
 const { parse } = require('node-html-parser')
-const { validateFooterContent } = require('../lib/helpers/context-footer-checker')
+const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
 
 lab.experiment('Routes test - location - 2', () => {
   let sandbox
@@ -54,7 +53,6 @@ lab.experiment('Routes test - location - 2', () => {
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
 
     sandbox = await sinon.createSandbox()
-    sandbox.stub(config, 'webchat').value({ enabled: true })
 
     server = Hapi.server({
       port: 3000,
@@ -2125,6 +2123,6 @@ lab.experiment('Routes test - location - 2', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    validateFooterContent(response, config)
+    validateFooterPresent(response)
   })
 })
