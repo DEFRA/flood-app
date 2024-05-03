@@ -2,9 +2,7 @@ const { parse } = require('node-html-parser')
 const { expect } = require('@hapi/code')
 
 function validateFloodlineContactDetails (response) {
-  const asideElement = validateFooterPresent(response)
-
-  const contextFooterHTML = asideElement ? asideElement.innerHTML : ''
+  const contextFooterHTML = validateFooterPresent(response)
 
   expect(contextFooterHTML).to.contain('<header class="govuk-heading-m">Contact Floodline for advice</header>')
   expect(contextFooterHTML).to.contain('<strong>Floodine helpline</strong>')
@@ -15,20 +13,15 @@ function validateFloodlineContactDetails (response) {
 }
 
 function validateWebChatFooterPresent (response) {
-  const asideElement = validateFooterPresent(response)
+  const contextFooterHTML = validateFooterPresent(response)
 
-  const contextFooterHTML = asideElement ? asideElement.innerHTML : ''
-
-  // Check for the presence of "Talk to a Floodline adviser over webchat" only if webchat is enabled
   expect(contextFooterHTML).to.contain('<strong>Talk to a Floodline adviser over webchat</strong>')
   expect(contextFooterHTML).to.contain('We\'re running webchat as a trial.')
 }
 
 function validateWebChatFooterNotPresent (response) {
-  const asideElement = validateFooterPresent(response)
+  const contextFooterHTML = validateFooterPresent(response)
 
-  const contextFooterHTML = asideElement ? asideElement.innerHTML : ''
-  // Check for the presence of "Talk to a Floodline adviser over webchat" only if webchat is disabled
   expect(contextFooterHTML).to.not.contain('<strong>Talk to a Floodline adviser over webchat</strong>')
   expect(contextFooterHTML).to.not.contain('We\'re running webchat as a trial.')
 }
@@ -37,7 +30,8 @@ function validateFooterPresent (response) {
   const root = parse(response.payload)
   const asideElement = root.querySelector('aside.defra-context-footer')
   expect(asideElement, 'Aside footer element should exist.').to.exist()
-  return asideElement
+  const contextFooterHTML = asideElement ? asideElement.innerHTML : ''
+  return contextFooterHTML
 }
 
 module.exports = {
