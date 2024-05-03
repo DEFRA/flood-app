@@ -81,7 +81,7 @@ describe('context-footer', () => {
       server.method('flood.getFloodArea', sinon.stub().resolves(area))
       server.method('flood.getFloods', sinon.stub().resolves({ floods: [] }))
     })
-    it('should display webchat link', async () => {
+    it('should be possible to enable webchat link', async () => {
       await server.register(
         proxyquire('../../server/plugins/views', {
           '../../server/config': { webchat: { enabled: true } }
@@ -93,7 +93,7 @@ describe('context-footer', () => {
       const root = parse(response.payload)
       webchatParagraphChecker(root, true)
     })
-    it('should not display webchat link', async () => {
+    it('should be possible to disable webchat link', async () => {
       await server.register(
         proxyquire('../../server/plugins/views', {
           '../../server/config': { webchat: { enabled: false } }
@@ -117,6 +117,8 @@ describe('context-footer', () => {
       const locationRoute = proxyquire('../../server/routes/location', {
         '../../server/models/views/location': FakeViewModel,
         '../../server/services/location': {
+          // the location data below would be better created using a
+          // data builder (see test/lib/helpers/data-builders.js)
           find: sinon.stub().resolves([
             {
               name: 'Knaresborough, North Yorkshire',
@@ -157,7 +159,7 @@ describe('context-footer', () => {
       server.method('flood.getStationsWithin', sinon.stub().resolves([]))
       server.method('flood.getOutlook', sinon.stub().resolves({}))
     })
-    it('should display webchat link', async () => {
+    it('should be possible to enable webchat link', async () => {
       await server.register(
         proxyquire('../../server/plugins/views', {
           '../../server/config': { webchat: { enabled: true } }
@@ -169,7 +171,7 @@ describe('context-footer', () => {
       const root = parse(response.payload)
       webchatParagraphChecker(root, true)
     })
-    it('should not display webchat link', async () => {
+    it('should be possible to disable webchat link', async () => {
       await server.register(
         proxyquire('../../server/plugins/views', {
           '../../server/config': { webchat: { enabled: false } }
