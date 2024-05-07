@@ -61,9 +61,10 @@ function toFixed (value, dp) {
       return 'Invalid input. Please provide a valid number string.'
     }
 
-    const roundedValue = numberValue.toFixed(dp)
+    const factor = Math.pow(10, dp)
+    const roundedValue = Math.round(numberValue * factor) / factor
 
-    return roundedValue.toString()
+    return roundedValue.toFixed(dp)
   } else {
     return value
   }
