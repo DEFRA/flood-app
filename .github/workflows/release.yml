@@ -32,11 +32,6 @@ jobs:
       - name: Display inputs
         run: echo "${{ github.event.inputs.jira_release_id }} ${{ github.event.inputs.increment }} ${{ github.event.inputs.db_changes }} ${{ github.event.inputs.proposed_release_date }}"
 
-      - name: Validate date
-        run: |
-          date=$(date --date "${{ github.event.inputs.proposed_release_date }}" "+%d/%m/%Y -d "Europe/London"")
-          echo FORMATTED_DATE=$(date --date $date  "+%A %d %B %Y") >> "$GITHUB_ENV"
-
       - name: Check PAT token is still valid
         run: |
           gh workflow list --repo "$GITHUB_REPOSITORY_OWNER/flood-service"
