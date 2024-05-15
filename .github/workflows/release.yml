@@ -34,7 +34,7 @@ jobs:
 
       - name: Validate date
         run: |
-          date=$(date --date "${{ github.event.inputs.proposed_release_date }}" "+%d/%m/%Y")
+          date=$(date --date "${{ github.event.inputs.proposed_release_date }}" "+%d/%m/%Y -d "Europe/London"")
           echo FORMATTED_DATE=$(date --date $date  "+%A %d %B %Y") >> "$GITHUB_ENV"
 
       - name: Check PAT token is still valid
