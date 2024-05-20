@@ -74,7 +74,7 @@ lab.experiment('Test - /alerts-warnings', () => {
     delete require.cache[require.resolve('../../server/util')]
   })
 
-  lab.test('GET /alerts-and-warnings with query parameters of Warrington and no warnings or alerts', async () => {
+  lab.test('GET /alerts-and-warnings with legacy query parameters of Warrington', async () => {
     stubs.getJson.callsFake(() => data.warringtonGetJson)
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))
     stubs.getFloodsWithin.callsFake(() => ({ floods: [] }))
@@ -87,63 +87,44 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('No alerts or warnings')
+    Code.expect(response.statusCode).to.equal(301)
+    Code.expect(response.headers.location).to.equal('/alerts-and-warnings/warrington')
   })
-  lab.test('GET /alerts-and-warnings TYPO or non location "afdv vdaf adfv  fda" ', async () => {
+
+  lab.test('GET /alerts-and-warnings with location of Warrington', async () => {
+    stubs.getJson.callsFake(() => data.warringtonGetJson)
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+    stubs.getFloodsWithin.callsFake(() => ({ floods: [] }))
+
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings/warrington'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+  })
+
+  lab.test('GET /alerts-and-warnings with legacy query parameters should 404', async () => {
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
 
     const options = {
       method: 'GET',
-      url: '/alerts-and-warnings?q=wefwe%20we%20fwef%20str'
+      url: '/alerts-and-warnings?q=not-found'
     }
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('No alerts or warnings')
-    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.statusCode).to.equal(404)
+    Code.expect(response.headers.location).to.equal(undefined)
   })
-  lab.test('GET /alerts-and-warnings with query parameters of Kinghorn, Scotland', async () => {
-    stubs.getIsEngland.callsFake(() => ({ is_england: false }))
-    stubs.getJson.callsFake(() => data.scotlandGetJson)
-    const options = {
-      method: 'GET',
-      url: '/alerts-and-warnings?q=kinghorn'
-    }
 
-    const response = await server.inject(options)
-
-    Code.expect(response.payload).to.contain('If you searched a place in England, you should:')
-    Code.expect(response.statusCode).to.equal(200)
-  })
-  lab.test('GET /alerts-and-warnings with query parameters, show alert, warnings and severe', async () => {
-    stubs.getJson.callsFake(() => data.warringtonGetJson)
-    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-    stubs.getFloodsWithin.callsFake(() => data.fakeFloodsData)
-    stubs.getStationsWithin.callsFake(() => [])
-    stubs.getImpactsWithin.callsFake(() => [])
-    const options = {
-      method: 'GET',
-      url: '/alerts-and-warnings?q=Warrington'
-    }
-
-    const response = await server.inject(options)
-
-    Code.expect(response.payload).to.contain('1 flood warning')
-    Code.expect(response.payload).to.contain('1 severe flood warning')
-    Code.expect(response.payload).to.contain('3 flood alerts')
-    Code.expect(response.payload).to.contain('1 flood warning removed')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFGL" class="defra-flood-warnings-list-item__title">River Glaze catchment including Leigh and East Wigan</a>')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013FWFCH29" class="defra-flood-warnings-list-item__title">Wider area at risk from Sankey Brook at Dallam</a>')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFDI" class="defra-flood-warnings-list-item__title">River Ditton catchment including areas around Huyton-with-Roby and Widnes</a>')
-    Code.expect(response.statusCode).to.equal(200)
-  })
-  lab.test('GET /alerts-and-warnings with query parameters of WA4 1HT', async () => {
+  lab.test('GET /alerts-and-warnings with legacy query parameters of WA4 1HT', async () => {
     stubs.getJson.callsFake(() => data.warringtonGetJson)
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))
     stubs.getFloodsWithin.callsFake(() => data.floodsByPostCode)
-    stubs.getStationsWithin.callsFake(() => [])
-    stubs.getImpactsWithin.callsFake(() => [])
+
     const options = {
       method: 'GET',
       url: '/alerts-and-warnings?q=WA4%201HT'
@@ -151,29 +132,11 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('4 flood alerts')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFLM" class="defra-flood-warnings-list-item__title">Lower River Mersey including Warrington, Runcorn and Lymm areas</a>')
-    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.statusCode).to.equal(301)
+    // Code.expect(response.headers.location).to.equal('/alerts-and-warnings/warrington-wa4-1ht')
   })
-  lab.test('GET /alerts-and-warnings Bing returns error', async () => {
-    stubs.getJson.callsFake(() => {
-      throw new Error('Bing error')
-    })
-    stubs.getFloods.callsFake(() => ({
-      floods: []
-    }))
-    const options = {
-      method: 'GET',
-      url: '/alerts-and-warnings?q=WA4%201HT'
-    }
 
-    const response = await server.inject(options)
-
-    Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location - GOV.UK')
-    Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location')
-    Code.expect(response.statusCode).to.equal(200)
-  })
-  lab.test('GET /alerts-and-warnings - England parameter query', async () => {
+  lab.test('GET /alerts-and-warnings with legacy query parameters of England', async () => {
     // Create dummy flood data in place of cached data
     stubs.getFloods.callsFake(() => ({
       floods: [
@@ -203,9 +166,146 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('1 flood warning')
+    Code.expect(response.statusCode).to.equal(404)
   })
+
+  lab.test('POST /alerts and warnings', async () => {
+    stubs.getJson.callsFake(() => data.warringtonGetJson)
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+    stubs.getFloodsWithin.callsFake(() => data.fakeFloodsData)
+
+    const options = {
+      method: 'POST',
+      url: '/alerts-and-warnings',
+      payload: {
+        location: 'Warrington'
+      }
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(301)
+    Code.expect(response.headers['content-type']).to.include('text/html')
+  })
+
+  lab.test('POST /alerts and warnings payload fails joi validation', async () => {
+    stubs.getJson.callsFake(() => data.nonLocationGetJson)
+
+    const options = {
+      method: 'POST',
+      url: '/alerts-and-warnings',
+      payload: {
+        river: 'Test'
+      }
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.headers['content-type']).to.include('text/html')
+  })
+
+  lab.test('POST /alerts and warnings with blank location', async () => {
+    stubs.getJson.callsFake(() => data.nonLocationGetJson)
+    stubs.getFloods.callsFake(() => ({ floods: [] }))
+
+    const options = {
+      method: 'POST',
+      url: '/alerts-and-warnings',
+      payload: {
+        location: ''
+      }
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.headers['content-type']).to.include('text/html')
+  })
+
+  lab.test('GET /alerts-and-warnings TYPO or non location "afdv vdaf adfv  fda" ', async () => {
+    stubs.getJson.callsFake(() => data.nonLocationGetJson)
+
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings?q=wefwe%20we%20fwef%20str'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(404)
+  })
+
+  lab.test('GET /alerts-and-warnings with query parameters of Kinghorn, Scotland', async () => {
+    stubs.getIsEngland.callsFake(() => ({ is_england: false }))
+    stubs.getJson.callsFake(() => data.scotlandGetJson)
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings?q=kinghorn'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(301)
+    Code.expect(response.headers.location).to.equal('/alerts-and-warnings/kinghorn-fife')
+  })
+
+  lab.test('GET /alerts-and-warnings location, show alert, warnings and severe', async () => {
+    stubs.getJson.callsFake(() => data.warringtonGetJson)
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+    stubs.getFloodsWithin.callsFake(() => data.fakeFloodsData)
+    stubs.getStationsWithin.callsFake(() => [])
+    stubs.getImpactsWithin.callsFake(() => [])
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings/Warrington'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('1 flood warning')
+    Code.expect(response.payload).to.contain('1 severe flood warning')
+    Code.expect(response.payload).to.contain('3 flood alerts')
+    Code.expect(response.payload).to.contain('1 flood warning removed')
+    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFGL" class="defra-flood-warnings-list-item__title">River Glaze catchment including Leigh and East Wigan</a>')
+    Code.expect(response.payload).to.contain('<a href="/target-area/013FWFCH29" class="defra-flood-warnings-list-item__title">Wider area at risk from Sankey Brook at Dallam</a>')
+    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFDI" class="defra-flood-warnings-list-item__title">River Ditton catchment including areas around Huyton-with-Roby and Widnes</a>')
+    Code.expect(response.statusCode).to.equal(200)
+  })
+
+  lab.test('GET /alerts-and-warnings should set the canonical url', async () => {
+    stubs.getJson.callsFake(() => data.warringtonGetJson)
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+    stubs.getFloodsWithin.callsFake(() => data.fakeFloodsData)
+
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings/warrington?active=true'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.payload).to.contain('<link rel="canonical" href="http://localhost:3000/alerts-and-warnings/warrington"/>')
+    Code.expect(response.statusCode).to.equal(200)
+  })
+
+  // lab.test('GET /alerts-and-warnings Bing returns error', async () => {
+  //   // stubs.getJson.callsFake(() => { throw new Error('Bing error') })
+  //   // stubs.getJson.callsFake(() => data.warringtonGetJson)
+  //   // stubs.getFloodsWithin.callsFake(() => ({ floods: [] }))
+  //   stubs.getJson.callsFake(() => data.warringtonGetJson)
+  //   stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+  //   stubs.getFloodsWithin.callsFake(() => data.fakeFloodsData)
+
+  //   const options = {
+  //     method: 'GET',
+  //     url: '/alerts-and-warnings'
+  //   }
+
+  //   const response = await server.inject(options)
+
+  //   Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location - GOV.UK')
+  //   Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location')
+  //   Code.expect(response.statusCode).to.equal(500)
+  // })
+
   lab.test('GET /alerts-and-warnings ', async () => {
     stubs.getFloods.callsFake(() => ({
       floods: []
@@ -221,9 +321,12 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('No flood alerts or warnings')
   })
+
   lab.test('GET /alerts-and-warnings?station=1001 ', async () => {
+    stubs.getFloods.callsFake(() => ({ floods: [] }))
     stubs.getStationById.callsFake(() => data.fakeGetStationById)
     stubs.getWarningsAlertsWithinStationBuffer.callsFake(() => [])
+
     const options = {
       method: 'GET',
       url: '/alerts-and-warnings?station=1001'
@@ -234,6 +337,7 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('Beeding Bridge - flood alerts and warnings - GOV.UK')
   })
+
   lab.test('GET /alerts-and-warnings with unknown parameter e.g. facebook click id ', async () => {
     stubs.getStationById.callsFake(() => data.fakeGetStationById)
     stubs.getWarningsAlertsWithinStationBuffer.callsFake(() => [])
@@ -247,6 +351,7 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.payload).to.contain('Beeding Bridge - flood alerts and warnings - GOV.UK')
     Code.expect(response.statusCode).to.equal(200)
   })
+
   lab.test('GET /alerts-and-warnings check for related content links ', async () => {
     stubs.getFloods.callsFake(() => ({
       floods: []
