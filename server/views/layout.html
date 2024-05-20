@@ -30,7 +30,7 @@
  
 
   {% if metaCanonical %}
-    <link rel="canonical" href="{{fullUrl}}"/>
+    <link rel="canonical" href="{{ model.canonicalUrl if model.canonicalUrl else fullUrl }}"/>
   {% endif %}
 
   <script>

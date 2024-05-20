@@ -2,15 +2,17 @@ const { bingKeyMaps } = require('../../config')
 const config = require('../../config')
 
 class ViewModel {
-  constructor ({ location, place, floods, station, error }) {
+  constructor ({ q, location, place, floods, station, canonical, error }) {
     Object.assign(this, {
-      q: location,
+      q: q || location,
       map: station ? 'map-station' : 'map',
       station: station || null,
       placeName: place ? place.name : '',
       placeBbox: place ? place.bbox2k : [],
       placeCentre: place ? place.center : [],
       timestamp: Date.now(),
+      metaCanonical: canonical,
+      canonicalUrl: canonical,
       error: error ? true : null,
       displayGetWarningsLink: true,
       displayLongTermLink: true,
