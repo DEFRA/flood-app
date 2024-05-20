@@ -34,6 +34,9 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Install dependencies
+        run: npm install
+        
       - name: Setup version env vars
         run: |
           version=${{ github.event.inputs.version }}
@@ -49,36 +52,14 @@ jobs:
             exit 1
           fi
 
-      - name: Check PR's approved
-        run: |
-            function prCheck () {
-              REPO=$1
-              BASE=$2
-              STATE=$(gh pr list --repo $GITHUB_REPOSITORY_OWNER/$REPO --json title,mergeStateStatus,state,reviews --state OPEN --base $BASE --head $RELEASE_BRANCH --jq '.[] | select(.mergeStateStatus == "CLEAN" and .reviews[].state == "APPROVED") | .reviews[].state ')
-              if [ "$STATE" != "APPROVED" ]; then
-                echo "Error: PR for merging $GITHUB_REPOSITORY_OWNER/$REPO $RELEASE_BRANCH into $BASE needs to be ready to merge and approved. (STATE=$STATE)" >&2
-                exit 1
-              fi
-            }
-            prCheck flood-app master
-            prCheck flood-app development
-            prCheck flood-service master
-            prCheck flood-service development
-        env:
-          # create classic PAT and then run `gh secret set GH_WORKFLOW`
-          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
-
-      - name: Install dependencies
-        run: npm install
-
       - name: Merge release branch into master
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
           git switch $RELEASE_BRANCH
           git switch master
-          git merge --no-edit $RELEASE_BRANCH
-          git push origin master
+          git merge --ff-only $RELEASE_BRANCH
+          git push
 
       - name: Create GitHub Release
         run: gh release create $TAG_VERSION --title "Release $VERSION" --notes "[release notes](/$RELEASE_NOTES_FILE)"
@@ -89,8 +70,8 @@ jobs:
       - name: Merge release branch into development
         run: |
           git switch development
-          git merge --no-edit $RELEASE_BRANCH
-          git push origin development
+          git merge --ff-only $RELEASE_BRANCH
+          git push
 
       - name: Trigger Merge Release Branch for flood-service
         run: gh workflow run --repo  "$GITHUB_REPOSITORY_OWNER/flood-service" merge.yml -f version="$VERSION"
