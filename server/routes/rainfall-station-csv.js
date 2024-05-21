@@ -3,6 +3,9 @@ const util = require('../../server/util')
 const boom = require('@hapi/boom')
 const floodService = require('../services/flood')
 
+const valueDuration15 = 15
+const valueDuration45 = 45
+
 module.exports = {
   method: 'GET',
   path: '/rainfall-station-csv/{id}',
@@ -28,7 +31,7 @@ module.exports = {
       .station_name
       .replace(/(^\w|\s\w)(\S*)/g, (_, m1, m2) => m1.toUpperCase() + m2.toLowerCase())
 
-    const valueDuration = rainfallStationTelemetry[0].period === '15 min' ? 15 : 45
+    const valueDuration = rainfallStationTelemetry[0].period === '15 min' ? valueDuration15 : valueDuration45
 
     const values = util.formatRainfallTelemetry(rainfallStationTelemetry, valueDuration)
 
