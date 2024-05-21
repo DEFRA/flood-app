@@ -10,6 +10,14 @@ const { slugify } = require('./lib/utils')
 const pathUrl = '/alerts-and-warnings'
 const QUERY_STRING_LOCATION_MAX_LENGTH = 200
 
+function renderLocationNotFound (location, h) {
+  return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', href: 'alerts-and-warnings', location }).takeover()
+}
+
+function renderNotFound (location) {
+  return boom.notFound(`Location ${location} not found`)
+}
+
 function createQueryParametersString (queryObject) {
   const { q, location, ...otherParameters } = queryObject
   const queryString = qs.stringify(otherParameters, { addQueryPrefix: true, encode: false })
@@ -42,9 +50,9 @@ async function routeHandler (request, h) {
 
     if (!place) {
       if (request.method === 'get') {
-        return boom.notFound(`Location ${location} not found`)
+        return renderNotFound(location)
       } else {
-        return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', href: 'alerts-and-warnings', location }).takeover()
+        return renderLocationNotFound(location, h)
       }
     }
 
@@ -54,7 +62,7 @@ async function routeHandler (request, h) {
       })
 
       if (request.method === 'post') {
-        return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', href: 'alerts-and-warnings', location }).takeover()
+        return renderLocationNotFound(location, h)
       }
     }
 
@@ -94,7 +102,7 @@ async function locationRouteHandler (request, h) {
   }
 
   if (slugify(place?.name) !== location) {
-    return boom.notFound(`Location ${location} not found`)
+    return renderNotFound(location)
   }
 
   if (!place.isEngland.is_england) {
@@ -103,9 +111,9 @@ async function locationRouteHandler (request, h) {
     })
 
     if (request.method === 'get') {
-      return boom.notFound(`Location ${location} not found`)
+      return renderNotFound(location)
     } else {
-      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', href: 'alerts-and-warnings', location }).takeover()
+      return renderLocationNotFound(location, h)
     }
   }
 
@@ -126,7 +134,7 @@ function failActionHandler (request, h) {
   if (!location) {
     return h.redirect('alerts-and-warnings').takeover()
   } else {
-    return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', href: 'alerts-and-warnings', location }).takeover()
+    return renderLocationNotFound(location, h)
   }
 }
 
