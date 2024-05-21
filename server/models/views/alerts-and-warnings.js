@@ -6,18 +6,18 @@ class ViewModel {
     Object.assign(this, {
       q: q || location,
       map: station ? 'map-station' : 'map',
-      station: station || null,
-      placeName: place ? place.name : '',
-      placeBbox: place ? place.bbox2k : [],
-      placeCentre: place ? place.center : [],
+      station: station,
+      placeName: place?.name || '',
+      placeBbox: place?.bbox2k || [],
+      placeCentre: place?.center || [],
       timestamp: Date.now(),
       metaCanonical: canonical,
       canonicalUrl: canonical,
       error: error ? true : null,
       displayGetWarningsLink: true,
       displayLongTermLink: true,
-      isEngland: place ? place.isEngland.is_england : null,
-      isDummyData: floods ? floods.isDummyData : false,
+      isEngland: place?.isEngland?.is_england || null,
+      isDummyData: floods?.isDummyData || false,
       floodRiskUrl: config.floodRiskUrl
     })
 
