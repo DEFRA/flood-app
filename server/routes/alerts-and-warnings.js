@@ -7,6 +7,9 @@ const locationService = require('../services/location')
 const util = require('../util')
 const { slugify } = require('./lib/utils')
 
+const pathUrl = '/alerts-and-warnings'
+const QUERY_STRING_LOCATION_MAX_LENGTH = 200
+
 function createQueryParametersString (queryObject) {
   const { q, location, ...otherParameters } = queryObject
   const queryString = qs.stringify(otherParameters, { addQueryPrefix: true, encode: false })
@@ -57,7 +60,7 @@ async function routeHandler (request, h) {
 
     const queryString = createQueryParametersString(request.query)
 
-    return h.redirect(`/alerts-and-warnings/${slugify(place?.name)}${queryString}`).permanent()
+    return h.redirect(`${pathUrl}/${slugify(place?.name)}${queryString}`).permanent()
   }
 
   const data = await request.server.methods.flood.getFloods()
@@ -87,7 +90,7 @@ async function locationRouteHandler (request, h) {
   }
 
   if (location.match(/^england$/i)) {
-    return h.redirect('/alerts-and-warnings')
+    return h.redirect(pathUrl)
   }
 
   if (slugify(place?.name) !== location) {
@@ -129,12 +132,12 @@ function failActionHandler (request, h) {
 
 module.exports = [{
   method: 'GET',
-  path: '/alerts-and-warnings',
+  path: pathUrl,
   handler: routeHandler,
   options: {
     validate: {
       query: joi.object({
-        q: joi.string().trim().max(200),
+        q: joi.string().trim().max(QUERY_STRING_LOCATION_MAX_LENGTH),
         station: joi.string(),
         btn: joi.string(),
         ext: joi.string(),
@@ -148,7 +151,7 @@ module.exports = [{
 },
 {
   method: 'GET',
-  path: '/alerts-and-warnings/{location}',
+  path: `${pathUrl}/{location}`,
   handler: locationRouteHandler,
   options: {
     validate: {
@@ -169,12 +172,12 @@ module.exports = [{
 },
 {
   method: 'POST',
-  path: '/alerts-and-warnings',
+  path: pathUrl,
   handler: routeHandler,
   options: {
     validate: {
       payload: joi.object({
-        location: joi.string().allow('').trim().max(200).required()
+        location: joi.string().allow('').trim().max(QUERY_STRING_LOCATION_MAX_LENGTH).required()
       }),
       failAction: failActionHandler
     }
