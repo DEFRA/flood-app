@@ -220,6 +220,35 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
 
+  lab.test('POST /alerts and warnings should have status code 200 with invalid location', async () => {
+    stubs.getJson.callsFake(() => data.nonLocationGetJson)
+    stubs.getFloods.callsFake(() => ({ floods: [] }))
+
+    const options = {
+      method: 'POST',
+      url: '/alerts-and-warnings',
+      payload: {
+        location: 'not-found'
+      }
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+  })
+
+  lab.test('GET /alerts-and-warnings should not find location', async () => {
+    stubs.getJson.callsFake(() => data.nonLocationGetJson)
+
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings/not-found'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(404)
+  })
+
   lab.test('GET /alerts-and-warnings TYPO or non location "afdv vdaf adfv  fda" ', async () => {
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
 
