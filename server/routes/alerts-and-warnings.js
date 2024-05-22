@@ -25,7 +25,7 @@ function createQueryParametersString (queryObject) {
 }
 
 async function routeHandler (request, h) {
-  let location = request.query.q || request.query.location || request.payload?.location
+  let location = request.query.q || request.payload?.location
 
   request.yar.set('q', { location })
 
@@ -115,7 +115,7 @@ function failActionHandler (request, h) {
     situation: 'Location search error: Invalid or no string input.'
   })
 
-  const location = request.query.q || request.query.location || request.payload?.location
+  const location = request.query.q || request.payload?.location
 
   if (!location) {
     return h.redirect(page).takeover()
