@@ -233,7 +233,27 @@ lab.experiment('Test - /alerts-warnings', () => {
     }
 
     const response = await server.inject(options)
+
     Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('Error: Find location - Check for flooding - GOV.UK')
+  })
+
+  lab.test('POST /alerts-and-warnings with non-england location', async () => {
+    stubs.getIsEngland.callsFake(() => ({ is_england: false }))
+    stubs.getJson.callsFake(() => data.nonLocationGetJson)
+
+    const options = {
+      method: 'POST',
+      url: '/alerts-and-warnings',
+      payload: {
+        location: 'kinghorn'
+      }
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('Error: Find location - Check for flooding - GOV.UK')
   })
 
   lab.test('GET /alerts-and-warnings should not find location', async () => {
