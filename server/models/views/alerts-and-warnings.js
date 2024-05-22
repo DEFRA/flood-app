@@ -13,11 +13,11 @@ class ViewModel {
       timestamp: Date.now(),
       metaCanonical: canonical,
       canonicalUrl: canonical,
-      error: error ? true : null,
+      error: !!error,
       displayGetWarningsLink: true,
       displayLongTermLink: true,
-      isEngland: place?.isEngland?.is_england || null,
-      isDummyData: floods?.isDummyData || false,
+      isEngland: place?.isEngland?.is_england,
+      isDummyData: floods?.isDummyData,
       floodRiskUrl: config.floodRiskUrl
     })
 
@@ -30,10 +30,8 @@ class ViewModel {
         this.pageTitle = `${location ? location + ' - f' : 'F'}lood alerts and warnings`
       }
     }
-    this.countFloods = floods ? floods.floods.length : 0
-    this.floods = floods
-      ? floods.groups.map(item => item)
-      : []
+    this.countFloods = floods?.floods?.length ?? 0
+    this.floods = floods?.groups?.map(item => item) ?? []
 
     this.expose = {
       station: this.station,
