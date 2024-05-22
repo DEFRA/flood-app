@@ -95,11 +95,7 @@ async function locationRouteHandler (request, h) {
       situation: 'Location search error: Valid response but location not in England.'
     })
 
-    if (request.method === 'get') {
-      return renderNotFound(location)
-    } else {
-      return renderLocationNotFound(location, h)
-    }
+    return renderNotFound(location)
   }
 
   // Data passed to floods model so the schema is the same as cached floods
