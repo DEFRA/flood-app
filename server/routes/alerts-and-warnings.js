@@ -7,11 +7,11 @@ const locationService = require('../services/location')
 const util = require('../util')
 const { slugify } = require('./lib/utils')
 
-const pathUrl = '/alerts-and-warnings'
+const page = 'alerts-and-warnings'
 const QUERY_STRING_LOCATION_MAX_LENGTH = 200
 
 function renderLocationNotFound (location, h) {
-  return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', href: 'alerts-and-warnings', location }).takeover()
+  return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', href: page, location }).takeover()
 }
 
 function renderNotFound (location) {
@@ -26,21 +26,19 @@ function createQueryParametersString (queryObject) {
 
 async function routeHandler (request, h) {
   let location = request.query.q || request.query.location || request.payload?.location
-  const direction = request.query.direction === 'downstream' ? 'd' : 'u'
-
-  const station = request.query.station
-    ? await request.server.methods.flood.getStationById(request.query.station, direction)
-    : null
-
-  let model, floods
-
   request.yar.set('q', location)
 
-  if (station) {
+  const direction = request.query.direction === 'downstream' ? 'd' : 'u'
+
+  let model, floods, station
+
+  if (request.query.station) {
+    station = await request.server.methods.flood.getStationById(request.query.station, direction)
+
     const warningsAlerts = await request.server.methods.flood.getWarningsAlertsWithinStationBuffer(station.rloi_id)
     floods = new Floods({ floods: warningsAlerts })
     model = new ViewModel({ location, floods, station })
-    return h.view('alerts-and-warnings', { model })
+    return h.view(page, { model })
   }
 
   if (location) {
@@ -51,9 +49,9 @@ async function routeHandler (request, h) {
     if (!place) {
       if (request.method === 'get') {
         return renderNotFound(location)
-      } else {
-        return renderLocationNotFound(location, h)
       }
+
+      return renderLocationNotFound(location, h)
     }
 
     if (!place.isEngland.is_england) {
@@ -68,13 +66,13 @@ async function routeHandler (request, h) {
 
     const queryString = createQueryParametersString(request.query)
 
-    return h.redirect(`${pathUrl}/${slugify(place?.name)}${queryString}`).permanent()
+    return h.redirect(`/${page}/${slugify(place?.name)}${queryString}`).permanent()
   }
 
   const data = await request.server.methods.flood.getFloods()
   floods = new Floods(data)
   model = new ViewModel({ location, floods })
-  return h.view('alerts-and-warnings', { model })
+  return h.view(page, { model })
 }
 
 async function locationRouteHandler (request, h) {
@@ -82,23 +80,21 @@ async function locationRouteHandler (request, h) {
   const location = util.cleanseLocation(request.params.location)
   const direction = request.query.direction === 'downstream' ? 'd' : 'u'
 
-  const station = request.query.station
-    ? await request.server.methods.flood.getStationById(request.query.station, direction)
-    : null
-
   const [place] = await locationService.find(location)
 
-  let model, floods
+  let model, floods, station
 
-  if (station) {
+  if (request.query.station) {
+    station = await request.server.methods.flood.getStationById(request.query.station, direction)
+
     const warningsAlerts = await request.server.methods.flood.getWarningsAlertsWithinStationBuffer(station.rloi_id)
     floods = new Floods({ floods: warningsAlerts })
     model = new ViewModel({ location, place, floods, station, canonical: canonicalUrl, q: request.yar.get('q') })
-    return h.view('alerts-and-warnings', { model })
+    return h.view(page, { model })
   }
 
   if (location.match(/^england$/i)) {
-    return h.redirect(pathUrl)
+    return h.redirect(`/${page}`)
   }
 
   if (slugify(place?.name) !== location) {
@@ -121,7 +117,7 @@ async function locationRouteHandler (request, h) {
   const data = await request.server.methods.flood.getFloodsWithin(place.bbox2k)
   floods = new Floods(data)
   model = new ViewModel({ location, place, floods, station, canonical: canonicalUrl, q: request.yar.get('q') })
-  return h.view('alerts-and-warnings', { model })
+  return h.view(page, { model })
 }
 
 function failActionHandler (request, h) {
@@ -132,7 +128,7 @@ function failActionHandler (request, h) {
   const location = request.query.q || request.query.location || request.payload?.location
 
   if (!location) {
-    return h.redirect('alerts-and-warnings').takeover()
+    return h.redirect(page).takeover()
   } else {
     return renderLocationNotFound(location, h)
   }
@@ -140,7 +136,7 @@ function failActionHandler (request, h) {
 
 module.exports = [{
   method: 'GET',
-  path: pathUrl,
+  path: `/${page}`,
   handler: routeHandler,
   options: {
     validate: {
@@ -159,7 +155,7 @@ module.exports = [{
 },
 {
   method: 'GET',
-  path: `${pathUrl}/{location}`,
+  path: `/${page}/{location}`,
   handler: locationRouteHandler,
   options: {
     validate: {
@@ -180,7 +176,7 @@ module.exports = [{
 },
 {
   method: 'POST',
-  path: pathUrl,
+  path: `/${page}`,
   handler: routeHandler,
   options: {
     validate: {
