@@ -4,9 +4,9 @@ const config = require('../../config')
 class ViewModel {
   constructor ({ q, location, place, floods, station, canonical, error }) {
     Object.assign(this, {
-      q: q || location,
+      q,
+      station,
       map: station ? 'map-station' : 'map',
-      station: station,
       placeName: place?.name || '',
       placeBbox: place?.bbox2k || [],
       placeCentre: place?.center || [],

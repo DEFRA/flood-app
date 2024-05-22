@@ -26,14 +26,15 @@ function createQueryParametersString (queryObject) {
 
 async function routeHandler (request, h) {
   let location = request.query.q || request.query.location || request.payload?.location
-  request.yar.set('q', location)
+
+  request.yar.set('q', { location })
 
   const direction = request.query.direction === 'downstream' ? 'd' : 'u'
 
-  let model, floods, station
+  let model, floods
 
   if (request.query.station) {
-    station = await request.server.methods.flood.getStationById(request.query.station, direction)
+    const station = await request.server.methods.flood.getStationById(request.query.station, direction)
 
     const warningsAlerts = await request.server.methods.flood.getWarningsAlertsWithinStationBuffer(station.rloi_id)
     floods = new Floods({ floods: warningsAlerts })
@@ -41,57 +42,45 @@ async function routeHandler (request, h) {
     return h.view(page, { model })
   }
 
-  if (location) {
-    location = util.cleanseLocation(location)
-
-    const [place] = await locationService.find(location)
-
-    if (!place) {
-      if (request.method === 'get') {
-        return renderNotFound(location)
-      }
-
-      return renderLocationNotFound(location, h)
-    }
-
-    if (!place.isEngland.is_england) {
-      request.logger.warn({
-        situation: 'Location search error: Valid response but location not in England.'
-      })
-
-      if (request.method === 'post') {
-        return renderLocationNotFound(location, h)
-      }
-    }
-
-    const queryString = createQueryParametersString(request.query)
-
-    return h.redirect(`/${page}/${slugify(place?.name)}${queryString}`).permanent()
+  if (!location) {
+    const data = await request.server.methods.flood.getFloods()
+    floods = new Floods(data)
+    model = new ViewModel({ location, floods })
+    return h.view(page, { model })
   }
 
-  const data = await request.server.methods.flood.getFloods()
-  floods = new Floods(data)
-  model = new ViewModel({ location, floods })
-  return h.view(page, { model })
+  location = util.cleanseLocation(location)
+
+  const [place] = await locationService.find(location)
+
+  if (!place) {
+    if (request.method === 'get') {
+      return renderNotFound(location)
+    }
+
+    return renderLocationNotFound(location, h)
+  }
+
+  if (!place.isEngland.is_england) {
+    request.logger.warn({
+      situation: 'Location search error: Valid response but location not in England.'
+    })
+
+    if (request.method === 'post') {
+      return renderLocationNotFound(location, h)
+    }
+  }
+
+  const queryString = createQueryParametersString(request.query)
+
+  return h.redirect(`/${page}/${slugify(place?.name)}${queryString}`).permanent()
 }
 
 async function locationRouteHandler (request, h) {
   const canonicalUrl = request.url.origin + request.url.pathname
   const location = util.cleanseLocation(request.params.location)
-  const direction = request.query.direction === 'downstream' ? 'd' : 'u'
 
   const [place] = await locationService.find(location)
-
-  let model, floods, station
-
-  if (request.query.station) {
-    station = await request.server.methods.flood.getStationById(request.query.station, direction)
-
-    const warningsAlerts = await request.server.methods.flood.getWarningsAlertsWithinStationBuffer(station.rloi_id)
-    floods = new Floods({ floods: warningsAlerts })
-    model = new ViewModel({ location, place, floods, station, canonical: canonicalUrl, q: request.yar.get('q') })
-    return h.view(page, { model })
-  }
 
   if (location.match(/^england$/i)) {
     return h.redirect(`/${page}`)
@@ -101,7 +90,7 @@ async function locationRouteHandler (request, h) {
     return renderNotFound(location)
   }
 
-  if (!place.isEngland.is_england) {
+  if (!place?.isEngland.is_england) {
     request.logger.warn({
       situation: 'Location search error: Valid response but location not in England.'
     })
@@ -115,8 +104,9 @@ async function locationRouteHandler (request, h) {
 
   // Data passed to floods model so the schema is the same as cached floods
   const data = await request.server.methods.flood.getFloodsWithin(place.bbox2k)
-  floods = new Floods(data)
-  model = new ViewModel({ location, place, floods, station, canonical: canonicalUrl, q: request.yar.get('q') })
+  const floods = new Floods(data)
+  const model = new ViewModel({ location, place, floods, canonical: canonicalUrl, q: request.yar.get('q')?.location })
+  request.yar.set('q', null)
   return h.view(page, { model })
 }
 
