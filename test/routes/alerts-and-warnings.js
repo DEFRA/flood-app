@@ -255,7 +255,7 @@ lab.experiment('Test - /alerts-warnings', () => {
     stubs.getImpactsWithin.callsFake(() => [])
     const options = {
       method: 'GET',
-      url: '/alerts-and-warnings/Warrington'
+      url: '/alerts-and-warnings/warrington'
     }
 
     const response = await server.inject(options)
@@ -284,6 +284,19 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     Code.expect(response.payload).to.contain('<link rel="canonical" href="http://localhost:3000/alerts-and-warnings/warrington"/>')
     Code.expect(response.statusCode).to.equal(200)
+  })
+
+  lab.test('GET /alerts-and-warnings should not find location', async () => {
+    stubs.getJson.callsFake(() => data.nonLocationGetJson)
+
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings/not-found'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(404)
   })
 
   // lab.test('GET /alerts-and-warnings Bing returns error', async () => {
