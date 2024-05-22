@@ -236,6 +236,20 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.headers.location).to.equal('/alerts-and-warnings')
   })
 
+  lab.test('GET /alerts-and-warnings/{location} with valid non-england location', async () => {
+    stubs.getIsEngland.callsFake(() => ({ is_england: false }))
+    stubs.getJson.callsFake(() => data.scotlandGetJson)
+
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings/kinghorn-fife'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(404)
+  })
+
   // lab.test('GET /alerts-and-warnings Bing returns error', async () => {
   //   // stubs.getJson.callsFake(() => { throw new Error('Bing error') })
   //   // stubs.getJson.callsFake(() => data.warringtonGetJson)
