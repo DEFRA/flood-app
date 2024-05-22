@@ -220,6 +220,22 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.statusCode).to.equal(200)
   })
 
+  lab.test('GET /alerts-and-warnings/{location} with england should redirect to default page', async () => {
+    stubs.getJson.callsFake(() => ({ floods: [] }))
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+    stubs.getOutlook.callsFake(() => outlookData.statements[0])
+
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings/england'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.headers.location).to.equal('/alerts-and-warnings')
+  })
+
   // lab.test('GET /alerts-and-warnings Bing returns error', async () => {
   //   // stubs.getJson.callsFake(() => { throw new Error('Bing error') })
   //   // stubs.getJson.callsFake(() => data.warringtonGetJson)
