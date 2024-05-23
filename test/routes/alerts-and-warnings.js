@@ -366,6 +366,36 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
 
+  lab.test('POST /alerts-and-warnings with no location payload', async () => {
+    stubs.getJson.callsFake(() => data.nonLocationGetJson)
+    stubs.getFloods.callsFake(() => ({ floods: [] }))
+
+    const options = {
+      method: 'POST',
+      url: '/alerts-and-warnings'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(302)
+  })
+
+  lab.test('POST /alerts-and-warnings with location payload length exceeds limit', async () => {
+    stubs.getJson.callsFake(() => data.nonLocationGetJson)
+    stubs.getFloods.callsFake(() => ({ floods: [] }))
+
+    const options = {
+      method: 'POST',
+      url: '/alerts-and-warnings',
+      payload: {
+        location: new Array(201).join('x')
+      }
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('Error: Find location - Check for flooding - GOV.UK')
+  })
+
   lab.test('POST /alerts-and-warnings with invalid location payload', async () => {
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
     stubs.getFloods.callsFake(() => ({ floods: [] }))
