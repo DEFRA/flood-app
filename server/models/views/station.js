@@ -15,6 +15,7 @@ class ViewModel {
     this.station = new Station(station)
     this.station.riverNavigation = river
     this.id = station.id
+    this.river = river
 
     this.station.trend = river.trend
 
@@ -206,13 +207,15 @@ class ViewModel {
     // Set pageTitle, metaDescription
     const stationType = stationTypeCalculator(this.station.type)
     const stationLocation = this.station.name
-
-    if (this.station.type === 'g') {
+    if (this.station.isGroundwater) {
       this.pageTitle = `Groundwater level at ${stationLocation}`
       this.postTitle = `Latest groundwater level information for ${this.station.name} borehole`
-    } else if (this.station.type === 'c') {
+    } else if (this.station.isCoastal && this.river.river_name !== 'Sea Levels') {
+      this.pageTitle = `${this.river.river_name} level at ${stationLocation}`
+      this.postTitle = `Latest tidal level information for the ${this.river.river_name} at ${this.station.name}`
+    } else if (this.station.isCoastal) {
       this.pageTitle = `Sea level at ${stationLocation}`
-      this.postTitle = `Latest tidal level information for the ${this.station.river} at ${this.station.name}`
+      this.postTitle = `Latest tidal level information for the sea at ${this.station.name}`
     } else {
       this.pageTitle = `${this.station.river} level ${this.station.isMulti ? this.station.direction + ' ' : ''}at ${stationLocation}`
       this.postTitle = `Latest river level information for the ${this.station.river} at ${this.station.name} ${this.station.isMulti ? this.station.direction : ''}`
