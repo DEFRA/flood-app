@@ -139,4 +139,21 @@ experiment('BarChart', () => {
     expect(description).to.contain('Showing 24 hours')
     expect(description).to.contain('from 17 July 2023 at 12:15AM to 18 July 2023 at 12:15AM in 15 minute totals')
   })
+  test('The chart displays only 6AM ticks on the X axis for the 5-day range', async () => {
+    // Arrange
+    const chartId = 'example-chart-id'
+    const telemetry = telemetryFixture
+    const chartContainer = document.createElement('div')
+    chartContainer.setAttribute('id', 'bar-chart-container')
+    document.body.appendChild(chartContainer)
+
+    // Act
+    window.flood.charts.createBarChart('bar-chart-container', chartId, telemetry)
+    chartContainer.querySelector('.defra-chart-controls__group--resolution .defra-chart-controls__button[data-period="hours"]').click()
+
+    // Assert
+    const xAxisTicks = Array.from(chartContainer.querySelectorAll('.x.axis .tick text')).map(tick => tick.textContent)
+    const all6amTicks = xAxisTicks.every(tick => tick.includes('6am'))
+    expect(all6amTicks).to.be.true()
+  })
 })
