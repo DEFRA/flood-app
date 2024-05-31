@@ -2242,4 +2242,142 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV (12KB)</a>')
   })
+  lab.test('GET station/1034 - Coastal River title check ', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationData = () => {
+      return {
+        rloi_id: 1034,
+        station_type: 'C',
+        qualifier: 'u',
+        telemetry_context_id: '56605303',
+        telemetry_id: 'E12660',
+        wiski_id: '152300002',
+        post_process: false,
+        subtract: null,
+        region: 'Southern',
+        area: 'Solent and South Downs',
+        catchment: 'Test and Itchen',
+        display_region: 'South East',
+        display_area: 'Solent and South Downs',
+        display_catchment: 'Test and Itchen',
+        agency_name: 'Woolston',
+        external_name: 'Woolston',
+        location_info: 'Woolston',
+        x_coord_actual: 443140,
+        y_coord_actual: 110250,
+        actual_ngr: 'SU4315110254',
+        x_coord_display: 443140,
+        y_coord_display: 110250,
+        site_max: '7',
+        wiski_river_name: 'Tide',
+        date_open: '1993-06-21T23:00:00.000Z',
+        stage_datum: '0',
+        period_of_record: 'to date',
+        por_max_value: '2.875',
+        date_por_max: '2008-03-10T12:15:00.000Z',
+        highest_level: null,
+        date_highest_level: null,
+        por_min_value: null,
+        date_por_min: null,
+        percentile_5: null,
+        percentile_95: null,
+        comments: '',
+        status: 'Active',
+        status_reason: '',
+        status_date: null,
+        coordinates: '{"type":"Point","coordinates":[-1.388037105,50.890130955]}',
+        geography: '0101000020E610000034E523656635F6BF73CCA6CFEF714940',
+        centroid: '0101000020E610000034E523656635F6BF73CCA6CFEF714940'
+      }
+    }
+
+    const fakeRiverData = () => {
+      return {
+        river_id: 'river-itchen-hampshire',
+        river_name: 'River Itchen',
+        river_qualified_name: 'River Itchen (Hampshire)',
+        navigable: true,
+        view_rank: 1,
+        rank: '10',
+        rloi_id: 1034,
+        up: 1056,
+        down: null,
+        telemetry_id: 'E12660',
+        region: 'Southern',
+        catchment: 'Test and Itchen',
+        wiski_river_name: 'Tide',
+        agency_name: 'Woolston',
+        external_name: 'Woolston',
+        station_type: 'C',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '-1.099',
+        value_timestamp: '2024-05-29T08:45:00.000Z',
+        value_erred: false,
+        trend: 'rising',
+        percentile_5: null,
+        percentile_95: null,
+        centroid: '0101000020E610000034E523656635F6BF73CCA6CFEF714940',
+        lon: -1.3880371046819393,
+        lat: 50.89013095516648,
+        day_total: null,
+        six_hr_total: null,
+        one_hr_total: null,
+        id: '2401'
+      }
+    }
+
+    const fakeTelemetryData = () => [
+      {
+        ts: '2024-05-29T08:45:00.000Z',
+        _: -1.099,
+        err: false,
+        formattedTime: '8:45am',
+        dateWhen: 'today'
+      }
+    ]
+
+    const fakeImpactsData = () => []
+    const fakeThresholdsData = () => []
+    const fakeWarningsAlertsData = () => []
+    const fakeStationThresholdData = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
+
+    const stationPlugin = {
+      plugin: {
+        name: 'station',
+        register: (server, options) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(stationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/station/1084'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.match(/<h1 class="govuk-heading-xl govuk-!-margin-bottom-0">\s*River Itchen\s*level\s*at Woolston\s*<\/h1>/)
+    Code.expect(response.payload).to.match(/<title>\s*River Itchen level at Woolston - GOV.UK\s*<\/title>/)
+  })
 })
