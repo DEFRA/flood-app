@@ -1,35 +1,30 @@
 # Check For Flooding Release
 
 * Version: 8.4.0
-* Proposed Release Date: 
+* Proposed Release Date: 11th June 2024
 * Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/16984/tab/release-report-all-issues
 
-## Sense Check
-
-* Note that this is the definitive release notes for WebOps. The release notes in flood-service and flood-db are for CFF dev team use only.
-* Cross check the list of Jira tickets below with those in the Jira release linked to above and update where needed
-* Add additional Jira tickets from the related release notes in the 'Release 8.4.0' PR's created in:
-  * [flood-service](https://github.com/DEFRA/flood-service)
-
-* Add any required infrastructure changes such as redirects to the infrastructure changes section below
-* Once this sense check is done, delete this section
-
 ## Tickets
-
-
   
-  * FSR-1157 : Sonar Cloud issues (Take 2) (#674)
-  
-
+  * FSR-1157 : Sonarcloud issues on Flood App
+  * FSR-1158 : Sonarcloud issues on Flood Service
+  * FSR-1159 : Sonarcloud issues on Flood Data
+  * FSR-1168 : Update Flood DB dependencies
+  * FSR-1171 : Update Flood Data dependencies
+  * FSR-1177 : Bug Fix | 500 error when whitespace searched on /river-and-sea-levels
+  * FSR-818  : Create Lambda function to use the DisplayTimeSeries property from IMTD API to populate FFOI_Station Table
 
 ## Instructions
 
+ 1 - LFW_{stage}_99_DEPLOY_FLOOD_DATA_PIPELINE
 
-  1 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+ 2 - LFW_{stage}_02_UPDATE_DATABASE
+
+ 3 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
 
 
 Execute smoke tests and forward results
 
 ## Related Infrastructure Changes Required
 
-* None
+ 1 - Run the LFW terraform iam module to add lamda permission to the developer role
