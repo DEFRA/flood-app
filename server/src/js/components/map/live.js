@@ -156,11 +156,15 @@ function LiveMap (mapId, options) {
           state = props.type === 'G' ? 'ground' : 'river'
         }
       } else if (props.type === 'C') {
-        // Tide
-        if (props.status === 'Suspended' || props.status === 'Closed' || (!props.value && !props.iswales)) {
-          state = 'seaError'
+        // Tide or River based on river_name
+        if (props.river_name !== 'Sea Levels') {
+          state = 'river'
         } else {
-          state = 'sea'
+          if (props.status === 'Suspended' || props.status === 'Closed' || (!props.value && !props.iswales)) {
+            state = 'seaError'
+          } else {
+            state = 'sea'
+          }
         }
       } else if (props.type === 'R') {
         // Rainfall
@@ -183,8 +187,10 @@ function LiveMap (mapId, options) {
         (props.severity_value && props.severity_value === 4 && lyrCodes.includes('tr')) ||
         // Rivers
         (ref === 'stations' && ['S', 'M'].includes(props.type) && lyrCodes.includes('ri')) ||
+        // Tidal Rivers
+        (ref === 'stations' && props.type === 'C' && props.river_name !== 'Sea Levels' && lyrCodes.includes('ri')) ||
         // Sea
-        (ref === 'stations' && props.type === 'C' && lyrCodes.includes('ti')) ||
+        (ref === 'stations' && props.type === 'C' && props.river_name === 'Sea Levels' && lyrCodes.includes('ti')) ||
         // Ground
         (ref === 'stations' && props.type === 'G' && lyrCodes.includes('gr')) ||
         // Rainfall
