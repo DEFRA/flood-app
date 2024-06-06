@@ -31,7 +31,7 @@
 <div id="infoDescription">
     <strong class="defra-map-info__name">
         <a data-journey-click="Map:Map interaction:Map - Open station from tooltip" href="/station/{{ model.id }}">
-            {% if model.type === 'C' %}Sea Level{% elif model.type === 'G' %}Groundwater{% else %}{{ model.river }}{% endif %} at
+            {% if model.type === 'C' and model.river_name !== 'Sea Levels' %}{{model.river_name}}{%elif model.type === 'C'%}Sea Level{% elif model.type === 'G' %}Groundwater{% else %}{{ model.river }}{% endif %} at
             {{ model.name }}
             {% if model.iswales %} (Natural Resources Wales){% endif %}
         </a>
