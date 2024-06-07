@@ -118,7 +118,6 @@ lab.experiment('Test - /alerts-warnings', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(301)
-    // Code.expect(response.headers.location).to.equal('/alerts-and-warnings/warrington-wa4-1ht')
   })
 
   lab.test('GET /alerts-and-warnings with legacy query parameter england', async () => {
@@ -249,26 +248,6 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     Code.expect(response.statusCode).to.equal(404)
   })
-
-  // lab.test('GET /alerts-and-warnings Bing returns error', async () => {
-  //   // stubs.getJson.callsFake(() => { throw new Error('Bing error') })
-  //   // stubs.getJson.callsFake(() => data.warringtonGetJson)
-  //   // stubs.getFloodsWithin.callsFake(() => ({ floods: [] }))
-  //   stubs.getJson.callsFake(() => data.warringtonGetJson)
-  //   stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-  //   stubs.getFloodsWithin.callsFake(() => data.fakeFloodsData)
-
-  //   const options = {
-  //     method: 'GET',
-  //     url: '/alerts-and-warnings'
-  //   }
-
-  //   const response = await server.inject(options)
-
-  //   Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location - GOV.UK')
-  //   Code.expect(response.payload).to.contain('Sorry, there is currently a problem searching a location')
-  //   Code.expect(response.statusCode).to.equal(500)
-  // })
 
   lab.test('GET /alerts-and-warnings should show default page', async () => {
     stubs.getFloods.callsFake(() => ({ floods: [] }))
