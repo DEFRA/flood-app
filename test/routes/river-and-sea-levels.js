@@ -855,6 +855,93 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('<span class="defra-flood-levels-table-na">n/a</a>')
     Code.expect(response.statusCode).to.equal(200)
   })
+  lab.test('GET /river-and-sea-levels should display height, trend, and state data for Natural Resources Wales stations', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    const fakeStationsData = () => [
+      {
+        river_id: 'river-alyn',
+        river_name: 'Alyn',
+        navigable: true,
+        view_rank: 1,
+        rank: '1',
+        rloi_id: 4243,
+        up: null,
+        down: null,
+        telemetry_id: '5678',
+        region: 'Wales',
+        catchment: 'Dee',
+        wiski_river_name: 'River Alyn',
+        agency_name: 'Pontblyddyn',
+        external_name: 'Pontblyddyn',
+        station_type: 'S',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: true,
+        value: '0.73',
+        value_timestamp: '2022-06-10T09:15:00.000Z',
+        value_erred: false,
+        trend: 'steady',
+        percentile_5: '1.00',
+        percentile_95: '0.50',
+        centroid: '0101000020E6100000068A4FA62670FCBF9C9AE66602264A40',
+        lon: -3.067,
+        lat: 53.154,
+        state: 'NORMAL'
+      }
+    ]
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+
+    const fakeGetJson = () => data.chesterGetJson
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
+    await server.register(riversPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=Chester'
+    }
+
+    const response = await server.inject(options)
+
+    const root = parse(response.payload)
+
+    checkTitleAndDescription(
+      root,
+      'Chester - Find river, sea, groundwater and rainfall levels - GOV.UK',
+      'Find river, sea, groundwater and rainfall levels in Chester. Check the last updated height, trend and state recorded by the measuring station.'
+    )
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.match(/Alyn at\s*Pontblyddyn\s*<span class="defra-flood-levels-table-subtitle"><span>\(Natural Resources Wales\)<\/span>/)
+    Code.expect(response.payload).to.contain('<span class="defra-flood-levels-table-numeric">0.73m</span>')
+    Code.expect(response.payload).to.contain('<span class="defra-flood-levels-table-trend__icon defra-flood-levels-tables-trend__icon--steady">')
+    Code.expect(response.payload).to.contain('<span class="defra-flood-levels-table-state defra-flood-levels-table-state--grey">NORMAL</span>')
+  })
   lab.test('GET /river-and-sea-levels stations returned but location in Wales should not show stations', async () => {
     const floodService = require('../../server/services/flood')
 
