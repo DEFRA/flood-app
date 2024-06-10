@@ -4,7 +4,7 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
-const { referencedStationViewModel, placeViewModel } = require('../../server/models/views/river-and-sea-levels')
+const { referencedStationViewModel, placeViewModel, getDisplayData } = require('../../server/models/views/river-and-sea-levels')
 const data = require('../data')
 
 lab.experiment('river-and-sea-levels model test', () => {
@@ -104,6 +104,41 @@ lab.experiment('river-and-sea-levels model test', () => {
       const result = referencedStationViewModel(referencePoint, stationsData.stations)
 
       Code.expect(result.displayGetWarningsLink).to.equal(true)
+    })
+  })
+
+  lab.experiment('getDisplayData', () => {
+    lab.test('should return true for active Welsh stations', async () => {
+      const station = {
+        status: 'Active',
+        value: 1.2,
+        value_erred: false,
+        iswales: true
+      }
+      const result = getDisplayData(station)
+      Code.expect(result).to.equal(true)
+    })
+
+    lab.test('should return false for suspended Welsh stations', async () => {
+      const station = {
+        status: 'Suspended',
+        value: 1.2,
+        value_erred: false,
+        iswales: true
+      }
+      const result = getDisplayData(station)
+      Code.expect(result).to.equal(false)
+    })
+
+    lab.test('should return false for closed Welsh stations', async () => {
+      const station = {
+        status: 'Closed',
+        value: 1.2,
+        value_erred: false,
+        iswales: true
+      }
+      const result = getDisplayData(station)
+      Code.expect(result).to.equal(false)
     })
   })
 })

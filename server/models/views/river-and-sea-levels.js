@@ -276,5 +276,6 @@ module.exports = {
   referencedStationViewModel,
   placeViewModel,
   disambiguationModel,
-  emptyResultsModel
+  emptyResultsModel,
+  getDisplayData
 }
