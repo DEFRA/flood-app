@@ -38,6 +38,10 @@ module.exports = {
     return util.getJson(`${serviceUrl}/stations`)
   },
 
+  getForecastFlag (id, direction) {
+    return util.getJson(`${serviceUrl}/forecast-station/${id}/${direction}`)
+  },
+
   getStationsWithin (bbox) {
     const xyCoordsPath = bbox.join('/')
     return util.getJson(`${serviceUrl}/stations-within/${xyCoordsPath}`)
