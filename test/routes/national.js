@@ -3,14 +3,17 @@ const Hapi = require('@hapi/hapi')
 const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const sinon = require('sinon')
+const config = require('../../server/config')
 const lab = exports.lab = Lab.script()
 const moment = require('moment-timezone')
 const { parse } = require('node-html-parser')
 const { linkChecker } = require('../lib/helpers/html-expectations')
 const flushAppRequireCache = require('../lib/flush-app-require-cache')
+const proxyquire = require('proxyquire')
 
 const fgs = require('../data/fgs.json')
 const floods = require('../data/floods.json')
+const { validateFloodlineContactDetails, validateWebChatFooterPresent, validateWebChatFooterNotPresent } = require('../lib/helpers/context-footer-checker')
 
 function formatDate (date) {
   return moment.tz(date, 'Europe/London').format('h:mma [on] D MMMM YYYY')
@@ -31,7 +34,6 @@ lab.experiment('Routes test - national view', () => {
   async function setup (fakeFloodData, fakeOutlookData, fakeSearchData) {
     flushAppRequireCache()
 
-    const config = require('../../server/config')
     sandbox.stub(config, 'floodRiskUrl').value('http://server/cyltfr')
 
     const floodService = require('../../server/services/flood')
@@ -232,6 +234,96 @@ lab.experiment('Routes test - national view', () => {
       linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
       linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
     })
+    lab.test('GET / - context footer checks with webchat enabled', async () => {
+      const locationPlugin = {
+        plugin: {
+          name: 'national',
+          register: (server, options) => {
+            server.route(require('../../server/routes/national'))
+          }
+        }
+      }
+      const floodService = require('../../server/services/flood')
+      // Create dummy flood data in place of cached data
+      const fakeFloodData = () => {
+        return {
+          floods: []
+        }
+      }
+
+      const fakeOutlookData = () => {
+        return {}
+      }
+
+      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+      await server.register(proxyquire('../../server/plugins/views', {
+        '../../server/config': { webchat: { enabled: true } }
+      }))
+      await server.register(require('../../server/plugins/session'))
+      await server.register(require('../../server/plugins/logging'))
+      await server.register(locationPlugin)
+      // Add Cache methods to server
+      const registerServerMethods = require('../../server/services/server-methods')
+      registerServerMethods(server)
+      await server.initialize()
+
+      const options = {
+        method: 'GET',
+        url: '/'
+      }
+      const response = await server.inject(options)
+
+      Code.expect(response.statusCode).to.equal(200)
+      validateFloodlineContactDetails(response)
+      validateWebChatFooterPresent(response)
+    })
+    lab.test('GET / - context footer checks with webchat disabled', async () => {
+      const locationPlugin = {
+        plugin: {
+          name: 'national',
+          register: (server, options) => {
+            server.route(require('../../server/routes/national'))
+          }
+        }
+      }
+      const floodService = require('../../server/services/flood')
+      // Create dummy flood data in place of cached data
+      const fakeFloodData = () => {
+        return {
+          floods: []
+        }
+      }
+
+      const fakeOutlookData = () => {
+        return {}
+      }
+
+      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+      await server.register(proxyquire('../../server/plugins/views', {
+        '../../server/config': { webchat: { enabled: false } }
+      }))
+      await server.register(require('../../server/plugins/session'))
+      await server.register(require('../../server/plugins/logging'))
+      await server.register(locationPlugin)
+      // Add Cache methods to server
+      const registerServerMethods = require('../../server/services/server-methods')
+      registerServerMethods(server)
+      await server.initialize()
+
+      const options = {
+        method: 'GET',
+        url: '/'
+      }
+      const response = await server.inject(options)
+
+      Code.expect(response.statusCode).to.equal(200)
+      validateFloodlineContactDetails(response)
+      validateWebChatFooterNotPresent(response)
+    })
     lab.test('GET /national view no alerts or warnings', async () => {
     // Create dummy flood data in place of cached data
       const fakeFloodData = () => {
@@ -276,7 +368,7 @@ lab.experiment('Routes test - national view', () => {
 
       Code.expect(response.statusCode).to.equal(200)
       Code.expect(response.payload).to.contain('No flood alerts or warnings')
-      Code.expect(response.payload).to.contain('Call Floodline for advice')
+      Code.expect(response.payload).to.contain('Contact Floodline for advice')
     })
     lab.test('GET /national view with incorrect outlook structure', async () => {
       // Create dummy flood data in place of cached data

@@ -9,6 +9,7 @@ const data = require('../data')
 const moment = require('moment')
 const LocationSearchError = require('../../server/location-search-error')
 const { parse } = require('node-html-parser')
+const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
 
 lab.experiment('Routes test - location - 2', () => {
   let sandbox
@@ -52,6 +53,7 @@ lab.experiment('Routes test - location - 2', () => {
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
 
     sandbox = await sinon.createSandbox()
+
     server = Hapi.server({
       port: 3000,
       host: 'localhost',
@@ -2069,5 +2071,58 @@ lab.experiment('Routes test - location - 2', () => {
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(500)
     Code.expect(response.payload).to.contain('<h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Sorry, there is a problem with the search</h1>')
+  })
+  lab.test('GET /location - context footer checks', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeGetJson = () => data.warringtonGetJson
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    const fakeFloodsData = () => {
+      return { floods: [] }
+    }
+    const fakeStationsData = () => []
+    const fakeImpactsData = () => []
+    const fakeOutlookData = () => { }
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
+    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const locationPlugin = {
+      plugin: {
+        name: 'location',
+        register: (server, options) => {
+          server.route(require('../../server/routes/location'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
+    await server.register(locationPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/location/Warrington'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    validateFooterPresent(response)
   })
 })
