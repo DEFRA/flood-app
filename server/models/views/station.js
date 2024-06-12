@@ -365,7 +365,7 @@ class ViewModel {
     // Forecast Data Calculations
 
     let forecastData
-    if (forecast) {
+    if (isForecast) {
       this.isFfoi = isForecast
       if (this.isFfoi) {
         forecastData = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)

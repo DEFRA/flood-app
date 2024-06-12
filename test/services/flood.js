@@ -234,19 +234,19 @@ lab.experiment('Flood service test', () => {
 
     Code.expect(result).to.equal('ok')
   })
-  lab.test('Test getStationForecastThresholds endpoint', async () => {
+  lab.test('Test getForecastFlag endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/station/7077/forecast/thresholds')
+      .withArgs('http://server2/forecast-station/2012/u')
       .once()
       .returns('ok')
 
     const floodService = require('../../server/services/flood')
 
-    const result = await floodService.getStationForecastThresholds(7077)
+    const result = await floodService.getForecastFlag(2012, 'u')
 
     Code.expect(result).to.equal('ok')
   })
