@@ -30,9 +30,9 @@ module.exports = {
 
     const stationName = station.external_name.replace(/[^a-zA-Z0-9]+/g, '-')
 
-    const [rawTelemetry, thresholds] = await Promise.all([
+    const [rawTelemetry, forecast] = await Promise.all([
       floodService.getStationTelemetry(id, direction),
-      floodService.getStationForecastThresholds(id)
+      floodService.getForecastFlag(id, direction)
     ])
 
     const telemetry = rawTelemetry.map(item => ({
@@ -42,7 +42,7 @@ module.exports = {
     }))
 
     // Forecast station
-    const includeForecast = !!thresholds.length
+    const includeForecast = forecast.display_time_series
     const truncateDateHoursToAdd = 36
 
     if (includeForecast && telemetry.length) {

@@ -65,24 +65,13 @@ lab.experiment('Routes test - station-csv', () => {
       }
     ]
 
-    const fakeThresholdsData = () => [
-      {
-        ffoi_station_threshold_id: 133,
-        ffoi_station_id: 19,
-        fwis_code: '031WAF213',
-        fwis_type: 'FW ACTCON FAL',
-        value: 2,
-        fwa_name: 'River Leadon Catchment',
-        fwa_type: 'a',
-        fwa_severity: -1
-      }
-    ]
+    const fakeForecastFlag = () => data.forecastFlag
 
     const fakeForecastData = () => data.csvForecastData
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
     sandbox.stub(floodService, 'getStationForecastData').callsFake(fakeForecastData)
 
     const response = await server.inject(options)
@@ -153,11 +142,17 @@ lab.experiment('Routes test - station-csv', () => {
       }
     ]
 
-    const fakeThresholdsData = () => []
+    const fakeForecastFlag = () => [{
+      station_display_time_series_id: '94280',
+      station_id: '8208',
+      direction: 'u',
+      display_time_series: true
+    }
+    ]
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
@@ -226,11 +221,17 @@ lab.experiment('Routes test - station-csv', () => {
       }
     ]
 
-    const fakeThresholdsData = () => []
+    const fakeForecastFlag = () => [{
+      station_display_time_series_id: '94280',
+      station_id: '8208',
+      direction: 'u',
+      display_time_series: true
+    }
+    ]
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
@@ -299,11 +300,17 @@ lab.experiment('Routes test - station-csv', () => {
       }
     ]
 
-    const fakeThresholdsData = () => []
+    const fakeForecastFlag = () => [{
+      station_display_time_series_id: '94280',
+      station_id: '8208',
+      direction: 'u',
+      display_time_series: true
+    }
+    ]
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
 
     const response = await server.inject(options)
     Code.expect(response.headers['content-disposition']).to.equal('attachment; filename=Pilling-Broadfleet-height-data.csv')
@@ -331,11 +338,17 @@ lab.experiment('Routes test - station-csv', () => {
       }
     ]
 
-    const fakeThresholdsData = () => []
+    const fakeForecastFlag = () => [{
+      station_display_time_series_id: '94280',
+      station_id: '8208',
+      direction: 'u',
+      display_time_series: true
+    }
+    ]
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(400)
@@ -361,11 +374,17 @@ lab.experiment('Routes test - station-csv', () => {
       }
     ]
 
-    const fakeThresholdsData = () => []
+    const fakeForecastFlag = () => [{
+      station_display_time_series_id: '94280',
+      station_id: '8208',
+      direction: 'u',
+      display_time_series: true
+    }
+    ]
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
 
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(400)
