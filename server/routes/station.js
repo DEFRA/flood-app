@@ -60,8 +60,10 @@ module.exports = {
       return h.view('station', { model })
     }
 
+    const hasForecast = forecastFlag.display_time_series
+
     // Check if it's a forecast station
-    if (forecastFlag.display_time_series && station.status !== 'Suspended') {
+    if (hasForecast && station.status !== 'Suspended') {
       // Forecast station
       const values = await request.server.methods.flood.getStationForecastData(station.wiski_id)
       const forecast = { forecastFlag, values }

@@ -62,7 +62,7 @@ module.exports = server => {
   server.method('flood.getForecastFlag', floodServices.getForecastFlag, {
     cache: {
       cache: cacheType,
-      expiresIn: minutes(expiresIn15),
+      expiresIn: minutes(1),
       generateTimeout: seconds(10)
     }
   })
