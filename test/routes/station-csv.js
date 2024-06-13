@@ -142,13 +142,7 @@ lab.experiment('Routes test - station-csv', () => {
       }
     ]
 
-    const fakeForecastFlag = () => [{
-      station_display_time_series_id: '94280',
-      station_id: '8208',
-      direction: 'u',
-      display_time_series: true
-    }
-    ]
+    const fakeForecastFlag = () => { return { } }
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
@@ -221,13 +215,7 @@ lab.experiment('Routes test - station-csv', () => {
       }
     ]
 
-    const fakeForecastFlag = () => [{
-      station_display_time_series_id: '94280',
-      station_id: '8208',
-      direction: 'u',
-      display_time_series: true
-    }
-    ]
+    const fakeForecastFlag = () => { return { } }
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
@@ -300,13 +288,7 @@ lab.experiment('Routes test - station-csv', () => {
       }
     ]
 
-    const fakeForecastFlag = () => [{
-      station_display_time_series_id: '94280',
-      station_id: '8208',
-      direction: 'u',
-      display_time_series: true
-    }
-    ]
+    const fakeForecastFlag = () => { return { } }
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
@@ -338,13 +320,7 @@ lab.experiment('Routes test - station-csv', () => {
       }
     ]
 
-    const fakeForecastFlag = () => [{
-      station_display_time_series_id: '94280',
-      station_id: '8208',
-      direction: 'u',
-      display_time_series: true
-    }
-    ]
+    const fakeForecastFlag = () => { return { } }
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
@@ -374,13 +350,7 @@ lab.experiment('Routes test - station-csv', () => {
       }
     ]
 
-    const fakeForecastFlag = () => [{
-      station_display_time_series_id: '94280',
-      station_id: '8208',
-      direction: 'u',
-      display_time_series: true
-    }
-    ]
+    const fakeForecastFlag = () => { return { } }
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)

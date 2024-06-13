@@ -208,13 +208,7 @@ lab.experiment('Test - /station/{id}', () => {
         forecastactive: false
       }
     ]
-    const fakeForecastFlag = () => [{
-      station_display_time_series_id: '94280',
-      station_id: '8208',
-      direction: 'u',
-      display_time_series: true
-    }
-    ]
+    const fakeForecastFlag = () => { return { } }
 
     const fakeStationForecastData = () => []
     const fakeWarningsAlertsData = () => []
@@ -351,13 +345,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => [{
-      station_display_time_series_id: '94280',
-      station_id: '8208',
-      direction: 'u',
-      display_time_series: true
-    }
-    ]
+    const fakeForecastFlag = () => { return { } }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
@@ -495,13 +483,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => [{
-      station_display_time_series_id: '94280',
-      station_id: '8208',
-      direction: 'u',
-      display_time_series: true
-    }
-    ]
+    const fakeForecastFlag = () => { return { } }
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
@@ -634,13 +616,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => [{
-      station_display_time_series_id: '94280',
-      station_id: '8208',
-      direction: 'u',
-      display_time_series: true
-    }
-    ]
+    const fakeForecastFlag = () => { return { } }
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
@@ -738,13 +714,7 @@ lab.experiment('Test - /station/{id}', () => {
     const fakeTelemetryData = () => []
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => [{
-      station_display_time_series_id: '94280',
-      station_id: '8208',
-      direction: 'u',
-      display_time_series: true
-    }
-    ]
+    const fakeForecastFlag = () => { return { } }
     const fakeWarningsAlertsData = () => []
     const fakeRiverStationData = () => []
     const fakeStationThresholdData = () => []
@@ -878,13 +848,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => [{
-      station_display_time_series_id: '94280',
-      station_id: '8208',
-      direction: 'u',
-      display_time_series: true
-    }
-    ]
+    const fakeForecastFlag = () => { return { } }
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
@@ -1020,13 +984,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => [{
-      station_display_time_series_id: '94280',
-      station_id: '8208',
-      direction: 'u',
-      display_time_series: true
-    }
-    ]
+    const fakeForecastFlag = () => { return { } }
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
@@ -1606,13 +1564,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => [{
-      station_display_time_series_id: '94280',
-      station_id: '8208',
-      direction: 'u',
-      display_time_series: true
-    }
-    ]
+    const fakeForecastFlag = () => { return { } }
 
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
@@ -1903,13 +1855,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => [{
-      station_display_time_series_id: '94280',
-      station_id: '8208',
-      direction: 'u',
-      display_time_series: true
-    }
-    ]
+    const fakeForecastFlag = () => { return { } }
 
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
@@ -2043,13 +1989,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => [{
-      station_display_time_series_id: '94280',
-      station_id: '8208',
-      direction: 'u',
-      display_time_series: true
-    }
-    ]
+    const fakeForecastFlag = () => { return { } }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => { return {} }
 
@@ -2180,13 +2120,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => [{
-      station_display_time_series_id: '94280',
-      station_id: '8208',
-      direction: 'u',
-      display_time_series: true
-    }
-    ]
+    const fakeForecastFlag = () => { return { } }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
