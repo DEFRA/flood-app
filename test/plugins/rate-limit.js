@@ -79,7 +79,7 @@ lab.experiment('rate-limit plugin test', () => {
         percentile_5: '3.5',
         percentile_95: '0.15',
         comments: '',
-        status: 'Closed',
+        status: 'Active',
         status_reason: '',
         status_date: null,
         coordinates: '{"type":"Point","coordinates":[-2.68044442027032,53.7529105624953]}',
@@ -89,6 +89,7 @@ lab.experiment('rate-limit plugin test', () => {
     }
 
     const fakeTelemetryData = () => []
+    const fakeThresholdData = () => []
 
     const fakeImpactsData = () => []
     const fakeForecastFlag = () => {
@@ -96,18 +97,18 @@ lab.experiment('rate-limit plugin test', () => {
         station_display_time_series_id: '94280',
         station_id: '8208',
         direction: 'u',
-        display_time_series: true
+        display_time_series: false
       }
     }
-
     const fakeWarningsAlertsData = () => []
     const fakeRiverStationData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeThresholdData)
+    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverStationData)
 
     const stationPlugin = {
