@@ -8,7 +8,7 @@ async function bingResultsParser (bingData, getIsEngland) {
 
   const allowedConfidences = ['medium', 'high']
   const allowedTypes = [
-    'populatedplace', 'postcode1', 'postcode3', 'admindivision2', 'neighborhood', 'religiousstructure'
+    'populatedplace', 'postcode1', 'postcode3', 'admindivision2', 'neighborhood', 'religiousstructure', 'roadblock'
   ]
   const data = set.resources
     .filter(r => allowedConfidences.includes(r.confidence.toLowerCase()))
