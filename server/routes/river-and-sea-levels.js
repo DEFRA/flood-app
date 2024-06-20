@@ -1,5 +1,6 @@
 'use strict'
 
+const qs = require('qs')
 const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
 const {
@@ -12,13 +13,137 @@ const {
 } = require('../models/views/river-and-sea-levels')
 const locationService = require('../services/location')
 const util = require('../util')
+const { slugify } = require('./lib/utils')
 
 const route = 'river-and-sea-levels'
+const page = 'river-and-sea-levels'
+const QUERY_STRING_LOCATION_MAX_LENGTH = 200
 
 const miles = 1609.344
 const joiValidationQMax = 200
 const joiValidationGroupMax = 11
 const joiValidationSearchTypeMax = 11
+
+function renderLocationNotFound (location, h) {
+  return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', href: page, location }).takeover()
+}
+
+function renderNotFound (location) {
+  return boom.notFound(`Location ${location} not found`)
+}
+
+function createQueryParametersString (queryObject) {
+  const { q, location, ...otherParameters } = queryObject
+  const queryString = qs.stringify(otherParameters, { addQueryPrefix: true, encode: false })
+  return queryString
+}
+
+async function locationRouteHandler (request, h) {
+  const referer = request.headers.referer
+  const queryGroup = request.query.group
+
+  const canonicalUrl = request.url.origin + request.url.pathname
+  const location = util.cleanseLocation(request.params.location)
+
+  const [place] = await locationService.find(location)
+
+  if (location.match(/^england$/i)) {
+    return h.redirect(`/${page}`)
+  }
+
+  if (slugify(place?.name) !== location) {
+    return renderNotFound(location)
+  }
+
+  if (!place?.isEngland.is_england) {
+    request.logger.warn({
+      situation: 'Location search error: Valid response but location not in England.'
+    })
+
+    return renderNotFound(location)
+  }
+
+  const stations = await request.server.methods.flood.getStationsWithin(place.bbox10k)
+  const model = placeViewModel({ location, place, stations, referer, queryGroup, canonical: canonicalUrl, q: request.yar.get('q')?.location })
+  request.yar.set('q', null)
+  return h.view(route, { model })
+}
+
+async function locationQueryHandler (request, h) {
+  const location = request.query.q || request.payload?.location
+
+  let rivers = []
+  let places = []
+
+  request.yar.set('q', { location })
+
+  const cleanLocation = util.cleanseLocation(location)
+
+  if (cleanLocation.match(/^england$/i)) {
+    return h.redirect(`/${page}`)
+  }
+
+  if (cleanLocation && cleanLocation.length > 1 && !cleanLocation.match(/^england$/i)) {
+    rivers = await request.server.methods.flood.getRiversByName(cleanLocation)
+    places = await findPlaces(cleanLocation)
+  }
+
+  // console.log('location', location, request.method)
+  console.log('places', places)
+  // console.log('rivers', rivers)
+  // console.log('-----')
+
+  if (places.length + rivers.length > 1) {
+    return h.view(`${route}-list`, { model: disambiguationModel(location, places, rivers) })
+  }
+
+  if (places.length === 0) {
+    if (rivers.length === 0) {
+      return renderNotFound(location, h)
+    }
+
+    if (rivers.length === 1) {
+      return h.redirect(`/${route}/river/${rivers[0].id}`)
+    }
+  }
+
+  const place = places[0]
+
+  if (!place.isEngland.is_england) {
+    request.logger.warn({
+      situation: 'Location search error: Valid response but location not in England.'
+    })
+
+    return renderLocationNotFound(location, h)
+  }
+
+  const queryString = createQueryParametersString(request.query)
+
+  return h.redirect(`/${page}/${slugify(place?.name)}${queryString}`).permanent()
+}
+
+// const inUk = place => place?.isUK && !place?.isScotlandOrNorthernIreland
+
+async function findPlaces (location) {
+  // NOTE: at the moment locationService.find just returns a single place
+  // using the [] for no results and with a nod to upcoming work to return >1 result
+  const [place] = await locationService.find(location)
+  return place ? [place] : []
+}
+
+function failActionHandler (request, h) {
+  request.logger.warn({
+    situation: 'Location search error: Invalid or no string input.'
+  })
+
+  const location = request.query.q || request.payload?.location
+
+  if (!location) {
+    return h.redirect(page).takeover()
+  } else {
+    return renderLocationNotFound(location, h)
+  }
+}
 
 module.exports = [{
   method: 'GET',
@@ -134,19 +259,32 @@ module.exports = [{
         q: joi.string().trim().max(joiValidationQMax),
         group: joi.string().trim().max(joiValidationGroupMax),
         searchType: joi.string().trim().max(joiValidationSearchTypeMax),
-        includeTypes: joi.string().default('place,river'),
         'rloi-id': joi.string(),
         'rainfall-id': joi.string(),
         'target-area': joi.string(),
         riverId: joi.string()
       }),
-      failAction: (request, h) => {
-        request.logger.warn({
-          situation: 'River and Sea levels search error: Invalid or no string input.'
-        })
-
-        return h.redirect()
-      }
+      failAction: failActionHandler
+    }
+  }
+}, {
+  method: 'GET',
+  path: `/${route}/{location}`,
+  handler: locationRouteHandler,
+  options: {
+    validate: {
+      params: joi.object({
+        location: joi.string().lowercase()
+      }),
+      query: joi.object({
+        group: joi.string().trim().max(joiValidationGroupMax),
+        searchType: joi.string().trim().max(joiValidationSearchTypeMax),
+        'rloi-id': joi.string(),
+        'rainfall-id': joi.string(),
+        'target-area': joi.string(),
+        riverId: joi.string()
+      }),
+      failAction: failActionHandler
     }
   }
 }, {
@@ -160,56 +298,12 @@ module.exports = [{
     validate: {
       payload: joi.object({
         location: joi.string()
+          .allow('')
           .trim()
+          .max(QUERY_STRING_LOCATION_MAX_LENGTH)
           .regex(new RegExp(`^[${util.ALLOWED_SEARCH_CHARS}]*$`)).required()
       }),
-      failAction: (_request, h, _err) => h.view(route, { model: emptyResultsModel(_request.payload?.location.trim()) }).takeover()
+      failAction: failActionHandler
     }
   }
 }]
-
-async function locationQueryHandler (request, h) {
-  const location = request.query.q
-  const referer = request.headers.referer
-  const includeTypes = request.query.includeTypes.split(',')
-  const queryGroup = request.query.group
-
-  let rivers = []
-  let places = []
-  const cleanLocation = util.cleanseLocation(location)
-  if (cleanLocation && cleanLocation.length > 1 && !cleanLocation.match(/^england$/i)) {
-    if (includeTypes.includes('place')) {
-      places = await findPlaces(cleanLocation)
-    }
-    if (includeTypes.includes('river')) {
-      rivers = await request.server.methods.flood.getRiversByName(cleanLocation)
-    }
-  }
-
-  if (places.length === 0) {
-    if (rivers.length === 0) {
-      return h.view(route, { model: emptyResultsModel(location) })
-    }
-    if (rivers.length === 1) {
-      return h.redirect(`/${route}/river/${rivers[0].id}`)
-    }
-  }
-
-  if (places.length + rivers.length > 1) {
-    return h.view(`${route}-list`, { model: disambiguationModel(location, places, rivers) })
-  }
-
-  const place = places[0]
-  const stations = await request.server.methods.flood.getStationsWithin(place.bbox10k)
-  const model = placeViewModel({ location, place, stations, referer, queryGroup })
-  return h.view(route, { model })
-}
-
-const inUk = place => place?.isUK && !place?.isScotlandOrNorthernIreland
-
-async function findPlaces (location) {
-  // NOTE: at the moment locationService.find just returns a single place
-  // using the [] for no results and with a nod to upcoming work to return >1 result
-  const [place] = await locationService.find(location)
-  return inUk(place) ? [place] : []
-}
