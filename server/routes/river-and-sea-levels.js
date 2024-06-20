@@ -88,11 +88,6 @@ async function locationQueryHandler (request, h) {
     places = await findPlaces(cleanLocation)
   }
 
-  // console.log('location', location, request.method)
-  console.log('places', places)
-  // console.log('rivers', rivers)
-  // console.log('-----')
-
   if (places.length + rivers.length > 1) {
     return h.view(`${route}-list`, { model: disambiguationModel(location, places, rivers) })
   }
