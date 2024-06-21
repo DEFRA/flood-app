@@ -94,7 +94,7 @@ async function locationQueryHandler (request, h) {
 
   if (places.length === 0) {
     if (rivers.length === 0) {
-      return renderNotFound(location, h)
+      return renderNotFound(location)
     }
 
     if (rivers.length === 1) {
