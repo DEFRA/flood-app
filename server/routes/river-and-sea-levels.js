@@ -83,7 +83,7 @@ async function locationQueryHandler (request, h) {
     return h.redirect(`/${page}`)
   }
 
-  if (cleanLocation && cleanLocation.length > 1 && !cleanLocation.match(/^england$/i)) {
+  if (cleanLocation.length > 1 && !cleanLocation.match(/^england$/i)) {
     rivers = await request.server.methods.flood.getRiversByName(cleanLocation)
     places = await findPlaces(cleanLocation)
   }
