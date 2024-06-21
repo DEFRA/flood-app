@@ -1309,6 +1309,52 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.headers.location).to.equal('/river-and-sea-levels')
   })
 
+  lab.test('GET /river-and-sea-levels?q=warrington&riverId=123 should redirect with query parameters', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeGetJson = () => data.warringtonGetJson
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
+    const fakeIsEngland = () => {
+      return { is_england: true }
+    }
+
+    const fakeStationsData = () => []
+
+    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
+    sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
+
+    const riversPlugin = {
+      plugin: {
+        name: 'rivers',
+        register: (server, options) => {
+          server.route(require('../../server/routes/river-and-sea-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(require('../../server/plugins/logging'))
+    await server.register(riversPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=warrington&riverId=123'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(301)
+    Code.expect(response.headers.location).to.equal('/river-and-sea-levels/warrington?riverId=123')
+  })
+
   lab.test('GET /river-and-sea-levels empty query', async () => {
     const floodService = require('../../server/services/flood')
 
