@@ -21,17 +21,18 @@ class ViewModel {
       floodRiskUrl: config.floodRiskUrl
     })
 
-    const pageTitle = place?.name ?? location
+    if (this.station && this.station.agency_name) {
+      this.pageTitle = `${this.station.agency_name} - flood alerts and warnings`
+    } else {
+      const pageTitle = place?.name ?? location
+
+      this.pageTitle = `${pageTitle ? pageTitle + ' - f' : 'F'}lood alerts and warnings`
+    }
 
     if (error) {
       this.pageTitle = 'Sorry, there is currently a problem searching a location'
-    } else {
-      if (this.station && this.station.agency_name) {
-        this.pageTitle = `${this.station.agency_name} - flood alerts and warnings`
-      } else {
-        this.pageTitle = `${pageTitle ? pageTitle + ' - f' : 'F'}lood alerts and warnings`
-      }
     }
+
     this.countFloods = floods?.floods?.length ?? 0
     this.floods = floods?.groups?.map(item => item)
 
