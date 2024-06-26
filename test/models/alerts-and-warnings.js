@@ -27,7 +27,7 @@ lab.test('Test exposed data placeBox is blank if not a place in England', async 
   const Result = await new ViewModel({ location, place, floods, station })
 
   Code.expect(Result.expose.placeBbox.length).to.equal(0)
-  Code.expect(Result.pageTitle).to.equal('Flood alerts and warnings')
+  Code.expect(Result.pageTitle).to.equal('Kinghorn - flood alerts and warnings')
 })
 
 lab.test('Test count floods function returns correct number of floods', async () => {
