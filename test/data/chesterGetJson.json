@@ -1,0 +1,58 @@
+{
+   "authenticationResultCode": "ValidCredentials",
+   "brandLogoUri": "http://dev.virtualearth.net/Branding/logo_powered_by.png",
+   "copyright": "Copyright",
+   "resourceSets": [
+      {
+         "estimatedTotal": 1,
+         "resources": [
+            {
+               "__type": "Location:http://schemas.microsoft.com/search/local/ws/rest/v1",
+               "bbox": [
+                  53.36754,
+                  -2.639558,
+                  53.42084,
+                  -2.5353
+               ],
+               "name": "Warrington, Warrington",
+               "point": {
+                  "type": "Point",
+                  "coordinates": [
+                     53.39387,
+                     -2.58935
+                  ]
+               },
+               "address": {
+                  "adminDistrict": "England",
+                  "adminDistrict2": "Warrington",
+                  "countryRegion": "United Kingdom",
+                  "formattedAddress": "Warrington, Warrington",
+                  "locality": "Warrington",
+                  "countryRegionIso2": "GB"
+               },
+               "confidence": "Medium",
+               "entityType": "PopulatedPlace",
+               "geocodePoints": [
+                  {
+                     "type": "Point",
+                     "coordinates": [
+                        53.39387,
+                        -2.58935
+                     ],
+                     "calculationMethod": "Rooftop",
+                     "usageTypes": [
+                        "Display"
+                     ]
+                  }
+               ],
+               "matchCodes": [
+                  "Good"
+               ]
+            }
+         ]
+      }
+   ],
+   "statusCode": 200,
+   "tatusDescription": "OK",
+   "traceId": "trace-id"
+ } 
