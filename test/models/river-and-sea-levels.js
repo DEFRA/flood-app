@@ -4,7 +4,7 @@ const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
-const { referencedStationViewModel, placeViewModel, getDisplayData } = require('../../server/models/views/river-and-sea-levels')
+const { referencedStationViewModel, placeViewModel, riverViewModel } = require('../../server/models/views/river-and-sea-levels')
 const data = require('../data')
 
 lab.experiment('river-and-sea-levels model test', () => {
@@ -107,38 +107,65 @@ lab.experiment('river-and-sea-levels model test', () => {
     })
   })
 
-  lab.experiment('getDisplayData', () => {
-    lab.test('should return true for active Welsh stations', async () => {
-      const station = {
+  lab.experiment('riverViewModel', () => {
+    lab.test('should set displayData to true for active Welsh stations', async () => {
+      const stations = [{
         status: 'Active',
         value: 1.2,
         value_erred: false,
-        iswales: true
-      }
-      const result = getDisplayData(station)
-      Code.expect(result).to.equal(true)
+        iswales: true,
+        lon: 0,
+        lat: 0,
+        external_name: 'Test Station',
+        station_type: 'R',
+        river_qualified_name: 'Test River',
+        trend: 'steady',
+        percentile_5: '1.0',
+        percentile_95: '0.5',
+        value_timestamp: '2022-03-30T12:00:00Z'
+      }]
+      const result = riverViewModel(stations)
+      Code.expect(result.stations[0].displayData).to.equal(true)
     })
 
-    lab.test('should return false for suspended Welsh stations', async () => {
-      const station = {
+    lab.test('should set displayData to false for suspended Welsh stations', async () => {
+      const stations = [{
         status: 'Suspended',
         value: 1.2,
         value_erred: false,
-        iswales: true
-      }
-      const result = getDisplayData(station)
-      Code.expect(result).to.equal(false)
+        iswales: true,
+        lon: 0,
+        lat: 0,
+        external_name: 'Test Station',
+        station_type: 'R',
+        river_qualified_name: 'Test River',
+        trend: 'steady',
+        percentile_5: '1.0',
+        percentile_95: '0.5',
+        value_timestamp: '2022-03-30T12:00:00Z'
+      }]
+      const result = riverViewModel(stations)
+      Code.expect(result.stations[0].displayData).to.equal(false)
     })
 
-    lab.test('should return false for closed Welsh stations', async () => {
-      const station = {
+    lab.test('should set displayData to false for closed Welsh stations', async () => {
+      const stations = [{
         status: 'Closed',
         value: 1.2,
         value_erred: false,
-        iswales: true
-      }
-      const result = getDisplayData(station)
-      Code.expect(result).to.equal(false)
+        iswales: true,
+        lon: 0,
+        lat: 0,
+        external_name: 'Test Station',
+        station_type: 'R',
+        river_qualified_name: 'Test River',
+        trend: 'steady',
+        percentile_5: '1.0',
+        percentile_95: '0.5',
+        value_timestamp: '2022-03-30T12:00:00Z'
+      }]
+      const result = riverViewModel(stations)
+      Code.expect(result.stations[0].displayData).to.equal(false)
     })
   })
 })
