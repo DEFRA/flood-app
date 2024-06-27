@@ -96,7 +96,7 @@
     "husky": "^8.0.3",
     "jsdom": "^22.1.0",
     "mockdate": "^3.0.5",
-    "node-html-parser": "^6.1.11",
+    "node-html-parser": "^6.1.13",
     "nodemon": "^3.0.1",
     "proxyquire": "^2.1.3"
   }
