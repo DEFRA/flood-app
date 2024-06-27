@@ -1,6 +1,5 @@
 'use strict'
 
-const qs = require('qs')
 const joi = require('@hapi/joi')
 const boom = require('@hapi/boom')
 const {
@@ -13,30 +12,21 @@ const {
 } = require('../models/views/river-and-sea-levels')
 const locationService = require('../services/location')
 const util = require('../util')
-const { slugify } = require('./lib/utils')
+const {
+  slugify,
+  failActionHandler,
+  renderNotFound,
+  renderLocationNotFound,
+  createQueryParametersString
+} = require('./lib/utils')
 
 const route = 'river-and-sea-levels'
-const page = 'river-and-sea-levels'
 const QUERY_STRING_LOCATION_MAX_LENGTH = 200
 
 const miles = 1609.344
 const joiValidationQMax = 200
 const joiValidationGroupMax = 11
 const joiValidationSearchTypeMax = 11
-
-function renderLocationNotFound (location, h) {
-  return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', href: page, location }).takeover()
-}
-
-function renderNotFound (location) {
-  return boom.notFound(`Location ${location} not found`)
-}
-
-function createQueryParametersString (queryObject) {
-  const { q, location, ...otherParameters } = queryObject
-  const queryString = qs.stringify(otherParameters, { addQueryPrefix: true, encode: false })
-  return queryString
-}
 
 async function locationRouteHandler (request, h) {
   const referer = request.headers.referer
@@ -48,7 +38,7 @@ async function locationRouteHandler (request, h) {
   const [place] = await locationService.find(location)
 
   if (location.match(/^england$/i)) {
-    return h.redirect(`/${page}`)
+    return h.redirect(`/${route}`)
   }
 
   if (slugify(place?.name) !== location) {
@@ -80,7 +70,7 @@ async function locationQueryHandler (request, h) {
   const cleanLocation = util.cleanseLocation(location)
 
   if (cleanLocation.match(/^england$/i)) {
-    return h.redirect(`/${page}`)
+    return h.redirect(`/${route}`)
   }
 
   if (cleanLocation.length > 1 && !cleanLocation.match(/^england$/i)) {
@@ -109,12 +99,12 @@ async function locationQueryHandler (request, h) {
       situation: 'Location search error: Valid response but location not in England.'
     })
 
-    return renderLocationNotFound(location, h)
+    return renderLocationNotFound(route, location, h)
   }
 
   const queryString = createQueryParametersString(request.query)
 
-  return h.redirect(`/${page}/${slugify(place?.name)}${queryString}`).permanent()
+  return h.redirect(`/${route}/${slugify(place?.name)}${queryString}`).permanent()
 }
 
 // const inUk = place => place?.isUK && !place?.isScotlandOrNorthernIreland
@@ -124,20 +114,6 @@ async function findPlaces (location) {
   // using the [] for no results and with a nod to upcoming work to return >1 result
   const [place] = await locationService.find(location)
   return place ? [place] : []
-}
-
-function failActionHandler (request, h) {
-  request.logger.warn({
-    situation: 'Location search error: Invalid or no string input.'
-  })
-
-  const location = request.query.q || request.payload?.location
-
-  if (!location) {
-    return h.redirect(page).takeover()
-  } else {
-    return renderLocationNotFound(location, h)
-  }
 }
 
 module.exports = [{
@@ -259,7 +235,7 @@ module.exports = [{
         'target-area': joi.string(),
         riverId: joi.string()
       }),
-      failAction: failActionHandler
+      failAction: (request, h) => failActionHandler(request, h, route)
     }
   }
 }, {
@@ -279,7 +255,7 @@ module.exports = [{
         'target-area': joi.string(),
         riverId: joi.string()
       }),
-      failAction: failActionHandler
+      failAction: (request, h) => failActionHandler(request, h, route)
     }
   }
 }, {
@@ -298,7 +274,7 @@ module.exports = [{
           .max(QUERY_STRING_LOCATION_MAX_LENGTH)
           .regex(new RegExp(`^[${util.ALLOWED_SEARCH_CHARS}]*$`)).required()
       }),
-      failAction: failActionHandler
+      failAction: (request, h) => failActionHandler(request, h, route)
     }
   }
 }]
