@@ -96,8 +96,6 @@ async function locationRouteHandler (request, h) {
   return h.view(route, { model })
 }
 
-const failAction = (request, h) => failActionHandler(request, h, route)
-
 module.exports = [{
   method: 'GET',
   path: `/${route}`,
@@ -113,7 +111,7 @@ module.exports = [{
         lyr: joi.string(),
         v: joi.string()
       }),
-      failAction
+      failAction: (request, h) => failActionHandler(request, h, route)
     }
   }
 },
@@ -134,7 +132,7 @@ module.exports = [{
         lyr: joi.string(),
         v: joi.string()
       }),
-      failAction
+      failAction: (request, h) => failActionHandler(request, h, route)
     }
   }
 },
@@ -147,7 +145,7 @@ module.exports = [{
       payload: joi.object({
         location: joi.string().allow('').trim().max(QUERY_STRING_LOCATION_MAX_LENGTH).required()
       }),
-      failAction
+      failAction: (request, h) => failActionHandler(request, h, route)
     }
   }
 }]
