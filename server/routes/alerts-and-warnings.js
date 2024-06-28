@@ -5,6 +5,7 @@ const locationService = require('../services/location')
 const util = require('../util')
 const {
   slugify,
+  failActionHandler,
   renderNotFound,
   renderLocationNotFound,
   createQueryParametersString
@@ -93,20 +94,6 @@ async function locationRouteHandler (request, h) {
   const model = new ViewModel({ location, place, floods, canonical: canonicalUrl, q: request.yar.get('q')?.location })
   request.yar.set('q', null)
   return h.view(route, { model })
-}
-
-function failActionHandler (request, h) {
-  request.logger.warn({
-    situation: 'Location search error: Invalid or no string input.'
-  })
-
-  const location = request.query.q || request.payload?.location
-
-  if (!location) {
-    return h.redirect(route).takeover()
-  } else {
-    return renderLocationNotFound(route, location, h)
-  }
 }
 
 module.exports = [{
