@@ -38,6 +38,10 @@ module.exports = {
     return util.getJson(`${serviceUrl}/stations`)
   },
 
+  getForecastFlag (id, direction) {
+    return util.getJson(`${serviceUrl}/forecast-station/${id}/${direction}`)
+  },
+
   getStationsWithin (bbox) {
     const xyCoordsPath = bbox.join('/')
     return util.getJson(`${serviceUrl}/stations-within/${xyCoordsPath}`)
@@ -70,10 +74,6 @@ module.exports = {
   // direction is either 'u' or 'd'
   getStationTelemetry (id, direction) {
     return util.getJson(`${serviceUrl}/station/${id}/${direction}/telemetry`)
-  },
-
-  getStationForecastThresholds (id) {
-    return util.getJson(`${serviceUrl}/station/${id}/forecast/thresholds`)
   },
 
   getStationImtdThresholds (id, direction) {

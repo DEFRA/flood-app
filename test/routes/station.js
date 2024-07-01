@@ -205,35 +205,7 @@ lab.experiment('Test - /station/{id}', () => {
         forecastactive: false
       }
     ]
-    const fakeForecastThresholds = () => [
-      {
-        ffoi_station_threshold_id: 490,
-        ffoi_station_id: 80,
-        fwis_code: '062WAF46MidLee',
-        value: 0.6,
-        fwa_name: 'River Lee at Hertford',
-        fwa_type: 'a',
-        fwa_severity: -1
-      },
-      {
-        ffoi_station_threshold_id: 492,
-        ffoi_station_id: 80,
-        fwis_code: '062FWF46Hertford',
-        value: 0.85,
-        fwa_name: 'River Lee at Hertford and Ware',
-        fwa_type: 'w',
-        fwa_severity: -1
-      },
-      {
-        ffoi_station_threshold_id: 491,
-        ffoi_station_id: 80,
-        fwis_code: '062FWF46Lemsford',
-        value: 0.85,
-        fwa_name: 'River Lee from Lemsford to Hertford',
-        fwa_type: 'w',
-        fwa_severity: -1
-      }
-    ]
+    const fakeForecastFlag = () => { return { } }
 
     const fakeStationForecastData = () => []
     const fakeWarningsAlertsData = () => []
@@ -241,7 +213,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeForecastThresholds)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
     sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
@@ -370,7 +342,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeThresholdsData = () => []
+    const fakeForecastFlag = () => data.fakeNonForecastFlag
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
@@ -378,7 +350,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
     sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
 
@@ -507,7 +479,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeThresholdsData = () => []
+    const fakeForecastFlag = () => { return { } }
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
@@ -515,7 +487,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
     sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
 
@@ -640,7 +612,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeThresholdsData = () => []
+    const fakeForecastFlag = () => { return { } }
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
@@ -648,7 +620,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
     sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
 
@@ -738,7 +710,7 @@ lab.experiment('Test - /station/{id}', () => {
     const fakeTelemetryData = () => []
 
     const fakeImpactsData = () => []
-    const fakeThresholdsData = () => []
+    const fakeForecastFlag = () => { return { } }
     const fakeWarningsAlertsData = () => []
     const fakeRiverStationData = () => []
     const fakeStationThresholdData = () => []
@@ -746,7 +718,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
     sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverStationData)
@@ -872,7 +844,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeThresholdsData = () => []
+    const fakeForecastFlag = () => { return { } }
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
@@ -880,7 +852,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
     sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
 
@@ -1008,7 +980,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeThresholdsData = () => []
+    const fakeForecastFlag = () => { return { } }
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
@@ -1016,7 +988,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
     sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
 
@@ -1225,35 +1197,7 @@ lab.experiment('Test - /station/{id}', () => {
         forecastactive: false
       }
     ]
-    const fakeForecastThresholds = () => [
-      {
-        ffoi_station_threshold_id: 490,
-        ffoi_station_id: 80,
-        fwis_code: '062WAF46MidLee',
-        value: 0.6,
-        fwa_name: 'River Lee at Hertford',
-        fwa_type: 'a',
-        fwa_severity: -1
-      },
-      {
-        ffoi_station_threshold_id: 492,
-        ffoi_station_id: 80,
-        fwis_code: '062FWF46Hertford',
-        value: 0.85,
-        fwa_name: 'River Lee at Hertford and Ware',
-        fwa_type: 'w',
-        fwa_severity: -1
-      },
-      {
-        ffoi_station_threshold_id: 491,
-        ffoi_station_id: 80,
-        fwis_code: '062FWF46Lemsford',
-        value: 0.85,
-        fwa_name: 'River Lee from Lemsford to Hertford',
-        fwa_type: 'w',
-        fwa_severity: -1
-      }
-    ]
+    const fakeForecastFlag = () => data.forecastFlag
 
     const fakeStationForecastData = () => data.fakeStationForecastData
     const fakeWarningsAlertsData = () => []
@@ -1261,7 +1205,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeForecastThresholds)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
     sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
@@ -1474,35 +1418,7 @@ lab.experiment('Test - /station/{id}', () => {
         forecastactive: false
       }
     ]
-    const fakeForecastThresholds = () => [
-      {
-        ffoi_station_threshold_id: 490,
-        ffoi_station_id: 80,
-        fwis_code: '062WAF46MidLee',
-        value: 0.6,
-        fwa_name: 'River Lee at Hertford',
-        fwa_type: 'a',
-        fwa_severity: -1
-      },
-      {
-        ffoi_station_threshold_id: 492,
-        ffoi_station_id: 80,
-        fwis_code: '062FWF46Hertford',
-        value: 0.85,
-        fwa_name: 'River Lee at Hertford and Ware',
-        fwa_type: 'w',
-        fwa_severity: -1
-      },
-      {
-        ffoi_station_threshold_id: 491,
-        ffoi_station_id: 80,
-        fwis_code: '062FWF46Lemsford',
-        value: 0.85,
-        fwa_name: 'River Lee from Lemsford to Hertford',
-        fwa_type: 'w',
-        fwa_severity: -1
-      }
-    ]
+    const fakeForecastFlag = () => data.forecastFlag
 
     const fakeStationForecastData = () => data.fakeStationForecastDataMax
     const fakeWarningsAlertsData = () => []
@@ -1513,7 +1429,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeForecastThresholds)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
     sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
@@ -1644,7 +1560,8 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeThresholdsData = () => []
+    const fakeForecastFlag = () => { return { } }
+
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
@@ -1652,7 +1569,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
     sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
 
@@ -1934,7 +1851,8 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeThresholdsData = () => []
+    const fakeForecastFlag = () => { return { } }
+
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
@@ -1942,7 +1860,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
     sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
 
@@ -2067,7 +1985,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeThresholdsData = () => []
+    const fakeForecastFlag = () => { return { } }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => { return {} }
 
@@ -2075,7 +1993,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
     sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
 
@@ -2198,7 +2116,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeThresholdsData = () => []
+    const fakeForecastFlag = () => { return { } }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
@@ -2206,7 +2124,7 @@ lab.experiment('Test - /station/{id}', () => {
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
     sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
     sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
 
