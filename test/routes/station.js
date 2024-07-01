@@ -345,7 +345,7 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => data.fakeNonForecastFlag
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
