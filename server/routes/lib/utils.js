@@ -5,6 +5,18 @@ function slugify (text = '') {
   return text.replace(/,/g, '').replace(/ /g, '-').toLowerCase()
 }
 
+function isLocationEngland (location) {
+  return location.match(/^england$/i)
+}
+
+function isPlaceEngland (place) {
+  return place?.isEngland.is_england
+}
+
+function isValidLocationSlug (location, place) {
+  return slugify(place?.name) !== location
+}
+
 function createQueryParametersString (queryObject) {
   const { q, location, ...otherParameters } = queryObject
   const queryString = qs.stringify(otherParameters, { addQueryPrefix: true, encode: false })
@@ -17,6 +29,14 @@ function renderLocationNotFound (href, location, h) {
 
 function renderNotFound (location) {
   return boom.notFound(`Location ${location} not found`)
+}
+
+function locationEnglandHandler (request, location) {
+  request.logger.warn({
+    situation: 'Location search error: Valid response but location not in England.'
+  })
+
+  return renderNotFound(location)
 }
 
 function failActionHandler (request, h, page) {
@@ -36,6 +56,10 @@ function failActionHandler (request, h, page) {
 module.exports = {
   slugify,
   failActionHandler,
+  locationEnglandHandler,
+  isLocationEngland,
+  isPlaceEngland,
+  isValidLocationSlug,
   renderNotFound,
   renderLocationNotFound,
   createQueryParametersString

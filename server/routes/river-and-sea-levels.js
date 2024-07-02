@@ -15,9 +15,13 @@ const util = require('../util')
 const {
   slugify,
   failActionHandler,
+  locationEnglandHandler,
   renderNotFound,
   renderLocationNotFound,
-  createQueryParametersString
+  createQueryParametersString,
+  isValidLocationSlug,
+  isLocationEngland,
+  isPlaceEngland
 } = require('./lib/utils')
 
 const route = 'river-and-sea-levels'
@@ -37,20 +41,16 @@ async function locationRouteHandler (request, h) {
 
   const [place] = await locationService.find(location)
 
-  if (location.match(/^england$/i)) {
+  if (isLocationEngland(location)) {
     return h.redirect(`/${route}`)
   }
 
-  if (slugify(place?.name) !== location) {
+  if (isValidLocationSlug(location, place)) {
     return renderNotFound(location)
   }
 
   if (!place?.isEngland.is_england) {
-    request.logger.warn({
-      situation: 'Location search error: Valid response but location not in England.'
-    })
-
-    return renderNotFound(location)
+    return locationEnglandHandler(request, location)
   }
 
   const stations = await request.server.methods.flood.getStationsWithin(place.bbox10k)
@@ -69,7 +69,7 @@ async function locationQueryHandler (request, h) {
 
   const cleanLocation = util.cleanseLocation(location)
 
-  if (cleanLocation.match(/^england$/i)) {
+  if (isLocationEngland(cleanLocation)) {
     return h.redirect(`/${route}`)
   }
 
@@ -94,7 +94,7 @@ async function locationQueryHandler (request, h) {
 
   const place = places[0]
 
-  if (!place.isEngland.is_england) {
+  if (!isPlaceEngland(place)) {
     request.logger.warn({
       situation: 'Location search error: Valid response but location not in England.'
     })

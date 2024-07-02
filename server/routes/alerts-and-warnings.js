@@ -5,6 +5,8 @@ const locationService = require('../services/location')
 const util = require('../util')
 const {
   slugify,
+  isLocationEngland,
+  isValidLocationSlug,
   failActionHandler,
   renderNotFound,
   renderLocationNotFound,
@@ -25,8 +27,8 @@ async function routeHandler (request, h) {
 
   if (request.query.station) {
     const station = await request.server.methods.flood.getStationById(request.query.station, direction)
-
     const warningsAlerts = await request.server.methods.flood.getWarningsAlertsWithinStationBuffer(station.rloi_id)
+
     floods = new Floods({ floods: warningsAlerts })
     model = new ViewModel({ location, floods, station })
     return h.view(route, { model })
@@ -51,6 +53,10 @@ async function routeHandler (request, h) {
     return renderLocationNotFound(route, location, h)
   }
 
+  // if (!isPlaceEngland(place)) {
+  //   return locationEnglandHandler(request, h, route, location)
+  // }
+
   if (!place.isEngland.is_england) {
     request.logger.warn({
       situation: 'Location search error: Valid response but location not in England.'
@@ -72,13 +78,17 @@ async function locationRouteHandler (request, h) {
 
   const [place] = await locationService.find(location)
 
-  if (location.match(/^england$/i)) {
+  if (isLocationEngland(location)) {
     return h.redirect(`/${route}`)
   }
 
-  if (slugify(place?.name) !== location) {
+  if (isValidLocationSlug(location, place)) {
     return renderNotFound(location)
   }
+
+  // if (!isPlaceEngland(place)) {
+  //   return locationEnglandHandler(request, h, route, location)
+  // }
 
   if (!place?.isEngland.is_england) {
     request.logger.warn({
