@@ -49,12 +49,12 @@ async function locationRouteHandler (request, h) {
       situation: 'Location search error: Valid response but location not in England.'
     })
     return renderNotFound(location)
+  } else {
+    const stations = await request.server.methods.flood.getStationsWithin(place.bbox10k)
+    const model = placeViewModel({ location, place, stations, referer, queryGroup, canonical: canonicalUrl, q: request.yar.get('q')?.location })
+    request.yar.set('q', null)
+    return h.view(route, { model })
   }
-
-  const stations = await request.server.methods.flood.getStationsWithin(place.bbox10k)
-  const model = placeViewModel({ location, place, stations, referer, queryGroup, canonical: canonicalUrl, q: request.yar.get('q')?.location })
-  request.yar.set('q', null)
-  return h.view(route, { model })
 }
 
 async function locationQueryHandler (request, h) {
