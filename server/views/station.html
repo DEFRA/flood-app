@@ -40,38 +40,65 @@
         <span id="map-live"></span>
         <div class="defra-navbar__group">
           <ul class="defra-navbar__list">
-          {% if model.station.riverNavigation.up %}
+            {% if model.station.riverNavigation.station_type == 'M' %}
+                <!-- Multi-station Navigation Logic -->
+                {% if model.station.riverNavigation.qualifier == 'u' %}
+                    {% if model.station.riverNavigation.up %}
+                        <li class="defra-navbar__item">
+                            <a href="/station/{{ model.station.riverNavigation.up }}">Upstream</a>
+                        </li>
+                    {% endif %}
+                    <li class="defra-navbar__item">
+                        <a href="/station/{{ model.station.riverNavigation.rloi_id }}/downstream">Downstream</a>
+                    </li>
+                {% elif model.station.riverNavigation.qualifier == 'd' %}
+                    <li class="defra-navbar__item">
+                        <a href="/station/{{ model.station.riverNavigation.rloi_id }}">Upstream</a>
+                    </li>
+                    {% if model.station.riverNavigation.down %}
+                        <li class="defra-navbar__item">
+                            <a href="/station/{{ model.station.riverNavigation.down }}">Downstream</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                <!-- Single-station Navigation Logic -->
+                {% if model.station.riverNavigation.up %}
+                    {% if model.station.riverNavigation.up_station_type == 'M' %}
+                        <!-- If upstream station is a multi-station, append '/downstream' for correct multi-station view -->
+                        <li class="defra-navbar__item">
+                            <a href="/station/{{ model.station.riverNavigation.up }}/downstream">Upstream</a>
+                        </li>
+                    {% else %}
+                        <li class="defra-navbar__item">
+                            <a href="/station/{{ model.station.riverNavigation.up }}">Upstream</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+                {% if model.station.riverNavigation.down %}
+                    {% if model.station.riverNavigation.down_station_type == 'M' %}
+                        <li class="defra-navbar__item">
+                            <a href="/station/{{ model.station.riverNavigation.down }}">Downstream</a>
+                        </li>
+                    {% else %}
+                        <li class="defra-navbar__item">
+                            <a href="/station/{{ model.station.riverNavigation.down }}">Downstream</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+            
+            <!-- Link to nearby levels for additional site navigation -->
             <li class="defra-navbar__item">
-              <a href="/station/{{model.station.riverNavigation.up}}">Upstream</a>
+                <a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/{{ model.station.id }}">Nearby levels</a>
             </li>
-          {% endif %}
-          {% if model.station.riverNavigation.down %}
-            <li class="defra-navbar__item">
-              <a href="/station/{{model.station.riverNavigation.down}}">Downstream</a>
-            </li>
-          {% endif %}
-            <li class="defra-navbar__item">
-              <a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/{{model.station.id}}">Nearby levels</a>
-            </li>
-          </ul>
+        </ul>
+        
         </div>
       </div>
     </nav>
   </div>
 </div>
-
-{# For multi station #}
-{% if model.station.isMulti %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-        {% if model.station.isDownstream %}
-        <p>This measuring station takes 2 measurements. You're viewing the downstream level. <a data-journey-click="Station:Station navigation:Station - Upstream" href="/station/{{ model.station.id }}">View the upstream level.</a></p>
-        {% else %}
-        <p>This measuring station takes 2 measurements. You're viewing the upstream level. <a data-journey-click="Station:Station navigation:Station - Downstream" href="/station/{{ model.station.id }}/downstream">View the downstream level.</a></p>
-        {% endif %}
-      </div>
-  </div>
-{% endif %}
 
 {# if station is suspended #}
 {% if model.status === 'suspended' %}
