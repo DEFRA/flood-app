@@ -42,17 +42,12 @@ async function locationRouteHandler (request, h) {
 
   if (isLocationEngland(location)) {
     return h.redirect(`/${route}`)
-  }
-
-  if (isValidLocationSlug(location, place)) {
+  } else if (isValidLocationSlug(location, place)) {
     return renderNotFound(location)
-  }
-
-  if (!place?.isEngland.is_england) {
+  } else if (!place?.isEngland.is_england) {
     request.logger.warn({
       situation: 'Location search error: Valid response but location not in England.'
     })
-
     return renderNotFound(location)
   }
 
