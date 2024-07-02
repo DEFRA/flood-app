@@ -31,14 +31,6 @@ function renderNotFound (location) {
   return boom.notFound(`Location ${location} not found`)
 }
 
-function locationEnglandHandler (request, location) {
-  request.logger.warn({
-    situation: 'Location search error: Valid response but location not in England.'
-  })
-
-  return renderNotFound(location)
-}
-
 function failActionHandler (request, h, page) {
   request.logger.warn({
     situation: 'Location search error: Invalid or no string input.'
@@ -56,7 +48,6 @@ function failActionHandler (request, h, page) {
 module.exports = {
   slugify,
   failActionHandler,
-  locationEnglandHandler,
   isLocationEngland,
   isPlaceEngland,
   isValidLocationSlug,

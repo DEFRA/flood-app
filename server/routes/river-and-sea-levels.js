@@ -15,7 +15,6 @@ const util = require('../util')
 const {
   slugify,
   failActionHandler,
-  locationEnglandHandler,
   renderNotFound,
   renderLocationNotFound,
   createQueryParametersString,
@@ -50,7 +49,11 @@ async function locationRouteHandler (request, h) {
   }
 
   if (!place?.isEngland.is_england) {
-    return locationEnglandHandler(request, location)
+    request.logger.warn({
+      situation: 'Location search error: Valid response but location not in England.'
+    })
+
+    return renderNotFound(location)
   }
 
   const stations = await request.server.methods.flood.getStationsWithin(place.bbox10k)
