@@ -26,6 +26,12 @@ class ViewModel {
     this.river = river
     const isForecast = forecast ? forecast.forecastFlag.display_time_series : false
 
+    // Define staion navigation properties based on the station type and qualifier
+    this.nav = {
+      upstream: getNavigationLink(river.rloi_id, river.station_type, river.qualifier, river.up, river.up_station_type, 'upstream'),
+      downstream: getNavigationLink(river.rloi_id, river.station_type, river.qualifier, river.down, river.down_station_type, 'downstream')
+    }
+
     this.station.trend = river.trend
 
     Object.assign(this, {
@@ -403,6 +409,36 @@ class ViewModel {
     }
     this.telemetryRefined = telemetryData || []
   }
+}
+
+function getNavigationLink (currentStationId, currentStationType, currentStationQualifier, targetStationId, targetStationType, direction) {
+  if (!targetStationId) return null
+
+  // Logic for multi-station
+  if (currentStationType === 'M') {
+    if (currentStationQualifier === 'u') {
+      if (direction === 'upstream') {
+        return `${targetStationId}`
+      } else if (direction === 'downstream') {
+        return `${currentStationId}/downstream`
+      }
+    } else if (currentStationQualifier === 'd') {
+      if (direction === 'upstream') {
+        return `${currentStationId}`
+      } else if (direction === 'downstream') {
+        return `${targetStationId}`
+      }
+    }
+  } else {
+    // Logic for single-station
+    if (direction === 'upstream') {
+      return targetStationType === 'M' ? `${targetStationId}/downstream` : `${targetStationId}`
+    } else if (direction === 'downstream') {
+      return targetStationType === 'M' ? `${targetStationId}` : `${targetStationId}`
+    }
+  }
+
+  return null
 }
 
 function getBannerIcon (id) {
