@@ -53,10 +53,6 @@ async function routeHandler (request, h) {
     return renderLocationNotFound(route, location, h)
   }
 
-  // if (!isPlaceEngland(place)) {
-  //   return locationEnglandHandler(request, h, route, location)
-  // }
-
   if (!place.isEngland.is_england) {
     request.logger.warn({
       situation: 'Location search error: Valid response but location not in England.'
@@ -85,10 +81,6 @@ async function locationRouteHandler (request, h) {
   if (isValidLocationSlug(location, place)) {
     return renderNotFound(location)
   }
-
-  // if (!isPlaceEngland(place)) {
-  //   return locationEnglandHandler(request, h, route, location)
-  // }
 
   if (!place?.isEngland.is_england) {
     request.logger.warn({
