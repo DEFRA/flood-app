@@ -105,8 +105,6 @@ async function locationQueryHandler (request, h) {
   return h.redirect(`/${route}/${slugify(place?.name)}${queryString}`).permanent()
 }
 
-// const inUk = place => place?.isUK && !place?.isScotlandOrNorthernIreland
-
 async function findPlaces (location) {
   // NOTE: at the moment locationService.find just returns a single place
   // using the [] for no results and with a nod to upcoming work to return >1 result

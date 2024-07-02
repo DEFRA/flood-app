@@ -7,6 +7,7 @@ const {
   slugify,
   isLocationEngland,
   isValidLocationSlug,
+  isPlaceEngland,
   failActionHandler,
   renderNotFound,
   renderLocationNotFound,
@@ -53,7 +54,7 @@ async function routeHandler (request, h) {
     return renderLocationNotFound(route, location, h)
   }
 
-  if (!place.isEngland.is_england) {
+  if (!isPlaceEngland(place)) {
     request.logger.warn({
       situation: 'Location search error: Valid response but location not in England.'
     })
@@ -82,7 +83,7 @@ async function locationRouteHandler (request, h) {
     return renderNotFound(location)
   }
 
-  if (!place?.isEngland.is_england) {
+  if (!isPlaceEngland(place)) {
     request.logger.warn({
       situation: 'Location search error: Valid response but location not in England.'
     })
