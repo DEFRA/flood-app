@@ -26,11 +26,11 @@ class ViewModel {
     this.river = river
     const isForecast = forecast ? forecast.forecastFlag.display_time_series : false
 
-    // Define staion navigation properties based on the station type and qualifier
-    this.nav = {
-      upstream: getNavigationLink(river.rloi_id, river.station_type, river.qualifier, river.up, river.up_station_type, 'upstream'),
-      downstream: getNavigationLink(river.rloi_id, river.station_type, river.qualifier, river.down, river.down_station_type, 'downstream')
-    }
+    // Define station navigation properties based on the station type and qualifier
+    const upstreamNavigationLink = createNavigationLink(river, 'upstream')
+    const downstreamNavigationLink = createNavigationLink(river, 'downstream')
+
+    this.navigationLink = { upstream: upstreamNavigationLink, downstream: downstreamNavigationLink }
 
     this.station.trend = river.trend
 
@@ -411,34 +411,38 @@ class ViewModel {
   }
 }
 
-function getNavigationLink (currentStationId, currentStationType, currentStationQualifier, targetStationId, targetStationType, direction) {
-  if (!targetStationId) return null
+function createNavigationLink (river, direction) {
+  const currentStationId = river.rloi_id
+  const currentStationType = river.station_type
+  const currentStationQualifier = river.qualifier
+  const targetStationId = direction === 'upstream' ? river.up : river.down
+  const targetStationType = direction === 'upstream' ? river.up_station_type : river.down_station_type
 
-  // Logic for multi-station
-  if (currentStationType === 'M') {
-    if (currentStationQualifier === 'u') {
-      if (direction === 'upstream') {
-        return `${targetStationId}`
-      } else if (direction === 'downstream') {
-        return `${currentStationId}/downstream`
-      }
-    } else if (currentStationQualifier === 'd') {
-      if (direction === 'upstream') {
-        return `${currentStationId}`
-      } else if (direction === 'downstream') {
-        return `${targetStationId}`
-      }
-    }
-  } else {
-    // Logic for single-station
-    if (direction === 'upstream') {
-      return targetStationType === 'M' ? `${targetStationId}/downstream` : `${targetStationId}`
-    } else if (direction === 'downstream') {
-      return targetStationType === 'M' ? `${targetStationId}` : `${targetStationId}`
-    }
+  if (!targetStationId) {
+    return null
   }
 
-  return null
+  if (currentStationType === 'M') {
+    return createMultiStationNavLink(direction, currentStationQualifier, targetStationId, currentStationId)
+  } else {
+    return createSingleStationNavLink(direction, targetStationType, targetStationId)
+  }
+}
+
+function createMultiStationNavLink (direction, currentStationQualifier, targetStationId, currentStationId) {
+  if (currentStationQualifier === 'u') {
+    return direction === 'upstream' ? `${targetStationId}` : `${currentStationId}/downstream`
+  } else {
+    return direction === 'upstream' ? `${currentStationId}` : `${targetStationId}`
+  }
+}
+
+function createSingleStationNavLink (direction, targetStationType, targetStationId) {
+  if (direction === 'upstream') {
+    return targetStationType === 'M' ? `${targetStationId}/downstream` : `${targetStationId}`
+  } else {
+    return `${targetStationId}`
+  }
 }
 
 function getBannerIcon (id) {
