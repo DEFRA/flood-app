@@ -40,14 +40,14 @@
         <span id="map-live"></span>
         <div class="defra-navbar__group">
           <ul class="defra-navbar__list">
-            {% if model.nav.upstream %}
+            {% if model.navigationLink.upstream %}
               <li class="defra-navbar__item">
-                <a href="/station/{{model.nav.upstream}}">Upstream</a>
+                <a href="/station/{{model.navigationLink.upstream}}">Upstream</a>
               </li>
             {% endif %}
-            {% if model.nav.downstream %}
+            {% if model.navigationLink.downstream %}
               <li class="defra-navbar__item">
-                <a href="/station/{{model.nav.downstream}}">Downstream</a>
+                <a href="/station/{{model.navigationLink.downstream}}">Downstream</a>
               </li>
             {% endif %}
               <li class="defra-navbar__item">
