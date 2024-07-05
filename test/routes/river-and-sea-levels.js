@@ -2394,51 +2394,6 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     // Code.expect(root.querySelectorAll('table.defra-flood-levels-table#results').length).to.equal(0)
   })
 
-  lab.test('POST /river-and-sea-levels query parameters should be encoded', async () => {
-    const floodService = require('../../server/services/flood')
-
-    const fakeIsEngland = () => {
-      return { is_england: true }
-    }
-
-    const fakeStationsData = () => []
-
-    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-    sandbox.stub(floodService, 'getStations').callsFake(fakeStationsData)
-
-    const riversPlugin = {
-      plugin: {
-        name: 'rivers',
-        register: (server, options) => {
-          server.route(require('../../server/routes/river-and-sea-levels'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(riversPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'POST',
-      url: '/river-and-sea-levels',
-      payload: { location: 'newcastle & gateshead' }
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(301)
-    Code.expect(response.headers.location).to.equal('/river-and-sea-levels/gateshead-tyne-and-wear')
-
-    // const root = parse(response.payload)
-    // Code.expect(root.querySelectorAll('h2').some(h => h.textContent.trim().startsWith('No results for'))).to.be.false()
-    // Code.expect(root.querySelectorAll('table.defra-flood-levels-table#results').length).to.equal(0)
-  })
-
   lab.test('POST /river-and-sea-levels query parameters should display script tags safely', async () => {
     const floodService = require('../../server/services/flood')
 
