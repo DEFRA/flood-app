@@ -42,9 +42,9 @@ async function locationRouteHandler (request, h) {
 
   if (isLocationEngland(location)) {
     return h.redirect(`/${route}`)
-  } else if (isValidLocationSlug(location, place)) {
+  } else if (!isValidLocationSlug(location, place)) {
     return renderNotFound(location)
-  } else if (!place?.isEngland.is_england) {
+  } else if (!isPlaceEngland(place)) {
     request.logger.warn({
       situation: 'Location search error: Valid response but location not in England.'
     })
@@ -67,11 +67,15 @@ async function locationQueryHandler (request, h) {
 
   const cleanLocation = util.cleanseLocation(location)
 
+  if (!location) {
+    return h.view(route, { model: emptyResultsModel() })
+  }
+
   if (isLocationEngland(cleanLocation)) {
     return h.redirect(`/${route}`)
   }
 
-  if (cleanLocation.length > 1 && !cleanLocation.match(/^england$/i)) {
+  if (cleanLocation.length > 1 && !isLocationEngland(cleanLocation)) {
     rivers = await request.server.methods.flood.getRiversByName(cleanLocation)
     places = await findPlaces(cleanLocation)
   }
@@ -97,7 +101,9 @@ async function locationQueryHandler (request, h) {
       situation: 'Location search error: Valid response but location not in England.'
     })
 
-    return renderLocationNotFound(route, location, h)
+    if (request.method === 'post') {
+      return renderLocationNotFound(route, location, h)
+    }
   }
 
   const queryString = createQueryParametersString(request.query)
@@ -257,10 +263,7 @@ module.exports = [{
 }, {
   method: 'POST',
   path: `/${route}`,
-  handler: async (request, h) => {
-    const { location } = request.payload
-    return h.redirect(`/${route}?q=${encodeURIComponent(location)}`).takeover()
-  },
+  handler: locationQueryHandler,
   options: {
     validate: {
       payload: joi.object({

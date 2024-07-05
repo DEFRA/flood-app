@@ -79,7 +79,7 @@ async function locationRouteHandler (request, h) {
     return h.redirect(`/${route}`)
   }
 
-  if (isValidLocationSlug(location, place)) {
+  if (!isValidLocationSlug(location, place)) {
     return renderNotFound(location)
   }
 

@@ -14,7 +14,7 @@ function isPlaceEngland (place) {
 }
 
 function isValidLocationSlug (location, place) {
-  return slugify(place?.name) !== location
+  return slugify(place?.name) === location
 }
 
 function createQueryParametersString (queryObject) {

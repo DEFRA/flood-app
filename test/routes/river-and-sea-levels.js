@@ -123,7 +123,8 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.statusCode).to.equal(301)
+    Code.expect(response.headers.location).to.equal('/river-and-sea-levels/kinghorn-fife')
   })
 
   lab.test('GET /river-and-see-levels with location Kinghorn, Scotland', async () => {
@@ -2343,7 +2344,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.not.contain('No results for')
   })
 
@@ -2384,8 +2385,8 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers.location).to.equal('/river-and-sea-levels?q=warrington')
+    Code.expect(response.statusCode).to.equal(301)
+    Code.expect(response.headers.location).to.equal('/river-and-sea-levels/warrington')
 
     Code.expect(response.payload).to.not.contain('Page not found')
     // const root = parse(response.payload)
@@ -2430,8 +2431,8 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers.location).to.equal('/river-and-sea-levels?q=newcastle%20%26%20gateshead')
+    Code.expect(response.statusCode).to.equal(301)
+    Code.expect(response.headers.location).to.equal('/river-and-sea-levels/gateshead-tyne-and-wear')
 
     // const root = parse(response.payload)
     // Code.expect(root.querySelectorAll('h2').some(h => h.textContent.trim().startsWith('No results for'))).to.be.false()
