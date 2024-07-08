@@ -60,38 +60,35 @@ async function locationRouteHandler (request, h) {
 async function locationQueryHandler (request, h) {
   const location = request.query.q || request.payload?.location
 
-  let rivers = []
-  let places = []
-
   request.yar.set('q', { location })
 
   const cleanLocation = util.cleanseLocation(location)
 
-  if (!location) {
+  if (!cleanLocation) {
     return h.view(route, { model: emptyResultsModel() })
+  }
+
+  if (cleanLocation.length === 1) {
+    return renderNotFound(cleanLocation)
   }
 
   if (isLocationEngland(cleanLocation)) {
     return h.redirect(`/${route}`)
   }
 
-  if (cleanLocation.length > 1 && !isLocationEngland(cleanLocation)) {
-    rivers = await request.server.methods.flood.getRiversByName(cleanLocation)
-    places = await findPlaces(cleanLocation)
-  }
+  const rivers = await request.server.methods.flood.getRiversByName(cleanLocation)
+  const places = await findPlaces(cleanLocation)
 
   if (places.length + rivers.length > 1) {
-    return h.view(`${route}-list`, { model: disambiguationModel(location, places, rivers) })
+    return h.view(`${route}-list`, { model: disambiguationModel(cleanLocation, places, rivers) })
   }
 
   if (places.length === 0) {
     if (rivers.length === 0) {
-      return renderNotFound(location)
+      return renderNotFound(cleanLocation)
     }
 
-    if (rivers.length === 1) {
-      return h.redirect(`/${route}/river/${rivers[0].id}`)
-    }
+    return h.redirect(`/${route}/river/${rivers[0].id}`)
   }
 
   const place = places[0]
@@ -102,7 +99,7 @@ async function locationQueryHandler (request, h) {
     })
 
     if (request.method === 'post') {
-      return renderLocationNotFound(route, location, h)
+      return renderLocationNotFound(route, cleanLocation, h)
     }
   }
 
