@@ -2351,6 +2351,11 @@ lab.experiment('Test - /river-and-sea-levels', () => {
   lab.test('POST /river-and-sea-levels non empty query should redirect', async () => {
     const floodService = require('../../server/services/flood')
 
+    const fakeGetJson = () => data.warringtonGetJson
+
+    const util = require('../../server/util')
+    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+
     const fakeIsEngland = () => {
       return { is_england: true }
     }
