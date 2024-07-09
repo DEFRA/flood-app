@@ -58,34 +58,38 @@ async function locationRouteHandler (request, h) {
 }
 
 async function locationQueryHandler (request, h) {
-  const location = request.query.q || request.payload?.location
+  let location = request.query.q || request.payload?.location
+
+  location = util.cleanseLocation(location)
 
   request.yar.set('q', { location })
 
-  const cleanLocation = util.cleanseLocation(location)
-
-  if (!cleanLocation) {
+  if (!location) {
     return h.view(route, { model: emptyResultsModel() })
   }
 
-  if (cleanLocation.length === 1) {
-    return renderNotFound(cleanLocation)
+  if (location.length === 1) {
+    return renderNotFound(location)
   }
 
-  if (isLocationEngland(cleanLocation)) {
+  if (isLocationEngland(location)) {
     return h.redirect(`/${route}`)
   }
 
-  const rivers = await request.server.methods.flood.getRiversByName(cleanLocation)
-  const places = await findPlaces(cleanLocation)
+  const rivers = await request.server.methods.flood.getRiversByName(location)
+  const places = await findPlaces(location)
 
   if (places.length + rivers.length > 1) {
-    return h.view(`${route}-list`, { model: disambiguationModel(cleanLocation, places, rivers) })
+    return h.view(`${route}-list`, { model: disambiguationModel(location, places, rivers) })
   }
 
   if (places.length === 0) {
     if (rivers.length === 0) {
-      return renderNotFound(cleanLocation)
+      if (request.method === 'get') {
+        return renderNotFound(location)
+      }
+
+      return renderLocationNotFound(route, location, h)
     }
 
     return h.redirect(`/${route}/river/${rivers[0].id}`)
@@ -99,7 +103,7 @@ async function locationQueryHandler (request, h) {
     })
 
     if (request.method === 'post') {
-      return renderLocationNotFound(route, cleanLocation, h)
+      return renderLocationNotFound(route, location, h)
     }
   }
 
@@ -268,7 +272,7 @@ module.exports = [{
           .allow('')
           .trim()
           .max(QUERY_STRING_LOCATION_MAX_LENGTH)
-          .regex(new RegExp(`^[${util.ALLOWED_SEARCH_CHARS}]*$`)).required()
+          .required()
       }),
       failAction: (request, h) => failActionHandler(request, h, route)
     }

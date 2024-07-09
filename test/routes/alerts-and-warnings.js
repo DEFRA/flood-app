@@ -149,7 +149,8 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(404)
+    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.headers.location).to.equal('/alerts-and-warnings')
   })
 
   lab.test('GET /alerts-and-warnings with legacy query parameter valid non-england', async () => {
@@ -164,6 +165,22 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     Code.expect(response.statusCode).to.equal(301)
     Code.expect(response.headers.location).to.equal('/alerts-and-warnings/kinghorn-fife')
+  })
+
+  lab.test('GET /alerts-and-warnings with legacy query parameter invalid characters', async () => {
+    stubs.getJson.callsFake(() => data.warringtonGetJson)
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+    stubs.getFloodsWithin.callsFake(() => ({ floods: [] }))
+
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings?q=warrington%*_'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(301)
+    Code.expect(response.headers.location).to.equal('/alerts-and-warnings/warrington')
   })
 
   lab.test('GET /alerts-and-warnings/{location} with location', async () => {

@@ -20,6 +20,8 @@ const QUERY_STRING_LOCATION_MAX_LENGTH = 200
 async function routeHandler (request, h) {
   let location = request.query.q || request.payload?.location
 
+  location = util.cleanseLocation(location)
+
   request.yar.set('q', { location })
 
   const direction = request.query.direction === 'downstream' ? 'd' : 'u'
@@ -42,7 +44,9 @@ async function routeHandler (request, h) {
     return h.view(route, { model })
   }
 
-  location = util.cleanseLocation(location)
+  if (isLocationEngland(location)) {
+    return h.redirect(`/${route}`)
+  }
 
   const [place] = await locationService.find(location)
 
@@ -146,7 +150,11 @@ module.exports = [{
   options: {
     validate: {
       payload: joi.object({
-        location: joi.string().allow('').trim().max(QUERY_STRING_LOCATION_MAX_LENGTH).required()
+        location: joi.string()
+          .allow('')
+          .trim()
+          .max(QUERY_STRING_LOCATION_MAX_LENGTH)
+          .required()
       }),
       failAction: (request, h) => failActionHandler(request, h, route)
     }
