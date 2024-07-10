@@ -228,7 +228,7 @@ lab.experiment('Routes test - national view', () => {
       Code.expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)
       linkChecker(relatedContentLinks, 'Get flood warnings by phone, text or email', 'https://www.gov.uk/sign-up-for-flood-warnings')
       linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
-      linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/guidance/flood-alerts-and-warnings-what-they-are-and-what-to-do')
+      linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/help-during-flood')
       linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
       linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
     })

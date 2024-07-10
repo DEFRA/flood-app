@@ -124,7 +124,7 @@ describe('target-area route', () => {
     const relatedContentLinks = root.querySelectorAll('.defra-related-items a')
     expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)
     linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
-    linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/guidance/flood-alerts-and-warnings-what-they-are-and-what-to-do')
+    linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/help-during-flood')
     linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
     linkChecker(relatedContentLinks, 'Check your long term flood risk', 'https://fake-flood-risk-url.com')
     linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
