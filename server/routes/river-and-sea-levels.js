@@ -68,10 +68,6 @@ async function locationQueryHandler (request, h) {
     return h.view(route, { model: emptyResultsModel() })
   }
 
-  if (location.length === 1) {
-    return renderNotFound(location)
-  }
-
   if (isLocationEngland(location)) {
     return h.redirect(`/${route}`)
   }

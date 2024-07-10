@@ -288,7 +288,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.statusCode).to.equal(404)
   })
 
-  lab.test('GET /rivers-and-sea-levels single character search should return no results', async () => {
+  lab.test('GET /rivers-and-sea-levels single character in query parameter should return no results', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationsData = () => [{
@@ -381,7 +381,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(404)
+    Code.expect(response.statusCode).to.equal(302)
   })
 
   lab.test('GET /river-and-sea-levels with levels Low, Normal, High', async () => {
