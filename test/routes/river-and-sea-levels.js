@@ -901,6 +901,23 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.headers.location).to.equal('/river-and-sea-levels')
   })
 
+  lab.test('POST /alerts-and-warnings with special charcters serves 404 error', async () => {
+    stubs.getJson.callsFake(() => [])
+    stubs.getIsEngland.callsFake(() => ({ is_england: false }))
+
+    const options = {
+      method: 'POST',
+      url: '/alerts-and-warnings',
+      payload: {
+        location: '<script>alert(\'TEST\')</script>'
+      }
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(404)
+    Code.expect(response.result.message).to.equal('Not Found')
+  })
+
   lab.experiment('RLOI', () => {
     lab.test('GET /river-and-sea-levels?rloi-id=7224 should redirect', async () => {
       stubs.getJson.callsFake(() => data.warringtonGetJson)
