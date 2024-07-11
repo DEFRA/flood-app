@@ -1,31 +1,26 @@
-const qs = require('qs')
 const joi = require('@hapi/joi')
-const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/alerts-and-warnings')
 const Floods = require('../models/floods')
 const locationService = require('../services/location')
 const util = require('../util')
-const { slugify } = require('./lib/utils')
+const {
+  slugify,
+  isLocationEngland,
+  isValidLocationSlug,
+  isPlaceEngland,
+  failActionHandler,
+  renderNotFound,
+  renderLocationNotFound,
+  createQueryParametersString
+} = require('./lib/utils')
 
-const page = 'alerts-and-warnings'
+const route = 'alerts-and-warnings'
 const QUERY_STRING_LOCATION_MAX_LENGTH = 200
-
-function renderLocationNotFound (location, h) {
-  return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', href: page, location }).takeover()
-}
-
-function renderNotFound (location) {
-  return boom.notFound(`Location ${location} not found`)
-}
-
-function createQueryParametersString (queryObject) {
-  const { q, location, ...otherParameters } = queryObject
-  const queryString = qs.stringify(otherParameters, { addQueryPrefix: true, encode: false })
-  return queryString
-}
 
 async function routeHandler (request, h) {
   let location = request.query.q || request.payload?.location
+
+  location = util.cleanseLocation(location)
 
   request.yar.set('q', { location })
 
@@ -35,21 +30,23 @@ async function routeHandler (request, h) {
 
   if (request.query.station) {
     const station = await request.server.methods.flood.getStationById(request.query.station, direction)
-
     const warningsAlerts = await request.server.methods.flood.getWarningsAlertsWithinStationBuffer(station.rloi_id)
+
     floods = new Floods({ floods: warningsAlerts })
     model = new ViewModel({ location, floods, station })
-    return h.view(page, { model })
+    return h.view(route, { model })
   }
 
   if (!location) {
     const data = await request.server.methods.flood.getFloods()
     floods = new Floods(data)
     model = new ViewModel({ location, floods })
-    return h.view(page, { model })
+    return h.view(route, { model })
   }
 
-  location = util.cleanseLocation(location)
+  if (isLocationEngland(location)) {
+    return h.redirect(`/${route}`)
+  }
 
   const [place] = await locationService.find(location)
 
@@ -58,22 +55,22 @@ async function routeHandler (request, h) {
       return renderNotFound(location)
     }
 
-    return renderLocationNotFound(location, h)
+    return renderLocationNotFound(route, location, h)
   }
 
-  if (!place.isEngland.is_england) {
+  if (!isPlaceEngland(place)) {
     request.logger.warn({
       situation: 'Location search error: Valid response but location not in England.'
     })
 
     if (request.method === 'post') {
-      return renderLocationNotFound(location, h)
+      return renderLocationNotFound(route, location, h)
     }
   }
 
   const queryString = createQueryParametersString(request.query)
 
-  return h.redirect(`/${page}/${slugify(place?.name)}${queryString}`).permanent()
+  return h.redirect(`/${route}/${slugify(place?.name)}${queryString}`).permanent()
 }
 
 async function locationRouteHandler (request, h) {
@@ -82,15 +79,15 @@ async function locationRouteHandler (request, h) {
 
   const [place] = await locationService.find(location)
 
-  if (location.match(/^england$/i)) {
-    return h.redirect(`/${page}`)
+  if (isLocationEngland(location)) {
+    return h.redirect(`/${route}`)
   }
 
-  if (slugify(place?.name) !== location) {
+  if (!isValidLocationSlug(location, place)) {
     return renderNotFound(location)
   }
 
-  if (!place?.isEngland.is_england) {
+  if (!isPlaceEngland(place)) {
     request.logger.warn({
       situation: 'Location search error: Valid response but location not in England.'
     })
@@ -103,26 +100,12 @@ async function locationRouteHandler (request, h) {
   const floods = new Floods(data)
   const model = new ViewModel({ location, place, floods, canonical: canonicalUrl, q: request.yar.get('q')?.location })
   request.yar.set('q', null)
-  return h.view(page, { model })
-}
-
-function failActionHandler (request, h) {
-  request.logger.warn({
-    situation: 'Location search error: Invalid or no string input.'
-  })
-
-  const location = request.query.q || request.payload?.location
-
-  if (!location) {
-    return h.redirect(page).takeover()
-  } else {
-    return renderLocationNotFound(location, h)
-  }
+  return h.view(route, { model })
 }
 
 module.exports = [{
   method: 'GET',
-  path: `/${page}`,
+  path: `/${route}`,
   handler: routeHandler,
   options: {
     validate: {
@@ -135,13 +118,13 @@ module.exports = [{
         lyr: joi.string(),
         v: joi.string()
       }),
-      failAction: failActionHandler
+      failAction: (request, h) => failActionHandler(request, h, route)
     }
   }
 },
 {
   method: 'GET',
-  path: `/${page}/{location}`,
+  path: `/${route}/{location}`,
   handler: locationRouteHandler,
   options: {
     validate: {
@@ -156,20 +139,24 @@ module.exports = [{
         lyr: joi.string(),
         v: joi.string()
       }),
-      failAction: failActionHandler
+      failAction: (request, h) => failActionHandler(request, h, route)
     }
   }
 },
 {
   method: 'POST',
-  path: `/${page}`,
+  path: `/${route}`,
   handler: routeHandler,
   options: {
     validate: {
       payload: joi.object({
-        location: joi.string().allow('').trim().max(QUERY_STRING_LOCATION_MAX_LENGTH).required()
+        location: joi.string()
+          .allow('')
+          .trim()
+          .max(QUERY_STRING_LOCATION_MAX_LENGTH)
+          .required()
       }),
-      failAction: failActionHandler
+      failAction: (request, h) => failActionHandler(request, h, route)
     }
   }
 }]
