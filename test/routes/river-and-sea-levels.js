@@ -882,7 +882,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     // Code.expect(root.querySelectorAll('table.defra-flood-levels-table#results').length).to.equal(0)
   })
 
-  lab.test('POST /alerts-and-warnings with location england should show location not found', async () => {
+  lab.test('POST /river-and-sea-levels with location england should show location not found', async () => {
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
     stubs.getStations.callsFake(() => [])
     stubs.getRiversByName.callsFake(() => [])
