@@ -329,6 +329,24 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.headers['content-type']).to.include('text/html')
   })
 
+  lab.test('POST /alerts-and-warnings with location england should show location not found', async () => {
+    stubs.getJson.callsFake(() => data.nonLocationGetJson)
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+    stubs.getFloodsWithin.callsFake(() => [])
+
+    const options = {
+      method: 'POST',
+      url: '/alerts-and-warnings',
+      payload: {
+        location: 'england'
+      }
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.headers.location).to.equal('/alerts-and-warnings')
+  })
+
   lab.test('POST /alerts-and-warnings with invalid payload', async () => {
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
 

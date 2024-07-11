@@ -882,6 +882,25 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     // Code.expect(root.querySelectorAll('table.defra-flood-levels-table#results').length).to.equal(0)
   })
 
+  lab.test('POST /alerts-and-warnings with location england should show location not found', async () => {
+    stubs.getJson.callsFake(() => data.nonLocationGetJson)
+    stubs.getStations.callsFake(() => [])
+    stubs.getRiversByName.callsFake(() => [])
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+
+    const options = {
+      method: 'POST',
+      url: '/river-and-sea-levels',
+      payload: {
+        location: 'england'
+      }
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(302)
+    Code.expect(response.headers.location).to.equal('/river-and-sea-levels')
+  })
+
   lab.experiment('RLOI', () => {
     lab.test('GET /river-and-sea-levels?rloi-id=7224 should redirect', async () => {
       stubs.getJson.callsFake(() => data.warringtonGetJson)
