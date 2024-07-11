@@ -250,7 +250,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.headers.location).to.equal('/river-and-sea-levels/warrington?riverId=123')
   })
 
-  lab.test('GET /river-and-sea-levels empty query', async () => {
+  lab.test('GET /river-and-sea-levels no query value', async () => {
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))
     stubs.getRiversByName.callsFake(() => [])
@@ -590,7 +590,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('Showing levels within 5 miles of Keswick Campsite.')
   })
 
-  lab.test('GET /river-and-sea-levels?q=tyne returns river list', async () => {
+  lab.test('GET /river-and-sea-levels?q=tyne query parameter returns river list', async () => {
     stubs.getJson.callsFake(() => {
       return {
         authenticationResultCode: 'ValidCredentials',
@@ -646,7 +646,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.statusCode).to.equal(200)
   })
 
-  lab.test('GET /river-and-sea-levels?q=avon returns multiple choice page', async () => {
+  lab.test('GET /river-and-sea-levels?q=avon query parameter returns multiple choice page', async () => {
     stubs.getJson.callsFake(() => data.avonGetJson)
     stubs.getStationsWithin.callsFake(() => [{
       river_id: 'river-alne',
@@ -758,7 +758,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.statusCode).to.equal(200)
   })
 
-  lab.test('GET /river-and-sea-levels?q=river mersey returns the river stations', async () => {
+  lab.test('GET /river-and-sea-levels?q=river query parameter returns river stations', async () => {
     stubs.getJson.callsFake(() => {
       return {
         authenticationResultCode: 'ValidCredentials',
@@ -832,7 +832,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.headers.location).to.equal('/river-and-sea-levels/river/river-mersey')
   })
 
-  lab.test('POST /river-and-sea-levels empty query should return start page', async () => {
+  lab.test('POST /river-and-sea-levels with no location payload', async () => {
     stubs.getStations.callsFake(() => [])
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))
 
@@ -846,7 +846,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.not.contain('No results for')
   })
 
-  lab.test('POST /river-and-sea-levels empty space query should return start page', async () => {
+  lab.test('POST /river-and-sea-levels with empty location payload', async () => {
     stubs.getStations.callsFake(() => [])
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))
 
@@ -861,7 +861,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.not.contain('No results for')
   })
 
-  lab.test('POST /river-and-sea-levels non empty query should redirect', async () => {
+  lab.test('POST /river-and-sea-levels with location payload', async () => {
     stubs.getJson.callsFake(() => data.warringtonGetJson)
     stubs.getStations.callsFake(() => [])
     stubs.getRiversByName.callsFake(() => [])
