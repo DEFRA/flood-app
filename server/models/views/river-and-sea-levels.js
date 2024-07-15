@@ -112,7 +112,7 @@ function referencedStationViewModel (referencePoint, stations) {
   }
 }
 
-function placeViewModel ({ location, place, stations = [], queryGroup, canonical, q }) {
+function placeViewModel ({ location, place, stations = [], queryGroup }) {
   let distStatement, title, description
 
   const isEngland = place ? place.isEngland.is_england : true
@@ -128,10 +128,10 @@ function placeViewModel ({ location, place, stations = [], queryGroup, canonical
   deleteUndefinedProperties(stations)
 
   if (location && isEngland) {
-    title = `${place.name ?? location} - ${pageTitle}`
+    title = `${location} - ${pageTitle}`
     description = `Find river, sea, groundwater and rainfall levels in ${location}. Check the last updated height, trend and state recorded by the measuring station.`
   } else {
-    title = place ? `${place.name} - ${pageTitle}` : pageTitle
+    title = location ? `${location} - ${pageTitle}` : pageTitle
     description = metaDescription
   }
 
@@ -141,15 +141,13 @@ function placeViewModel ({ location, place, stations = [], queryGroup, canonical
     filters,
     floodRiskUrl,
     distStatement,
-    q: q || location,
+    q: location,
     clientModel: getClientModel(isEngland ? place.bbox10k : []),
     queryGroup: activeFilter,
     placeAddress: place.address,
     ...getDataJourneyClickStrings(),
     pageTitle: title,
-    metaDescription: description,
-    metaCanonical: canonical,
-    canonicalUrl: canonical
+    metaDescription: description
   }
 }
 

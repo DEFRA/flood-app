@@ -2,39 +2,36 @@ const { bingKeyMaps } = require('../../config')
 const config = require('../../config')
 
 class ViewModel {
-  constructor ({ q, location, place, floods = [], station, canonical, error }) {
+  constructor ({ location, place, floods, station, error }) {
     Object.assign(this, {
-      q,
-      station,
+      q: location,
       map: station ? 'map-station' : 'map',
-      placeName: place?.name || '',
-      placeBbox: place?.bbox2k || [],
-      placeCentre: place?.center || [],
+      station: station || null,
+      placeName: place ? place.name : '',
+      placeBbox: place ? place.bbox2k : [],
+      placeCentre: place ? place.center : [],
       timestamp: Date.now(),
-      metaCanonical: canonical,
-      canonicalUrl: canonical,
-      error: !!error,
+      error: error ? true : null,
       displayGetWarningsLink: true,
       displayLongTermLink: true,
-      isEngland: place?.isEngland?.is_england,
-      isDummyData: floods?.isDummyData,
+      isEngland: place ? place.isEngland.is_england : null,
+      isDummyData: floods ? floods.isDummyData : false,
       floodRiskUrl: config.floodRiskUrl
     })
 
-    if (this.station && this.station.agency_name) {
-      this.pageTitle = `${this.station.agency_name} - flood alerts and warnings`
-    } else {
-      const pageTitle = place?.name ?? location
-
-      this.pageTitle = `${pageTitle ? pageTitle + ' - f' : 'F'}lood alerts and warnings`
-    }
-
     if (error) {
       this.pageTitle = 'Sorry, there is currently a problem searching a location'
+    } else {
+      if (this.station && this.station.agency_name) {
+        this.pageTitle = `${this.station.agency_name} - flood alerts and warnings`
+      } else {
+        this.pageTitle = `${location ? location + ' - f' : 'F'}lood alerts and warnings`
+      }
     }
-
-    this.countFloods = floods?.floods?.length ?? 0
-    this.floods = floods?.groups?.map(item => item)
+    this.countFloods = floods ? floods.floods.length : 0
+    this.floods = floods
+      ? floods.groups.map(item => item)
+      : []
 
     this.expose = {
       station: this.station,
