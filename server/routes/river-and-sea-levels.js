@@ -19,6 +19,7 @@ const {
   renderLocationNotFound,
   createQueryParametersString,
   getDisambiguationPath,
+  filterDisambiguationPlaces,
   isValidLocationSlug,
   isLocationEngland,
   isPlaceEngland
@@ -77,7 +78,7 @@ async function locationQueryHandler (request, h) {
   let places = await findPlaces(location)
 
   if (places.length + rivers.length > 1) {
-    places = isPlaceEngland(places[0]) ? places : []
+    places = filterDisambiguationPlaces(places)
 
     const path = getDisambiguationPath(places[0], location)
 
