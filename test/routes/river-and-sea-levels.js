@@ -956,7 +956,7 @@ lab.experiment('Test - /river-and-sea-levels', () => {
       one_hr_total: null,
       id: '610'
     }])
-    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+    stubs.getIsEngland.callsFake(() => ({ is_england: false }))
     stubs.getRiversByName.callsFake(() => [
       {
         local_name: 'Little Avon River',
