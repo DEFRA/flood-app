@@ -76,8 +76,11 @@ async function locationQueryHandler (request, h) {
   const places = await findPlaces(location)
 
   if (places.length + rivers.length > 1) {
-    const path = places.length ? (places[0].name.toLowerCase() === location.toLowerCase() ? `/${places[0].name}` : `?q=${places[0].name}`) : null
-    return h.view(`${route}-list`, { model: disambiguationModel(location, places, rivers), path })
+    const place = places[0]
+    const englandPlaces = place?.isUK && !place?.isScotlandOrNorthernIreland ? [place] : []
+
+    const path = englandPlaces.length ? (englandPlaces[0].name.toLowerCase() === location.toLowerCase() ? `/${englandPlaces[0].name}` : `?q=${englandPlaces[0].name}`) : null
+    return h.view(`${route}-list`, { model: disambiguationModel(location, englandPlaces, rivers), path })
   }
 
   if (places.length === 0) {
