@@ -76,7 +76,8 @@ async function locationQueryHandler (request, h) {
   const places = await findPlaces(location)
 
   if (places.length + rivers.length > 1) {
-    return h.view(`${route}-list`, { model: disambiguationModel(location, places, rivers) })
+    const path = places.length ? (places[0].name.toLowerCase() === location.toLowerCase() ? `/${places[0].name}` : `?q=${places[0].name}`) : null
+    return h.view(`${route}-list`, { model: disambiguationModel(location, places, rivers), path })
   }
 
   if (places.length === 0) {

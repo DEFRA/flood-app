@@ -755,7 +755,170 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.payload).to.contain('Levels near')
     Code.expect(response.payload).to.contain('Rivers')
     Code.expect(response.payload).to.contain('More than one match was found for your location.')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=Stratford-upon-Avon, Warwickshire">')
     Code.expect(response.statusCode).to.equal(200)
+  })
+
+  lab.test('GET /river-and-sea-levels?q=avon query parameter sets path to a location url', async () => {
+    stubs.getJson.callsFake(() => (
+      {
+        authenticationResultCode: 'ValidCredentials',
+        brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
+        copyright: 'Copyright',
+        resourceSets: [
+          {
+            estimatedTotal: 1,
+            resources: [
+              {
+                __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+                bbox: [
+                  52.16256332397461,
+                  -1.7445210218429565,
+                  52.216796875,
+                  -1.63857901096344
+                ],
+                name: 'Avon',
+                point: {
+                  type: 'Point',
+                  coordinates: [
+                    52.19157028,
+                    -1.70698905
+                  ]
+                },
+                address: {
+                  adminDistrict: 'England',
+                  adminDistrict2: 'Warwickshire',
+                  countryRegion: 'United Kingdom',
+                  formattedAddress: 'Stratford-upon-Avon, Warwickshire',
+                  locality: 'Stratford-upon-Avon',
+                  countryRegionIso2: 'GB'
+                },
+                confidence: 'High',
+                entityType: 'PopulatedPlace',
+                geocodePoints: [
+                  {
+                    type: 'Point',
+                    coordinates: [
+                      52.19157028,
+                      -1.70698905
+                    ],
+                    calculationMethod: 'Rooftop',
+                    usageTypes: [
+                      'Display'
+                    ]
+                  }
+                ],
+                matchCodes: [
+                  'Good'
+                ]
+              }
+            ]
+          }
+        ],
+        statusCode: 200,
+        tatusDescription: 'OK',
+        traceId: 'trace-id'
+      }
+    ))
+    stubs.getStationsWithin.callsFake(() => [{
+      river_id: 'river-alne',
+      river_name: 'River Alne',
+      river_qualified_name: 'River Alne',
+      navigable: true,
+      view_rank: 1,
+      rank: '1',
+      rloi_id: 2083,
+      up: null,
+      down: 2048,
+      telemetry_id: '2621',
+      region: 'Midlands',
+      catchment: 'Warwickshire Avon',
+      wiski_river_name: 'River Alne',
+      agency_name: 'Henley River',
+      external_name: 'Henley River',
+      station_type: 'S',
+      status: 'Active',
+      qualifier: 'u',
+      iswales: false,
+      value: '0.414',
+      value_timestamp: '2022-09-26T13:30:00.000Z',
+      value_erred: false,
+      percentile_5: '0.546',
+      percentile_95: '0.387',
+      centroid: '0101000020E6100000068A4FA62670FCBF9C9AE66602264A40',
+      lon: -1.77738060917966,
+      lat: 52.29694830188711,
+      day_total: null,
+      six_hr_total: null,
+      one_hr_total: null,
+      id: '610'
+    }])
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+    stubs.getRiversByName.callsFake(() => [
+      {
+        local_name: 'Little Avon River',
+        qualified_name: 'Little Avon River',
+        other_names: null,
+        river_id: 'little-avon-river'
+      },
+      {
+        local_name: 'River Avon',
+        qualified_name: 'River Avon (Bristol)',
+        other_names: null,
+        river_id: 'river-avon-bristol'
+      },
+      {
+        local_name: 'River Avon',
+        qualified_name: 'River Avon (Corsham)',
+        other_names: null,
+        river_id: 'river-avon-corsham'
+      },
+      {
+        local_name: 'River Avon',
+        qualified_name: 'River Avon (Devon)',
+        other_names: null,
+        river_id: 'river-avon-devon'
+      },
+      {
+        local_name: 'River Avon',
+        qualified_name: 'River Avon (Hampshire)',
+        other_names: null,
+        river_id: 'river-avon-hampshire'
+      },
+      {
+        local_name: 'River Avon',
+        qualified_name: 'River Avon (Warwickshire)',
+        other_names: null,
+        river_id: 'river-avon-warwickshire'
+      },
+      {
+        local_name: 'Sherston Avon',
+        qualified_name: 'Sherston Avon',
+        other_names: null,
+        river_id: 'sherston-avon'
+      },
+      {
+        local_name: 'Tetbury Avon',
+        qualified_name: 'Tetbury Avon',
+        other_names: null,
+        river_id: 'tetbury-avon'
+      }
+    ])
+    stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+
+    // Set cached stationsGeojson
+    const floodService = require('../../server/services/flood')
+    floodService.stationsGeojson = await floodService.getStationsGeoJson()
+
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=avon'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels/Avon">')
   })
 
   lab.test('GET /river-and-sea-levels?q=river query parameter returns river stations', async () => {
