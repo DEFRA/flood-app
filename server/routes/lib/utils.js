@@ -6,7 +6,10 @@ function slugify (text = '') {
 }
 
 function getDisambiguationPath (place, location) {
-  if (!place) return null
+  if (!place) {
+    return null
+  }
+
   return place.name.toLowerCase() === location.toLowerCase() ? `/${place.name}` : `?q=${place.name}`
 }
 
