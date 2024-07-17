@@ -38,6 +38,10 @@ async function routeHandler (request, h) {
   }
 
   if (!location) {
+    if (request.query.q) {
+      return renderNotFound(location)
+    }
+
     const data = await request.server.methods.flood.getFloods()
     floods = new Floods(data)
     model = new ViewModel({ location, floods })

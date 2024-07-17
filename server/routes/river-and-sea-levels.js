@@ -67,6 +67,10 @@ async function locationQueryHandler (request, h) {
   request.yar.set('q', { location })
 
   if (!location) {
+    if (request.query.q) {
+      return renderNotFound(location)
+    }
+
     return h.view(route, { model: emptyResultsModel() })
   }
 

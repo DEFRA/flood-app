@@ -1290,4 +1290,35 @@ lab.experiment('Test - /river-and-sea-levels', () => {
       fullRelatedContentChecker(root)
     })
   })
+
+  lab.test('GET /river-and-sea-levels with non-latin characters should 404', async () => {
+    stubs.getStations.callsFake(() => [])
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels?q=你好'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(404)
+  })
+
+  lab.test('POST /river-and-sea-levels with non-latin characters should return default page', async () => {
+    stubs.getStations.callsFake(() => [])
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+
+    const options = {
+      method: 'POST',
+      url: '/river-and-sea-levels',
+      payload: {
+        location: '你好'
+      }
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+  })
 })
