@@ -75,10 +75,6 @@ async function locationQueryHandler (request, h) {
     return h.view(route, { model: emptyResultsModel() })
   }
 
-  if (isLocationEngland(location)) {
-    return h.redirect(`/${route}`)
-  }
-
   const rivers = await request.server.methods.flood.getRiversByName(location)
   let places = await findPlaces(location)
 

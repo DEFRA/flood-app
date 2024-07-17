@@ -108,10 +108,8 @@ module.exports = [{
   method: 'GET',
   path: `/${route}`,
   handler: (request, h) => {
-    if (request.query.q) {
-      if (isLocationEngland(util.cleanseLocation(request.query.q))) {
-        return h.redirect(`/${route}`)
-      }
+    if (request.query.q && isLocationEngland(util.cleanseLocation(request.query.q))) {
+      return h.redirect(`/${route}`)
     }
 
     return routeHandler(request, h)
