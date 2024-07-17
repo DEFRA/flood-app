@@ -160,7 +160,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(expiresIn15),
-      generateTimeout: seconds(30)
+      generateTimeout: seconds(floodGetOutlookGenerateTimeout)
     }
   })
 

@@ -2,6 +2,7 @@ const moment = require('moment-timezone')
 const severity = require('../models/severity')
 const { groupBy } = require('../util')
 const { svgDataDefault, svgDataOne, svgDataTwo, svgDataThree } = require('../src/images/svgFloodsIcons')
+const constants = require('../constants')
 
 class Floods {
   constructor (data, national = true) {
@@ -102,11 +103,11 @@ class Floods {
 module.exports = Floods
 function svgMarkup (item) {
   let svgInner
-  if (item.id === 3) {
+  if (item.id === constants.FLOOD_SEVERITY.SEVERE) {
     svgInner = `${svgDataThree}`
-  } else if (item.id === 2) {
+  } else if (item.id === constants.FLOOD_SEVERITY.WARNING) {
     svgInner = `${svgDataTwo}`
-  } else if (item.id === 1) {
+  } else if (item.id === constants.FLOOD_SEVERITY.ALERT) {
     svgInner = `${svgDataOne}`
   } else {
     svgInner = `${svgDataDefault}`
@@ -124,7 +125,7 @@ function createHtml (flood, item, svgInner) {
               </div>
               <div class="defra-flood-warnings-list-item__description">
                 <a href="/target-area/${flood.ta_code}" class="defra-flood-warnings-list-item__title">${flood.ta_name}</a>
-                <span class="defra-flood-warnings-list-item__meta">${item.id === 4 ? 'Removed at' : 'Updated'} 
+                <span class="defra-flood-warnings-list-item__meta">${item.id === constants.FLOOD_SEVERITY.REMOVED ? 'Removed at' : 'Updated'} 
                 <time datetime="${flood.situation_changed}">${moment.tz(flood.situation_changed, 'Europe/London').format('h:mma')} on 
                 ${moment(flood.situation_changed).tz('Europe/London').format('D MMMM YYYY')}</time></span>
               </div>

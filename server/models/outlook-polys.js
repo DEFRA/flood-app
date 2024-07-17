@@ -1,10 +1,15 @@
 const turf = require('@turf/turf')
 
+const alert = 1
+const warning = 2
+const severe = 3
+const removed = 4
+
 const RISK_LEVELS = new Map([
-  [1, new Map([[1, 1], [2, 1], [3, 1], [4, 1]])],
-  [2, new Map([[1, 1], [2, 1], [3, 2], [4, 2]])],
-  [3, new Map([[1, 2], [2, 2], [3, 3], [4, 3]])],
-  [4, new Map([[1, 2], [2, 3], [3, 3], [4, 4]])]
+  [1, new Map([[alert, alert], [warning, alert], [severe, alert], [removed, alert]])],
+  [2, new Map([[alert, alert], [warning, alert], [severe, warning], [removed, warning]])],
+  [3, new Map([[alert, warning], [warning, warning], [severe, severe], [removed, severe]])],
+  [4, new Map([[alert, warning], [warning, severe], [severe, severe], [removed, removed]])]
 ])
 
 module.exports = class OutlookPolys {
