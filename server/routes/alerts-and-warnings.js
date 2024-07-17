@@ -49,10 +49,6 @@ async function routeHandler (request, h) {
     return h.view(route, { model })
   }
 
-  if (isLocationEngland(location)) {
-    return h.redirect(`/${route}`)
-  }
-
   const [place] = await locationService.find(location)
 
   if (!place) {
@@ -111,7 +107,15 @@ async function locationRouteHandler (request, h) {
 module.exports = [{
   method: 'GET',
   path: `/${route}`,
-  handler: routeHandler,
+  handler: (request, h) => {
+    if (request.query.q) {
+      if (isLocationEngland(util.cleanseLocation(request.query.q))) {
+        return h.redirect(`/${route}`)
+      }
+    }
+
+    return routeHandler(request, h)
+  },
   options: {
     validate: {
       query: joi.object({
@@ -151,7 +155,13 @@ module.exports = [{
 {
   method: 'POST',
   path: `/${route}`,
-  handler: routeHandler,
+  handler: (request, h) => {
+    if (isLocationEngland(util.cleanseLocation(request.payload.location))) {
+      return h.redirect(`/${route}`)
+    }
+
+    return routeHandler(request, h)
+  },
   options: {
     validate: {
       payload: joi.object({

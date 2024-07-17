@@ -218,6 +218,10 @@ module.exports = [{
     // note: the redirects below are to handle any bookmarks users may have as all internal links use the new format
     // the redirects can be removed at some point in the future when we are no longer concerned about broken bookmarks
     if (request.query.q) {
+      if (isLocationEngland(util.cleanseLocation(request.query.q))) {
+        return h.redirect(`/${route}`)
+      }
+
       return locationQueryHandler(request, h)
     }
     if (rainfallid) {
@@ -271,7 +275,13 @@ module.exports = [{
 }, {
   method: 'POST',
   path: `/${route}`,
-  handler: locationQueryHandler,
+  handler: (request, h) => {
+    if (isLocationEngland(util.cleanseLocation(request.payload.location))) {
+      return h.redirect(`/${route}`)
+    }
+
+    return locationQueryHandler(request, h)
+  },
   options: {
     validate: {
       payload: joi.object({
