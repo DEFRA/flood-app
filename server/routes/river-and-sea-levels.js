@@ -18,6 +18,8 @@ const {
   renderNotFound,
   renderLocationNotFound,
   createQueryParametersString,
+  getDisambiguationPath,
+  filterDisambiguationPlaces,
   isValidLocationSlug,
   isLocationEngland,
   isPlaceEngland
@@ -73,10 +75,14 @@ async function locationQueryHandler (request, h) {
   }
 
   const rivers = await request.server.methods.flood.getRiversByName(location)
-  const places = await findPlaces(location)
+  let places = await findPlaces(location)
 
   if (places.length + rivers.length > 1) {
-    return h.view(`${route}-list`, { model: disambiguationModel(location, places, rivers) })
+    places = filterDisambiguationPlaces(places)
+
+    const path = getDisambiguationPath(places[0], location)
+
+    return h.view(`${route}-list`, { model: disambiguationModel(location, places, rivers), path })
   }
 
   if (places.length === 0) {
