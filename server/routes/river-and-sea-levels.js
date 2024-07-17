@@ -69,7 +69,9 @@ async function locationQueryHandler (request, h) {
 
   if (hasInvalidCharacters(location, request.query.q)) {
     return renderNotFound(location)
-  } else if (!location) {
+  }
+
+  if (!location) {
     return h.view(route, { model: emptyResultsModel() })
   }
 
