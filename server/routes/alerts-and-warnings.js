@@ -11,7 +11,8 @@ const {
   failActionHandler,
   renderNotFound,
   renderLocationNotFound,
-  createQueryParametersString
+  createQueryParametersString,
+  hasInvalidCharacters
 } = require('./lib/utils')
 
 const route = 'alerts-and-warnings'
@@ -37,11 +38,9 @@ async function routeHandler (request, h) {
     return h.view(route, { model })
   }
 
-  if (!location) {
-    if (request.query.q) {
-      return renderNotFound(location)
-    }
-
+  if (hasInvalidCharacters(location, request.query.q)) {
+    return renderNotFound(location)
+  } else if (!location) {
     const data = await request.server.methods.flood.getFloods()
     floods = new Floods(data)
     model = new ViewModel({ location, floods })

@@ -22,7 +22,8 @@ const {
   filterDisambiguationPlaces,
   isValidLocationSlug,
   isLocationEngland,
-  isPlaceEngland
+  isPlaceEngland,
+  hasInvalidCharacters
 } = require('./lib/utils')
 
 const route = 'river-and-sea-levels'
@@ -66,11 +67,9 @@ async function locationQueryHandler (request, h) {
 
   request.yar.set('q', { location })
 
-  if (!location) {
-    if (request.query.q) {
-      return renderNotFound(location)
-    }
-
+  if (hasInvalidCharacters(location, request.query.q)) {
+    return renderNotFound(location)
+  } else if (!location) {
     return h.view(route, { model: emptyResultsModel() })
   }
 

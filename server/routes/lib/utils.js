@@ -5,6 +5,10 @@ function slugify (text = '') {
   return text.replace(/,/g, '').replace(/ /g, '-').toLowerCase()
 }
 
+function hasInvalidCharacters (location, q) {
+  return !location && q
+}
+
 function filterDisambiguationPlaces (places) {
   return isPlaceEngland(places[0]) ? places : []
 }
@@ -63,6 +67,7 @@ module.exports = {
   isLocationEngland,
   isPlaceEngland,
   isValidLocationSlug,
+  hasInvalidCharacters,
   renderNotFound,
   renderLocationNotFound,
   createQueryParametersString,

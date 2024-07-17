@@ -5,7 +5,7 @@ const wreck = require('@hapi/wreck').defaults({
   timeout: config.httpTimeoutMs
 })
 const LocationSearchError = require('./location-search-error')
-const ALLOWED_SEARCH_CHARS = 'a-zA-Z0-9\',-.& ()'
+const ALLOWED_SEARCH_CHARS = 'a-zA-Z0-9\',-.& ()!'
 
 async function request (method, url, options) {
   let res, payload
