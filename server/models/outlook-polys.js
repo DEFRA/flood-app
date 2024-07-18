@@ -6,10 +6,10 @@ const severe = 3
 const removed = 4
 
 const RISK_LEVELS = new Map([
-  [1, new Map([[alert, alert], [warning, alert], [severe, alert], [removed, alert]])],
-  [2, new Map([[alert, alert], [warning, alert], [severe, warning], [removed, warning]])],
-  [3, new Map([[alert, warning], [warning, warning], [severe, severe], [removed, severe]])],
-  [4, new Map([[alert, warning], [warning, severe], [severe, severe], [removed, removed]])]
+  [alert, new Map([[alert, alert], [warning, alert], [severe, alert], [removed, alert]])],
+  [warning, new Map([[alert, alert], [warning, alert], [severe, warning], [removed, warning]])],
+  [severe, new Map([[alert, warning], [warning, warning], [severe, severe], [removed, severe]])],
+  [removed, new Map([[alert, warning], [warning, severe], [severe, severe], [removed, removed]])]
 ])
 
 module.exports = class OutlookPolys {
