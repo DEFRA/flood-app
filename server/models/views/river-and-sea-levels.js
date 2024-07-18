@@ -184,7 +184,7 @@ function getStationGroup (station) {
 }
 
 function getDisplayData (station) {
-  return !(station.status === 'Suspended' || station.status === 'Closed' || station.value === null || station.value_erred === true || station.iswales)
+  return !(station.status === 'Suspended' || station.status === 'Closed' || station.value === null || station.value_erred === true)
 }
 
 function calcDistance (station, place) {
