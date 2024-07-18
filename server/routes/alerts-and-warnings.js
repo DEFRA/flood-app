@@ -11,7 +11,8 @@ const {
   failActionHandler,
   renderNotFound,
   renderLocationNotFound,
-  createQueryParametersString
+  createQueryParametersString,
+  hasInvalidCharacters
 } = require('./lib/utils')
 
 const route = 'alerts-and-warnings'
@@ -37,15 +38,15 @@ async function routeHandler (request, h) {
     return h.view(route, { model })
   }
 
+  if (hasInvalidCharacters(location, request.query.q)) {
+    return renderNotFound(location)
+  }
+
   if (!location) {
     const data = await request.server.methods.flood.getFloods()
     floods = new Floods(data)
     model = new ViewModel({ location, floods })
     return h.view(route, { model })
-  }
-
-  if (isLocationEngland(location)) {
-    return h.redirect(`/${route}`)
   }
 
   const [place] = await locationService.find(location)
@@ -106,7 +107,13 @@ async function locationRouteHandler (request, h) {
 module.exports = [{
   method: 'GET',
   path: `/${route}`,
-  handler: routeHandler,
+  handler: (request, h) => {
+    if (request.query.q && isLocationEngland(util.cleanseLocation(request.query.q))) {
+      return h.redirect(`/${route}`)
+    }
+
+    return routeHandler(request, h)
+  },
   options: {
     validate: {
       query: joi.object({
@@ -146,7 +153,13 @@ module.exports = [{
 {
   method: 'POST',
   path: `/${route}`,
-  handler: routeHandler,
+  handler: (request, h) => {
+    if (isLocationEngland(util.cleanseLocation(request.payload.location))) {
+      return h.redirect(`/${route}`)
+    }
+
+    return routeHandler(request, h)
+  },
   options: {
     validate: {
       payload: joi.object({

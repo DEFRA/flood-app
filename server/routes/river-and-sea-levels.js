@@ -22,7 +22,8 @@ const {
   filterDisambiguationPlaces,
   isValidLocationSlug,
   isLocationEngland,
-  isPlaceEngland
+  isPlaceEngland,
+  hasInvalidCharacters
 } = require('./lib/utils')
 
 const route = 'river-and-sea-levels'
@@ -66,12 +67,12 @@ async function locationQueryHandler (request, h) {
 
   request.yar.set('q', { location })
 
-  if (!location) {
-    return h.view(route, { model: emptyResultsModel() })
+  if (hasInvalidCharacters(location, request.query.q)) {
+    return renderNotFound(location)
   }
 
-  if (isLocationEngland(location)) {
-    return h.redirect(`/${route}`)
+  if (!location) {
+    return h.view(route, { model: emptyResultsModel() })
   }
 
   const rivers = await request.server.methods.flood.getRiversByName(location)
@@ -213,6 +214,10 @@ module.exports = [{
     // note: the redirects below are to handle any bookmarks users may have as all internal links use the new format
     // the redirects can be removed at some point in the future when we are no longer concerned about broken bookmarks
     if (request.query.q) {
+      if (isLocationEngland(util.cleanseLocation(request.query.q))) {
+        return h.redirect(`/${route}`)
+      }
+
       return locationQueryHandler(request, h)
     }
     if (rainfallid) {
@@ -266,7 +271,13 @@ module.exports = [{
 }, {
   method: 'POST',
   path: `/${route}`,
-  handler: locationQueryHandler,
+  handler: (request, h) => {
+    if (isLocationEngland(util.cleanseLocation(request.payload.location))) {
+      return h.redirect(`/${route}`)
+    }
+
+    return locationQueryHandler(request, h)
+  },
   options: {
     validate: {
       payload: joi.object({

@@ -311,6 +311,37 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.statusCode).to.equal(200)
   })
 
+  lab.test('GET /alerts-and-warnings with non-latin characters should 404', async () => {
+    stubs.getJson.callsFake(() => data.nonLocationGetJson)
+    stubs.getFloods.callsFake(() => ({ floods: [] }))
+
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings?q=你好'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(404)
+  })
+
+  lab.test('POST /alerts-and-warnings with non-latin characters should return default page', async () => {
+    stubs.getJson.callsFake(() => {})
+    stubs.getFloods.callsFake(() => ({ floods: [] }))
+
+    const options = {
+      method: 'POST',
+      url: '/alerts-and-warnings',
+      payload: {
+        location: '你好'
+      }
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+  })
+
   lab.test('POST /alerts-and-warnings with location payload', async () => {
     stubs.getJson.callsFake(() => data.warringtonGetJson)
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))
