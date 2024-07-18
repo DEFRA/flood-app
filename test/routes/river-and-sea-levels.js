@@ -1335,4 +1335,52 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     Code.expect(response.statusCode).to.equal(200)
   })
+  lab.test('GET /river-and-sea-levels should display height, trend, and state data for Natural Resources Wales stations', async () => {
+    stubs.getJson.callsFake(() => require('../data/chesterGetJson.json'))
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+    stubs.getStationsWithin.callsFake(() => [
+      {
+        river_id: 'river-alyn',
+        river_name: 'Alyn',
+        navigable: true,
+        view_rank: 1,
+        rank: '1',
+        rloi_id: 4243,
+        up: null,
+        down: null,
+        telemetry_id: '5678',
+        region: 'Wales',
+        catchment: 'Dee',
+        wiski_river_name: 'River Alyn',
+        agency_name: 'Pontblyddyn',
+        external_name: 'Pontblyddyn',
+        station_type: 'S',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: true,
+        value: '0.73',
+        value_timestamp: '2022-06-10T09:15:00.000Z',
+        value_erred: false,
+        trend: 'steady',
+        percentile_5: '1.00',
+        percentile_95: '0.50',
+        centroid: '0101000020E6100000068A4FA62670FCBF9C9AE66602264A40',
+        lon: -3.067,
+        lat: 53.154,
+        state: 'NORMAL'
+      }
+    ])
+
+    const options = {
+      method: 'GET',
+      url: '/river-and-sea-levels/chester-cheshire-west-and-chester'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.match(/Alyn at\s*Pontblyddyn\s*<span class="defra-flood-levels-table-subtitle"><span>\(Natural Resources Wales\)<\/span>/)
+    Code.expect(response.payload).to.contain('<span class="defra-flood-levels-table-numeric">0.73m</span>')
+    Code.expect(response.payload).to.contain('<span class="defra-flood-levels-table-trend__icon defra-flood-levels-tables-trend__icon--steady">')
+    Code.expect(response.payload).to.contain('<span class="defra-flood-levels-table-state defra-flood-levels-table-state--grey">NORMAL</span>')
+  })
 })
