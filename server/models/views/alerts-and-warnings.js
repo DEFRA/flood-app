@@ -6,7 +6,6 @@ class ViewModel {
     Object.assign(this, {
       q,
       station,
-      map: station ? 'map-station' : 'map',
       placeName: place?.name || '',
       placeBbox: place?.bbox2k || [],
       placeCentre: place?.center || [],
