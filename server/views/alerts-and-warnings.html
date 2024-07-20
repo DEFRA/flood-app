@@ -48,7 +48,7 @@
         </div>
       </form>
     </div>
-    <span id="{{ model.map }}"></span>
+    <span id="map-live"></span>
 
     {% if not model.countFloods %}
       <h2 class="govuk-heading-m govuk-!-margin-top-7">
@@ -120,9 +120,15 @@
 
 {% block bodyEnd %}
 {{ super() }}
+{% endblock %}
+
+{% block pageScripts %}
 <script>
+  window.flood = {}
   window.flood.model = {{ model.expose | dump(2) | safe }}
+  window.flood.model.mapButtonText = 'View map of flood warning and alert areas'
+  window.flood.model.mapButtonClass = 'defra-button-secondary defra-button-secondary--icon'
+  window.flood.model.mapLayers = {{ model.mapLayers | dump | safe }}
+  window.flood.model.extent = window.flood.model.placeBbox
 </script>
-<script src="{{assetPath}}/js/templates.js"></script>
-<script src="{{assetPath}}/js/alerts-and-warnings.js"></script>
 {% endblock %}

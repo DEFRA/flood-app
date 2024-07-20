@@ -28,7 +28,7 @@
         </form>
       </div>
       {% if not model.stations | length or model.isMultilpleMatch %}
-        <span id="map"></span>
+        <span id="map-live"></span>
       {% endif %}
     </div>
   </div>
@@ -64,7 +64,7 @@
         <div class="govuk-grid-column-full">
           <nav class="defra-navbar defra-navbar--search-categories" aria-label="Levels by type">
             <div class="defra-navbar__inner">
-              <span id="map"></span>
+              <span id="map-live"></span>
               <div class="defra-navbar__group">
                 <ul class="defra-navbar__list" id="filter" data-controls="results">
                   {% for filter in model.filters %}
@@ -129,9 +129,21 @@
 
 {% block bodyEnd %}
   {{ super() }}
+{% endblock %}
+
+{% block pageScripts %}
   <script>
+    window.flood = {}
     window.flood.model = {{ model.clientModel | dump(2) | safe }}
+    window.flood.model.mapButtonText = 'View map of levels'
+    window.flood.model.mpaButtonClass = 'defra-button-secondary defra-button-secondary--icon'
+    window.flood.model.mapLayers = 'mv,ri,ti,gr,rf'
+    window.flood.model.extent = window.flood.model.placeBox
+    window.flood.model.data = {
+      button: 'River-list:Map-View:View-Live-warning-map',
+      checkBox: 'River-list:Map interaction:Map - Layer interaction',
+      aerial: 'River-list:Map-interaction:View-satelite-basemap'
+    },
+    window.flood.model.selectedId = window.flood.model.originalStationId
   </script>
-  <script src="{{assetPath}}/js/templates.js"></script>
-  <script src="{{assetPath}}/js/river-and-sea-levels.js"></script>
 {% endblock %}

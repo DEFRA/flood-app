@@ -129,10 +129,19 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  {{ super() }}
+{{ super() }}
+{% endblock %}
+
+{% block pageScripts %}
   <script>
+    window.flood = {}
     window.flood.model = {{ model.expose | dump(2) | safe }}
+    window.flood.model.mapButtonText = window.flood.model.hasWarnings ? 'View map of flood warnings and alerts' : 'View map'
+    window.flood.model.mapButtonClass = 'defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4'
+    window.flood.model.data = {
+      button: 'Location:Map view:Location - View national warning map'
+    }
+    window.flood.model.mapLayers = 'mv,ts,tw,ta',
+    window.flood.model.extent = window.flood.model.placeBbox
   </script>
-  <script src="{{assetPath}}/js/templates.js"></script>
-  <script src="{{assetPath}}/js/location.js"></script>
 {% endblock %}

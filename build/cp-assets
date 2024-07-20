@@ -1,5 +1,3 @@
 cp -r server/src/images server/dist/images
 cp -r server/src/audio server/dist/audio
 cp server/src/robots.txt server/dist/robots.txt
-cp node_modules/govuk-frontend/govuk/all.js server/dist/js/all.js
-node_modules/.bin/uglifyjs server/dist/js/all.js --output server/dist/js/all.js

@@ -37,7 +37,7 @@
   <div class="govuk-grid-column-full">
     <nav class="defra-navbar defra-navbar--secondary" aria-label="Related levels">
       <div class="defra-navbar__inner">
-        <span id="map"></span>
+        <span id="map-live"></span>
         <div class="defra-navbar__group">
           <ul class="defra-navbar__list">
           {% if model.station.riverNavigation.up %}
@@ -314,19 +314,34 @@
 
 {% block bodyEnd %}
 {{ super() }}
+{% endblock %}
+
+{% block pageScripts %}
 <script>
-  window.flood.model = {
-    mapButtonText: 'Map',
-    mapButtonClass: 'defra-link-icon-s',
-    mapButtonType: 'link',
-    mapLayers: 'mv,ri,ti,gr,rl',
-    id: {{ model.station.id | dump | safe }},
-    zoom: {{ model.zoom | dump | safe }},
-    centre: {{ model.centre | dump | safe }},
-    telemetry: {{ model.telemetryRefined | dump | safe }},
-    bingMaps: {{ model.bingMaps | dump | safe }}
+  window.flood = {}
+  window.flood.model = {{ model | dump(2) | safe }}
+  window.flood.model.id = {{ model.station.id | dump | safe }}
+  window.flood.model.telemetry = {{ model.telemetryRefined | dump | safe }}
+  window.flood.model.bingMaps = {{ model.bingMaps | dump | safe }}
+
+  window.flood.model.mapButtonText = 'Map',
+  window.flood.model.mapButtonClass = 'defra-link-icon-s',
+  window.flood.model.mapButtonType = 'link',
+  window.flood.model.mapLayers = 'mv,ri,ti,gr,rl',
+  window.flood.model.data = {
+    button: 'Station:Map View:Station - View map',
+    checkBox: 'Station:Map interaction:Map - Layer interaction',
+    aerial: 'Station:Map interaction:View-satelite-basemap'
+  }
+  window.flood.model.centre = window.flood.model.centre.split(','),
+  window.flood.model.selectedId = 'stations.' + window.flood.model.id,
+  window.flood.model.zoom = 14
+
+  window.flood.model.toggletip = {
+    type: 'impact',
+    buttonText: 'historical events'
   }
 </script>
-<script src="{{assetPath}}/js/templates.js"></script>
-<script src="{{assetPath}}/js/station.js"></script>
+<script src="{{ assetPath }}/js/chart.js"></script>
 {% endblock %}
+

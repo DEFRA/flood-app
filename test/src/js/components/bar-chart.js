@@ -13,7 +13,7 @@ experiment('BarChart', () => {
     process.env.TZ = 'Etc/UTC'
     mockdate.set('2023-07-19T00:00:00.000Z')
     await import('../../../../server/src/js/core.mjs')
-    await import('../../../../server/src/js/components/bar-chart/index.mjs')
+    await import('../../../../server/src/js/components/chart.js')
   })
 
   after(() => {
