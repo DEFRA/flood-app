@@ -48,7 +48,7 @@
       {% if model.place %}
         <h3 class="govuk-heading-s">Levels near</h3>
         <ul class="govuk-list" id="places-list">
-          <li><a href="/river-and-sea-levels?q={{model.place.name}}">{{ model.place.name | toMarked(model.q) | safe }}</a></li>
+          <li><a href="/river-and-sea-levels{{ path }}">{{ model.place.name | toMarked(model.q) | safe }}</a></li>
       </ul>
       {% endif %}
       <p>Alternatively try searching again</p>
