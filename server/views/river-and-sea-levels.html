@@ -14,8 +14,7 @@
 
       <div class="defra-search govuk-form-group govuk-!-margin-bottom-2">
         <form method="post" action="/river-and-sea-levels">
-          <label class="govuk-label defra-search__label" for="location">Search river, town or postcode
-          </label>
+          <label class="govuk-label defra-search__label" for="location">Search river, town or postcode</label>
           <div class="defra-search__container">
             <input class="defra-search__input" id="location" name="location" type="search" spellcheck="false" value="{% if not model.distStatement %}{{ model.q }}{% endif %}">
             <div class="defra-search__submit-container">
@@ -32,6 +31,30 @@
       {% endif %}
     </div>
   </div>
+
+  {% if model.disambiguation %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-m govuk-!-margin-top-8">Locations matching '{{ model.q }}'</h2>
+      <p>More than one match was found for your location. Choose the correct location from the following options:</p>
+      {% if model.rivers.length %}
+      <h3 class="govuk-heading-s">Rivers</h3>
+      <ul class="govuk-list" id="rivers-list">
+        {% for river in model.rivers %}
+          <li><a href="/river-and-sea-levels/river/{{ river.id }}">{{ river.qualified_name | toMarked(model.q) | safe}}</a></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% if model.place %}
+        <h3 class="govuk-heading-s">Levels near</h3>
+        <ul class="govuk-list" id="places-list">
+          <li><a href="/river-and-sea-levels?q={{model.place.name}}">{{ model.place.name | toMarked(model.q) | safe }}</a></li>
+      </ul>
+      {% endif %}
+      <p>Alternatively try searching again</p>
+    </div>
+  </div>
+  {% endif %}
 
   {% if model.q and not model.stations | length and model.q and not model.rivers | length or model.isEngland === false and not model.rivers %}
     <div class="govuk-grid-row">
