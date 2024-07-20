@@ -34,7 +34,8 @@ function disambiguationModel (q, places, rivers) {
     ...getDataJourneyClickStrings(),
     pageTitle: `${q} - ${pageTitle}`,
     place: places[0],
-    clientModel: getClientModel()
+    clientModel: getClientModel(),
+    disambiguation: true
   }
 }
 

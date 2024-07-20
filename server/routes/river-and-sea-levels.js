@@ -83,7 +83,7 @@ async function locationQueryHandler (request, h) {
 
     const path = getDisambiguationPath(places[0], location)
 
-    return h.view(`${route}-list`, { model: disambiguationModel(location, places, rivers), path })
+    return h.view(route, { model: disambiguationModel(location, places, rivers), path })
   }
 
   if (places.length === 0) {
