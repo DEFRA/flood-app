@@ -54,20 +54,20 @@
     {% endif %}
 
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-1">{{ model.pageTitle }}</h1>
+    <p>{% include "partials/sign-up-for-flood-warnings.html" %}</p>
     <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-top-1 govuk-!-margin-bottom-0">
       <time datetime="{{model.situationChanged}}">{{model.situationChanged}}</time>
     </p>
-    <span id="map"></span>
-
+    
     <div class="govuk-!-padding-top-6">
       {{ model.situation | safe }}
     </div>
 
+    <span id="map"></span>
+
     <p>{{ model.areaDescription | safe }}</p>
   
     <p><a data-journey-click="Target Area:Station list:TA - View station list" href="/river-and-sea-levels/target-area/{{ model.targetArea }}">Find a river, sea, groundwater or rainfall level in this area</a></p>
-
-    {% include "partials/sign-up-for-flood-warnings.html" %}
 
     {% if model.severity %}
     <p>Could this information be better? <a href="https://defragroup.eu.qualtrics.com/jfe/form/SV_26xlu1fVwKTHkwu?Source={{fullUrl}}">Tell us how to improve it.</a></p>
