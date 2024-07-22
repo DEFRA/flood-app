@@ -1,6 +1,6 @@
 'use strict'
 import 'elm-pep'
-import { initAll, SkipLink, Button, Tabs } from 'govuk-frontend'
+import { SkipLink, Button, Tabs } from 'govuk-frontend'
 import './utils'
 import './components/nunjucks'
 import './components/map/maps'
@@ -15,8 +15,6 @@ import './components/toggletip'
 
 document.addEventListener('readystatechange', () => {
   if (document.readyState === 'interactive') {
-    initAll()
-
     // Initialise govuk components
     const skipLink = document.querySelector('[data-module="govuk-skip-link"]')
 
