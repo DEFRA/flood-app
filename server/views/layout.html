@@ -121,7 +121,6 @@
 
 {% block pageScripts %}{% endblock %}
 {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
-  <script src="{{ assetPath }}/js/templates.js"></script>
   <script src="{{ assetPath }}/js/core.js"></script>
   {% if webchat.enabled %}
     <script src="{{ assetPath }}/js/webchat.js"></script>
