@@ -2,6 +2,7 @@
 import 'elm-pep'
 import { createAll, SkipLink, Button, Tabs } from 'govuk-frontend'
 import './utils'
+import '../../dist/js/templates'
 import './components/nunjucks'
 import './components/map/maps'
 import './components/map/styles'
