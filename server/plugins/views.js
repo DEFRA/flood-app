@@ -28,8 +28,8 @@ module.exports = {
     },
     path: [
       'server/views',
-      'node_modules/govuk-frontend/govuk',
-      'node_modules/govuk-frontend/govuk/components/'
+      'node_modules/govuk-frontend/dist/govuk',
+      'node_modules/govuk-frontend/dist/govuk/components'
     ],
     isCached: true,
     context: {

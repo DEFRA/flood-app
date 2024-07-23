@@ -8,8 +8,7 @@ $govuk-breakpoints: (
 ) !default;
 
 // GOV.UK Frontend
-@import "../../../node_modules/govuk-frontend/govuk/all";
-@import "../../../node_modules/@defra/flood-webchat/main";
+@import "govuk-frontend/dist/govuk/index";
 
 // Flood Webchat
 @import "@defra/flood-webchat/main";
