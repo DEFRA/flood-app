@@ -8,7 +8,6 @@ module.exports = (env, argv) => ({
   devtool: !inDev ? false : 'source-map',
   entry: {
     core: './server/src/js/core.js',
-    utils: './server/src/js/utils.js',
     webchat: './server/src/js/webchat.js',
     chart: './server/src/js/components/chart.js',
     'stations-overview': './server/src/js/pages/stations-overview'
