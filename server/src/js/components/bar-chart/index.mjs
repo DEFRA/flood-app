@@ -34,7 +34,7 @@ function BarChart (containerId, stationId, data) {
     xScale = xScale.range([0, width]).padding(0.4)
     const xAxis = axisBottom(xScale).tickSizeOuter(0).tickValues(xScale.domain().filter((d, i) => {
       const hourMinute = timeFormat('%H:%M')(new Date(d))
-      const labelsHours = ['00:00']
+      const labelsHours = ['06:00']
       const labelsMinutes = ['00:00', '06:00', '12:00', '18:00']
       const labels = period === 'hours' ? labelsHours : labelsMinutes
       return labels.includes(hourMinute) && i >= 2 // Don't show lable if before 3rd tick
