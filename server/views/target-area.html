@@ -91,7 +91,7 @@
   <script>
     window.flood = {}
     window.flood.model = {{ model | dump(2) | safe }}
-    window.flood.model.mapButtonText = {{ model | dump | safe }}
+    window.flood.model.mapButtonText = {{ model.mapButtonText | dump | safe }}
     window.flood.model.mapButtonClass = 'defra-button-secondary defra-button-secondary--icon govuk-!-margin-top-4'
     window.flood.model.mapLayers = 'mv,ts,tw,ta',
     window.flood.model.data = {
