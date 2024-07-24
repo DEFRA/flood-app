@@ -62,6 +62,7 @@ class ViewModel {
       pageTitle,
       metaDescription,
       metaCanonical,
+      mapButtonText: `View map of the flood ${area.code.slice(4, 5).toLowerCase() === 'w' ? 'warning' : 'alert'} area`,
       placeName: area.name,
       placeCentre: JSON.parse(area.centroid).coordinates,
       featureId: area.id,
