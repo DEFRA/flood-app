@@ -8,6 +8,7 @@ const lab = exports.lab = Lab.script()
 const data = require('../data')
 const { parse } = require('node-html-parser')
 const { fullRelatedContentChecker } = require('../lib/helpers/html-expectations')
+const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
 
 lab.experiment('Test - /river-and-sea-levels', () => {
   let sandbox
@@ -1288,6 +1289,19 @@ lab.experiment('Test - /river-and-sea-levels', () => {
       const root = parse(response.payload)
       Code.expect(root.querySelectorAll('h2').some(h => h.textContent.trim().startsWith('No results for'))).to.be.false()
       fullRelatedContentChecker(root)
+    })
+    lab.test('GET /river-and-sea-levels - Context footer checks', async () => {
+      stubs.getStations.callsFake(() => [])
+      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+
+      const options = {
+        method: 'GET',
+        url: '/river-and-sea-levels'
+      }
+
+      const response = await server.inject(options)
+      Code.expect(response.statusCode).to.equal(200)
+      validateFooterPresent(response)
     })
   })
 
