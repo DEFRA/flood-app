@@ -94,9 +94,11 @@
     @include mq ($from: tablet) {
         padding-left:115px;
     }
-    padding-top:10px;
-    padding-bottom:10px;
-    margin-bottom:0px;
+    & {
+        padding-top:10px;
+        padding-bottom:10px;
+        margin-bottom:0px;
+    }
 }
 .defra-level-list__item:before {
     position:absolute;
@@ -109,7 +111,9 @@
     @include mq ($from: tablet) {
         left:80px;
     }
-    background-color:$govuk-border-colour;
+    & {
+        background-color:$govuk-border-colour;
+    }
 }
 .defra-level-list__item:first-child:before {
     top:4px;
@@ -129,9 +133,11 @@
         left:76px;
         bottom:5px;
     }
-    transform: rotate(45deg);
-    border-right: 2px solid $govuk-border-colour;
-    border-bottom: 2px solid $govuk-border-colour;     
+    & {
+        transform: rotate(45deg);
+        border-right: 2px solid $govuk-border-colour;
+        border-bottom: 2px solid $govuk-border-colour;    
+    } 
 }
 .defra-level-list__item:first-child:after,
 .defra-level-list__item--river:last-child:after {
@@ -152,11 +158,13 @@
     @include mq ($from: tablet) {
         left:72px;
     }
-    background-image: url('#{$govuk-images-path}icon-flood-symbols-2x.png');
-    background-color: transparent;
-    background-size:180px;
-    background-position:-81px -381px;
-    background-repeat: no-repeat;
+    & {
+        background-image: url('#{$govuk-images-path}icon-flood-symbols-2x.png');
+        background-color: transparent;
+        background-size:180px;
+        background-position:-81px -381px;
+        background-repeat: no-repeat;
+    }
 }
 .defra-level-list__item-state--above {
     background-position:-81px -501px;
@@ -175,8 +183,10 @@
         left:2px;
         margin-top:-9px;
     }
-    top:50%;
-    margin-top:-7px;
+    & {
+        top:50%;
+        margin-top:-7px;
+    }
 }
 .defra-level-list__item-measurement--above {
     font-weight:bold;
@@ -197,7 +207,9 @@
     @include mq ($from: tablet) {
         left:76px;
     }
-    top:50%;
+    & {
+        top:50%;
+    }
 }
 .defra-level-list__item-meta {
     @extend .govuk-body-s;

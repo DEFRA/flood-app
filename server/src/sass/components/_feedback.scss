@@ -12,7 +12,9 @@
     }
     a {
         @include govuk-font($size: 16, $weight: bold);
-        color: white;
+        & {
+            color: white;
+        }
     }
     a:focus {
         color: $govuk-link-active-colour;

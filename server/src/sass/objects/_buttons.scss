@@ -19,15 +19,17 @@ button.defra-button-secondary {
     position: relative;
     display: inline-block;
     @include govuk-font($size: 16);
-    width: auto;
-    margin: 0px 0px 20px 0px;
-    border: 1px solid govuk-colour('mid-grey');
-    box-shadow: none;
-    background-color: white;
-    padding: 10px;
-    cursor: pointer;
-    color: govuk-colour('black');
-    text-decoration: none;
+    & {
+        width: auto;
+        margin: 0px 0px 20px 0px;
+        border: 1px solid govuk-colour('mid-grey');
+        box-shadow: none;
+        background-color: white;
+        padding: 10px;
+        cursor: pointer;
+        color: govuk-colour('black');
+        text-decoration: none;
+    }
     &:visited {
         color: govuk-colour('black');
     }
@@ -62,8 +64,10 @@ button.defra-button-secondary {
 }
 .defra-button-secondary-s {
     @extend .defra-button-secondary;
-    @include govuk-font($size: 14);
-    padding: 6px 7px 7px;
+    @include govuk-font($size: 16);
+    & {
+        padding: 6px 7px 7px;
+    }
 }
 
 // Buttons like hyperlinks

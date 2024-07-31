@@ -1,8 +1,10 @@
 .defra-flood-nav {
     @include govuk-font($size: 16);
-    margin-top: 15px;
-    margin-left: -7.5px;
-    margin-right: -7.5px;
+    & {
+        margin-top: 15px;
+        margin-left: -7.5px;
+        margin-right: -7.5px;
+    }
     .defra-button-map-s,
     &__link {
         display: inline-block;

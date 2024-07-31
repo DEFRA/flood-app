@@ -34,8 +34,10 @@
         @include govuk-font($size: 24, $weight: bold);
         & + p {
             @include govuk-font($size: 19);
-            margin-top: -5px;
-            margin-bottom: 0px;
+            & {
+                margin-top: -5px;
+                margin-bottom: 0px;
+            }
         }
     }
     &__items {
@@ -81,7 +83,9 @@
     &__meta {
         display:block;
         @include govuk-font($size: 16);
-        color: $govuk-secondary-text-colour;
+        & {
+            color: $govuk-secondary-text-colour;
+        }
         @include mq ($from: tablet) {
             max-width: 66%;
         }

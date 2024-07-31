@@ -153,15 +153,19 @@
   }
 
   &::-moz-focus-inner {
-    border: 0;
+    & {
+      border: 0;
+    }
   }
 
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  pointer-events: auto;
+  & {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    pointer-events: auto;
+  }
 }
 
 // Map controls - open key
@@ -203,16 +207,18 @@
     @include focus;
   }
 
-  &::-moz-focus-inner {
+  &::-moz-focus-inner & {
     border: 0;
   }
 
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  pointer-events: auto;
+  & {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    pointer-events: auto;
+  }
 }
 
 // Map controls - open key
@@ -257,12 +263,14 @@
     border: 0;
   }
 
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  pointer-events: auto;
+  & {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    pointer-events: auto;
+  }
 }
 
 // Map key
@@ -293,8 +301,10 @@
 .defra-map-key__title {
   display: block;
   @include govuk-font($size: 24, $weight: bold, $line-height: 51px);
-  padding: 0 15px;
-  margin: 0;
+  & { 
+    padding: 0 15px;
+    margin: 0;
+  }
 }
 
 .defra-map-key__content {
@@ -309,18 +319,20 @@
     display: none;
   }
 
-  position:absolute;
-  right:5px;
-  top:5px;
-  width:40px;
-  height:40px;
-  margin:0;
-  border:0;
-  padding:0;
-  border:0;
-  cursor:pointer;
-  background-color: #ffffff;
-  color: govuk-colour('black');
+  & {
+    position:absolute;
+    right:5px;
+    top:5px;
+    width:40px;
+    height:40px;
+    margin:0;
+    border:0;
+    padding:0;
+    border:0;
+    cursor:pointer;
+    background-color: #ffffff;
+    color: govuk-colour('black');
+  }
 
   svg {
     display: block;
@@ -358,7 +370,9 @@
     right: 290px;
   }
 
-  pointer-events: none;
+  & {
+    pointer-events: none;
+  }
 }
 
 .defra-map-controls__bottom {
@@ -470,14 +484,16 @@
   clear: both;
   position: relative;
   @include govuk-font($size: 19);
-  border: 0;
-  height: 40px;
-  width: 40px;
-  padding: 0;
-  margin-top: 5px;
-  cursor: pointer;
-  background-color: white;
-  color: govuk-colour('black');
+  & {
+    border: 0;
+    height: 40px;
+    width: 40px;
+    padding: 0;
+    margin-top: 5px;
+    cursor: pointer;
+    background-color: white;
+    color: govuk-colour('black');
+  }
 
   svg {
     display: block;
@@ -579,11 +595,13 @@
 .defra-map-tooltip {
   position: absolute;
   @include govuk-font($size: 16);
-  background-color: $govuk-focus-colour;
-  bottom: 10px;
-  left: 10px;
-  right: 10px;
-  padding: 10px 12px;
+  & {
+    background-color: $govuk-focus-colour;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    padding: 10px 12px;
+  }
 
   @include mq ($from: tablet) {
     right: auto;
