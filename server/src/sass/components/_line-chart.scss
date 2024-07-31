@@ -23,10 +23,10 @@
         height: 450px;
     }
     .axis.y {
-        @include govuk-font($size: 14, $tabular: true);
+        @include govuk-font($size: 16, $tabular: true);
     }
     .axis.x {
-        @include govuk-font($size: 14);
+        @include govuk-font($size: 16);
     }
     .axis.y text,
     .axis.x text {
@@ -141,8 +141,10 @@
     }
     .tooltip-text {
         @include govuk-font($size: 16);
-        color: $govuk-text-colour;
-        fill: currentColor;
+        &{
+            color: $govuk-text-colour;
+            fill: currentColor;
+        }
     }
     .tooltip-text__strong {
         @include govuk-font($size: 19, $weight:bold);
@@ -160,9 +162,11 @@
         shape-rendering: crispEdges;
     }
     .time-now-text {
-        @include govuk-font($size: 14, $weight: bold);
-        color: $govuk-text-colour;
-        fill: currentColor;
+        @include govuk-font($size: 16, $weight: bold);
+        & {
+            color: $govuk-text-colour;
+            fill: currentColor;
+        }
     }
     // Thresholds
     .threshold__line {
@@ -224,8 +228,10 @@
     }
     .threshold-label__text {
         @include govuk-font($size: 16);
-        color: $govuk-text-colour;
-        fill: currentColor;
+        & {
+            color: $govuk-text-colour;
+            fill: currentColor;
+        }
     }
     @include high-contrast-mode-only {
         .threshold__line {

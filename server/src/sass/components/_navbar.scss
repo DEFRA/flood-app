@@ -2,18 +2,22 @@
   position: relative;
   z-index: 1;
   @include govuk-font($size: 19);
-  margin: 7px -15px 10px -15px;
+  & {
+    margin: 7px -15px 10px -15px;
+  }
   @include mq ($from: tablet) {
     @include govuk-font($size: 16);
     margin-bottom: 15px;
   }
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
+  & {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
   &:before {
     @include mq ($until: tablet) {
       position: absolute;
@@ -80,8 +84,10 @@
     @include mq ($from: tablet) {
       @include govuk-font($size: 16);
     }
-    float: left;
-    margin-right: 10px;
+    & {
+      float: left;
+      margin-right: 10px;
+    }
     &:not([keyboard-focus]):focus {
       background-color: white;
       border: 0px;
@@ -131,13 +137,15 @@
       @include mq ($from: tablet) {
         @include govuk-font($size: 16);
       }
-      float: left;
-      border: 0px;
-      color: $govuk-link-colour;
-      margin: 0px 7px 3px 0px;
-      padding-top: 7px;
-      padding-bottom: 7px;
-      text-decoration: none;
+      & {
+        float: left;
+        border: 0px;
+        color: $govuk-link-colour;
+        margin: 0px 7px 3px 0px;
+        padding-top: 7px;
+        padding-bottom: 7px;
+        text-decoration: none;
+      }
       &:visited {
         color: $govuk-link-colour;
       }

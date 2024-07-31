@@ -55,8 +55,10 @@
   }
   &__select-counter {
       display: block;
-      @include govuk-font($size: 14);
-      color: $govuk-text-colour;
+      @include govuk-font($size: 16);
+      & {
+        color: $govuk-text-colour;
+      }
   }
   &[open] &__summary:before {
       background-image: svg-url('<svg width="22" height="14" viewBox="0 0 22 14"><path d="M2,12L11,3L20,12" style="fill:none;stroke:#000;stroke-width:2px;"/></svg>');
@@ -150,8 +152,10 @@
       @include mq ($from: tablet) {
           display: block;
       }
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch
+      & {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch
+      }
   }
   &__container[aria-modal="true"] {
       display: block;

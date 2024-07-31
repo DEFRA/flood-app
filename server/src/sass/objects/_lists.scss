@@ -20,7 +20,9 @@
         @include govuk-font($size: 24, $weight: bold);
         span {
             @include govuk-font($size: 19);
-            display:block;
+            & {
+                display:block;
+            }
         }
     }
     &__items {
@@ -105,10 +107,12 @@
         @include mq ($from: tablet) {
             top:7px;
         }
-        bottom:13px;
-        left:12px;
-        width:3px;
-        background-color: govuk-colour('mid-grey');
+        & {
+            bottom:13px;
+            left:12px;
+            width:3px;
+            background-color: govuk-colour('mid-grey');
+        }
     }
     &__items--has-relation:after {
         position:absolute;
@@ -130,8 +134,10 @@
             padding-bottom:15px;
             margin-bottom:0px;
         }
-        padding-top:10px;
-        border-bottom:1px solid $govuk-border-colour;
+        & {
+            padding-top:10px;
+            border-bottom:1px solid $govuk-border-colour;
+        }
         @include mq ($from: tablet) {
             padding-top:15px;
         }
@@ -147,10 +153,12 @@
     }
     &__item-desc,
     &__item-meta {
-        @include govuk-font($size: 14);
-        display: block;
-        padding-left:0px;
-        margin:0px;
+        @include govuk-font($size: 16);
+        & {
+            display: block;
+            padding-left:0px;
+            margin:0px;
+        }
     }
     &__item-meta {
         /*

@@ -17,9 +17,11 @@
     @include mq ($from: tablet) {
         padding:26px 0 24px 68px;
     }
-    margin-bottom:-10px;
-    border-bottom:10px solid $govuk-link-colour;
-    box-sizing:border-box;
+    & {
+        margin-bottom:-10px;
+        border-bottom:10px solid $govuk-link-colour;
+        box-sizing:border-box;
+    }
 }
 .defra-banner-warning__icon {
     float:left;
@@ -33,8 +35,10 @@
     @include mq ($from: tablet) {
         background-position: -120px -120px;
     }
-    background-size: 180px;
-    text-indent:-5000px;
+    & {
+        background-size: 180px;
+        text-indent:-5000px;
+    }
 }
 .defra-banner-warning__title {
     @extend .govuk-body-l;

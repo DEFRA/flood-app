@@ -7,8 +7,10 @@
     @include mq ($from: tablet) {
       margin-bottom:40px;
     }
-    margin-right:0px;
-    text-align:left;
+    & {
+      margin-right:0px;
+      text-align:left;
+    }
   }
   &__container {
     position:relative;
@@ -25,10 +27,10 @@
     height:450px;
   }
   .axis.y {
-    @include govuk-font($size: 14, $tabular: true);
+    @include govuk-font($size: 16, $tabular: true);
   }
   .axis.x {
-    @include govuk-font($size: 14);
+    @include govuk-font($size: 16);
   }
   .axis.y text,
   .axis.x text {
@@ -147,12 +149,14 @@
   }
   .tooltip-text {
       @include govuk-font($size: 16);
-      fill: currentColor;
+      & {
+        fill: currentColor;
+      }
   }
   .tooltip-text__strong {
       @include govuk-font($size: 19, $weight:bold);
   }
   .tooltip-text__small {
-    @include govuk-font($size: 14);
+    @include govuk-font($size: 16);
   }
 }
