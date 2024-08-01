@@ -16,8 +16,6 @@ class ViewModel {
       ? 'warning'
       : 'alert'
 
-    const mapTitle = `View map of the flood ${type} area`
-
     let fallbackText
     if (type === 'alert') {
       fallbackText = '<p>We\'ll update this page when there\'s a flood alert in the area, which means flooding to low lying land is possible.</p>'
@@ -62,7 +60,7 @@ class ViewModel {
       pageTitle,
       metaDescription,
       metaCanonical,
-      mapButtonText: `View map of the flood ${area.code.slice(4, 5).toLowerCase() === 'w' ? 'warning' : 'alert'} area`,
+      mapButtonText: `View map of the flood ${type} area`,
       placeName: area.name,
       placeCentre: JSON.parse(area.centroid).coordinates,
       featureId: area.id,
@@ -73,7 +71,6 @@ class ViewModel {
       areaDescription,
       targetArea: area.code,
       feedback: false,
-      mapTitle,
       floodRiskUrl,
       bingMaps: bingKeyMaps,
       signUpForFloodWarnings: true,
