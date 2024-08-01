@@ -8,11 +8,13 @@
 .defra-map-key__section-title {
   position:relative;
   @include govuk-font($size: 16, $weight: bold);
-  display: block;
-  margin:0;
-  padding:15px 15px 0px;
-  box-sizing: border-box;
-  width: 100%;
+  & {
+    display: block;
+    margin:0;
+    padding:15px 15px 0px;
+    box-sizing: border-box;
+    width: 100%;
+  }
   &:before {
     position:absolute;
     content:'';
@@ -77,10 +79,12 @@
   @include mq ($from: tablet) {
     margin-top:-6px;
   }
-  background-size: 32px;
-  background-repeat: no-repeat;
-  border:0;
-  color: govuk-color('black');
+  & {
+    background-size: 32px;
+    background-repeat: no-repeat;
+    border:0;
+    color: govuk-color('black');
+  }
   svg {
     display: block;
   }

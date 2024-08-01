@@ -22,6 +22,7 @@ class ViewModel {
       metaDescription:
         'View current flood warnings and alerts for England and the national flood forecast for the next 5 days. Also check river, sea, groundwater and rainfall levels.',
       metaCanonical: '/',
+      mapButtonText: floods.hasActiveFloods ? 'View map of flood warning and alert areas' : 'View map',
       hasActiveFloods: floods.hasActiveFloods,
       highestSeverityId: floods.highestSeverityId,
       dateFormatted: `${moment().tz(tz).format('h:mma')} on ${moment().tz(tz).format('D MMMM YYYY')}`,

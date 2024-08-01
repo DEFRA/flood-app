@@ -14,8 +14,7 @@
 
       <div class="defra-search govuk-form-group govuk-!-margin-bottom-2">
         <form method="post" action="/river-and-sea-levels">
-          <label class="govuk-label defra-search__label" for="location">Search river, town or postcode
-          </label>
+          <label class="govuk-label defra-search__label" for="location">Search river, town or postcode</label>
           <div class="defra-search__container">
             <input class="defra-search__input" id="location" name="location" type="search" spellcheck="false" value="{% if not model.distStatement %}{{ model.q }}{% endif %}">
             <div class="defra-search__submit-container">
@@ -28,10 +27,34 @@
         </form>
       </div>
       {% if not model.stations | length or model.isMultilpleMatch %}
-        <span id="map"></span>
+        <span id="map-live"></span>
       {% endif %}
     </div>
   </div>
+
+  {% if model.disambiguation %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-m govuk-!-margin-top-8">Locations matching '{{ model.q }}'</h2>
+      <p>More than one match was found for your location. Choose the correct location from the following options:</p>
+      {% if model.rivers.length %}
+      <h3 class="govuk-heading-s">Rivers</h3>
+      <ul class="govuk-list" id="rivers-list">
+        {% for river in model.rivers %}
+          <li><a href="/river-and-sea-levels/river/{{ river.id }}">{{ river.qualified_name | toMarked(model.q) | safe}}</a></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% if model.place %}
+        <h3 class="govuk-heading-s">Levels near</h3>
+        <ul class="govuk-list" id="places-list">
+          <li><a href="/river-and-sea-levels{{ path }}">{{ model.place.name | toMarked(model.q) | safe }}</a></li>
+      </ul>
+      {% endif %}
+      <p>Alternatively try searching again</p>
+    </div>
+  </div>
+  {% endif %}
 
   {% if model.q and not model.stations | length and model.q and not model.rivers | length or model.isEngland === false and not model.rivers %}
     <div class="govuk-grid-row">
@@ -64,7 +87,7 @@
         <div class="govuk-grid-column-full">
           <nav class="defra-navbar defra-navbar--search-categories" aria-label="Levels by type">
             <div class="defra-navbar__inner">
-              <span id="map"></span>
+              <span id="map-live"></span>
               <div class="defra-navbar__group">
                 <ul class="defra-navbar__list" id="filter" data-controls="results">
                   {% for filter in model.filters %}
@@ -129,9 +152,21 @@
 
 {% block bodyEnd %}
   {{ super() }}
+{% endblock %}
+
+{% block pageScripts %}
   <script>
+    window.flood = {}
     window.flood.model = {{ model.clientModel | dump(2) | safe }}
+    window.flood.model.mapButtonText = 'View map of levels'
+    window.flood.model.mpaButtonClass = 'defra-button-secondary defra-button-secondary--icon'
+    window.flood.model.mapLayers = 'mv,ri,ti,gr,rf'
+    window.flood.model.extent = window.flood.model.placeBox
+    window.flood.model.data = {
+      button: 'River-list:Map-View:View-Live-warning-map',
+      checkBox: 'River-list:Map interaction:Map - Layer interaction',
+      aerial: 'River-list:Map-interaction:View-satelite-basemap'
+    },
+    window.flood.model.selectedId = window.flood.model.originalStationId
   </script>
-  <script src="{{assetPath}}/js/templates.js"></script>
-  <script src="{{assetPath}}/js/river-and-sea-levels.js"></script>
 {% endblock %}

@@ -26,19 +26,24 @@
             @include defra-visually-hidden();
         }
     }
-    border-bottom:1px solid $govuk-border-colour;
-    margin-bottom:10px;
+    & {
+        border-bottom:1px solid $govuk-border-colour;
+        margin-bottom:10px;
+    }
     @include mq ($from: tablet) {
         border-bottom:0px;
         margin-bottom:0px;
     }
     &__label {
         text-decoration: underline;
+        @include govuk-font($size: 19);
     }
     &__label-risk {
         display:block;
         @include govuk-font($size: 14);
-        text-decoration: none;
+        & {
+            text-decoration: none;
+        }
     }
     &__icon {
         display: inline-block;

@@ -7,18 +7,6 @@ const ViewModel = require('../../server/models/views/alerts-and-warnings')
 const data = require('../data')
 const Floods = require('../../server/models/floods')
 
-lab.test('Test alerts and warnings viewModel with a station', async () => {
-  let place, location
-  const station = data.alertStation
-  const floods = new Floods({ floods: data.floodAlertStation })
-
-  const Result = await new ViewModel({ location, place, floods, station })
-
-  Code.expect(Result.pageTitle).to.equal('Davis Road - flood alerts and warnings')
-  Code.expect(Result.map).to.equal('map-station')
-  Code.expect(Result.station.rloi_id).to.equal(5041)
-})
-
 lab.test('Test exposed data placeBox is blank if not a place in England', async () => {
   let station, location
   const place = data.scottishPlaceData

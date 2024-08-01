@@ -115,9 +115,23 @@
 
 {% block bodyEnd %}
 {{ super() }}
+{% endblock %}
+{% block pageScripts %}
 <script>
+  window.flood = {}
   window.flood.model = {{ model | dump(2) | safe }}
+  window.flood.model.mapButtonText = {{ model.mapButtonText | dump | safe }}
+  window.flood.model.mapButtonClass = 'defra-button-secondary defra-button-secondary--icon'
+  window.flood.model.mapLayers = 'mv,ts,tw,ta'
+  window.flood.model.outlookDays = {{ model.outlook.days | dump | safe }}
+  window.flood.model.data = {
+    button: 'National:Map-View:View-National-warning-map',
+    checkBox: 'National-Map:Map interaction:Map - Layer interaction',
+    aerial: 'National-Map:Map-interaction:View-satelite-basemap'
+  }
+  window.flood.model.outlookData = {
+    button: 'Outlook:Map-View:View-Outlook-warning-map',
+    checkBox: 'Outlook:Map interaction:Map - Layer interaction'
+  }
 </script>
-<script src="{{assetPath}}/js/templates.js"></script>
-<script src="{{assetPath}}/js/national.js"></script>
 {% endblock %}

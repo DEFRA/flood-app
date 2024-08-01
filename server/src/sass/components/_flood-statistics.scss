@@ -19,13 +19,17 @@
     }
     &__key {
         @include govuk-font($size: 19);
-        color: $govuk-secondary-text-colour;
+        & {
+            color: $govuk-secondary-text-colour;
+        }
     }
     &__value {
         @include govuk-font($size: 27);
-        margin:0;
-        display: block;
-        box-sizing: border-box;
+        & {
+            margin:0;
+            display: block;
+            box-sizing: border-box;
+        }
     }
     &__value::first-letter {
         margin-left: -0.075em;

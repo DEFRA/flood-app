@@ -37,7 +37,9 @@
 
 .defra-cookie-banner__button-set {
   @include govuk-font($size: 19, $line-height: 1);
-  margin-top:5px;
+  & {
+    margin-top:5px;
+  }
 }
 
 .defra-cookie-banner__button-accept {
