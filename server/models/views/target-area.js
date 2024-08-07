@@ -1,10 +1,11 @@
 const severity = require('../severity')
 const moment = require('moment-timezone')
 const { bingKeyMaps, floodRiskUrl } = require('../../config')
+const getThresholdsForTargetArea = require('./lib/latest-levels')
 
 class ViewModel {
   constructor (options) {
-    const { area, flood, parentFlood } = options
+    const { area, flood, parentFlood, thresholds } = options
     const severityLevel = flood && severity.filter(item => {
       return item.id === flood.severity_value
     })[0]
@@ -56,11 +57,14 @@ class ViewModel {
     const pageTitle = (severityLevel?.isActive ? `${severityLevel.title} for ${area.name}` : `${area.name} flood ${type} area`)
     const metaCanonical = `/target-area/${area.code}`
 
+    const latestLevels = thresholds ? getThresholdsForTargetArea(thresholds) : null
+
     Object.assign(this, {
       pageTitle,
       metaDescription,
       metaCanonical,
       mapButtonText: `View map of the flood ${type} area`,
+      latestLevels,
       placeName: area.name,
       placeCentre: JSON.parse(area.centroid).coordinates,
       featureId: area.id,

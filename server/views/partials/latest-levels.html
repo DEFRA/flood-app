@@ -1,0 +1,13 @@
+<div class="defra-latest-level-box">
+  <div class="defra-latest-level-box__header">
+    <h2 class="defra-latest-level-box__header__title" id="latest-level-title">LATEST LEVEL</h2>
+    <p class="defra-latest-level-box__header__time"><strong>{{ model.latestLevels.warning.formatted_time }}</strong></p>
+  </div>
+  <div class="defra-latest-level-box__content">
+    <p>The {{ model.latestLevels.warning.wiski_river_name }} level at {{ model.latestLevels.warning.agency_name }} was {{ model.latestLevels.warning.latest_level | toFixed(2) }} metres. Property flooding is possible when it goes above {{ model.latestLevels.warning.threshold_value | toFixed(2) }} metres.</p>
+    <p>
+      <a class="defra-latest-level-box__content__link" href="/station/{{ model.latestLevels.warning.rloi_id }}">Monitor the latest level at {{ model.latestLevels.warning.agency_name }}</a>
+    </p>
+    <p>This level will update automatically.</p>
+  </div>
+</div>
