@@ -80,6 +80,10 @@ module.exports = {
     return util.getJson(`${serviceUrl}/station/${id}/${direction}/imtd-thresholds`)
   },
 
+  getTargetAreaThresholds (fwisCode) {
+    return util.getJson(`${serviceUrl}/target-area/${fwisCode}/imtd-thresholds`)
+  },
+
   getStationForecastData (id) {
     return util.getJson(`${serviceUrl}/station/${id}/forecast/data`)
   },
