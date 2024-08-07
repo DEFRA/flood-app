@@ -2164,7 +2164,7 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV (12KB)</a>')
   })
-  lab.test('GET station/1034 - Coastal River title check ', async () => {
+  lab.test('GET station/1034 - Coastal River title check  ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -2262,17 +2262,17 @@ lab.experiment('Test - /station/{id}', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeThresholdsData = () => []
-    const fakeWarningsAlertsData = () => []
+    const fakeForecastFlag = () => { return { } }
+    const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
     sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
     sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeThresholdsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
     sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
+    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
 
     const stationPlugin = {
       plugin: {
