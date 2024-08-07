@@ -20,6 +20,7 @@ class ViewModel {
     this.station.riverNavigation = river
     this.id = station.id
     this.river = river
+    const isForecast = forecast ? forecast.forecastFlag.display_time_series : false
 
     this.station.trend = river.trend
 
@@ -364,9 +365,8 @@ class ViewModel {
     // Forecast Data Calculations
 
     let forecastData
-    if (forecast) {
-      const { thresholds } = forecast
-      this.isFfoi = thresholds.length > 0
+    if (isForecast) {
+      this.isFfoi = isForecast
       if (this.isFfoi) {
         forecastData = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
         this.isForecast = forecastData.hasForecastData
