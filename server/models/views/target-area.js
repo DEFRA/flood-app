@@ -1,10 +1,11 @@
 const severity = require('../severity')
 const moment = require('moment-timezone')
 const { bingKeyMaps, floodRiskUrl } = require('../../config')
+const getThresholdsForTargetArea = require('./lib/latest-levels')
 
 class ViewModel {
   constructor (options) {
-    const { area, flood, parentFlood } = options
+    const { area, flood, parentFlood, thresholds } = options
     const severityLevel = flood && severity.filter(item => {
       return item.id === flood.severity_value
     })[0]
@@ -58,6 +59,8 @@ class ViewModel {
     const pageTitle = (severityLevel?.isActive ? `${severityLevel.title} for ${area.name}` : `${area.name} flood ${type} area`)
     const metaCanonical = `/target-area/${area.code}`
 
+    const latestLevels = getThresholdsForTargetArea(thresholds)
+
     Object.assign(this, {
       pageTitle,
       metaDescription,
@@ -76,7 +79,8 @@ class ViewModel {
       floodRiskUrl,
       bingMaps: bingKeyMaps,
       signUpForFloodWarnings: true,
-      displayLongTermLink: true
+      displayLongTermLink: true,
+      latestLevels
     }, options)
   }
 }
@@ -85,4 +89,5 @@ function messageValidator (message) {
   const strippedMessage = message.replace(/(\r?\n)+/g, '\n')
   return strippedMessage.split('\n').map(p => `<p>${p}</p>`).join(' ')
 }
+
 module.exports = ViewModel

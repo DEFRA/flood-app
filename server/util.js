@@ -53,6 +53,18 @@ function formatDate (value, format = 'D/M/YY h:mma') {
   return moment(value).tz('Europe/London').format(format)
 }
 
+function formatElapsedTime (datetime) {
+  const now = moment.tz('Europe/London')
+  const diffMinutes = now.diff(moment.tz(datetime, 'Europe/London'), 'minutes')
+
+  if (diffMinutes < 60) {
+    return `${diffMinutes} minutes ago`
+  } else {
+    const diffHours = Math.floor(diffMinutes / 60)
+    return diffHours === 1 ? 'More than 1 hour ago' : `More than ${diffHours} hours ago`
+  }
+}
+
 function toFixed (value, dp) {
   if (value) {
     const numberValue = parseFloat(value)
@@ -182,6 +194,7 @@ module.exports = {
   postJson,
   request,
   formatDate,
+  formatElapsedTime,
   toFixed,
   groupBy,
   cleanseLocation,

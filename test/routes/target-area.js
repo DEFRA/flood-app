@@ -515,4 +515,433 @@ lab.experiment('Target-area tests', () => {
     validateFooterPresent(response)
     Code.expect(response.payload).to.contain('There are no flood warnings in this area, but there is <a href="/target-area/123WAF984">a flood alert in the wider area</a>')
   })
+  lab.test('GET target-area 011WAFDW with correct threshold hierarchy', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeFloodData = () => {
+      return {
+        floods: fakeTargetAreaFloodData.floodsWithWarning
+      }
+    }
+
+    const fakeFloodArea = () => {
+      return fakeTargetAreaFloodData.area
+    }
+
+    const fakeThresholds = () => {
+      return [
+        {
+          station_threshold_id: '1749068',
+          station_id: '7201',
+          fwis_code: '062FWF28Pinner',
+          fwis_type: 'W',
+          direction: 'u',
+          value: '0.192',
+          threshold_type: 'FW RES FW',
+          river_id: 'river-pinn',
+          river_name: 'River Pinn',
+          river_qualified_name: 'River Pinn',
+          navigable: true,
+          view_rank: 1,
+          rank: '2',
+          rloi_id: 7201,
+          up: 7397,
+          up_station_type: 'S',
+          down: 7173,
+          down_station_type: 'S',
+          telemetry_id: '2886TH',
+          region: 'Thames',
+          catchment: 'Pinn',
+          wiski_river_name: 'River Pinn',
+          agency_name: 'Moss Close',
+          external_name: 'Pinner, Moss Close',
+          station_type: 'S',
+          status: 'Active',
+          qualifier: 'u',
+          iswales: false,
+          value_timestamp: '2024-07-05T10:45:00.000Z',
+          value_erred: false,
+          trend: 'steady',
+          percentile_5: '0.94',
+          percentile_95: '0.175',
+          centroid: '0101000020E610000034A8B468161ED8BFE52F7089A5CC4940',
+          lon: -0.3768363974110145,
+          lat: 51.59880178430448,
+          day_total: null,
+          six_hr_total: null,
+          one_hr_total: null,
+          id: '3327',
+          threshold_value: '1.15',
+          latest_level: '0.192'
+        },
+        {
+          station_threshold_id: '1749067',
+          station_id: '7201',
+          fwis_code: '062FWF28Pinner',
+          fwis_type: 'W',
+          direction: 'u',
+          value: '0.192',
+          threshold_type: 'FW ACTCON FW',
+          river_id: 'river-pinn',
+          river_name: 'River Pinn',
+          river_qualified_name: 'River Pinn',
+          navigable: true,
+          view_rank: 1,
+          rank: '2',
+          rloi_id: 7201,
+          up: 7397,
+          up_station_type: 'S',
+          down: 7173,
+          down_station_type: 'S',
+          telemetry_id: '2886TH',
+          region: 'Thames',
+          catchment: 'Pinn',
+          wiski_river_name: 'River Pinn',
+          agency_name: 'Moss Close',
+          external_name: 'Pinner, Moss Close',
+          station_type: 'S',
+          status: 'Active',
+          qualifier: 'u',
+          iswales: false,
+          value_timestamp: '2024-07-05T10:45:00.000Z',
+          value_erred: false,
+          trend: 'steady',
+          percentile_5: '0.94',
+          percentile_95: '0.175',
+          centroid: '0101000020E610000034A8B468161ED8BFE52F7089A5CC4940',
+          lon: -0.3768363974110145,
+          lat: 51.59880178430448,
+          day_total: null,
+          six_hr_total: null,
+          one_hr_total: null,
+          id: '3327',
+          threshold_value: '1',
+          latest_level: '0.192'
+        },
+        {
+          station_threshold_id: '1748981',
+          station_id: '7173',
+          fwis_code: '062FWF28Pinner',
+          fwis_type: 'W',
+          direction: 'u',
+          value: '0.211',
+          threshold_type: 'FW RES FW',
+          river_id: 'river-pinn',
+          river_name: 'River Pinn',
+          river_qualified_name: 'River Pinn',
+          navigable: true,
+          view_rank: 1,
+          rank: '3',
+          rloi_id: 7173,
+          up: 7201,
+          up_station_type: 'S',
+          down: 7174,
+          down_station_type: 'S',
+          telemetry_id: '2803TH',
+          region: 'Thames',
+          catchment: 'Pinn',
+          wiski_river_name: 'River Pinn',
+          agency_name: 'Avenue Road',
+          external_name: 'Pinner, Avenue Road',
+          station_type: 'S',
+          status: 'Active',
+          qualifier: 'u',
+          iswales: false,
+          value_timestamp: '2024-07-05T10:45:00.000Z',
+          value_erred: false,
+          trend: 'falling',
+          percentile_5: '1.2',
+          percentile_95: '0.025',
+          centroid: '0101000020E610000098BFEB5A046FD8BFB6CA44E76ECC4940',
+          lon: -0.38177594069474585,
+          lat: 51.59713450297333,
+          day_total: null,
+          six_hr_total: null,
+          one_hr_total: null,
+          id: '1323',
+          threshold_value: '1.46',
+          latest_level: '0.211'
+        }
+      ]
+    }
+
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+    sandbox.stub(floodService, 'getThresholdsForTargetArea').callsFake(fakeThresholds)
+
+    const targetAreaPlugin = {
+      plugin: {
+        name: 'target',
+        register: (server, options) => {
+          server.route(require('../../server/routes/target-area'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(targetAreaPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/target-area/011WAFDW'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    const root = parse(response.payload)
+    const latestLevelsBox = root.querySelector('.govuk-notification-banner')
+
+    Code.expect(latestLevelsBox, 'Latest levels box should be present').to.not.be.null()
+    Code.expect(latestLevelsBox.innerHTML).to.include('LATEST LEVEL')
+    Code.expect(latestLevelsBox.innerHTML).to.include('Property flooding is possible when it goes above 1.15 metres.')
+  })
+
+  lab.test('GET target-area 011WAFDW with missing threshold types', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeFloodData = () => {
+      return {
+        floods: fakeTargetAreaFloodData.floodsWithWarning
+      }
+    }
+
+    const fakeFloodArea = () => {
+      return fakeTargetAreaFloodData.area
+    }
+
+    const fakeThresholds = () => {
+      return [
+        {
+          station_threshold_id: '1748981',
+          station_id: '7173',
+          fwis_code: '062FWF28Pinner',
+          fwis_type: 'W',
+          direction: 'u',
+          value: '0.211',
+          threshold_type: 'FW ACT FW',
+          river_id: 'river-pinn',
+          river_name: 'River Pinn',
+          river_qualified_name: 'River Pinn',
+          navigable: true,
+          view_rank: 1,
+          rank: '3',
+          rloi_id: 7173,
+          up: 7201,
+          up_station_type: 'S',
+          down: 7174,
+          down_station_type: 'S',
+          telemetry_id: '2803TH',
+          region: 'Thames',
+          catchment: 'Pinn',
+          wiski_river_name: 'River Pinn',
+          agency_name: 'Avenue Road',
+          external_name: 'Pinner, Avenue Road',
+          station_type: 'S',
+          status: 'Active',
+          qualifier: 'u',
+          iswales: false,
+          value_timestamp: '2024-07-05T10:45:00.000Z',
+          value_erred: false,
+          trend: 'falling',
+          percentile_5: '1.2',
+          percentile_95: '0.025',
+          centroid: '0101000020E610000098BFEB5A046FD8BFB6CA44E76ECC4940',
+          lon: -0.38177594069474585,
+          lat: 51.59713450297333,
+          day_total: null,
+          six_hr_total: null,
+          one_hr_total: null,
+          id: '1323',
+          threshold_value: '1.46',
+          latest_level: '0.211'
+        },
+        {
+          station_threshold_id: '1749067',
+          station_id: '7201',
+          fwis_code: '062FWF28Pinner',
+          fwis_type: 'W',
+          direction: 'u',
+          value: '0.192',
+          threshold_type: 'FW ACTCON FW',
+          river_id: 'river-pinn',
+          river_name: 'River Pinn',
+          river_qualified_name: 'River Pinn',
+          navigable: true,
+          view_rank: 1,
+          rank: '2',
+          rloi_id: 7201,
+          up: 7397,
+          up_station_type: 'S',
+          down: 7173,
+          down_station_type: 'S',
+          telemetry_id: '2886TH',
+          region: 'Thames',
+          catchment: 'Pinn',
+          wiski_river_name: 'River Pinn',
+          agency_name: 'Moss Close',
+          external_name: 'Pinner, Moss Close',
+          station_type: 'S',
+          status: 'Active',
+          qualifier: 'u',
+          iswales: false,
+          value_timestamp: '2024-07-05T10:45:00.000Z',
+          value_erred: false,
+          trend: 'steady',
+          percentile_5: '0.94',
+          percentile_95: '0.175',
+          centroid: '0101000020E610000034A8B468161ED8BFE52F7089A5CC4940',
+          lon: -0.3768363974110145,
+          lat: 51.59880178430448,
+          day_total: null,
+          six_hr_total: null,
+          one_hr_total: null,
+          id: '3327',
+          threshold_value: '1',
+          latest_level: '0.192'
+        }
+      ]
+    }
+
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+    sandbox.stub(floodService, 'getThresholdsForTargetArea').callsFake(fakeThresholds)
+
+    const targetAreaPlugin = {
+      plugin: {
+        name: 'target',
+        register: (server, options) => {
+          server.route(require('../../server/routes/target-area'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(targetAreaPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/target-area/011WAFDW'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    const root = parse(response.payload)
+    const latestLevelsBox = root.querySelector('.govuk-notification-banner')
+
+    Code.expect(latestLevelsBox, 'Latest levels box should be present').to.not.be.null()
+    Code.expect(latestLevelsBox.innerHTML).to.include('LATEST LEVEL')
+    Code.expect(latestLevelsBox.innerHTML).to.include('Property flooding is possible when it goes above 1.46 metres.')
+  })
+
+  lab.test('GET target-area 011WAFDW latest levels update timing', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeFloodData = () => {
+      return {
+        floods: fakeTargetAreaFloodData.floodsWithWarning
+      }
+    }
+
+    const fakeFloodArea = () => {
+      return fakeTargetAreaFloodData.area
+    }
+
+    const fakeThresholds = () => {
+      return [
+        {
+          station_threshold_id: '1749068',
+          station_id: '7201',
+          fwis_code: '062FWF28Pinner',
+          fwis_type: 'W',
+          direction: 'u',
+          value: '0.192',
+          threshold_type: 'FW RES FW',
+          river_id: 'river-pinn',
+          river_name: 'River Pinn',
+          river_qualified_name: 'River Pinn',
+          navigable: true,
+          view_rank: 1,
+          rank: '2',
+          rloi_id: 7201,
+          up: 7397,
+          up_station_type: 'S',
+          down: 7173,
+          down_station_type: 'S',
+          telemetry_id: '2886TH',
+          region: 'Thames',
+          catchment: 'Pinn',
+          wiski_river_name: 'River Pinn',
+          agency_name: 'Moss Close',
+          external_name: 'Pinner, Moss Close',
+          station_type: 'S',
+          status: 'Active',
+          qualifier: 'u',
+          iswales: false,
+          value_timestamp: '2024-07-05T10:45:00.000Z',
+          value_erred: false,
+          trend: 'steady',
+          percentile_5: '0.94',
+          percentile_95: '0.175',
+          centroid: '0101000020E610000034A8B468161ED8BFE52F7089A5CC4940',
+          lon: -0.3768363974110145,
+          lat: 51.59880178430448,
+          day_total: null,
+          six_hr_total: null,
+          one_hr_total: null,
+          id: '3327',
+          threshold_value: '1.15',
+          latest_level: '0.192',
+          formatted_time: 'More than 774 hours ago'
+        }
+      ]
+    }
+
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+    sandbox.stub(floodService, 'getThresholdsForTargetArea').callsFake(fakeThresholds)
+
+    const targetAreaPlugin = {
+      plugin: {
+        name: 'target',
+        register: (server, options) => {
+          server.route(require('../../server/routes/target-area'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(targetAreaPlugin)
+    // Add Cache methods to server
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/target-area/011WAFDW'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    const root = parse(response.payload)
+    const latestLevelsBox = root.querySelector('.govuk-notification-banner')
+    const updateTime = latestLevelsBox.querySelector('strong')
+
+    Code.expect(updateTime, 'Update time should be present').to.not.be.null()
+    Code.expect(updateTime.textContent).to.include('More than 774 hours ago')
+  })
 })
