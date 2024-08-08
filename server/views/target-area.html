@@ -68,9 +68,11 @@
       <p>{{ model.areaDescription | safe }}</p>
 
       <!-- Latest water level information -->
-      {% if model.latestLevels.warning %}
+      {% if model.latestLevels and model.latestLevels.length > 0 and model.latestLevels.length <= 4 %}
       {% include "partials/latest-levels.html" %}
       {% endif %}
+
+
       
       <!-- Link to river, sea, groundwater, or rainfall levels in the area -->
       <p>
