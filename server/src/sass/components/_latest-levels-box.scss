@@ -1,50 +1,17 @@
-.defra-latest-level-box {
-    border: 1px solid #005ea5;
-    padding: 0;
-    border-radius: 4px;
-    background-color: #f0f4f5;
-    margin-top: 30px;
-  
-    &__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #005ea5;
-      color: #ffffff;
-      padding: 8px 16px;
-      border-radius: 4px 4px 0 0;
-  
-      &__title {
-        margin: 0;
-        font-size: 1.25rem;
-      }
-  
-      &__time {
-        font-size: 1rem;
-        font-weight: bold;
-      }
-    }
-  
-    &__content {
-      padding: 16px;
-  
-      p {
-        margin: 8px 0;
-  
-        &__strong {
-          display: block;
-          margin-bottom: 8px;
-        }
-  
-        &__link {
-          color: #2b8cc4;
-          text-decoration: none;
-  
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-      }
-    }
+.defra-live {
+  position: relative;
+  border: 2px solid govuk-colour('blue');
+  margin-top: 30px;
+  margin-bottom: 15px;
+  padding: 15px;
+  &__title {
+    @extend .govuk-tag;
+    margin-top: 0px;
+    margin-bottom: 15px;
   }
-  
+  &__supplementary {
+    @include govuk-font($size: 16);
+    color: $govuk-secondary-text-colour;
+    margin: 0;
+  }
+}
