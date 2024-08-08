@@ -68,8 +68,10 @@
       <p>{{ model.areaDescription | safe }}</p>
 
       <!-- Latest water level information -->
+      {% if model.latestLevels.warning %}
       {% include "partials/latest-levels.html" %}
-
+      {% endif %}
+      
       <!-- Link to river, sea, groundwater, or rainfall levels in the area -->
       <p>
          <a data-journey-click="Target Area:Station list:TA - View station list" href="/river-and-sea-levels/target-area/{{ model.targetArea }}">
