@@ -10,7 +10,7 @@
     </p>
     {% if model.latestLevels.length == 1 %}
     <p>
-      <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}-downstage{% endif %}?tid=threshold-{{ warnings.id }}">Monitor the latest{% if model.latestLevels.length > 1 %} {{ warnings.wiski_river_name }}{% endif %} level at {{ warnings.agency_name }}</a>
+      <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}-downstage{% endif %}">Monitor the latest{% if model.latestLevels.length > 1 %} {{ warnings.wiski_river_name }}{% endif %} level at {{ warnings.agency_name }}</a>
     </p>
     {% endif %}
   </div>
