@@ -6,6 +6,7 @@ const wreck = require('@hapi/wreck').defaults({
 })
 const LocationSearchError = require('./location-search-error')
 const ALLOWED_SEARCH_CHARS = 'a-zA-Z0-9\',-.& ()!'
+const timezone = 'Europe/London'
 
 async function request (method, url, options) {
   let res, payload
@@ -50,12 +51,12 @@ function getJson (url) {
 }
 
 function formatDate (value, format = 'D/M/YY h:mma') {
-  return moment(value).tz('Europe/London').format(format)
+  return moment(value).tz(timezone).format(format)
 }
 
 function formatElapsedTime (datetime) {
-  const now = moment.tz('Europe/London')
-  const diffMinutes = now.diff(moment.tz(datetime, 'Europe/London'), 'minutes')
+  const now = moment.tz(timezone)
+  const diffMinutes = now.diff(moment.tz(datetime, timezone), 'minutes')
 
   if (diffMinutes < 60) {
     return `${diffMinutes} minutes ago`
