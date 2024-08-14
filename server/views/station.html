@@ -43,15 +43,18 @@
             {% if model.station.riverNavigation.station_type == 'M' %}
                 <!-- Multi-station Navigation Logic -->
                 {% if model.station.riverNavigation.qualifier == 'u' %}
+                    <!-- Multi-station with 'u' qualifier -->
                     {% if model.station.riverNavigation.up %}
                         <li class="defra-navbar__item">
                             <a href="/station/{{ model.station.riverNavigation.up }}">Upstream</a>
                         </li>
                     {% endif %}
+                    <!-- Navigate to the downstream version of the current multi-station -->
                     <li class="defra-navbar__item">
                         <a href="/station/{{ model.station.riverNavigation.rloi_id }}/downstream">Downstream</a>
                     </li>
                 {% elif model.station.riverNavigation.qualifier == 'd' %}
+                    <!-- Multi-station with 'd' qualifier -->
                     <li class="defra-navbar__item">
                         <a href="/station/{{ model.station.riverNavigation.rloi_id }}">Upstream</a>
                     </li>
@@ -75,7 +78,9 @@
                         </li>
                     {% endif %}
                 {% endif %}
+                <!-- Current station is a Single-station (S) -->
                 {% if model.station.riverNavigation.down %}
+                <!-- If upstream station is a multi-station, append '/downstream' for correct multi-station view -->
                     {% if model.station.riverNavigation.down_station_type == 'M' %}
                         <li class="defra-navbar__item">
                             <a href="/station/{{ model.station.riverNavigation.down }}">Downstream</a>
