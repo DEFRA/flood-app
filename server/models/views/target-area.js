@@ -45,7 +45,6 @@ class ViewModel {
       : `${area.name} flood ${type} area`
 
     const metaCanonical = `/target-area/${area.code}`
-
     const latestLevels = thresholds ? getThresholdsForTargetArea(thresholds) : null
 
     Object.assign(this, {

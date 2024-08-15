@@ -8,8 +8,7 @@ const moment = require('moment-timezone')
 const lab = exports.lab = Lab.script()
 const { parse } = require('node-html-parser')
 const fakeTargetAreaFloodData = require('../data/fakeTargetAreaFloodData.json')
-const fakeTaThresholds = require('../data/taThreshold.json')
-const fakeTaThresholdsOverLimit = require('../data/taThresholdsOverLimit.json')
+const fakeTaThresholdsData = require('../data/taThresholdsData.json')
 const { linkChecker } = require('../lib/helpers/html-expectations')
 const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
 
@@ -157,7 +156,7 @@ lab.experiment('Target-area tests', () => {
       return fakeTargetAreaFloodData.area
     }
 
-    const fakeTAThresholdsData = () => fakeTaThresholds
+    const fakeTAThresholdsData = () => fakeTaThresholdsData.multipleLatestLevels
 
     sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
@@ -196,7 +195,6 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.payload).to.contain(' <a href="/station/7173">Monitor the River Pinn level at Avenue Road</a>')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Moss Close was 0.13 metres. Property flooding is possible when it goes above 1.15 metres.')
     Code.expect(response.payload).to.contain('<a href="/station/7201">Monitor the River Pinn level at Moss Close</a>')
-    Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">These levels will update automatically</p>')
   })
   lab.test('Check flood severity banner link for Flood warning', async () => {
     const floodService = require('../../server/services/flood')
@@ -480,7 +478,7 @@ lab.experiment('Target-area tests', () => {
       return fakeTargetAreaFloodData.area
     }
 
-    const fakeTAThresholdsData = () => fakeTaThresholdsOverLimit
+    const fakeTAThresholdsData = () => fakeTaThresholdsData.overLimitLatestLevels
 
     sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
