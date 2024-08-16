@@ -61,6 +61,32 @@ lab.experiment('getThresholdsForTargetArea', () => {
     expect(result[0].formatted_time).to.equal('More than 2 hours ago')
   })
 
+  lab.test('should exclude thresholds with status Closed', () => {
+    const thresholds = [
+      { rloi_id: 1, threshold_type: 'FW RES FW', status: 'Closed', value_timestamp: '2024-08-12T11:45:00.000Z' },
+      { rloi_id: 2, threshold_type: 'FW RES FW', status: 'Active', value_timestamp: '2024-08-12T10:45:00.000Z' }
+    ]
+
+    const result = getThresholdsForTargetArea(thresholds)
+
+    expect(result).to.have.length(1)
+    expect(result[0].status).to.equal('Active')
+    expect(result[0].formatted_time).to.equal('More than 2 hours ago')
+  })
+
+  lab.test('should exclude Welsh stations with no data', () => {
+    const thresholds = [
+      { rloi_id: 1, threshold_type: 'FW RES FW', status: 'Active', iswales: true, latest_level: null, value_timestamp: '2024-08-12T11:45:00.000Z' },
+      { rloi_id: 2, threshold_type: 'FW RES FW', status: 'Active', iswales: false, latest_level: '0.5', value_timestamp: '2024-08-12T10:45:00.000Z' }
+    ]
+
+    const result = getThresholdsForTargetArea(thresholds)
+
+    expect(result).to.have.length(1)
+    expect(result[0].rloi_id).to.equal(2)
+    expect(result[0].formatted_time).to.equal('More than 2 hours ago')
+  })
+
   lab.test('should prioritize and return the correct threshold when there are duplicates with different types', () => {
     const thresholds = [
       { rloi_id: 1, threshold_type: 'FW ACT FW', value_timestamp: '2024-08-12T11:45:00.000Z' },

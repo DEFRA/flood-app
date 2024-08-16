@@ -3,7 +3,11 @@ const { formatElapsedTime } = require('../../../util')
 const WARNING_THRESHOLD_TYPES = ['FW RES FW', 'FW ACT FW', 'FW ACTCON FW']
 
 function getThresholdsForTargetArea (thresholds) {
-  const warningThresholds = findPrioritizedThresholds(thresholds, WARNING_THRESHOLD_TYPES)
+  const filteredThresholds = thresholds.filter(threshold =>
+    threshold.status !== 'Closed' && !(threshold.iswales && threshold.latest_level === null)
+  )
+
+  const warningThresholds = findPrioritizedThresholds(filteredThresholds, WARNING_THRESHOLD_TYPES)
   return warningThresholds.map(formatThresholdTimestamp)
 }
 

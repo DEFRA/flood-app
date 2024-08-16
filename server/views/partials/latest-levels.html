@@ -2,9 +2,9 @@
   <h2 class="defra-live__title">Latest level{% if model.latestLevels.length > 1 %}s{% endif %}</h2>
   {% for warnings in model.latestLevels %}
   <div class="defra-live__item">
-    {% if warnings.status == 'suspended' or (warnings.status == 'Active' and warnings.latest_level == null) %}
+    {% if warnings.status == 'Suspended' or (warnings.status == 'Active' and warnings.latest_level == null) %}
       <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0"><strong>Latest Level</strong></p>
-      <p>The {{ warnings.river_name }} level at {{ warnings.agency_name }} is currently unavailable.</p>    , 
+      <p>The {{ warnings.river_name }} level at {{ warnings.agency_name }} is currently unavailable.</p>
     {% else %}
       <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0"><strong>{{ warnings.formatted_time }}</strong></p>
       <p>The {{ warnings.river_name }} level at {{ warnings.agency_name }} was {{ warnings.latest_level | toFixed(2) }} metres. Property flooding is possible when it goes above {{ warnings.threshold_value | toFixed(2) }} metres.

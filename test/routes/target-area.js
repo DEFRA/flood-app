@@ -417,6 +417,7 @@ lab.experiment('Target-area tests', () => {
     validateFooterPresent(response)
     Code.expect(response.payload).to.contain('There are no flood warnings in this area, but there is <a href="/target-area/123WAF984">a flood alert in the wider area</a>')
   })
+
   lab.test('Should not display latest level, TA has non in DB', async () => {
     const floodService = require('../../server/services/flood')
 
@@ -462,6 +463,7 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.not.contain('<h2 class="defra-live__title">Latest level</h2>')
   })
+
   lab.test('Should not display latest levels as more than four', async () => {
     const floodService = require('../../server/services/flood')
 
@@ -513,6 +515,7 @@ lab.experiment('Target-area tests', () => {
     // latests levels (multi)
     Code.expect(response.payload).to.not.contain('<h2 class="defra-live__title">Latest levels</h2>')
   })
+
   lab.test('Displays latest level for a single active but offline station', async () => {
     const floodService = require('../../server/services/flood')
 
@@ -609,7 +612,7 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Moss Close is currently unavailable.</p>')
   })
 
-  lab.test('Displays multiple levels with one active but offline and one normal', async () => {
+  lab.test('Displays multiple levels with one active but offline, one normal, and one Welsh station with no values', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeFloodData = () => {
@@ -622,7 +625,7 @@ lab.experiment('Target-area tests', () => {
       return fakeTargetAreaFloodData.area
     }
 
-    const fakeTAThresholdsData = () => fakeTaThresholds.multipleNormalActiveOffline
+    const fakeTAThresholdsData = () => fakeTaThresholds.multipleNormalActiveOfflineWelshNoValues
 
     sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
@@ -658,7 +661,7 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road is currently unavailable.</p>')
   })
 
-  lab.test('Displays multiple levels with one suspended and one normal', async () => {
+  lab.test('Displays multiple levels with one suspended, one normal, and one closed', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeFloodData = () => {
@@ -671,7 +674,7 @@ lab.experiment('Target-area tests', () => {
       return fakeTargetAreaFloodData.area
     }
 
-    const fakeTAThresholdsData = () => fakeTaThresholds.multipleNormalSuspended
+    const fakeTAThresholdsData = () => fakeTaThresholds.multipleNormalSuspendedClosed
 
     sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
@@ -707,7 +710,7 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road is currently unavailable.</p>')
   })
 
-  lab.test('Displays multiple levels with one UKCMF/closed and one normal', async () => {
+  lab.test('Displays multiple levels with one Closed and one normal station', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeFloodData = () => {
@@ -720,7 +723,55 @@ lab.experiment('Target-area tests', () => {
       return fakeTargetAreaFloodData.area
     }
 
-    const fakeTAThresholdsData = () => fakeTaThresholds.multipleNormalUKCMFClosed
+    const fakeTAThresholdsData = () => fakeTaThresholds.multipleNormalClosed
+
+    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+
+    const targetAreaPlugin = {
+      plugin: {
+        name: 'target',
+        register: (server, options) => {
+          server.route(require('../../server/routes/target-area'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(targetAreaPlugin)
+
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/target-area/011WAFDW'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+
+    Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest level</h2>')
+    Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
+  })
+
+  lab.test('Displays multiple levels with one normal, one active but offline, and one Welsh station with no values', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeFloodData = () => {
+      return {
+        floods: fakeTargetAreaFloodData.floods
+      }
+    }
+
+    const fakeFloodArea = () => {
+      return fakeTargetAreaFloodData.area
+    }
+
+    const fakeTAThresholdsData = () => fakeTaThresholds.multipleNormalActiveOfflineWelshNoValues
 
     sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
@@ -753,10 +804,61 @@ lab.experiment('Target-area tests', () => {
 
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest levels</h2>')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
+    Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road is currently unavailable.</p>')
+    Code.expect(response.payload).to.not.contain('<p>The River Welsh station level is currently unavailable.</p>')
+  })
+
+  lab.test('Displays multiple levels with one normal, one suspended, and one Closed station', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeFloodData = () => {
+      return {
+        floods: fakeTargetAreaFloodData.floods
+      }
+    }
+
+    const fakeFloodArea = () => {
+      return fakeTargetAreaFloodData.area
+    }
+
+    const fakeTAThresholdsData = () => fakeTaThresholds.multipleNormalSuspendedClosed
+
+    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+
+    const targetAreaPlugin = {
+      plugin: {
+        name: 'target',
+        register: (server, options) => {
+          server.route(require('../../server/routes/target-area'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(targetAreaPlugin)
+
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/target-area/011WAFDW'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+
+    Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest levels</h2>')
+    Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
+    Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road is currently unavailable.</p>')
     Code.expect(response.payload).to.not.contain('<p>The River Test level at Test Road is currently unavailable.</p>')
   })
 
-  lab.test('Displays multiple levels with one normal, one active but offline, and one suspended', async () => {
+  lab.test('Does not display levels if all stations are Closed or Welsh with no values', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeFloodData = () => {
@@ -769,156 +871,7 @@ lab.experiment('Target-area tests', () => {
       return fakeTargetAreaFloodData.area
     }
 
-    const fakeTAThresholdsData = () => fakeTaThresholds.multipleNormalActiveOfflineSuspended
-
-    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
-
-    const targetAreaPlugin = {
-      plugin: {
-        name: 'target',
-        register: (server, options) => {
-          server.route(require('../../server/routes/target-area'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(targetAreaPlugin)
-
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/target-area/011WAFDW'
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-
-    Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest levels</h2>')
-    Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
-    Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road is currently unavailable.</p>')
-    Code.expect(response.payload).to.contain('<p>The River Pinn level at Moss Close is currently unavailable.</p>')
-  })
-
-  lab.test('Displays multiple levels with one normal, one suspended, and one UKCMF/closed', async () => {
-    const floodService = require('../../server/services/flood')
-
-    const fakeFloodData = () => {
-      return {
-        floods: fakeTargetAreaFloodData.floods
-      }
-    }
-
-    const fakeFloodArea = () => {
-      return fakeTargetAreaFloodData.area
-    }
-
-    const fakeTAThresholdsData = () => fakeTaThresholds.multipleNormalSuspendedUKCMFClosed
-
-    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
-
-    const targetAreaPlugin = {
-      plugin: {
-        name: 'target',
-        register: (server, options) => {
-          server.route(require('../../server/routes/target-area'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(targetAreaPlugin)
-
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/target-area/011WAFDW'
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-
-    Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest levels</h2>')
-    Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
-    Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road is currently unavailable.</p>')
-    Code.expect(response.payload).to.not.contain('<p>The River Test level at Test Road is currently unavailable.</p>')
-  })
-
-  lab.test('Displays multiple levels with normal levels within limit', async () => {
-    const floodService = require('../../server/services/flood')
-
-    const fakeFloodData = () => {
-      return {
-        floods: fakeTargetAreaFloodData.floods
-      }
-    }
-
-    const fakeFloodArea = () => {
-      return fakeTargetAreaFloodData.area
-    }
-
-    const fakeTAThresholdsData = () => fakeTaThresholds.multipleLatestLevels
-
-    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
-
-    const targetAreaPlugin = {
-      plugin: {
-        name: 'target',
-        register: (server, options) => {
-          server.route(require('../../server/routes/target-area'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(targetAreaPlugin)
-
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/target-area/011WAFDW'
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-
-    Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest levels</h2>')
-    Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
-    Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road was 0.18 metres. Property flooding is possible when it goes above 1.46 metres.')
-  })
-
-  lab.test('Does not display levels if over limit', async () => {
-    const floodService = require('../../server/services/flood')
-
-    const fakeFloodData = () => {
-      return {
-        floods: fakeTargetAreaFloodData.floods
-      }
-    }
-
-    const fakeFloodArea = () => {
-      return fakeTargetAreaFloodData.area
-    }
-
-    const fakeTAThresholdsData = () => fakeTaThresholds.overLimitLatestLevels
+    const fakeTAThresholdsData = () => fakeTaThresholds.allClosedOrWelshNoValues
 
     sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
@@ -949,5 +902,53 @@ lab.experiment('Target-area tests', () => {
     const response = await server.inject(options)
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.not.contain('<h2 class="defra-live__title">Latest levels</h2>')
+  })
+
+  lab.test('Displays Welsh station with values', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeFloodData = () => {
+      return {
+        floods: fakeTargetAreaFloodData.floods
+      }
+    }
+
+    const fakeFloodArea = () => {
+      return fakeTargetAreaFloodData.area
+    }
+
+    const fakeTAThresholdsData = () => fakeTaThresholds.singleWelshWithValues
+
+    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
+    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+
+    const targetAreaPlugin = {
+      plugin: {
+        name: 'target',
+        register: (server, options) => {
+          server.route(require('../../server/routes/target-area'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(targetAreaPlugin)
+
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+    const options = {
+      method: 'GET',
+      url: '/target-area/011WAFDW'
+    }
+
+    const response = await server.inject(options)
+    Code.expect(response.statusCode).to.equal(200)
+
+    Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest level</h2>')
+    Code.expect(response.payload).to.contain('<p>The River Welsh level at Welsh Station was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.\n        \n      </p>')
   })
 })
