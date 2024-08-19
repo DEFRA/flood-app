@@ -40,14 +40,14 @@ module.exports = {
     // batching all the service calls together, greatly improves page performance
     const [
       telemetry,
-      thresholds,
+      forecastFlag,
       imtdThresholds,
       impacts,
       warningsAlerts,
       river
     ] = await Promise.all([
       request.server.methods.flood.getStationTelemetry(id, direction),
-      request.server.methods.flood.getStationForecastThresholds(id),
+      request.server.methods.flood.getForecastFlag(id, direction),
       request.server.methods.flood.getStationImtdThresholds(id, direction),
       request.server.methods.flood.getImpactData(station.rloi_id),
       request.server.methods.flood.getWarningsAlertsWithinStationBuffer(station.rloi_id),
@@ -60,11 +60,13 @@ module.exports = {
       return h.view('station', { model })
     }
 
+    const hasForecast = forecastFlag.display_time_series
+
     // Check if it's a forecast station
-    if (thresholds.length && station.status !== 'Suspended') {
+    if (hasForecast && station.status !== 'Suspended') {
       // Forecast station
       const values = await request.server.methods.flood.getStationForecastData(station.wiski_id)
-      const forecast = { thresholds, values }
+      const forecast = { forecastFlag, values }
       const model = new ViewModel({ station, telemetry, forecast, imtdThresholds, impacts, river, warningsAlerts })
       return h.view('station', { model })
     } else {
