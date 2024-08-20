@@ -12,8 +12,6 @@ class ViewModel {
 
     const type = area.code.charAt(4).toLowerCase() === 'w' ? 'warning' : 'alert'
 
-    const mapTitle = `View map of the flood ${type} area`
-
     const fallbackText = getFallbackText(type)
     let situation = fallbackText
 

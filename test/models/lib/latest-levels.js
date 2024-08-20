@@ -35,7 +35,7 @@ lab.experiment('getThresholdsForTargetArea', () => {
     formatElapsedTimeStub.restore()
   })
 
-  lab.test('should return the prioritized thresholds with formatted timestamps', () => {
+  lab.test('should return the prioritised thresholds with formatted timestamps', () => {
     const thresholds = [
       { rloi_id: 1, threshold_type: 'FW RES FW', value_timestamp: '2024-08-12T11:45:00.000Z' },
       { rloi_id: 2, threshold_type: 'FW ACTCON FW', value_timestamp: '2024-08-12T10:45:00.000Z' }

@@ -4,14 +4,19 @@ const WARNING_THRESHOLD_TYPES = ['FW RES FW', 'FW ACT FW', 'FW ACTCON FW']
 
 function getThresholdsForTargetArea (thresholds) {
   const filteredThresholds = thresholds.filter(threshold =>
-    threshold.status !== 'Closed' && !(threshold.iswales && threshold.latest_level === null)
+    threshold.status !== 'Closed' &&
+    !(threshold.iswales && threshold.latest_level === null)
   )
 
-  const warningThresholds = findPrioritizedThresholds(filteredThresholds, WARNING_THRESHOLD_TYPES)
-  return warningThresholds.map(formatThresholdTimestamp)
+  const warningThresholds = findPrioritisedThresholds(filteredThresholds, WARNING_THRESHOLD_TYPES)
+  return warningThresholds.map(threshold => {
+    threshold.formatted_time = formatElapsedTime(threshold.value_timestamp)
+    threshold.isSuspendedOrOffline = threshold.status === 'Suspended' || (threshold.status === 'Active' && threshold.latest_level === null)
+    return threshold
+  })
 }
 
-function findPrioritizedThresholds (thresholds, types) {
+function findPrioritisedThresholds (thresholds, types) {
   const thresholdMap = new Map()
 
   for (const type of types) {
@@ -25,13 +30,6 @@ function findPrioritizedThresholds (thresholds, types) {
   }
 
   return Array.from(thresholdMap.values())
-}
-
-function formatThresholdTimestamp (threshold) {
-  if (threshold) {
-    threshold.formatted_time = formatElapsedTime(threshold.value_timestamp)
-  }
-  return threshold
 }
 
 module.exports = getThresholdsForTargetArea
