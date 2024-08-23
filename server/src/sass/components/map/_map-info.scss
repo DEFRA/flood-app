@@ -8,7 +8,9 @@
   &__name {
     display: block;
     @include govuk-font($size: 19, $weight: bold);
-    margin: 0px;
+    & {
+      margin: 0px;
+    }
     a {
       color: $govuk-text-colour;
     }
@@ -24,15 +26,19 @@
   &__error {
     display: block;
     @include govuk-font($size: 16);
-    margin-bottom: 0px;
-    margin-top: 10px;
+    & {
+      margin-bottom: 0px;
+      margin-top: 10px;
+    }
   }
   &__meta {
     display: block;
-    @include govuk-font($size: 14);
-    margin-top: 10px;
-    margin-bottom: 0px;
-    color: $govuk-secondary-text-colour;
+    @include govuk-font($size: 16);
+    & {
+      margin-top: 10px;
+      margin-bottom: 0px;
+      color: $govuk-secondary-text-colour;
+    }
   }
   &__buttons {
     margin: 15px -51px 0px -15px;
@@ -46,8 +52,10 @@
   // Attributions
   ul {
     @extend .govuk-list;
-    @include govuk-font($size: 14);
-    margin-bottom: 0px;
+    @include govuk-font($size: 16);
+    & {
+      margin-bottom: 0px;
+    }
   }
   ul > li {
     margin-bottom: 0px;

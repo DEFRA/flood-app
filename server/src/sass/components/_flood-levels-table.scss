@@ -72,8 +72,10 @@
   }
   &__cell--location {
     @include govuk-font($size: 19, $weight: bold);
-    width: 50%;
-    padding-right:20px;
+    & {
+      width: 50%;
+      padding-right:20px;
+    }
     @include mq ($until: tablet) {
       padding-top:10px;
       padding-right: 0px;
@@ -82,8 +84,10 @@
   }
   &__cell--location-rainfall {
     @include govuk-font($size: 19, $weight: bold);
-    width: 40%;
-    padding-right:20px;
+    & {
+      width: 40%;
+      padding-right:20px;
+    }
     @include mq ($until: tablet) {
       padding-top:10px;
       padding-right: 0px;
@@ -125,25 +129,31 @@
   &-meta {
     display: block;
     @include govuk-font($size: 16);
-    color: $govuk-secondary-text-colour;
+    & {
+      color: $govuk-secondary-text-colour;
+    }
   }
   &-na {
     @include govuk-font($size: 16);
   }
   &-numeric {
     @include govuk-font($size: 19, $tabular: true);
-    display: inline-block;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    & {
+      display: inline-block;
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
   }
   &-state {
     position: relative;
     @include govuk-font($size: 19, $weight: normal);
-    text-transform: uppercase;
-    // color: $govuk-secondary-text-colour;
-    background-color: govuk-colour('light-grey');
-    display: inline-block;
-    padding: 4px 8px;
+    & {
+      text-transform: uppercase;
+      // color: $govuk-secondary-text-colour;
+      background-color: govuk-colour('light-grey');
+      display: inline-block;
+      padding: 4px 8px;
+    }
     &--blue {
       color: govuk-colour('dark-blue');
       background-color: govuk-tint(govuk-colour('blue'), 80);
@@ -156,7 +166,9 @@
     position: relative;
     text-transform: uppercase;
     @include govuk-font($size: 19, $weight: normal);
-    padding-left: 30px;
+    & {
+      padding-left: 30px;
+    }
     @include mq ($from: tablet) {
       padding-left: 36px;
     }

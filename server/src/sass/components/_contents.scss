@@ -1,7 +1,9 @@
 .defra-contents {
     &__title {
         @include govuk-font($size: 16, $line-height: 1.5);
-        margin:0px;
+        & {
+            margin:0px;
+        }
     }
     &__list {
         margin:0px;

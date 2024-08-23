@@ -9,9 +9,11 @@
         display: inline-block;
         margin-right: 20px;
         @include govuk-font($size: 16, $weight: bold);
-        height: 30px;
-        padding-left: 36px;
-        margin-bottom: 10px;
+        & {
+            height: 30px;
+            padding-left: 36px;
+            margin-bottom: 10px;
+        }
     }
     &__link {
         line-height: 30px;

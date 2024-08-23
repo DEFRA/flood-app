@@ -5,7 +5,7 @@
 <div class="govuk-phase-banner">
   <p class="govuk-phase-banner__content">
     <strong class="govuk-tag govuk-phase-banner__content__tag">
-      beta
+      Beta
     </strong>
     <span class="govuk-phase-banner__text">
       This is a new service – your <a class="govuk-link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965?Source={{fullUrl}}">feedback</a> will help us to improve it.
@@ -88,7 +88,7 @@
     {% endif %}
 
     {% if model.hasActiveFloods %}
-      <span id="map"></span>
+      <span id="map-live"></span>
     {% endif %}
 
     {% include "partials/sign-up-for-flood-warnings.html" %}
@@ -129,10 +129,19 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  {{ super() }}
+{{ super() }}
+{% endblock %}
+
+{% block pageScripts %}
   <script>
+    window.flood = {}
     window.flood.model = {{ model.expose | dump(2) | safe }}
+    window.flood.model.mapButtonText = {{ model.expose.mapButtonText | dump | safe }}
+    window.flood.model.mapButtonClass = 'defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4'
+    window.flood.model.data = {
+      button: 'Location:Map view:Location - View national warning map'
+    }
+    window.flood.model.mapLayers = 'mv,ts,tw,ta',
+    window.flood.model.extent = window.flood.model.placeBbox
   </script>
-  <script src="{{assetPath}}/js/templates.js"></script>
-  <script src="{{assetPath}}/js/location.js"></script>
 {% endblock %}

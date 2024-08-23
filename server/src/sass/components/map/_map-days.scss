@@ -7,38 +7,48 @@
     left:0px;
     max-width:475px;
   }
-  padding-top:10px;
-  overflow-x: auto;
-  -ms-overflow-style: -ms-autohiding-scrollbar;
+  &{
+    padding-top:10px;
+    overflow-x: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+  }
 }
 .defra-map-days__container {
   width:100%;
 }
 .defra-map-days__button {
   position: relative;
-  @include govuk-font($size: 14);
-  display: inline-block;
-  width:20%;
-  border:0;
-  margin:0px;
-  padding:0px;
-  box-sizing: border-box;
+  @include govuk-font($size: 16);
+  & {
+    display: inline-block;
+    width:20%;
+    border:0;
+    margin:0px;
+    padding:0px;
+    box-sizing: border-box;
+  }
   &:last-child {
     border-right:0px;
   }
-  cursor:pointer;
-  background-color: white;
-  box-sizing: border-box;
-  color: $govuk-text-colour;
+  & {
+    cursor:pointer;
+    background-color: white;
+    box-sizing: border-box;
+    color: $govuk-text-colour;
+  }
   &::-moz-focus-inner {
     border: 0;
   }
-  text-align:left;
+  & {
+    text-align:left;
+  }
   strong {
     display: inline-block;
     @include govuk-font($size: 19, $weight: bold);
-    text-decoration:underline;
-    margin-bottom: 2px;
+    & {
+      text-decoration:underline;
+      margin-bottom: 2px;
+    }
   }
   &[aria-selected=true] {
     background-color: white;

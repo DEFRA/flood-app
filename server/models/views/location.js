@@ -65,6 +65,7 @@ class ViewModel {
     // Expose model values for client side javascript
     this.expose = {
       hasWarnings: this.hasActiveFloods,
+      mapButtonText: this.hasActiveFloods ? 'View map of flood warnings and alerts' : 'View map',
       placeBbox: this.placeBbox,
       outlookDays: tabs.days,
       bingMaps: bingKeyMaps

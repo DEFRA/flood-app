@@ -3,8 +3,10 @@
 	&:first-child {
 		display: inline-block;
 	}
-  display: inline-block;
-  position: relative;
+	& {
+		display: inline-block;
+		position: relative;
+	}
 	&:not(.defra-toggletip-target) {
 		padding-right: 26px;
 	}
@@ -17,9 +19,11 @@
 		@include mq ($from: tablet) {
 			top: -1px;
 		}
-		right: 0px;
-		width: 26px;
-		height: 26px;
+		& {
+			right: 0px;
+			width: 26px;
+			height: 26px;
+		}
 	}
 	&__button {
 		position: absolute;
@@ -65,17 +69,21 @@
 	}
 	&__info {
 		@include govuk-font($size: 16);
-		cursor: auto;
-		position:absolute;
-		width:0px;
-		overflow: hidden;
-		box-sizing: border-box;
-		visibility: hidden;
-		top: auto;
-		bottom: 100%;
-		left: 0px;
-		padding-bottom: 10px;
-		text-align: left;
+		& {
+			cursor: auto;
+		}
+		& {
+			position:absolute;
+			width:0px;
+			overflow: hidden;
+			box-sizing: border-box;
+			visibility: hidden;
+			top: auto;
+			bottom: 100%;
+			left: 0px;
+			padding-bottom: 10px;
+			text-align: left;
+		}
 	}
 	&__text {
 		position: relative;
