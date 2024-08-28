@@ -24,8 +24,7 @@ lab.experiment('getThresholdsForTargetArea', () => {
       if (diffMinutes < 60) {
         return `${diffMinutes} minutes ago`
       } else {
-        const diffHours = Math.floor(diffMinutes / 60)
-        return diffHours === 1 ? 'More than 1 hour ago' : `More than ${diffHours} hours ago`
+        return 'More than 1 hour ago'
       }
     })
   })
@@ -45,7 +44,7 @@ lab.experiment('getThresholdsForTargetArea', () => {
 
     expect(result).to.have.length(2)
     expect(result[0].formatted_time).to.equal('More than 1 hour ago')
-    expect(result[1].formatted_time).to.equal('More than 2 hours ago')
+    expect(result[1].formatted_time).to.equal('More than 1 hour ago')
   })
 
   lab.test('should exclude thresholds not matching the priority types', () => {
@@ -58,7 +57,7 @@ lab.experiment('getThresholdsForTargetArea', () => {
 
     expect(result).to.have.length(1)
     expect(result[0].threshold_type).to.equal('FW ACT FW')
-    expect(result[0].formatted_time).to.equal('More than 2 hours ago')
+    expect(result[0].formatted_time).to.equal('More than 1 hour ago')
   })
 
   lab.test('should exclude thresholds with status Closed', () => {
@@ -71,7 +70,7 @@ lab.experiment('getThresholdsForTargetArea', () => {
 
     expect(result).to.have.length(1)
     expect(result[0].status).to.equal('Active')
-    expect(result[0].formatted_time).to.equal('More than 2 hours ago')
+    expect(result[0].formatted_time).to.equal('More than 1 hour ago')
   })
 
   lab.test('should exclude Welsh stations with no data', () => {
@@ -84,7 +83,7 @@ lab.experiment('getThresholdsForTargetArea', () => {
 
     expect(result).to.have.length(1)
     expect(result[0].rloi_id).to.equal(2)
-    expect(result[0].formatted_time).to.equal('More than 2 hours ago')
+    expect(result[0].formatted_time).to.equal('More than 1 hour ago')
   })
 
   lab.test('should prioritize and return the correct threshold when there are duplicates with different types', () => {
@@ -97,7 +96,7 @@ lab.experiment('getThresholdsForTargetArea', () => {
 
     expect(result).to.have.length(1)
     expect(result[0].threshold_type).to.equal('FW RES FW')
-    expect(result[0].formatted_time).to.equal('More than 2 hours ago')
+    expect(result[0].formatted_time).to.equal('More than 1 hour ago')
   })
 
   lab.test('should return an empty array if no thresholds are provided', () => {

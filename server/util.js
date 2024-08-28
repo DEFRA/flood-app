@@ -61,8 +61,7 @@ function formatElapsedTime (datetime) {
   if (diffMinutes < 60) {
     return `${diffMinutes} minutes ago`
   } else {
-    const diffHours = Math.floor(diffMinutes / 60)
-    return diffHours === 1 ? 'More than 1 hour ago' : `More than ${diffHours} hours ago`
+    return 'More than 1 hour ago'
   }
 }
 
