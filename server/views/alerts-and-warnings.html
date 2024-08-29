@@ -128,7 +128,7 @@
   window.flood.model = {{ model.expose | dump(2) | safe }}
   window.flood.model.mapButtonText = 'View map of flood warning and alert areas'
   window.flood.model.mapButtonClass = 'defra-button-secondary defra-button-secondary--icon'
-  window.flood.model.mapLayers = 'ts,tw,ta'
+  window.flood.model.mapLayers = 'mv,ts,tw,ta'
   window.flood.model.extent = window.flood.model.placeBbox
 </script>
 {% endblock %}
