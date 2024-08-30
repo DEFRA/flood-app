@@ -251,7 +251,7 @@ function BarChart (containerId, stationId, data) {
     // Set Background size
     const text = tooltip.select('text')
     const txtHeight = Math.round(text.node().getBBox().height) + 23
-    const pathLength = period === 'minutes' ? 182 : 142
+    const pathLength = period === 'minutes' ? 212 : 162
     const pathLeft = `M${pathLength},${(txtHeight / 2) - 8}l-0,-${(txtHeight / 2) - 8}l-${pathLength},0l0,${txtHeight}l${pathLength},0l0,-${(txtHeight / 2) - 8}l8,-8l-8,-8Z`
     const pathRight = `M8,${(txtHeight / 2) - 8}l0,-${(txtHeight / 2) - 8}l${pathLength},0l-0,${txtHeight}l-${pathLength},0l-0,-${(txtHeight / 2) - 8}l-8,-8l8,-8Z`
     const pathCentre = `M${pathLength},${txtHeight}l0,-${txtHeight}l-${pathLength},0l0,${txtHeight}l${pathLength},0Z`
