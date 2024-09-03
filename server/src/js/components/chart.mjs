@@ -1,7 +1,7 @@
 'use strict'
 // Chart component
 
-import '../utils'
+import '../utils.mjs'
 import { axisBottom, axisLeft } from 'd3-axis'
 import { scaleLinear, scaleBand, scaleTime } from 'd3-scale'
 import { timeFormat } from 'd3-time-format'

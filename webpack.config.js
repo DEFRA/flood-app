@@ -7,9 +7,9 @@ module.exports = (env, argv) => ({
   mode: !inDev ? 'production' : 'development',
   devtool: !inDev ? false : 'source-map',
   entry: {
-    core: './server/src/js/core.js',
+    core: './server/src/js/core.mjs',
     webchat: './server/src/js/webchat.js',
-    chart: './server/src/js/components/chart.js',
+    chart: './server/src/js/components/chart.mjs',
     'stations-overview': './server/src/js/pages/stations-overview'
   },
   output: {
