@@ -164,7 +164,7 @@ function BarChart (containerId, stationId, data) {
     xScale = xScale.range([0, width]).padding(0.4)
     const xAxis = axisBottom(xScale).tickSizeOuter(0).tickValues(xScale.domain().filter((d, i) => {
       const hourMinute = timeFormat('%H:%M')(new Date(d))
-      const labelsHours = ['00:00']
+      const labelsHours = ['06:00']
       const labelsMinutes = ['00:00', '06:00', '12:00', '18:00']
       const labels = period === 'hours' ? labelsHours : labelsMinutes
       return labels.includes(hourMinute) && i >= 2 // Don't show lable if before 3rd tick
@@ -251,7 +251,7 @@ function BarChart (containerId, stationId, data) {
     // Set Background size
     const text = tooltip.select('text')
     const txtHeight = Math.round(text.node().getBBox().height) + 23
-    const pathLength = period === 'minutes' ? 182 : 142
+    const pathLength = period === 'minutes' ? 212 : 162
     const pathLeft = `M${pathLength},${(txtHeight / 2) - 8}l-0,-${(txtHeight / 2) - 8}l-${pathLength},0l0,${txtHeight}l${pathLength},0l0,-${(txtHeight / 2) - 8}l8,-8l-8,-8Z`
     const pathRight = `M8,${(txtHeight / 2) - 8}l0,-${(txtHeight / 2) - 8}l${pathLength},0l-0,${txtHeight}l-${pathLength},0l-0,-${(txtHeight / 2) - 8}l-8,-8l8,-8Z`
     const pathCentre = `M${pathLength},${txtHeight}l0,-${txtHeight}l-${pathLength},0l0,${txtHeight}l${pathLength},0Z`

@@ -367,19 +367,17 @@ class ViewModel {
     let forecastData
     if (isForecast) {
       this.isFfoi = isForecast
-      if (this.isFfoi) {
-        forecastData = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
-        this.isForecast = forecastData.hasForecastData
-        const highestPoint = forecastData.maxValue || null
+      forecastData = new Forecast(forecast, this.station.isCoastal, this.station.recentValue)
+      this.isForecast = forecastData.hasForecastData
+      const highestPoint = forecastData.maxValue || null
 
-        if (highestPoint !== null) {
-          const forecastHighestPoint = parseFloat(highestPoint._).toFixed(2)
-          const forecastHighestPointTime = `${moment.tz(highestPoint.ts, tz).format('D MMMM')} at ${moment.tz(highestPoint.ts, tz).format('h:mma')}`
+      if (highestPoint !== null) {
+        const forecastHighestPoint = parseFloat(highestPoint._).toFixed(2)
+        const forecastHighestPointTime = `${moment.tz(highestPoint.ts, tz).format('D MMMM')} at ${moment.tz(highestPoint.ts, tz).format('h:mma')}`
 
-          this.forecastHighest = forecastHighestPoint
-          this.forecastHighestTime = forecastHighestPointTime
-          this.forecastDetails = `The highest level in our forecast is ${forecastHighestPoint}m at ${forecastHighestPointTime}. Forecasts come from a computer model and can change.`
-        }
+        this.forecastHighest = forecastHighestPoint
+        this.forecastHighestTime = forecastHighestPointTime
+        this.forecastDetails = `The highest level in our forecast is ${forecastHighestPoint}m at ${forecastHighestPointTime}. Forecasts come from a computer model and can change.`
       }
     }
     let telemetryData
