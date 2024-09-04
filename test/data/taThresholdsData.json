@@ -1,0 +1,382 @@
+{
+  "singleActiveOffline": [
+    {
+      "rloi_id": 7173,
+      "river_name": "River Pinn",
+      "agency_name": "Avenue Road",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": null,
+      "threshold_value": "1.46",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW ACTCON FW",
+      "formatted_time": null
+    }
+  ],
+  "singleSuspended": [
+    {
+      "rloi_id": 7201,
+      "river_name": "River Pinn",
+      "agency_name": "Moss Close",
+      "status": "Suspended",
+      "iswales": false,
+      "latest_level": null,
+      "threshold_value": "1.15",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": null
+    }
+  ],
+  "singleClosed": [
+    {
+      "rloi_id": 7202,
+      "river_name": "River Test",
+      "agency_name": "Test Road",
+      "status": "Closed",
+      "iswales": false,
+      "latest_level": null,
+      "threshold_value": "1.25",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": null
+    }
+  ],
+  "multipleNormalClosed": [
+    {
+      "rloi_id": 7174,
+      "river_name": "River Pinn",
+      "agency_name": "Eastcote Road",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.352",
+      "threshold_value": "1.4",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 7202,
+      "river_name": "River Test",
+      "agency_name": "Test Road",
+      "status": "Closed",
+      "iswales": false,
+      "latest_level": null,
+      "threshold_value": "1.25",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": null
+    }
+  ],
+  "multipleNormalActiveOfflineWelshNoValues": [
+    {
+      "rloi_id": 7174,
+      "river_name": "River Pinn",
+      "agency_name": "Eastcote Road",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.352",
+      "threshold_value": "1.4",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 7173,
+      "river_name": "River Pinn",
+      "agency_name": "Avenue Road",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": null,
+      "threshold_value": "1.46",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW ACTCON FW",
+      "formatted_time": null
+    },
+    {
+      "rloi_id": 7201,
+      "river_name": "River Welsh",
+      "agency_name": "Welsh Station",
+      "status": "Active",
+      "iswales": true,
+      "latest_level": null,
+      "threshold_value": "1.5",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": null
+    }
+  ],
+  "multipleNormalSuspendedClosed": [
+    {
+      "rloi_id": 7174,
+      "river_name": "River Pinn",
+      "agency_name": "Eastcote Road",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.352",
+      "threshold_value": "1.4",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 7173,
+      "river_name": "River Pinn",
+      "agency_name": "Avenue Road",
+      "status": "Suspended",
+      "iswales": false,
+      "latest_level": null,
+      "threshold_value": "1.46",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW ACTCON FW",
+      "formatted_time": null
+    },
+    {
+      "rloi_id": 7202,
+      "river_name": "River Test",
+      "agency_name": "Test Road",
+      "status": "Closed",
+      "iswales": false,
+      "latest_level": null,
+      "threshold_value": "1.25",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": null
+    }
+  ],
+  "allClosedOrWelshNoValues": [
+    {
+      "rloi_id": 7202,
+      "river_name": "River Test",
+      "agency_name": "Test Road",
+      "status": "Closed",
+      "iswales": false,
+      "latest_level": null,
+      "threshold_value": "1.25",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": null
+    },
+    {
+      "rloi_id": 7201,
+      "river_name": "River Welsh",
+      "agency_name": "Welsh Station",
+      "status": "Active",
+      "iswales": true,
+      "latest_level": null,
+      "threshold_value": "1.5",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": null
+    }
+  ],
+  "singleWelshWithValues": [
+    {
+      "rloi_id": 7201,
+      "river_name": "River Welsh",
+      "agency_name": "Welsh Station",
+      "status": "Active",
+      "iswales": true,
+      "latest_level": "0.352",
+      "threshold_value": "1.4",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": "More than 167 hours ago"
+    }
+  ],
+  "multipleLatestLevels": [
+    {
+      "rloi_id": 7174,
+      "river_name": "River Pinn",
+      "agency_name": "Eastcote Road",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.352",
+      "threshold_value": "1.4",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 7174,
+      "river_name": "River Pinn",
+      "agency_name": "Eastcote Road",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.352",
+      "threshold_value": "1.25",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW ACTCON FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 7173,
+      "river_name": "River Pinn",
+      "agency_name": "Avenue Road",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.182",
+      "threshold_value": "1.46",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 7173,
+      "river_name": "River Pinn",
+      "agency_name": "Avenue Road",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.182",
+      "threshold_value": "1.25",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW ACTCON FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 7201,
+      "river_name": "River Pinn",
+      "agency_name": "Moss Close",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.127",
+      "threshold_value": "1.15",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 7201,
+      "river_name": "River Pinn",
+      "agency_name": "Moss Close",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.127",
+      "threshold_value": "1",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW ACTCON FW",
+      "formatted_time": "More than 167 hours ago"
+    }
+  ],
+  "overLimitLatestLevels": [
+    {
+      "rloi_id": 7174,
+      "river_name": "River Pinn",
+      "agency_name": "Eastcote Road",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.352",
+      "threshold_value": "1.4",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 7174,
+      "river_name": "River Pinn",
+      "agency_name": "Eastcote Road",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.352",
+      "threshold_value": "1.25",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW ACTCON FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 7173,
+      "river_name": "River Pinn",
+      "agency_name": "Avenue Road",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.182",
+      "threshold_value": "1.46",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 7173,
+      "river_name": "River Pinn",
+      "agency_name": "Avenue Road",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.182",
+      "threshold_value": "1.25",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW ACTCON FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 7201,
+      "river_name": "River Pinn",
+      "agency_name": "Moss Close",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.127",
+      "threshold_value": "1.15",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 7201,
+      "river_name": "River Pinn",
+      "agency_name": "Moss Close",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.127",
+      "threshold_value": "1",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW ACTCON FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 1111,
+      "river_name": "River Pinn",
+      "agency_name": "Moss Close",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.127",
+      "threshold_value": "1",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW ACTCON FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 1111,
+      "river_name": "River Pinn",
+      "agency_name": "Avenue Road",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.182",
+      "threshold_value": "1.46",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 1112,
+      "river_name": "River Pinn",
+      "agency_name": "Avenue Road",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.182",
+      "threshold_value": "1.46",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": "More than 167 hours ago"
+    },
+    {
+      "rloi_id": 1113,
+      "river_name": "River Pinn",
+      "agency_name": "Avenue Road",
+      "status": "Active",
+      "iswales": false,
+      "latest_level": "0.182",
+      "threshold_value": "1.46",
+      "value_timestamp": "2024-08-12T11:45:00.000Z",
+      "threshold_type": "FW RES FW",
+      "formatted_time": "More than 167 hours ago"
+    }
+  ]
+}

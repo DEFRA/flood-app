@@ -1,0 +1,22 @@
+.defra-live {
+  position: relative;
+  border: 2px solid govuk-colour('blue');
+  margin-top: 30px;
+  margin-bottom: 15px;
+  padding: 15px;
+  &__title {
+    @extend .govuk-tag;
+    @include govuk-font($size: 16);
+    margin-top: 0px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: #1C70B8;
+    color: white;
+  }  
+  &__supplementary {
+    @include govuk-font($size: 16);
+    color: $govuk-secondary-text-colour;
+    margin: 0;
+  }
+}

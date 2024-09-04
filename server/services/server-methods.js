@@ -140,6 +140,14 @@ module.exports = server => {
     }
   })
 
+  server.method('flood.getTargetAreaThresholds', floodServices.getTargetAreaThresholds, {
+    cache: {
+      cache: cacheType,
+      expiresIn: minutes(1),
+      generateTimeout: seconds(10)
+    }
+  })
+
   server.method('flood.getStationForecastData', floodServices.getStationForecastData, {
     cache: {
       cache: cacheType,

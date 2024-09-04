@@ -753,8 +753,8 @@ lab.experiment('Test - /station/{id}', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('No data is available. You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a> or call Floodline for advice.\n')
-    Code.expect(response.payload).to.contain('This measuring station is closed\n')
+    Code.expect(response.payload).to.contain('No data is available. You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a> or call Floodline for advice.')
+    Code.expect(response.payload).to.contain('This measuring station is closed')
   })
   lab.test('GET station/5146 with Low Level ', async () => {
     const floodService = require('../../server/services/flood')
@@ -886,7 +886,7 @@ lab.experiment('Test - /station/{id}', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('Low\n')
+    Code.expect(response.payload).to.contain('Low')
     Code.expect(response.payload).to.contain('Rising')
     Code.expect(response.payload).to.contain('Latest at 1:30am')
     Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
