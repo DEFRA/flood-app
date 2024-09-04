@@ -17,19 +17,17 @@ function getThresholdsForTargetArea (thresholds) {
 }
 
 function findPrioritisedThresholds (thresholds, types) {
-  const thresholdMap = new Map()
+  const thresholdMap = {}
 
   for (const type of types) {
-    const filteredThresholds = thresholds.filter(threshold => threshold.threshold_type === type)
-
-    filteredThresholds.forEach(threshold => {
-      if (!thresholdMap.has(threshold.rloi_id)) {
-        thresholdMap.set(threshold.rloi_id, threshold)
+    for (const threshold of thresholds) {
+      if (threshold.threshold_type === type && !thresholdMap[threshold.rloi_id]) {
+        thresholdMap[threshold.rloi_id] = threshold
       }
-    })
+    }
   }
 
-  return Array.from(thresholdMap.values())
+  return Object.values(thresholdMap)
 }
 
 module.exports = getThresholdsForTargetArea
