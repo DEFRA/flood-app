@@ -1,18 +1,8 @@
 # Check For Flooding Release
 
 * Version: 8.8.0
-* Proposed Release Date: 
+* Proposed Release Date: 5th September 2024
 * Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/17194/tab/release-report-all-issues
-
-## Sense Check
-
-* Note that this is the definitive release notes for WebOps. The release notes in flood-service and flood-db are for CFF dev team use only.
-* Cross check the list of Jira tickets below with those in the Jira release linked to above and update where needed
-* Add additional Jira tickets from the related release notes in the 'Release 8.8.0' PR's created in:
-  * [flood-service](https://github.com/DEFRA/flood-service)
-
-* Add any required infrastructure changes such as redirects to the infrastructure changes section below
-* Once this sense check is done, delete this section
 
 ## Tickets
 
@@ -20,7 +10,9 @@
   
   * FSR-0001 | fix aw map layers (#799)
   
-  * FSR-1130 | refactor JS files (#761)
+  * FSR-1130 | Update front end Toolkit to 5.4.0 (#761)
+    
+  * FSR-1270 | Reduce Bundle Size - Phase One
   
   * FSR-823 | FFOI check using DTS table (#722)
   
