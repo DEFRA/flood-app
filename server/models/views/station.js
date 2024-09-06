@@ -22,6 +22,12 @@ class ViewModel {
     this.river = river
     const isForecast = forecast ? forecast.forecastFlag.display_time_series : false
 
+    // Define station navigation properties based on the station type and qualifier
+    const upstreamNavigationLink = createNavigationLink(river, 'upstream')
+    const downstreamNavigationLink = createNavigationLink(river, 'downstream')
+
+    this.navigationLink = { upstream: upstreamNavigationLink, downstream: downstreamNavigationLink }
+
     this.station.trend = river.trend
 
     Object.assign(this, {
@@ -39,7 +45,6 @@ class ViewModel {
     const numSevereWarnings = warningsAlertsGroups['3'] ? warningsAlertsGroups['3'].length : 0
 
     // Determine appropriate warning/alert text for banner
-
     this.banner = numAlerts || numWarnings || numSevereWarnings
 
     switch (numAlerts) {
@@ -385,6 +390,40 @@ class ViewModel {
       telemetryData = telemetryForecastBuilder(this.telemetry, forecastData, this.station.type)
     }
     this.telemetryRefined = telemetryData || []
+  }
+}
+
+function createNavigationLink (river, direction) {
+  const currentStationId = river.rloi_id
+  const currentStationType = river.station_type
+  const currentStationQualifier = river.qualifier
+  const targetStationId = direction === 'upstream' ? river.up : river.down
+  const targetStationType = direction === 'upstream' ? river.up_station_type : river.down_station_type
+
+  if (!targetStationId) {
+    return null
+  }
+
+  if (currentStationType === 'M') {
+    return createMultiStationNavLink(direction, currentStationQualifier, targetStationId, currentStationId)
+  } else {
+    return createSingleStationNavLink(direction, targetStationType, targetStationId)
+  }
+}
+
+function createMultiStationNavLink (direction, currentStationQualifier, targetStationId, currentStationId) {
+  if (currentStationQualifier === 'u') {
+    return direction === 'upstream' ? `${targetStationId}` : `${currentStationId}/downstream`
+  } else {
+    return direction === 'upstream' ? `${currentStationId}` : `${targetStationId}`
+  }
+}
+
+function createSingleStationNavLink (direction, targetStationType, targetStationId) {
+  if (direction === 'upstream') {
+    return targetStationType === 'M' ? `${targetStationId}/downstream` : `${targetStationId}`
+  } else {
+    return `${targetStationId}`
   }
 }
 
