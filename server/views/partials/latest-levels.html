@@ -3,7 +3,7 @@
   {% for warnings in model.latestLevels %}
   <div class="defra-live__item">
     {% if warnings.isSuspendedOrOffline %}
-      <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0"><strong>Latest Level</strong></p>
+      <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0"><strong>{{ warnings.formatted_time }}</strong></p>
       <p>The {{ warnings.river_name }} level at {{ warnings.agency_name }} is currently unavailable.</p>
     {% else %}
       <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0"><strong>{{ warnings.formatted_time }}</strong></p>
