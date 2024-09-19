@@ -9,7 +9,7 @@
       <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0"><strong>{{ warnings.formatted_time }}</strong></p>
       <p>The {{ warnings.river_name }} level at {{ warnings.agency_name }} was {{ warnings.latest_level | toFixed(2) }} metres. Property flooding is possible when it goes above {{ warnings.threshold_value | toFixed(2) }} metres.
         {% if model.latestLevels.length > 1 %}
-        <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}-downstage{% endif %}">Monitor the {{ warnings.river_name }} level at {{ warnings.agency_name }}{% if warnings.iswales %} (Natural Resources Wales){% endif %}</a>
+        <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}-downstage{% endif %}">Monitor the {{ warnings.river_name }} level at {{ warnings.agency_name }}{% if warnings.iswales %} (Natural Resources Wales){% endif %}.</a>
         {% endif %}
       </p>
       {% if model.latestLevels.length == 1 %}

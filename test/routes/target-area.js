@@ -192,9 +192,9 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest levels</h2>')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road was 0.18 metres. Property flooding is possible when it goes above 1.46 metres.')
-    Code.expect(response.payload).to.contain('<a href="/station/7173">Monitor the River Pinn level at Avenue Road</a>')
+    Code.expect(response.payload).to.contain('<a href="/station/7173">Monitor the River Pinn level at Avenue Road.</a>')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Moss Close was 0.13 metres. Property flooding is possible when it goes above 1.15 metres.')
-    Code.expect(response.payload).to.contain('<a href="/station/7201">Monitor the River Pinn level at Moss Close</a>')
+    Code.expect(response.payload).to.contain('<a href="/station/7201">Monitor the River Pinn level at Moss Close.</a>')
   })
   lab.test('Check flood severity banner link for Flood warning', async () => {
     const floodService = require('../../server/services/flood')
