@@ -286,7 +286,7 @@ lab.experiment('Target-area tests', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     const root = parse(response.payload)
-    Code.expect(response.payload).to.contain('Find other river and sea levels')
+    Code.expect(response.payload).to.contain('Find a river, sea, groundwater or rainfall level in this area')
     Code.expect(response.payload).to.contain('<a data-journey-click="Target Area:Station list:TA - View station list" href="/river-and-sea-levels/target-area/011WAFDW">')
 
     const relatedContentLinks = root.querySelectorAll('.defra-related-items a')
@@ -357,7 +357,7 @@ lab.experiment('Target-area tests', () => {
     // context footer check
     validateFooterPresent(response)
     Code.expect(response.payload).to.contain('Severe flood warning for Upper River Derwent, Stonethwaite Beck and Derwent Water')
-    Code.expect(response.payload).to.contain('Find other river and sea levels')
+    Code.expect(response.payload).to.contain('Find a river, sea, groundwater or rainfall level in this area')
 
     const anchorFound = root.querySelectorAll('a').some(a =>
       a.attributes.href === '/river-and-sea-levels/target-area/011WAFDW'
