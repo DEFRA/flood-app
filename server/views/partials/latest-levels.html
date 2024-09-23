@@ -36,6 +36,8 @@
     let timeAgoInterval
     let liveStatusMessages = []
 
+    const INTERVAL_1_MINUTE = 60000
+
     const dataItemTimeAttr = '[data-item-time]'
     const latestLevels = document.querySelectorAll('.defra-live__item')
 
@@ -67,7 +69,7 @@
 
       setTimeout(() => {
         renderTimeAgo()
-        timeAgoInterval = setInterval(renderTimeAgo, 60000)
+        timeAgoInterval = setInterval(renderTimeAgo, INTERVAL_1_MINUTE)
       }, (60 - new Date().getSeconds()) * 1000)
     }
 
@@ -114,20 +116,24 @@
             return liveStatusMessages.push('Warnings have been removed, please refresh the page.')
           }
 
-          fetchedElements.forEach((fetchedElement, index) => {
+          return fetchedElements.map(fetchedElement => {
             const itemId = fetchedElement.getAttribute('data-item-id')
             const itemRiverName = fetchedElement.getAttribute('data-item-name')
             const itemRiverAgency = fetchedElement.getAttribute('data-item-agency')
+
+            const fetchedTime = fetchedElement.querySelector(dataItemTimeAttr)
+            const fetchedValue = fetchedElement.querySelector('[data-item-value]')
+            const fetchedStatus = fetchedElement.getAttribute('data-item-status')
 
             const currentItem = document.querySelector(`[data-item-id="${itemId}"]`)
 
             console.log('fetchedElement', itemId, itemRiverName, itemRiverAgency)
 
-            if (currentItem) {
-              const fetchedTime = fetchedElement.querySelector(dataItemTimeAttr)
-              const fetchedValue = fetchedElement.querySelector('[data-item-value]')
-              const fetchedStatus = fetchedElement.getAttribute('data-item-status')
+            if (fetchedStatus !== 'Active') {
+              return liveStatusMessages.push(`There was an error getting the latest ${itemRiverName} at ${itemRiverAgency} level`)
+            }
 
+            if (currentItem) {
               const currentTime = currentItem.querySelector(dataItemTimeAttr)
               const currentValue = currentItem.querySelector('[data-item-value]')
               const currentStatus = currentItem.getAttribute('data-item-status')
@@ -190,7 +196,7 @@
       nextTargetDate.setSeconds(0)
       nextTargetDate.setMilliseconds(0)
 
-      if (nowMinute >= targetMinutes[3]) {
+      if (nowMinute >= targetMinutes[targetMinutes.length - 1]) {
         nextTargetDate.setHours(nextTargetDate.getHours() + 1)
       }
 
