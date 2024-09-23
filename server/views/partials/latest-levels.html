@@ -36,12 +36,15 @@
     let timeAgoInterval
     let liveStatusMessages = []
 
+    const dataItemTimeAttr = '[data-item-time]'
     const latestLevels = document.querySelectorAll('.defra-live__item')
 
-    if (latestLevels.length === 0) return
+    if (latestLevels.length === 0) {
+      return
+    }
 
     function renderTimeAgo () {
-      const elements = document.querySelectorAll('[data-item-time]')
+      const elements = document.querySelectorAll(dataItemTimeAttr)
 
       elements.forEach((element, index) => {
         console.log('element', index)
@@ -69,7 +72,9 @@
     }
 
     function updateLiveStatus () {
-      if (liveStatusMessages.length === 0) return
+      if (liveStatusMessages.length === 0) {
+        return
+      }
 
       const element = document.querySelector('[data-live-status]')
       element.innerHTML = ''
@@ -86,7 +91,10 @@
 
       fetch(window.location.href)
         .then(res => {
-          if (!res.ok) throw new Error('Failed to fetch data')
+          if (!res.ok) {
+            throw new Error('Failed to fetch data')
+          }
+
           return res.text()
         })
         .then(html => {
@@ -116,11 +124,11 @@
             console.log('fetchedElement', itemId, itemRiverName, itemRiverAgency)
 
             if (currentItem) {
-              const fetchedTime = fetchedElement.querySelector('[data-item-time]')
+              const fetchedTime = fetchedElement.querySelector(dataItemTimeAttr)
               const fetchedValue = fetchedElement.querySelector('[data-item-value]')
               const fetchedStatus = fetchedElement.getAttribute('data-item-status')
 
-              const currentTime = currentItem.querySelector('[data-item-time]')
+              const currentTime = currentItem.querySelector(dataItemTimeAttr)
               const currentValue = currentItem.querySelector('[data-item-value]')
               const currentStatus = currentItem.getAttribute('data-item-status')
 
