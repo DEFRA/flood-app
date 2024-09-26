@@ -14,8 +14,7 @@
 }
 
 // Secondoary button
-a.defra-button-secondary,
-button.defra-button-secondary {
+.defra-button-secondary {
     position: relative;
     display: inline-block;
     @include govuk-font($size: 16);
