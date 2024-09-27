@@ -17,17 +17,26 @@ function processThreshold (threshold, stationStageDatum, stationSubtract, postPr
 function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtract, postProcess) {
   const thresholds = []
 
-  const imtdThresholdWarning = processThreshold(imtdThresholds?.warning, stationStageDatum, stationSubtract, postProcess)
+  const imtdThresholdWarning = processThreshold(imtdThresholds?.warning?.value, stationStageDatum, stationSubtract, postProcess)
+  // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
   if (imtdThresholdWarning) {
-    // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
-    thresholds.push({
-      id: 'warningThreshold',
-      description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
-      shortname: 'Possible flood warnings',
-      value: imtdThresholdWarning
-    })
+    if (imtdThresholds.warning.severity_value) {
+      const warningType = imtdThresholds.warning.severity_value === 3 ? 'Severe Flood Warning' : 'Flood Warning'
+      thresholds.push({
+        id: 'warningThreshold',
+        description: `${warningType} issued: <a href="/target-area/${imtdThresholds.warning.fwis_code}">${imtdThresholds.warning.ta_name}</a>`,
+        shortname: 'Possible flood warnings',
+        value: imtdThresholdWarning
+      })
+    } else {
+      thresholds.push({
+        id: 'warningThreshold',
+        description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
+        shortname: 'Possible flood warnings',
+        value: imtdThresholdWarning
+      })
+    }
   }
-
   const imtdThresholdAlert = processThreshold(imtdThresholds?.alert, stationStageDatum, stationSubtract, postProcess)
   if (imtdThresholdAlert) {
     thresholds.push({
