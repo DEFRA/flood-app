@@ -14,7 +14,7 @@ function processThreshold (threshold, stationStageDatum, stationSubtract, postPr
   return null
 }
 
-function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtract, postProcess) {
+function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtract, postProcess, pc5) {
   const thresholds = []
 
   const imtdThresholdWarning = processThreshold(imtdThresholds?.warning?.value, stationStageDatum, stationSubtract, postProcess)
@@ -31,7 +31,7 @@ function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtra
     } else {
       thresholds.push({
         id: 'warningThreshold',
-        description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
+        description: 'Property flooding is possible above this level',
         shortname: 'Possible flood warnings',
         value: imtdThresholdWarning
       })
@@ -39,11 +39,29 @@ function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtra
   }
   const imtdThresholdAlert = processThreshold(imtdThresholds?.alert, stationStageDatum, stationSubtract, postProcess)
   if (imtdThresholdAlert) {
+    if (Number(imtdThresholdAlert) !== Number(pc5)) {
+      thresholds.push({
+        id: 'alertThreshold',
+        description: 'Low lying land flooding possible above this level. One or more flood alerts may be issued',
+        shortname: 'Possible flood alerts',
+        value: imtdThresholdAlert
+      })
+    } else {
+      thresholds.push({
+        id: 'alertThreshold',
+        description: Number(imtdThresholdAlert) === Number(pc5)
+          ? 'Top of normal range. Low lying land flooding possible above this level. One or more flood alerts may be issued'
+          : 'Top of normal range',
+        shortname: 'Possible flood alerts',
+        value: imtdThresholdAlert
+      })
+    }
+  } else if (pc5) {
     thresholds.push({
-      id: 'alertThreshold',
-      description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
-      shortname: 'Possible flood alerts',
-      value: imtdThresholdAlert
+      id: 'pc5',
+      description: 'Top of normal range. Low lying land flooding possible above this level',
+      shortname: 'Top of normal range',
+      value: pc5
     })
   }
   return thresholds

@@ -262,20 +262,11 @@ class ViewModel {
       this.imtdThresholds,
       this.station.stageDatum,
       this.station.subtract,
-      this.station.post_process
+      this.station.post_process,
+      this.station.percentile5
     )
 
     thresholds.push(...processedImtdThresholds)
-
-    if (this.station.percentile5) {
-      // Only push typical range if it has a percentile5
-      thresholds.push({
-        id: 'pc5',
-        value: this.station.percentile5,
-        description: 'This is the top of the normal range',
-        shortname: 'Top of normal range'
-      })
-    }
 
     // Add impacts
     if (impacts.length > 0) {
@@ -403,6 +394,7 @@ function stationTypeCalculator (stationTypeData) {
   }
   return stationType
 }
+
 function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationType) {
   const observed = telemetryRawData
     .filter(telemetry => telemetry._ !== null) // Filter out records where telemetry._ is null
