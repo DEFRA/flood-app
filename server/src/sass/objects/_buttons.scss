@@ -26,7 +26,7 @@
         background-color: white;
         padding: 10px;
         cursor: pointer;
-        color: govuk-colour('black');
+        color: govuk-colour('blue');
         text-decoration: none;
     }
     &:visited {
@@ -51,7 +51,7 @@
         color: govuk-colour('black');
     }
     svg {
-        color: currentColor;
+        // color: currentColor;
         position: relative;
         display: inline-block;
         vertical-align: middle;
