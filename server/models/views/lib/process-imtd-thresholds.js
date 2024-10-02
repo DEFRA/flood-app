@@ -1,3 +1,4 @@
+const SEVERE_FLOOD_WARNING_THRESHOLD = 3
 function processThreshold (threshold, stationStageDatum, stationSubtract, postProcess) {
   if (threshold) {
     if (postProcess) {
@@ -21,7 +22,7 @@ function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtra
   // Correct threshold value if value > zero (Above Ordnance Datum) [FSR-595]
   if (imtdThresholdWarning) {
     if (imtdThresholds.warning.severity_value) {
-      const warningType = imtdThresholds.warning.severity_value === 3 ? 'Severe Flood Warning' : 'Flood Warning'
+      const warningType = imtdThresholds.warning.severity_value === SEVERE_FLOOD_WARNING_THRESHOLD ? 'Severe Flood Warning' : 'Flood Warning'
       thresholds.push({
         id: 'warningThreshold',
         description: `${warningType} issued: <a href="/target-area/${imtdThresholds.warning.fwis_code}">${imtdThresholds.warning.ta_name}</a>`,
@@ -56,13 +57,15 @@ function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtra
         value: imtdThresholdAlert
       })
     }
-  } else if (pc5) {
-    thresholds.push({
-      id: 'pc5',
-      description: 'Top of normal range. Low lying land flooding possible above this level',
-      shortname: 'Top of normal range',
-      value: pc5
-    })
+  } else {
+    if (pc5) {
+      thresholds.push({
+        id: 'pc5',
+        description: 'Top of normal range. Low lying land flooding possible above this level',
+        shortname: 'Top of normal range',
+        value: pc5
+      })
+    }
   }
   return thresholds
 }
