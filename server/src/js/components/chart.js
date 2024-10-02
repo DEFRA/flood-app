@@ -1433,8 +1433,8 @@ if (document.getElementById('bar-chart')) {
 // Line chart
 if (document.getElementById('line-chart')) {
   const lineChart = window.flood.charts.createLineChart('line-chart', window.flood.model.id, window.flood.model.telemetry)
-  const thresholdId = `threshold-${window.flood.model.rloiId}-high`
-  const threshold = document.querySelector(`[data-id="${window.flood.utils.getParameterByName('tid') || thresholdId}"]`)
+  const thresholdId = 'threshold-pc5'
+  const threshold = document.querySelector(`[data-id="${thresholdId}"]`)
   if (threshold) {
     lineChart.addThreshold({
       id: thresholdId,
