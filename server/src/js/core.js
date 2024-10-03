@@ -44,7 +44,7 @@ document.addEventListener('readystatechange', () => {
     if (document.getElementById('map-outlook')) {
       window.flood.maps.createOutlookMap('map-outlook', {
         btnText: 'View map showing flood risk areas',
-        btnClass: 'defra-button-secondary defra-button-secondary--icon',
+        btnClass: 'defra-button-secondary',
         days: model.outlookDays,
         data: model.outlookData || null
       })
