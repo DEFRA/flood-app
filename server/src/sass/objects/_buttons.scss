@@ -143,3 +143,19 @@
         top: 0px;
     }
 }
+
+.defra-button-blue-text-black-icon {
+    @extend .defra-button-secondary;
+    color: govuk-colour('blue') !important;
+
+    svg {
+        color: govuk-colour('black') !important;
+    }
+
+    &:focus,
+    &:active,
+    &:visited {
+        color: govuk-colour('black') !important;
+    }
+}
+
