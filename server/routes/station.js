@@ -10,6 +10,7 @@ module.exports = {
   handler: async (request, h) => {
     const { id } = request.params
     let { direction } = request.params
+    // const thresholdId = request.query.tid?
 
     // Convert human readable url to service parameter
     direction = direction === 'downstream' ? 'd' : 'u'

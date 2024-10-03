@@ -170,7 +170,7 @@ class ViewModel {
 
       oneHourAgo.setHours(oneHourAgo.getHours() - 1)
 
-      // check if recent value is over one hour old0
+      // check if recent value is over one hour old
       this.dataOverHourOld = new Date(this.recentValue.ts) < oneHourAgo
 
       this.recentValue.dateWhen = 'on ' + moment.tz(this.recentValue.ts, tz).format('D/MM/YY')
@@ -248,7 +248,7 @@ class ViewModel {
         id: 'highest',
         value: this.station.porMaxValue,
         description: this.station.thresholdPorMaxDate
-          ? 'Water reaches the highest level recorded at this measuring station (recorded on ' + this.station.thresholdPorMaxDate + ')'
+          ? `Water reaches the highest level recorded at this measuring station (${this.station.thresholdPorMaxDate})`
           : 'Water reaches the highest level recorded at this measuring station',
         shortname: 'Highest level on record'
       })
@@ -262,20 +262,11 @@ class ViewModel {
       this.imtdThresholds,
       this.station.stageDatum,
       this.station.subtract,
-      this.station.post_process
+      this.station.post_process,
+      this.station.percentile5
     )
 
     thresholds.push(...processedImtdThresholds)
-
-    if (this.station.percentile5) {
-      // Only push typical range if it has a percentil5
-      thresholds.push({
-        id: 'pc5',
-        value: this.station.percentile5,
-        description: 'This is the top of the normal range',
-        shortname: 'Top of normal range'
-      })
-    }
 
     // Add impacts
     if (impacts.length > 0) {
@@ -403,6 +394,7 @@ function stationTypeCalculator (stationTypeData) {
   }
   return stationType
 }
+
 function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationType) {
   const observed = telemetryRawData
     .filter(telemetry => telemetry._ !== null) // Filter out records where telemetry._ is null
