@@ -192,9 +192,9 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest levels</h2>')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road was 0.18 metres. Property flooding is possible when it goes above 1.46 metres.')
-    Code.expect(response.payload).to.contain(' <a href="/station/7173">Monitor the River Pinn level at Avenue Road</a>')
+    Code.expect(response.payload).to.contain('<a href="/station/7173">Monitor the River Pinn level at Avenue Road.</a>')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Moss Close was 0.13 metres. Property flooding is possible when it goes above 1.15 metres.')
-    Code.expect(response.payload).to.contain('<a href="/station/7201">Monitor the River Pinn level at Moss Close</a>')
+    Code.expect(response.payload).to.contain('<a href="/station/7201">Monitor the River Pinn level at Moss Close.</a>')
   })
   lab.test('Check flood severity banner link for Flood warning', async () => {
     const floodService = require('../../server/services/flood')
@@ -286,7 +286,7 @@ lab.experiment('Target-area tests', () => {
 
     Code.expect(response.statusCode).to.equal(200)
     const root = parse(response.payload)
-    Code.expect(response.payload).to.contain('Find other river and sea levels')
+    Code.expect(response.payload).to.contain('Find a river, sea, groundwater or rainfall level in this area')
     Code.expect(response.payload).to.contain('<a data-journey-click="Target Area:Station list:TA - View station list" href="/river-and-sea-levels/target-area/011WAFDW">')
 
     const relatedContentLinks = root.querySelectorAll('.defra-related-items a')
@@ -357,7 +357,7 @@ lab.experiment('Target-area tests', () => {
     // context footer check
     validateFooterPresent(response)
     Code.expect(response.payload).to.contain('Severe flood warning for Upper River Derwent, Stonethwaite Beck and Derwent Water')
-    Code.expect(response.payload).to.contain('Find other river and sea levels')
+    Code.expect(response.payload).to.contain('Find a river, sea, groundwater or rainfall level in this area')
 
     const anchorFound = root.querySelectorAll('a').some(a =>
       a.attributes.href === '/river-and-sea-levels/target-area/011WAFDW'
@@ -950,5 +950,6 @@ lab.experiment('Target-area tests', () => {
 
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest level</h2>')
     Code.expect(response.payload).to.contain('<p>The River Welsh level at Welsh Station was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.\n        \n      </p>')
+    Code.expect(response.payload).to.contain('<a href="/station/7201">Monitor the latest level at Welsh Station (Natural Resources Wales)</a>')
   })
 })
