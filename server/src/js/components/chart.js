@@ -2,13 +2,13 @@
 // Chart component
 
 import '../utils'
+import { area as d3Area, line as d3Line, curveMonotoneX } from 'd3-shape'
 import { axisBottom, axisLeft } from 'd3-axis'
 import { scaleLinear, scaleBand, scaleTime } from 'd3-scale'
 import { timeFormat } from 'd3-time-format'
+import { timeHour, timeMinute } from 'd3-time'
 import { select, selectAll, pointer } from 'd3-selection'
 import { max, bisector, extent } from 'd3-array'
-import { timeHour, timeMinute } from 'd3-time'
-import { area as d3Area, line as d3Line, curveMonotoneX } from 'd3-shape'
 
 const { forEach, simplify } = window.flood.utils
 
@@ -776,18 +776,25 @@ function LineChart (containerId, stationId, data, options = {}) {
         .attr('class', 'threshold__line')
         .attr('aria-hidden', true)
         .attr('x2', xScale(xExtent[1])).attr('y2', 0)
-      const label = thresholdContainer.append('g')
-        .attr('class', 'threshold-label')
+
+      // Construct label text and split into lines of up to 35 characters
+      const thresholdLabel = `${threshold.level}m ${threshold.name}`
+      const labelSegments = thresholdLabel.match(/.{1,35}(\s|$)/g).map(line => line.trim())
+      const label = thresholdContainer.append('g').attr('class', 'threshold-label')
       const path = label.append('path')
         .attr('aria-hidden', true)
         .attr('class', 'threshold-label__bg')
       const text = label.append('text')
         .attr('class', 'threshold-label__text')
       text.append('tspan').attr('font-size', 0).text('Threshold: ')
-      text.append('tspan').attr('x', 10).attr('y', 22).text(`${threshold.level}m ${threshold.name}`)
+      // Add each line of the split text (up to 35 characters per line) as separate tspans
+      labelSegments.forEach((line, i) => {
+        text.append('tspan').attr('x', 10).attr('y', (i + 1) * 22).text(line.trim())
+      })
       const textWidth = Math.round(text.node().getBBox().width)
-      path.attr('d', `m-0.5,-0.5 l${textWidth + 20},0 l0,36 l-${((textWidth + 20) / 2) - 7.5},0 l-7.5,7.5 l-7.5,-7.5 l-${((textWidth + 20) / 2) - 7.5},0 l0,-36 l0,0`)
-      label.attr('transform', `translate(${Math.round(width / 2 - ((textWidth + 20) / 2))}, -46)`)
+      const textHeight = Math.round(text.node().getBBox().height)
+      path.attr('d', `m-0.5,-0.5 l${textWidth + 20},0 l0,${19 + textHeight} l-${((textWidth + 20) / 2) - 7.5},0 l-7.5,7.5 l-7.5,-7.5 l-${((textWidth + 20) / 2) - 7.5},0 l0,-${19 + textHeight} l0,0`)
+      label.attr('transform', `translate(${Math.round(width / 2 - ((textWidth + 20) / 2))}, -${29 + textHeight})`)
       const remove = thresholdContainer.append('a')
         .attr('role', 'button')
         .attr('class', 'threshold__remove')
@@ -800,6 +807,7 @@ function LineChart (containerId, stationId, data, options = {}) {
       remove.append('circle').attr('class', 'threshold__remove-button').attr('r', 11)
       remove.append('line').attr('x1', -3).attr('y1', -3).attr('x2', 3).attr('y2', 3)
       remove.append('line').attr('y1', -3).attr('x2', -3).attr('x1', 3).attr('y2', 3)
+
       // Set individual elements size and position
       thresholdContainer.attr('transform', 'translate(0,' + Math.round(yScale(threshold.level)) + ')')
     })
@@ -931,7 +939,7 @@ function LineChart (containerId, stationId, data, options = {}) {
   const showTooltip = (tooltipY = 10) => {
     if (!dataPoint) return
     // Hide threshold label
-    thresholdsContainer.select('.threshold--selected .threshold-label').style('visibility', 'hidden')
+    // thresholdsContainer.select('.threshold--selected .threshold-label').style('visibility', 'hidden')
     // Set tooltip text
     const value = dataCache.type === 'river' && (Math.round(dataPoint.value * 100) / 100) <= 0 ? '0' : dataPoint.value.toFixed(2) // *DBL below zero addition
     tooltipValue.text(`${value}m`) // *DBL below zero addition
@@ -1109,7 +1117,8 @@ function LineChart (containerId, stationId, data, options = {}) {
   //
 
   const defaults = {
-    btnAddThresholdClass: 'defra-button-text-s'
+    btnAddThresholdClass: 'defra-button-text-s',
+    btnAddThresholdText: 'Show on chart <span class="govuk-visually-hidden">(Visual only)</span>'
   }
   options = Object.assign({}, defaults, options)
 
@@ -1170,16 +1179,30 @@ function LineChart (containerId, stationId, data, options = {}) {
   const tooltipDescription = tooltipText.append('tspan').attr('class', 'tooltip-text').attr('x', 12).attr('dy', '1.4em')
 
   // Add optional 'Add threshold' buttons
-  document.querySelectorAll('[data-threshold-add]').forEach(container => {
-    const button = document.createElement('button')
-    button.className = options.btnAddThresholdClass
-    button.innerHTML = `Show<span class="govuk-visually-hidden"> ${container.getAttribute('data-level')}m threshold</span> on chart <span class="govuk-visually-hidden">(Visual only)</span>`
-    button.setAttribute('aria-controls', `${containerId}-visualisation`)
-    button.setAttribute('data-id', container.getAttribute('data-id'))
-    button.setAttribute('data-threshold-add', '')
-    button.setAttribute('data-level', container.getAttribute('data-level'))
-    button.setAttribute('data-name', container.getAttribute('data-name'))
-    container.parentElement.replaceChild(button, container)
+  document.querySelectorAll('[data-threshold-add]').forEach((container, i) => {
+    const tooltip = document.createElement('div')
+    tooltip.className = 'defra-tooltip defra-tooltip--left'
+    tooltip.setAttribute('data-tooltip', '')
+    tooltip.innerHTML = `
+      <button class="${options.btnAddThresholdClass}"
+        aria-labelledby="tooltip-${i}"
+        aria-controls="${containerId}-visualisation"
+        data-id="${container.getAttribute('data-id')}"
+        data-level="${container.getAttribute('data-level')}"
+        data-name="${container.getAttribute('data-name')}"
+        data-threshold-add >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill-rule="evenodd" fill="currentColor">
+          <path d="M2.75 14.443v2.791H18v1.5H1.25V1.984h1.5v7.967L6.789 4.91l5.016 4.013 5.056-5.899 2.278 1.952-6.944 8.101L7.211 9.09 2.75 14.443z"/>
+        </svg>
+      </button>
+      <div id="tooltip-${i}" class="defra-tooltip__label" role="tooltip">
+        <div class="defra-tooltip__label-inner govuk-body-s">
+          ${options.btnAddThresholdText}
+          <span class="govuk-visually-hidden>(visual only)</span>
+        </div>
+      </div>
+    `
+    container.parentElement.replaceChild(tooltip, container)
   })
 
   // Define globals
@@ -1241,8 +1264,8 @@ function LineChart (containerId, stationId, data, options = {}) {
     significantContainer.node().parentNode.classList.remove('significant--visible')
     // svg.select('.focussed-cell').remove()
     // Add threshold button
-    if (!e.target.hasAttribute('data-threshold-add')) return
-    const button = e.target
+    const button = e.target.closest('button')
+    if (!(button && button.hasAttribute('data-threshold-add'))) return
     addThreshold({
       id: button.getAttribute('data-id'),
       level: Number(button.getAttribute('data-level')),
@@ -1408,16 +1431,45 @@ if (document.getElementById('bar-chart')) {
   window.flood.charts.createBarChart('bar-chart', window.flood.model.stationId, window.flood.model.telemetry)
 }
 
-// Line chart
+// Line chart setup and threshold handling logic ---
+// Constants for IDs
+const defaultThresholdId = 'threshold-pc5'
+
+// Function to get the threshold element by id
+function getThresholdById (id) {
+  return document.querySelector(`[data-id="${id}"]`)
+}
+
+// Function to add the threshold to the chart
+function addThresholdToChart (lineChart, thresholdElement) {
+  if (thresholdElement) {
+    lineChart.addThreshold({
+      id: thresholdElement.getAttribute('data-id'),
+      name: thresholdElement.getAttribute('data-name'),
+      level: Number(thresholdElement.getAttribute('data-level'))
+    })
+  } else {
+    console.error('No valid threshold found to add to the chart.')
+  }
+}
+
+// Line chart logic to initialize chart and set threshold
 if (document.getElementById('line-chart')) {
   const lineChart = window.flood.charts.createLineChart('line-chart', window.flood.model.id, window.flood.model.telemetry)
-  const thresholdId = 'threshold-pc5'
-  const threshold = document.querySelector(`[data-id="${thresholdId}"]`)
-  if (threshold) {
-    lineChart.addThreshold({
-      id: thresholdId,
-      name: threshold.getAttribute('data-name'),
-      level: Number(threshold.getAttribute('data-level'))
-    })
+
+  // Get tid from URL, if present
+  const tid = window.flood.utils.getParameterByName('tid')
+  const thresholdId = tid ? `threshold-${tid}` : defaultThresholdId
+
+  // Attempt to get the threshold by ID
+  let threshold = getThresholdById(thresholdId)
+
+  // If no threshold found for tid, fallback to default threshold
+  if (!threshold && tid) {
+    console.warn(`Threshold with tid=${tid} not found. Falling back to default threshold.`)
+    threshold = getThresholdById(defaultThresholdId)
   }
+
+  // Add threshold to the chart
+  addThresholdToChart(lineChart, threshold)
 }

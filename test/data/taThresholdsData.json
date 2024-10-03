@@ -2,6 +2,7 @@
   "singleActiveOffline": [
     {
       "rloi_id": 7173,
+      "station_threshold_id": 123465,
       "river_name": "River Pinn",
       "agency_name": "Avenue Road",
       "status": "Active",
@@ -16,6 +17,7 @@
   "singleSuspended": [
     {
       "rloi_id": 7201,
+      "station_threshold_id": 123457,
       "river_name": "River Pinn",
       "agency_name": "Moss Close",
       "status": "Suspended",
@@ -30,6 +32,7 @@
   "singleClosed": [
     {
       "rloi_id": 7202,
+      "station_threshold_id": 123458,
       "river_name": "River Test",
       "agency_name": "Test Road",
       "status": "Closed",
@@ -44,6 +47,7 @@
   "multipleNormalClosed": [
     {
       "rloi_id": 7174,
+      "station_threshold_id": 123459,
       "river_name": "River Pinn",
       "agency_name": "Eastcote Road",
       "status": "Active",
@@ -56,6 +60,7 @@
     },
     {
       "rloi_id": 7202,
+      "station_threshold_id": 123458,
       "river_name": "River Test",
       "agency_name": "Test Road",
       "status": "Closed",
@@ -70,6 +75,7 @@
   "multipleNormalActiveOfflineWelshNoValues": [
     {
       "rloi_id": 7174,
+      "station_threshold_id": 123459,
       "river_name": "River Pinn",
       "agency_name": "Eastcote Road",
       "status": "Active",
@@ -82,6 +88,7 @@
     },
     {
       "rloi_id": 7173,
+      "station_threshold_id": 123465,
       "river_name": "River Pinn",
       "agency_name": "Avenue Road",
       "status": "Active",
@@ -94,6 +101,7 @@
     },
     {
       "rloi_id": 7201,
+      "station_threshold_id": 123457,
       "river_name": "River Welsh",
       "agency_name": "Welsh Station",
       "status": "Active",
@@ -108,6 +116,7 @@
   "multipleNormalSuspendedClosed": [
     {
       "rloi_id": 7174,
+      "station_threshold_id": 123459,
       "river_name": "River Pinn",
       "agency_name": "Eastcote Road",
       "status": "Active",
@@ -120,6 +129,7 @@
     },
     {
       "rloi_id": 7173,
+      "station_threshold_id": 123465,
       "river_name": "River Pinn",
       "agency_name": "Avenue Road",
       "status": "Suspended",
@@ -132,6 +142,7 @@
     },
     {
       "rloi_id": 7202,
+      "station_threshold_id": 123458,
       "river_name": "River Test",
       "agency_name": "Test Road",
       "status": "Closed",
@@ -146,6 +157,7 @@
   "allClosedOrWelshNoValues": [
     {
       "rloi_id": 7202,
+      "station_threshold_id": 123458,
       "river_name": "River Test",
       "agency_name": "Test Road",
       "status": "Closed",
@@ -158,6 +170,7 @@
     },
     {
       "rloi_id": 7201,
+      "station_threshold_id": 123457,
       "river_name": "River Welsh",
       "agency_name": "Welsh Station",
       "status": "Active",
@@ -172,6 +185,7 @@
   "singleWelshWithValues": [
     {
       "rloi_id": 7201,
+      "station_threshold_id": 123457,
       "river_name": "River Welsh",
       "agency_name": "Welsh Station",
       "status": "Active",
@@ -186,6 +200,7 @@
   "multipleLatestLevels": [
     {
       "rloi_id": 7174,
+      "station_threshold_id": 123459,
       "river_name": "River Pinn",
       "agency_name": "Eastcote Road",
       "status": "Active",
@@ -198,6 +213,7 @@
     },
     {
       "rloi_id": 7174,
+      "station_threshold_id": 123459,
       "river_name": "River Pinn",
       "agency_name": "Eastcote Road",
       "status": "Active",
@@ -210,6 +226,7 @@
     },
     {
       "rloi_id": 7173,
+      "station_threshold_id": 123465,
       "river_name": "River Pinn",
       "agency_name": "Avenue Road",
       "status": "Active",
@@ -222,6 +239,7 @@
     },
     {
       "rloi_id": 7173,
+      "station_threshold_id": 123465,
       "river_name": "River Pinn",
       "agency_name": "Avenue Road",
       "status": "Active",
@@ -234,6 +252,7 @@
     },
     {
       "rloi_id": 7201,
+      "station_threshold_id": 123457,
       "river_name": "River Pinn",
       "agency_name": "Moss Close",
       "status": "Active",
@@ -246,6 +265,7 @@
     },
     {
       "rloi_id": 7201,
+      "station_threshold_id": 123457,
       "river_name": "River Pinn",
       "agency_name": "Moss Close",
       "status": "Active",
@@ -260,6 +280,7 @@
   "overLimitLatestLevels": [
     {
       "rloi_id": 7174,
+      "station_threshold_id": 123459,
       "river_name": "River Pinn",
       "agency_name": "Eastcote Road",
       "status": "Active",
@@ -272,6 +293,7 @@
     },
     {
       "rloi_id": 7174,
+      "station_threshold_id": 123459,
       "river_name": "River Pinn",
       "agency_name": "Eastcote Road",
       "status": "Active",
@@ -284,6 +306,7 @@
     },
     {
       "rloi_id": 7173,
+      "station_threshold_id": 123465,
       "river_name": "River Pinn",
       "agency_name": "Avenue Road",
       "status": "Active",
@@ -296,6 +319,7 @@
     },
     {
       "rloi_id": 7173,
+      "station_threshold_id": 123465,
       "river_name": "River Pinn",
       "agency_name": "Avenue Road",
       "status": "Active",
@@ -308,6 +332,7 @@
     },
     {
       "rloi_id": 7201,
+      "station_threshold_id": 123457,
       "river_name": "River Pinn",
       "agency_name": "Moss Close",
       "status": "Active",
@@ -320,6 +345,7 @@
     },
     {
       "rloi_id": 7201,
+      "station_threshold_id": 123457,
       "river_name": "River Pinn",
       "agency_name": "Moss Close",
       "status": "Active",
@@ -332,6 +358,7 @@
     },
     {
       "rloi_id": 1111,
+      "station_threshold_id": 123500,
       "river_name": "River Pinn",
       "agency_name": "Moss Close",
       "status": "Active",
@@ -344,6 +371,7 @@
     },
     {
       "rloi_id": 1111,
+      "station_threshold_id": 123500,
       "river_name": "River Pinn",
       "agency_name": "Avenue Road",
       "status": "Active",
@@ -356,6 +384,7 @@
     },
     {
       "rloi_id": 1112,
+      "station_threshold_id": 123501,
       "river_name": "River Pinn",
       "agency_name": "Avenue Road",
       "status": "Active",
@@ -368,6 +397,7 @@
     },
     {
       "rloi_id": 1113,
+      "station_threshold_id": 123502,
       "river_name": "River Pinn",
       "agency_name": "Avenue Road",
       "status": "Active",
