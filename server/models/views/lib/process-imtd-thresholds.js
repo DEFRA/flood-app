@@ -52,7 +52,7 @@ function calculateWarningThreshold (imtdThresholds, stationStageDatum, stationSu
       description: imtdThresholds.warning.severity_value
         ? `${warningType} issued: <a href="/target-area/${imtdThresholds.warning.fwis_code}">${imtdThresholds.warning.ta_name}</a>`
         : 'Property flooding is possible above this level',
-      shortname: 'Possible flood warnings',
+      shortname: imtdThresholds.warning.severity_value ? `${imtdThresholds.warning.ta_name}` : 'Possible flood warnings',
       value: imtdThresholdWarning
     }
   }
