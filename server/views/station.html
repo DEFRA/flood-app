@@ -251,7 +251,6 @@
       {% if model.station.isRiver and model.hasNegativeValues %}
       <p class="govuk-body-s govuk-!-margin-top-0 govuk-!-margin-bottom-2">Levels that are very low or below zero are normal for some stations.</p>
       {% endif %}
-
       <!-- Button to download station data CSV -->
       <a href="/station-csv/{{model.station.id}}{% if model.station.qualifier == 'd' %}/downstream{% endif %}" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4" download>
         <span class="defra-button-secondary__icon">
@@ -271,10 +270,12 @@
 {% if model.thresholds.length > 0 %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h2 class="govuk-heading-s govuk-!-margin-bottom-4">How levels here could affect nearby areas</h2>
-    {% if model.station.hasImpacts %}
+    <h2 class="govuk-heading-s govuk-!-margin-bottom-4"data-toggletip data-toggletip-label="More information about historical events" data-toggletip-content="Flooding might not happen again at the same historical levels if, for example, flood defences are now in place.">How levels here could affect nearby areas</h2>
+    <div>
+      {% if model.station.hasImpacts %}
     <span id="toggle-list-display" data-toggle-list-display-type="impact"></span>
     {% endif %}
+    </div>
     <dl class="defra-flood-impact-list govuk-!-margin-bottom-4" id="impact-list">
       {% for band in model.thresholds %}
       <div class="defra-flood-impact-list__row {% if band.isLatest %} defra-flood-impact-list__row--current {% elif band.isExceeded %} defra-flood-impact-list__row--exceeded{% endif %}" {% if band.type === 'historical' %} data-toggle-list-display-item="impact" {% endif %}>
