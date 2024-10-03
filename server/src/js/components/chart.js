@@ -1408,16 +1408,45 @@ if (document.getElementById('bar-chart')) {
   window.flood.charts.createBarChart('bar-chart', window.flood.model.stationId, window.flood.model.telemetry)
 }
 
-// Line chart
+// Line chart setup and threshold handling logic ---
+// Constants for IDs
+const defaultThresholdId = 'threshold-pc5'
+
+// Function to get the threshold element by id
+function getThresholdById (id) {
+  return document.querySelector(`[data-id="${id}"]`)
+}
+
+// Function to add the threshold to the chart
+function addThresholdToChart (lineChart, thresholdElement) {
+  if (thresholdElement) {
+    lineChart.addThreshold({
+      id: thresholdElement.getAttribute('data-id'),
+      name: thresholdElement.getAttribute('data-name'),
+      level: Number(thresholdElement.getAttribute('data-level'))
+    })
+  } else {
+    console.error('No valid threshold found to add to the chart.')
+  }
+}
+
+// Line chart logic to initialize chart and set threshold
 if (document.getElementById('line-chart')) {
   const lineChart = window.flood.charts.createLineChart('line-chart', window.flood.model.id, window.flood.model.telemetry)
-  const thresholdId = 'threshold-pc5'
-  const threshold = document.querySelector(`[data-id="${thresholdId}"]`)
-  if (threshold) {
-    lineChart.addThreshold({
-      id: thresholdId,
-      name: threshold.getAttribute('data-name'),
-      level: Number(threshold.getAttribute('data-level'))
-    })
+
+  // Get tid from URL, if present
+  const tid = window.flood.utils.getParameterByName('tid')
+  const thresholdId = tid ? `threshold-${tid}` : defaultThresholdId
+
+  // Attempt to get the threshold by ID
+  let threshold = getThresholdById(thresholdId)
+
+  // If no threshold found for tid, fallback to default threshold
+  if (!threshold && tid) {
+    console.warn(`Threshold with tid=${tid} not found. Falling back to default threshold.`)
+    threshold = getThresholdById(defaultThresholdId)
   }
+
+  // Add threshold to the chart
+  addThresholdToChart(lineChart, threshold)
 }
