@@ -14,7 +14,7 @@ const dataStartDateTimeDaysToSubtract = 5
 
 class ViewModel {
   constructor (options) {
-    const { station, telemetry, forecast, imtdThresholds, impacts, river, warningsAlerts } = options
+    const { station, telemetry, forecast, imtdThresholds, impacts, river, warningsAlerts, requestUrl } = options
 
     this.station = new Station(station)
     this.station.riverNavigation = river
@@ -39,7 +39,6 @@ class ViewModel {
     const numSevereWarnings = warningsAlertsGroups['3'] ? warningsAlertsGroups['3'].length : 0
 
     // Determine appropriate warning/alert text for banner
-
     this.banner = numAlerts || numWarnings || numSevereWarnings
 
     switch (numAlerts) {
@@ -170,7 +169,7 @@ class ViewModel {
 
       oneHourAgo.setHours(oneHourAgo.getHours() - 1)
 
-      // check if recent value is over one hour old0
+      // check if recent value is over one hour old
       this.dataOverHourOld = new Date(this.recentValue.ts) < oneHourAgo
 
       this.recentValue.dateWhen = 'on ' + moment.tz(this.recentValue.ts, tz).format('D/MM/YY')
@@ -230,12 +229,44 @@ class ViewModel {
     }
     this.metaDescription = `Check the latest recorded ${stationType.toLowerCase()} level and recent 5-day trend at ${stationLocation}`
 
-    // Thresholds
+    // Ensure requestUrl is defined and valid
+    let tid
+    if (requestUrl && requestUrl.startsWith('http')) {
+      try {
+        const urlObj = new URL(requestUrl)
+        tid = urlObj.searchParams.get('tid')
+      } catch (e) {
+        console.error('Invalid request URL:', e)
+      }
+    }
+
+    // Function to find the threshold with the specific tid
+    const getThresholdByTid = (tid, imtdThresholds) => {
+      if (!tid || !imtdThresholds || !imtdThresholds.length) return null
+
+      // Find the threshold by `station_threshold_id`
+      const threshold = imtdThresholds.find(thresh => thresh.station_threshold_id === tid)
+      if (threshold) {
+        // Return formatted threshold
+        return {
+          id: threshold.station_threshold_id,
+          value: Number(threshold.value).toFixed(2),
+          description: `${threshold.value}m ${threshold.ta_name || ''}`,
+          shortname: threshold.ta_name || 'Target Area Threshold'
+        }
+      }
+      return null
+    }
+
+    // Fetch the threshold for `tid`
+    const tidThreshold = getThresholdByTid(tid, imtdThresholds)
+
+    // Array to hold thresholds
     let thresholds = []
 
+    // Check if recent value exists and add it to thresholds
     if (this.station.recentValue && !this.station.recentValue.err) {
       const tVal = this.station.type !== 'c' && this.station.recentValue._ <= 0 ? 0 : this.station.recentValue._.toFixed(2)
-
       thresholds.push({
         id: 'latest',
         value: tVal,
@@ -243,17 +274,23 @@ class ViewModel {
         shortname: ''
       })
     }
+
+    // Add tid threshold if exists
+    if (tidThreshold) {
+      thresholds.push(tidThreshold)
+    }
+
+    // Add the highest level threshold if available
     if (this.station.porMaxValue) {
       thresholds.push({
         id: 'highest',
         value: this.station.porMaxValue,
         description: this.station.thresholdPorMaxDate
-          ? 'Water reaches the highest level recorded at this measuring station (recorded on ' + this.station.thresholdPorMaxDate + ')'
+          ? `Water reaches the highest level recorded at this measuring station (${this.station.thresholdPorMaxDate})`
           : 'Water reaches the highest level recorded at this measuring station',
         shortname: 'Highest level on record'
       })
     }
-
     this.imtdThresholds = imtdThresholds?.length > 0
       ? filterImtdThresholds(imtdThresholds)
       : []
@@ -262,20 +299,10 @@ class ViewModel {
       this.imtdThresholds,
       this.station.stageDatum,
       this.station.subtract,
-      this.station.post_process
+      this.station.post_process,
+      this.station.percentile5
     )
-
     thresholds.push(...processedImtdThresholds)
-
-    if (this.station.percentile5) {
-      // Only push typical range if it has a percentil5
-      thresholds.push({
-        id: 'pc5',
-        value: this.station.percentile5,
-        description: 'This is the top of the normal range',
-        shortname: 'Top of normal range'
-      })
-    }
 
     // Add impacts
     if (impacts.length > 0) {
@@ -363,7 +390,6 @@ class ViewModel {
     this.zoom = 14
 
     // Forecast Data Calculations
-
     let forecastData
     if (isForecast) {
       this.isFfoi = isForecast
@@ -403,6 +429,7 @@ function stationTypeCalculator (stationTypeData) {
   }
   return stationType
 }
+
 function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationType) {
   const observed = telemetryRawData
     .filter(telemetry => telemetry._ !== null) // Filter out records where telemetry._ is null

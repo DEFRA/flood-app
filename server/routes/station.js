@@ -10,6 +10,7 @@ module.exports = {
   handler: async (request, h) => {
     const { id } = request.params
     let { direction } = request.params
+    // const thresholdId = request.query.tid?
 
     // Convert human readable url to service parameter
     direction = direction === 'downstream' ? 'd' : 'u'
@@ -54,6 +55,9 @@ module.exports = {
       request.server.methods.flood.getRiverStationByStationId(id, direction)
     ])
 
+    // const requestUrl = request.url.href
+    const requestUrl = request.url.toString()
+
     if (station.status === 'Closed') {
       const river = []
       const model = new ViewModel({ station, telemetry, imtdThresholds, impacts, river, warningsAlerts })
@@ -67,11 +71,11 @@ module.exports = {
       // Forecast station
       const values = await request.server.methods.flood.getStationForecastData(station.wiski_id)
       const forecast = { forecastFlag, values }
-      const model = new ViewModel({ station, telemetry, forecast, imtdThresholds, impacts, river, warningsAlerts })
+      const model = new ViewModel({ station, telemetry, forecast, imtdThresholds, impacts, river, warningsAlerts, requestUrl })
       return h.view('station', { model })
     } else {
       // Non-forecast Station
-      const model = new ViewModel({ station, telemetry, imtdThresholds, impacts, river, warningsAlerts })
+      const model = new ViewModel({ station, telemetry, imtdThresholds, impacts, river, warningsAlerts, requestUrl })
       return h.view('station', { model })
     }
   },
