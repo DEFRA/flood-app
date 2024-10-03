@@ -231,7 +231,7 @@ class ViewModel {
 
     // Ensure requestUrl is defined and valid
     let tid
-    if (requestUrl && requestUrl.startsWith('http')) {
+    if (requestUrl?.startsWith('http')) {
       try {
         const urlObj = new URL(requestUrl)
         tid = urlObj.searchParams.get('tid')
@@ -241,8 +241,10 @@ class ViewModel {
     }
 
     // Function to find the threshold with the specific tid
-    const getThresholdByTid = (tid, imtdThresholds) => {
-      if (!tid || !imtdThresholds || !imtdThresholds.length) return null
+    const getThresholdByTid = () => {
+      if (!tid || !imtdThresholds?.length) {
+        return null
+      }
 
       // Find the threshold by `station_threshold_id`
       const threshold = imtdThresholds.find(thresh => thresh.station_threshold_id === tid)
@@ -259,7 +261,7 @@ class ViewModel {
     }
 
     // Fetch the threshold for `tid`
-    const tidThreshold = getThresholdByTid(tid, imtdThresholds)
+    const tidThreshold = getThresholdByTid(tid)
 
     // Array to hold thresholds
     let thresholds = []

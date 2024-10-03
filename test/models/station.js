@@ -64,7 +64,6 @@ lab.experiment('Station model test', () => {
     const viewModel = new ViewModel(stationData)
 
     const Result = viewModel
-
     Code.expect(Result.thresholds[1].values).to.equal([
       {
         id: 'warningThreshold',
