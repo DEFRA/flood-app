@@ -286,30 +286,6 @@ class ViewModel {
       console.error('Invalid request URL:', e)
     }
 
-    // Function to retrieve a threshold by tid or fall back to 'pc5' or 'alertThreshold'
-    const getThresholdByThresholdId = (thresholdId, customThresholds, defaultThresholds) => {
-      // Check if a threshold exists based on thresholdId
-      const tidThreshold = thresholdId && customThresholds?.find(thresh => thresh.station_threshold_id === thresholdId)
-      if (tidThreshold) {
-        return {
-          id: tidThreshold.station_threshold_id,
-          value: Number(tidThreshold.value).toFixed(2),
-          description: `${tidThreshold.value}m ${tidThreshold.ta_name || ''}`,
-          shortname: tidThreshold.ta_name || 'Target Area Threshold'
-        }
-      }
-
-      // Fallback to 'pc5' if present, else look for 'alertThreshold'
-      const pc5Threshold = defaultThresholds.find(t => t.id === 'pc5')
-      if (pc5Threshold) {
-        return pc5Threshold
-      }
-
-      // Fallback to 'alertThreshold' if description includes 'Top of normal range'
-      const alertThreshold = defaultThresholds.find(t => t.id === 'alertThreshold' && t.description.includes(TOP_OF_NORMAL_RANGE))
-      return alertThreshold ? { ...alertThreshold, shortname: TOP_OF_NORMAL_RANGE } : null
-    }
-
     // Retrieve the applicable threshold for chartThreshold
     const chartThreshold = [getThresholdByThresholdId(tid, imtdThresholds, thresholds)].filter(Boolean)
 
@@ -441,6 +417,7 @@ function stationTypeCalculator (stationTypeData) {
   }
   return stationType
 }
+
 function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationType) {
   const observed = telemetryRawData
     .filter(telemetry => telemetry._ !== null) // Filter out records where telemetry._ is null
@@ -468,6 +445,30 @@ function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationTyp
     forecast: forecastData,
     observed
   }
+}
+
+// Function to retrieve a threshold by tid or fall back to 'pc5' or 'alertThreshold'
+const getThresholdByThresholdId = (tid, imtdThresholds, thresholds) => {
+  // Check if a threshold exists based on tid
+  const tidThreshold = tid && imtdThresholds?.find(thresh => thresh.station_threshold_id === tid)
+  if (tidThreshold) {
+    return {
+      id: tidThreshold.station_threshold_id,
+      value: Number(tidThreshold.value).toFixed(2),
+      description: `${tidThreshold.value}m ${tidThreshold.ta_name || ''}`,
+      shortname: tidThreshold.ta_name || 'Target Area Threshold'
+    }
+  }
+
+  // Fallback to 'pc5' if present, else look for 'alertThreshold'
+  const pc5Threshold = thresholds.find(t => t.id === 'pc5')
+  if (pc5Threshold) {
+    return pc5Threshold
+  }
+
+  // Fallback to 'alertThreshold' if description includes 'Top of normal range'
+  const alertThreshold = thresholds.find(t => t.id === 'alertThreshold' && t.description.includes(TOP_OF_NORMAL_RANGE))
+  return alertThreshold ? { ...alertThreshold, shortname: TOP_OF_NORMAL_RANGE } : null
 }
 
 module.exports = ViewModel
