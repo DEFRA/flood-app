@@ -44,8 +44,8 @@ function calculateWarningThreshold (imtdThresholds, stationStageDatum, stationSu
 
   if (imtdThresholdWarning) {
     const warningType = imtdThresholds.warning.severity_value === SEVERE_FLOOD_WARNING_THRESHOLD
-      ? 'Severe Flood Warning'
-      : 'Flood Warning'
+      ? 'Severe flood warning'
+      : 'Flood warning'
 
     return {
       id: 'warningThreshold',

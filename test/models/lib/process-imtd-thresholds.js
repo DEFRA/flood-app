@@ -5,7 +5,7 @@ const lab = exports.lab = Lab.script()
 const processImtdThresholds = require('../../../server/models/views/lib/process-imtd-thresholds')
 
 const alertExpectedText = { id: 'alertThreshold', description: 'Top of normal range. Low lying land flooding possible above this level. One or more flood alerts may be issued', shortname: 'Possible flood alerts' }
-const warningExpectedText = { id: 'warningThreshold', description: 'Flood Warning issued: <a href="/target-area/062FWF46Harpendn">River Lee at Harpenden</a>', shortname: 'River Lee at Harpenden' }
+const warningExpectedText = { id: 'warningThreshold', description: 'Flood warning issued: <a href="/target-area/062FWF46Harpendn">River Lee at Harpenden</a>', shortname: 'River Lee at Harpenden' }
 
 function expectThresholds (thresholds, warningThreshold, alertThreshold) {
   Code.expect(thresholds.length).to.equal(2)
