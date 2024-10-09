@@ -163,5 +163,6 @@
             "severity":"Flood warning",
             "geometry":"{\"type\":\"Point\",\"coordinates\":[-3.03674273776571,53.8811798090409]}"
           }
-        ]
+        ],
+  "requestUrl": "http://localhost:3000/station/1001"
 }
