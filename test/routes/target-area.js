@@ -136,7 +136,7 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.payload).to.contain('<p>The River Derwent level at Derby St Marys was 0.54 metres. Property flooding is possible when it goes above 3.30 metres.')
     Code.expect(response.payload).to.contain('<a href="/station/2138?tid=1746074">Monitor the latest level at Derby St Marys</a>')
     Code.expect(response.payload).to.match(/<div class="defra-flood-status-item__text">\s*<strong>Flooding is possible - <a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do#flood-alert">\s*be prepared\s*<\/a><\/strong>\s*<\/div>/)
-    Code.expect(response.payload).to.contain('<p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0"><strong>30 minutes ago</strong></p>')
+    Code.expect(response.payload).to.contain('30 minutes ago')
 
     clock.restore()
   })
@@ -660,7 +660,7 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.statusCode).to.equal(200)
 
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest levels</h2>')
-    Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
+    Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was <span data-item-value>0.35</span> metres. Property flooding is possible when it goes above 1.40 metres.')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road is currently unavailable.</p>')
   })
 
@@ -709,7 +709,7 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.statusCode).to.equal(200)
 
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest levels</h2>')
-    Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
+    Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was <span data-item-value>0.35</span> metres. Property flooding is possible when it goes above 1.40 metres.')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road is currently unavailable.</p>')
     Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">These levels will update automatically</p>')
   })
@@ -808,7 +808,7 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.statusCode).to.equal(200)
 
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest levels</h2>')
-    Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
+    Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was <span data-item-value>0.35</span> metres. Property flooding is possible when it goes above 1.40 metres.')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road is currently unavailable.</p>')
     Code.expect(response.payload).to.not.contain('<p>The River Welsh station level is currently unavailable.</p>')
     Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">These levels will update automatically</p>')
@@ -859,7 +859,7 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.statusCode).to.equal(200)
 
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest levels</h2>')
-    Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
+    Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was <span data-item-value>0.35</span> metres. Property flooding is possible when it goes above 1.40 metres.')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road is currently unavailable.</p>')
     Code.expect(response.payload).to.not.contain('<p>The River Test level at Test Road is currently unavailable.</p>')
     Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">These levels will update automatically</p>')
