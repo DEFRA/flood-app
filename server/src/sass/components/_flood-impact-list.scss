@@ -103,6 +103,8 @@
         margin-top: 0;
     }
 
+    
+    dd:has(+ [style*="display: none"]) &__container,
     dd:last-of-type &__container {
         border-bottom: 1px solid $govuk-border-colour;
         margin-bottom: 10px;
