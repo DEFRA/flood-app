@@ -105,5 +105,6 @@
       "value": "3.88",
       "threshold_type": "FW ACTCON FW"
     }
-  ]
+  ],
+  "requestUrl": "http://localhost:3000/station/1001"
 }
