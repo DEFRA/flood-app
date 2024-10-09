@@ -1,10 +1,11 @@
 const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
+const data = require('../../data')
 const lab = exports.lab = Lab.script()
 const processImtdThresholds = require('../../../server/models/views/lib/process-imtd-thresholds')
 
-const alertExpectedText = { id: 'alertThreshold', description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued', shortname: 'Possible flood alerts' }
-const warningExpectedText = { id: 'warningThreshold', description: 'Property flooding is possible above this level. One or more flood warnings may be issued', shortname: 'Possible flood warnings' }
+const alertExpectedText = { id: 'alertThreshold', description: 'Top of normal range. Low lying land flooding possible above this level. One or more flood alerts may be issued', shortname: 'Possible flood alerts' }
+const warningExpectedText = { id: 'warningThreshold', description: 'Flood warning issued: <a href="/target-area/062FWF46Harpendn">River Lee at Harpenden</a>', shortname: 'River Lee at Harpenden' }
 
 function expectThresholds (thresholds, warningThreshold, alertThreshold) {
   Code.expect(thresholds.length).to.equal(2)
@@ -15,11 +16,11 @@ function expectThresholds (thresholds, warningThreshold, alertThreshold) {
 lab.experiment('process IMTD thresholds test', () => {
   lab.experiment('given post processing is set to false', () => {
     lab.test('then thresholds should be returned as is', async () => {
-      const thresholds = processImtdThresholds({ alert: 1.1, warning: 2.1 }, 0, 0, false)
+      const thresholds = processImtdThresholds({ alert: 1.1, warning: data.warning }, 0, 0, false, 1.1)
       expectThresholds(thresholds, '2.10', '1.10')
     })
     lab.test('then single null thresholds should not be returned', async () => {
-      const thresholds = processImtdThresholds({ alert: 1.1, warning: null }, 0, 0, false)
+      const thresholds = processImtdThresholds({ alert: 1.1, warning: null }, 0, 0, false, 1.1)
       Code.expect(thresholds.length).to.equal(1)
       Code.expect(thresholds[0]).to.equal({ ...alertExpectedText, value: '1.10' })
     })
@@ -34,35 +35,35 @@ lab.experiment('process IMTD thresholds test', () => {
   })
   lab.experiment('given post processing is set to true', () => {
     lab.test('then thresholds should be returned as is when stageDatum is zero', async () => {
-      const thresholds = processImtdThresholds({ alert: 1.1, warning: 2.1 }, 0, 0, true)
+      const thresholds = processImtdThresholds({ alert: 1.1, warning: data.warning }, 0, 0, true, 1.1)
       expectThresholds(thresholds, '2.10', '1.10')
     })
     lab.test('then thresholds should be returned as adjusted when stageDatum is greater than zero', async () => {
-      const thresholds = processImtdThresholds({ alert: 1.1, warning: 2.1 }, 2.2, 0, true)
+      const thresholds = processImtdThresholds({ alert: 1.1, warning: data.warning }, 2.2, 0, true, -1.1)
       expectThresholds(thresholds, '-0.10', '-1.10')
     })
     lab.test('then thresholds should be returned as is when stageDatum is less than zero', async () => {
-      const thresholds = processImtdThresholds({ alert: 1.1, warning: 2.1 }, -2.2, 0, true)
+      const thresholds = processImtdThresholds({ alert: 1.1, warning: data.warning }, -2.2, 0, true, 1.1)
       expectThresholds(thresholds, '2.10', '1.10')
     })
     lab.test('then thresholds should be returned as adjusted when stageDatum is less than zero and stationSubtract is greater than zero', async () => {
-      const thresholds = processImtdThresholds({ alert: 1.1, warning: 2.1 }, -2.2, 0.5, true)
+      const thresholds = processImtdThresholds({ alert: 1.1, warning: data.warning }, -2.2, 0.5, true, 0.6)
       expectThresholds(thresholds, '1.60', '0.60')
     })
     lab.test('then thresholds should be returned as is when stageDatum is less than zero and stationSubtract is less than zero', async () => {
-      const thresholds = processImtdThresholds({ alert: 1.1, warning: 2.1 }, -2.2, -0.5, true)
+      const thresholds = processImtdThresholds({ alert: 1.1, warning: data.warning }, -2.2, -0.5, true, 1.1)
       expectThresholds(thresholds, '2.10', '1.10')
     })
     lab.test('then thresholds should be returned as is when stageDatum is equal to zero and stationSubtract is less than zero', async () => {
-      const thresholds = processImtdThresholds({ alert: 1.1, warning: 2.1 }, 0, -0.5, true)
+      const thresholds = processImtdThresholds({ alert: 1.1, warning: data.warning }, 0, -0.5, true, 1.1)
       expectThresholds(thresholds, '2.10', '1.10')
     })
     lab.test('then thresholds should be returned as adjusted when stageDatum is equal to zero and stationSubtract is greater than than zero', async () => {
-      const thresholds = processImtdThresholds({ alert: 1.1, warning: 2.1 }, 0, 0.5, true)
+      const thresholds = processImtdThresholds({ alert: 1.1, warning: data.warning }, 0, 0.5, true, 0.6)
       expectThresholds(thresholds, '1.60', '0.60')
     })
     lab.test('then thresholds should be returned as is when stageDatum is equal to zero and stationSubtract is zero', async () => {
-      const thresholds = processImtdThresholds({ alert: 1.1, warning: 2.1 }, 0, 0, true)
+      const thresholds = processImtdThresholds({ alert: 1.1, warning: data.warning }, 0, 0, true, 1.1)
       expectThresholds(thresholds, '2.10', '1.10')
     })
   })

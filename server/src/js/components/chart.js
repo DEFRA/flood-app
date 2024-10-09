@@ -794,6 +794,7 @@ function LineChart (containerId, stationId, data, options = {}) {
       const textHeight = Math.round(text.node().getBBox().height)
       path.attr('d', `m-0.5,-0.5 l${textWidth + 20},0 l0,${19 + textHeight} l-${((textWidth + 20) / 2) - 7.5},0 l-7.5,7.5 l-7.5,-7.5 l-${((textWidth + 20) / 2) - 7.5},0 l0,-${19 + textHeight} l0,0`)
       label.attr('transform', `translate(${Math.round(width / 2 - ((textWidth + 20) / 2))}, -${29 + textHeight})`)
+      
       const remove = thresholdContainer.append('a')
         .attr('role', 'button')
         .attr('class', 'threshold__remove')
