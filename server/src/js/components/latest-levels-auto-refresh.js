@@ -69,7 +69,10 @@ class LatestLevelsAutoRefresh {
       })
       .then(html => {
         this.updateRiverLevels(html)
-        callback()
+
+        if (callback) {
+          callback()
+        }
       })
       .catch(error => {
         console.error('Error updating levels:', error)
