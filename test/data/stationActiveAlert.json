@@ -97,5 +97,6 @@
             "severity_value":1,
             "severity":"Flood alert",
             "geometry":"{\"type\":\"Point\",\"coordinates\":[-0.992084272973095,51.1269040605477]}"}
-        ]
+        ],
+  "requestUrl": "http://localhost:3000/station/1001"
 }

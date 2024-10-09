@@ -51,21 +51,34 @@
 
       <!-- Page title -->
       <h1 class="govuk-heading-xl govuk-!-margin-bottom-1">{{ model.pageTitle }}</h1>
+
+      <!-- Sign-up -->
+      <p>{% include "partials/sign-up-for-flood-warnings.html" %}</p>
+
       <!-- Last situation change time -->
       <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-top-1 govuk-!-margin-bottom-0">
          <time datetime="{{model.situationChanged}}">{{model.situationChanged}}</time>
       </p>
-
-      <!-- Map placeholder -->
-      <span id="map-live"></span>
 
       <!-- Situation description -->
       <div class="govuk-!-padding-top-6">
          {{ model.situation | safe }}
       </div>
 
+      <!-- Map placeholder -->
+      <span id="map-live" ></span>
+
       <!-- Area description -->
       <p>{{ model.areaDescription | safe }}</p>
+
+      <!-- Feedback link  -->
+      {% if model.severity %}
+      <p>
+         <a href="https://defragroup.eu.qualtrics.com/jfe/form/SV_26xlu1fVwKTHkwu?Source={{fullUrl}}">
+            Give feedback on this flood warning information
+         </a>
+      </p>
+      {% endif %}
 
       <!-- Latest water level information -->
       {% if model.latestLevels and model.latestLevels.length > 0 and model.latestLevels.length <= 4 %}
@@ -75,22 +88,9 @@
       <!-- Link to river, sea, groundwater, or rainfall levels in the area -->
       <p>
          <a data-journey-click="Target Area:Station list:TA - View station list" href="/river-and-sea-levels/target-area/{{ model.targetArea }}">
-            Find other river and sea levels
+            Find a river, sea, groundwater or rainfall level in this area
          </a>
       </p>
-
-      <!-- Sign-up -->
-      {% include "partials/sign-up-for-flood-warnings.html" %}
-
-      <!-- Feedback link  -->
-      {% if model.severity %}
-      <p>
-         Could this information be better? 
-         <a href="https://defragroup.eu.qualtrics.com/jfe/form/SV_26xlu1fVwKTHkwu?Source={{fullUrl}}">
-         Tell us how to improve it.
-         </a>
-      </p>
-      {% endif %}
 
       <!-- Context footer -->
       {% include "partials/context-footer.html" %}
@@ -111,7 +111,7 @@
     window.flood = {}
     window.flood.model = {{ model | dump(2) | safe }}
     window.flood.model.mapButtonText = {{ model.mapButtonText | dump | safe }}
-    window.flood.model.mapButtonClass = 'defra-button-secondary defra-button-secondary--icon govuk-!-margin-top-4'
+    window.flood.model.mapButtonClass = 'defra-button-secondary govuk-!-margin-top-4 defra-button-blue-text-black-icon';
     window.flood.model.mapLayers = 'mv,ts,tw,ta',
     window.flood.model.data = {
       button: 'Target Area:Map view:TA - Map view'
