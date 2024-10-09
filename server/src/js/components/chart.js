@@ -776,7 +776,6 @@ function LineChart (containerId, stationId, data, options = {}) {
         .attr('class', 'threshold__line')
         .attr('aria-hidden', true)
         .attr('x2', xScale(xExtent[1])).attr('y2', 0)
-
       // Construct label text and split into lines of up to 35 characters
       const thresholdLabel = `${threshold.level}m ${threshold.name}`
       const labelSegments = thresholdLabel.match(/.{1,35}(\s|$)/g).map(line => line.trim())
