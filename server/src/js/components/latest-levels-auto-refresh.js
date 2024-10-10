@@ -88,6 +88,12 @@ class LatestLevelsAutoRefresh {
     const parser = new DOMParser()
     const doc = parser.parseFromString(html, 'text/html')
 
+    const status = doc.querySelector('[data-severity-status]')?.getAttribute('data-severity-status')
+
+    if (!status) {
+      return window.location.reload()
+    }
+
     // Get elements from fetched content
     const fetchedElements = Array.from(doc.querySelectorAll('.defra-live .defra-live__item'))
 

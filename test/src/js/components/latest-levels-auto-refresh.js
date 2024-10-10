@@ -10,7 +10,7 @@ exports.lab = lab
 const htmlNewUpdate = {
   ok: true,
   text: () => `
-    <div class="defra-live">
+    <div class="defra-live" data-severity-status="3">
       <div class="defra-live__item" data-item-status="Active" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
         <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
           <strong data-item-time>15 minutes ago</strong>
@@ -42,8 +42,8 @@ describe('latestLevels', () => {
 
   before(() => {
     const html = `
-      <div role="status" data-live-status></div>
-      <div class="defra-live">
+      <output data-live-status></output>
+      <div class="defra-live" data-severity-status="3">
         <div class="defra-live__item" data-item-status="Active" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
           <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
             <strong data-item-time>20 minutes ago</strong>
