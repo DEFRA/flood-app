@@ -5,7 +5,7 @@ const Station = require('./station-data')
 const Forecast = require('./station-forecast')
 const util = require('../../util')
 const tz = 'Europe/London'
-const processImtdThresholds = require('./lib/process-imtd-thresholds')
+const { processImtdThresholds } = require('./lib/process-imtd-thresholds')
 const filterImtdThresholds = require('./lib/find-min-threshold')
 
 const bannerIconId3 = 3
