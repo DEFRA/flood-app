@@ -113,7 +113,21 @@ describe('latestLevels', () => {
   })
 
   it('should set accessibility message when there are missing elements fetched', () => {
-    mockFetch.returns(Promise.resolve({ ok: true, text: () => '<div class="defra-live"></div>' }))
+    mockFetch.returns(Promise.resolve({
+      ok: true,
+      text: () => `
+      <div class="defra-live" data-severity-status="3">
+        <div class="defra-live__item" data-item-status="Active" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
+          <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
+            <strong data-item-time>15 minutes ago</strong>
+          </p>
+          <p>The River Thames level at London was <span data-item-value>0.10</span> metres. Property flooding is possible when it goes above 4.00 metres.</p>
+          <p>
+            <a href="/station/1000">Monitor the latest level at London</a>
+          </p>
+        </div>
+      </div>`
+    }))
 
     const ll = new window.LatestLevelsAutoRefresh()
 
