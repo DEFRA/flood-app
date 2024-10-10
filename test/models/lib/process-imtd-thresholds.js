@@ -1,7 +1,7 @@
 const Lab = require('@hapi/lab')
 const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
-const processImtdThresholds = require('../../../server/models/views/lib/process-imtd-thresholds')
+const { processImtdThresholds } = require('../../../server/models/views/lib/process-imtd-thresholds')
 
 const alertExpectedText = { id: 'alertThreshold', description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued', shortname: 'Possible flood alerts' }
 const warningExpectedText = { id: 'warningThreshold', description: 'Property flooding is possible above this level. One or more flood warnings may be issued', shortname: 'Possible flood warnings' }

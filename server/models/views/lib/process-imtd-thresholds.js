@@ -40,4 +40,7 @@ function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtra
   return thresholds
 }
 
-module.exports = processImtdThresholds
+module.exports = {
+  processImtdThresholds,
+  processThreshold
+}
