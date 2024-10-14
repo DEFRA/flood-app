@@ -49,6 +49,8 @@ function calculateWarningThreshold (imtdThresholds, stationStageDatum, stationSu
       value: imtdThresholdWarning
     }
   }
+
+  return null
 }
 
 function calculateAlertThreshold (imtdThresholds, stationStageDatum, stationSubtract, postProcess, pc5) {
