@@ -20,16 +20,12 @@ function getMaxForEachFwisCode (thresholds) {
       // If it's the first threshold for this fwis_code, store it
       maxValuesByFwisCode[fwisCode] = threshold
     } else {
-      const currentMax = maxValuesByFwisCode[fwisCode]
-
-      // Compare based on severity_value first
-      if (severityValue > currentMax.severity_value) {
-        maxValuesByFwisCode[fwisCode] = threshold
-      } else if (severityValue === currentMax.severity_value) {
-        // If severity_value is the same, compare based on the value
-        if (parseFloat(thresholdValue) > parseFloat(currentMax.value)) {
-          maxValuesByFwisCode[fwisCode] = threshold
-        }
+      const currentMax = maxValuesByFwisCode[fwisCode];
+    
+      // Compare based on severity_value first, or if severity_value is the same, compare based on the threshold value
+      if (severityValue > currentMax.severity_value || 
+          (severityValue === currentMax.severity_value && parseFloat(thresholdValue) > parseFloat(currentMax.value))) {
+        maxValuesByFwisCode[fwisCode] = threshold;
       }
     }
   })
@@ -45,12 +41,8 @@ function createWarningObject (threshold) {
 
   return {
     id: 'warningThreshold',
-    description: threshold.severity_value
-      ? `${warningType} issued: <a href="/target-area/${threshold.fwis_code}">${threshold.ta_name}</a>`
-      : 'Property flooding is possible above this level',
-    shortname: threshold.severity_value
-      ? `${threshold.ta_name}`
-      : 'Possible flood warnings',
+    description: `${warningType} issued: <a href="/target-area/${threshold.fwis_code}">${threshold.ta_name}</a>`,
+    shortname: `${threshold.ta_name}`,
     value: parseFloat(threshold.threshold_value).toFixed(2)
   }
 }

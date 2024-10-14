@@ -7,7 +7,7 @@ const processWarningThresholds = require('../../../server/models/views/lib/proce
 // const warningExpectedText = { id: 'warningThreshold', description: 'Flood warning issued: <a href="/target-area/062FWF46Harpendn">River Lee at Harpenden</a>', shortname: 'River Lee at Harpenden' }
 
 lab.experiment('process Warning thresholds test', () => {
-  lab.test('check warning thresholds are created', async () => {
+  lab.test('check correct number of warning thresholds are created', async () => {
     const thresholds = processWarningThresholds(data.warnings)
     console.log(thresholds)
     Code.expect(thresholds.length).to.equal(4)
@@ -29,6 +29,10 @@ lab.experiment('process Warning thresholds test', () => {
   lab.test('check severe warning threshold value with 2 decimal places', async () => {
     const thresholds = processWarningThresholds(data.warnings)
     Code.expect(thresholds[2].value).to.equal('1.70')
+  })
+  lab.test('check only the highest warning is used when multiple', async () => {
+    const thresholds = processWarningThresholds(data.warnings)
+    Code.expect(thresholds[3].value).to.equal('1.70')
   })
   lab.test('check no warning thresholds is handled', async () => {
     const thresholds = processWarningThresholds([])
