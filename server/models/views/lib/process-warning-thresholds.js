@@ -20,12 +20,12 @@ function getMaxForEachFwisCode (thresholds) {
       // If it's the first threshold for this fwis_code, store it
       maxValuesByFwisCode[fwisCode] = threshold
     } else {
-      const currentMax = maxValuesByFwisCode[fwisCode];
-    
+      const currentMax = maxValuesByFwisCode[fwisCode]
+
       // Compare based on severity_value first, or if severity_value is the same, compare based on the threshold value
-      if (severityValue > currentMax.severity_value || 
+      if (severityValue > currentMax.severity_value ||
           (severityValue === currentMax.severity_value && parseFloat(thresholdValue) > parseFloat(currentMax.value))) {
-        maxValuesByFwisCode[fwisCode] = threshold;
+        maxValuesByFwisCode[fwisCode] = threshold
       }
     }
   })
