@@ -1,4 +1,3 @@
-const SEVERE_FLOOD_WARNING_THRESHOLD = 3
 function processThreshold (threshold, stationStageDatum, stationSubtract, postProcess) {
   if (threshold) {
     if (postProcess) {
@@ -43,21 +42,13 @@ function calculateWarningThreshold (imtdThresholds, stationStageDatum, stationSu
   const imtdThresholdWarning = processThreshold(imtdThresholds?.warning?.value, stationStageDatum, stationSubtract, postProcess)
 
   if (imtdThresholdWarning) {
-    const warningType = imtdThresholds.warning.severity_value === SEVERE_FLOOD_WARNING_THRESHOLD
-      ? 'Severe flood warning'
-      : 'Flood warning'
-
     return {
       id: 'warningThreshold',
-      description: imtdThresholds.warning.severity_value
-        ? `${warningType} issued: <a href="/target-area/${imtdThresholds.warning.fwis_code}">${imtdThresholds.warning.ta_name}</a>`
-        : 'Property flooding is possible above this level',
-      shortname: imtdThresholds.warning.severity_value ? `${imtdThresholds.warning.ta_name}` : 'Possible flood warnings',
+      description: 'Property flooding is possible above this level',
+      shortname: 'Possible flood warnings',
       value: imtdThresholdWarning
     }
   }
-
-  return null
 }
 
 function calculateAlertThreshold (imtdThresholds, stationStageDatum, stationSubtract, postProcess, pc5) {

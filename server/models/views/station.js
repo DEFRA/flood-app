@@ -6,6 +6,7 @@ const Forecast = require('./station-forecast')
 const util = require('../../util')
 const tz = 'Europe/London'
 const processImtdThresholds = require('./lib/process-imtd-thresholds')
+const processWarningThresholds = require('./lib/process-warning-thresholds')
 const filterImtdThresholds = require('./lib/find-min-threshold')
 
 const bannerIconId3 = 3
@@ -252,6 +253,11 @@ class ViewModel {
           : 'Water reaches the highest level recorded at this measuring station',
         shortname: 'Highest level on record'
       })
+    }
+
+    if (imtdThresholds?.length > 0) {
+      const processedWarningThresholds = processWarningThresholds(imtdThresholds)
+      thresholds.push(...processedWarningThresholds)
     }
 
     this.imtdThresholds = imtdThresholds?.length > 0
