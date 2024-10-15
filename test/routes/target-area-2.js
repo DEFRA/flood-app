@@ -147,7 +147,7 @@ describe('target-area route', () => {
     expect(response.statusCode).to.equal(200)
     const root = parse(response.payload)
     linkChecker(root.querySelectorAll('a'),
-      'Find other river and sea levels',
+      'Find a river, sea, groundwater or rainfall level in this area',
       `/river-and-sea-levels/target-area/${AREA_CODE}`
     )
   })
@@ -175,7 +175,7 @@ describe('target-area route', () => {
     expect(response.statusCode).to.equal(200)
     const root = parse(response.payload)
     linkChecker(root.querySelectorAll('a'),
-      'Find other river and sea levels',
+      'Find a river, sea, groundwater or rainfall level in this area',
       `/river-and-sea-levels/target-area/${AREA_CODE}`
     )
   })

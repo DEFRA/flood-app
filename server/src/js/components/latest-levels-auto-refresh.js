@@ -67,7 +67,6 @@ class LatestLevelsAutoRefresh {
         }
       })
       .catch(error => {
-        console.error(error)
         this.liveStatusMessages.push('There was an error getting the latest level')
       })
       .finally(() => {
@@ -111,15 +110,16 @@ class LatestLevelsAutoRefresh {
         const currentValue = currentItem.querySelector('[data-item-value]')
         const currentStatus = currentItem.getAttribute('data-item-status')
 
+
         if (fetchedStatus === currentStatus) {
           if (fetchedValue?.textContent !== currentValue?.textContent) {
             clearInterval(this.timeAgoInterval)
+
             currentValue.textContent = fetchedValue.textContent
 
             this.liveStatusMessages.push(`The ${itemRiverName} at ${itemRiverAgency} level was ${fetchedValue.textContent} metres ${fetchedTime.textContent}`)
 
             this.updateTimeAgo()
-          }
 
           currentTime.textContent = fetchedTime.textContent
         } else {
