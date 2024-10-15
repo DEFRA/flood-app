@@ -4,7 +4,7 @@ const data = require('../../data')
 const lab = exports.lab = Lab.script()
 const processImtdThresholds = require('../../../server/models/views/lib/process-imtd-thresholds')
 
-const alertExpectedText = { id: 'alertThreshold', description: 'Top of normal range. Low lying land flooding possible above this level. One or more flood alerts may be issued', shortname: 'Possible flood alerts' }
+const alertExpectedText = { id: 'alertThreshold', description: 'Top of normal range. Low lying land flooding possible above this level. One or more flood alerts may be issued', shortname: 'Top of normal range' }
 const warningExpectedText = { id: 'warningThreshold', description: 'Property flooding is possible above this level', shortname: 'Possible flood warnings' }
 
 function expectThresholds (thresholds, warningThreshold, alertThreshold) {

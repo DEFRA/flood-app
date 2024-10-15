@@ -77,7 +77,7 @@ lab.experiment('Station model test', () => {
       {
         id: 'alertThreshold',
         description: 'Top of normal range. Low lying land flooding possible above this level. One or more flood alerts may be issued',
-        shortname: 'Possible flood alerts',
+        shortname: 'Top of normal range',
         value: '2.84'
       }
     ])

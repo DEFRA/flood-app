@@ -62,7 +62,7 @@ function calculateAlertThreshold (imtdThresholds, stationStageDatum, stationSubt
       description: Number(imtdThresholdAlert) !== Number(pc5)
         ? 'Low lying land flooding possible above this level. One or more flood alerts may be issued'
         : 'Top of normal range. Low lying land flooding possible above this level. One or more flood alerts may be issued',
-      shortname: 'Possible flood alerts',
+      shortname: Number(imtdThresholdAlert) !== Number(pc5) ? 'Possible flood alerts' : 'Top of normal range',
       value: imtdThresholdAlert
     }
   }
