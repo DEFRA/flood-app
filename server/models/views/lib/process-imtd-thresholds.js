@@ -1,3 +1,4 @@
+const SEVERE_FLOOD_WARNING_THRESHOLD = 3
 function processThreshold (threshold, stationStageDatum, stationSubtract, postProcess) {
   if (threshold) {
     if (postProcess) {

@@ -13,9 +13,11 @@ const bannerIconId3 = 3
 const outOfDateMax = 5
 const dataStartDateTimeDaysToSubtract = 5
 
+const TOP_OF_NORMAL_RANGE = 'Top of normal range'
+
 class ViewModel {
   constructor (options) {
-    const { station, telemetry, forecast, imtdThresholds, impacts, river, warningsAlerts } = options
+    const { station, telemetry, forecast, imtdThresholds, impacts, river, warningsAlerts, requestUrl } = options
 
     this.station = new Station(station)
     this.station.riverNavigation = river
@@ -40,7 +42,6 @@ class ViewModel {
     const numSevereWarnings = warningsAlertsGroups['3'] ? warningsAlertsGroups['3'].length : 0
 
     // Determine appropriate warning/alert text for banner
-
     this.banner = numAlerts || numWarnings || numSevereWarnings
 
     switch (numAlerts) {
@@ -231,12 +232,12 @@ class ViewModel {
     }
     this.metaDescription = `Check the latest recorded ${stationType.toLowerCase()} level and recent 5-day trend at ${stationLocation}`
 
-    // Thresholds
+    // Array to hold thresholds
     let thresholds = []
 
+    // Check if recent value exists and add it to thresholds
     if (this.station.recentValue && !this.station.recentValue.err) {
       const tVal = this.station.type !== 'c' && this.station.recentValue._ <= 0 ? 0 : this.station.recentValue._.toFixed(2)
-
       thresholds.push({
         id: 'latest',
         value: tVal,
@@ -244,6 +245,7 @@ class ViewModel {
         shortname: ''
       })
     }
+    // Add the highest level threshold if available
     if (this.station.porMaxValue) {
       thresholds.push({
         id: 'highest',
@@ -271,8 +273,32 @@ class ViewModel {
       this.station.post_process,
       this.station.percentile5
     )
-
     thresholds.push(...processedImtdThresholds)
+
+    if (this.station.percentile5) {
+      // Only push typical range if it has a percentil5
+      thresholds.push({
+        id: 'pc5',
+        value: this.station.percentile5,
+        description: 'This is the top of the normal range',
+        shortname: TOP_OF_NORMAL_RANGE
+      })
+    }
+
+    // Handle chartThreshold: add tidThreshold if a valid tid is present; if not, fallback to 'pc5'; if 'pc5' is unavailable, use 'alertThreshold' with "Top of normal range" description.
+    // Extract tid from request URL if valid
+    let tid = null
+    try {
+      tid = requestUrl?.startsWith('http') ? new URL(requestUrl).searchParams.get('tid') : null
+    } catch (e) {
+      console.error('Invalid request URL:', e)
+    }
+
+    // Retrieve the applicable threshold for chartThreshold
+    const chartThreshold = [getThresholdByThresholdId(tid, imtdThresholds, thresholds)].filter(Boolean)
+
+    // Set chartThreshold property
+    this.chartThreshold = chartThreshold
 
     // Add impacts
     if (impacts.length > 0) {
@@ -360,7 +386,6 @@ class ViewModel {
     this.zoom = 14
 
     // Forecast Data Calculations
-
     let forecastData
     if (isForecast) {
       this.isFfoi = isForecast
@@ -428,6 +453,30 @@ function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationTyp
     forecast: forecastData,
     observed
   }
+}
+
+// Function to retrieve a threshold by tid or fall back to 'pc5' or 'alertThreshold'
+const getThresholdByThresholdId = (tid, imtdThresholds, thresholds) => {
+  // Check if a threshold exists based on tid
+  const tidThreshold = tid && imtdThresholds?.find(thresh => thresh.station_threshold_id === tid)
+  if (tidThreshold) {
+    return {
+      id: tidThreshold.station_threshold_id,
+      value: Number(tidThreshold.value).toFixed(2),
+      description: `${tidThreshold.value}m ${tidThreshold.ta_name || ''}`,
+      shortname: tidThreshold.ta_name || 'Target Area Threshold'
+    }
+  }
+
+  // Fallback to 'pc5' if present, else look for 'alertThreshold'
+  const pc5Threshold = thresholds.find(t => t.id === 'pc5')
+  if (pc5Threshold) {
+    return pc5Threshold
+  }
+
+  // Fallback to 'alertThreshold' if description includes 'Top of normal range'
+  const alertThreshold = thresholds.find(t => t.id === 'alertThreshold' && t.description.includes(TOP_OF_NORMAL_RANGE))
+  return alertThreshold ? { ...alertThreshold, shortname: TOP_OF_NORMAL_RANGE } : null
 }
 
 module.exports = ViewModel

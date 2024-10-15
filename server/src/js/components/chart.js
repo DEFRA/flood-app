@@ -777,23 +777,25 @@ function LineChart (containerId, stationId, data, options = {}) {
         .attr('aria-hidden', true)
         .attr('x2', xScale(xExtent[1])).attr('y2', 0)
 
-      // Label
-      const copy = `${threshold.level}m ${threshold.name}`.match(/[\s\S]{1,35}(?!\S)/g, '$&\n')
-      const label = thresholdContainer.append('g')
-        .attr('class', 'threshold-label')
-      const path = label.append('path')
-        .attr('aria-hidden', true)
-        .attr('class', 'threshold-label__bg')
-      const text = label.append('text')
-        .attr('class', 'threshold-label__text')
-      text.append('tspan').attr('font-size', 0).text('Threshold: ')
+      // Construct label text and split into lines of up to 35 characters
+      const thresholdLabel = `${threshold.level}m ${threshold.name}`
+      const labelSegments = thresholdLabel.match(/.{1,35}(\s|$)/g).map(line => line.trim())
+      const label = thresholdContainer.append('g').attr('class', 'threshold-label')
       copy.map((l, i) => text.append('tspan').attr('x', 10).attr('y', (i + 1) * 22).text(l.trim()))
       const textWidth = Math.round(text.node().getBBox().width)
       const textHeight = Math.round(text.node().getBBox().height)
       path.attr('d', `m-0.5,-0.5 l${textWidth + 20},0 l0,36 l-${((textWidth + 20) / 2) - 7.5},0 l-7.5,7.5 l-7.5,-7.5 l-${((textWidth + 20) / 2) - 7.5},0 l0,-36 l0,0`)
       label.attr('transform', `translate(${Math.round(width / 2 - ((textWidth + 20) / 2))}, -${29 + textHeight})`)
 
-      // Remove button
+      // Add each line of the split text (up to 35 characters per line) as separate tspans
+      labelSegments.forEach((line, i) => {
+        text.append('tspan').attr('x', 10).attr('y', (i + 1) * 22).text(line.trim())
+      })
+      const textWidth = Math.round(text.node().getBBox().width)
+      const textHeight = Math.round(text.node().getBBox().height)
+      path.attr('d', `m-0.5,-0.5 l${textWidth + 20},0 l0,${19 + textHeight} l-${((textWidth + 20) / 2) - 7.5},0 l-7.5,7.5 l-7.5,-7.5 l-${((textWidth + 20) / 2) - 7.5},0 l0,-${19 + textHeight} l0,0`)
+      label.attr('transform', `translate(${Math.round(width / 2 - ((textWidth + 20) / 2))}, -${29 + textHeight})`)
+      
       const remove = thresholdContainer.append('a')
         .attr('role', 'button')
         .attr('class', 'threshold__remove')
@@ -1430,16 +1432,25 @@ if (document.getElementById('bar-chart')) {
   window.flood.charts.createBarChart('bar-chart', window.flood.model.stationId, window.flood.model.telemetry)
 }
 
-// Line chart
-if (document.getElementById('line-chart')) {
-  const lineChart = window.flood.charts.createLineChart('line-chart', window.flood.model.id, window.flood.model.telemetry)
-  const thresholdId = 'threshold-pc5'
-  const threshold = document.querySelector(`[data-id="${thresholdId}"]`)
+// Line chart setup to display thresholds based on chartThreshold configuration -----
+function addThresholdToChart (lineChart, threshold) {
   if (threshold) {
     lineChart.addThreshold({
-      id: thresholdId,
-      name: threshold.getAttribute('data-name'),
-      level: Number(threshold.getAttribute('data-level'))
+      id: threshold.id,
+      name: threshold.shortname,
+      level: Number(threshold.value)
     })
+  } else {
+    console.error('No valid threshold found to add to the chart.')
   }
+}
+
+// Initialize the line chart and set thresholds using chartThreshold from ViewModel
+if (document.getElementById('line-chart')) {
+  const lineChart = window.flood.charts.createLineChart('line-chart', window.flood.model.id, window.flood.model.telemetry)
+
+  // Iterate through each threshold in chartThreshold and add it to the chart
+  window.flood.model.chartThreshold.forEach(threshold => {
+    addThresholdToChart(lineChart, threshold)
+  })
 }
