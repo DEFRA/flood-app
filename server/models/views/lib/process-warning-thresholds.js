@@ -3,7 +3,7 @@ function filterThresholdsBySeverity (thresholds) {
   return thresholds.filter(item =>
     item.fwis_type === 'W' &&
     item.severity_value !== null &&
-    item.severity_value > 1
+    (item.severity_value === 2 || item.severity_value === 3)
   )
 }
 
