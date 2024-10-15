@@ -7,33 +7,6 @@ const lab = script()
 const { describe, it, before, afterEach } = lab
 exports.lab = lab
 
-const htmlNewUpdate = {
-  ok: true,
-  text: () => `
-    <div class="defra-live">
-      <div class="defra-live__item" data-item-status="Active" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
-        <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
-          <strong data-item-time>15 minutes ago</strong>
-        </p>
-        <p>The River Thames level at London was <span data-item-value>0.10</span> metres. Property flooding is possible when it goes above 4.00 metres.</p>
-        <p>
-          <a href="/station/1000">Monitor the latest level at London</a>
-        </p>
-      </div>
-
-      <div class="defra-live__item" data-item-status="Active" data-item-name="Sea Cut" data-item-agency="Mowthorpe" data-item-id="2000">
-        <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
-          <strong data-item-time>15 minutes ago</strong>
-        </p>
-        <p>The Sea Cut level at Mowthorpe was <span data-item-value>0.20</span> metres. Property flooding is possible when it goes above 2.00 metres.</p>
-        <p>
-          <a href="/station/2000">Monitor the latest level at Mowthorpe</a>
-        </p>
-      </div>
-    </div>
-  `
-}
-
 describe('latestLevels', () => {
   let window
   let document
@@ -42,8 +15,8 @@ describe('latestLevels', () => {
 
   before(() => {
     const html = `
-      <div role="status" data-live-status></div>
-      <div class="defra-live">
+      <output data-live-status></output>
+      <div class="defra-live" data-severity-status="3">
         <div class="defra-live__item" data-item-status="Active" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
           <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
             <strong data-item-time>20 minutes ago</strong>
@@ -97,7 +70,32 @@ describe('latestLevels', () => {
   })
 
   it('should fetch levels and update the DOM with the new values', () => {
-    mockFetch.returns(Promise.resolve(htmlNewUpdate))
+    mockFetch.returns(Promise.resolve({
+      ok: true,
+      text: () => `
+        <div class="defra-live" data-severity-status="3">
+          <div class="defra-live__item" data-item-status="Active" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
+            <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
+              <strong data-item-time>15 minutes ago</strong>
+            </p>
+            <p>The River Thames level at London was <span data-item-value>0.10</span> metres. Property flooding is possible when it goes above 4.00 metres.</p>
+            <p>
+              <a href="/station/1000">Monitor the latest level at London</a>
+            </p>
+          </div>
+    
+          <div class="defra-live__item" data-item-status="Active" data-item-name="Sea Cut" data-item-agency="Mowthorpe" data-item-id="2000">
+            <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
+              <strong data-item-time>15 minutes ago</strong>
+            </p>
+            <p>The Sea Cut level at Mowthorpe was <span data-item-value>0.20</span> metres. Property flooding is possible when it goes above 2.00 metres.</p>
+            <p>
+              <a href="/station/2000">Monitor the latest level at Mowthorpe</a>
+            </p>
+          </div>
+        </div>
+      `
+    }))
 
     const ll = new window.LatestLevelsAutoRefresh()
 
@@ -113,7 +111,21 @@ describe('latestLevels', () => {
   })
 
   it('should set accessibility message when there are missing elements fetched', () => {
-    mockFetch.returns(Promise.resolve({ ok: true, text: () => '<div class="defra-live"></div>' }))
+    mockFetch.returns(Promise.resolve({
+      ok: true,
+      text: () => `
+      <div class="defra-live" data-severity-status="3">
+        <div class="defra-live__item" data-item-status="Active" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
+          <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
+            <strong data-item-time>15 minutes ago</strong>
+          </p>
+          <p>The River Thames level at London was <span data-item-value>0.10</span> metres. Property flooding is possible when it goes above 4.00 metres.</p>
+          <p>
+            <a href="/station/1000">Monitor the latest level at London</a>
+          </p>
+        </div>
+      </div>`
+    }))
 
     const ll = new window.LatestLevelsAutoRefresh()
 

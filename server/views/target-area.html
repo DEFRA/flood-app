@@ -7,7 +7,7 @@
       <!-- FIRST BANNER FOR ACTIVE ALERTS/WARNING -->
       <div class="defra-flood-status govuk-!-margin-bottom-3">
          {% if model.flood and model.severity.id < 4 %}
-         <div class="defra-flood-status-item defra-flood-status-item--{{model.severity.hash}}">
+         <div class="defra-flood-status-item defra-flood-status-item--{{model.severity.hash}}" data-severity-status="{{model.severity.hash}}">
             <span class="defra-flood-status-item__icon">
                {{model.severity.icon | safe }}
             </span>
