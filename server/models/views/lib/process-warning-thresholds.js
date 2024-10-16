@@ -1,9 +1,10 @@
+const FLOOD_WARNING_THRESHOLD = 2
 const SEVERE_FLOOD_WARNING_THRESHOLD = 3
 function filterThresholdsBySeverity (thresholds) {
   return thresholds.filter(item =>
     item.fwis_type === 'W' &&
     item.severity_value !== null &&
-    (item.severity_value === 2 || item.severity_value === 3)
+    (item.severity_value === FLOOD_WARNING_THRESHOLD || item.severity_value === SEVERE_FLOOD_WARNING_THRESHOLD)
   )
 }
 
