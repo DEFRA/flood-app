@@ -24,8 +24,8 @@ function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtra
     thresholds.push(imtdThresholdWarning)
   }
 
-  if (imtdThresholdAlert) {
-    thresholds.push(imtdThresholdAlert)
+  if (imtdThresholdAlert.length > 0) {
+    thresholds.push(...imtdThresholdAlert)
   } else if (pc5) {
     thresholds.push({
       id: 'pc5',
@@ -55,19 +55,37 @@ function calculateWarningThreshold (imtdThresholds, stationStageDatum, stationSu
 
 function calculateAlertThreshold (imtdThresholds, stationStageDatum, stationSubtract, postProcess, pc5) {
   const imtdThresholdAlert = processThreshold(imtdThresholds?.alert, stationStageDatum, stationSubtract, postProcess)
+  const imtdThresholdAlerts = []
 
   if (imtdThresholdAlert) {
-    return {
-      id: 'alertThreshold',
-      description: Number(imtdThresholdAlert) !== Number(pc5)
-        ? 'Low lying land flooding possible above this level. One or more flood alerts may be issued'
-        : 'Top of normal range. Low lying land flooding possible above this level. One or more flood alerts may be issued',
-      shortname: Number(imtdThresholdAlert) !== Number(pc5) ? 'Possible flood alerts' : 'Top of normal range',
-      value: imtdThresholdAlert
+  // First condition: if imtdThresholdAlert is not equal to Top of Normal Range (pc5)
+    if (Number(imtdThresholdAlert) !== Number(pc5)) {
+      imtdThresholdAlerts.push({
+        id: 'alertThreshold',
+        description: 'Low lying land flooding possible above this level. One or more flood alerts may be issued',
+        shortname: 'Possible flood alerts',
+        value: imtdThresholdAlert
+      })
+    }
+    // Second condition: if imtdThresholdAlert is equal to Top of Normal Range (pc5)
+    if (Number(imtdThresholdAlert) === Number(pc5)) {
+      imtdThresholdAlerts.push({
+        id: 'alertThreshold',
+        description: 'Top of normal range. Low lying land flooding possible above this level. One or more flood alerts may be issued',
+        shortname: 'Top of normal range',
+        value: imtdThresholdAlert
+      })
+    } else {
+      imtdThresholdAlerts.push({
+        id: 'alertThreshold',
+        description: 'Top of normal range',
+        shortname: 'Top of normal range',
+        value: imtdThresholdAlert
+      })
     }
   }
 
-  return null
+  return imtdThresholdAlerts
 }
 
 module.exports = processImtdThresholds
