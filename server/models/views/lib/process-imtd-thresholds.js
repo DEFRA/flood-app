@@ -1,3 +1,5 @@
+const TOP_OF_NORMAL_RANGE = 'Top of normal range'
+
 function processThreshold (threshold, stationStageDatum, stationSubtract, postProcess) {
   if (threshold) {
     if (postProcess) {
@@ -30,7 +32,7 @@ function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtra
     thresholds.push({
       id: 'pc5',
       description: 'Top of normal range. Low lying land flooding possible above this level',
-      shortname: 'Top of normal range',
+      shortname: TOP_OF_NORMAL_RANGE,
       value: pc5
     })
   } else { return thresholds }
@@ -72,14 +74,14 @@ function calculateAlertThreshold (imtdThresholds, stationStageDatum, stationSubt
       imtdThresholdAlerts.push({
         id: 'alertThreshold',
         description: 'Top of normal range. Low lying land flooding possible above this level. One or more flood alerts may be issued',
-        shortname: 'Top of normal range',
+        shortname: TOP_OF_NORMAL_RANGE,
         value: imtdThresholdAlert
       })
     } else {
       imtdThresholdAlerts.push({
         id: 'alertThreshold',
-        description: 'Top of normal range',
-        shortname: 'Top of normal range',
+        description: TOP_OF_NORMAL_RANGE,
+        shortname: TOP_OF_NORMAL_RANGE,
         value: imtdThresholdAlert
       })
     }
