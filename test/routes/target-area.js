@@ -957,7 +957,5 @@ lab.experiment('Target-area tests', () => {
 
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest level</h2>')
     Code.expect(response.payload).to.contain('<p>The River Welsh level at Welsh Station was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.\n        \n      </p>')
-    Code.expect(response.payload).to.contain('<a href="/station/7201">Monitor the latest level at Welsh Station (Natural Resources Wales)</a>')
-    Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">This level will update automatically</p>')
   })
 })

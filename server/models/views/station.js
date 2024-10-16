@@ -275,8 +275,6 @@ class ViewModel {
     )
     thresholds.push(...processedImtdThresholds)
 
-
-
     // Handle chartThreshold: add tidThreshold if a valid tid is present; if not, fallback to 'pc5'; if 'pc5' is unavailable, use 'alertThreshold' with "Top of normal range" description.
     // Extract tid from request URL if valid
     let tid = null
