@@ -776,6 +776,7 @@ function LineChart (containerId, stationId, data, options = {}) {
         .attr('class', 'threshold__line')
         .attr('aria-hidden', true)
         .attr('x2', xScale(xExtent[1])).attr('y2', 0)
+
       // Construct label text and split into lines of up to 35 characters
       const thresholdLabel = `${threshold.level}m ${threshold.name}`
       const labelSegments = thresholdLabel.match(/.{1,35}(\s|$)/g).map(line => line.trim())
@@ -1430,16 +1431,25 @@ if (document.getElementById('bar-chart')) {
   window.flood.charts.createBarChart('bar-chart', window.flood.model.stationId, window.flood.model.telemetry)
 }
 
-// Line chart
-if (document.getElementById('line-chart')) {
-  const lineChart = window.flood.charts.createLineChart('line-chart', window.flood.model.id, window.flood.model.telemetry)
-  const thresholdId = 'threshold-pc5'
-  const threshold = document.querySelector(`[data-id="${thresholdId}"]`)
+// Line chart setup to display thresholds based on chartThreshold configuration -----
+function addThresholdToChart (lineChart, threshold) {
   if (threshold) {
     lineChart.addThreshold({
-      id: thresholdId,
-      name: threshold.getAttribute('data-name'),
-      level: Number(threshold.getAttribute('data-level'))
+      id: threshold.id,
+      name: threshold.shortname,
+      level: Number(threshold.value)
     })
+  } else {
+    console.error('No valid threshold found to add to the chart.')
   }
+}
+
+// Initialize the line chart and set thresholds using chartThreshold from ViewModel
+if (document.getElementById('line-chart')) {
+  const lineChart = window.flood.charts.createLineChart('line-chart', window.flood.model.id, window.flood.model.telemetry)
+
+  // Iterate through each threshold in chartThreshold and add it to the chart
+  window.flood.model.chartThreshold.forEach(threshold => {
+    addThresholdToChart(lineChart, threshold)
+  })
 }

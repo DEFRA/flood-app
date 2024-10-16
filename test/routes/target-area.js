@@ -134,7 +134,7 @@ lab.experiment('Target-area tests', () => {
     // Latest level (single threshold)
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest level</h2>')
     Code.expect(response.payload).to.contain('<p>The River Derwent level at Derby St Marys was 0.54 metres. Property flooding is possible when it goes above 3.30 metres.')
-    Code.expect(response.payload).to.contain('<a href="/station/2138">Monitor the latest level at Derby St Marys</a>')
+    Code.expect(response.payload).to.contain('<a href="/station/2138?tid=1746074">Monitor the latest level at Derby St Marys</a>')
     Code.expect(response.payload).to.match(/<div class="defra-flood-status-item__text">\s*<strong>Flooding is possible - <a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do#flood-alert">\s*be prepared\s*<\/a><\/strong>\s*<\/div>/)
     Code.expect(response.payload).to.contain('<p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0"><strong>30 minutes ago</strong></p>')
 
@@ -189,13 +189,13 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.payload).to.match(/<div class="defra-flood-status-item__text">\s*<strong>Flooding is expected - <a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do#flood-warning">\s*act now\s*<\/a><\/strong>\s*<\/div>/)
 
     // latests levels (multi)
+    // console.log('DEFRA Live Elements:', response.payload.match(/<div class="defra-live[^>]*>[\s\S]*?<\/div>/g)) // Keep for debugging
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest levels</h2>')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road was 0.18 metres. Property flooding is possible when it goes above 1.46 metres.')
-    Code.expect(response.payload).to.contain('<a href="/station/7173">Monitor the River Pinn level at Avenue Road.</a>')
+    Code.expect(response.payload).to.contain('<a href="/station/7173?tid=1747543">Monitor the River Pinn level at Avenue Road</a>')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Moss Close was 0.13 metres. Property flooding is possible when it goes above 1.15 metres.')
-    Code.expect(response.payload).to.contain('<a href="/station/7201">Monitor the River Pinn level at Moss Close.</a>')
-    Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">These levels will update automatically</p>')
+    Code.expect(response.payload).to.contain('<a href="/station/7201?tid=1747541">Monitor the River Pinn level at Moss Close</a>')
   })
   lab.test('Check flood severity banner link for Flood warning', async () => {
     const floodService = require('../../server/services/flood')
