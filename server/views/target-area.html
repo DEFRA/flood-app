@@ -88,7 +88,7 @@
       <!-- Link to river, sea, groundwater, or rainfall levels in the area -->
       <p>
          <a data-journey-click="Target Area:Station list:TA - View station list" href="/river-and-sea-levels/target-area/{{ model.targetArea }}">
-            Find other river and sea levels
+            Find a river, sea, groundwater or rainfall level in this area
          </a>
       </p>
 
@@ -111,7 +111,7 @@
     window.flood = {}
     window.flood.model = {{ model | dump(2) | safe }}
     window.flood.model.mapButtonText = {{ model.mapButtonText | dump | safe }}
-    window.flood.model.mapButtonClass = 'defra-button-secondary govuk-!-margin-top-4 defra-button-blue-text-black-icon';
+    window.flood.model.mapButtonClass = 'defra-button-secondary govuk-!-margin-top-4';
     window.flood.model.mapLayers = 'mv,ts,tw,ta',
     window.flood.model.data = {
       button: 'Target Area:Map view:TA - Map view'
