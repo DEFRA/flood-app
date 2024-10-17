@@ -31,7 +31,7 @@ function filterImtdThresholds (imtdThresholds) {
 
   return {
     alert: minObjectA ? minObjectA.value : null,
-    warning: minObjectW ? minObjectW.value : null
+    warning: minObjectW || null
   }
 }
 
