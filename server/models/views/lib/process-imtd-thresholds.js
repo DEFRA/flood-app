@@ -83,7 +83,7 @@ function calculateAlertThreshold (imtdThresholds, stationStageDatum, stationSubt
         id: 'alertThreshold',
         description: TOP_OF_NORMAL_RANGE,
         shortname: TOP_OF_NORMAL_RANGE,
-        value: parseFloat(pc5).toFixed(2)
+        value: parseFloat(Number(pc5)).toFixed(2)
       })
     } else {
       return imtdThresholdAlerts
