@@ -80,7 +80,7 @@ function calculateAlertThreshold (imtdThresholds, stationStageDatum, stationSubt
       })
     } else if (Number(pc5)) {
       imtdThresholdAlerts.push({
-        id: 'alertThreshold',
+        id: 'pc5',
         description: TOP_OF_NORMAL_RANGE,
         shortname: TOP_OF_NORMAL_RANGE,
         value: parseFloat(Number(pc5)).toFixed(2)
