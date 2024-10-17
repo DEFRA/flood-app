@@ -48,15 +48,9 @@ lab.experiment('Station model test', () => {
         description: 'Low lying land flooding possible above this level. One or more flood alerts may be issued',
         shortname: 'Possible flood alerts',
         value: '3.22'
-      },
-      {
-        id: 'alertThreshold',
-        description: 'Top of normal range',
-        shortname: 'Top of normal range',
-        value: '3.22'
       }
     ])
-    Code.expect(Result.thresholds[3].values).to.equal([
+    Code.expect(Result.thresholds[4].values).to.equal([
       {
         id: 'latest',
         value: '0.81',
@@ -231,19 +225,12 @@ lab.experiment('Station model test', () => {
         }
       ]
     )
-    console.log(Result.thresholds[1].values)
     Code.expect(Result.thresholds[1].values).to.equal(
       [
         {
           id: 'alertThreshold',
           description: 'Low lying land flooding possible above this level. One or more flood alerts may be issued',
           shortname: 'Possible flood alerts',
-          value: '3.88'
-        },
-        {
-          id: 'alertThreshold',
-          description: 'Top of normal range',
-          shortname: 'Top of normal range',
           value: '3.88'
         }
       ]
