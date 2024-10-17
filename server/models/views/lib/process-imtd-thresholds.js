@@ -27,7 +27,9 @@ function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtra
   }
 
   if (imtdThresholdAlert.length > 0) {
-    thresholds.push(...imtdThresholdAlert)
+    for (const alert of imtdThresholdAlert) {
+      thresholds.push(alert)
+    }
   } else if (pc5) {
     thresholds.push({
       id: 'pc5',
@@ -58,7 +60,6 @@ function calculateWarningThreshold (imtdThresholds, stationStageDatum, stationSu
 function calculateAlertThreshold (imtdThresholds, stationStageDatum, stationSubtract, postProcess, pc5) {
   const imtdThresholdAlert = processThreshold(imtdThresholds?.alert, stationStageDatum, stationSubtract, postProcess)
   const imtdThresholdAlerts = []
-
   if (imtdThresholdAlert) {
   // First condition: if imtdThresholdAlert is not equal to Top of Normal Range (pc5)
     if (Number(imtdThresholdAlert) !== Number(pc5)) {
@@ -77,12 +78,12 @@ function calculateAlertThreshold (imtdThresholds, stationStageDatum, stationSubt
         shortname: TOP_OF_NORMAL_RANGE,
         value: imtdThresholdAlert
       })
-    } else {
+    } else if (Number(pc5)) {
       imtdThresholdAlerts.push({
         id: 'alertThreshold',
         description: TOP_OF_NORMAL_RANGE,
         shortname: TOP_OF_NORMAL_RANGE,
-        value: imtdThresholdAlert
+        value: Number(pc5)
       })
     }
   }
