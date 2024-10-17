@@ -85,6 +85,8 @@ function calculateAlertThreshold (imtdThresholds, stationStageDatum, stationSubt
         shortname: TOP_OF_NORMAL_RANGE,
         value: Number(pc5)
       })
+    } else {
+      return imtdThresholdAlerts
     }
   }
 
