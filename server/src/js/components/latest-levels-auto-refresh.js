@@ -67,7 +67,8 @@ class LatestLevelsAutoRefresh {
         }
       })
       .catch(error => {
-        console.error(error)
+        console.error('Error updating levels:', error)
+
         this.liveStatusMessages.push('There was an error getting the latest level')
       })
       .finally(() => {
@@ -79,9 +80,10 @@ class LatestLevelsAutoRefresh {
     const parser = new DOMParser()
     const doc = parser.parseFromString(html, 'text/html')
 
-    const status = doc.querySelector('[data-severity-status]')?.getAttribute('data-severity-status')
+    const currentStatus = document.querySelector('[data-severity-status]')?.getAttribute('data-severity-status')
+    const newStatus = doc.querySelector('[data-severity-status]')?.getAttribute('data-severity-status')
 
-    if (!status) {
+    if (currentStatus !== newStatus) {
       return window.location.reload()
     }
 
