@@ -36,7 +36,7 @@ function getMaxForEachFwisCode (thresholds) {
   return Object.values(maxValuesByFwisCode)
 }
 
-function createWarningObject (threshold, stationStageDatum, stationSubtract, postProcess, pc5) {
+function createWarningObject (threshold, stationStageDatum, stationSubtract, postProcess) {
   const warningType =
     threshold.severity_value === SEVERE_FLOOD_WARNING_THRESHOLD
       ? 'Severe flood warning'
@@ -51,12 +51,12 @@ function createWarningObject (threshold, stationStageDatum, stationSubtract, pos
     value: imtdThresholdWarning
   }
 }
-function processWarningThresholds (imtdThresholds, stationStageDatum, stationSubtract, postProcess, pc5) {
+function processWarningThresholds (imtdThresholds, stationStageDatum, stationSubtract, postProcess) {
   const filteredThresholds = filterThresholdsBySeverity(imtdThresholds)
   const maxThresholdsByFwisCode = getMaxForEachFwisCode(filteredThresholds)
 
   const warningObjects = maxThresholdsByFwisCode.map(threshold =>
-    createWarningObject(threshold, stationStageDatum, stationSubtract, postProcess, pc5)
+    createWarningObject(threshold, stationStageDatum, stationSubtract, postProcess)
   )
 
   return warningObjects

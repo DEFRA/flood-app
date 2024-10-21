@@ -260,8 +260,7 @@ class ViewModel {
         imtdThresholds,
         this.station.stageDatum,
         this.station.subtract,
-        this.station.post_process,
-        this.station.percentile5)
+        this.station.post_process)
       thresholds.push(...processedWarningThresholds)
     }
 
