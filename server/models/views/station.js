@@ -5,7 +5,7 @@ const Station = require('./station-data')
 const Forecast = require('./station-forecast')
 const util = require('../../util')
 const tz = 'Europe/London'
-const processImtdThresholds = require('./lib/process-imtd-thresholds')
+const { processImtdThresholds } = require('./lib/process-imtd-thresholds')
 const processWarningThresholds = require('./lib/process-warning-thresholds')
 const filterImtdThresholds = require('./lib/find-min-threshold')
 
@@ -258,7 +258,11 @@ class ViewModel {
     }
 
     if (imtdThresholds?.length > 0) {
-      const processedWarningThresholds = processWarningThresholds(imtdThresholds)
+      const processedWarningThresholds = processWarningThresholds(
+        imtdThresholds,
+        this.station.stageDatum,
+        this.station.subtract,
+        this.station.post_process)
       thresholds.push(...processedWarningThresholds)
     }
 

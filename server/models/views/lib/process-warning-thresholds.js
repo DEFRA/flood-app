@@ -1,3 +1,5 @@
+const { processThreshold } = require('./process-imtd-thresholds')
+
 const FLOOD_WARNING_THRESHOLD = 2
 const SEVERE_FLOOD_WARNING_THRESHOLD = 3
 function filterThresholdsBySeverity (thresholds) {
@@ -34,24 +36,28 @@ function getMaxForEachFwisCode (thresholds) {
   return Object.values(maxValuesByFwisCode)
 }
 
-function createWarningObject (threshold) {
+function createWarningObject (threshold, stationStageDatum, stationSubtract, postProcess) {
   const warningType =
     threshold.severity_value === SEVERE_FLOOD_WARNING_THRESHOLD
       ? 'Severe flood warning'
       : 'Flood warning'
 
+  const imtdThresholdWarning = processThreshold(parseFloat(threshold.threshold_value).toFixed(2), stationStageDatum, stationSubtract, postProcess)
+
   return {
     id: 'warningThreshold',
     description: `${warningType} issued: <a href="/target-area/${threshold.fwis_code}">${threshold.ta_name}</a>`,
     shortname: `${threshold.ta_name}`,
-    value: parseFloat(threshold.threshold_value).toFixed(2)
+    value: imtdThresholdWarning
   }
 }
-function processWarningThresholds (thresholds) {
-  const filteredThresholds = filterThresholdsBySeverity(thresholds)
+function processWarningThresholds (imtdThresholds, stationStageDatum, stationSubtract, postProcess) {
+  const filteredThresholds = filterThresholdsBySeverity(imtdThresholds)
   const maxThresholdsByFwisCode = getMaxForEachFwisCode(filteredThresholds)
 
-  const warningObjects = maxThresholdsByFwisCode.map(createWarningObject)
+  const warningObjects = maxThresholdsByFwisCode.map(threshold =>
+    createWarningObject(threshold, stationStageDatum, stationSubtract, postProcess)
+  )
 
   return warningObjects
 }
