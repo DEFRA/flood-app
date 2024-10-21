@@ -80,6 +80,5 @@ function calculateAlertThreshold (imtdThresholds, stationStageDatum, stationSubt
 }
 
 module.exports = {
-  processThreshold,
   processImtdThresholds
 }
