@@ -1,20 +1,6 @@
-const TOP_OF_NORMAL_RANGE = 'Top of normal range'
+const processThreshold = require('./process-threshold')
 
-function processThreshold (threshold, stationStageDatum, stationSubtract, postProcess) {
-  if (threshold) {
-    if (postProcess) {
-      if (stationStageDatum > 0) {
-        threshold = threshold - stationStageDatum
-      } else if (stationStageDatum <= 0 && stationSubtract > 0) {
-        threshold = threshold - stationSubtract
-      } else {
-        return parseFloat(threshold).toFixed(2)
-      }
-    }
-    return parseFloat(threshold).toFixed(2)
-  }
-  return null
-}
+const TOP_OF_NORMAL_RANGE = 'Top of normal range'
 
 function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtract, postProcess, pc5) {
   const thresholds = []

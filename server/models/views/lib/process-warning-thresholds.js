@@ -1,4 +1,4 @@
-const { processThreshold } = require('./process-imtd-thresholds')
+const processThreshold = require('./process-threshold')
 
 const FLOOD_WARNING_THRESHOLD = 2
 const SEVERE_FLOOD_WARNING_THRESHOLD = 3
