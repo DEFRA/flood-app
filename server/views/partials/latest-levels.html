@@ -3,21 +3,22 @@
   {% for warnings in model.latestLevels %}
   <div class="defra-live__item">
     {% if warnings.isSuspendedOrOffline %}
-      <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0"><strong>Latest Level</strong></p>
+      <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0"><strong>{{ warnings.formatted_time }}</strong></p>
       <p>The {{ warnings.river_name }} level at {{ warnings.agency_name }} is currently unavailable.</p>
     {% else %}
       <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0"><strong>{{ warnings.formatted_time }}</strong></p>
       <p>The {{ warnings.river_name }} level at {{ warnings.agency_name }} was {{ warnings.latest_level | toFixed(2) }} metres. Property flooding is possible when it goes above {{ warnings.threshold_value | toFixed(2) }} metres.
         {% if model.latestLevels.length > 1 %}
-        <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}-downstage{% endif %}{% if not warnings.iswales %}?tid={{ warnings.station_threshold_id }}{% endif %}">Monitor the {{ warnings.river_name }} level at {{ warnings.agency_name }}</a>
+        <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}-downstage{% endif %}{% if not warnings.iswales %}?tid={{ warnings.station_threshold_id }}{% endif %}">Monitor the {{ warnings.river_name }} level at {{ warnings.agency_name }}{% if warnings.iswales %} (Natural Resources Wales){% endif %}.</a>
         {% endif %}
       </p>
       {% if model.latestLevels.length == 1 %}
       <p>
-        <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}-downstage{% endif %}{% if not warnings.iswales %}?tid={{ warnings.station_threshold_id }}{% endif %}">Monitor the latest{% if model.latestLevels.length > 1 %} {{ warnings.river_name }}{% endif %} level at {{ warnings.agency_name }}</a>
+        <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}-downstage{% endif %}{% if not warnings.iswales %}?tid={{ warnings.station_threshold_id }}{% endif %}">Monitor the latest{% if model.latestLevels.length > 1 %} {{ warnings.river_name }}{% endif %} level at {{ warnings.agency_name }}{% if warnings.iswales %} (Natural Resources Wales){% endif %}</a>
       </p>
       {% endif %}
     {% endif %}
   </div>
   {% endfor %}
+  <p class="defra-live__supplementary">{% if model.latestLevels.length > 1 %}These levels{% else %}This level{% endif %} will update automatically</p>
 </div>
