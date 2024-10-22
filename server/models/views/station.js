@@ -5,7 +5,7 @@ const Station = require('./station-data')
 const Forecast = require('./station-forecast')
 const util = require('../../util')
 const tz = 'Europe/London'
-const processImtdThresholds = require('./lib/process-imtd-thresholds')
+const { processImtdThresholds, processThreshold } = require('./lib/process-imtd-thresholds')
 const filterImtdThresholds = require('./lib/find-min-threshold')
 
 const bannerIconId3 = 3
@@ -171,7 +171,7 @@ class ViewModel {
 
       oneHourAgo.setHours(oneHourAgo.getHours() - 1)
 
-      // check if recent value is over one hour old0
+      // check if recent value is over one hour old
       this.dataOverHourOld = new Date(this.recentValue.ts) < oneHourAgo
 
       this.recentValue.dateWhen = 'on ' + moment.tz(this.recentValue.ts, tz).format('D/MM/YY')
@@ -287,7 +287,7 @@ class ViewModel {
     }
 
     // Retrieve the applicable threshold for chartThreshold
-    const chartThreshold = [getThresholdByThresholdId(tid, imtdThresholds, thresholds)].filter(Boolean)
+    const chartThreshold = [getThresholdByThresholdId(tid, imtdThresholds, thresholds, this.station.stageDatum, this.station.subtract, this.station.post_process)].filter(Boolean)
 
     // Set chartThreshold property
     this.chartThreshold = chartThreshold
@@ -448,13 +448,14 @@ function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationTyp
 }
 
 // Function to retrieve a threshold by tid or fall back to 'pc5' or 'alertThreshold'
-const getThresholdByThresholdId = (tid, imtdThresholds, thresholds) => {
+const getThresholdByThresholdId = (tid, imtdThresholds, thresholds, stationStageDatum, stationSubtract, postProcess) => {
   // Check if a threshold exists based on tid
   const tidThreshold = tid && imtdThresholds?.find(thresh => thresh.station_threshold_id === tid)
   if (tidThreshold) {
+    const thresholdValue = processThreshold(tidThreshold.value, stationStageDatum, stationSubtract, postProcess)
     return {
       id: tidThreshold.station_threshold_id,
-      value: Number(tidThreshold.value).toFixed(2),
+      value: thresholdValue,
       description: `${tidThreshold.value}m ${tidThreshold.ta_name || ''}`,
       shortname: tidThreshold.ta_name || 'Target Area Threshold'
     }
