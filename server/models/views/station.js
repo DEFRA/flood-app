@@ -5,7 +5,8 @@ const Station = require('./station-data')
 const Forecast = require('./station-forecast')
 const util = require('../../util')
 const tz = 'Europe/London'
-const { processImtdThresholds, processThreshold } = require('./lib/process-imtd-thresholds')
+const { processImtdThresholds } = require('./lib/process-imtd-thresholds')
+const processWarningThresholds = require('./lib/process-warning-thresholds')
 const filterImtdThresholds = require('./lib/find-min-threshold')
 
 const bannerIconId3 = 3
@@ -288,7 +289,7 @@ class ViewModel {
     }
 
     // Retrieve the applicable threshold for chartThreshold
-    const chartThreshold = [getThresholdByThresholdId(tid, imtdThresholds, thresholds, this.station.stageDatum, this.station.subtract, this.station.post_process)].filter(Boolean)
+    const chartThreshold = [getThresholdByThresholdId(tid, imtdThresholds, thresholds)].filter(Boolean)
 
     // Set chartThreshold property
     this.chartThreshold = chartThreshold
@@ -449,14 +450,13 @@ function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationTyp
 }
 
 // Function to retrieve a threshold by tid or fall back to 'pc5' or 'alertThreshold'
-const getThresholdByThresholdId = (tid, imtdThresholds, thresholds, stationStageDatum, stationSubtract, postProcess) => {
+const getThresholdByThresholdId = (tid, imtdThresholds, thresholds) => {
   // Check if a threshold exists based on tid
   const tidThreshold = tid && imtdThresholds?.find(thresh => thresh.station_threshold_id === tid)
   if (tidThreshold) {
-    const thresholdValue = processThreshold(tidThreshold.value, stationStageDatum, stationSubtract, postProcess)
     return {
       id: tidThreshold.station_threshold_id,
-      value: thresholdValue,
+      value: Number(tidThreshold.value).toFixed(2),
       description: `${tidThreshold.value}m ${tidThreshold.ta_name || ''}`,
       shortname: tidThreshold.ta_name || 'Target Area Threshold'
     }
