@@ -139,23 +139,19 @@ class LatestLevelsAutoRefresh {
     const now = new Date()
     const nowMinute = now.getMinutes()
 
-    // Find the next target minute
     const nextTargetMinute = this.targetMinutes.find(minute => minute > nowMinute) ?? this.targetMinutes[0]
 
-    // Create the next target date based on the next target minute
     const nextTargetDate = new Date(now)
     nextTargetDate.setMinutes(nextTargetMinute)
     nextTargetDate.setSeconds(0)
     nextTargetDate.setMilliseconds(0)
 
-    if (nowMinute >= this.targetMinutes[this.targetMinutes.length - 1]) {
+    if (nextTargetMinute === this.targetMinutes[0] && nowMinute >= this.targetMinutes[this.targetMinutes.length - 1]) {
       nextTargetDate.setHours(nextTargetDate.getHours() + 1)
     }
 
-    // Calculate delay correctly from now
     const delay = nextTargetDate.getTime() - now.getTime()
 
-    // Schedule the next update
     this.timeout = setTimeout(() => {
       this.fetchRiverLevels()
       this.nextUpdate()
