@@ -447,7 +447,7 @@ function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationTyp
   }
 }
 
-// Function to retrieve a threshold by tid or fall back to 'pc5' or 'alertThreshold'
+// Function to retrieve a threshold by tid or fallback to 'pc5' or 'alertThreshold'
 const getThresholdByThresholdId = (tid, imtdThresholds, thresholds, stationStageDatum, stationSubtract, postProcess) => {
   // Check if a threshold exists based on tid
   const tidThreshold = tid && imtdThresholds?.find(thresh => thresh.station_threshold_id === tid)
