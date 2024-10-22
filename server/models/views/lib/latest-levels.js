@@ -1,5 +1,5 @@
 const { formatElapsedTime } = require('../../../util')
-const { processThreshold } = require('./process-imtd-thresholds') // Import processThreshold from the module
+const processThreshold = require('./process-threshold') // Import processThreshold from the module
 
 const WARNING_THRESHOLD_TYPES = ['FW RES FW', 'FW ACT FW', 'FW ACTCON FW']
 
