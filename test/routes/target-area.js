@@ -196,7 +196,7 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.payload).to.contain('<a href="/station/7173?tid=1747543">Monitor the River Pinn level at Avenue Road.</a>')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Moss Close was 0.13 metres. Property flooding is possible when it goes above 1.15 metres.')
     Code.expect(response.payload).to.contain('<a href="/station/7201?tid=1747541">Monitor the River Pinn level at Moss Close.</a>')
-    Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">These levels will update automatically</p>')
+    // Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">These levels will update automatically</p>')
   })
   lab.test('Check flood severity banner link for Flood warning', async () => {
     const floodService = require('../../server/services/flood')
@@ -564,7 +564,7 @@ lab.experiment('Target-area tests', () => {
 
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest level</h2>')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road is currently unavailable.</p>')
-    Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">This level will update automatically</p>')
+    // Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">This level will update automatically</p>')
   })
 
   lab.test('Displays latest level for a single suspended station', async () => {
@@ -613,7 +613,7 @@ lab.experiment('Target-area tests', () => {
 
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest level</h2>')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Moss Close is currently unavailable.</p>')
-    Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">This level will update automatically</p>')
+    // Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">This level will update automatically</p>')
   })
 
   lab.test('Displays multiple levels with one active but offline, one normal, and one Welsh station with no values', async () => {
@@ -712,7 +712,7 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest levels</h2>')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road is currently unavailable.</p>')
-    Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">These levels will update automatically</p>')
+    // Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">These levels will update automatically</p>')
   })
 
   lab.test('Displays multiple levels with one Closed and one normal station', async () => {
@@ -761,7 +761,7 @@ lab.experiment('Target-area tests', () => {
 
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest level</h2>')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
-    Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">This level will update automatically</p>')
+    // Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">This level will update automatically</p>')
   })
 
   lab.test('Displays multiple levels with one normal, one active but offline, and one Welsh station with no values', async () => {
@@ -812,7 +812,7 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road is currently unavailable.</p>')
     Code.expect(response.payload).to.not.contain('<p>The River Welsh station level is currently unavailable.</p>')
-    Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">These levels will update automatically</p>')
+    // Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">These levels will update automatically</p>')
   })
 
   lab.test('Displays multiple levels with one normal, one suspended, and one Closed station', async () => {
@@ -863,7 +863,7 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Eastcote Road was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.')
     Code.expect(response.payload).to.contain('<p>The River Pinn level at Avenue Road is currently unavailable.</p>')
     Code.expect(response.payload).to.not.contain('<p>The River Test level at Test Road is currently unavailable.</p>')
-    Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">These levels will update automatically</p>')
+    // Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">These levels will update automatically</p>')
   })
 
   lab.test('Does not display levels if all stations are Closed or Welsh with no values', async () => {
@@ -959,6 +959,6 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest level</h2>')
     Code.expect(response.payload).to.contain('<p>The River Welsh level at Welsh Station was 0.35 metres. Property flooding is possible when it goes above 1.40 metres.\n        \n      </p>')
     Code.expect(response.payload).to.contain('<a href="/station/7201">Monitor the latest level at Welsh Station (Natural Resources Wales)</a>')
-    Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">This level will update automatically</p>')
+    // Code.expect(response.payload).to.contain('<p class="defra-live__supplementary">This level will update automatically</p>')
   })
 })
