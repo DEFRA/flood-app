@@ -10,6 +10,7 @@ module.exports = (env, argv) => ({
     core: './server/src/js/core.js',
     webchat: './server/src/js/webchat.js',
     chart: './server/src/js/components/chart.js',
+    'latest-levels-auto-refresh': './server/src/js/components/latest-levels-auto-refresh',
     'stations-overview': './server/src/js/pages/stations-overview'
   },
   output: {

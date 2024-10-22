@@ -250,11 +250,21 @@ class ViewModel {
         id: 'highest',
         value: this.station.porMaxValue,
         description: this.station.thresholdPorMaxDate
-          ? 'Water reaches the highest level recorded at this measuring station (recorded on ' + this.station.thresholdPorMaxDate + ')'
+          ? `Water reaches the highest level recorded at this measuring station (${this.station.thresholdPorMaxDate})`
           : 'Water reaches the highest level recorded at this measuring station',
         shortname: 'Highest level on record'
       })
     }
+
+    if (imtdThresholds?.length > 0) {
+      const processedWarningThresholds = processWarningThresholds(
+        imtdThresholds,
+        this.station.stageDatum,
+        this.station.subtract,
+        this.station.post_process)
+      thresholds.push(...processedWarningThresholds)
+    }
+
     this.imtdThresholds = imtdThresholds?.length > 0
       ? filterImtdThresholds(imtdThresholds)
       : []
@@ -263,19 +273,10 @@ class ViewModel {
       this.imtdThresholds,
       this.station.stageDatum,
       this.station.subtract,
-      this.station.post_process
+      this.station.post_process,
+      this.station.percentile5
     )
     thresholds.push(...processedImtdThresholds)
-
-    if (this.station.percentile5) {
-      // Only push typical range if it has a percentil5
-      thresholds.push({
-        id: 'pc5',
-        value: this.station.percentile5,
-        description: 'This is the top of the normal range',
-        shortname: TOP_OF_NORMAL_RANGE
-      })
-    }
 
     // Handle chartThreshold: add tidThreshold if a valid tid is present; if not, fallback to 'pc5'; if 'pc5' is unavailable, use 'alertThreshold' with "Top of normal range" description.
     // Extract tid from request URL if valid
