@@ -808,7 +808,6 @@ function LineChart (containerId, stationId, data, options = {}) {
       remove.append('line').attr('x1', -3).attr('y1', -3).attr('x2', 3).attr('y2', 3)
       remove.append('line').attr('y1', -3).attr('x2', -3).attr('x1', 3).attr('y2', 3)
 
-
       // Set individual elements size and position
       thresholdContainer.attr('transform', 'translate(0,' + Math.round(yScale(threshold.level)) + ')')
     })

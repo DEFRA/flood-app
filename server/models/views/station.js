@@ -5,7 +5,8 @@ const Station = require('./station-data')
 const Forecast = require('./station-forecast')
 const util = require('../../util')
 const tz = 'Europe/London'
-const { { processImtdThresholds, processThreshold } } = require('./lib/process-imtd-thresholds')
+const processImtdThresholds = require('./lib/process-imtd-thresholds')
+const processThreshold = require('./lib/process-threshold')
 const processWarningThresholds = require('./lib/process-warning-thresholds')
 const filterImtdThresholds = require('./lib/find-min-threshold')
 
@@ -279,16 +280,6 @@ class ViewModel {
     )
     thresholds.push(...processedImtdThresholds)
 
-    if (this.station.percentile5) {
-      // Only push typical range if it has a percentil5
-      thresholds.push({
-        id: 'pc5',
-        value: this.station.percentile5,
-        description: 'This is the top of the normal range',
-        shortname: TOP_OF_NORMAL_RANGE
-      })
-    }
-
     // Handle chartThreshold: add tidThreshold if a valid tid is present; if not, fallback to 'pc5'; if 'pc5' is unavailable, use 'alertThreshold' with "Top of normal range" description.
     // Extract tid from request URL if valid
     let tid = null
@@ -304,13 +295,6 @@ class ViewModel {
     // Set chartThreshold property
     this.chartThreshold = chartThreshold
 
-    // Retrieve the applicable threshold for chartThreshold
-    const chartThreshold = [getThresholdByThresholdId(tid, imtdThresholds, thresholds, this.station.stageDatum, this.station.subtract, this.station.post_process)].filter(Boolean)
-
-    // Set chartThreshold property
-    this.chartThreshold = chartThreshold
-
->>>>>>> development
     // Add impacts
     if (impacts.length > 0) {
       this.station.hasImpacts = true
@@ -436,7 +420,6 @@ function stationTypeCalculator (stationTypeData) {
   }
   return stationType
 }
-
 
 function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationType) {
   const observed = telemetryRawData
