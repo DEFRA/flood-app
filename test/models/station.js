@@ -37,7 +37,7 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.thresholds[0].values).to.equal([
       {
         id: 'warningThreshold',
-        description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
+        description: 'Property flooding is possible above this level',
         shortname: 'Possible flood warnings',
         value: '3.64'
       }
@@ -45,7 +45,7 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.thresholds[2].values).to.equal([
       {
         id: 'alertThreshold',
-        description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
+        description: 'Low lying land flooding possible above this level. One or more flood alerts may be issued',
         shortname: 'Possible flood alerts',
         value: '3.22'
       }
@@ -64,11 +64,10 @@ lab.experiment('Station model test', () => {
     const viewModel = new ViewModel(stationData)
 
     const Result = viewModel
-
     Code.expect(Result.thresholds[1].values).to.equal([
       {
         id: 'warningThreshold',
-        description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
+        description: 'Property flooding is possible above this level',
         shortname: 'Possible flood warnings',
         value: '3.22'
       }
@@ -76,13 +75,7 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.thresholds[2].values).to.equal([
       {
         id: 'alertThreshold',
-        description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
-        shortname: 'Possible flood alerts',
-        value: '2.84'
-      },
-      {
-        description: 'This is the top of the normal range',
-        id: 'pc5',
+        description: 'Top of normal range. Low lying land flooding possible above this level. One or more flood alerts may be issued',
         shortname: 'Top of normal range',
         value: '2.84'
       }
@@ -225,7 +218,7 @@ lab.experiment('Station model test', () => {
     Code.expect(Result.thresholds[0].values).to.equal(
       [
         {
-          description: 'Property flooding is possible above this level. One or more flood warnings may be issued',
+          description: 'Property flooding is possible above this level',
           id: 'warningThreshold',
           shortname: 'Possible flood warnings',
           value: '4.20'
@@ -236,7 +229,7 @@ lab.experiment('Station model test', () => {
       [
         {
           id: 'alertThreshold',
-          description: 'Low lying land flooding is possible above this level. One or more flood alerts may be issued',
+          description: 'Low lying land flooding possible above this level. One or more flood alerts may be issued',
           shortname: 'Possible flood alerts',
           value: '3.88'
         }
@@ -307,5 +300,64 @@ lab.experiment('Station model test', () => {
     const Result = viewModel
 
     Code.expect(Result.telemetryRefined.observed.length).to.equal(4)
+  })
+  lab.test('Test station viewModel one warning in force', async () => {
+    const stationData = data.stationActiveWarning
+
+    const viewModel = new ViewModel(stationData)
+
+    const Result = viewModel
+
+    Code.expect(Result.station.id).to.equal(1001)
+    Code.expect(Result.banner).to.equal(1)
+    Code.expect(Result.severityLevel).to.equal('warning')
+    Code.expect(Result.warningsBanner).to.equal('Flood warning for Coast from Fleetwood to Blackpool')
+    Code.expect(Result.warningsLink).to.equal('/target-area/012WACFB')
+  })
+
+  lab.test('Test station viewModel one alert in force', async () => {
+    const stationData = data.stationActiveAlert
+
+    const viewModel = new ViewModel(stationData)
+
+    const Result = viewModel
+
+    Code.expect(Result.station.id).to.equal(1001)
+    Code.expect(Result.banner).to.equal(1)
+    Code.expect(Result.severityLevel).to.equal('alert')
+    Code.expect(Result.alertsBanner).to.equal('There is a flood alert within 5 miles of this measuring station')
+    Code.expect(Result.alertsLink).to.equal('/target-area/061FAG30Alton')
+  })
+
+  lab.test('Test station viewModel one Severe Warning in force', async () => {
+    const stationData = data.stationSevereWarning
+
+    const viewModel = new ViewModel(stationData)
+
+    const Result = viewModel
+
+    Code.expect(Result.station.id).to.equal(1001)
+    Code.expect(Result.banner).to.equal(1)
+    Code.expect(Result.severityLevel).to.equal('severe')
+    Code.expect(Result.severeBanner).to.equal('Severe flood warning for Coast from Fleetwood to Blackpool')
+    Code.expect(Result.severeLink).to.equal('/target-area/012WACFB')
+  })
+
+  lab.test('Test station viewModel multiple Warnings and Alerts in force', async () => {
+    const stationData = data.stationMultipleAW
+
+    const viewModel = new ViewModel(stationData)
+
+    const Result = viewModel
+
+    Code.expect(Result.station.id).to.equal(1001)
+    Code.expect(Result.banner).to.equal(2)
+    Code.expect(Result.severityLevel).to.equal('severe')
+    Code.expect(Result.severeBanner).to.equal('There are severe flood warnings within 5 miles of this measuring station')
+    Code.expect(Result.severeLink).to.equal('/alerts-and-warnings?station=1001#severe')
+    Code.expect(Result.alertsBanner).to.equal('There are flood alerts within 5 miles of this measuring station')
+    Code.expect(Result.alertsLink).to.equal('/alerts-and-warnings?station=1001#alerts')
+    Code.expect(Result.warningsBanner).to.equal('There are flood warnings within 5 miles of this measuring station')
+    Code.expect(Result.warningsLink).to.equal('/alerts-and-warnings?station=1001#warnings')
   })
 })
