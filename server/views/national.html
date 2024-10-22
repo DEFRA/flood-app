@@ -121,7 +121,7 @@
   window.flood = {}
   window.flood.model = {{ model | dump(2) | safe }}
   window.flood.model.mapButtonText = {{ model.mapButtonText | dump | safe }}
-  window.flood.model.mapButtonClass = 'defra-button-secondary defra-button-secondary--icon'
+  window.flood.model.mapButtonClass = 'defra-button-secondary'
   window.flood.model.mapLayers = 'mv,ts,tw,ta'
   window.flood.model.outlookDays = {{ model.outlook.days | dump | safe }}
   window.flood.model.data = {
