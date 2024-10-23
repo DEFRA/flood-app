@@ -15,12 +15,12 @@
       </p>
       <p>The {{ warnings.river_name }} level at {{ warnings.agency_name }} was <span data-item-value>{{ warnings.latest_level | toFixed(2) }}</span> metres. Property flooding is possible when it goes above {{ warnings.threshold_value | toFixed(2) }} metres.
         {% if model.latestLevels.length > 1 %}
-        <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}-downstage{% endif %}{% if not warnings.iswales %}?tid={{ warnings.station_threshold_id }}{% endif %}">Monitor the {{ warnings.river_name }} level at {{ warnings.agency_name }}</a>
+        <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}-downstage{% endif %}{% if not warnings.iswales %}?tid={{ warnings.station_threshold_id }}{% endif %}">Monitor the {{ warnings.river_name }} level at {{ warnings.agency_name }}{% if warnings.iswales %} (Natural Resources Wales){% endif %}.</a>
         {% endif %}
       </p>
       {% if model.latestLevels.length == 1 %}
       <p>
-        <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}-downstage{% endif %}{% if not warnings.iswales %}?tid={{ warnings.station_threshold_id }}{% endif %}">Monitor the latest{% if model.latestLevels.length > 1 %} {{ warnings.river_name }}{% endif %} level at {{ warnings.agency_name }}</a>
+        <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}-downstage{% endif %}{% if not warnings.iswales %}?tid={{ warnings.station_threshold_id }}{% endif %}">Monitor the latest{% if model.latestLevels.length > 1 %} {{ warnings.river_name }}{% endif %} level at {{ warnings.agency_name }}{% if warnings.iswales %} (Natural Resources Wales){% endif %}</a>
       </p>
       {% endif %}
     {% endif %}
@@ -28,6 +28,7 @@
   {% endfor %}
   <p class="defra-live__supplementary">{% if model.latestLevels.length > 1 %}These levels{% else %}This level{% endif %} will update automatically</p>
 </div>
+
 
 
 <script src="{{ assetPath }}/js/latest-levels-auto-refresh.js"></script>

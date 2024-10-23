@@ -5,7 +5,7 @@ const Station = require('./station-data')
 const Forecast = require('./station-forecast')
 const util = require('../../util')
 const tz = 'Europe/London'
-const { processImtdThresholds } = require('./lib/process-imtd-thresholds')
+const processImtdThresholds = require('./lib/process-imtd-thresholds')
 const processThreshold = require('./lib/process-threshold')
 const processWarningThresholds = require('./lib/process-warning-thresholds')
 const filterImtdThresholds = require('./lib/find-min-threshold')
@@ -290,9 +290,7 @@ class ViewModel {
     }
 
     // Retrieve the applicable threshold for chartThreshold
-    const chartThreshold = [getThresholdByThresholdId(tid, imtdThresholds, thresholds, this.station.stageDatum,
-      this.station.subtract,
-      this.station.post_process)].filter(Boolean)
+    const chartThreshold = [getThresholdByThresholdId(tid, imtdThresholds, thresholds, this.station.stageDatum, this.station.subtract, this.station.post_process)].filter(Boolean)
 
     // Set chartThreshold property
     this.chartThreshold = chartThreshold
