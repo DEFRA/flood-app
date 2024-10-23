@@ -72,6 +72,10 @@ function LiveMap (mapId, options) {
   ]
   const layers = defaultLayers.concat(dataLayers)
 
+  // Assign z-index to ensure visibility
+  stations.setZIndex(2) // Higher priority
+  rainfall.setZIndex(1) // Lower priority
+
   // Configure default interactions
   const interactions = defaultInteractions({
     pinchRotate: false
