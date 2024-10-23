@@ -50,8 +50,8 @@ class LatestLevelsAutoRefresh {
         element.textContent = `${timeAgoValue + 1} minutes ago`
       }
 
-      if ((timeAgoValue + 1) > 60) {
-        element.textContent = 'more than 1 hour ago'
+      if ((timeAgoValue + 1) > 59) {
+        element.textContent = 'More than 1 hour ago'
       }
     })
   }
