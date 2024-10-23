@@ -49,6 +49,10 @@ class LatestLevelsAutoRefresh {
       if (!timeAgoText.includes('hour')) {
         element.textContent = `${timeAgoValue + 1} minutes ago`
       }
+
+      if ((timeAgoValue + 1) > 60) {
+        element.textContent = 'more than 1 hour ago'
+      }
     })
   }
 
