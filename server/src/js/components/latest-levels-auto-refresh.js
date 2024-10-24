@@ -115,9 +115,9 @@ class LatestLevelsAutoRefresh {
       if (currentItem) {
         const currentTime = currentItem.querySelector('[data-item-time]')
         const currentValue = currentItem.querySelector('[data-item-value]')
-        const currentStatus = currentItem.getAttribute('data-item-status')
 
-        if (fetchedStatus === currentStatus) {
+        // if isSuspendedOrOffline
+        if (fetchedStatus === 'false') {
           if (fetchedValue?.textContent !== currentValue?.textContent) {
             clearInterval(this.timeAgoInterval)
 
