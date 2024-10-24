@@ -51,6 +51,7 @@ $govuk-breakpoints: (
 @import "components/map/map-overlays";
 @import "components/map/map-days";
 @import "components/bar-chart";
+@import "components/latest-levels-box";
 @import "components/line-chart";
 @import "components/banners";
 @import "components/flood-details";
@@ -67,6 +68,7 @@ $govuk-breakpoints: (
 @import "components/stations-overview";
 @import "components/chart-controls";
 @import "components/toggletip";
+@import "components/tooltip";
 @import "components/navbar";
 @import "components/flood-levels-table";
 

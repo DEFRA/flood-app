@@ -13,6 +13,7 @@ import './components/map/outlook'
 import './components/levels-table'
 import './components/toggle-list-display'
 import './components/toggletip'
+import './components/tooltip'
 
 document.addEventListener('readystatechange', () => {
   if (document.readyState === 'interactive') {
@@ -43,7 +44,7 @@ document.addEventListener('readystatechange', () => {
     if (document.getElementById('map-outlook')) {
       window.flood.maps.createOutlookMap('map-outlook', {
         btnText: 'View map showing flood risk areas',
-        btnClass: 'defra-button-secondary defra-button-secondary--icon',
+        btnClass: 'defra-button-secondary',
         days: model.outlookDays,
         data: model.outlookData || null
       })
@@ -71,6 +72,9 @@ document.addEventListener('readystatechange', () => {
 
     const elem = document.getElementById('cookie-banner')
     let calledGTag = false
+
+    // Add tooltips
+    window.flood.createTooltips()
 
     // Check not on cookie settings page
     if (elem) {

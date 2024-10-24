@@ -19,6 +19,12 @@ function getTargetAreaAndWarning (targetAreaValues, floodWarningValues) {
   return { area, flood: floodWarning }
 }
 
+function getTargetAreaAndAlert (targetAreaValues, floodAlertValues) {
+  const area = getTargetArea(targetAreaValues)
+  const floodAlert = getAlert(floodAlertValues)
+  return { area, flood: floodAlert }
+}
+
 describe('target area model test', () => {
   describe('Description handling', () => {
     it('should populate meta details', async () => {
@@ -302,6 +308,34 @@ describe('target area model test', () => {
       const viewModel = new ViewModel(options)
       expect(viewModel).to.include({
         situationChanged: 'Removed 5:13pm on 15 September 2022'
+      })
+    })
+    it('should revert to fallbackText when Warning situation string is blank', async () => {
+      const ViewModel = proxyquire('../../server/models/views/target-area', {})
+      const targetAreaValues = {
+        code: 'ABCDW001'
+      }
+      const floodWarningValues = {
+        situation: ''
+      }
+      const options = getTargetAreaAndWarning(targetAreaValues, floodWarningValues)
+      const viewModel = new ViewModel(options)
+      expect(viewModel).to.include({
+        situation: '<p>We\'ll update this page when there\'s a flood warning in the area.</p><p>A flood warning means flooding to some property is expected. A severe flood warning means there\'s a danger to life.</p>'
+      })
+    })
+    it('should revert to fallbackText when Alert situation string is blank', async () => {
+      const ViewModel = proxyquire('../../server/models/views/target-area', {})
+      const targetAreaValues = {
+        code: 'ABCDA001'
+      }
+      const floodAlertValues = {
+        situation: ''
+      }
+      const options = getTargetAreaAndAlert(targetAreaValues, floodAlertValues)
+      const viewModel = new ViewModel(options)
+      expect(viewModel).to.include({
+        situation: '<p>We\'ll update this page when there\'s a flood alert in the area, which means flooding to low lying land is possible.</p>'
       })
     })
   })

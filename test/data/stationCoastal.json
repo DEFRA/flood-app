@@ -2482,5 +2482,6 @@
    }
   ],
   "impacts":[],
-  "warningsAlerts":[]
+  "warningsAlerts":[],
+  "requestUrl": "http://localhost:3000/station/1001"
 }
