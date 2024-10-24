@@ -3,7 +3,7 @@
 <div class="defra-live">
   <h2 class="defra-live__title">Latest level{% if model.latestLevels.length > 1 %}s{% endif %}</h2>
   {% for warnings in model.latestLevels %}
-  <div class="defra-live__item" data-item-status="{{ warnings.status }}" data-item-name="{{ warnings.river_name }}" data-item-agency="{{ warnings.agency_name }}"  data-item-id="{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}-downstage{% endif %}">
+  <div class="defra-live__item" data-item-status="{{ warnings.status }}" data-item-name="{{ warnings.river_name }}" data-item-agency="{{ warnings.agency_name }}"  data-item-id="{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}/downstream{% endif %}">
     {% if warnings.status == 'Suspended' or (warnings.status == 'Active' and warnings.latest_level == null) %}
       <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
         <strong>Latest Level</strong>
@@ -15,12 +15,12 @@
       </p>
       <p>The {{ warnings.river_name }} level at {{ warnings.agency_name }} was <span data-item-value>{{ warnings.latest_level | toFixed(2) }}</span> metres. Property flooding is possible when it goes above {{ warnings.threshold_value | toFixed(2) }} metres.
         {% if model.latestLevels.length > 1 %}
-        <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}-downstage{% endif %}{% if not warnings.iswales %}?tid={{ warnings.station_threshold_id }}{% endif %}">Monitor the {{ warnings.river_name }} level at {{ warnings.agency_name }}{% if warnings.iswales %} (Natural Resources Wales){% endif %}.</a>
+        <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}/downstream{% endif %}{% if not warnings.iswales %}?tid={{ warnings.station_threshold_id }}{% endif %}">Monitor the {{ warnings.river_name }} level at {{ warnings.agency_name }}{% if warnings.iswales %} (Natural Resources Wales){% endif %}.</a>
         {% endif %}
       </p>
       {% if model.latestLevels.length == 1 %}
       <p>
-        <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}-downstage{% endif %}{% if not warnings.iswales %}?tid={{ warnings.station_threshold_id }}{% endif %}">Monitor the latest{% if model.latestLevels.length > 1 %} {{ warnings.river_name }}{% endif %} level at {{ warnings.agency_name }}{% if warnings.iswales %} (Natural Resources Wales){% endif %}</a>
+        <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}/downstream{% endif %}{% if not warnings.iswales %}?tid={{ warnings.station_threshold_id }}{% endif %}">Monitor the latest{% if model.latestLevels.length > 1 %} {{ warnings.river_name }}{% endif %} level at {{ warnings.agency_name }}{% if warnings.iswales %} (Natural Resources Wales){% endif %}</a>
       </p>
       {% endif %}
     {% endif %}
