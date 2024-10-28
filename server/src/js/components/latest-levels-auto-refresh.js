@@ -152,7 +152,7 @@ class LatestLevelsAutoRefresh {
     nextTargetDate.setSeconds(0)
     nextTargetDate.setMilliseconds(0)
 
-    if (nowMinute > this.targetMinutes[this.targetMinutes.length - 1]) {
+    if (nowMinute >= this.targetMinutes[this.targetMinutes.length - 1]) {
       nextTargetDate.setHours(nextTargetDate.getHours() + 1)
     }
 
