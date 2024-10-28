@@ -1,7 +1,7 @@
 /* global DOMParser */
 
 class LatestLevelsAutoRefresh {
-  constructor (targetMinutes = [3, 18, 33, 48]) {
+  constructor (targetMinutes = [4, 19, 34, 49]) {
     this.timeout = null
     this.timeAgoInterval = null
     this.liveStatusMessages = []
@@ -29,6 +29,8 @@ class LatestLevelsAutoRefresh {
   }
 
   updateTimeAgo = () => {
+    console.log('--updateTimeAgo() started')
+
     setTimeout(() => {
       this.renderTimeAgo()
       this.timeAgoInterval = setInterval(this.renderTimeAgo, 60000)
@@ -42,6 +44,8 @@ class LatestLevelsAutoRefresh {
       const timeAgoText = element.textContent
       const timeAgoValue = parseInt(timeAgoText, 10)
 
+      console.log('--currentTime', timeAgoText)
+
       if (!timeAgoText.includes('hour')) {
         element.textContent = `${timeAgoValue + 1} minutes ago`
       }
@@ -53,6 +57,8 @@ class LatestLevelsAutoRefresh {
   }
 
   fetchRiverLevels = (callback) => {
+    console.log('fetchRiverLevels...')
+
     this.liveStatusMessages = []
 
     fetch(window.location.href)
@@ -97,6 +103,10 @@ class LatestLevelsAutoRefresh {
     // Check if any elements are missing in the fetched data
     const isMissingElements = this.latestLevels.length !== fetchedElements.length
 
+    console.log('isMissingElements', isMissingElements, this.latestLevels.length, fetchedElements.length)
+    console.log('latestLevels', this.latestLevels)
+    console.log('fetchedElements', fetchedElements)
+
     if (isMissingElements) {
       return this.liveStatusMessages.push('Warnings have been removed, please refresh the page.')
     }
@@ -112,20 +122,30 @@ class LatestLevelsAutoRefresh {
 
       const currentItem = document.querySelector(`[data-item-id="${itemId}"]`)
 
+      console.log('fetchedElement', itemId, itemRiverName, itemRiverAgency)
+
       if (currentItem) {
         const currentTime = currentItem.querySelector('[data-item-time]')
         const currentValue = currentItem.querySelector('[data-item-value]')
 
+        console.log('--currentValue', currentValue?.textContent, currentStatus, currentTime)
+        console.log('--fetchedValue', fetchedValue?.textContent, fetchedStatus, fetchedTime)
+        console.log('--requires update?', fetchedValue?.textContent !== currentValue?.textContent)
+
         // if isSuspendedOrOffline
         if (fetchedStatus === 'false') {
           if (fetchedValue?.textContent !== currentValue?.textContent) {
+            console.log('--new value fetched')
             clearInterval(this.timeAgoInterval)
+            console.log('--interval cleared')
 
             currentValue.textContent = fetchedValue.textContent
 
             this.liveStatusMessages.push(`The ${itemRiverName} at ${itemRiverAgency} level was ${fetchedValue.textContent} metres ${fetchedTime.textContent}`)
 
             this.updateTimeAgo()
+          } else {
+            console.log('--no change')
           }
 
           currentTime.textContent = fetchedTime.textContent
@@ -146,17 +166,26 @@ class LatestLevelsAutoRefresh {
 
     const nextTargetMinute = this.targetMinutes.find(minute => minute > nowMinute) ?? this.targetMinutes[0]
 
+    console.log('--Current minute:', nowMinute)
+    console.log('--Next target minute:', nextTargetMinute)
+
     // Create the next target date based on the next target minute
     const nextTargetDate = new Date(now)
     nextTargetDate.setMinutes(nextTargetMinute)
     nextTargetDate.setSeconds(0)
     nextTargetDate.setMilliseconds(0)
 
-    if (nowMinute > this.targetMinutes[this.targetMinutes.length - 1]) {
+    if (nowMinute >= this.targetMinutes[this.targetMinutes.length - 1]) {
       nextTargetDate.setHours(nextTargetDate.getHours() + 1)
+      console.log('--Next target date hour+1', nextTargetDate.getHours() + 1)
     }
 
+    console.log('--Next target date:', nextTargetDate)
+
     const delay = nextTargetDate.getTime() - now.getTime()
+
+    console.log('--delay (calc)', Math.round(delay / 1000 / 60))
+    console.log(`Next update scheduled in ${Math.round(delay / 1000 / 60)} minutes at ${nextTargetDate.toLocaleTimeString()}\n\n`)
 
     // Schedule the next update
     this.timeout = setTimeout(() => {
