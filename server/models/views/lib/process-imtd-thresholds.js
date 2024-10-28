@@ -19,7 +19,7 @@ function processImtdThresholds (imtdThresholds, stationStageDatum, stationSubtra
   } else if (pc5) {
     thresholds.push({
       id: 'pc5',
-      description: 'Top of normal range. Low lying land flooding possible above this level',
+      description: 'Top of normal range. Low-lying land flooding possible above this level',
       shortname: TOP_OF_NORMAL_RANGE,
       value: pc5
     })
@@ -51,7 +51,7 @@ function calculateAlertThreshold (imtdThresholds, stationStageDatum, stationSubt
     if (Number(imtdThresholdAlert) !== Number(pc5)) {
       imtdThresholdAlerts.push({
         id: 'alertThreshold',
-        description: 'Low lying land flooding possible above this level. One or more flood alerts may be issued',
+        description: 'Low-lying land flooding possible above this level. One or more flood alerts may be issued.',
         shortname: 'Possible flood alerts',
         value: imtdThresholdAlert
       })
@@ -60,7 +60,7 @@ function calculateAlertThreshold (imtdThresholds, stationStageDatum, stationSubt
     if (Number(imtdThresholdAlert) === Number(pc5)) {
       imtdThresholdAlerts.push({
         id: 'alertThreshold',
-        description: 'Top of normal range. Low lying land flooding possible above this level. One or more flood alerts may be issued',
+        description: 'Top of normal range. Low-lying land flooding possible above this level. One or more flood alerts may be issued.',
         shortname: TOP_OF_NORMAL_RANGE,
         value: imtdThresholdAlert
       })
