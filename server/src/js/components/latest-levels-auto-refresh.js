@@ -137,21 +137,22 @@ class LatestLevelsAutoRefresh {
         if (fetchedStatus === 'false') {
           if (fetchedValue?.textContent !== currentValue?.textContent) {
             console.log('--new value fetched')
-            clearInterval(this.timeAgoInterval)
-            clearTimeout(this.timeAgoTimeout)
-            console.log('--interval cleared')
-            console.log('--timeout cleared')
 
             currentValue.textContent = fetchedValue.textContent
 
             this.liveStatusMessages.push(`The ${itemRiverName} at ${itemRiverAgency} level was ${fetchedValue.textContent} metres ${fetchedTime.textContent}`)
-
-            this.updateTimeAgo()
           } else {
             console.log('--no change')
           }
 
+          clearInterval(this.timeAgoInterval)
+          clearTimeout(this.timeAgoTimeout)
+          console.log('--interval cleared')
+          console.log('--timeout cleared')
+
           currentTime.textContent = fetchedTime.textContent
+
+          this.updateTimeAgo()
         } else {
           this.liveStatusMessages.push('Please refresh the page')
         }
