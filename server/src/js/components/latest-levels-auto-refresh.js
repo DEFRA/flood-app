@@ -4,6 +4,7 @@ class LatestLevelsAutoRefresh {
   constructor (targetMinutes = [4, 19, 34, 49]) {
     this.timeout = null
     this.timeAgoInterval = null
+    this.timeAgoTimeout = null
     this.liveStatusMessages = []
     this.targetMinutes = targetMinutes
 
@@ -31,7 +32,7 @@ class LatestLevelsAutoRefresh {
   updateTimeAgo = () => {
     console.log('--updateTimeAgo() started')
 
-    setTimeout(() => {
+    this.timeAgoTimeout = setTimeout(() => {
       this.renderTimeAgo()
       this.timeAgoInterval = setInterval(this.renderTimeAgo, 60000)
     }, (60 - new Date().getSeconds()) * 1000)
@@ -137,7 +138,9 @@ class LatestLevelsAutoRefresh {
           if (fetchedValue?.textContent !== currentValue?.textContent) {
             console.log('--new value fetched')
             clearInterval(this.timeAgoInterval)
+            clearTimeout(this.timeAgoTimeout)
             console.log('--interval cleared')
+            console.log('--timeout cleared')
 
             currentValue.textContent = fetchedValue.textContent
 
