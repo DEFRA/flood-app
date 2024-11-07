@@ -14,13 +14,14 @@ module.exports = {
     // Convert human readable url to service parameter
     direction = direction === 'downstream' ? 'd' : 'u'
 
+    // Fetch station data
+    const station = await request.server.methods.flood.getStationById(id, direction)
+
     // Welsh stations
     const nrwParameter = '?parameterType=1'
     if (additionalWelshStations.indexOf(id) > -1) {
       return h.redirect(`${nrwStationUrl}${id}${nrwParameter}`)
     }
-
-    const station = await request.server.methods.flood.getStationById(id, direction)
 
     // If upstream param is specified redirect route of station
     if (request.params.direction === 'upstream') {
