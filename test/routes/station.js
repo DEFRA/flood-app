@@ -2179,523 +2179,6 @@ lab.experiment('Test - /station/{id}', () => {
       )
     )
   })
-
-  lab.test('GET /station/9382/downstream should navigate to /station/9382 upstream', async () => {
-    const floodService = require('../../server/services/flood')
-
-    // Fake data for Station B (Multi-station with 'd' qualifier)
-    const fakeStationData = () => ({
-      rloi_id: 9382,
-      station_type: 'M',
-      qualifier: 'd',
-      telemetry_context_id: '1145946',
-      telemetry_id: '2088',
-      wiski_id: '2088',
-      post_process: false,
-      subtract: null,
-      region: 'North East',
-      area: 'Don and Rother',
-      catchment: 'Don and Rother',
-      display_region: 'North East',
-      display_area: '',
-      display_catchment: '',
-      agency_name: 'Meadowgate Regulator',
-      external_name: 'Meadowgate Regulator',
-      location_info: 'Rotherham',
-      x_coord_actual: 456360,
-      y_coord_actual: 277780,
-      actual_ngr: '',
-      x_coord_display: 456360,
-      y_coord_display: 277780,
-      site_max: '3',
-      wiski_river_name: 'River Rother',
-      date_open: '1972-04-26T23:00:00.000Z',
-      stage_datum: '92.6',
-      period_of_record: 'to date',
-      por_max_value: '1.774',
-      date_por_max: '2007-03-03T08:30:00.000Z',
-      highest_level: '1.77',
-      date_highest_level: '2012-11-25T10:45:00.000Z',
-      por_min_value: '-0.346',
-      date_por_min: '2015-07-07T18:15:00.000Z',
-      percentile_5: '0.666',
-      percentile_95: '-0.255',
-      comments: '',
-      status: 'Active',
-      status_reason: '',
-      status_date: null,
-      coordinates: '{"type":"Point","coordinates":[-1.17316039381184,52.3951465511329]}',
-      geography: '0101000020E61000003F2646D543C5F2BF161F852994324A40',
-      centroid: '0101000020E61000003F2646D543C5F2BF161F852994324A40'
-    })
-
-    const fakeTelemetryData = () => [
-      {
-        ts: '2020-03-13T01:30Z',
-        _: 1.354,
-        err: false
-      }
-    ]
-
-    const fakeRiverData = () => ({
-      river_id: 'river-rother-yorkshire',
-      river_name: 'River Rother',
-      navigable: true,
-      view_rank: 1,
-      rank: 8,
-      rloi_id: 9382,
-      up: 9045,
-      up_station_type: 'S',
-      down: 9345,
-      down_station_type: 'S',
-      telemetry_id: 'L0306',
-      region: 'North East',
-      catchment: 'Don and Rother',
-      wiski_river_name: 'River Rother',
-      agency_name: 'Meadowgate Regulator',
-      external_name: 'Meadowgate Regulator',
-      station_type: 'M',
-      status: 'Active',
-      qualifier: 'd',
-      iswales: false,
-      value: '0.341',
-      value_timestamp: '2020-03-18T08:00:00.000Z',
-      value_erred: false,
-      trend: 'steady',
-      percentile_5: '0.659',
-      percentile_95: '0.098',
-      centroid: '0101000020E61000003F2646D543C5F2BF161F852994324A40',
-      lon: -1.17316039381184,
-      lat: 52.3951465511329,
-      id: '3192'
-    })
-
-    const fakeImpactData = () => []
-    const fakeStationForecastThresholds = () => []
-    const fakeStationImtdThresholds = () => []
-    const fakeWarningsAlertsData = () => []
-
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeStationForecastThresholds)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationImtdThresholds)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
-
-    const stationPlugin = {
-      plugin: {
-        name: 'station',
-        register: (server, options) => {
-          server.route(require('../../server/routes/station'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(stationPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/station/9382/downstream'
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.include('<a href="/station/9382">Upstream</a>')
-  })
-  lab.test('GET /station/9382 should navigate to /station/9382/downstream downstream', async () => {
-    const floodService = require('../../server/services/flood')
-
-    // Fake data for Station B (Multi-station with 'u' qualifier)
-    const fakeStationData = () => ({
-      rloi_id: 9382,
-      station_type: 'M',
-      qualifier: 'u',
-      telemetry_context_id: '1145946',
-      telemetry_id: '2088',
-      wiski_id: '2088',
-      post_process: false,
-      subtract: null,
-      region: 'North East',
-      area: 'Don and Rother',
-      catchment: 'Don and Rother',
-      display_region: 'North East',
-      display_area: '',
-      display_catchment: '',
-      agency_name: 'Meadowgate Regulator',
-      external_name: 'Meadowgate Regulator',
-      location_info: 'Rotherham',
-      x_coord_actual: 456360,
-      y_coord_actual: 277780,
-      actual_ngr: '',
-      x_coord_display: 456360,
-      y_coord_display: 277780,
-      site_max: '3',
-      wiski_river_name: 'River Rother',
-      date_open: '1972-04-26T23:00:00.000Z',
-      stage_datum: '92.6',
-      period_of_record: 'to date',
-      por_max_value: '1.774',
-      date_por_max: '2007-03-03T08:30:00.000Z',
-      highest_level: '1.77',
-      date_highest_level: '2012-11-25T10:45:00.000Z',
-      por_min_value: '-0.346',
-      date_por_min: '2015-07-07T18:15:00.000Z',
-      percentile_5: '0.666',
-      percentile_95: '-0.255',
-      comments: '',
-      status: 'Active',
-      status_reason: '',
-      status_date: null,
-      coordinates: '{"type":"Point","coordinates":[-1.17316039381184,52.3951465511329]}',
-      geography: '0101000020E61000003F2646D543C5F2BF161F852994324A40',
-      centroid: '0101000020E61000003F2646D543C5F2BF161F852994324A40'
-    })
-
-    const fakeTelemetryData = () => [
-      {
-        ts: '2020-03-13T01:30Z',
-        _: 1.354,
-        err: false
-      }
-    ]
-
-    const fakeRiverData = () => ({
-      river_id: 'river-rother-yorkshire',
-      river_name: 'River Rother',
-      navigable: true,
-      view_rank: 1,
-      rank: 8,
-      rloi_id: 9382,
-      up: 9045,
-      up_station_type: 'S',
-      down: 9345,
-      down_station_type: 'S',
-      telemetry_id: 'L0306',
-      region: 'North East',
-      catchment: 'Don and Rother',
-      wiski_river_name: 'River Rother',
-      agency_name: 'Meadowgate Regulator',
-      external_name: 'Meadowgate Regulator',
-      station_type: 'M',
-      status: 'Active',
-      qualifier: 'u',
-      iswales: false,
-      value: '0.341',
-      value_timestamp: '2020-03-18T08:00:00.000Z',
-      value_erred: false,
-      trend: 'steady',
-      percentile_5: '0.659',
-      percentile_95: '0.098',
-      centroid: '0101000020E61000003F2646D543C5F2BF161F852994324A40',
-      lon: -1.17316039381184,
-      lat: 52.3951465511329,
-      id: '3192'
-    })
-
-    const fakeImpactData = () => []
-    const fakeStationForecastThresholds = () => []
-    const fakeStationImtdThresholds = () => []
-    const fakeWarningsAlertsData = () => []
-
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeStationForecastThresholds)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationImtdThresholds)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
-
-    const stationPlugin = {
-      plugin: {
-        name: 'station',
-        register: (server, options) => {
-          server.route(require('../../server/routes/station'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(stationPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/station/9382'
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.include('<a href="/station/9382/downstream">Downstream</a>')
-  })
-  lab.test('GET /station/9045 should navigate to /station/9382/downstream when clicking upstream', async () => {
-    const floodService = require('../../server/services/flood')
-
-    // Fake data for Station A (Single-station)
-    const fakeStationData = () => ({
-      rloi_id: 9045,
-      station_type: 'S',
-      qualifier: 'u',
-      telemetry_context_id: '1145946',
-      telemetry_id: '2088',
-      wiski_id: '2088',
-      post_process: false,
-      subtract: null,
-      region: 'North East',
-      area: 'Rother',
-      catchment: 'Rother',
-      display_region: 'North East',
-      display_area: '',
-      display_catchment: '',
-      agency_name: 'Rother Valley Lake',
-      external_name: 'Rother Valley Lake',
-      location_info: 'Rotherham',
-      x_coord_actual: 456360,
-      y_coord_actual: 277780,
-      actual_ngr: '',
-      x_coord_display: 456360,
-      y_coord_display: 277780,
-      site_max: '3',
-      wiski_river_name: 'Rother Washlands',
-      date_open: '1972-04-26T23:00:00.000Z',
-      stage_datum: '92.6',
-      period_of_record: 'to date',
-      por_max_value: '1.774',
-      date_por_max: '2007-03-03T08:30:00.000Z',
-      highest_level: '1.77',
-      date_highest_level: '2012-11-25T10:45:00.000Z',
-      por_min_value: '-0.346',
-      date_por_min: '2015-07-07T18:15:00.000Z',
-      percentile_5: '0.666',
-      percentile_95: '-0.255',
-      comments: '',
-      status: 'Active',
-      status_reason: '',
-      status_date: null,
-      coordinates: '{"type":"Point","coordinates":[-1.17316039381184,52.3951465511329]}',
-      geography: '0101000020E61000003F2646D543C5F2BF161F852994324A40',
-      centroid: '0101000020E61000003F2646D543C5F2BF161F852994324A40'
-    })
-
-    const fakeTelemetryData = () => [
-      {
-        ts: '2020-03-13T01:30Z',
-        _: 1.354,
-        err: false
-      }
-    ]
-
-    const fakeRiverData = () => ({
-      river_id: 'river-rother-yorkshire',
-      river_name: 'River Rother',
-      navigable: true,
-      view_rank: 1,
-      rank: 7,
-      rloi_id: 9045,
-      up: 9382,
-      up_station_type: 'M',
-      down: 8114,
-      down_station_type: 'S',
-      telemetry_id: 'L0317',
-      region: 'North East',
-      catchment: 'Rother',
-      wiski_river_name: 'Rother Washlands',
-      agency_name: 'Rother Valley Lake',
-      external_name: 'Rother Valley Lake',
-      station_type: 'S',
-      status: 'Active',
-      qualifier: 'u',
-      iswales: false,
-      value: '0.192',
-      value_timestamp: '2024-04-30T10:30:00.000Z',
-      value_erred: false,
-      trend: 'steady',
-      percentile_5: '1.32',
-      percentile_95: '0.016',
-      centroid: '0101000020E6100000919802720629F5BFABBABC6643AA4A40',
-      lon: -1.3225159123917687,
-      lat: 53.33018192496578,
-      id: '1856'
-    })
-
-    const fakeImpactData = () => []
-    const fakeStationForecastThresholds = () => []
-    const fakeStationImtdThresholds = () => []
-    const fakeWarningsAlertsData = () => []
-
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeStationForecastThresholds)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationImtdThresholds)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
-
-    const stationPlugin = {
-      plugin: {
-        name: 'station',
-        register: (server, options) => {
-          server.route(require('../../server/routes/station'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(stationPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/station/9045'
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.include('<a href="/station/9382/downstream">Upstream</a>')
-  })
-  lab.test('GET /station/9045 should navigate to /station/8114 downstream', async () => {
-    const floodService = require('../../server/services/flood')
-
-    // Fake data for Station A (Single-station)
-    const fakeStationData = () => ({
-      rloi_id: 9045,
-      station_type: 'S',
-      qualifier: 'u',
-      telemetry_context_id: '1145946',
-      telemetry_id: '2088',
-      wiski_id: '2088',
-      post_process: false,
-      subtract: null,
-      region: 'North East',
-      area: 'Rother',
-      catchment: 'Rother',
-      display_region: 'North East',
-      display_area: '',
-      display_catchment: '',
-      agency_name: 'Rother Valley Lake',
-      external_name: 'Rother Valley Lake',
-      location_info: 'Rotherham',
-      x_coord_actual: 456360,
-      y_coord_actual: 277780,
-      actual_ngr: '',
-      x_coord_display: 456360,
-      y_coord_display: 277780,
-      site_max: '3',
-      wiski_river_name: 'Rother Washlands',
-      date_open: '1972-04-26T23:00:00.000Z',
-      stage_datum: '92.6',
-      period_of_record: 'to date',
-      por_max_value: '1.774',
-      date_por_max: '2007-03-03T08:30:00.000Z',
-      highest_level: '1.77',
-      date_highest_level: '2012-11-25T10:45:00.000Z',
-      por_min_value: '-0.346',
-      date_por_min: '2015-07-07T18:15:00.000Z',
-      percentile_5: '0.666',
-      percentile_95: '-0.255',
-      comments: '',
-      status: 'Active',
-      status_reason: '',
-      status_date: null,
-      coordinates: '{"type":"Point","coordinates":[-1.17316039381184,52.3951465511329]}',
-      geography: '0101000020E61000003F2646D543C5F2BF161F852994324A40',
-      centroid: '0101000020E61000003F2646D543C5F2BF161F852994324A40'
-    })
-
-    const fakeTelemetryData = () => [
-      {
-        ts: '2020-03-13T01:30Z',
-        _: 1.354,
-        err: false
-      }
-    ]
-
-    const fakeRiverData = () => ({
-      river_id: 'river-rother-yorkshire',
-      river_name: 'River Rother',
-      navigable: true,
-      view_rank: 1,
-      rank: 7,
-      rloi_id: 9045,
-      up: 9382,
-      up_station_type: 'M',
-      down: 8114,
-      down_station_type: 'S',
-      telemetry_id: 'L0317',
-      region: 'North East',
-      catchment: 'Rother',
-      wiski_river_name: 'Rother Washlands',
-      agency_name: 'Rother Valley Lake',
-      external_name: 'Rother Valley Lake',
-      station_type: 'S',
-      status: 'Active',
-      qualifier: 'u',
-      iswales: false,
-      value: '0.192',
-      value_timestamp: '2024-04-30T10:30:00.000Z',
-      value_erred: false,
-      trend: 'steady',
-      percentile_5: '1.32',
-      percentile_95: '0.016',
-      centroid: '0101000020E6100000919802720629F5BFABBABC6643AA4A40',
-      lon: -1.3225159123917687,
-      lat: 53.33018192496578,
-      id: '1856'
-    })
-
-    const fakeImpactData = () => []
-    const fakeStationForecastThresholds = () => []
-    const fakeStationImtdThresholds = () => []
-    const fakeWarningsAlertsData = () => []
-
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactData)
-    sandbox.stub(floodService, 'getStationForecastThresholds').callsFake(fakeStationForecastThresholds)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationImtdThresholds)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
-
-    const stationPlugin = {
-      plugin: {
-        name: 'station',
-        register: (server, options) => {
-          server.route(require('../../server/routes/station'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(stationPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/station/9045'
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.include('<a href="/station/8114">Downstream</a>')
-  })
   lab.test('GET station/1034 - Coastal River title check ', async () => {
     const floodService = require('../../server/services/flood')
 
@@ -2833,5 +2316,824 @@ lab.experiment('Test - /station/{id}', () => {
     Code.expect(response.statusCode).to.equal(200)
     Code.expect(response.payload).to.match(/<h1 class="govuk-heading-xl govuk-!-margin-bottom-0">\s*River Itchen\s*level\s*at Woolston\s*<\/h1>/)
     Code.expect(response.payload).to.match(/<title>\s*River Itchen level at Woolston - GOV.UK\s*<\/title>/)
+  })
+
+  lab.test('GET /station/9382/downstream shows correct upstream and downstream navigation links within same multi-reading station', async () => {
+    const floodService = require('../../server/services/flood')
+    const fakeStationData = () => {
+      return {
+        rloi_id: 9382,
+        station_type: 'M',
+        qualifier: 'd',
+        telemetry_context_id: '1146588',
+        telemetry_id: '713030',
+        wiski_id: '713030',
+        post_process: false,
+        subtract: null,
+        region: 'North West',
+        area: 'Cumbria and Lancashire',
+        catchment: 'Ribble Douglas and Crossens',
+        display_region: 'North West',
+        display_area: '',
+        display_catchment: '',
+        agency_name: 'Walton-Le-Dale',
+        external_name: 'Walton-Le-Dale',
+        location_info: 'Preston',
+        x_coord_actual: 355230,
+        y_coord_actual: 428720,
+        actual_ngr: '',
+        x_coord_display: 355230,
+        y_coord_display: 428720,
+        site_max: '5',
+        wiski_river_name: 'River Ribble',
+        date_open: '2001-01-01T00:00:00.000Z',
+        stage_datum: '3.642',
+        period_of_record: 'to date',
+        por_max_value: '5.488',
+        date_por_max: '2020-02-09T18:15:00.000Z',
+        highest_level: '3.469',
+        date_highest_level: '2012-09-26T01:15:00.000Z',
+        por_min_value: '-0.07',
+        date_por_min: '2009-04-22T12:45:00.000Z',
+        percentile_5: '3.5',
+        comments: '',
+        status: 'Active',
+        status_reason: '',
+        status_date: null,
+        coordinates: '{"type":"Point","coordinates":[-2.68044442027032,53.7529105624953]}',
+        geography: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
+        centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40'
+      }
+    }
+
+    const fakeTelemetryData = () => []
+    const fakeImpactsData = () => []
+    const fakeForecastFlag = () => { return { } }
+    const fakeTargetAreasData = () => []
+    const fakeStationThresholdData = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.multiStationDownstreamData)
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+
+    // Set up the Hapi server
+    const server = Hapi.server()
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+
+    const stationPlugin = {
+      plugin: {
+        name: 'station',
+        register: (server, options) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    }
+    await server.register(stationPlugin)
+
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+    await server.initialize()
+
+    const response = await server.inject({
+      method: 'GET',
+      url: '/station/9382/downstream'
+    })
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('<a href="/station/9382">Upstream</a>')
+    Code.expect(response.payload).to.include('<a href="/station/9345">Downstream</a>')
+  })
+
+  lab.test('GET /station/9382 redirects to the downstream view and shows correct navigation links for multi-reading station', async () => {
+    const floodService = require('../../server/services/flood')
+    const fakeStationData = () => {
+      return {
+        rloi_id: 9382,
+        station_type: 'M',
+        qualifier: 'u',
+        telemetry_context_id: '1146588',
+        telemetry_id: '713030',
+        wiski_id: '713030',
+        post_process: false,
+        subtract: null,
+        region: 'North West',
+        area: 'Cumbria and Lancashire',
+        catchment: 'Ribble Douglas and Crossens',
+        display_region: 'North West',
+        display_area: '',
+        display_catchment: '',
+        agency_name: 'Walton-Le-Dale',
+        external_name: 'Walton-Le-Dale',
+        location_info: 'Preston',
+        x_coord_actual: 355230,
+        y_coord_actual: 428720,
+        actual_ngr: '',
+        x_coord_display: 355230,
+        y_coord_display: 428720,
+        site_max: '5',
+        wiski_river_name: 'River Ribble',
+        date_open: '2001-01-01T00:00:00.000Z',
+        stage_datum: '3.642',
+        period_of_record: 'to date',
+        por_max_value: '5.488',
+        date_por_max: '2020-02-09T18:15:00.000Z',
+        highest_level: '3.469',
+        date_highest_level: '2012-09-26T01:15:00.000Z',
+        por_min_value: '-0.07',
+        date_por_min: '2009-04-22T12:45:00.000Z',
+        percentile_5: '3.5',
+        comments: '',
+        status: 'Active',
+        status_reason: '',
+        status_date: null,
+        coordinates: '{"type":"Point","coordinates":[-2.68044442027032,53.7529105624953]}',
+        geography: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
+        centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40'
+      }
+    }
+
+    const fakeTelemetryData = () => []
+    const fakeImpactsData = () => []
+    const fakeForecastFlag = () => { return { } }
+    const fakeTargetAreasData = () => []
+    const fakeStationThresholdData = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.multiStationUpstreamData)
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+
+    // Set up the Hapi server
+    const server = Hapi.server()
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+
+    const stationPlugin = {
+      plugin: {
+        name: 'station',
+        register: (server, options) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    }
+    await server.register(stationPlugin)
+
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+    await server.initialize()
+
+    const response = await server.inject({
+      method: 'GET',
+      url: '/station/9382'
+    })
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('<a href="/station/9045">Upstream</a>')
+    Code.expect(response.payload).to.include('<a href="/station/9382/downstream">Downstream</a>')
+  })
+
+  lab.test('GET /station/9045 navigates correctly to upstream and downstream views from a single station', async () => {
+    const floodService = require('../../server/services/flood')
+    const fakeStationData = () => {
+      return {
+        rloi_id: 9045,
+        station_type: 'S',
+        qualifier: 'u',
+        telemetry_context_id: '1146588',
+        telemetry_id: '713030',
+        wiski_id: '713030',
+        post_process: false,
+        subtract: null,
+        region: 'North West',
+        area: 'Cumbria and Lancashire',
+        catchment: 'Ribble Douglas and Crossens',
+        display_region: 'North West',
+        display_area: '',
+        display_catchment: '',
+        agency_name: 'Walton-Le-Dale',
+        external_name: 'Walton-Le-Dale',
+        location_info: 'Preston',
+        x_coord_actual: 355230,
+        y_coord_actual: 428720,
+        actual_ngr: '',
+        x_coord_display: 355230,
+        y_coord_display: 428720,
+        site_max: '5',
+        wiski_river_name: 'River Ribble',
+        date_open: '2001-01-01T00:00:00.000Z',
+        stage_datum: '3.642',
+        period_of_record: 'to date',
+        por_max_value: '5.488',
+        date_por_max: '2020-02-09T18:15:00.000Z',
+        highest_level: '3.469',
+        date_highest_level: '2012-09-26T01:15:00.000Z',
+        por_min_value: '-0.07',
+        date_por_min: '2009-04-22T12:45:00.000Z',
+        percentile_5: '3.5',
+        comments: '',
+        status: 'Active',
+        status_reason: '',
+        status_date: null,
+        coordinates: '{"type":"Point","coordinates":[-2.68044442027032,53.7529105624953]}',
+        geography: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
+        centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40'
+      }
+    }
+
+    const fakeTelemetryData = () => []
+    const fakeImpactsData = () => []
+    const fakeForecastFlag = () => { return { } }
+    const fakeTargetAreasData = () => []
+    const fakeStationThresholdData = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.singleStationData)
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+
+    // Set up the Hapi server
+    const server = Hapi.server()
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+
+    const stationPlugin = {
+      plugin: {
+        name: 'station',
+        register: (server, options) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    }
+    await server.register(stationPlugin)
+
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+    await server.initialize()
+
+    const response = await server.inject({
+      method: 'GET',
+      url: '/station/9045'
+    })
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('<a href="/station/9382/downstream">Upstream</a>')
+    Code.expect(response.payload).to.include('<a href="/station/8114">Downstream</a>')
+  })
+
+  lab.test('GET /station/9382 shows correct upstream and downstream navigation links for multi to single upstream navigation', async () => {
+    const floodService = require('../../server/services/flood')
+    const fakeStationData = () => {
+      return {
+        rloi_id: 9382,
+        station_type: 'M',
+        qualifier: 'u',
+        telemetry_context_id: '1146588',
+        telemetry_id: '713030',
+        wiski_id: '713030',
+        post_process: false,
+        subtract: null,
+        region: 'North West',
+        area: 'Cumbria and Lancashire',
+        catchment: 'Ribble Douglas and Crossens',
+        display_region: 'North West',
+        display_area: '',
+        display_catchment: '',
+        agency_name: 'Walton-Le-Dale',
+        external_name: 'Walton-Le-Dale',
+        location_info: 'Preston',
+        x_coord_actual: 355230,
+        y_coord_actual: 428720,
+        actual_ngr: '',
+        x_coord_display: 355230,
+        y_coord_display: 428720,
+        site_max: '5',
+        wiski_river_name: 'River Ribble',
+        date_open: '2001-01-01T00:00:00.000Z',
+        stage_datum: '3.642',
+        period_of_record: 'to date',
+        por_max_value: '5.488',
+        date_por_max: '2020-02-09T18:15:00.000Z',
+        highest_level: '3.469',
+        date_highest_level: '2012-09-26T01:15:00.000Z',
+        por_min_value: '-0.07',
+        date_por_min: '2009-04-22T12:45:00.000Z',
+        percentile_5: '3.5',
+        comments: '',
+        status: 'Active',
+        status_reason: '',
+        status_date: null,
+        coordinates: '{"type":"Point","coordinates":[-2.68044442027032,53.7529105624953]}',
+        geography: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
+        centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40'
+      }
+    }
+
+    const fakeTelemetryData = () => []
+    const fakeImpactsData = () => []
+    const fakeForecastFlag = () => { return { } }
+    const fakeTargetAreasData = () => []
+    const fakeStationThresholdData = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.multiStationUpstreamData)
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+
+    // Set up the Hapi server
+    const server = Hapi.server()
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+
+    const stationPlugin = {
+      plugin: {
+        name: 'station',
+        register: (server, options) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    }
+    await server.register(stationPlugin)
+
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+    await server.initialize()
+
+    const response = await server.inject({
+      method: 'GET',
+      url: '/station/9382'
+    })
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('<a href="/station/9045">Upstream</a>')
+    Code.expect(response.payload).to.include('<a href="/station/9382/downstream">Downstream</a>')
+  })
+
+  lab.test('GET /station/9382/downstream shows correct upstream and downstream navigation links for multi to single downstream navigation', async () => {
+    const floodService = require('../../server/services/flood')
+    const fakeStationData = () => {
+      return {
+        rloi_id: 9382,
+        station_type: 'M',
+        qualifier: 'd',
+        telemetry_context_id: '1146588',
+        telemetry_id: '713030',
+        wiski_id: '713030',
+        post_process: false,
+        subtract: null,
+        region: 'North West',
+        area: 'Cumbria and Lancashire',
+        catchment: 'Ribble Douglas and Crossens',
+        display_region: 'North West',
+        display_area: '',
+        display_catchment: '',
+        agency_name: 'Walton-Le-Dale',
+        external_name: 'Walton-Le-Dale',
+        location_info: 'Preston',
+        x_coord_actual: 355230,
+        y_coord_actual: 428720,
+        actual_ngr: '',
+        x_coord_display: 355230,
+        y_coord_display: 428720,
+        site_max: '5',
+        wiski_river_name: 'River Ribble',
+        date_open: '2001-01-01T00:00:00.000Z',
+        stage_datum: '3.642',
+        period_of_record: 'to date',
+        por_max_value: '5.488',
+        date_por_max: '2020-02-09T18:15:00.000Z',
+        highest_level: '3.469',
+        date_highest_level: '2012-09-26T01:15:00.000Z',
+        por_min_value: '-0.07',
+        date_por_min: '2009-04-22T12:45:00.000Z',
+        percentile_5: '3.5',
+        comments: '',
+        status: 'Active',
+        status_reason: '',
+        status_date: null,
+        coordinates: '{"type":"Point","coordinates":[-2.68044442027032,53.7529105624953]}',
+        geography: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
+        centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40'
+      }
+    }
+
+    const fakeTelemetryData = () => []
+    const fakeImpactsData = () => []
+    const fakeForecastFlag = () => { return { } }
+    const fakeTargetAreasData = () => []
+    const fakeStationThresholdData = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.multiStationDownstreamData)
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+
+    // Set up the Hapi server
+    const server = Hapi.server()
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+
+    const stationPlugin = {
+      plugin: {
+        name: 'station',
+        register: (server, options) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    }
+    await server.register(stationPlugin)
+
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+    await server.initialize()
+
+    const response = await server.inject({
+      method: 'GET',
+      url: '/station/9382/downstream'
+    })
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('<a href="/station/9382">Upstream</a>')
+    Code.expect(response.payload).to.include('<a href="/station/9345">Downstream</a>')
+  })
+
+  lab.test('GET /station/9382/downstream switches from downstream to upstream view within the same multi-reading station', async () => {
+    const floodService = require('../../server/services/flood')
+    const fakeStationData = () => {
+      return {
+        rloi_id: 9382,
+        station_type: 'M',
+        qualifier: 'd',
+        telemetry_context_id: '1146588',
+        telemetry_id: '713030',
+        wiski_id: '713030',
+        post_process: false,
+        subtract: null,
+        region: 'North West',
+        area: 'Cumbria and Lancashire',
+        catchment: 'Ribble Douglas and Crossens',
+        display_region: 'North West',
+        display_area: '',
+        display_catchment: '',
+        agency_name: 'Walton-Le-Dale',
+        external_name: 'Walton-Le-Dale',
+        location_info: 'Preston',
+        x_coord_actual: 355230,
+        y_coord_actual: 428720,
+        actual_ngr: '',
+        x_coord_display: 355230,
+        y_coord_display: 428720,
+        site_max: '5',
+        wiski_river_name: 'River Ribble',
+        date_open: '2001-01-01T00:00:00.000Z',
+        stage_datum: '3.642',
+        period_of_record: 'to date',
+        por_max_value: '5.488',
+        date_por_max: '2020-02-09T18:15:00.000Z',
+        highest_level: '3.469',
+        date_highest_level: '2012-09-26T01:15:00.000Z',
+        por_min_value: '-0.07',
+        date_por_min: '2009-04-22T12:45:00.000Z',
+        percentile_5: '3.5',
+        comments: '',
+        status: 'Active',
+        status_reason: '',
+        status_date: null,
+        coordinates: '{"type":"Point","coordinates":[-2.68044442027032,53.7529105624953]}',
+        geography: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
+        centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40'
+      }
+    }
+
+    const fakeTelemetryData = () => []
+    const fakeImpactsData = () => []
+    const fakeForecastFlag = () => { return { } }
+    const fakeTargetAreasData = () => []
+    const fakeStationThresholdData = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.multiStationDownstreamData)
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+
+    // Set up the Hapi server
+    const server = Hapi.server()
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+
+    const stationPlugin = {
+      plugin: {
+        name: 'station',
+        register: (server, options) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    }
+    await server.register(stationPlugin)
+
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+    await server.initialize()
+
+    const response = await server.inject({
+      method: 'GET',
+      url: '/station/9382/downstream'
+    })
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('<a href="/station/9382">Upstream</a>')
+    Code.expect(response.payload).to.include('<a href="/station/9345">Downstream</a>')
+  })
+
+  lab.test('GET /station/9382 switches from upstream to downstream view within the same multi-reading station', async () => {
+    const floodService = require('../../server/services/flood')
+    const fakeStationData = () => {
+      return {
+        rloi_id: 9382,
+        station_type: 'M',
+        qualifier: 'u',
+        telemetry_context_id: '1146588',
+        telemetry_id: '713030',
+        wiski_id: '713030',
+        post_process: false,
+        subtract: null,
+        region: 'North West',
+        area: 'Cumbria and Lancashire',
+        catchment: 'Ribble Douglas and Crossens',
+        display_region: 'North West',
+        display_area: '',
+        display_catchment: '',
+        agency_name: 'Walton-Le-Dale',
+        external_name: 'Walton-Le-Dale',
+        location_info: 'Preston',
+        x_coord_actual: 355230,
+        y_coord_actual: 428720,
+        actual_ngr: '',
+        x_coord_display: 355230,
+        y_coord_display: 428720,
+        site_max: '5',
+        wiski_river_name: 'River Ribble',
+        date_open: '2001-01-01T00:00:00.000Z',
+        stage_datum: '3.642',
+        period_of_record: 'to date',
+        por_max_value: '5.488',
+        date_por_max: '2020-02-09T18:15:00.000Z',
+        highest_level: '3.469',
+        date_highest_level: '2012-09-26T01:15:00.000Z',
+        por_min_value: '-0.07',
+        date_por_min: '2009-04-22T12:45:00.000Z',
+        percentile_5: '3.5',
+        comments: '',
+        status: 'Active',
+        status_reason: '',
+        status_date: null,
+        coordinates: '{"type":"Point","coordinates":[-2.68044442027032,53.7529105624953]}',
+        geography: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
+        centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40'
+      }
+    }
+
+    const fakeTelemetryData = () => []
+    const fakeImpactsData = () => []
+    const fakeForecastFlag = () => { return { } }
+    const fakeTargetAreasData = () => []
+    const fakeStationThresholdData = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.multiStationUpstreamData)
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+
+    // Set up the Hapi server
+    const server = Hapi.server()
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+
+    const stationPlugin = {
+      plugin: {
+        name: 'station',
+        register: (server, options) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    }
+    await server.register(stationPlugin)
+
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+    await server.initialize()
+
+    const response = await server.inject({
+      method: 'GET',
+      url: '/station/9382'
+    })
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('<a href="/station/9045">Upstream</a>')
+    Code.expect(response.payload).to.include('<a href="/station/9382/downstream">Downstream</a>')
+  })
+
+  lab.test('GET /station/9345 navigates correctly to another multi-reading station upstream', async () => {
+    const floodService = require('../../server/services/flood')
+    const fakeStationData = () => {
+      return {
+        rloi_id: 9345,
+        station_type: 'M',
+        qualifier: 'u',
+        telemetry_context_id: '1146588',
+        telemetry_id: '713030',
+        wiski_id: '713030',
+        post_process: false,
+        subtract: null,
+        region: 'North West',
+        area: 'Cumbria and Lancashire',
+        catchment: 'Ribble Douglas and Crossens',
+        display_region: 'North West',
+        display_area: '',
+        display_catchment: '',
+        agency_name: 'Walton-Le-Dale',
+        external_name: 'Walton-Le-Dale',
+        location_info: 'Preston',
+        x_coord_actual: 355230,
+        y_coord_actual: 428720,
+        actual_ngr: '',
+        x_coord_display: 355230,
+        y_coord_display: 428720,
+        site_max: '5',
+        wiski_river_name: 'River Ribble',
+        date_open: '2001-01-01T00:00:00.000Z',
+        stage_datum: '3.642',
+        period_of_record: 'to date',
+        por_max_value: '5.488',
+        date_por_max: '2020-02-09T18:15:00.000Z',
+        highest_level: '3.469',
+        date_highest_level: '2012-09-26T01:15:00.000Z',
+        por_min_value: '-0.07',
+        date_por_min: '2009-04-22T12:45:00.000Z',
+        percentile_5: '3.5',
+        comments: '',
+        status: 'Active',
+        status_reason: '',
+        status_date: null,
+        coordinates: '{"type":"Point","coordinates":[-2.68044442027032,53.7529105624953]}',
+        geography: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
+        centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40'
+      }
+    }
+
+    const fakeTelemetryData = () => []
+    const fakeImpactsData = () => []
+    const fakeForecastFlag = () => { return { } }
+    const fakeTargetAreasData = () => []
+    const fakeStationThresholdData = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.multiToMultiUpstreamData)
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+
+    // Set up the Hapi server
+    const server = Hapi.server()
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+
+    const stationPlugin = {
+      plugin: {
+        name: 'station',
+        register: (server, options) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    }
+    await server.register(stationPlugin)
+
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+    await server.initialize()
+
+    const response = await server.inject({
+      method: 'GET',
+      url: '/station/9345'
+    })
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('<a href="/station/9382/downstream">Upstream</a>')
+    Code.expect(response.payload).to.include('<a href="/station/9345/downstream">Downstream</a>')
+  })
+
+  lab.test('GET /station/9345/downstream navigates correctly to another multi-reading station', async () => {
+    const floodService = require('../../server/services/flood')
+    const fakeStationData = () => {
+      return {
+        rloi_id: 5146,
+        station_type: 'S',
+        qualifier: 'u',
+        telemetry_context_id: '1146588',
+        telemetry_id: '713030',
+        wiski_id: '713030',
+        post_process: false,
+        subtract: null,
+        region: 'North West',
+        area: 'Cumbria and Lancashire',
+        catchment: 'Ribble Douglas and Crossens',
+        display_region: 'North West',
+        display_area: '',
+        display_catchment: '',
+        agency_name: 'Walton-Le-Dale',
+        external_name: 'Walton-Le-Dale',
+        location_info: 'Preston',
+        x_coord_actual: 355230,
+        y_coord_actual: 428720,
+        actual_ngr: '',
+        x_coord_display: 355230,
+        y_coord_display: 428720,
+        site_max: '5',
+        wiski_river_name: 'River Ribble',
+        date_open: '2001-01-01T00:00:00.000Z',
+        stage_datum: '3.642',
+        period_of_record: 'to date',
+        por_max_value: '5.488',
+        date_por_max: '2020-02-09T18:15:00.000Z',
+        highest_level: '3.469',
+        date_highest_level: '2012-09-26T01:15:00.000Z',
+        por_min_value: '-0.07',
+        date_por_min: '2009-04-22T12:45:00.000Z',
+        percentile_5: '3.5',
+        comments: '',
+        status: 'Active',
+        status_reason: '',
+        status_date: null,
+        coordinates: '{"type":"Point","coordinates":[-2.68044442027032,53.7529105624953]}',
+        geography: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
+        centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40'
+      }
+    }
+
+    const fakeTelemetryData = () => []
+    const fakeImpactsData = () => []
+    const fakeForecastFlag = () => { return { } }
+    const fakeTargetAreasData = () => []
+    const fakeStationThresholdData = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.multiToMultiDownstreamData)
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+
+    // Set up the Hapi server
+    const server = Hapi.server()
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+
+    const stationPlugin = {
+      plugin: {
+        name: 'station',
+        register: (server, options) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    }
+    await server.register(stationPlugin)
+
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+    await server.initialize()
+
+    const response = await server.inject({
+      method: 'GET',
+      url: '/station/9345/downstream'
+    })
+
+    Code.expect(response.statusCode).to.equal(200)
+    Code.expect(response.payload).to.include('<a href="/station/9345">Upstream</a>')
+    Code.expect(response.payload).to.include('<a href="/station/8114">Downstream</a>')
   })
 })
