@@ -412,34 +412,34 @@ class ViewModel {
 }
 
 function createNavigationLink (river, direction) {
-  const currentStationId = river.rloi_id
-  const currentStationType = river.station_type // 'M' or 'S'
-  const currentStationQualifier = river.qualifier || (river.is_multi ? 'u' : null) // 'u', 'd', or null
-  const targetStationId = direction === 'upstream' ? river.up : river.down
-  const targetStationType = direction === 'upstream' ? river.up_station_type : river.down_station_type // 'M' or 'S'
+  const { rloi_id: currentStationId, station_type: currentStationType, qualifier, isMulti, up, down, up_station_type: upStationType, down_station_type: downStationType } = river
+  const currentStationQualifier = qualifier || (isMulti ? 'u' : null)
+  const targetStationId = direction === 'upstream' ? up : down
+  const targetStationType = direction === 'upstream' ? upStationType : downStationType
 
-  // Handle cases where no upstream or downstream station exists
-  if (!targetStationId && currentStationType === 'M') {
-    // Switch between qualifiers within the same station
-    if (direction === 'upstream' && currentStationQualifier === 'd') {
-      return `${currentStationId}` // Switch to 'u' qualifier
-    } else if (direction === 'downstream' && currentStationQualifier === 'u') {
-      return `${currentStationId}/downstream` // Switch to 'd' qualifier
-    }
+  if (targetStationId) {
+    return determineNavigationLink(
+      currentStationId,
+      currentStationType,
+      currentStationQualifier,
+      targetStationType,
+      targetStationId,
+      direction
+    )
   }
 
-  if (!targetStationId) {
-    return null
-  }
+  return getQualifierSwitchLink(currentStationType, currentStationQualifier, currentStationId, direction)
+}
 
-  return determineNavigationLink(
-    currentStationId,
-    currentStationType,
-    currentStationQualifier,
-    targetStationType,
-    targetStationId,
-    direction
-  )
+function getQualifierSwitchLink (currentStationType, currentStationQualifier, currentStationId, direction) {
+  if (
+    currentStationType === 'M' &&
+    ((direction === 'upstream' && currentStationQualifier === 'd') ||
+      (direction === 'downstream' && currentStationQualifier === 'u'))
+  ) {
+    return direction === 'upstream' ? `${currentStationId}` : `${currentStationId}/downstream`
+  }
+  return null
 }
 
 function determineNavigationLink (
@@ -458,6 +458,8 @@ function determineNavigationLink (
     } else if (direction === 'downstream' && currentStationQualifier === 'u') {
       // From upstream to downstream within the same station
       return `${currentStationId}/downstream`
+    } else {
+      // No qualifier switch needed; proceed to target station navigation
     }
   }
 
@@ -470,21 +472,13 @@ function determineNavigationLink (
       // Navigate to the single-reading station
       return `${targetStationId}`
     }
+  } else if (direction === 'downstream') {
+    // For downstream navigation, navigate to the target station ID
+    return `${targetStationId}`
+  } else {
+    // Handle unexpected direction values
+    return `${targetStationId}`
   }
-
-  // Downstream Navigation Logic
-  if (direction === 'downstream') {
-    if (targetStationType === 'M') {
-      // Navigate to the default view (assumed 'u') of the multi-reading station
-      return `${targetStationId}`
-    } else {
-      // Navigate to the single-reading station
-      return `${targetStationId}`
-    }
-  }
-
-  // Default Fallback
-  return `${targetStationId}`
 }
 
 function getBannerIcon (id) {
