@@ -30,12 +30,13 @@
         text-decoration: none;
     }
     &:visited {
-        color: govuk-colour('black');
+        color: govuk-colour('blue');
     }
     &:hover {
         background-color: govuk-colour('light-grey');
     }
     &:focus {
+        color: govuk-colour('blue');
         background-color: $govuk-focus-colour;
         border-color: $govuk-focus-colour;
         box-shadow: 0 2px 0 govuk-colour('black');
