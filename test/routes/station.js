@@ -2028,8 +2028,8 @@ lab.experiment('Test - /station/{id}', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.not.contain('Low lying land flooding is possible above this level. One or more flood alerts may be issued')
-    Code.expect(response.payload).to.not.contain('Property flooding is possible above this level. One or more flood warnings may be issued')
+    Code.expect(response.payload).to.not.contain('Low-lying land flooding is possible above this level. One or more flood alerts may be issued.')
+    Code.expect(response.payload).to.not.contain('Property flooding is possible above this level. One or more flood warnings may be issued.')
   })
   lab.test('GET station/5146 with missing percentile ', async () => {
     const floodService = require('../../server/services/flood')
