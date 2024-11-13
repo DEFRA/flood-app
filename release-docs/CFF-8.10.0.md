@@ -1,7 +1,7 @@
 # Check For Flooding Release
 
 * Version: 8.10.0
-* Proposed Release Date: 
+* Proposed Release Date: 20/11/2024
 * Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/16852/tab/release-report-all-issues
 
 ## Sense Check
@@ -15,20 +15,10 @@
 * Once this sense check is done, delete this section
 
 ## Tickets
-
-
   
-  * Merge pull request #876 from DEFRA/fix/FSR-1357-map-button-text-color-persistence
+  * FSR-1356: Latest Levels - Content Changes
   
-  * Merge pull request #883 from DEFRA/feature/FSR-1356-station-page-threshold-level-content-updates
-  
-  * FSR-1357: Change button color to remain blue for all events
-  
-  * FSR-1357: Ensure map button text color remains blue on refresh and after visit across all pages
-  
-  * FSR-1356: Add hyphen in &#39;low-lying land&#39; and full stop to &#39;One or more flood alerts may be issued&#39; on station threshold level list
-  
-
+  * FSR-1357: Map Buttons Issue
 
 ## Instructions
 
