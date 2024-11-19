@@ -54,7 +54,9 @@ jobs:
             function prCheck () {
               REPO=$1
               BASE=$2
-              STATE=$(gh pr list --repo $GITHUB_REPOSITORY_OWNER/$REPO --json title,mergeStateStatus,state,reviews --state OPEN --base $BASE --head $RELEASE_BRANCH --jq '.[] | select(.mergeStateStatus == "CLEAN" and .reviews[].state == "APPROVED") | .reviews[].state ')
+              STATE=$(gh pr list --repo $GITHUB_REPOSITORY_OWNER/$REPO --json title,mergeStateStatus,state,reviews \
+              --state OPEN --base $BASE --head $RELEASE_BRANCH \
+              --jq '.[] | select(.mergeStateStatus == "CLEAN") | .reviews | max_by(.submittedAt) | .state')
               if [ "$STATE" != "APPROVED" ]; then
                 echo "Error: PR for merging $GITHUB_REPOSITORY_OWNER/$REPO $RELEASE_BRANCH into $BASE needs to be ready to merge and approved. (STATE=$STATE)" >&2
                 exit 1
