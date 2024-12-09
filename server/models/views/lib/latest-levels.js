@@ -25,7 +25,7 @@ function getThresholdsForTargetArea (thresholds) {
     return threshold
   })
 }
-function findPrioritisedThresholds(thresholds, types) {
+function findPrioritisedThresholds (thresholds, types) {
   const thresholdMap = thresholds.reduce((acc, threshold) => {
     if (types.includes(threshold.threshold_type)) {
       acc[threshold.rloi_id] = acc[threshold.rloi_id] || []

@@ -105,7 +105,7 @@ lab.experiment('getThresholdsForTargetArea', () => {
         stage_datum: 2.5,
         subtract: 1.0,
         post_process: true
-      },
+      }
     ]
 
     const result = getThresholdsForTargetArea(thresholds)
