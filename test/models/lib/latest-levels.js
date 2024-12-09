@@ -88,8 +88,24 @@ lab.experiment('getThresholdsForTargetArea', () => {
 
   lab.test('should prioritize and return the correct threshold when there are duplicates with different types', () => {
     const thresholds = [
-      { rloi_id: 1, threshold_type: 'FW ACT FW', value_timestamp: '2024-08-12T11:45:00.000Z' },
-      { rloi_id: 1, threshold_type: 'FW RES FW', value_timestamp: '2024-08-12T10:45:00.000Z' }
+      {
+        rloi_id: 1,
+        threshold_type: 'FW RES FW',
+        value_timestamp: '2024-08-12T11:45:00.000Z',
+        threshold_value: '5.00',
+        stage_datum: 2.5,
+        subtract: 1.0,
+        post_process: true
+      },
+      {
+        rloi_id: 1,
+        threshold_type: 'FW ACT FW',
+        value_timestamp: '2024-08-12T11:45:00.000Z',
+        threshold_value: '5.00',
+        stage_datum: 2.5,
+        subtract: 1.0,
+        post_process: true
+      },
     ]
 
     const result = getThresholdsForTargetArea(thresholds)

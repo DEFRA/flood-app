@@ -8,7 +8,6 @@ function getThresholdsForTargetArea (thresholds) {
     threshold.status !== 'Closed' &&
     !(threshold.iswales && threshold.latest_level === null)
   )
-
   const warningThresholds = findPrioritisedThresholds(filteredThresholds, WARNING_THRESHOLD_TYPES)
 
   return warningThresholds.map(threshold => {
@@ -26,19 +25,18 @@ function getThresholdsForTargetArea (thresholds) {
     return threshold
   })
 }
-
-function findPrioritisedThresholds (thresholds, types) {
-  const thresholdMap = {}
-
-  for (const type of types) {
-    for (const threshold of thresholds) {
-      if (threshold.threshold_type === type && !thresholdMap[threshold.rloi_id]) {
-        thresholdMap[threshold.rloi_id] = threshold
+function findPrioritisedThresholds(thresholds, types) {
+  const thresholdMap = thresholds.reduce((acc, threshold) => {
+    if (types.includes(threshold.threshold_type)) {
+      acc[threshold.rloi_id] = acc[threshold.rloi_id] || []
+      if (!acc[threshold.rloi_id].some(t => t.direction === threshold.direction)) {
+        acc[threshold.rloi_id].push(threshold)
       }
     }
-  }
+    return acc
+  }, {})
 
-  return Object.values(thresholdMap)
+  return Object.values(thresholdMap).flat()
 }
 
 module.exports = getThresholdsForTargetArea
