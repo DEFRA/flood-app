@@ -856,7 +856,7 @@ lab.experiment('Target-area tests', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200) 
+    Code.expect(response.statusCode).to.equal(200)
 
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest levels</h2>')
     Code.expect(response.payload).to.contain('<p>The River Pinn level upstream at Eastcote Road was <span data-item-value>0.35</span> metres. Property flooding is possible when it goes above 1.40 metres.')
