@@ -20,7 +20,7 @@
       </p>
       {% if model.latestLevels.length == 1 %}
       <p>
-        <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}/downstream{% endif %}{% if not warnings.iswales %}?tid={{ warnings.station_threshold_id }}{% endif %}">Monitor the latest {{ warnings.river_name }} level {% if warnings.direction == 'd' %}downstream{% else %}upstream{% endif %} at {{ warnings.agency_name }}{% if warnings.iswales %} (Natural Resources Wales){% endif %}</a>
+        <a href="/station/{{ warnings.rloi_id }}{% if warnings.direction == 'd' %}/downstream{% endif %}{% if not warnings.iswales %}?tid={{ warnings.station_threshold_id }}{% endif %}">Monitor the latest level at {{ warnings.agency_name }}{% if warnings.iswales %} (Natural Resources Wales){% endif %}</a>
       </p>
       {% endif %}
     {% endif %}
