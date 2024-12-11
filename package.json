@@ -1,6 +1,6 @@
 {
   "name": "flood-app",
-  "version": "8.10.0",
+  "version": "8.11.0",
   "description": "Flood risk app",
   "main": "index.js",
   "repository": "github:defra/flood-app",
