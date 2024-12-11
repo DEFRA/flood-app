@@ -4,26 +4,13 @@
 * Proposed Release Date: 17/12/2024
 * Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/19017/tab/release-report-all-issues
 
-## Sense Check
-
-* Note that this is the definitive release notes for WebOps. The release notes in flood-service and flood-db are for CFF dev team use only.
-* Cross check the list of Jira tickets below with those in the Jira release linked to above and update where needed
-* Add additional Jira tickets from the related release notes in the 'Release 8.11.0' PR's created in:
-  * [flood-service](https://github.com/DEFRA/flood-service)
-
-* Add any required infrastructure changes such as redirects to the infrastructure changes section below
-* Once this sense check is done, delete this section
-
 ## Tickets
 
+  * FSR-1344 | Bump critical npm dependencies for app (#889)
+    
+  * FSR-1344 | Bump critical npm dependencies for service (#272)
 
-  
-  * FSR-1344 | NPM updates (#889)
-  
-  * Merge pull request #888 from DEFRA/fix/github_action__merge_fix
-  
-  * Merge pull request #886 from DEFRA/fix/merge-gh-action
-  
+  * FSR-1365 | Latest Levels box shows correct level for multi-station areas (#270)
 
 
 ## Instructions
