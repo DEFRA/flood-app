@@ -92,7 +92,6 @@ experiment('bingResultsParser', () => {
             54.12413077805586
           ],
           isUK: true,
-          isScotlandOrNorthernIreland: false,
           isEngland: { is_england: true }
         }
       ]
@@ -244,7 +243,6 @@ experiment('bingResultsParser', () => {
             55.901603977656706
           ],
           isUK: true,
-          isScotlandOrNorthernIreland: false,
           isEngland: { is_england: true }
         }
       ]
@@ -313,7 +311,6 @@ experiment('bingResultsParser', () => {
             55.278917707262806
           ],
           isUK: true,
-          isScotlandOrNorthernIreland: false,
           isEngland: { is_england: true }
         }
       ]
@@ -386,7 +383,6 @@ experiment('bingResultsParser', () => {
             54.10335056978173
           ],
           isUK: true,
-          isScotlandOrNorthernIreland: false,
           isEngland: { is_england: true }
         }
       ]
@@ -460,7 +456,6 @@ experiment('bingResultsParser', () => {
             54.16625259905653
           ],
           isUK: true,
-          isScotlandOrNorthernIreland: false,
           isEngland: { is_england: true }
         }
       ]
@@ -596,7 +591,6 @@ experiment('bingResultsParser', () => {
             54.12413077805586
           ],
           isUK: true,
-          isScotlandOrNorthernIreland: false,
           isEngland: { is_england: true }
         }
       ]
@@ -851,7 +845,6 @@ experiment('bingResultsParser', () => {
             51.267098001671634
           ],
           isUK: true,
-          isScotlandOrNorthernIreland: false,
           isEngland: { is_england: true }
         }
       ]

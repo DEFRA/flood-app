@@ -75,7 +75,6 @@ describe('location service', () => {
           51.267098001671634
         ],
         isUK: true,
-        isScotlandOrNorthernIreland: false,
         isEngland: { is_england: true }
       })
     })

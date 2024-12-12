@@ -14,8 +14,7 @@ const liverpool = {
   bbox10k: [-3.2625314463031407, 53.2213132254306, -2.6220408212292075, 53.640518437630426],
   address: 'Liverpool, Merseyside',
   isEngland: { is_england: true },
-  isUK: true,
-  isScotlandOrNorthernIreland: false
+  isUK: true
 }
 const london = {
   name: 'London',
@@ -34,8 +33,7 @@ const london = {
   ],
   address: 'London, Greater London',
   isEngland: { is_england: true },
-  isUK: true,
-  isScotlandOrNorthernIreland: false
+  isUK: true
 }
 
 const newcastle = {
@@ -55,8 +53,7 @@ const newcastle = {
   ],
   address: 'Newcastle Upon Tyne, Tyne And Wear',
   isEngland: { is_england: true },
-  isUK: true,
-  isScotlandOrNorthernIreland: false
+  isUK: true
 }
 
 experiment('OutlookPolys test', () => {

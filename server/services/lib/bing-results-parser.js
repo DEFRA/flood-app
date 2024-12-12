@@ -54,7 +54,7 @@ const englishCeremonialCounties =
       'worcestershire'
     ]
 
-async function bingResultsParser (bingData, getIsEngland) {
+async function bingResultsParser (bingData) {
   const set = bingData.resourceSets[0]
   if (set.estimatedTotal === 0) {
     return []
@@ -112,10 +112,8 @@ async function bingResultsParser (bingData, getIsEngland) {
   center.reverse()
 
   const isUK = data.address.countryRegionIso2 === 'GB'
-  const isScotlandOrNorthernIreland = isUK &&
-  (data.address.adminDistrict === 'Northern Ireland' || data.address.adminDistrict === 'Scotland')
 
-  const isEngland = await getIsEngland(center[0], center[1])
+  // const isEngland = await getIsEngland(center[0], center[1])
 
   const distanceInMetres = {
     '2k': 2000,
@@ -132,8 +130,7 @@ async function bingResultsParser (bingData, getIsEngland) {
     bbox2k,
     bbox10k,
     isUK,
-    isScotlandOrNorthernIreland,
-    isEngland
+    isEngland: { is_england: true }
   }]
 }
 

@@ -600,7 +600,6 @@ lab.experiment('Routes test - national view', () => {
                 51.267098001671634
               ],
               isUK: true,
-              isScotlandOrNorthernIreland: false,
               isEngland: { is_england: true }
             }
           ]
@@ -686,7 +685,6 @@ lab.experiment('Routes test - national view', () => {
                 51.267098001671634
               ],
               isUK: true,
-              isScotlandOrNorthernIreland: true,
               isEngland: { is_england: false }
             }
           ]

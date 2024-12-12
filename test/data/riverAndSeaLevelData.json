@@ -16,8 +16,7 @@
     "isEngland": {
       "is_england": true
     },
-    "isUK": true,
-    "isScotlandOrNorthernIreland": false
+    "isUK": true
   },
   "stations": [
     {
