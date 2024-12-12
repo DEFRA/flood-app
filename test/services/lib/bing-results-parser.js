@@ -371,7 +371,7 @@ experiment('bingResultsParser', () => {
 
       const expectedResult = [
         {
-          name: 'Knaresborough, HG5 0JL',
+          name: 'HG50JL',
           center: [-1.46519089, 54.00955582],
           bbox2k: [
             -1.5045644526149113,
@@ -445,7 +445,7 @@ experiment('bingResultsParser', () => {
 
       const expectedResult = [
         {
-          name: 'Knaresborough, HG5',
+          name: 'HG5',
           center: [-1.45626473, 54.01323318],
           bbox2k: [
             -1.554794384621328,

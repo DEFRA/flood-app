@@ -103,7 +103,9 @@ async function bingResultsParser (bingData, getIsEngland) {
     point: { coordinates: center }
   } = data
 
-  const name = formatName(data.name, data.entityType)
+  const name = ['postcode1', 'postcode3'].includes(data.entityType.toLowerCase())
+    ? data.address.postalCode.replace(/\s/g, '')
+    : formatName(data.name)
 
   // Reverse as Bing returns as [y (lat), x (long)]
   bbox.reverse()
