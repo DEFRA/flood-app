@@ -1,18 +1,98 @@
 const { addBufferToBbox, formatName } = require('../../util')
 
+// source: https://en.wikipedia.org/wiki/Ceremonial_counties_of_England
+// see also for a description of the difference between ceremonial and administrative counties
+const englishCeremonialCounties =
+    [
+      'bedfordshire',
+      'berkshire',
+      'bristol',
+      'buckinghamshire',
+      'cambridgeshire',
+      'cheshire',
+      'city of london',
+      'cornwall',
+      'cumbria',
+      'derbyshire',
+      'devon',
+      'dorset',
+      'durham',
+      'east riding of yorkshire',
+      'east sussex',
+      'essex',
+      'gloucestershire',
+      'greater london',
+      'greater manchester',
+      'hampshire',
+      'herefordshire',
+      'hertfordshire',
+      'isle of wight',
+      'kent',
+      'lancashire',
+      'leicestershire',
+      'lincolnshire',
+      'merseyside',
+      'norfolk',
+      'north yorkshire',
+      'northamptonshire',
+      'northumberland',
+      'nottinghamshire',
+      'oxfordshire',
+      'rutland',
+      'shropshire',
+      'somerset',
+      'south yorkshire',
+      'staffordshire',
+      'suffolk',
+      'surrey',
+      'tyne and wear',
+      'warwickshire',
+      'west midlands',
+      'west sussex',
+      'west yorkshire',
+      'wiltshire',
+      'worcestershire'
+    ]
+
 async function bingResultsParser (bingData, getIsEngland) {
   const set = bingData.resourceSets[0]
   if (set.estimatedTotal === 0) {
     return []
   }
 
-  const allowedConfidences = ['medium', 'high']
+  const allowedConfidences = ['high', 'medium']
+
+  // note that allowedTypes also captures precedance rules for when multiple
+  // results are returned (e.g admindivision2 takes precedance over admindivision1)
   const allowedTypes = [
-    'populatedplace', 'postcode1', 'postcode3', 'admindivision2', 'neighborhood', 'religiousstructure', 'roadblock'
+    'postcode1',
+    'postcode3',
+    'neighborhood',
+    'populatedplace',
+    'admindivision2',
+    'admindivision1',
+    'religiousstructure',
+    'roadblock'
   ]
+
+  function englandOnlyFilter (r) {
+    if (r.entityType.toLowerCase() === 'admindivision1') {
+      return englishCeremonialCounties.indexOf(r.name.toLowerCase()) >= 0
+    }
+
+    return r.address.adminDistrict.toLowerCase() === 'england'
+  }
+
   const data = set.resources
     .filter(r => allowedConfidences.includes(r.confidence.toLowerCase()))
-    .filter(r => allowedTypes.includes(r.entityType.toLowerCase()))[0]
+    .filter(r => allowedTypes.includes(r.entityType.toLowerCase()))
+    .filter(r => englandOnlyFilter(r))
+    .sort((a, b) =>
+      allowedTypes.indexOf(a.entityType.toLowerCase()) -
+      allowedTypes.indexOf(b.entityType.toLowerCase()))
+    .sort((a, b) =>
+      allowedConfidences.indexOf(a.confidence.toLowerCase()) -
+      allowedConfidences.indexOf(b.confidence.toLowerCase()))[0]
 
   if (!data) {
     return []

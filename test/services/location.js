@@ -7,8 +7,6 @@ const { expect } = require('@hapi/code')
 const { afterEach, beforeEach, describe, it } = exports.lab = Lab.script()
 const populatedPlace = require('./data/location/ashford-kent.json')
 const adminDivision1 = require('./data/location/wales.json')
-const ukButNotEngland = require('./data/location/cardiff.json')
-const notUk = require('./data/location/dublin.json')
 const LocationSearchError = require('../../server/location-search-error')
 const flushAppRequireCache = require('../lib/flush-app-require-cache')
 
@@ -111,28 +109,6 @@ describe('location service', () => {
       const result = await location.find('.wales')
       expect(context.stubs.getJson.callCount).to.equal(1)
       expect(result.length).to.equal(0)
-    })
-    it('should populate country flags for home nation cities', async () => {
-      setupStubs(context, ukButNotEngland, false)
-      const result = await location.find('cardiff')
-      expect(context.stubs.getJson.callCount).to.equal(1)
-      expect(result[0]).to.contain({
-        name: 'Cardiff',
-        isUK: true,
-        isScotlandOrNorthernIreland: false,
-        isEngland: { is_england: false }
-      })
-    })
-    it('should populate country flags out non-UK cities', async () => {
-      setupStubs(context, notUk, false)
-      const result = await location.find('dublin')
-      expect(context.stubs.getJson.callCount).to.equal(1)
-      expect(result[0]).to.contain({
-        name: 'Dublin, County Dublin, Ireland',
-        isUK: false,
-        isScotlandOrNorthernIreland: false,
-        isEngland: { is_england: false }
-      })
     })
     describe('confidence test', () => {
       [['high', 1], ['medium', 1], ['low', 0]].forEach(confidence => {
