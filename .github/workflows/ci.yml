@@ -41,7 +41,7 @@ jobs:
                 FLOOD_APP_SESSION_PASSWORD: "${{ secrets.FLOOD_APP_SESSION_PASSWORD }}"
               run: |
                 npm run unit-test
-                sed -i 's/\/home\/runner\/work\/flood-app\/flood-app\//\/github\/workspace\//g' coverage/lcov.info
+                # sed -i 's/\/home\/runner\/work\/flood-app\/flood-app\//\/github\/workspace\//g' coverage/lcov.info
 
             - name: Analyse code quality
               uses: sonarsource/sonarcloud-github-action@master

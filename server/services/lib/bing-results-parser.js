@@ -6,6 +6,7 @@ async function bingResultsParser (bingData, getIsEngland) {
     return []
   }
 
+  // add another comment to force build
   const allowedConfidences = ['medium', 'high']
 
   // adding comment to force build
