@@ -903,7 +903,7 @@ experiment('bingResultsParser', () => {
       ]
       checkParsedResponse(resources, stubGetEngland, expectedResult)
     })
-    test('welsh reserved county location search should return empty result', async () => {
+    test('welsh preserved county location search should return empty result', async () => {
       const resources = [
         {
           __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
