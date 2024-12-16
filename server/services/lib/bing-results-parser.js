@@ -6,11 +6,9 @@ async function bingResultsParser (bingData, getIsEngland) {
     return []
   }
 
-  const allowedConfidences = [
-    'medium',
-    'high'
-  ]
+  const allowedConfidences = ['medium', 'high']
 
+  // adding comment to force build
   const allowedTypes = [
     'populatedplace', 'postcode1', 'postcode3', 'admindivision2', 'neighborhood', 'religiousstructure', 'roadblock'
   ]
