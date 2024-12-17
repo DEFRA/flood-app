@@ -60,6 +60,7 @@ async function bingResultsParser (bingData) {
     return []
   }
 
+  // TODO: decide if we should only return high confidence
   const allowedConfidences = ['high', 'medium']
 
   // note that allowedTypes also captures precedance rules for when multiple
@@ -71,6 +72,7 @@ async function bingResultsParser (bingData) {
     'populatedplace',
     'admindivision2',
     'admindivision1',
+    // TODO: decide is we need to remove roadblock & religiousstructure
     'religiousstructure',
     'roadblock'
   ]
