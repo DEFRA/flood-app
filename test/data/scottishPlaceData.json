@@ -20,6 +20,5 @@
   "isEngland":{
      "is_england":false
   },
-  "isUK":true,
-  "isScotlandOrNorthernIreland":true
+  "isUK":true
 }

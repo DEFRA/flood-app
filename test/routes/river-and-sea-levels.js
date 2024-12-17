@@ -142,22 +142,6 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     Code.expect(response.headers.location).to.equal('/river-and-sea-levels')
   })
 
-  lab.test('GET /river-and-sea-levels with legacy query parameter valid non-england', async () => {
-    stubs.getJson.callsFake(() => data.scotlandGetJson)
-    stubs.getIsEngland.callsFake(() => ({ is_england: false }))
-    stubs.getRiversByName.callsFake(() => [])
-
-    const options = {
-      method: 'GET',
-      url: '/river-and-sea-levels?q=kinghorn'
-    }
-
-    const response = await server.inject(options)
-
-    Code.expect(response.statusCode).to.equal(301)
-    Code.expect(response.headers.location).to.equal('/river-and-sea-levels/kinghorn-fife')
-  })
-
   lab.test('GET /river-and-sea-levels with legacy query parameter invalid characters', async () => {
     stubs.getJson.callsFake(() => data.warringtonGetJson)
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))

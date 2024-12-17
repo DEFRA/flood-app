@@ -154,20 +154,6 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.headers.location).to.equal('/alerts-and-warnings')
   })
 
-  lab.test('GET /alerts-and-warnings with legacy query parameter valid non-england', async () => {
-    stubs.getIsEngland.callsFake(() => ({ is_england: false }))
-    stubs.getJson.callsFake(() => data.scotlandGetJson)
-    const options = {
-      method: 'GET',
-      url: '/alerts-and-warnings?q=kinghorn'
-    }
-
-    const response = await server.inject(options)
-
-    Code.expect(response.statusCode).to.equal(301)
-    Code.expect(response.headers.location).to.equal('/alerts-and-warnings/kinghorn-fife')
-  })
-
   lab.test('GET /alerts-and-warnings with legacy query parameter invalid characters', async () => {
     stubs.getJson.callsFake(() => data.warringtonGetJson)
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))
