@@ -106,7 +106,7 @@ async function bingResultsParser (bingData) {
   } = data
 
   const name = ['postcode1', 'postcode3'].includes(data.entityType.toLowerCase())
-    ? data.address.postalCode.replace(/\s/g, '')
+    ? data.address.postalCode
     : formatName(data.name)
 
   // Reverse as Bing returns as [y (lat), x (long)]

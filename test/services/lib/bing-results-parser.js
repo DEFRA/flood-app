@@ -368,7 +368,7 @@ experiment('bingResultsParser', () => {
 
       const expectedResult = [
         {
-          name: 'HG50JL',
+          name: 'HG5 0JL',
           center: [-1.46519089, 54.00955582],
           bbox2k: [
             -1.5045644526149113,
