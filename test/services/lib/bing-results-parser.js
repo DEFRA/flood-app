@@ -97,7 +97,7 @@ experiment('bingResultsParser', () => {
       ]
       checkParsedResponse(resources, stubGetEngland, expectedResult)
     })
-    test('english county search should return administrative county (AdminDivision2) before ceremonial county (AdminDivision2)', async () => {
+    test('english county search should return ceremonial county (AdminDivision1) over administrative county (AdminDivision2)', async () => {
       const resources = [
         {
           __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -226,21 +226,22 @@ experiment('bingResultsParser', () => {
       ]
 
       const expectedResult = [
-        // AdminDivision2 (administrative county)
+        // AdminDivision1 should take precedance over other entity types in
+        // response
         {
           name: 'Northumberland',
-          center: [-1.80139947, 55.17995834],
+          center: [-2.06545234, 55.24245834],
           bbox2k: [
-            -2.721803721763291,
-            54.76437447809684,
-            -1.428141060493789,
-            55.82966161755564
+            -2.721803715494745,
+            54.7643744779302,
+            -1.4282677862371271,
+            55.829653988329156
           ],
           bbox10k: [
-            -2.8498382626716765,
-            54.692432074671665,
-            -1.3001065195854036,
-            55.901603977656706
+            -2.8498382313297492,
+            54.692432073840145,
+            -1.300233270402123,
+            55.90159634910422
           ],
           isUK: true,
           isEngland: { is_england: true }

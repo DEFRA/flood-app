@@ -68,13 +68,10 @@ async function bingResultsParser (bingData) {
   const allowedTypes = [
     'postcode1',
     'postcode3',
-    'neighborhood',
-    'populatedplace',
-    'admindivision2',
     'admindivision1',
-    // TODO: decide is we need to remove roadblock & religiousstructure
-    'religiousstructure',
-    'roadblock'
+    'admindivision2',
+    'populatedplace',
+    'neighborhood'
   ]
 
   function englandOnlyFilter (r) {
