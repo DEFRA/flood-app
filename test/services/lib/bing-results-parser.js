@@ -78,6 +78,7 @@ experiment('bingResultsParser', () => {
       const expectedResult = [
         {
           name: 'Knaresborough, North Yorkshire',
+          slug: 'knaresborough-north-yorkshire',
           center: [-1.46303844, 54.00714111],
           bbox2k: [
             -1.534142855800849,
@@ -230,6 +231,7 @@ experiment('bingResultsParser', () => {
         // response
         {
           name: 'Northumberland',
+          slug: 'northumberland',
           center: [-2.06545234, 55.24245834],
           bbox2k: [
             -2.721803715494745,
@@ -298,6 +300,7 @@ experiment('bingResultsParser', () => {
       const expectedResult = [
         {
           name: 'Cumbria',
+          slug: 'cumbria',
           center: [-2.91157079, 54.57675934],
           bbox2k: [
             -3.672137848226576,
@@ -369,7 +372,8 @@ experiment('bingResultsParser', () => {
 
       const expectedResult = [
         {
-          name: 'HG5 0JL',
+          name: 'Knaresborough, HG5 0JL',
+          slug: 'hg5-0jl',
           center: [-1.46519089, 54.00955582],
           bbox2k: [
             -1.5045644526149113,
@@ -442,7 +446,8 @@ experiment('bingResultsParser', () => {
 
       const expectedResult = [
         {
-          name: 'HG5',
+          name: 'Knaresborough, HG5',
+          slug: 'hg5',
           center: [-1.45626473, 54.01323318],
           bbox2k: [
             -1.554794384621328,
@@ -578,6 +583,7 @@ experiment('bingResultsParser', () => {
       const expectedResult = [
         {
           name: 'Knaresborough, North Yorkshire',
+          slug: 'knaresborough-north-yorkshire',
           center: [-1.46303844, 54.00714111],
           bbox2k: [
             -1.534142855800849,
@@ -832,6 +838,7 @@ experiment('bingResultsParser', () => {
       const expectedResult = [
         {
           name: 'Ashford, Kent',
+          slug: 'ashford-kent',
           center: [0.87279475, 51.14772797],
           bbox2k: [
             0.80935719234919,

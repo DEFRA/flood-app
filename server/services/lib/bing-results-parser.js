@@ -54,6 +54,10 @@ const englishCeremonialCounties =
       'worcestershire'
     ]
 
+function slugify (text = '') {
+  return text.replace(/,/g, '').replace(/ /g, '-').toLowerCase()
+}
+
 async function bingResultsParser (bingData) {
   const set = bingData.resourceSets[0]
   if (set.estimatedTotal === 0) {
@@ -102,9 +106,11 @@ async function bingResultsParser (bingData) {
     point: { coordinates: center }
   } = data
 
-  const name = ['postcode1', 'postcode3'].includes(data.entityType.toLowerCase())
-    ? data.address.postalCode
-    : formatName(data.name)
+  const name = formatName(data.name)
+
+  const slug = ['postcode1', 'postcode3'].includes(data.entityType.toLowerCase())
+    ? slugify(data.address.postalCode)
+    : slugify(name)
 
   // Reverse as Bing returns as [y (lat), x (long)]
   bbox.reverse()
@@ -125,6 +131,7 @@ async function bingResultsParser (bingData) {
 
   return [{
     name,
+    slug,
     center,
     bbox2k,
     bbox10k,

@@ -13,7 +13,6 @@ const {
 const locationService = require('../services/location')
 const util = require('../util')
 const {
-  slugify,
   failActionHandler,
   renderNotFound,
   renderLocationNotFound,
@@ -112,7 +111,7 @@ async function locationQueryHandler (request, h) {
 
   const queryString = createQueryParametersString(request.query)
 
-  return h.redirect(`/${route}/${slugify(place?.name)}${queryString}`).permanent()
+  return h.redirect(`/${route}/${place?.slug}${queryString}`).permanent()
 }
 
 async function findPlaces (location) {
