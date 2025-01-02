@@ -92,7 +92,7 @@
                 <ul class="defra-navbar__list" id="filter" data-controls="results">
                   {% for filter in model.filters %}
                     <li class="defra-navbar__item{% if filter.type == model.queryGroup %} defra-navbar__item--selected{% endif %}">
-                      <a href="/river-and-sea-levels?q={{ model.q }}&group={{ filter.type }}" data-group-type="{{ filter.type }}">{{ filter.type | capitalize }} ({{ filter.count }})</a>
+                      <a href="/river-and-sea-levels/{{ model.slug }}?group={{ filter.type }}" data-group-type="{{ filter.type }}">{{ filter.type | capitalize }} ({{ filter.count }})</a>
                     </li>
                   {% endfor %}
                 </ul>

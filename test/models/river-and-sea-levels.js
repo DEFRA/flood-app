@@ -72,6 +72,13 @@ lab.experiment('river-and-sea-levels model test', () => {
 
       Code.expect(result.displayGetWarningsLink).to.equal(true)
     })
+    lab.test('Test slug has been populated correctly', async () => {
+      const stationsData = data.riverAndSeaLevelData
+
+      const result = placeViewModel(stationsData)
+
+      Code.expect(result.slug).to.equal('cheshire')
+    })
   })
 
   lab.experiment('referencedStationViewModel', () => {
@@ -104,6 +111,22 @@ lab.experiment('river-and-sea-levels model test', () => {
       const result = referencedStationViewModel(referencePoint, stationsData.stations)
 
       Code.expect(result.displayGetWarningsLink).to.equal(true)
+    })
+    lab.test('Test slug has been populated correctly', async () => {
+      const stationsData = data.riverAndSeaLevelDataUnordered
+      const [rainfallStation] = data.rainfallStation553564
+
+      const referencePoint = {
+        type: 'rainfall',
+        id: 'ABC123',
+        name: rainfallStation.station_name,
+        lat: rainfallStation.lat,
+        lon: rainfallStation.lon
+      }
+
+      const result = referencedStationViewModel(referencePoint, stationsData.stations)
+
+      Code.expect(result.slug).to.equal('rainfall/ABC123')
     })
   })
 })

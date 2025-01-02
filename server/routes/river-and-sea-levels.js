@@ -126,11 +126,13 @@ module.exports = [{
   path: `/${route}/target-area/{targetAreaCode}`,
   handler: async (request, h) => {
     const { targetAreaCode } = request.params
+    const queryGroup = request.query.group
     const targetArea = await request.server.methods.flood.getTargetArea(targetAreaCode)
 
     if (targetArea.ta_name) {
       const stations = await request.server.methods.flood.getStationsWithinTargetArea(targetAreaCode)
-      const model = areaViewModel(targetArea.ta_name, stations)
+      const model = areaViewModel(targetAreaCode, targetArea.ta_name, stations, queryGroup)
+
       return h.view(route, { model })
     }
     throw boom.notFound(`Cannot find target area ${targetAreaCode}`)
@@ -147,10 +149,11 @@ module.exports = [{
   path: `/${route}/river/{riverId}`,
   handler: async (request, h) => {
     const { riverId } = request.params
+    const queryGroup = request.query.group
     const stations = await request.server.methods.flood.getRiverById(riverId)
 
     if (stations.length > 0) {
-      const model = riverViewModel(stations)
+      const model = riverViewModel(riverId, stations, queryGroup)
       return h.view(route, { model })
     }
 
@@ -161,6 +164,7 @@ module.exports = [{
   path: `/${route}/rloi/{rloiId}`,
   handler: async (request, h) => {
     const { rloiId } = request.params
+    const queryGroup = request.query.group
     const riverLevelStation = await request.server.methods.flood.getStationById(rloiId, 'u')
     const coordinates = JSON.parse(riverLevelStation.coordinates)
 
@@ -168,12 +172,14 @@ module.exports = [{
       const radius = 8000 // metres
       const distanceInMiles = Math.round(radius / miles)
       const referencePoint = {
+        type: 'rloi',
+        id: rloiId,
         lat: coordinates.coordinates[1],
         lon: coordinates.coordinates[0],
         distStatement: `Showing levels within ${distanceInMiles} miles of ${riverLevelStation.external_name}.`
       }
       const stations = await request.server.methods.flood.getStationsByRadius(referencePoint.lon, referencePoint.lat, radius)
-      const model = referencedStationViewModel(referencePoint, stations)
+      const model = referencedStationViewModel(referencePoint, stations, queryGroup)
       return h.view(route, { model })
     }
 
@@ -184,18 +190,22 @@ module.exports = [{
   path: `/${route}/rainfall/{rainfallid}`,
   handler: async (request, h) => {
     const { rainfallid } = request.params
+    const queryGroup = request.query.group
     const rainfallStation = await request.server.methods.flood.getRainfallStation(rainfallid)
 
     if (rainfallStation) {
       const radius = 8000 // metres
       const distanceInMiles = Math.round(radius / miles)
       const referencePoint = {
+        type: 'rainfall',
+        id: rainfallid,
         lat: rainfallStation.lat,
         lon: rainfallStation.lon,
         distStatement: `Showing levels within ${distanceInMiles} miles of ${rainfallStation.station_name}.`
       }
       const stations = await request.server.methods.flood.getStationsByRadius(referencePoint.lon, referencePoint.lat, radius)
-      const model = referencedStationViewModel(referencePoint, stations)
+      const model = referencedStationViewModel(referencePoint, stations, queryGroup)
+
       return h.view(route, { model })
     }
 
