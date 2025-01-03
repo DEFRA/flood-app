@@ -116,7 +116,7 @@ function referencedStationViewModel (referencePoint, stations, queryGroup) {
   }
 }
 
-function placeViewModel ({ location, place, stations = [], queryGroup, canonical, q }) {
+function placeViewModel ({ location, place, stations = [], queryGroup, canonical }) {
   let distStatement, title, description
 
   const isEngland = place ? place.isEngland.is_england : true
