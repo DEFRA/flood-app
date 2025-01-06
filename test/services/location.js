@@ -20,7 +20,7 @@ describe('location service', () => {
   beforeEach(() => {
     flushAppRequireCache()
     const config = require('../../server/config')
-    sinon.stub(config, 'bingUrl').value('http://bing?query=%s&key=%s')
+    sinon.stub(config, 'bingUrl').value('http://bing?query=%s&maxResults=%s&key=%s')
     sinon.stub(config, 'bingKeyLocation').value('12345')
     util = require('../../server/util')
     floodServices = require('../../server/services/flood')
@@ -84,7 +84,7 @@ describe('location service', () => {
       const searchTerm = 'ashford'
       await location.find(searchTerm)
       expect(context.stubs.getJson.callCount).to.equal(1)
-      expect(context.stubs.getJson.args[0][0]).to.equal(`http://bing?query=${searchTerm}&key=12345`)
+      expect(context.stubs.getJson.args[0][0]).to.equal(`http://bing?query=${searchTerm}&maxResults=3&key=12345`)
     })
     it('should not query Bing if search term is longer than 60 characters', async () => {
       setupStubs(context, {})
