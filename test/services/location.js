@@ -92,11 +92,17 @@ describe('location service', () => {
       expect(context.stubs.getJson.callCount).to.equal(0)
       expect(result.length).to.equal(0)
     })
-    it('should not query Bing if search term contains only special characters', async () => {
+    it('should not query Bing if search term contains only non-alphanumeric characters', async () => {
       setupStubs(context, {})
       const result = await location.find('!@£$%^&')
       expect(context.stubs.getJson.callCount).to.equal(0)
       expect(result.length).to.equal(0)
+    })
+    it('should query Bing if search term contains a mix of alphanumeric and non-alphanumeric characters', async () => {
+      setupStubs(context, populatedPlace)
+      const result = await location.find('leeds !@£$%^&')
+      expect(context.stubs.getJson.callCount).to.equal(1)
+      expect(result.length).to.equal(1)
     })
     it('should not query Bing if search term is empty', async () => {
       setupStubs(context, {})
