@@ -1,6 +1,8 @@
 const { expect } = require('@hapi/code')
 
 function errorMessage (text) {
+  // without this, the stack trace reported when an expectation fails is
+  // less than helpful in determining which test failed and where
   return `${text}\n(Call stack: ${new Error().stack})`
 }
 
@@ -40,8 +42,14 @@ function fullRelatedContentChecker (root, cyltfrLink) {
 
 // Checks if a heading with specific text exists
 function headingChecker (root, headingLevel, headingText) {
-  const h1Found = root.querySelectorAll(headingLevel).some(h => h.textContent.trim() === headingText)
-  expect(h1Found, errorMessage(`Heading level ${headingLevel} with text ${headingText} not found.`)).to.be.true()
+  const headings = root
+    .querySelectorAll(headingLevel)
+    .filter(h => h.textContent.trim() === headingText)
+  expect(
+    headings.length,
+    errorMessage(`${headings.length} heading level ${headingLevel} with text ${headingText} found.`)
+  ).to.equal(1)
+  return headings[0]
 }
 
 module.exports = {
