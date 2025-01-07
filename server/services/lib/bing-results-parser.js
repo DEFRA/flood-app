@@ -64,8 +64,9 @@ async function bingResultsParser (bingData) {
     return []
   }
 
-  // TODO: decide if we should only return high confidence
-  const allowedConfidences = ['high', 'medium']
+  // following discussion with team, going to try out only high confidence
+  // results. This should reduce spurious results.
+  const allowedConfidences = ['high']
 
   // note that allowedTypes also captures precedance rules for when multiple
   // results are returned (e.g admindivision2 takes precedance over admindivision1)

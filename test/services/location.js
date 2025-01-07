@@ -117,7 +117,7 @@ describe('location service', () => {
       expect(result.length).to.equal(0)
     })
     describe('confidence test', () => {
-      [['high', 1], ['medium', 1], ['low', 0]].forEach(confidence => {
+      [['high', 1], ['medium', 0], ['low', 0]].forEach(confidence => {
         it(`should return ${confidence[1]} result for confidence level '${confidence[0]}' when Bing returns a ${confidence[0]} result`, async () => {
           const clonePopulatedPlace = { ...populatedPlace }
           clonePopulatedPlace.resourceSets[0].resources[0].confidence = confidence[0]

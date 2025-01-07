@@ -531,7 +531,79 @@ experiment('bingResultsParser', () => {
 
       expect(result).to.equal([])
     })
-    test('medium confidence response should return populated result', async () => {
+    test('high confidence response should return populated result', async () => {
+      const resources = [
+        {
+          __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+          bbox: [
+            53.99038314819336,
+            -1.5035173892974854,
+            54.03419876098633,
+            -1.4180587530136108
+          ],
+          name: 'Knaresborough, North Yorkshire',
+          point: {
+            type: 'Point',
+            coordinates: [
+              54.00714111,
+              -1.46303844
+            ]
+          },
+          address: {
+            adminDistrict: 'England',
+            adminDistrict2: 'North Yorkshire',
+            countryRegion: 'United Kingdom',
+            formattedAddress: 'Knaresborough, North Yorkshire',
+            locality: 'Knaresborough',
+            countryRegionIso2: 'GB'
+          },
+          confidence: 'High',
+          entityType: 'PopulatedPlace',
+          geocodePoints: [
+            {
+              type: 'Point',
+              coordinates: [
+                54.00714111,
+                -1.46303844
+              ],
+              calculationMethod: 'Rooftop',
+              usageTypes: [
+                'Display'
+              ]
+            }
+          ],
+          matchCodes: [
+            'Good'
+          ]
+        }
+      ]
+      const bingResponse = getBingResponse(resources)
+      const result = await bingResultsParser(bingResponse, stubGetEngland)
+
+      const expectedResult = [
+        {
+          name: 'Knaresborough, North Yorkshire',
+          slug: 'knaresborough-north-yorkshire',
+          center: [-1.46303844, 54.00714111],
+          bbox2k: [
+            -1.534142855800849,
+            53.972396744766755,
+            -1.3874332865102472,
+            54.05218516440792
+          ],
+          bbox10k: [
+            -1.6566444925899468,
+            53.90045113102211,
+            -1.2649316497211494,
+            54.12413077805586
+          ],
+          isUK: true,
+          isEngland: { is_england: true }
+        }
+      ]
+      expect(result).to.equal(expectedResult)
+    })
+    test('medium confidence response should return empty result', async () => {
       const resources = [
         {
           __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -580,27 +652,7 @@ experiment('bingResultsParser', () => {
       const bingResponse = getBingResponse(resources)
       const result = await bingResultsParser(bingResponse, stubGetEngland)
 
-      const expectedResult = [
-        {
-          name: 'Knaresborough, North Yorkshire',
-          slug: 'knaresborough-north-yorkshire',
-          center: [-1.46303844, 54.00714111],
-          bbox2k: [
-            -1.534142855800849,
-            53.972396744766755,
-            -1.3874332865102472,
-            54.05218516440792
-          ],
-          bbox10k: [
-            -1.6566444925899468,
-            53.90045113102211,
-            -1.2649316497211494,
-            54.12413077805586
-          ],
-          isUK: true,
-          isEngland: { is_england: true }
-        }
-      ]
+      const expectedResult = []
       expect(result).to.equal(expectedResult)
     })
     test('low confidence response should return empty result', async () => {
