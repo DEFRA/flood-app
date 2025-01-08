@@ -145,7 +145,7 @@ function placeViewModel ({ location, place, stations = [], queryGroup, canonical
     filters,
     floodRiskUrl,
     distStatement,
-    q: place.name,
+    q: place.query,
     slug: place.slug,
     clientModel: getClientModel(isEngland ? place.bbox10k : []),
     queryGroup: activeFilter,

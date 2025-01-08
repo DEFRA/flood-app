@@ -61,6 +61,7 @@ describe('location service', () => {
       expect(result.length).to.equal(1)
       expect(result[0]).to.equal({
         name: 'Ashford, Kent',
+        query: 'Ashford, Kent',
         slug: 'ashford-kent',
         center: [0.87279475, 51.14772797],
         bbox2k: [

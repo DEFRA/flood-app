@@ -109,9 +109,20 @@ async function bingResultsParser (bingData) {
 
   const name = formatName(data.name)
 
-  const slug = ['postcode1', 'postcode3'].includes(data.entityType.toLowerCase())
-    ? slugify(data.address.postalCode)
-    : slugify(name)
+  // query is the value to use in a search box or the slug to replicate the
+  // search and get the same result. If the bing format of the name (place
+  // name + postcode) is used then some postcode searches which were
+  // successful will subsequently fail to find a postcode with the same name
+  // e.g TQ9 6JZ => Dartington, Totnes TQ9 6JZ => returns the postcode but
+  // with a different name (Totnes, TQ9 6JZ, United Kingdom)
+  // This causes problems with validity checking
+  // Retained both name and query for display purposes for post codes
+  // (even though name and query are the are the same for non-postcodes)
+  const query = ['postcode1', 'postcode3'].includes(data.entityType.toLowerCase())
+    ? data.address.postalCode
+    : name
+
+  const slug = slugify(query)
 
   // Reverse as Bing returns as [y (lat), x (long)]
   bbox.reverse()
@@ -133,6 +144,7 @@ async function bingResultsParser (bingData) {
   return [{
     name,
     slug,
+    query,
     center,
     bbox2k,
     bbox10k,
