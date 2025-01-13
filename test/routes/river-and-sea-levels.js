@@ -7,8 +7,18 @@ const sinon = require('sinon')
 const lab = exports.lab = Lab.script()
 const data = require('../data')
 const { parse } = require('node-html-parser')
-const { fullRelatedContentChecker } = require('../lib/helpers/html-expectations')
+const {
+  fullRelatedContentChecker,
+  linkChecker,
+  attributeChecker
+} = require('../lib/helpers/html-expectations')
 const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
+
+function navBarItemChecker (navBarAnchors, text, location, count) {
+  const group = text.toLowerCase()
+  const anchor = linkChecker(navBarAnchors, `${text} (${count})`, `/river-and-sea-levels/${location}?group=${group}`)
+  attributeChecker(anchor, 'data-group-type', group)
+}
 
 lab.experiment('Test - /river-and-sea-levels', () => {
   let sandbox
@@ -140,22 +150,6 @@ lab.experiment('Test - /river-and-sea-levels', () => {
 
     Code.expect(response.statusCode).to.equal(302)
     Code.expect(response.headers.location).to.equal('/river-and-sea-levels')
-  })
-
-  lab.test('GET /river-and-sea-levels with legacy query parameter valid non-england', async () => {
-    stubs.getJson.callsFake(() => data.scotlandGetJson)
-    stubs.getIsEngland.callsFake(() => ({ is_england: false }))
-    stubs.getRiversByName.callsFake(() => [])
-
-    const options = {
-      method: 'GET',
-      url: '/river-and-sea-levels?q=kinghorn'
-    }
-
-    const response = await server.inject(options)
-
-    Code.expect(response.statusCode).to.equal(301)
-    Code.expect(response.headers.location).to.equal('/river-and-sea-levels/kinghorn-fife')
   })
 
   lab.test('GET /river-and-sea-levels with legacy query parameter invalid characters', async () => {
@@ -314,10 +308,13 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=warrington&group=river" data-group-type="river">River (0)</a>')
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=warrington&group=sea" data-group-type="sea">Sea (0)</a>')
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=warrington&group=rainfall" data-group-type="rainfall">Rainfall (0)</a>')
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=warrington&group=groundwater" data-group-type="groundwater">Groundwater (1)</a>')
+    const root = parse(response.payload)
+    const navBarAnchors = root.querySelectorAll('li.defra-navbar__item a')
+    Code.expect(navBarAnchors.length).to.equal(4)
+    navBarItemChecker(navBarAnchors, 'River', 'warrington', 0)
+    navBarItemChecker(navBarAnchors, 'Sea', 'warrington', 0)
+    navBarItemChecker(navBarAnchors, 'Rainfall', 'warrington', 0)
+    navBarItemChecker(navBarAnchors, 'Groundwater', 'warrington', 1)
   })
 
   lab.test('GET /river-and-sea-levels only rainfall stations', async () => {
@@ -397,9 +394,13 @@ lab.experiment('Test - /river-and-sea-levels', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=warrington&group=river" data-group-type="river">River (0)</a>')
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=warrington&group=sea" data-group-type="sea">Sea (0)</a>')
-    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=warrington&group=rainfall" data-group-type="rainfall">Rainfall (2)</a>')
+    const root = parse(response.payload)
+    const navBarAnchors = root.querySelectorAll('li.defra-navbar__item a')
+    Code.expect(navBarAnchors.length).to.equal(4)
+    navBarItemChecker(navBarAnchors, 'River', 'warrington', 0)
+    navBarItemChecker(navBarAnchors, 'Sea', 'warrington', 0)
+    navBarItemChecker(navBarAnchors, 'Rainfall', 'warrington', 2)
+    navBarItemChecker(navBarAnchors, 'Groundwater', 'warrington', 0)
   })
 
   lab.test('GET /river-and-sea-levels Test funny latest value', async () => {

@@ -8,8 +8,22 @@ const lab = exports.lab = Lab.script()
 const data = require('../data')
 const outlookData = require('../data/outlook.json')
 const { parse } = require('node-html-parser')
-const { fullRelatedContentChecker } = require('../lib/helpers/html-expectations')
+const {
+  fullRelatedContentChecker,
+  linkChecker,
+  headingChecker,
+  attributeChecker
+} = require('../lib/helpers/html-expectations')
 const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
+
+function warningBlockChecker (warningHeaders, headingText, warnings) {
+  const h3 = headingChecker(warningHeaders, 'h3', headingText)
+  // finds all anchors related to a given heading by a child or a sibling
+  // relationship
+  const warningAnchors = h3.parentNode.querySelectorAll('ul.defra-flood-warnings-list__items a')
+  Code.expect(warningAnchors.length).to.equal(warnings.length)
+  warnings.forEach(w => linkChecker(warningAnchors, w.description, w.slug))
+}
 
 lab.experiment('Test - /alerts-warnings', () => {
   let server
@@ -154,20 +168,6 @@ lab.experiment('Test - /alerts-warnings', () => {
     Code.expect(response.headers.location).to.equal('/alerts-and-warnings')
   })
 
-  lab.test('GET /alerts-and-warnings with legacy query parameter valid non-england', async () => {
-    stubs.getIsEngland.callsFake(() => ({ is_england: false }))
-    stubs.getJson.callsFake(() => data.scotlandGetJson)
-    const options = {
-      method: 'GET',
-      url: '/alerts-and-warnings?q=kinghorn'
-    }
-
-    const response = await server.inject(options)
-
-    Code.expect(response.statusCode).to.equal(301)
-    Code.expect(response.headers.location).to.equal('/alerts-and-warnings/kinghorn-fife')
-  })
-
   lab.test('GET /alerts-and-warnings with legacy query parameter invalid characters', async () => {
     stubs.getJson.callsFake(() => data.warringtonGetJson)
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))
@@ -199,13 +199,72 @@ lab.experiment('Test - /alerts-warnings', () => {
     const response = await server.inject(options)
 
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('1 flood warning')
-    Code.expect(response.payload).to.contain('1 severe flood warning')
-    Code.expect(response.payload).to.contain('3 flood alerts')
-    Code.expect(response.payload).to.contain('1 flood warning removed')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFGL" class="defra-flood-warnings-list-item__title">River Glaze catchment including Leigh and East Wigan</a>')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013FWFCH29" class="defra-flood-warnings-list-item__title">Wider area at risk from Sankey Brook at Dallam</a>')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFDI" class="defra-flood-warnings-list-item__title">River Ditton catchment including areas around Huyton-with-Roby and Widnes</a>')
+    const root = parse(response.payload)
+
+    const input = root.querySelector('input.defra-search__input')
+    attributeChecker(input, 'value', 'Warrington')
+
+    const warningList = root.querySelector('ul.defra-flood-warnings-list')
+
+    warningBlockChecker(
+      warningList,
+      '1 severe flood warning',
+      [{
+        description: 'River Ditton catchment including areas around Huyton-with-Roby and Widnes',
+        slug: '/target-area/013WAFDI'
+      }]
+    )
+    warningBlockChecker(
+      warningList,
+      '3 flood alerts',
+      [
+        {
+          description: 'Mersey Estuary at Warrington',
+          slug: '/target-area/013WATMEW'
+        },
+        {
+          description: 'River Glaze catchment including Leigh and East Wigan',
+          slug: '/target-area/013WAFGL'
+        },
+        {
+          description: 'River Sankey catchment with St Helens and Warrington',
+          slug: '/target-area/013WAFSA'
+        }
+      ]
+    )
+    warningBlockChecker(
+      warningList,
+      '1 flood warning removed',
+      [{
+        description: 'Lower River Mersey including Warrington, Runcorn and Lymm areas',
+        slug: '/target-area/013WAFLM'
+      }]
+    )
+  })
+
+  lab.test('GET /alerts-and-warnings/{location} with location and no warnings', async () => {
+    stubs.getJson.callsFake(() => data.warringtonGetJson)
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+    stubs.getFloodsWithin.callsFake(() => data.noWarningsOrAlerts)
+    stubs.getStationsWithin.callsFake(() => [])
+    stubs.getImpactsWithin.callsFake(() => [])
+
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings/warrington'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    const root = parse(response.payload)
+
+    const input = root.querySelector('input.defra-search__input')
+    attributeChecker(input, 'value', 'Warrington')
+
+    headingChecker(root, 'h2', "No alerts or warnings found for 'Warrington', England")
+    const warningList = root.querySelector('ul.defra-flood-warnings-list')
+    Code.expect(warningList).to.be.null()
   })
 
   lab.test('GET /alerts-and-warnings/{location} with invalid location', async () => {

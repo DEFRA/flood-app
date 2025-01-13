@@ -12,7 +12,7 @@ lab.experiment('outlookTabs model test', () => {
   lab.test('Test OutlookTabsModel', async () => {
     const outlook = data.fgs
 
-    const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true, isScotlandOrNorthernIreland: false }
+    const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true }
 
     const expectedOutlookTab1 = '{"3-i3-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]}'
     const expectedOutlookTab2 = '{"3-i3-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]}'
@@ -27,7 +27,7 @@ lab.experiment('outlookTabs model test', () => {
   lab.test('Test Coastal poly isnt failing in turf', async () => {
     const outlook = data.fgsCoastal
 
-    const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true, isScotlandOrNorthernIreland: false }
+    const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true }
 
     const expectedOutlookTab1 = '{"2-i2-l4":"runoff from rainfall or blocked drains and overflowing rivers","1-i2-l2":["high tides or large waves"]}'
     const expectedOutlookTab2 = '{"1-i2-l2":"runoff from rainfall or blocked drains, overflowing rivers and high tides or large waves"}'
@@ -46,7 +46,7 @@ lab.experiment('outlookTabs model test', () => {
 
     const formattedIssueDate = formatDate(outlook.issued_at, 'h:mma') + ' on ' + formatDate(outlook.issued_at, 'D MMMM YYYY')
 
-    const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true, isScotlandOrNorthernIreland: false }
+    const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true }
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
@@ -72,8 +72,7 @@ lab.experiment('outlookTabs model test', () => {
       ],
       address: 'Leeds, West Yorkshire',
       isEngland: { is_england: true },
-      isUK: true,
-      isScotlandOrNorthernIreland: false
+      isUK: true
     }
 
     const expectedOutlookTab1 = '{}'
@@ -109,8 +108,7 @@ lab.experiment('outlookTabs model test', () => {
       ],
       address: 'Oxford, Oxfordshire',
       isEngland: { is_england: true },
-      isUK: true,
-      isScotlandOrNorthernIreland: false
+      isUK: true
     }
 
     const viewModel = new OutlookTabsModel(outlook, place)
@@ -140,8 +138,7 @@ lab.experiment('outlookTabs model test', () => {
       ],
       address: 'Oxford, Oxfordshire',
       isEngland: { is_england: true },
-      isUK: true,
-      isScotlandOrNorthernIreland: false
+      isUK: true
     }
 
     const viewModel = new OutlookTabsModel(outlook, place)
@@ -267,8 +264,7 @@ lab.experiment('outlookTabs model test', () => {
       ],
       address: 'Leeds, West Yorkshire',
       isEngland: { is_england: true },
-      isUK: true,
-      isScotlandOrNorthernIreland: false
+      isUK: true
     }
 
     const viewModel = new OutlookTabsModel(outlook, place)
@@ -299,8 +295,7 @@ lab.experiment('outlookTabs model test', () => {
       ],
       address: 'Derby, Derby City',
       isEngland: { is_england: true },
-      isUK: true,
-      isScotlandOrNorthernIreland: false
+      isUK: true
     }
 
     const viewModel = new OutlookTabsModel(outlook, place)
@@ -332,8 +327,7 @@ lab.experiment('outlookTabs model test', () => {
       ],
       address: 'Derby, Derby City',
       isEngland: { is_england: true },
-      isUK: true,
-      isScotlandOrNorthernIreland: false
+      isUK: true
     }
 
     const viewModel = new OutlookTabsModel(outlook, place)
@@ -362,8 +356,7 @@ lab.experiment('outlookTabs model test', () => {
       ],
       address: 'Dover, Kent',
       isEngland: { is_england: true },
-      isUK: true,
-      isScotlandOrNorthernIreland: false
+      isUK: true
     }
 
     const expectedOutlookTab1 = '{"3-i4-l2":"Runoff from rainfall or blocked drains and overflowing rivers"}'

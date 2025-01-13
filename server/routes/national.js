@@ -3,7 +3,6 @@ const OutlookModel = require('../models/outlook')
 const FloodsModel = require('../models/floods')
 const ViewModel = require('../models/views/national')
 const locationService = require('../services/location')
-const { slugify } = require('./lib/utils')
 
 async function getModel (request, location) {
   const floods = new FloodsModel(await request.server.methods.flood.getFloods())
@@ -45,7 +44,7 @@ module.exports = [
       if (!place?.name || !place.isEngland.is_england) {
         return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
       }
-      return h.redirect(`/location/${encodeURIComponent(slugify(place?.name))}`)
+      return h.redirect(`/location/${encodeURIComponent(place?.slug)}`)
     },
     options: {
       validate: {

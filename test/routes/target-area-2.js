@@ -162,21 +162,4 @@ describe('target-area route', () => {
     const response = await server.inject(options)
     expect(response.statusCode).to.equal(404)
   })
-  it('should display river levels link', async () => {
-    const AREA_CODE = '011WAFDW'
-
-    setupFakeModel({
-      pageTitle: 'Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water',
-      targetArea: AREA_CODE
-    })
-
-    const response = await getResponse(undefined)
-
-    expect(response.statusCode).to.equal(200)
-    const root = parse(response.payload)
-    linkChecker(root.querySelectorAll('a'),
-      'Find a river, sea, groundwater or rainfall level in this area',
-      `/river-and-sea-levels/target-area/${AREA_CODE}`
-    )
-  })
 })

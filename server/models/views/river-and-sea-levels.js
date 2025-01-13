@@ -39,22 +39,23 @@ function disambiguationModel (q, places, rivers) {
   }
 }
 
-function riverViewModel (stations) {
+function riverViewModel (riverId, stations, queryGroup) {
   const bbox = createBbox(stations)
   stations.forEach(station => {
     setStationProperties(station)
   })
 
-  const { filters, activeFilter: queryGroup } = setFilters(stations)
+  const { filters, activeFilter } = setFilters(stations, queryGroup)
 
   deleteUndefinedProperties(stations)
 
   const qualifiedRiverName = stations[0].river_qualified_name
 
   return {
+    slug: `river/${riverId}`,
     stations,
     filters,
-    queryGroup,
+    queryGroup: activeFilter,
     floodRiskUrl,
     metaDescription,
     ...getDataJourneyClickStrings(),
@@ -64,20 +65,21 @@ function riverViewModel (stations) {
   }
 }
 
-function areaViewModel (areaName, stations) {
+function areaViewModel (areaCode, areaName, stations, queryGroup) {
   const bbox = createBbox(stations)
   stations.forEach(station => {
     setStationProperties(station)
   })
 
-  const { filters, activeFilter: queryGroup } = setFilters(stations)
+  const { filters, activeFilter } = setFilters(stations, queryGroup)
 
   deleteUndefinedProperties(stations)
 
   return {
+    slug: `target-area/${areaCode}`,
     stations,
     filters,
-    queryGroup,
+    queryGroup: activeFilter,
     floodRiskUrl,
     pageTitle,
     metaDescription,
@@ -87,7 +89,7 @@ function areaViewModel (areaName, stations) {
   }
 }
 
-function referencedStationViewModel (referencePoint, stations) {
+function referencedStationViewModel (referencePoint, stations, queryGroup) {
   const center = turf.point([referencePoint.lon, referencePoint.lat]).geometry
   const bbox = createBbox(stations)
   stations.forEach(station => {
@@ -96,14 +98,15 @@ function referencedStationViewModel (referencePoint, stations) {
   })
   stations.sort((a, b) => a.distance - b.distance)
 
-  const { filters, activeFilter: queryGroup } = setFilters(stations)
+  const { filters, activeFilter } = setFilters(stations, queryGroup)
 
   deleteUndefinedProperties(stations)
 
   return {
+    slug: `${referencePoint.type}/${referencePoint.id}`,
     stations,
     filters,
-    queryGroup,
+    queryGroup: activeFilter,
     floodRiskUrl,
     pageTitle,
     metaDescription,
@@ -113,7 +116,7 @@ function referencedStationViewModel (referencePoint, stations) {
   }
 }
 
-function placeViewModel ({ location, place, stations = [], queryGroup, canonical, q }) {
+function placeViewModel ({ location, place, stations = [], queryGroup, canonical }) {
   let distStatement, title, description
 
   const isEngland = place ? place.isEngland.is_england : true
@@ -142,7 +145,8 @@ function placeViewModel ({ location, place, stations = [], queryGroup, canonical
     filters,
     floodRiskUrl,
     distStatement,
-    q: q || location,
+    q: place.query,
+    slug: place.slug,
     clientModel: getClientModel(isEngland ? place.bbox10k : []),
     queryGroup: activeFilter,
     placeAddress: place.address,

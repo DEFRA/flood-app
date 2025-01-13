@@ -6,6 +6,8 @@ const bingResultsParser = require('./lib/bing-results-parser')
 const LocationSearchError = require('../location-search-error')
 const floodServices = require('./flood')
 
+const MAX_BING_RESULTS = 3
+
 function bingSearchNotNeeded (searchTerm) {
   const mustNotMatch = /[<>]|^england$|^scotland$|^wales$|^united kingdom$|^northern ireland$/i
   const mustMatch = /[a-zA-Z0-9]/
@@ -41,7 +43,7 @@ async function find (location) {
   }
 
   const query = encodeURIComponent(validatedLocation)
-  const url = util.format(bingUrl, query, bingKeyLocation)
+  const url = util.format(bingUrl, query, MAX_BING_RESULTS, bingKeyLocation)
 
   let bingData
   try {

@@ -492,7 +492,7 @@ lab.experiment('Routes test - location - 2', () => {
       const root = parse(response.payload)
       const targetText = 'Find a river, sea, groundwater or rainfall level in this area'
       const anchor = root.querySelectorAll('a').find(a => a.text.trim() === targetText)
-      Code.expect(anchor.getAttribute('href')).to.equal('/river-and-sea-levels?q=Warrington')
+      Code.expect(anchor.getAttribute('href')).to.equal('/river-and-sea-levels/warrington')
     })
   })
 

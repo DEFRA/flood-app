@@ -2,6 +2,7 @@
   "location": "cheshire",
   "place": {
     "name": "Cheshire",
+    "slug": "cheshire",
     "center": [
       -2.338408,
       53.09888
@@ -16,8 +17,7 @@
     "isEngland": {
       "is_england": true
     },
-    "isUK": true,
-    "isScotlandOrNorthernIreland": false
+    "isUK": true
   },
   "stations": [
     {
