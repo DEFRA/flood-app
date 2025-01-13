@@ -52,14 +52,14 @@
                 <span class="defra-flood-data-list__description">Height</span>
                 <span class="defra-flood-data-list__value">
                     {% if model.type != 'C' and model.value < 0 %}
-                        0
+                        0.00
                     {% else %}
-                        {{ model.value | round(2) }}
-                    {% endif %}m
+                        {{ (model.value).toFixed(2) }}m
+                    {% endif %}
                 </span>
             </dd>
         </div>
-        {% if model.value and model.type !== 'R' and model.status !== 'Closed' and model.status !== 'Suspended' and not model.iswales %}
+        {% if model.value and model.type !== 'R' and model.status !== 'Closed' and model.status !== 'Suspended' %}
         <div class="defra-flood-data-list__column">
             <dt class="govuk-visually-hidden">Trend</dt>
             <dd>
@@ -74,7 +74,7 @@
             </dd>
         </div>
         {% endif %}
-        {% if model.value and model.type !== 'C' and model.status !== 'Closed' and model.status !== 'Suspended' and not model.iswales %}
+        {% if model.value and model.type !== 'C' and model.status !== 'Closed' and model.status !== 'Suspended' %}
         <div class="defra-flood-data-list__column">
             <dt class="govuk-visually-hidden">State</dt>
             <dd>
