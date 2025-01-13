@@ -16,8 +16,8 @@ const {
 } = require('../lib/helpers/html-expectations')
 const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
 
-function warningBlockChecker (warningHeaders, header, warnings) {
-  const h3 = headingChecker(warningHeaders, 'h3', header, warnings)
+function warningBlockChecker (warningHeaders, headingText, warnings) {
+  const h3 = headingChecker(warningHeaders, 'h3', headingText)
   // finds all anchors related to a given heading by a child or a sibling
   // relationship
   const warningAnchors = h3.parentNode.querySelectorAll('ul.defra-flood-warnings-list__items a')
@@ -240,6 +240,31 @@ lab.experiment('Test - /alerts-warnings', () => {
         slug: '/target-area/013WAFLM'
       }]
     )
+  })
+
+  lab.test('GET /alerts-and-warnings/{location} with location and no warnings', async () => {
+    stubs.getJson.callsFake(() => data.warringtonGetJson)
+    stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+    stubs.getFloodsWithin.callsFake(() => data.noWarningsOrAlerts)
+    stubs.getStationsWithin.callsFake(() => [])
+    stubs.getImpactsWithin.callsFake(() => [])
+
+    const options = {
+      method: 'GET',
+      url: '/alerts-and-warnings/warrington'
+    }
+
+    const response = await server.inject(options)
+
+    Code.expect(response.statusCode).to.equal(200)
+    const root = parse(response.payload)
+
+    const input = root.querySelector('input.defra-search__input')
+    attributeChecker(input, 'value', 'Warrington')
+
+    headingChecker(root, 'h2', "No alerts or warnings found for 'Warrington', England")
+    const warningList = root.querySelector('ul.defra-flood-warnings-list')
+    Code.expect(warningList).to.be.null()
   })
 
   lab.test('GET /alerts-and-warnings/{location} with invalid location', async () => {
