@@ -1,4 +1,4 @@
-const joi = require('@hapi/joi')
+const joi = require('joi')
 const ViewModel = require('../models/views/target-area')
 
 module.exports = {

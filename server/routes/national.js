@@ -1,4 +1,4 @@
-const joi = require('@hapi/joi')
+const joi = require('joi')
 const OutlookModel = require('../models/outlook')
 const FloodsModel = require('../models/floods')
 const ViewModel = require('../models/views/national')

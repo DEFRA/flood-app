@@ -1,4 +1,4 @@
-const joi = require('@hapi/joi')
+const joi = require('joi')
 const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/station')
 const additionalWelshStations = [4162, 4170, 4173, 4174, 4176]
