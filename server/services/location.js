@@ -4,7 +4,6 @@ const { getJson } = require('../util')
 const util = require('util')
 const bingResultsParser = require('./lib/bing-results-parser')
 const LocationSearchError = require('../location-search-error')
-const floodServices = require('./flood')
 
 const MAX_BING_RESULTS = 3
 
@@ -54,7 +53,7 @@ async function find (location) {
 
   validateBingResponse(bingData)
 
-  return bingResultsParser(bingData, floodServices.getIsEngland)
+  return bingResultsParser(bingData)
 }
 
 module.exports = { find }
