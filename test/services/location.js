@@ -10,24 +10,21 @@ const adminDivision1 = require('./data/location/wales.json')
 const LocationSearchError = require('../../server/location-search-error')
 const flushAppRequireCache = require('../lib/flush-app-require-cache')
 
-function setupStubs (context, locationData, isEngland = true) {
+function setupStubs (context, locationData) {
   context.stubs.getJson.onFirstCall().returns(locationData)
-  context.stubs.getIsEngland.returns({ is_england: isEngland })
 }
 
 describe('location service', () => {
-  let location, util, floodServices, context
+  let location, util, context
   beforeEach(() => {
     flushAppRequireCache()
     const config = require('../../server/config')
     sinon.stub(config, 'bingUrl').value('http://bing?query=%s&maxResults=%s&key=%s')
     sinon.stub(config, 'bingKeyLocation').value('12345')
     util = require('../../server/util')
-    floodServices = require('../../server/services/flood')
     context = {
       stubs: {
-        getJson: sinon.stub(util, 'getJson'),
-        getIsEngland: sinon.stub(floodServices, 'getIsEngland')
+        getJson: sinon.stub(util, 'getJson')
       }
     }
     location = require('../../server/services/location')
