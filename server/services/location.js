@@ -1,6 +1,6 @@
 const joi = require('joi')
 const { bingKeyLocation, bingUrl } = require('../config')
-const { getJson, slugify } = require('../util')
+const { getJson } = require('../util')
 const util = require('util')
 const bingResultsParser = require('./lib/bing-results-parser')
 const LocationSearchError = require('../location-search-error')
@@ -34,15 +34,21 @@ function validateBingResponse (response) {
   }
 }
 
-function confidencePreFilter (result) {
-  return result.confidence.toLowerCase() === 'high'
-}
-
 async function get (locationSlug) {
-  return await find(locationSlug, (r) => slugify(r.name) === locationSlug)
+  const filters = {
+    postFilter: (r) => r.slug === locationSlug
+  }
+  return await filteredFind(locationSlug, filters)
 }
 
-async function find (location, prefilter = confidencePreFilter) {
+async function find (location) {
+  const filters = {
+    preFilter: (r) => r.confidence.toLowerCase() === 'high'
+  }
+  return await filteredFind(location, filters)
+}
+
+async function filteredFind (location, filters) {
   const validatedLocation = validateSearchTerm(location)
 
   if (bingSearchNotNeeded(validatedLocation)) {
@@ -61,7 +67,7 @@ async function find (location, prefilter = confidencePreFilter) {
 
   validateBingResponse(bingData)
 
-  return bingResultsParser(bingData, prefilter)
+  return bingResultsParser(bingData, filters)
 }
 
 module.exports = { find, get }
