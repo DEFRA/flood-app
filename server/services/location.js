@@ -38,14 +38,14 @@ async function get (locationSlug) {
   const filters = {
     postFilter: (r) => r.slug === locationSlug
   }
-  return await filteredFind(locationSlug, filters)
+  return filteredFind(locationSlug, filters)
 }
 
 async function find (location) {
   const filters = {
     preFilter: (r) => r.confidence.toLowerCase() === 'high'
   }
-  return await filteredFind(location, filters)
+  return filteredFind(location, filters)
 }
 
 async function filteredFind (location, filters) {
