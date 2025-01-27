@@ -14,18 +14,17 @@ function getBingResponse (resources = []) {
   return response
 }
 
-async function checkParsedResponse (resources, stubGetEngland, expectedResult) {
+async function checkParsedResponse (resources, expectedResult) {
   const bingResponse = getBingResponse(resources)
-  const result = await bingResultsParser(bingResponse, stubGetEngland)
+  const result = await bingResultsParser(bingResponse)
   expect(result).to.equal(expectedResult)
 }
 
 experiment('bingResultsParser', () => {
   experiment('english searches', () => {
-    const stubGetEngland = async () => { return { is_england: true } }
     test('empty resource set should return empty results', async () => {
       const bingResponse = getBingResponse()
-      const result = await bingResultsParser(bingResponse, stubGetEngland)
+      const result = await bingResultsParser(bingResponse)
       expect(result).to.equal([])
     })
     test('english town location search should return populated result', async () => {
@@ -97,7 +96,7 @@ experiment('bingResultsParser', () => {
           isEngland: { is_england: true }
         }
       ]
-      checkParsedResponse(resources, stubGetEngland, expectedResult)
+      checkParsedResponse(resources, expectedResult)
     })
     test('english county search should return ceremonial county (AdminDivision1) over administrative county (AdminDivision2)', async () => {
       const resources = [
@@ -251,7 +250,7 @@ experiment('bingResultsParser', () => {
           isEngland: { is_england: true }
         }
       ]
-      checkParsedResponse(resources, stubGetEngland, expectedResult)
+      checkParsedResponse(resources, expectedResult)
     })
     test('english county search for ceremonial county should return the ceremonial county when there are no administrative counties', async () => {
       const resources = [
@@ -321,7 +320,7 @@ experiment('bingResultsParser', () => {
           isEngland: { is_england: true }
         }
       ]
-      checkParsedResponse(resources, stubGetEngland, expectedResult)
+      checkParsedResponse(resources, expectedResult)
     })
     test('successful postcode search should return populated result', async () => {
       const resources = [
@@ -371,7 +370,7 @@ experiment('bingResultsParser', () => {
         }
       ]
       const bingResponse = getBingResponse(resources)
-      const result = await bingResultsParser(bingResponse, stubGetEngland)
+      const result = await bingResultsParser(bingResponse)
 
       const expectedResult = [
         {
@@ -446,7 +445,7 @@ experiment('bingResultsParser', () => {
 
       ]
       const bingResponse = getBingResponse(resources)
-      const result = await bingResultsParser(bingResponse, stubGetEngland)
+      const result = await bingResultsParser(bingResponse)
 
       const expectedResult = [
         {
@@ -532,7 +531,7 @@ experiment('bingResultsParser', () => {
         }
       ]
       const bingResponse = getBingResponse(resources)
-      const result = await bingResultsParser(bingResponse, stubGetEngland)
+      const result = await bingResultsParser(bingResponse)
 
       expect(result).to.equal([])
     })
@@ -583,7 +582,7 @@ experiment('bingResultsParser', () => {
         }
       ]
       const bingResponse = getBingResponse(resources)
-      const result = await bingResultsParser(bingResponse, stubGetEngland)
+      const result = await bingResultsParser(bingResponse)
 
       const expectedResult = [
         {
@@ -656,7 +655,7 @@ experiment('bingResultsParser', () => {
         }
       ]
       const bingResponse = getBingResponse(resources)
-      const result = await bingResultsParser(bingResponse, stubGetEngland)
+      const result = await bingResultsParser(bingResponse)
 
       const expectedResult = []
       expect(result).to.equal(expectedResult)
@@ -708,7 +707,7 @@ experiment('bingResultsParser', () => {
         }
       ]
       const bingResponse = getBingResponse(resources)
-      const result = await bingResultsParser(bingResponse, stubGetEngland)
+      const result = await bingResultsParser(bingResponse)
 
       expect(result).to.equal([])
     })
@@ -891,7 +890,7 @@ experiment('bingResultsParser', () => {
         }
       ]
       const bingResponse = getBingResponse(resources)
-      const result = await bingResultsParser(bingResponse, stubGetEngland)
+      const result = await bingResultsParser(bingResponse)
 
       const expectedResult = [
         {
@@ -919,7 +918,6 @@ experiment('bingResultsParser', () => {
     })
   })
   experiment('non-english searches', () => {
-    const stubGetEngland = async () => { return { is_england: false } }
     test('scottish town location search should return empty result', async () => {
       const resources = [
         {
@@ -968,7 +966,7 @@ experiment('bingResultsParser', () => {
       ]
       const expectedResult = [
       ]
-      checkParsedResponse(resources, stubGetEngland, expectedResult)
+      checkParsedResponse(resources, expectedResult)
     })
     test('welsh preserved county location search should return empty result', async () => {
       const resources = [
@@ -1016,7 +1014,7 @@ experiment('bingResultsParser', () => {
       ]
       const expectedResult = [
       ]
-      checkParsedResponse(resources, stubGetEngland, expectedResult)
+      checkParsedResponse(resources, expectedResult)
     })
   })
 })
