@@ -82,7 +82,7 @@ describe('location service', () => {
       const searchTerm = 'ashford'
       await location.find(searchTerm)
       expect(context.stubs.getJson.callCount).to.equal(1)
-      expect(context.stubs.getJson.args[0][0]).to.equal(`http://bing?query=${searchTerm}&maxResults=3&key=12345`)
+      expect(context.stubs.getJson.args[0][0]).to.equal(`http://bing?query=${searchTerm}&maxResults=5&key=12345`)
     })
     it('should not query Bing if search term is longer than 60 characters', async () => {
       setupStubs(context, {})
@@ -143,6 +143,16 @@ describe('location service', () => {
           expect(context.stubs.getJson.callCount).to.equal(0)
           expect(result.length).to.equal(0)
         })
+      })
+    })
+  })
+  describe('get happy path', () => {
+    describe('get by slug', () => {
+      it('should return result matching slug', async () => {
+        setupStubs(context, populatedPlace)
+        const result = await location.get('ashford-kent')
+        expect(result.length).to.equal(1)
+        expect(result[0].name).to.equal('Ashford, Kent')
       })
     })
   })
