@@ -131,7 +131,7 @@ async function bingResultsParser (bingData) {
     })
     .filter((place, index, self) => self.findIndex(p => p.slug === place.slug) === index)
 
-  return data.slice(0, 1)
+  return data
 }
 
 module.exports = bingResultsParser
