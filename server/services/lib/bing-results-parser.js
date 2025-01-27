@@ -58,15 +58,19 @@ function slugify (text = '') {
   return text.replace(/,/g, '').replace(/ /g, '-').toLowerCase()
 }
 
-async function bingResultsParser (bingData) {
+// following discussion with team, going to try out only high confidence
+// results. This should reduce spurious results.
+const allowedConfidences = ['high']
+
+function defaultPreFilter (result) {
+  return allowedConfidences.includes(result.confidence.toLowerCase())
+}
+
+async function bingResultsParser (bingData, prefilter = defaultPreFilter) {
   const set = bingData.resourceSets[0]
   if (set.estimatedTotal === 0) {
     return []
   }
-
-  // following discussion with team, going to try out only high confidence
-  // results. This should reduce spurious results.
-  const allowedConfidences = ['high']
 
   // note that allowedTypes also captures precedance rules for when multiple
   // results are returned (e.g admindivision2 takes precedance over admindivision1)
@@ -93,7 +97,7 @@ async function bingResultsParser (bingData) {
   }
 
   const data = set.resources
-    .filter(r => allowedConfidences.includes(r.confidence.toLowerCase()))
+    .filter(prefilter)
     .filter(r => allowedTypes.includes(r.entityType.toLowerCase()))
     .filter(r => englandOnlyFilter(r))
     .sort((a, b) =>
