@@ -17,16 +17,16 @@ function getBingResponse (resources = []) {
 
 async function checkParsedResponse (resources, expectedResult) {
   const bingResponse = getBingResponse(resources)
-  const result = await bingResultsParser(bingResponse)
+  // this is the prefilter used by the service location find method
+  const preFilter = (r) => r.confidence.toLowerCase() === 'high'
+  const result = await bingResultsParser(bingResponse, preFilter)
   expect(result).to.equal(expectedResult)
 }
 
 experiment('bingResultsParser', () => {
   experiment('english searches', () => {
     test('empty resource set should return empty results', async () => {
-      const bingResponse = getBingResponse()
-      const result = await bingResultsParser(bingResponse)
-      expect(result).to.equal([])
+      checkParsedResponse([], [])
     })
     test('english town location search should return populated result', async () => {
       const resources = [
@@ -370,9 +370,6 @@ experiment('bingResultsParser', () => {
           ]
         }
       ]
-      const bingResponse = getBingResponse(resources)
-      const result = await bingResultsParser(bingResponse)
-
       const expectedResult = [
         {
           name: 'Knaresborough, HG5 0JL',
@@ -395,7 +392,7 @@ experiment('bingResultsParser', () => {
           isEngland: { is_england: true }
         }
       ]
-      expect(result).to.equal(expectedResult)
+      checkParsedResponse(resources, expectedResult)
     })
     test('successful outcode search should return populated result', async () => {
       const resources = [
@@ -445,9 +442,6 @@ experiment('bingResultsParser', () => {
         }
 
       ]
-      const bingResponse = getBingResponse(resources)
-      const result = await bingResultsParser(bingResponse)
-
       const expectedResult = [
         {
           name: 'Knaresborough, HG5',
@@ -470,7 +464,7 @@ experiment('bingResultsParser', () => {
           isEngland: { is_england: true }
         }
       ]
-      expect(result).to.equal(expectedResult)
+      checkParsedResponse(resources, expectedResult)
     })
     test('successful address search should return empty result', async () => {
       const resources = [
@@ -531,10 +525,7 @@ experiment('bingResultsParser', () => {
           ]
         }
       ]
-      const bingResponse = getBingResponse(resources)
-      const result = await bingResultsParser(bingResponse)
-
-      expect(result).to.equal([])
+      checkParsedResponse(resources, [])
     })
     test('high confidence response should return populated result', async () => {
       const resources = [
@@ -582,9 +573,6 @@ experiment('bingResultsParser', () => {
           ]
         }
       ]
-      const bingResponse = getBingResponse(resources)
-      const result = await bingResultsParser(bingResponse)
-
       const expectedResult = [
         {
           name: 'Knaresborough, North Yorkshire',
@@ -607,7 +595,7 @@ experiment('bingResultsParser', () => {
           isEngland: { is_england: true }
         }
       ]
-      expect(result).to.equal(expectedResult)
+      checkParsedResponse(resources, expectedResult)
     })
     test('medium confidence response should return empty result', async () => {
       const resources = [
@@ -655,11 +643,8 @@ experiment('bingResultsParser', () => {
           ]
         }
       ]
-      const bingResponse = getBingResponse(resources)
-      const result = await bingResultsParser(bingResponse)
-
       const expectedResult = []
-      expect(result).to.equal(expectedResult)
+      checkParsedResponse(resources, expectedResult)
     })
     test('low confidence response should return empty result', async () => {
       const resources = [
@@ -707,10 +692,7 @@ experiment('bingResultsParser', () => {
           ]
         }
       ]
-      const bingResponse = getBingResponse(resources)
-      const result = await bingResultsParser(bingResponse)
-
-      expect(result).to.equal([])
+      checkParsedResponse(resources, [])
     })
     test('multiple items in response should return the first non-low confidence result', async () => {
       // Note: we currently limit the max results returned from bing using the maxResults URL query parameter
@@ -890,8 +872,6 @@ experiment('bingResultsParser', () => {
           ]
         }
       ]
-      const bingResponse = getBingResponse(resources)
-      const result = await bingResultsParser(bingResponse)
 
       const expectedResult = [
         {
@@ -915,7 +895,7 @@ experiment('bingResultsParser', () => {
           isEngland: { is_england: true }
         }
       ]
-      expect(result).to.equal(expectedResult)
+      checkParsedResponse(resources, expectedResult)
     })
     test('can find a result in the response by slug regardless of confidence level', async () => {
       const resources = [
@@ -1092,6 +1072,7 @@ experiment('bingResultsParser', () => {
         }
       ]
       const bingResponse = getBingResponse(resources)
+      // this is the prefilter used by the service location get method
       const customFilter = (r) => slugify(r.name) === 'ashford-surrey'
       const result = await bingResultsParser(bingResponse, customFilter)
 

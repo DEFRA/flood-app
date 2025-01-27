@@ -54,15 +54,7 @@ const englishCeremonialCounties =
       'worcestershire'
     ]
 
-// following discussion with team, going to try out only high confidence
-// results. This should reduce spurious results.
-const allowedConfidences = ['high']
-
-function defaultPreFilter (result) {
-  return allowedConfidences.includes(result.confidence.toLowerCase())
-}
-
-async function bingResultsParser (bingData, prefilter = defaultPreFilter) {
+async function bingResultsParser (bingData, prefilter) {
   const set = bingData.resourceSets[0]
   if (set.estimatedTotal === 0) {
     return []
@@ -99,9 +91,6 @@ async function bingResultsParser (bingData, prefilter = defaultPreFilter) {
     .sort((a, b) =>
       allowedTypes.indexOf(a.entityType.toLowerCase()) -
       allowedTypes.indexOf(b.entityType.toLowerCase()))
-    .sort((a, b) =>
-      allowedConfidences.indexOf(a.confidence.toLowerCase()) -
-      allowedConfidences.indexOf(b.confidence.toLowerCase()))
     .map(r => {
       const name = formatName(r.name)
       const bbox = r.bbox.reverse()
