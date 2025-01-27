@@ -54,7 +54,7 @@ const englishCeremonialCounties =
       'worcestershire'
     ]
 
-const passThroughFilter = (r) => true
+const passThroughFilter = () => true
 
 async function bingResultsParser (bingData, { preFilter = passThroughFilter, postFilter = passThroughFilter }) {
   const set = bingData.resourceSets[0]
