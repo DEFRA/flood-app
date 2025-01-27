@@ -1,11 +1,11 @@
 const joi = require('@hapi/joi')
 const { bingKeyLocation, bingUrl } = require('../config')
-const { getJson } = require('../util')
+const { getJson, slugify } = require('../util')
 const util = require('util')
 const bingResultsParser = require('./lib/bing-results-parser')
 const LocationSearchError = require('../location-search-error')
 
-const MAX_BING_RESULTS = 3
+const MAX_BING_RESULTS = 5
 
 function bingSearchNotNeeded (searchTerm) {
   const mustNotMatch = /[<>]|^england$|^scotland$|^wales$|^united kingdom$|^northern ireland$/i
@@ -34,7 +34,15 @@ function validateBingResponse (response) {
   }
 }
 
-async function find (location) {
+function confidencePreFilter (result) {
+  return result.confidence.toLowerCase() === 'high'
+}
+
+async function get (locationSlug) {
+  return await find(locationSlug, (r) => slugify(r.name) === locationSlug)
+}
+
+async function find (location, prefilter = confidencePreFilter) {
   const validatedLocation = validateSearchTerm(location)
 
   if (bingSearchNotNeeded(validatedLocation)) {
@@ -53,7 +61,7 @@ async function find (location) {
 
   validateBingResponse(bingData)
 
-  return bingResultsParser(bingData)
+  return bingResultsParser(bingData, prefilter)
 }
 
-module.exports = { find }
+module.exports = { find, get }
