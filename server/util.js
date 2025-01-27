@@ -187,6 +187,10 @@ function formatName (name) {
   return removeCityQualifiers(removeRepeatingEntries(name))
 }
 
+function slugify (text = '') {
+  return text.replace(/,/g, '').replace(/ /g, '-').toLowerCase()
+}
+
 module.exports = {
   get,
   post,
@@ -201,6 +205,7 @@ module.exports = {
   addBufferToBbox,
   formatValue,
   formatName,
+  slugify,
   toMarked,
   dateDiff,
   formatRainfallTelemetry,

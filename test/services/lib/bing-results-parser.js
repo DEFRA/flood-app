@@ -3,6 +3,7 @@ const { expect } = require('@hapi/code')
 const { experiment, test } = exports.lab = Lab.script()
 const responseTemplate = require('./bing-results-template.json')
 
+const { slugify } = require('../../../server/util')
 const bingResultsParser = require('../../../server/services/lib/bing-results-parser')
 
 function getBingResponse (resources = []) {
@@ -909,6 +910,208 @@ experiment('bingResultsParser', () => {
             51.034125753112406,
             1.0699404409236273,
             51.267098001671634
+          ],
+          isUK: true,
+          isEngland: { is_england: true }
+        }
+      ]
+      expect(result).to.equal(expectedResult)
+    })
+    test('can find a result in the response by slug regardless of confidence level', async () => {
+      const resources = [
+        {
+          __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+          bbox: [
+            51.12405776977539,
+            0.8380475640296936,
+            51.17716598510742,
+            0.9264887571334839
+          ],
+          name: 'Ashford, Kent',
+          point: {
+            type: 'Point',
+            coordinates: [
+              51.14772797,
+              0.87279475
+            ]
+          },
+          address: {
+            adminDistrict: 'England',
+            adminDistrict2: 'Kent',
+            countryRegion: 'United Kingdom',
+            formattedAddress: 'Ashford, Kent',
+            locality: 'Ashford',
+            countryRegionIso2: 'GB'
+          },
+          confidence: 'High',
+          entityType: 'PopulatedPlace',
+          geocodePoints: [
+            {
+              type: 'Point',
+              coordinates: [
+                51.14772797,
+                0.87279475
+              ],
+              calculationMethod: 'Rooftop',
+              usageTypes: [
+                'Display'
+              ]
+            }
+          ],
+          matchCodes: [
+            'Good'
+          ]
+        },
+        {
+          __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+          bbox: [
+            51.02236557006836,
+            -0.4873929023742676,
+            51.44563293457031,
+            1.0504722595214844
+          ],
+          name: 'Ashford, Surrey',
+          point: {
+            type: 'Point',
+            coordinates: [
+              51.43230057,
+              -0.46049938
+            ]
+          },
+          address: {
+            adminDistrict: 'England',
+            adminDistrict2: 'Surrey',
+            countryRegion: 'United Kingdom',
+            formattedAddress: 'Ashford, Surrey',
+            locality: 'Ashford',
+            countryRegionIso2: 'GB'
+          },
+          confidence: 'Medium',
+          entityType: 'PopulatedPlace',
+          geocodePoints: [
+            {
+              type: 'Point',
+              coordinates: [
+                51.43230057,
+                -0.46049938
+              ],
+              calculationMethod: 'Rooftop',
+              usageTypes: [
+                'Display'
+              ]
+            }
+          ],
+          matchCodes: [
+            'Good'
+          ]
+        },
+        {
+          __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+          bbox: [
+            50.89913783233948,
+            -1.8659905171462143,
+            50.957078598324586,
+            -1.7434982085160171
+          ],
+          name: 'Ashford, Fordingbridge, Hampshire',
+          point: {
+            type: 'Point',
+            coordinates: [
+              50.92810822,
+              -1.80474436
+            ]
+          },
+          address: {
+            adminDistrict: 'England',
+            adminDistrict2: 'Hampshire',
+            countryRegion: 'United Kingdom',
+            formattedAddress: 'Ashford, Fordingbridge, Hampshire',
+            locality: 'Ashford',
+            countryRegionIso2: 'GB'
+          },
+          confidence: 'Medium',
+          entityType: 'PopulatedPlace',
+          geocodePoints: [
+            {
+              type: 'Point',
+              coordinates: [
+                50.92810822,
+                -1.80474436
+              ],
+              calculationMethod: 'Rooftop',
+              usageTypes: [
+                'Display'
+              ]
+            }
+          ],
+          matchCodes: [
+            'Good'
+          ]
+        },
+        {
+          __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+          bbox: [
+            50.9887580871582,
+            0.5919979214668274,
+            51.26953887939453,
+            1.030938744544983
+          ],
+          name: 'Ashford',
+          point: {
+            type: 'Point',
+            coordinates: [
+              51.13436127,
+              0.83433753
+            ]
+          },
+          address: {
+            adminDistrict: 'England',
+            adminDistrict2: 'Kent',
+            countryRegion: 'United Kingdom',
+            formattedAddress: 'Ashford',
+            countryRegionIso2: 'GB'
+          },
+          confidence: 'Low',
+          entityType: 'AdminDivision3',
+          geocodePoints: [
+            {
+              type: 'Point',
+              coordinates: [
+                51.13436127,
+                0.83433753
+              ],
+              calculationMethod: 'Rooftop',
+              usageTypes: [
+                'Display'
+              ]
+            }
+          ],
+          matchCodes: [
+            'Good'
+          ]
+        }
+      ]
+      const bingResponse = getBingResponse(resources)
+      const customFilter = (r) => slugify(r.name) === 'ashford-surrey'
+      const result = await bingResultsParser(bingResponse, customFilter)
+
+      const expectedResult = [
+        {
+          name: 'Ashford, Surrey',
+          query: 'Ashford, Surrey',
+          slug: 'ashford-surrey',
+          center: [-0.46049938, 51.43230057],
+          bbox2k: [
+            -0.5162515713809895,
+            51.00438035668807,
+            1.0793309285282062,
+            51.463618142955355
+          ],
+          bbox10k: [
+            -0.631686066459741,
+            50.9324394922677,
+            1.194765423606958,
+            51.53555896537625
           ],
           isUK: true,
           isEngland: { is_england: true }
