@@ -217,7 +217,7 @@ const unknownPlaces = [
 // These are towns where searching by the Bing qualified name doesn't
 // return a high confidence location which matches the Bing name
 const brokenPlaces = [
-  'Dartinton', // => Dartington, Totnes, Devon => none
+  'Dartington', // => Dartington, Totnes, Devon => none
   'Kington', // => Kington, County of Herefordshire => none
   'Stoke Gabriel' // => Stoke Gabriel, Totnes, Devon => none
 ]

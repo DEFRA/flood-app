@@ -30,9 +30,9 @@ async function routeHandler (request, h) {
     return h.redirect('/')
   }
 
-  const [place] = await locationService.find(location)
+  const [place] = await locationService.get(location)
 
-  if (place?.slug !== location) {
+  if (!place) {
     return boom.notFound(`Location ${location} not found`)
   }
 

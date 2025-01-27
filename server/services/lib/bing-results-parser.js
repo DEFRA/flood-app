@@ -54,7 +54,9 @@ const englishCeremonialCounties =
       'worcestershire'
     ]
 
-async function bingResultsParser (bingData, prefilter) {
+const passThroughFilter = (r) => true
+
+async function bingResultsParser (bingData, { preFilter = passThroughFilter, postFilter = passThroughFilter }) {
   const set = bingData.resourceSets[0]
   if (set.estimatedTotal === 0) {
     return []
@@ -76,7 +78,7 @@ async function bingResultsParser (bingData, prefilter) {
       return englishCeremonialCounties.indexOf(r.name.toLowerCase()) >= 0
     }
 
-    return r.address.adminDistrict.toLowerCase() === 'england'
+    return r.address.adminDistrict?.toLowerCase() === 'england'
   }
 
   const distanceInMetres = {
@@ -85,7 +87,7 @@ async function bingResultsParser (bingData, prefilter) {
   }
 
   const data = set.resources
-    .filter(prefilter)
+    .filter(preFilter)
     .filter(r => allowedTypes.includes(r.entityType.toLowerCase()))
     .filter(r => englandOnlyFilter(r))
     .sort((a, b) =>
@@ -119,6 +121,7 @@ async function bingResultsParser (bingData, prefilter) {
       }
     })
     .filter((place, index, self) => self.findIndex(p => p.slug === place.slug) === index)
+    .filter(postFilter)
 
   return data
 }

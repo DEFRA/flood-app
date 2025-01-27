@@ -3,7 +3,6 @@ const { expect } = require('@hapi/code')
 const { experiment, test } = exports.lab = Lab.script()
 const responseTemplate = require('./bing-results-template.json')
 
-const { slugify } = require('../../../server/util')
 const bingResultsParser = require('../../../server/services/lib/bing-results-parser')
 
 function getBingResponse (resources = []) {
@@ -19,7 +18,7 @@ async function checkParsedResponse (resources, expectedResult) {
   const bingResponse = getBingResponse(resources)
   // this is the prefilter used by the service location find method
   const preFilter = (r) => r.confidence.toLowerCase() === 'high'
-  const result = await bingResultsParser(bingResponse, preFilter)
+  const result = await bingResultsParser(bingResponse, { preFilter })
   expect(result).to.equal(expectedResult)
 }
 
@@ -694,7 +693,7 @@ experiment('bingResultsParser', () => {
       ]
       checkParsedResponse(resources, [])
     })
-    test('multiple items in response should return the first non-low confidence result', async () => {
+    test('multiple items in response should return the only high confidence result', async () => {
       // Note: we currently limit the max results returned from bing using the maxResults URL query parameter
       // to just 1
       // The results are still returned as an array with just a single entry but this test demonstrates that
@@ -1073,8 +1072,8 @@ experiment('bingResultsParser', () => {
       ]
       const bingResponse = getBingResponse(resources)
       // this is the prefilter used by the service location get method
-      const customFilter = (r) => slugify(r.name) === 'ashford-surrey'
-      const result = await bingResultsParser(bingResponse, customFilter)
+      const postFilter = (r) => r.slug === 'ashford-surrey'
+      const result = await bingResultsParser(bingResponse, { postFilter })
 
       const expectedResult = [
         {
@@ -1093,6 +1092,166 @@ experiment('bingResultsParser', () => {
             50.9324394922677,
             1.194765423606958,
             51.53555896537625
+          ],
+          isUK: true,
+          isEngland: { is_england: true }
+        }
+      ]
+      expect(result).to.equal(expectedResult)
+    })
+    test('can find a result in the response by slug even when name has been de-duplicated', async () => {
+      const resources = [
+        {
+          __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+          bbox: [
+            53.289649963378906,
+            -2.694925308227539,
+            53.493385314941406,
+            -2.451319694519043
+          ],
+          name: 'Warrington, Warrington',
+          point: {
+            type: 'Point',
+            coordinates: [
+              53.38956833,
+              -2.59089661
+            ]
+          },
+          address: {
+            adminDistrict: 'England',
+            adminDistrict2: 'Warrington',
+            countryRegion: 'United Kingdom',
+            formattedAddress: 'Warrington, Warrington',
+            locality: 'Warrington',
+            countryRegionIso2: 'GB'
+          },
+          confidence: 'High',
+          entityType: 'PopulatedPlace',
+          geocodePoints: [
+            {
+              type: 'Point',
+              coordinates: [
+                53.38956833,
+                -2.59089661
+              ],
+              calculationMethod: 'Rooftop',
+              usageTypes: [
+                'Display'
+              ]
+            }
+          ],
+          matchCodes: [
+            'Good'
+          ]
+        },
+        {
+          __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+          bbox: [
+            53.322303771972656,
+            -2.6977343559265137,
+            53.48092269897461,
+            -2.4253716468811035
+          ],
+          name: 'Warrington',
+          point: {
+            type: 'Point',
+            coordinates: [
+              53.397789,
+              -2.57385659
+            ]
+          },
+          address: {
+            adminDistrict: 'England',
+            adminDistrict2: 'Warrington',
+            countryRegion: 'United Kingdom',
+            formattedAddress: 'Warrington',
+            countryRegionIso2: 'GB'
+          },
+          confidence: 'High',
+          entityType: 'AdminDivision2',
+          geocodePoints: [
+            {
+              type: 'Point',
+              coordinates: [
+                53.397789,
+                -2.57385659
+              ],
+              calculationMethod: 'Rooftop',
+              usageTypes: [
+                'Display'
+              ]
+            }
+          ],
+          matchCodes: [
+            'Good'
+          ]
+        },
+        {
+          __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+          bbox: [
+            52.162532806396484,
+            -0.7140147089958191,
+            52.196353912353516,
+            -0.6784347295761108
+          ],
+          name: 'Warrington, Olney, Milton Keynes',
+          point: {
+            type: 'Point',
+            coordinates: [
+              52.17710495,
+              -0.6892029
+            ]
+          },
+          address: {
+            adminDistrict: 'England',
+            adminDistrict2: 'Milton Keynes',
+            countryRegion: 'United Kingdom',
+            formattedAddress: 'Warrington, Olney, Milton Keynes',
+            locality: 'Warrington',
+            countryRegionIso2: 'GB'
+          },
+          confidence: 'Medium',
+          entityType: 'PopulatedPlace',
+          geocodePoints: [
+            {
+              type: 'Point',
+              coordinates: [
+                52.17710495,
+                -0.6892029
+              ],
+              calculationMethod: 'Rooftop',
+              usageTypes: [
+                'Display'
+              ]
+            }
+          ],
+          matchCodes: [
+            'Good'
+          ]
+        }
+      ]
+      const bingResponse = getBingResponse(resources)
+      // this is the post filter used by the service location get method
+      const slugFilter = (r) => r.slug === 'warrington'
+      const result = await bingResultsParser(bingResponse, { postFilter: slugFilter })
+
+      const expectedResult = [
+        {
+          name: 'Warrington',
+          query: 'Warrington',
+          slug: 'warrington',
+          center: [-2.57385659, 53.397789],
+          bbox2k: [
+            -2.727959007910171,
+            53.30431740342236,
+            -2.3951469948974466,
+            53.49890906744219
+          ],
+          bbox10k: [
+            -2.8488573986091374,
+            53.23237192884462,
+            -2.2742486041984797,
+            53.57085454093165
           ],
           isUK: true,
           isEngland: { is_england: true }
