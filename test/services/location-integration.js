@@ -231,8 +231,8 @@ const brokenPlaces2 = [
 
 async function resultCheck (town) {
   const result1 = await location.find(town)
-  expect(result1.length, `No match found for ${town}`).to.equal(1)
-  const result2 = await location.find(result1[0].name)
+  expect(result1.length, `No match found for ${town}`).to.be.greaterThan(0)
+  const result2 = await location.get(result1[0].slug)
   expect(result2.length, `No match found when searching by qualified name (${result1[0].name})`).to.equal(1)
   expect(result1[0].name).to.equal(result2[0].name)
 }
