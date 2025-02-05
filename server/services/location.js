@@ -1,4 +1,4 @@
-const joi = require('@hapi/joi')
+const joi = require('joi')
 const { bingKeyLocation, bingUrl } = require('../config')
 const { getJson } = require('../util')
 const util = require('util')

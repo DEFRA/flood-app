@@ -17,9 +17,8 @@
 
 
   1 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
-
-
-Execute smoke tests and forward results
+  
+  2 -  Execute smoke tests and forward results
 
 ## Notes
 

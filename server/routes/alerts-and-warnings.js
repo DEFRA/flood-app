@@ -1,4 +1,4 @@
-const joi = require('@hapi/joi')
+const joi = require('joi')
 const ViewModel = require('../models/views/alerts-and-warnings')
 const Floods = require('../models/floods')
 const locationService = require('../services/location')
