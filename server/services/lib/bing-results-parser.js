@@ -126,4 +126,17 @@ async function bingResultsParser (bingData, { preFilter = passThroughFilter, pos
   return data
 }
 
-module.exports = bingResultsParser
+async function find (bingResponse) {
+  const preFilter = (r) => r.confidence.toLowerCase() === 'high'
+  return bingResultsParser(bingResponse, { preFilter })
+}
+
+async function get (bingResponse, slug) {
+  const postFilter = (r) => r.slug === slug
+  return bingResultsParser(bingResponse, { postFilter })
+}
+
+module.exports = {
+  find,
+  get
+}

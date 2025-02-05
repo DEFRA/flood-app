@@ -2,7 +2,7 @@ const joi = require('@hapi/joi')
 const { bingKeyLocation, bingUrl } = require('../config')
 const { getJson } = require('../util')
 const util = require('util')
-const bingResultsParser = require('./lib/bing-results-parser')
+const { find, get } = require('./lib/bing-results-parser')
 const LocationSearchError = require('../location-search-error')
 
 const MAX_BING_RESULTS = 5
@@ -34,29 +34,16 @@ function validateBingResponse (response) {
   }
 }
 
-async function get (locationSlug) {
-  const filters = {
-    postFilter: (r) => r.slug === locationSlug
-  }
-  return filteredFind(locationSlug, filters)
-}
+async function getBingResponse (query) {
+  const validatedQuery = validateSearchTerm(query)
+  const emptyBingResponse = { resourceSets: [{ estimatedTotal: 0 }] }
 
-async function find (location) {
-  const filters = {
-    preFilter: (r) => r.confidence.toLowerCase() === 'high'
-  }
-  return filteredFind(location, filters)
-}
-
-async function filteredFind (location, filters) {
-  const validatedLocation = validateSearchTerm(location)
-
-  if (bingSearchNotNeeded(validatedLocation)) {
-    return []
+  if (bingSearchNotNeeded(validatedQuery)) {
+    return emptyBingResponse
   }
 
-  const query = encodeURIComponent(validatedLocation)
-  const url = util.format(bingUrl, query, MAX_BING_RESULTS, bingKeyLocation)
+  const encodedQuery = encodeURIComponent(validatedQuery)
+  const url = util.format(bingUrl, encodedQuery, MAX_BING_RESULTS, bingKeyLocation)
 
   let bingData
   try {
@@ -67,7 +54,20 @@ async function filteredFind (location, filters) {
 
   validateBingResponse(bingData)
 
-  return bingResultsParser(bingData, filters)
+  return bingData
 }
 
-module.exports = { find, get }
+async function getLocationBySlug (locationSlug) {
+  const bingData = await getBingResponse(locationSlug)
+  return get(bingData, locationSlug)
+}
+
+async function findLocationByQuery (locationQuery) {
+  const bingData = await getBingResponse(locationQuery)
+  return find(bingData)
+}
+
+module.exports = {
+  find: findLocationByQuery,
+  get: getLocationBySlug
+}
