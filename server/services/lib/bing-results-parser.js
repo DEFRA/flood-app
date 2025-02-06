@@ -122,6 +122,9 @@ const removeDuplicatesFilter = (place, index, self) =>
   self.findIndex(p => p.slug === place.slug) === index
 
 async function find (bingResponse) {
+  // This function is for processing all query results returned by Bing filtered by
+  // confidence, entity type and england only. It contrasts with the get
+  // function below which aims to retrieve a location based on the slugified name
   const set = bingResponse.resourceSets[0]
   return set.estimatedTotal
     ? set.resources
@@ -134,6 +137,17 @@ async function find (bingResponse) {
 }
 
 async function get (bingResponse, slug) {
+  // * this function is for processing all results returned by Bing to identify a location in
+  // the results using the psuedo id (the name slugified)
+  // * since we generate the slug we assume we have already found the location using
+  // find function above.
+  // Although in almost all cases passing all terms in the name back at Bing in
+  // the form of the slug results in the original result being returned as the
+  // first high confidence result there are a small number of locations where
+  // this assumption does not hold.
+  // In order to deal with this scenario, we parse the multiple results
+  // returned from bing and look for a matching slug regardless of the confidence
+  // value (we do still filter by england only and allowed entity types)
   const matchingSlugFilter = (r) => r.slug === slug
   const set = bingResponse.resourceSets[0]
   return set.estimatedTotal
