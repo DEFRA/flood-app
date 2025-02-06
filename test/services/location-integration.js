@@ -136,6 +136,7 @@ const towns = [
   'Corsham',
   'Crediton',
   'Crewkerne',
+  'Dartington',
   'Daventry',
   'Deal',
   'Dereham',
@@ -163,6 +164,7 @@ const towns = [
   'Hexham',
   'Hitchin',
   'Honiton',
+  'Hoxne',
   'Hungerford',
   'Ilkeston',
   'Kendal',
@@ -202,6 +204,7 @@ const towns = [
   'Sandbach',
   'Shepton Mallet',
   'St Ives, Cornwall',
+  'Stoke Gabriel',
   'Stone',
   'Wetherby'
 ]
@@ -217,16 +220,13 @@ const unknownPlaces = [
 // These are towns where searching by the Bing qualified name doesn't
 // return a high confidence location which matches the Bing name
 const brokenPlaces = [
-  'Dartington', // => Dartington, Totnes, Devon => none
-  'Kington', // => Kington, County of Herefordshire => none
-  'Stoke Gabriel' // => Stoke Gabriel, Totnes, Devon => none
+  'Kington' // => Kington, County of Herefordshire => none
 ]
 
 // These are towns where searching by the Bing qualified name
 // returns a different high confidence location which doesn't match
-// the Bing name
+// the Bing name, was hoxne but now works
 const brokenPlaces2 = [
-  'Hoxne' // => Hoxne, Eye, Suffolk => Suffolk
 ]
 
 async function resultCheck (town) {
