@@ -73,7 +73,7 @@ async function bingResultsParser (bingData, { preFilter = passThroughFilter, pos
     'neighborhood'
   ]
 
-  function englandOnlyFilter (r) {
+  const englandOnlyFilter = r => {
     if (r.entityType.toLowerCase() === 'admindivision1') {
       return englishCeremonialCounties.indexOf(r.name.toLowerCase()) >= 0
     }
@@ -86,41 +86,48 @@ async function bingResultsParser (bingData, { preFilter = passThroughFilter, pos
     '10k': 10000
   }
 
+  const mapper = r => {
+    const name = formatName(r.name)
+    const bbox = r.bbox.reverse()
+    // query is the value to use in a search box or the slug to replicate the
+    // search and get the same result. If the bing format of the name (place
+    // name + postcode) is used then some postcode searches which were
+    // successful will subsequently fail to find a postcode with the same name
+    // e.g TQ9 6JZ => Dartington, Totnes TQ9 6JZ => returns the postcode but
+    // with a different name (Totnes, TQ9 6JZ, United Kingdom)
+    // This causes problems with validity checking
+    // Retained both name and query for display purposes for post codes
+    // (even though name and query are the are the same for non-postcodes)
+    const query = ['postcode1', 'postcode3'].includes(r.entityType.toLowerCase())
+      ? r.address.postalCode
+      : name
+
+    return {
+      name,
+      query,
+      slug: slugify(query),
+      center: r.point.coordinates.reverse(),
+      bbox2k: addBufferToBbox(bbox, distanceInMetres['2k']),
+      bbox10k: addBufferToBbox(bbox, distanceInMetres['10k']),
+      isUK: r.address.countryRegionIso2 === 'GB',
+      isEngland: { is_england: true }
+    }
+  }
+
+  const allowedTypesFilter = r => allowedTypes.includes(r.entityType.toLowerCase())
+
+  const typesSort = (a, b) =>
+    allowedTypes.indexOf(a.entityType.toLowerCase()) - allowedTypes.indexOf(b.entityType.toLowerCase())
+
+  const removeDuplicatesFilter = (place, index, self) => self.findIndex(p => p.slug === place.slug) === index
+
   const data = set.resources
     .filter(preFilter)
-    .filter(r => allowedTypes.includes(r.entityType.toLowerCase()))
-    .filter(r => englandOnlyFilter(r))
-    .sort((a, b) =>
-      allowedTypes.indexOf(a.entityType.toLowerCase()) -
-      allowedTypes.indexOf(b.entityType.toLowerCase()))
-    .map(r => {
-      const name = formatName(r.name)
-      const bbox = r.bbox.reverse()
-      // query is the value to use in a search box or the slug to replicate the
-      // search and get the same result. If the bing format of the name (place
-      // name + postcode) is used then some postcode searches which were
-      // successful will subsequently fail to find a postcode with the same name
-      // e.g TQ9 6JZ => Dartington, Totnes TQ9 6JZ => returns the postcode but
-      // with a different name (Totnes, TQ9 6JZ, United Kingdom)
-      // This causes problems with validity checking
-      // Retained both name and query for display purposes for post codes
-      // (even though name and query are the are the same for non-postcodes)
-      const query = ['postcode1', 'postcode3'].includes(r.entityType.toLowerCase())
-        ? r.address.postalCode
-        : name
-
-      return {
-        name,
-        query,
-        slug: slugify(query),
-        center: r.point.coordinates.reverse(),
-        bbox2k: addBufferToBbox(bbox, distanceInMetres['2k']),
-        bbox10k: addBufferToBbox(bbox, distanceInMetres['10k']),
-        isUK: r.address.countryRegionIso2 === 'GB',
-        isEngland: { is_england: true }
-      }
-    })
-    .filter((place, index, self) => self.findIndex(p => p.slug === place.slug) === index)
+    .filter(allowedTypesFilter)
+    .filter(englandOnlyFilter)
+    .sort(typesSort)
+    .map(mapper)
+    .filter(removeDuplicatesFilter)
     .filter(postFilter)
 
   return data
