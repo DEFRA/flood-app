@@ -1,4 +1,4 @@
-const { addBufferToBbox, formatName, slugify } = require('../../util')
+const { addBufferToBbox, formatName, slugify } = require('./bing-utils')
 
 // source: https://en.wikipedia.org/wiki/Ceremonial_counties_of_England
 // see also for a description of the difference between ceremonial and administrative counties
