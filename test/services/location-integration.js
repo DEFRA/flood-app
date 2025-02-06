@@ -40,7 +40,7 @@ const villages = [
   'Heyshott',
   'Hinton St George',
   'Holme-next-the-Sea',
-  // 'Hoxne',
+  'Hoxne',
   'Icklesham',
   'Ilmington',
   'Kersey',
@@ -75,7 +75,7 @@ const villages = [
   'Staithes',
   'Stanton',
   'Steeple Ashton',
-  // 'Stoke Gabriel',
+  'Stoke Gabriel',
   'Stow-on-the-Wold',
   'Swanton Morley',
   'Symondsbury',
@@ -164,7 +164,6 @@ const towns = [
   'Hexham',
   'Hitchin',
   'Honiton',
-  'Hoxne',
   'Hungerford',
   'Ilkeston',
   'Kendal',
@@ -204,9 +203,64 @@ const towns = [
   'Sandbach',
   'Shepton Mallet',
   'St Ives, Cornwall',
-  'Stoke Gabriel',
   'Stone',
   'Wetherby'
+]
+
+const counties = [
+  'Bedfordshire',
+  'Berkshire',
+  'Buckinghamshire',
+  'Cambridgeshire',
+  'Cheshire',
+  'Cornwall',
+  'Cumbria',
+  'Derbyshire',
+  'Devon',
+  'Dorset',
+  'Durham',
+  'East Sussex',
+  'Essex',
+  'Gloucestershire',
+  'Greater Manchester',
+  'Hampshire',
+  'Herefordshire',
+  'Hertfordshire',
+  'Isle of Wight',
+  'Kent',
+  'Lancashire',
+  'Leicestershire',
+  'Lincolnshire',
+  'Shropshire',
+  'West Yorkshire'
+]
+
+const cities = [
+  'Bath',
+  'Birmingham',
+  'Bradford',
+  'Brighton and Hove',
+  'Bristol',
+  'Cambridge',
+  'Canterbury',
+  'Carlisle',
+  'Chester',
+  'Coventry',
+  'Derby',
+  'Durham',
+  'Exeter',
+  'Gloucester',
+  'Kingston upon Hull',
+  'Lancaster',
+  'Leeds',
+  'Leicester',
+  'Liverpool',
+  'Manchester',
+  'Newcastle upon Tyne',
+  'Norwich',
+  'Nottingham',
+  'Oxford',
+  'Sheffield'
 ]
 
 // These are towns where searching by the name doesn't
@@ -218,7 +272,7 @@ const unknownPlaces = [
 ]
 
 // These are towns where searching by the Bing qualified name doesn't
-// return a high confidence location which matches the Bing name
+// return a location which matches the slugified Bing name
 const brokenPlaces = [
   'Kington' // => Kington, County of Herefordshire => none
 ]
@@ -239,6 +293,8 @@ async function resultCheck (town) {
 
 // These tests document known issues with bing search and, as such, they will
 // will hit bing and the sad path tests will fail (hence the use of skip)
+// They are retained as a useful check on Bing search and are intended to be run
+// ad-hoc (by selective removal of skip and the --grep option of lab
 describe.skip('location service integration tests', () => {
   // Helper function to dynamically generate tests
   const generateTests = (places, description) => {
@@ -254,6 +310,8 @@ describe.skip('location service integration tests', () => {
   describe('Happy path', () => {
     generateTests(villages, 'Villages: Searching by found name returns the same location')
     generateTests(towns, 'Towns: Searching by found name returns the same location')
+    generateTests(counties, 'Counties: Searching by found name returns the same location')
+    generateTests(cities, 'Cities: Searching by found name returns the same location')
   })
 
   describe('Sad path: known Bing issues', () => {
