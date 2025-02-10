@@ -5,8 +5,6 @@ const util = require('util')
 const { find, get } = require('./lib/bing-results-parser')
 const LocationSearchError = require('../location-search-error')
 
-const MAX_BING_RESULTS = 5
-
 function bingSearchNotNeeded (searchTerm) {
   const mustNotMatch = /[<>]|^england$|^scotland$|^wales$|^united kingdom$|^northern ireland$/i
   const mustMatch = /[a-zA-Z0-9]/
@@ -34,7 +32,7 @@ function validateBingResponse (response) {
   }
 }
 
-async function getBingResponse (query) {
+async function getBingResponse (query, maxBingResults) {
   const validatedQuery = validateSearchTerm(query)
   const emptyBingResponse = { resourceSets: [{ estimatedTotal: 0 }] }
 
@@ -43,7 +41,7 @@ async function getBingResponse (query) {
   }
 
   const encodedQuery = encodeURIComponent(validatedQuery)
-  const url = util.format(bingUrl, encodedQuery, MAX_BING_RESULTS, bingKeyLocation)
+  const url = util.format(bingUrl, encodedQuery, maxBingResults, bingKeyLocation)
 
   let bingData
   try {
@@ -58,12 +56,18 @@ async function getBingResponse (query) {
 }
 
 async function getLocationBySlug (locationSlug) {
-  const bingData = await getBingResponse(locationSlug)
+  // inspection shows that for some slug searches (e.g. hoxne-eye-suffolk)
+  // the desired result is not within the first 3 results so need a different
+  // value. 5 seems to be an acceptable value.
+  const MAX_BING_RESULTS = 5
+
+  const bingData = await getBingResponse(locationSlug, MAX_BING_RESULTS)
   return get(bingData, locationSlug)
 }
 
 async function findLocationByQuery (locationQuery) {
-  const bingData = await getBingResponse(locationQuery)
+  const MAX_BING_RESULTS = 3
+  const bingData = await getBingResponse(locationQuery, MAX_BING_RESULTS)
   return find(bingData)
 }
 
