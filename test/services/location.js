@@ -77,12 +77,12 @@ describe('location service', () => {
         isEngland: { is_england: true }
       })
     })
-    it('should query bing using the provided search term', async () => {
+    it('should query bing using the provided search term and 3 maxResults', async () => {
       setupStubs(context, populatedPlace)
       const searchTerm = 'ashford'
       await location.find(searchTerm)
       expect(context.stubs.getJson.callCount).to.equal(1)
-      expect(context.stubs.getJson.args[0][0]).to.equal(`http://bing?query=${searchTerm}&maxResults=5&key=12345`)
+      expect(context.stubs.getJson.args[0][0]).to.equal(`http://bing?query=${searchTerm}&maxResults=3&key=12345`)
     })
     it('should not query Bing if search term is longer than 60 characters', async () => {
       setupStubs(context, {})
@@ -153,6 +153,13 @@ describe('location service', () => {
         const result = await location.get('ashford-kent')
         expect(result.length).to.equal(1)
         expect(result[0].name).to.equal('Ashford, Kent')
+      })
+      it('should query bing using the provided slug and 5 maxResults', async () => {
+        setupStubs(context, populatedPlace)
+        const slug = 'ashford-slug'
+        await location.get(slug)
+        expect(context.stubs.getJson.callCount).to.equal(1)
+        expect(context.stubs.getJson.args[0][0]).to.equal(`http://bing?query=${slug}&maxResults=5&key=12345`)
       })
     })
   })
