@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 sass --style=compressed \
   --load-path=node_modules \
