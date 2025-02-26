@@ -77,7 +77,7 @@ async function locationRouteHandler (request, h) {
   const canonicalUrl = request.url.origin + request.url.pathname
   const location = util.cleanseLocation(request.params.location)
 
-  const [place] = await locationService.find(location)
+  const [place] = await locationService.get(location)
 
   if (isLocationEngland(location)) {
     return h.redirect(`/${route}`)

@@ -1,114 +1,78 @@
-const { addBufferToBbox, formatName } = require('../../util')
+const { addBufferToBbox, formatName, slugify } = require('./bing-utils')
 
 // source: https://en.wikipedia.org/wiki/Ceremonial_counties_of_England
 // see also for a description of the difference between ceremonial and administrative counties
 const englishCeremonialCounties =
-    [
-      'bedfordshire',
-      'berkshire',
-      'bristol',
-      'buckinghamshire',
-      'cambridgeshire',
-      'cheshire',
-      'city of london',
-      'cornwall',
-      'cumbria',
-      'derbyshire',
-      'devon',
-      'dorset',
-      'durham',
-      'east riding of yorkshire',
-      'east sussex',
-      'essex',
-      'gloucestershire',
-      'greater london',
-      'greater manchester',
-      'hampshire',
-      'herefordshire',
-      'hertfordshire',
-      'isle of wight',
-      'kent',
-      'lancashire',
-      'leicestershire',
-      'lincolnshire',
-      'merseyside',
-      'norfolk',
-      'north yorkshire',
-      'northamptonshire',
-      'northumberland',
-      'nottinghamshire',
-      'oxfordshire',
-      'rutland',
-      'shropshire',
-      'somerset',
-      'south yorkshire',
-      'staffordshire',
-      'suffolk',
-      'surrey',
-      'tyne and wear',
-      'warwickshire',
-      'west midlands',
-      'west sussex',
-      'west yorkshire',
-      'wiltshire',
-      'worcestershire'
-    ]
-
-function slugify (text = '') {
-  return text.replace(/,/g, '').replace(/ /g, '-').toLowerCase()
-}
-
-async function bingResultsParser (bingData) {
-  const set = bingData.resourceSets[0]
-  if (set.estimatedTotal === 0) {
-    return []
-  }
-
-  // following discussion with team, going to try out only high confidence
-  // results. This should reduce spurious results.
-  const allowedConfidences = ['high']
-
-  // note that allowedTypes also captures precedance rules for when multiple
-  // results are returned (e.g admindivision2 takes precedance over admindivision1)
-  const allowedTypes = [
-    'postcode1',
-    'postcode3',
-    'admindivision1',
-    'admindivision2',
-    'populatedplace',
-    'neighborhood'
+  [
+    'bedfordshire',
+    'berkshire',
+    'bristol',
+    'buckinghamshire',
+    'cambridgeshire',
+    'cheshire',
+    'city of london',
+    'cornwall',
+    'cumbria',
+    'derbyshire',
+    'devon',
+    'dorset',
+    'durham',
+    'east riding of yorkshire',
+    'east sussex',
+    'essex',
+    'gloucestershire',
+    'greater london',
+    'greater manchester',
+    'hampshire',
+    'herefordshire',
+    'hertfordshire',
+    'isle of wight',
+    'kent',
+    'lancashire',
+    'leicestershire',
+    'lincolnshire',
+    'merseyside',
+    'norfolk',
+    'north yorkshire',
+    'northamptonshire',
+    'northumberland',
+    'nottinghamshire',
+    'oxfordshire',
+    'rutland',
+    'shropshire',
+    'somerset',
+    'south yorkshire',
+    'staffordshire',
+    'suffolk',
+    'surrey',
+    'tyne and wear',
+    'warwickshire',
+    'west midlands',
+    'west sussex',
+    'west yorkshire',
+    'wiltshire',
+    'worcestershire'
   ]
 
-  function englandOnlyFilter (r) {
-    if (r.entityType.toLowerCase() === 'admindivision1') {
-      return englishCeremonialCounties.indexOf(r.name.toLowerCase()) >= 0
-    }
+// note that allowedTypes also captures precedance rules for when multiple
+// results are returned (e.g admindivision2 takes precedance over admindivision1)
+const allowedTypes = [
+  'postcode1',
+  'postcode3',
+  'admindivision1',
+  'admindivision2',
+  'populatedplace',
+  'neighborhood'
+]
 
-    return r.address.adminDistrict.toLowerCase() === 'england'
-  }
+const distanceInMetres = {
+  '2k': 2000,
+  '10k': 10000
+}
 
-  const data = set.resources
-    .filter(r => allowedConfidences.includes(r.confidence.toLowerCase()))
-    .filter(r => allowedTypes.includes(r.entityType.toLowerCase()))
-    .filter(r => englandOnlyFilter(r))
-    .sort((a, b) =>
-      allowedTypes.indexOf(a.entityType.toLowerCase()) -
-      allowedTypes.indexOf(b.entityType.toLowerCase()))
-    .sort((a, b) =>
-      allowedConfidences.indexOf(a.confidence.toLowerCase()) -
-      allowedConfidences.indexOf(b.confidence.toLowerCase()))[0]
-
-  if (!data) {
-    return []
-  }
-
-  const {
-    bbox,
-    point: { coordinates: center }
-  } = data
-
-  const name = formatName(data.name)
-
+const mapper = (r) => {
+  const name = formatName(r.name)
+  const bbox = r.bbox.reverse()
   // query is the value to use in a search box or the slug to replicate the
   // search and get the same result. If the bing format of the name (place
   // name + postcode) is used then some postcode searches which were
@@ -118,39 +82,85 @@ async function bingResultsParser (bingData) {
   // This causes problems with validity checking
   // Retained both name and query for display purposes for post codes
   // (even though name and query are the are the same for non-postcodes)
-  const query = ['postcode1', 'postcode3'].includes(data.entityType.toLowerCase())
-    ? data.address.postalCode
+  const query = ['postcode1', 'postcode3'].includes(r.entityType.toLowerCase())
+    ? r.address.postalCode
     : name
 
-  const slug = slugify(query)
-
-  // Reverse as Bing returns as [y (lat), x (long)]
-  bbox.reverse()
-  center.reverse()
-
-  const isUK = data.address.countryRegionIso2 === 'GB'
-
-  // const isEngland = await getIsEngland(center[0], center[1])
-
-  const distanceInMetres = {
-    '2k': 2000,
-    '10k': 10000
-  }
-
-  // add buffer to place.bbox for stations search
-  const bbox2k = addBufferToBbox(bbox, distanceInMetres['2k'])
-  const bbox10k = addBufferToBbox(bbox, distanceInMetres['10k'])
-
-  return [{
+  return {
     name,
-    slug,
     query,
-    center,
-    bbox2k,
-    bbox10k,
-    isUK,
+    slug: slugify(query),
+    center: r.point.coordinates.reverse(),
+    bbox2k: addBufferToBbox(bbox, distanceInMetres['2k']),
+    bbox10k: addBufferToBbox(bbox, distanceInMetres['10k']),
+    isUK: r.address.countryRegionIso2 === 'GB',
     isEngland: { is_england: true }
-  }]
+  }
 }
 
-module.exports = bingResultsParser
+const confidenceFilter = (r) => r.confidence.toLowerCase() === 'high'
+
+const englandOnlyFilter = (r) => {
+  if (r.entityType.toLowerCase() === 'admindivision1') {
+    return englishCeremonialCounties.indexOf(r.name.toLowerCase()) >= 0
+  }
+
+  return r.address.adminDistrict?.toLowerCase() === 'england'
+}
+
+const allowedTypesFilter = (r) =>
+  allowedTypes.includes(r.entityType.toLowerCase())
+
+const baseFilter = (r) =>
+  allowedTypesFilter(r) && englandOnlyFilter(r)
+
+const typesSort = (a, b) =>
+  allowedTypes.indexOf(a.entityType.toLowerCase()) -
+  allowedTypes.indexOf(b.entityType.toLowerCase())
+
+const removeDuplicatesFilter = (place, index, self) =>
+  self.findIndex(p => p.slug === place.slug) === index
+
+async function find (bingResponse) {
+  // This function is for processing all query results returned by Bing filtered by
+  // confidence, entity type and england only. It contrasts with the get
+  // function below which aims to retrieve a location based on the slugified name
+  const set = bingResponse.resourceSets[0]
+  return set.estimatedTotal
+    ? set.resources
+      .filter(confidenceFilter)
+      .filter(baseFilter)
+      .sort(typesSort)
+      .map(mapper)
+      .filter(removeDuplicatesFilter)
+    : []
+}
+
+async function get (bingResponse, slug) {
+  // * this function is for processing all results returned by Bing to identify a location in
+  // the results using the psuedo id (the name slugified)
+  // * since we generate the slug we assume we have already found the location using
+  // find function above.
+  // Although in almost all cases passing all terms in the name back at Bing in
+  // the form of the slug results in the original result being returned as the
+  // first high confidence result there are a small number of locations where
+  // this assumption does not hold.
+  // In order to deal with this scenario, we parse the multiple results
+  // returned from bing and look for a matching slug regardless of the confidence
+  // value (we do still filter by england only and allowed entity types)
+  const matchingSlugFilter = (r) => r.slug === slug
+  const set = bingResponse.resourceSets[0]
+  return set.estimatedTotal
+    ? set.resources
+      .filter(baseFilter)
+      .sort(typesSort)
+      .map(mapper)
+      .filter(removeDuplicatesFilter)
+      .filter(matchingSlugFilter)
+    : []
+}
+
+module.exports = {
+  find,
+  get
+}
