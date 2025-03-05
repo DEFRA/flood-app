@@ -1,7 +1,7 @@
 /* global DOMParser */
 
 class LatestLevelsAutoRefresh {
-  constructor (targetMinutes = [3, 18, 33, 48]) {
+  constructor (targetMinutes = [4, 19, 34, 49]) {
     this.timeout = null
     this.timeAgoInterval = null
     this.liveStatusMessages = []
