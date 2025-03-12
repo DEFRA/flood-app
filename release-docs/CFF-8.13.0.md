@@ -16,4 +16,4 @@ Execute smoke tests and forward results
 
 ## Related Infrastructure Changes Required
 
-* None
+* Upgrade node to V20 on frontend and backend servers
