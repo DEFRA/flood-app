@@ -17,7 +17,7 @@ describe('latestLevels', () => {
     const html = `
       <output data-live-status></output>
       <div class="defra-live" data-severity-status="3">
-        <div class="defra-live__item" data-item-status="Active" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
+        <div class="defra-live__item" data-item-status="false" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
           <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
             <strong data-item-time>20 minutes ago</strong>
           </p>
@@ -27,7 +27,7 @@ describe('latestLevels', () => {
           </p>
         </div>
 
-        <div class="defra-live__item" data-item-status="Active" data-item-name="Sea Cut" data-item-agency="Mowthorpe" data-item-id="2000">
+        <div class="defra-live__item" data-item-status="false" data-item-name="Sea Cut" data-item-agency="Mowthorpe" data-item-id="2000">
           <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
             <strong data-item-time>30 minutes ago</strong>
           </p>
@@ -69,12 +69,12 @@ describe('latestLevels', () => {
     expect(ll.liveStatusMessages.length).to.equal(0)
   })
 
-  it('should fetch levels and update the DOM with the new values', () => {
+  it('should fetch levels and update the DOM with the new values', async () => {
     mockFetch.returns(Promise.resolve({
       ok: true,
       text: () => `
         <div class="defra-live" data-severity-status="3">
-          <div class="defra-live__item" data-item-status="Active" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
+          <div class="defra-live__item" data-item-status="false" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
             <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
               <strong data-item-time>15 minutes ago</strong>
             </p>
@@ -84,7 +84,7 @@ describe('latestLevels', () => {
             </p>
           </div>
     
-          <div class="defra-live__item" data-item-status="Active" data-item-name="Sea Cut" data-item-agency="Mowthorpe" data-item-id="2000">
+          <div class="defra-live__item" data-item-status="false" data-item-name="Sea Cut" data-item-agency="Mowthorpe" data-item-id="2000">
             <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
               <strong data-item-time>15 minutes ago</strong>
             </p>
@@ -99,14 +99,22 @@ describe('latestLevels', () => {
 
     const ll = new window.LatestLevelsAutoRefresh()
 
-    ll.fetchRiverLevels(() => {
-      const elements = document.querySelectorAll('.defra-live__item')
+    await new Promise((resolve, reject) => {
+      ll.fetchRiverLevels(() => {
+        try {
+          const elements = document.querySelectorAll('.defra-live__item')
 
-      expect(elements[0].querySelector('[data-item-time]').textContent).to.equal('15 minutes ago')
-      expect(elements[0].querySelector('[data-item-value]').textContent).to.equal('0.10')
-      expect(ll.liveStatusMessages.length).to.equal(2)
-      expect(ll.liveStatusMessages[0]).to.equal('The River Thames at London level was 0.10 metres 15 minutes ago')
-      expect(ll.liveStatusMessages[1]).to.equal('The Sea Cut at Mowthorpe level was 0.20 metres 15 minutes ago')
+          expect(elements[0].querySelector('[data-item-time]').textContent).to.equal('15 minutes ago')
+          expect(elements[0].querySelector('[data-item-value]').textContent).to.equal('0.10')
+          expect(ll.liveStatusMessages.length).to.equal(2)
+          expect(ll.liveStatusMessages[0]).to.equal('The River Thames at London level was 0.10 metres 15 minutes ago')
+          expect(ll.liveStatusMessages[1]).to.equal('The Sea Cut at Mowthorpe level was 0.20 metres 15 minutes ago')
+
+          resolve()
+        } catch (err) {
+          reject(err)
+        }
+      })
     })
   })
 
@@ -115,7 +123,7 @@ describe('latestLevels', () => {
       ok: true,
       text: () => `
       <div class="defra-live" data-severity-status="3">
-        <div class="defra-live__item" data-item-status="Active" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
+        <div class="defra-live__item" data-item-status="false" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
           <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
             <strong data-item-time>15 minutes ago</strong>
           </p>
