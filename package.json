@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": "github:defra/flood-app",
   "engines": {
-    "node": "20.18.2"
+    "node": "^20.0.0"
   },
   "browserslist": [
     "IE 11"
@@ -80,6 +80,7 @@
     "qs": "^6.12.1",
     "regenerator-runtime": "^0.14.0",
     "sass": "^1.77.6",
+    "semver": "^7.7.1",
     "sinon": "^18.0.0",
     "standard": "^17.1.0",
     "uglify-js": "^3.14.4",

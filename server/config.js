@@ -1,7 +1,9 @@
 const joi = require('joi')
 const pkg = require('../package.json')
-
+const nodeVersionCheck = require('./lib/node-version-check')
 const defaultPort = 3009
+
+nodeVersionCheck(pkg.engines?.node)
 
 // Define config schema
 const schema = joi.object({
