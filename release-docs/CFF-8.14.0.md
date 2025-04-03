@@ -1,7 +1,7 @@
 # Check For Flooding Release
 
 * Version: 8.14.0
-* Proposed Release Date: 
+* Proposed Release Date: 10th April 2025
 * Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/19777/tab/release-report-all-issues
 
 ## Sense Check
@@ -16,20 +16,18 @@
 
 ## Tickets
 
-
-  
-  * FSR-000 : Fix tests which were failing silently (#908)
-  
-
+  * FSR-1404 : Moving to Terraforms for CFF Lambda deployments
 
 ## Instructions
 
-
   1 - Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
-
+  2 - Execute LFW_{STAGE}_99_DEPLOY_FLOOD_DATA_PIPELINE_TF
 
 Execute smoke tests and forward results
 
 ## Related Infrastructure Changes Required
 
-* None
+* Add env var LFW_DATA_ITMD_API_URL='imfs-prd1-thresholds-api.azurewebsites.net'
+* No other specific infrastructure changes required from a development perspective but, given that
+  the deployment mechanism is moving from serverless to terraforms, there may be some changes
+  driven by WebOps
