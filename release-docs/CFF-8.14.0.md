@@ -28,6 +28,8 @@ Execute smoke tests and forward results
 ## Related Infrastructure Changes Required
 
 * Add env var LFW_DATA_ITMD_API_URL='imfs-prd1-thresholds-api.azurewebsites.net'
+* Remove env var CHROME_DRIVER_CDNURL (this points to a legacy CDN which is
+  no longer updated)
 * No other specific infrastructure changes required from a development perspective but, given that
   the deployment mechanism is moving from serverless to terraforms, there may be some changes
   driven by WebOps
