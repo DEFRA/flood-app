@@ -7,6 +7,7 @@
 ## Tickets
 
 - FSR-1404 : Moving to Terraforms for CFF Lambda deployments
+- FSR-1411 : IMTD API Endpoint : update hardcoded endpoint for Lambdas
 
 ## Instructions
 
