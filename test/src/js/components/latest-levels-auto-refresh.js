@@ -16,7 +16,7 @@ describe('latestLevels', () => {
   before(() => {
     const html = `
       <output data-live-status></output>
-      <div class="defra-live" data-severity-status="3">
+      <div class="defra-live" data-severity-status="severe">
         <div class="defra-live__item" data-item-status="false" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
           <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
             <strong data-item-time>20 minutes ago</strong>
@@ -71,30 +71,29 @@ describe('latestLevels', () => {
 
   it('should fetch levels and update the DOM with the new values', async () => {
     mockFetch.returns(Promise.resolve({
-      ok: true,
-      text: () => `
-        <div class="defra-live" data-severity-status="3">
-          <div class="defra-live__item" data-item-status="false" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
-            <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
-              <strong data-item-time>15 minutes ago</strong>
-            </p>
-            <p>The River Thames level at London was <span data-item-value>0.10</span> metres. Property flooding is possible when it goes above 4.00 metres.</p>
-            <p>
-              <a href="/station/1000">Monitor the latest level at London</a>
-            </p>
-          </div>
-    
-          <div class="defra-live__item" data-item-status="false" data-item-name="Sea Cut" data-item-agency="Mowthorpe" data-item-id="2000">
-            <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
-              <strong data-item-time>15 minutes ago</strong>
-            </p>
-            <p>The Sea Cut level at Mowthorpe was <span data-item-value>0.20</span> metres. Property flooding is possible when it goes above 2.00 metres.</p>
-            <p>
-              <a href="/station/2000">Monitor the latest level at Mowthorpe</a>
-            </p>
-          </div>
-        </div>
-      `
+      json: () => ({
+        severity: 'severe',
+        levels: [
+          {
+            rloi_id: 1000,
+            river_name: 'River Thames',
+            agency_name: 'London',
+            latest_level: '0.10',
+            threshold_value: '11.50',
+            isSuspendedOrOffline: false,
+            value_timestamp: '15 minutes ago'
+          },
+          {
+            rloi_id: 2000,
+            river_name: 'Sea Cut',
+            agency_name: 'Mowthorpe',
+            latest_level: '0.20',
+            threshold_value: '1.57',
+            isSuspendedOrOffline: false,
+            value_timestamp: '15 minutes ago'
+          }
+        ]
+      })
     }))
 
     const ll = new window.LatestLevelsAutoRefresh()
@@ -120,19 +119,20 @@ describe('latestLevels', () => {
 
   it('should set accessibility message when there are missing elements fetched', () => {
     mockFetch.returns(Promise.resolve({
-      ok: true,
-      text: () => `
-      <div class="defra-live" data-severity-status="3">
-        <div class="defra-live__item" data-item-status="false" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
-          <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
-            <strong data-item-time>15 minutes ago</strong>
-          </p>
-          <p>The River Thames level at London was <span data-item-value>0.10</span> metres. Property flooding is possible when it goes above 4.00 metres.</p>
-          <p>
-            <a href="/station/1000">Monitor the latest level at London</a>
-          </p>
-        </div>
-      </div>`
+      json: () => ({
+        severity: 'severe',
+        levels: [
+          {
+            rloi_id: 1000,
+            river_name: 'River Thames',
+            agency_name: 'London',
+            latest_level: '0.10',
+            threshold_value: '11.50',
+            isSuspendedOrOffline: false,
+            value_timestamp: '15 minutes ago'
+          }
+        ]
+      })
     }))
 
     const ll = new window.LatestLevelsAutoRefresh()
