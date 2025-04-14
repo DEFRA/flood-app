@@ -10,24 +10,21 @@ const adminDivision1 = require('./data/location/wales.json')
 const LocationSearchError = require('../../server/location-search-error')
 const flushAppRequireCache = require('../lib/flush-app-require-cache')
 
-function setupStubs (context, locationData, isEngland = true) {
+function setupStubs (context, locationData) {
   context.stubs.getJson.onFirstCall().returns(locationData)
-  context.stubs.getIsEngland.returns({ is_england: isEngland })
 }
 
 describe('location service', () => {
-  let location, util, floodServices, context
+  let location, util, context
   beforeEach(() => {
     flushAppRequireCache()
     const config = require('../../server/config')
     sinon.stub(config, 'bingUrl').value('http://bing?query=%s&maxResults=%s&key=%s')
     sinon.stub(config, 'bingKeyLocation').value('12345')
     util = require('../../server/util')
-    floodServices = require('../../server/services/flood')
     context = {
       stubs: {
-        getJson: sinon.stub(util, 'getJson'),
-        getIsEngland: sinon.stub(floodServices, 'getIsEngland')
+        getJson: sinon.stub(util, 'getJson')
       }
     }
     location = require('../../server/services/location')
@@ -80,7 +77,7 @@ describe('location service', () => {
         isEngland: { is_england: true }
       })
     })
-    it('should query bing using the provided search term', async () => {
+    it('should query bing using the provided search term and 3 maxResults', async () => {
       setupStubs(context, populatedPlace)
       const searchTerm = 'ashford'
       await location.find(searchTerm)
@@ -146,6 +143,23 @@ describe('location service', () => {
           expect(context.stubs.getJson.callCount).to.equal(0)
           expect(result.length).to.equal(0)
         })
+      })
+    })
+  })
+  describe('get happy path', () => {
+    describe('get by slug', () => {
+      it('should return result matching slug', async () => {
+        setupStubs(context, populatedPlace)
+        const result = await location.get('ashford-kent')
+        expect(result.length).to.equal(1)
+        expect(result[0].name).to.equal('Ashford, Kent')
+      })
+      it('should query bing using the provided slug and 5 maxResults', async () => {
+        setupStubs(context, populatedPlace)
+        const slug = 'ashford-slug'
+        await location.get(slug)
+        expect(context.stubs.getJson.callCount).to.equal(1)
+        expect(context.stubs.getJson.args[0][0]).to.equal(`http://bing?query=${slug}&maxResults=5&key=12345`)
       })
     })
   })
