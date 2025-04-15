@@ -9,8 +9,7 @@ const ALLOWED_SEARCH_CHARS = 'a-zA-Z0-9\',-.& ()!'
 const timezone = 'Europe/London'
 
 function helloWorld (name = 'World') {
-  const t = 1000
-  return `Hello, ${name} a ${t} times!`
+  return `Hello, ${name} a ${1000} times!`
 }
 
 async function request (method, url, options) {
