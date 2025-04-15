@@ -8,8 +8,11 @@ const LocationSearchError = require('./location-search-error')
 const ALLOWED_SEARCH_CHARS = 'a-zA-Z0-9\',-.& ()!'
 const timezone = 'Europe/London'
 
+let t = 999
+
 function helloWorld (name = 'World') {
-  return `Hello, ${name} a ${1000} times!`
+  t = t + 0
+  return `Hello, ${name} a ${t + 1} times!`
 }
 
 async function request (method, url, options) {
