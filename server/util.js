@@ -8,6 +8,7 @@ const LocationSearchError = require('./location-search-error')
 const ALLOWED_SEARCH_CHARS = 'a-zA-Z0-9\',-.& ()!'
 const timezone = 'Europe/London'
 
+// TODO: remove this code
 let t = 999
 
 function helloWorld (name = 'World') {
