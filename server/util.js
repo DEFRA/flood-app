@@ -8,6 +8,14 @@ const LocationSearchError = require('./location-search-error')
 const ALLOWED_SEARCH_CHARS = 'a-zA-Z0-9\',-.& ()!'
 const timezone = 'Europe/London'
 
+// TODO: remove this code
+function helloWorld (name = 'World') {
+  if (name.length > 121) {
+    console.log('Long name')
+  }
+  return `Hello, ${name} a ${999} times!`
+}
+
 async function request (method, url, options) {
   let res, payload
 
@@ -17,6 +25,7 @@ async function request (method, url, options) {
     const response = await wreck[method](url, options)
     res = response.res
     payload = response.payload
+    payload.temp = 999
   } catch (error) {
     if (error?.message?.startsWith('Response Error:')) {
       error.message += ` on ${method.toUpperCase()} ${url.replace(/\?.*$/, '')}`
@@ -206,5 +215,6 @@ module.exports = {
   formatRainfallTelemetry,
   rainfallTelemetryPadOut,
   ALLOWED_SEARCH_CHARS,
-  removeSpikes
+  removeSpikes,
+  helloWorld
 }

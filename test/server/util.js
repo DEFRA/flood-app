@@ -3,9 +3,27 @@ const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const spikeTelem = require('../data/spikeTelem.json')
 const nonSpikeTelem = require('../data/nonSpikeTelem.json')
-const { formatName, toMarked, cleanseLocation, removeSpikes } = require('../../server/util')
+const { formatName, toMarked, cleanseLocation, removeSpikes, helloWorld } = require('../../server/util')
 
 lab.experiment('util', () => {
+  lab.experiment('helloWorld', () => {
+    lab.test('returns default greeting with World when no name is provided', async () => {
+      Code.expect(helloWorld()).to.equal('Hello, World a 999 times!')
+    })
+
+    lab.test('returns personalized greeting when name is provided', async () => {
+      Code.expect(helloWorld('Test')).to.equal('Hello, Test a 999 times!')
+    })
+
+    lab.test('handles empty string as name', async () => {
+      Code.expect(helloWorld('')).to.equal('Hello,  a 999 times!')
+    })
+
+    lab.test('handles special characters in name', async () => {
+      Code.expect(helloWorld('<script>')).to.equal('Hello, <script> a 999 times!')
+    })
+  })
+
   lab.experiment('toMarked', () => {
     lab.test('Find text is marked', async () => {
       Code.expect(toMarked('This is some text to be marked', 'text')).to.equal('This is some <mark>text</mark> to be marked')
