@@ -8,19 +8,19 @@ const { formatName, toMarked, cleanseLocation, removeSpikes, helloWorld } = requ
 lab.experiment('util', () => {
   lab.experiment('helloWorld', () => {
     lab.test('returns default greeting with World when no name is provided', async () => {
-      Code.expect(helloWorld()).to.equal('Hello, World a 1000 times!')
+      Code.expect(helloWorld()).to.equal('Hello, World a 999 times!')
     })
 
     lab.test('returns personalized greeting when name is provided', async () => {
-      Code.expect(helloWorld('Test')).to.equal('Hello, Test a 1000 times!')
+      Code.expect(helloWorld('Test')).to.equal('Hello, Test a 999 times!')
     })
 
     lab.test('handles empty string as name', async () => {
-      Code.expect(helloWorld('')).to.equal('Hello,  a 1000 times!')
+      Code.expect(helloWorld('')).to.equal('Hello,  a 999 times!')
     })
 
     lab.test('handles special characters in name', async () => {
-      Code.expect(helloWorld('<script>')).to.equal('Hello, <script> a 1000 times!')
+      Code.expect(helloWorld('<script>')).to.equal('Hello, <script> a 999 times!')
     })
   })
 

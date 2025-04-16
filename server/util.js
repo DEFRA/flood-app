@@ -13,7 +13,7 @@ function helloWorld (name = 'World') {
   if (name.length > 121) {
     console.log('Long name')
   }
-  return `Hello, ${name} a ${999 + 1} times!`
+  return `Hello, ${name} a ${999} times!`
 }
 
 async function request (method, url, options) {
