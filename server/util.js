@@ -9,16 +9,11 @@ const ALLOWED_SEARCH_CHARS = 'a-zA-Z0-9\',-.& ()!'
 const timezone = 'Europe/London'
 
 // TODO: remove this code
-let t = 999
-
 function helloWorld (name = 'World') {
-  t = t + 0
-
   if (name.length > 121) {
     console.log('Long name')
   }
-
-  return `Hello, ${name} a ${t + 1} times!`
+  return `Hello, ${name} a ${999 + 1} times!`
 }
 
 async function request (method, url, options) {
