@@ -24,7 +24,7 @@ async function request (method, url, options) {
     const response = await wreck[method](url, options)
     res = response.res
     payload = response.payload
-    payload.temp = 1000
+    payload.temp = 999
   } catch (error) {
     if (error?.message?.startsWith('Response Error:')) {
       error.message += ` on ${method.toUpperCase()} ${url.replace(/\?.*$/, '')}`
