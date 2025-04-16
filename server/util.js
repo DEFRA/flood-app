@@ -13,6 +13,11 @@ let t = 999
 
 function helloWorld (name = 'World') {
   t = t + 0
+
+  if (name.length > 121) {
+    console.log('Long name')
+  }
+
   return `Hello, ${name} a ${t + 1} times!`
 }
 
