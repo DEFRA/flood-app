@@ -45,13 +45,13 @@ jobs:
           ref: development
           fetch-depth: 0
 
-      - name: Set up Node.js environment
+      - name: Install nodejs
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: npm install
+          node-version-file: '.nvmrc'
+      
+      - name: Install node dependencies
+        run: npm ci --engine-strict
         
       - name: Bump version
         run: |
