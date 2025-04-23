@@ -40,7 +40,7 @@ module.exports = {
           logLevel = 'warn'
           statusCode = response.output.statusCode
         } else if (response.output.statusCode === HTTP_NOT_FOUND || (response.output.statusCode === HTTP_BAD_REQUEST && response.message === 'Invalid request params input')) {
-          statusCode = 404
+          statusCode = HTTP_NOT_FOUND
           view = '404'
           logLevel = 'debug'
         } else {
