@@ -17,7 +17,7 @@ describe('latestLevels', () => {
     const html = `
       <output data-live-status></output>
       <div class="defra-live" data-severity-status="severe">
-        <div class="defra-live__item" data-item-status="false" data-item-name="River Thames" data-item-agency="London" data-item-id="1000">
+        <div class="defra-live__item" data-item-status="false" data-item-name="River Thames" data-item-external-name="London" data-item-id="1000">
           <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
             <strong data-item-time>20 minutes ago</strong>
           </p>
@@ -27,7 +27,7 @@ describe('latestLevels', () => {
           </p>
         </div>
 
-        <div class="defra-live__item" data-item-status="false" data-item-name="Sea Cut" data-item-agency="Mowthorpe" data-item-id="2000">
+        <div class="defra-live__item" data-item-status="false" data-item-name="Sea Cut" data-item-external-name="Mowthorpe" data-item-id="2000">
           <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
             <strong data-item-time>30 minutes ago</strong>
           </p>
@@ -77,7 +77,7 @@ describe('latestLevels', () => {
           {
             rloi_id: 1000,
             river_name: 'River Thames',
-            agency_name: 'London',
+            external_name: 'London',
             latest_level: '0.10',
             threshold_value: '11.50',
             isSuspendedOrOffline: false,
@@ -86,7 +86,7 @@ describe('latestLevels', () => {
           {
             rloi_id: 2000,
             river_name: 'Sea Cut',
-            agency_name: 'Mowthorpe',
+            external_name: 'Mowthorpe',
             latest_level: '0.20',
             threshold_value: '1.57',
             isSuspendedOrOffline: false,
@@ -117,6 +117,47 @@ describe('latestLevels', () => {
     })
   })
 
+  it('should flag "hasChanges" when there are no changes', async () => {
+    mockFetch.returns(Promise.resolve({
+      json: () => ({
+        severity: 'severe',
+        levels: [
+          {
+            rloi_id: 1000,
+            river_name: 'River Thames',
+            external_name: 'London',
+            latest_level: '0.10',
+            threshold_value: '2.17',
+            isSuspendedOrOffline: false,
+            value_timestamp: '15 minutes ago'
+          },
+          {
+            rloi_id: 2000,
+            river_name: 'Sea Cut',
+            external_name: 'Mowthorpe',
+            latest_level: '0.20',
+            threshold_value: '1.10',
+            isSuspendedOrOffline: false,
+            value_timestamp: '15 minutes ago'
+          }
+        ]
+      })
+    }))
+
+    const ll = new window.LatestLevelsAutoRefresh()
+
+    await new Promise((resolve, reject) => {
+      ll.fetchRiverLevels(() => {
+        try {
+          expect(ll.hasChanges).to.equal(false)
+          resolve()
+        } catch (err) {
+          reject(err)
+        }
+      })
+    })
+  })
+
   it('should set accessibility message when there are missing elements fetched', () => {
     mockFetch.returns(Promise.resolve({
       json: () => ({
@@ -125,7 +166,7 @@ describe('latestLevels', () => {
           {
             rloi_id: 1000,
             river_name: 'River Thames',
-            agency_name: 'London',
+            external_name: 'London',
             latest_level: '0.10',
             threshold_value: '11.50',
             isSuspendedOrOffline: false,

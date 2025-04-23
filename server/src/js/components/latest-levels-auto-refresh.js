@@ -5,6 +5,8 @@ class LatestLevelsAutoRefresh {
     this.liveStatusMessages = []
     this.targetMinutes = targetMinutes
 
+    this.hasChanges = null
+
     this.latestLevels = document.querySelectorAll('.defra-live__item')
   }
 
@@ -33,6 +35,8 @@ class LatestLevelsAutoRefresh {
     const p = document.createElement('p')
     p.innerText = this.liveStatusMessages.join('. ')
     element.append(p)
+
+    console.log('\n---Done---\n')
   }
 
   initializeTimeAgoUpdates = () => {
@@ -70,8 +74,6 @@ class LatestLevelsAutoRefresh {
   renderRiverLevels = (data) => {
     console.log('\nrenderRiverLevels()')
 
-    clearInterval(this.timeAgoInterval)
-
     const { levels, severity } = data
 
     const currentSeverity = document.querySelector('[data-severity-status]')?.getAttribute('data-severity-status')
@@ -102,7 +104,7 @@ class LatestLevelsAutoRefresh {
 
       const elementId = element.getAttribute('data-item-id')
       const elementRiverName = element.getAttribute('data-item-name')
-      const elementRiverAgency = element.getAttribute('data-item-agency')
+      const elementRiverExternalName = element.getAttribute('data-item-external-name')
 
       const elementValue = element.querySelector('[data-item-value]')
       const elementTime = element.querySelector('[data-item-time]')
@@ -114,28 +116,47 @@ class LatestLevelsAutoRefresh {
         console.log('-- [element]')
         console.log('---- id', elementId)
         console.log('---- riverName', elementRiverName)
-        console.log('---- riverAgency', elementRiverAgency)
+        console.log('---- riverExternalName', elementRiverExternalName)
         console.log('---- value', elementValue.textContent)
         console.log('---- time', elementTime.textContent)
 
         console.log('\n-- [api]')
         console.log('---- id', item.rloi_id)
         console.log('---- riverName', item.river_name)
-        console.log('---- riverAgency', item.agency_name)
+        console.log('---- riverExternalName', item.external_name)
         console.log('---- value', itemValue)
         console.log('---- time', itemTime)
 
         elementValue.textContent = itemValue
 
-        this.liveStatusMessages.push(`The ${item.river_name} at ${item.agency_name} level was ${itemValue} metres ${itemTime}`)
+        this.liveStatusMessages.push(`The ${item.river_name} at ${item.external_name} level was ${itemValue} metres ${itemTime}`)
       } else {
-        console.log('\n---No changes!---\n\n')
+        console.log('\n---No changes!---')
+
+        this.hasChanges = false
       }
 
       elementTime.textContent = item.value_timestamp
     })
+  }
 
-    this.initializeTimeAgoUpdates()
+  retry = async () => {
+    console.log('\nretry()')
+
+    this.hasChanges = null
+
+    try {
+      const data = await this.fetchData()
+      console.log(data)
+
+      this.renderRiverLevels(data)
+    } catch (err) {
+      console.error('[Error] retry', err)
+      this.liveStatusMessages.push('There was an error retrying to get the latest level')
+    } finally {
+      this.updateLiveStatus()
+      console.log('\n---Retry done!---\n\n\n\n')
+    }
   }
 
   fetchRiverLevels = async (callback) => {
@@ -147,7 +168,19 @@ class LatestLevelsAutoRefresh {
       const data = await this.fetchData()
       console.log(data)
 
+      clearInterval(this.timeAgoInterval)
+
       this.renderRiverLevels(data)
+
+      if (this.hasChanges === false) {
+        console.log('- triggering retry in ~10s...\n\n')
+
+        setTimeout(() => {
+          this.retry()
+        }, 10000)
+      }
+
+      this.initializeTimeAgoUpdates()
 
       if (callback) {
         callback(data)
