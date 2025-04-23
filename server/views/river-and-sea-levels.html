@@ -110,7 +110,7 @@
               <span>{{ model.queryGroup }}</span>
               levels
             </caption>
-            <thead class="defra-flood-levels-table__head" role="rowgroup">
+            <thead class="defra-flood-levels-table__head">
               {%- set hideHeader -%}
               {% if model.queryGroup == 'rainfall' %}style="display:none"{% endif %}
               {%- endset -%}
@@ -130,7 +130,7 @@
                 <th class="defra-flood-levels-table__cell defra-flood-levels-table__cell--state" scope="col" role="columnheader">State</th>
               </tr>
             </thead>
-            <tbody class="defra-flood-levels-table__body" role="rowgroup">
+            <tbody class="defra-flood-levels-table__body">
               {% for item in model.stations %}
                 {% include "partials/level-row.html" %}
               {% endfor %}
