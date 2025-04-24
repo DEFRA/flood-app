@@ -80,7 +80,7 @@
     "qs": "^6.12.1",
     "regenerator-runtime": "^0.14.0",
     "sass": "^1.77.6",
-    "sinon": "^18.0.0",
+    "sinon": "^20.0.0",
     "standard": "^17.1.0",
     "uglify-js": "^3.14.4",
     "webpack": "^5.95.0",
