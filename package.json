@@ -83,7 +83,7 @@
     "sinon": "^18.0.0",
     "standard": "^17.1.0",
     "uglify-js": "^3.14.4",
-    "webpack": "^5.95.0",
+    "webpack": "^5.99.7",
     "webpack-cli": "^5.1.4",
     "yargs": "^17.7.2"
   },
