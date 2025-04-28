@@ -14,7 +14,7 @@ CFF Lambdas
 
 
 1. Update the nodejs runtime for the lambdas (see below)
-1. Execute LFW_DEV_99_DEPLOY_FLOOD_DATA_PIPELINE_TF
+1. Execute LFW_{STAGE}_99_DEPLOY_FLOOD_DATA_PIPELINE_TF
 1. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
 
 
