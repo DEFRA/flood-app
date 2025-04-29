@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": "github:defra/flood-app",
   "engines": {
-    "node": "20.18.2"
+    "node": "20.x"
   },
   "browserslist": [
     "IE 11"
