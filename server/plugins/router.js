@@ -13,6 +13,7 @@ const routes = [].concat(
   require('../routes/api/places.geojson'),
   require('../routes/api/ows'),
   require('../routes/api/outlook'),
+  require('../routes/api/latest-levels'),
   require('../routes/start-page'),
   require('../routes/sms-auto-opt-in-info'),
   require('../routes/alerts-and-warnings'),
