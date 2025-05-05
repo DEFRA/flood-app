@@ -7,6 +7,8 @@ const cacheType = config.localCache ? undefined : 'redis_cache'
 const seconds = secs => secs * 1000
 const minutes = min => seconds(min * 60)
 
+const tenSeconds = 10
+
 const expiresIn15 = 15
 const floodGetOutlookGenerateTimeout = 30
 const floodGetStationsGeoJsonGenerateTimeout = 30
@@ -22,7 +24,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -30,7 +32,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     },
     generateKey: array => array.join(',') // functions with array or object var need a non default key
   })
@@ -39,7 +41,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(expiresIn15),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -55,7 +57,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(expiresIn15),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -63,7 +65,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -71,7 +73,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -79,7 +81,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -87,7 +89,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     },
     generateKey: array => array.join(',') // functions with array or object var need a non default key
   })
@@ -96,7 +98,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -104,7 +106,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -112,7 +114,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -120,7 +122,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -128,7 +130,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -136,7 +138,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -144,7 +146,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -152,7 +154,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -176,7 +178,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -184,7 +186,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -192,7 +194,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     },
     generateKey: array => array.join(',') // functions with array or object var need a non default key
   })
@@ -201,7 +203,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -209,7 +211,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -217,7 +219,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -225,7 +227,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -233,7 +235,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
@@ -241,7 +243,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: seconds(tenSeconds)
     }
   })
 
