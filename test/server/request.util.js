@@ -9,8 +9,9 @@ const mocks = {
   wreckPost: sinon.stub()
 }
 
-lab.experiment('util / outbound request helpers : request', () => {
+lab.experiment('util - request', () => {
   let util
+
   lab.before(() => {
     util = proxyquire('../../server/util', {
       '@hapi/wreck': {
@@ -21,21 +22,25 @@ lab.experiment('util / outbound request helpers : request', () => {
       }
     })
   })
+
   lab.afterEach(() => {
     for (const stub of Object.values(mocks)) {
       stub.reset()
     }
   })
 
-  lab.test('request uses acts as a proxy for the relevant wreck method', async () => {
+  lab.test('should use acts as a proxy for the relevant wreck method', async () => {
     const getUrl = '/some/get/url'
     const postUrl = '/some/post/url'
+
     const requestOptions = {
       headers: {
         'some-header': 'some-value'
       }
     }
+
     const mockResponse = { res: { statusCode: 200, headers: {} }, payload: { ok: true } }
+
     mocks.wreckGet.resolves(mockResponse)
     mocks.wreckPost.resolves(mockResponse)
 
@@ -56,18 +61,22 @@ lab.experiment('util / outbound request helpers : request', () => {
     expect(postResult).to.equal(mockResponse.payload)
   })
 
-  lab.test('request adds the method and url (with query strings removed) to wreck request errors', async () => {
+  lab.test('should add the method and url (with query strings removed) to wreck request errors', async () => {
     const method = 'get'
     const url = '/some/get/url?a=1&b=2&key=secret&c=4'
+
     const requestOptions = {
       headers: {
         'some-header': 'some-value'
       }
     }
+
     const requestError = new Error('Response Error: some response error')
+
     mocks.wreckGet.rejects(requestError)
 
     let err
+
     try {
       await util.request(method, url, requestOptions)
     } catch (e) {
@@ -77,18 +86,22 @@ lab.experiment('util / outbound request helpers : request', () => {
     expect(err.message).to.equal('Response Error: some response error on GET /some/get/url')
   })
 
-  lab.test('request does not add the method and url to wreck non-request errors', async () => {
+  lab.test('should not add the method and url to wreck non-request errors', async () => {
     const method = 'get'
     const url = '/some/get/url'
+
     const requestOptions = {
       headers: {
         'some-header': 'some-value'
       }
     }
+
     const requestError = new Error('some other error')
+
     mocks.wreckGet.rejects(requestError)
 
     let err
+
     try {
       await util.request(method, url, requestOptions)
     } catch (e) {
@@ -98,18 +111,22 @@ lab.experiment('util / outbound request helpers : request', () => {
     expect(err.message).to.equal('some other error')
   })
 
-  lab.test('request throws a LocationSearchError if the \'x-ms-bm-ws-info\' response header has a value of \'1\'', async () => {
+  lab.test('should throw a LocationSearchError if the \'x-ms-bm-ws-info\' response header has a value of \'1\'', async () => {
     const method = 'get'
     const url = '/some/get/url'
+
     const requestOptions = {
       headers: {
         'some-header': 'some-value'
       }
     }
+
     const mockResponse = { res: { statusCode: 200, headers: { 'x-ms-bm-ws-info': '1' } }, payload: { ok: true } }
+
     mocks.wreckGet.resolves(mockResponse)
 
     let err
+
     try {
       await util.request(method, url, requestOptions)
     } catch (e) {

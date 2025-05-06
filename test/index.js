@@ -22,11 +22,13 @@ const index = () => proxyquire('../index', {
   }
 })
 
-lab.experiment('Server fail test', () => {
+lab.experiment('index.js - Server failure', () => {
   let originalExit
+
   lab.beforeEach(() => {
     originalExit = process.exit
     process.exit = mocks.exit
+
     mocks.exit.callsFake(() => {
       process.exit = originalExit
     })
@@ -39,7 +41,7 @@ lab.experiment('Server fail test', () => {
     process.exit = originalExit
   })
 
-  lab.test('it should handle errors with createServer()', async () => {
+  lab.test('should handle errors with createServer()', async () => {
     mocks.createServer.rejects(new Error('create server went wrong'))
     mocks.fatal.returns(undefined)
     mocks.flush.callsFake(cb => cb())
@@ -56,7 +58,7 @@ lab.experiment('Server fail test', () => {
     expect(mocks.exit.lastCall.args[0]).to.equal(1)
   })
 
-  lab.test('it should handle errors with server.start()', async () => {
+  lab.test('should handle errors with server.start()', async () => {
     mocks.createServer.resolves({ start: mocks.start, listener: {} })
     mocks.start.rejects(new Error('server start went wrong'))
     mocks.fatal.returns(undefined)
@@ -74,7 +76,7 @@ lab.experiment('Server fail test', () => {
     expect(mocks.exit.lastCall.args[0]).to.equal(1)
   })
 
-  lab.test('it disables requestTimeout and headersTimeout', async () => {
+  lab.test('should not fail the server if there is no error', async () => {
     const listener = {}
     mocks.createServer.resolves({ start: mocks.start, listener })
     mocks.start.resolves(undefined)

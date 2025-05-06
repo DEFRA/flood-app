@@ -8,13 +8,16 @@ const createLoggingTarget = require('../../../server/lib/logging/create-logging-
 
 experiment('createLoggingTarget', () => {
   let originalConfig
+
   before(() => {
     originalConfig = JSON.parse(JSON.stringify(config))
   })
+
   after(() => {
     Object.assign(config, originalConfig)
   })
-  test('it logs json to file when isPM2 is true', () => {
+
+  test('should log json to file when isPM2 is true', () => {
     config.isPM2 = true
 
     const actual = Object.values(pino.levels.labels).map(level => createLoggingTarget(level))
@@ -32,7 +35,8 @@ experiment('createLoggingTarget', () => {
     expect(destinations.error).to.endWith('.pino.err.log')
     expect(destinations.fatal).to.endWith('.pino.err.log')
   })
-  test('it logs pretty print to process when isPM2 is false', () => {
+
+  test('should log pretty print to process when isPM2 is false', () => {
     config.isPM2 = false
 
     const actual = Object.values(pino.levels.labels).map(level => createLoggingTarget(level))

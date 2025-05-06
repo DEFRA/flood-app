@@ -5,7 +5,7 @@ const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 // const createServer = require('../server')
 
-lab.experiment('Missing resource test', () => {
+lab.experiment('404', () => {
   let server
 
   lab.before(async () => {
@@ -43,7 +43,7 @@ lab.experiment('Missing resource test', () => {
     await server.stop()
   })
 
-  lab.test('Missing resources are handled correctly', async () => {
+  lab.test('should return 404 when visiting a missing resource', async () => {
     const options = {
       method: 'GET',
       url: '/missing/resource'
