@@ -24,7 +24,7 @@ const errbitTransport = proxyquire('../../../server/lib/logging/errbit-transport
   './errbit': stubs.Errbit
 })
 
-experiment('Errbit', () => {
+experiment('Logging - Errbit', () => {
   beforeEach(() => {
     stubs.Notifier.callsFake(() => ({
       notify: stubs.notify,
@@ -234,7 +234,7 @@ experiment('Errbit', () => {
   })
 })
 
-experiment('Errbit transport', () => {
+experiment('Logging - Errbit Transport', () => {
   beforeEach(() => {
     stubs.Errbit.callsFake(() => ({
       send: stubs.send,

@@ -5,7 +5,7 @@ const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
 const webpackConfig = require('../webpack.config')
 
-lab.experiment('webpack-config.js', () => {
+lab.experiment('Webpack - [server/webpack-config.js]', () => {
   let sandbox
 
   process.env.FLOOD_APP_GA4_ID = 'TEST_GA4_ID'

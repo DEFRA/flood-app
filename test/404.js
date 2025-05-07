@@ -5,7 +5,7 @@ const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 // const createServer = require('../server')
 
-lab.experiment('404', () => {
+lab.experiment('404 - [server/404.js]', () => {
   let server
 
   lab.before(async () => {

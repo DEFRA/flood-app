@@ -22,7 +22,7 @@ const index = () => proxyquire('../index', {
   }
 })
 
-lab.experiment('index.js - Server failure', () => {
+lab.experiment('Server failure - [server/index.js]', () => {
   let originalExit
 
   lab.beforeEach(() => {

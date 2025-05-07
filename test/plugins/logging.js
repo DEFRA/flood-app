@@ -9,7 +9,7 @@ const { URL } = require('url')
 
 const HOST = 'https://example.gov.uk'
 
-lab.experiment('logging plugin', () => {
+lab.experiment('Plugin - Request Logging', () => {
   let loggingPlugin
 
   lab.before(() => {
@@ -19,7 +19,7 @@ lab.experiment('logging plugin', () => {
     })
   })
 
-  lab.test('req serializer with query', async () => {
+  lab.test('should serialize req with query', async () => {
     const req = {
       url: new URL('/some/url', HOST),
       method: 'get',
@@ -38,7 +38,8 @@ lab.experiment('logging plugin', () => {
       }
     })
   })
-  lab.test('req serializer with empty query', async () => {
+
+  lab.test('should serialize req with an empty query', async () => {
     const req = {
       url: new URL('/some/url', HOST),
       method: 'get',
@@ -56,7 +57,8 @@ lab.experiment('logging plugin', () => {
       query: undefined
     })
   })
-  lab.test('req serializer without query', async () => {
+
+  lab.test('should serialize req without query', async () => {
     const req = {
       url: new URL('/some/url', HOST),
       method: 'get',
@@ -74,7 +76,7 @@ lab.experiment('logging plugin', () => {
     })
   })
 
-  lab.test('res serializer', async () => {
+  lab.test('should serialize res', async () => {
     const res = {
       output: {
         statusCode: 200
@@ -86,12 +88,10 @@ lab.experiment('logging plugin', () => {
 
     const actual = loggingPlugin.options.serializers.res(res)
 
-    expect(actual).to.equal({
-      statusCode: 200
-    })
+    expect(actual).to.equal({ statusCode: 200 })
   })
 
-  lab.test('err serializer', async () => {
+  lab.test('should serialize err', async () => {
     const err = new TypeError('Something went boom')
     err.code = 'BOOM_0001'
 
