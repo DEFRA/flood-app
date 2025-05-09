@@ -1,14 +1,14 @@
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
+const { expect } = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const spikeTelem = require('../data/spikeTelem.json')
 const nonSpikeTelem = require('../data/nonSpikeTelem.json')
 const { formatName, toMarked, cleanseLocation, removeSpikes } = require('../../server/util')
 
-lab.experiment('util', () => {
+lab.experiment('Util', () => {
   lab.experiment('toMarked', () => {
     lab.test('should find text that is marked', async () => {
-      Code.expect(toMarked('This is some text to be marked', 'text')).to.equal('This is some <mark>text</mark> to be marked')
+      expect(toMarked('This is some text to be marked', 'text')).to.equal('This is some <mark>text</mark> to be marked')
     })
 
     lab.test('should find text that is marked when search term is a regex char', async () => {
@@ -17,56 +17,56 @@ lab.experiment('util', () => {
       // error ("SyntaxError: Invalid regular expression: /(()/: Unterminated group: (unknown path)").
       // A requirement to return no results for single character search side steps the template rendering
       // error but it seems prudent to escape charaters before passing them to the regex generator
-      Code.expect(toMarked('This is some (text) to be marked', '(')).to.equal('This is some <mark>(</mark>text) to be marked')
+      expect(toMarked('This is some (text) to be marked', '(')).to.equal('This is some <mark>(</mark>text) to be marked')
     })
   })
 
   lab.experiment('cleanLocation', () => {
     lab.test('should find text that is cleansed', async () => {
-      Code.expect(cleanseLocation('This is some text to be cleansed', 'text')).to.equal('This is some text to be cleansed')
+      expect(cleanseLocation('This is some text to be cleansed', 'text')).to.equal('This is some text to be cleansed')
     })
 
     lab.test('should find text that is cleansed when search term contains special character', async () => {
-      Code.expect(cleanseLocation('This is some (text) to be cleansed <script>alert(\'TEST\')</script>', '(')).to.equal('This is some (text) to be cleansed scriptalert(\'TEST\')script')
+      expect(cleanseLocation('This is some (text) to be cleansed <script>alert(\'TEST\')</script>', '(')).to.equal('This is some (text) to be cleansed scriptalert(\'TEST\')script')
     })
   })
 
   lab.experiment('remove spikes in telem', () => {
     lab.test('should remove spike in telem over 300m and return 479 values', async () => {
       const telem = removeSpikes(spikeTelem)
-      Code.expect(telem.length).to.equal(479)
+      expect(telem.length).to.equal(479)
     })
 
     lab.test('should contain no spikes in telem all values under 300m and return 480 values', async () => {
       const telem = removeSpikes(nonSpikeTelem)
-      Code.expect(telem.length).to.equal(480)
+      expect(telem.length).to.equal(480)
     })
   })
 
   lab.experiment('formatName', () => {
     lab.test('should remove repeating parts', async () => {
-      Code.expect(formatName('Middlesbrough, Middlesbrough')).to.equal('Middlesbrough')
+      expect(formatName('Middlesbrough, Middlesbrough')).to.equal('Middlesbrough')
     })
 
     lab.test('should not remove similar parts', async () => {
-      Code.expect(formatName('Durham, County Durham')).to.equal('Durham, County Durham')
+      expect(formatName('Durham, County Durham')).to.equal('Durham, County Durham')
     })
 
     lab.test('should remove city qualifier "City Of"', async () => {
-      Code.expect(formatName('Bristol, City Of Bristol')).to.equal('Bristol')
-      Code.expect(formatName('Bristol, City of Bristol')).to.equal('Bristol')
+      expect(formatName('Bristol, City Of Bristol')).to.equal('Bristol')
+      expect(formatName('Bristol, City of Bristol')).to.equal('Bristol')
     })
 
     lab.test('should remove City qualifier "Greater"', async () => {
-      Code.expect(formatName('London, Greater London')).to.equal('London')
+      expect(formatName('London, Greater London')).to.equal('London')
     })
 
     lab.test('should remove City qualifier from neighbourhood', async () => {
-      Code.expect(formatName('Camberwell, London, Greater London')).to.equal('Camberwell, London')
+      expect(formatName('Camberwell, London, Greater London')).to.equal('Camberwell, London')
     })
 
     lab.test('should fail gracefully with undefined name', async () => {
-      Code.expect(formatName()).to.equal('')
+      expect(formatName()).to.equal('')
     })
   })
 })

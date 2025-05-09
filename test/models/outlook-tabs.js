@@ -1,15 +1,15 @@
 'use strict'
 
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
+const { expect } = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const OutlookTabsModel = require('../../server/models/outlook-tabs')
 const data = require('../data')
 const moment = require('moment')
 const formatDate = require('../../server/util').formatDate
 
-lab.experiment('outlookTabs model test', () => {
-  lab.test('Test OutlookTabsModel', async () => {
+lab.experiment('Model - Outlook Tabs', () => {
+  lab.test('should return the expected tabs', async () => {
     const outlook = data.fgs
 
     const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true, isScotlandOrNorthernIreland: false }
@@ -20,11 +20,12 @@ lab.experiment('outlookTabs model test', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    Code.expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
-    Code.expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
-    Code.expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
+    expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
+    expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
+    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
   })
-  lab.test('Test Coastal poly isnt failing in turf', async () => {
+
+  lab.test('should return that coastal poly aren\'t failing in turf', async () => {
     const outlook = data.fgsCoastal
 
     const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true, isScotlandOrNorthernIreland: false }
@@ -35,11 +36,12 @@ lab.experiment('outlookTabs model test', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    Code.expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
-    Code.expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
-    Code.expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
+    expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
+    expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
+    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
   })
-  lab.test('Test OutlookTabs is formating date correctly and outOfDate is false for FGS created today', async () => {
+
+  lab.test('should format the date correctly and set"outOfDate" as false for FGS created today', async () => {
     const outlook = data.fgs
 
     outlook.issued_at = moment().utc()
@@ -50,9 +52,10 @@ lab.experiment('outlookTabs model test', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    Code.expect(viewModel.formattedIssueDate).to.equal(formattedIssueDate)
+    expect(viewModel.formattedIssueDate).to.equal(formattedIssueDate)
   })
-  lab.test('Test location that doesnt intersect any polygons', async () => {
+
+  lab.test('should not intersect any polygons', async () => {
     const outlook = data.fgs
 
     const place = {
@@ -84,12 +87,13 @@ lab.experiment('outlookTabs model test', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    Code.expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
-    Code.expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
-    Code.expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
-    Code.expect(viewModel).to.not.contain(lowForFive)
+    expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
+    expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
+    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
+    expect(viewModel).to.not.contain(lowForFive)
   })
-  lab.test('Test each trend is set ', async () => {
+
+  lab.test('should set the trends', async () => {
     const outlook = data.fgsTrends
 
     const place = {
@@ -115,12 +119,13 @@ lab.experiment('outlookTabs model test', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    Code.expect(viewModel.trend[0]).to.equal('')
-    Code.expect(viewModel.trend[1]).to.equal('rises to')
-    Code.expect(viewModel.trend[2]).to.equal('falls to')
-    Code.expect(viewModel.trend[3]).to.equal('remains')
+    expect(viewModel.trend[0]).to.equal('')
+    expect(viewModel.trend[1]).to.equal('rises to')
+    expect(viewModel.trend[2]).to.equal('falls to')
+    expect(viewModel.trend[3]).to.equal('remains')
   })
-  lab.test('Test FGS with all alerts less than very low are filtered and dont get shown  ', async () => {
+
+  lab.test('should filter and not show FGS with all alerts less than very low', async () => {
     const outlook = data.fgsBelowVeryLow
 
     const place = {
@@ -146,12 +151,13 @@ lab.experiment('outlookTabs model test', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    Code.expect(viewModel.tab1).to.equal({})
-    Code.expect(viewModel.tab1).to.equal({})
-    Code.expect(viewModel.tab1).to.equal({})
-    Code.expect(viewModel.lowForFive).to.equal(true)
+    expect(viewModel.tab1).to.equal({})
+    expect(viewModel.tab1).to.equal({})
+    expect(viewModel.tab1).to.equal({})
+    expect(viewModel.lowForFive).to.equal(true)
   })
-  lab.test('Test flood risk is the same on Day 3 and day 4 but different on day 5  ', async () => {
+
+  lab.test('should check flood risk is the same on day 3 and day 4 but different on day 5', async () => {
     const outlook = {
       id: 1107,
       issued_at: '2019-08-08T09:30:00Z',
@@ -273,9 +279,10 @@ lab.experiment('outlookTabs model test', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    Code.expect(viewModel.dayName[2]).to.equal('Saturday and Sunday')
+    expect(viewModel.dayName[2]).to.equal('Saturday and Sunday')
   })
-  lab.test('Test FGS issued is yesterdays, Tab1 is populated from day2', async () => {
+
+  lab.test('should issue FGS as yesterday and "tab1" is populated from "day2"', async () => {
     const outlook = data.fgs
 
     outlook.issued_at = moment().utc().subtract(1, 'days').format()
@@ -305,9 +312,10 @@ lab.experiment('outlookTabs model test', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    Code.expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
+    expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
   })
-  lab.test('Test FGS issued is > 24 but <= 48 hours, Tab1 is populated from day3', async () => {
+
+  lab.test('should populate "tab1" from day 3 when FGS issued is > 24 but <= 48 hours', async () => {
     const outlook = data.fgs
 
     // outlook.issued_at = moment().utc().subtract(40, 'hours').format()
@@ -338,9 +346,10 @@ lab.experiment('outlookTabs model test', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    Code.expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
+    expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
   })
-  lab.test('Test Capitalise source 3-i4-l2', async () => {
+
+  lab.test('should capitalise source 3-i4-l2', async () => {
     const outlook = data.fgs3i4l2
 
     outlook.issued_at = moment().utc()
@@ -372,8 +381,8 @@ lab.experiment('outlookTabs model test', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    Code.expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
-    Code.expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
-    Code.expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
+    expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
+    expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
+    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
   })
 })

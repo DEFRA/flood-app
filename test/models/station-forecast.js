@@ -1,23 +1,25 @@
 'use strict'
 
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
+const { expect } = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const sinon = require('sinon')
 const moment = require('moment-timezone')
 const ViewModel = require('../../server/models/views/station-forecast')
 const data = require('../data')
 
-lab.experiment('Station model test', () => {
+lab.experiment('Model - Station Forecast', () => {
   let sandbox
 
   lab.beforeEach(async () => {
     sandbox = await sinon.createSandbox()
   })
+
   lab.afterEach(async () => {
     await sandbox.restore()
   })
-  lab.test('Test station-forecast viewModel FFOI station 7377', async () => {
+
+  lab.test('should return FFOI station 7377 and set "maxValue._', async () => {
     const stationData = data.forcastStationModelData
 
     stationData.values.$.date = moment().subtract(1, 'day').format('YYYY-MM-DD')
@@ -42,7 +44,7 @@ lab.experiment('Station model test', () => {
 
     const Result = viewModel
 
-    Code.expect(Result.hasForecastData).to.equal(true)
-    Code.expect(Result.maxValue._).to.equal('0.202')
+    expect(Result.hasForecastData).to.equal(true)
+    expect(Result.maxValue._).to.equal('0.202')
   })
 })

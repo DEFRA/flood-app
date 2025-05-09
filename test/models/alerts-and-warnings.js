@@ -1,58 +1,60 @@
 'use strict'
 
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
+const { expect } = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const ViewModel = require('../../server/models/views/alerts-and-warnings')
 const data = require('../data')
 const Floods = require('../../server/models/floods')
 
-lab.test('Test exposed data placeBox is blank if not a place in England', async () => {
-  let station, location
-  const place = data.scottishPlaceData
-  const floods = new Floods({ floods: data.floodAlertStation })
+lab.experiment('Model - Alerts and Warnings', () => {
+  lab.test('should return no exposed placeBbox data if the place is not in England', () => {
+    let station, location
+    const place = data.scottishPlaceData
+    const floods = new Floods({ floods: data.floodAlertStation })
 
-  const Result = await new ViewModel({ location, place, floods, station })
+    const Result = new ViewModel({ location, place, floods, station })
 
-  Code.expect(Result.expose.placeBbox.length).to.equal(0)
-  Code.expect(Result.pageTitle).to.equal('Kinghorn - flood alerts and warnings')
-})
+    expect(Result.expose.placeBbox.length).to.equal(0)
+    expect(Result.pageTitle).to.equal('Kinghorn - flood alerts and warnings')
+  })
 
-lab.test('Test count floods function returns correct number of floods', async () => {
-  let place, location
-  const station = data.alertStation
-  const floods = new Floods({ floods: data.floodAlertStation })
+  lab.test('should return the correct number of floods', () => {
+    let place, location
+    const station = data.alertStation
+    const floods = new Floods({ floods: data.floodAlertStation })
 
-  const Result = await new ViewModel({ location, place, floods, station })
+    const Result = new ViewModel({ location, place, floods, station })
 
-  Code.expect(Result.countFloods).to.equal(6)
-})
+    expect(Result.countFloods).to.equal(6)
+  })
 
-lab.test('Test error returns error', async () => {
-  let place, location
-  const station = data.alertStation
-  const floods = new Floods({ floods: data.floodAlertStation })
-  const error = true
+  lab.test('should return an error if the "error" property is set', () => {
+    let place, location
+    const station = data.alertStation
+    const floods = new Floods({ floods: data.floodAlertStation })
+    const error = true
 
-  const Result = await new ViewModel({ location, place, floods, station, error })
+    const Result = new ViewModel({ location, place, floods, station, error })
 
-  Code.expect(Result.pageTitle).to.equal('Sorry, there is currently a problem searching a location')
-})
+    expect(Result.pageTitle).to.equal('Sorry, there is currently a problem searching a location')
+  })
 
-lab.test('Test location sets page title', async () => {
-  let station, place, floods
+  lab.test('should have the location in the page title', () => {
+    let station, place, floods
 
-  const location = 'Newcastle Upon Tyne'
-  const Result = await new ViewModel({ location, place, floods, station })
+    const location = 'Newcastle Upon Tyne'
+    const Result = new ViewModel({ location, place, floods, station })
 
-  Code.expect(Result.pageTitle).to.equal('Newcastle Upon Tyne - flood alerts and warnings')
-})
+    expect(Result.pageTitle).to.equal('Newcastle Upon Tyne - flood alerts and warnings')
+  })
 
-lab.test('Test displayGetWarningsLink has appropriate Value', async () => {
-  const options = {}
+  lab.test('should set "displayGetWarningsLink" with the appropriate value', () => {
+    const options = {}
 
-  const Result = await new ViewModel(options)
+    const Result = new ViewModel(options)
 
-  Code.expect(Result.displayGetWarningsLink, 'Get warnings flag should be true').to.equal(true)
-  Code.expect(Result.displayLongTermLink, 'Long term flood risk flag should be true').to.equal(true)
+    expect(Result.displayGetWarningsLink, 'Get warnings flag should be true').to.equal(true)
+    expect(Result.displayLongTermLink, 'Long term flood risk flag should be true').to.equal(true)
+  })
 })

@@ -9,7 +9,7 @@ const mocks = {
   wreckPost: sinon.stub()
 }
 
-lab.experiment('util - request', () => {
+lab.experiment('Util - Request', () => {
   let util
 
   lab.before(() => {
