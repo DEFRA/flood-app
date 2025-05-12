@@ -9,20 +9,24 @@ const stubGetEngland = async () => { return { is_england: true } }
 
 function getBingResponse (resources = []) {
   const response = { ...responseTemplate }
+
   response.resourceSets = [{
     estimatedTotal: resources.length,
     resources
   }]
+
   return response
 }
 
-describe('bingResultsParser', () => {
-  it('empty resource set should return empty results', async () => {
+describe('Service - Bing Results Parser', () => {
+  it('should return empty results from an empty resource set', async () => {
     const bingResponse = getBingResponse()
     const result = await bingResultsParser(bingResponse, stubGetEngland)
+
     expect(result).to.equal([])
   })
-  it('successful location search should return populated result', async () => {
+
+  it('should return populated result from location search', async () => {
     const resources = [
       {
         __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -68,6 +72,7 @@ describe('bingResultsParser', () => {
         ]
       }
     ]
+
     const bingResponse = getBingResponse(resources)
     const result = await bingResultsParser(bingResponse, stubGetEngland)
 
@@ -92,9 +97,11 @@ describe('bingResultsParser', () => {
         isEngland: { is_england: true }
       }
     ]
+
     expect(result).to.equal(expectedResult)
   })
-  it('successful postcode search should return populated result', async () => {
+
+  it('should return populated result from postcode search', async () => {
     const resources = [
       {
         __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -141,6 +148,7 @@ describe('bingResultsParser', () => {
         ]
       }
     ]
+
     const bingResponse = getBingResponse(resources)
     const result = await bingResultsParser(bingResponse, stubGetEngland)
 
@@ -165,9 +173,11 @@ describe('bingResultsParser', () => {
         isEngland: { is_england: true }
       }
     ]
+
     expect(result).to.equal(expectedResult)
   })
-  it('successful outcode search should return populated result', async () => {
+
+  it('should return populated result from outcode search', async () => {
     const resources = [
       {
         __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -215,6 +225,7 @@ describe('bingResultsParser', () => {
       }
 
     ]
+
     const bingResponse = getBingResponse(resources)
     const result = await bingResultsParser(bingResponse, stubGetEngland)
 
@@ -239,9 +250,11 @@ describe('bingResultsParser', () => {
         isEngland: { is_england: true }
       }
     ]
+
     expect(result).to.equal(expectedResult)
   })
-  it('successful address search should return empty result', async () => {
+
+  it('should return empty result from address search', async () => {
     const resources = [
       {
         __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -300,12 +313,14 @@ describe('bingResultsParser', () => {
         ]
       }
     ]
+
     const bingResponse = getBingResponse(resources)
     const result = await bingResultsParser(bingResponse, stubGetEngland)
 
     expect(result).to.equal([])
   })
-  it('medium confidence response should return populated result', async () => {
+
+  it('should return populated result from  medium confidence response', async () => {
     const resources = [
       {
         __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -351,6 +366,7 @@ describe('bingResultsParser', () => {
         ]
       }
     ]
+
     const bingResponse = getBingResponse(resources)
     const result = await bingResultsParser(bingResponse, stubGetEngland)
 
@@ -375,9 +391,11 @@ describe('bingResultsParser', () => {
         isEngland: { is_england: true }
       }
     ]
+
     expect(result).to.equal(expectedResult)
   })
-  it('low confidence response should return empty result', async () => {
+
+  it('should return empty result from low confidence response', async () => {
     const resources = [
       {
         __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -423,12 +441,14 @@ describe('bingResultsParser', () => {
         ]
       }
     ]
+
     const bingResponse = getBingResponse(resources)
     const result = await bingResultsParser(bingResponse, stubGetEngland)
 
     expect(result).to.equal([])
   })
-  it('multiple items in response should return the first non-low confidence result', async () => {
+
+  it('should return the first non-low confidence result from multiple item response', async () => {
     // Note: we currently limit the max results returned from bing using the maxResults URL query parameter
     // to just 1
     // The results are still returned as an array with just a single entry but this test demonstrates that
@@ -606,6 +626,7 @@ describe('bingResultsParser', () => {
         ]
       }
     ]
+
     const bingResponse = getBingResponse(resources)
     const result = await bingResultsParser(bingResponse, stubGetEngland)
 
@@ -630,6 +651,7 @@ describe('bingResultsParser', () => {
         isEngland: { is_england: true }
       }
     ]
+
     expect(result).to.equal(expectedResult)
   })
 })

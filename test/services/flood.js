@@ -5,12 +5,13 @@ const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const sinon = require('sinon')
 const config = require('../../server/config')
 
-describe('Flood service test', () => {
+describe('Service - Flood Endpoints', () => {
   let sandbox
 
   beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/util.js')]
+
     sandbox = sinon.createSandbox()
     sandbox.stub(config, 'serviceUrl').value('http://server2')
   })
@@ -19,11 +20,7 @@ describe('Flood service test', () => {
     await sandbox.restore()
   })
 
-  it('Check flood service exists', () => {
-    const floodService = require('../../server/services/flood')
-    expect(floodService).to.be.a.object()
-  })
-  it('Test getFloods endpoint', async () => {
+  it('should return ok: getFloods', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -39,7 +36,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getFloodsWithin endpoint', async () => {
+
+  it('should return ok: getFloodsWithin', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -55,7 +53,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getFloodArea endpoint warning', async () => {
+
+  it('should return ok: getFloodArea', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -71,7 +70,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getFloodArea endpoint alert', async () => {
+
+  it('should return ok: getFloodArea', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -87,7 +87,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getOutlook endpoint', async () => {
+
+  it('should return ok: getOutlook', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -103,7 +104,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getStationById endpoint', async () => {
+
+  it('should return ok: getStationById', async () => {
     const direction = 'u'
     const id = 1001
 
@@ -122,7 +124,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getStationsWithin endpoint', async () => {
+
+  it('should return ok: getStationsWithin', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -138,7 +141,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getStationsWithinTargetArea', async () => {
+
+  it('should return ok: getStationsWithinTargetArea', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -154,7 +158,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getWarningsAlertsWithinStationBuffer', async () => {
+
+  it('should return ok: getWarningsAlertsWithinStationBuffer', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -170,7 +175,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getRiverById', async () => {
+
+  it('should return ok: getRiverById', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -186,7 +192,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getRiversByName', async () => {
+
+  it('should return ok: getRiversByName', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -202,7 +209,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getRiverStationByStationId', async () => {
+
+  it('should return ok: getRiverStationByStationId', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -218,7 +226,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getStationTelemetry endpoint', async () => {
+
+  it('should return ok: getStationTelemetry', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -234,7 +243,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getForecastFlag endpoint', async () => {
+
+  it('should return ok: getForecastFlag', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -250,7 +260,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getStationForecastData endpoint', async () => {
+
+  it('should return ok: getStationForecastData', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -266,7 +277,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getStationsGeoJson endpoint', async () => {
+
+  it('should return ok: getStationsGeoJson', async () => {
     const util = require('../../server/util')
     sandbox.stub(config, 'geoserverUrl').value('http://server1')
 
@@ -283,7 +295,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getRainfallGeojson endpoint', async () => {
+
+  it('should return ok: getRainfallGeojson', async () => {
     const util = require('../../server/util')
     sandbox.stub(config, 'geoserverUrl').value('http://server1')
 
@@ -300,7 +313,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getIsEngland endpoint', async () => {
+
+  it('should return ok: getIsEngland', async () => {
     const lat = 1
     const lng = 2
 
@@ -319,7 +333,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getImpactsData endpoint', async () => {
+
+  it('should return ok: getImpactsData', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -335,7 +350,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getImpactsWithin endpoint', async () => {
+
+  it('should return ok: getImpactsWithin', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -351,7 +367,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getRivers endpoint', async () => {
+
+  it('should return ok: getRivers', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -367,7 +384,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getStationsOverview endpoint', async () => {
+
+  it('should return ok: getStationsOverview', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -383,7 +401,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getServiceHealth endpoint', async () => {
+
+  it('should return ok: getServiceHealth', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -399,7 +418,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getGeoserverHealth endpoint', async () => {
+
+  it('should return ok: getGeoserverHealth', async () => {
     sandbox.stub(config, 'geoserverUrl').value('http://server2')
 
     const util = require('../../server/util')
@@ -416,7 +436,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getStationsHealth endpoint', async () => {
+
+  it('should return ok: getStationsHealth', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -432,7 +453,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getTelemetryHealth endpoint', async () => {
+
+  it('should return ok: getTelemetryHealth', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -448,7 +470,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getFfoiHealth endpoint', async () => {
+
+  it('should return ok: getFfoiHealth', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -464,7 +487,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getStationsByRadius endpoint', async () => {
+
+  it('should return ok: getStationsByRadius', async () => {
     const util = require('../../server/util')
 
     const x = 1
@@ -483,7 +507,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getStationsByRadius endpoint with rad', async () => {
+
+  it('should return ok (with rad): getStationsByRadius', async () => {
     const util = require('../../server/util')
 
     const x = 1
@@ -503,7 +528,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getError', async () => {
+
+  it('should return ok: getError', async () => {
     const util = require('../../server/util')
     sandbox
       .mock(util)
@@ -518,7 +544,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getRainfallStationTelemetry', async () => {
+
+  it('should return ok: getRainfallStationTelemetry', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -534,7 +561,8 @@ describe('Flood service test', () => {
 
     expect(result).to.equal('ok')
   })
-  it('Test getRainfallStation', async () => {
+
+  it('should return ok: getRainfallStation', async () => {
     const util = require('../../server/util')
 
     sandbox
