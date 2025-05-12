@@ -2,16 +2,16 @@
 
 const Hapi = require('@hapi/hapi')
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
+const { expect } = require('@hapi/code')
 const sinon = require('sinon')
-const lab = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const { siteUrl } = require('../../server/config')
 
-lab.experiment('Get Cookies test', () => {
+describe('Get Cookies test', () => {
   let sandbox
   let server
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     sandbox = await sinon.createSandbox()
     server = Hapi.server({
       port: 3009,
@@ -19,12 +19,12 @@ lab.experiment('Get Cookies test', () => {
     })
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await server.stop()
     await sandbox.restore()
   })
 
-  lab.test('GET /cookies and set cookie preferences deal with attempted XSS', async () => {
+  it('GET /cookies and set cookie preferences deal with attempted XSS', async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/plugins/on-post-handler.js')]
 
@@ -64,16 +64,16 @@ lab.experiment('Get Cookies test', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.include('cookies')
-    Code.expect(response.headers['content-type']).to.include('text/html')
-    Code.expect(response.request.headers.referer).to.equal(`${siteUrl}" onclick="alert(10);`)
-    Code.expect(response.payload).to.not.include('Go back to the page you were looking at')
-    Code.expect(response.request.state.seen_cookie_message).to.equal('true')
-    Code.expect(response.request.state.set_cookie_usage).to.equal('true')
-    Code.expect(response.request.state._ga).to.equal('GA1.1.1682777723.1629978783')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.include('cookies')
+    expect(response.headers['content-type']).to.include('text/html')
+    expect(response.request.headers.referer).to.equal(`${siteUrl}" onclick="alert(10);`)
+    expect(response.payload).to.not.include('Go back to the page you were looking at')
+    expect(response.request.state.seen_cookie_message).to.equal('true')
+    expect(response.request.state.set_cookie_usage).to.equal('true')
+    expect(response.request.state._ga).to.equal('GA1.1.1682777723.1629978783')
   })
-  lab.test('GET /cookies and set cookie preferences with corrupt referer', async () => {
+  it('GET /cookies and set cookie preferences with corrupt referer', async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/plugins/on-post-handler.js')]
 
@@ -114,15 +114,15 @@ lab.experiment('Get Cookies test', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.include('cookies')
-    Code.expect(response.payload).to.not.include('Go back to the page you were looking at')
-    Code.expect(response.headers['content-type']).to.include('text/html')
-    Code.expect(response.request.state.seen_cookie_message).to.equal('true')
-    Code.expect(response.request.state.set_cookie_usage).to.equal('true')
-    Code.expect(response.request.state._ga).to.equal('GA1.1.1682777723.1629978783')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.include('cookies')
+    expect(response.payload).to.not.include('Go back to the page you were looking at')
+    expect(response.headers['content-type']).to.include('text/html')
+    expect(response.request.state.seen_cookie_message).to.equal('true')
+    expect(response.request.state.set_cookie_usage).to.equal('true')
+    expect(response.request.state._ga).to.equal('GA1.1.1682777723.1629978783')
   })
-  lab.test('GET /cookies and set cookie preferences with valid referer', async () => {
+  it('GET /cookies and set cookie preferences with valid referer', async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/plugins/on-post-handler.js')]
 
@@ -163,12 +163,12 @@ lab.experiment('Get Cookies test', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.include('cookies')
-    Code.expect(response.payload).to.include('Go back to the page you were looking at')
-    Code.expect(response.headers['content-type']).to.include('text/html')
-    Code.expect(response.request.state.seen_cookie_message).to.equal('true')
-    Code.expect(response.request.state.set_cookie_usage).to.equal('true')
-    Code.expect(response.request.state._ga).to.equal('GA1.1.1682777723.1629978783')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.include('cookies')
+    expect(response.payload).to.include('Go back to the page you were looking at')
+    expect(response.headers['content-type']).to.include('text/html')
+    expect(response.request.state.seen_cookie_message).to.equal('true')
+    expect(response.request.state.set_cookie_usage).to.equal('true')
+    expect(response.request.state._ga).to.equal('GA1.1.1682777723.1629978783')
   })
 })

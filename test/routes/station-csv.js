@@ -2,16 +2,16 @@
 
 const Hapi = require('@hapi/hapi')
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
+const { expect } = require('@hapi/code')
 const sinon = require('sinon')
-const lab = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const data = require('../data')
 
-lab.experiment('Routes test - station-csv', () => {
+describe('Routes test - station-csv', () => {
   let sandbox
   let server
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     delete require.cache[require.resolve('../../server/routes/station-csv.js')]
     delete require.cache[require.resolve('../../server/services/flood.js')]
     sandbox = await sinon.createSandbox()
@@ -36,7 +36,7 @@ lab.experiment('Routes test - station-csv', () => {
     await server.initialize()
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await server.stop()
     await sandbox.restore()
     const regex = /.\/server\/models\/./
@@ -46,7 +46,7 @@ lab.experiment('Routes test - station-csv', () => {
       }
     })
   })
-  lab.test('GET /station-csv FFOI station', async () => {
+  it('GET /station-csv FFOI station', async () => {
     const options = {
       method: 'GET',
       url: '/station-csv/8208'
@@ -76,11 +76,11 @@ lab.experiment('Routes test - station-csv', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.result).to.equal('Timestamp (UTC),Height (m),Type(observed/forecast)\n2021-07-15T12:00:00Z,0.25,observed\n2021-07-15T12:15:00Z,0.24,forecast\n2021-07-15T12:30:00Z,0.23,forecast\n2021-07-15T12:45:00Z,0.23,forecast\n2021-07-15T13:00:00Z,0.23,forecast\n2021-07-15T13:15:00Z,0.23,forecast\n2021-07-15T13:30:00Z,0.23,forecast\n2021-07-15T13:45:00Z,0.23,forecast\n2021-07-15T14:00:00Z,0.23,forecast\n2021-07-15T14:15:00Z,0.23,forecast\n2021-07-15T14:30:00Z,0.23,forecast\n2021-07-15T14:45:00Z,0.23,forecast\n2021-07-15T15:00:00Z,0.23,forecast\n2021-07-15T15:15:00Z,0.23,forecast\n2021-07-15T15:30:00Z,0.23,forecast\n2021-07-15T15:45:00Z,0.23,forecast\n2021-07-15T16:00:00Z,0.23,forecast\n2021-07-15T16:15:00Z,0.23,forecast\n2021-07-15T16:30:00Z,0.23,forecast\n2021-07-15T16:45:00Z,0.23,forecast\n2021-07-15T17:00:00Z,0.23,forecast\n2021-07-15T17:15:00Z,0.23,forecast\n2021-07-15T17:30:00Z,0.23,forecast\n2021-07-15T17:45:00Z,0.22,forecast\n2021-07-15T18:00:00Z,0.22,forecast\n2021-07-15T18:15:00Z,0.22,forecast\n2021-07-15T18:30:00Z,0.22,forecast\n2021-07-15T18:45:00Z,0.22,forecast\n2021-07-15T19:00:00Z,0.22,forecast\n2021-07-15T19:15:00Z,0.22,forecast\n2021-07-15T19:30:00Z,0.22,forecast\n2021-07-15T19:45:00Z,0.22,forecast\n2021-07-15T20:00:00Z,0.22,forecast\n2021-07-15T20:15:00Z,0.22,forecast\n2021-07-15T20:30:00Z,0.22,forecast\n2021-07-15T20:45:00Z,0.22,forecast\n2021-07-15T21:00:00Z,0.22,forecast\n2021-07-15T21:15:00Z,0.22,forecast\n2021-07-15T21:30:00Z,0.22,forecast\n2021-07-15T21:45:00Z,0.22,forecast\n2021-07-15T22:00:00Z,0.22,forecast\n2021-07-15T22:15:00Z,0.22,forecast\n2021-07-15T22:30:00Z,0.22,forecast\n2021-07-15T22:45:00Z,0.22,forecast\n2021-07-15T23:00:00Z,0.22,forecast\n2021-07-15T23:15:00Z,0.22,forecast\n2021-07-15T23:30:00Z,0.22,forecast\n2021-07-15T23:45:00Z,0.22,forecast\n2021-07-16T00:00:00Z,0.22,forecast\n2021-07-16T00:15:00Z,0.22,forecast\n2021-07-16T00:30:00Z,0.22,forecast\n2021-07-16T00:45:00Z,0.22,forecast\n2021-07-16T01:00:00Z,0.22,forecast\n2021-07-16T01:15:00Z,0.22,forecast\n2021-07-16T01:30:00Z,0.22,forecast\n2021-07-16T01:45:00Z,0.22,forecast\n2021-07-16T02:00:00Z,0.22,forecast\n2021-07-16T02:15:00Z,0.22,forecast\n2021-07-16T02:30:00Z,0.22,forecast\n2021-07-16T02:45:00Z,0.23,forecast\n2021-07-16T03:00:00Z,0.23,forecast\n2021-07-16T03:15:00Z,0.23,forecast\n2021-07-16T03:30:00Z,0.23,forecast\n2021-07-16T03:45:00Z,0.23,forecast\n2021-07-16T04:00:00Z,0.23,forecast\n2021-07-16T04:15:00Z,0.23,forecast\n2021-07-16T04:30:00Z,0.23,forecast\n2021-07-16T04:45:00Z,0.23,forecast\n2021-07-16T05:00:00Z,0.23,forecast\n2021-07-16T05:15:00Z,0.23,forecast\n2021-07-16T05:30:00Z,0.23,forecast\n2021-07-16T05:45:00Z,0.23,forecast\n2021-07-16T06:00:00Z,0.23,forecast\n2021-07-16T06:15:00Z,0.23,forecast\n2021-07-16T06:30:00Z,0.23,forecast\n2021-07-16T06:45:00Z,0.23,forecast\n2021-07-16T07:00:00Z,0.23,forecast\n2021-07-16T07:15:00Z,0.23,forecast\n2021-07-16T07:30:00Z,0.23,forecast\n2021-07-16T07:45:00Z,0.23,forecast\n2021-07-16T08:00:00Z,0.23,forecast\n2021-07-16T08:15:00Z,0.23,forecast\n2021-07-16T08:30:00Z,0.23,forecast\n2021-07-16T08:45:00Z,0.23,forecast\n2021-07-16T09:00:00Z,0.23,forecast\n2021-07-16T09:15:00Z,0.23,forecast\n2021-07-16T09:30:00Z,0.23,forecast\n2021-07-16T09:45:00Z,0.23,forecast\n2021-07-16T10:00:00Z,0.23,forecast\n2021-07-16T10:15:00Z,0.23,forecast\n2021-07-16T10:30:00Z,0.23,forecast\n2021-07-16T10:45:00Z,0.23,forecast\n2021-07-16T11:00:00Z,0.23,forecast\n2021-07-16T11:15:00Z,0.23,forecast\n2021-07-16T11:30:00Z,0.23,forecast\n2021-07-16T11:45:00Z,0.23,forecast\n2021-07-16T12:00:00Z,0.23,forecast\n2021-07-16T12:15:00Z,0.23,forecast\n2021-07-16T12:30:00Z,0.23,forecast\n2021-07-16T12:45:00Z,0.23,forecast\n2021-07-16T13:00:00Z,0.23,forecast\n2021-07-16T13:15:00Z,0.23,forecast\n2021-07-16T13:30:00Z,0.23,forecast\n2021-07-16T13:45:00Z,0.23,forecast\n2021-07-16T14:00:00Z,0.23,forecast\n2021-07-16T14:15:00Z,0.22,forecast\n2021-07-16T14:30:00Z,0.22,forecast\n2021-07-16T14:45:00Z,0.22,forecast\n2021-07-16T15:00:00Z,0.22,forecast\n2021-07-16T15:15:00Z,0.22,forecast\n2021-07-16T15:30:00Z,0.22,forecast\n2021-07-16T15:45:00Z,0.22,forecast\n2021-07-16T16:00:00Z,0.22,forecast\n2021-07-16T16:15:00Z,0.22,forecast\n2021-07-16T16:30:00Z,0.22,forecast\n2021-07-16T16:45:00Z,0.22,forecast\n2021-07-16T17:00:00Z,0.22,forecast\n2021-07-16T17:15:00Z,0.22,forecast\n2021-07-16T17:30:00Z,0.22,forecast\n2021-07-16T17:45:00Z,0.22,forecast\n2021-07-16T18:00:00Z,0.22,forecast\n2021-07-16T18:15:00Z,0.22,forecast\n2021-07-16T18:30:00Z,0.22,forecast\n2021-07-16T18:45:00Z,0.22,forecast\n2021-07-16T19:00:00Z,0.22,forecast\n2021-07-16T19:15:00Z,0.22,forecast\n2021-07-16T19:30:00Z,0.22,forecast\n2021-07-16T19:45:00Z,0.22,forecast\n2021-07-16T20:00:00Z,0.22,forecast\n2021-07-16T20:15:00Z,0.22,forecast\n2021-07-16T20:30:00Z,0.22,forecast\n2021-07-16T20:45:00Z,0.22,forecast\n2021-07-16T21:00:00Z,0.22,forecast\n2021-07-16T21:15:00Z,0.22,forecast\n2021-07-16T21:30:00Z,0.21,forecast\n2021-07-16T21:45:00Z,0.21,forecast\n2021-07-16T22:00:00Z,0.21,forecast\n2021-07-16T22:15:00Z,0.21,forecast\n2021-07-16T22:30:00Z,0.21,forecast\n2021-07-16T22:45:00Z,0.21,forecast\n2021-07-16T23:00:00Z,0.21,forecast\n2021-07-16T23:15:00Z,0.21,forecast\n2021-07-16T23:30:00Z,0.21,forecast\n2021-07-16T23:45:00Z,0.21,forecast\n2021-07-17T00:00:00Z,1.00,forecast')
-    Code.expect(response.headers['content-type']).to.include('text/csv')
+    expect(response.statusCode).to.equal(200)
+    expect(response.result).to.equal('Timestamp (UTC),Height (m),Type(observed/forecast)\n2021-07-15T12:00:00Z,0.25,observed\n2021-07-15T12:15:00Z,0.24,forecast\n2021-07-15T12:30:00Z,0.23,forecast\n2021-07-15T12:45:00Z,0.23,forecast\n2021-07-15T13:00:00Z,0.23,forecast\n2021-07-15T13:15:00Z,0.23,forecast\n2021-07-15T13:30:00Z,0.23,forecast\n2021-07-15T13:45:00Z,0.23,forecast\n2021-07-15T14:00:00Z,0.23,forecast\n2021-07-15T14:15:00Z,0.23,forecast\n2021-07-15T14:30:00Z,0.23,forecast\n2021-07-15T14:45:00Z,0.23,forecast\n2021-07-15T15:00:00Z,0.23,forecast\n2021-07-15T15:15:00Z,0.23,forecast\n2021-07-15T15:30:00Z,0.23,forecast\n2021-07-15T15:45:00Z,0.23,forecast\n2021-07-15T16:00:00Z,0.23,forecast\n2021-07-15T16:15:00Z,0.23,forecast\n2021-07-15T16:30:00Z,0.23,forecast\n2021-07-15T16:45:00Z,0.23,forecast\n2021-07-15T17:00:00Z,0.23,forecast\n2021-07-15T17:15:00Z,0.23,forecast\n2021-07-15T17:30:00Z,0.23,forecast\n2021-07-15T17:45:00Z,0.22,forecast\n2021-07-15T18:00:00Z,0.22,forecast\n2021-07-15T18:15:00Z,0.22,forecast\n2021-07-15T18:30:00Z,0.22,forecast\n2021-07-15T18:45:00Z,0.22,forecast\n2021-07-15T19:00:00Z,0.22,forecast\n2021-07-15T19:15:00Z,0.22,forecast\n2021-07-15T19:30:00Z,0.22,forecast\n2021-07-15T19:45:00Z,0.22,forecast\n2021-07-15T20:00:00Z,0.22,forecast\n2021-07-15T20:15:00Z,0.22,forecast\n2021-07-15T20:30:00Z,0.22,forecast\n2021-07-15T20:45:00Z,0.22,forecast\n2021-07-15T21:00:00Z,0.22,forecast\n2021-07-15T21:15:00Z,0.22,forecast\n2021-07-15T21:30:00Z,0.22,forecast\n2021-07-15T21:45:00Z,0.22,forecast\n2021-07-15T22:00:00Z,0.22,forecast\n2021-07-15T22:15:00Z,0.22,forecast\n2021-07-15T22:30:00Z,0.22,forecast\n2021-07-15T22:45:00Z,0.22,forecast\n2021-07-15T23:00:00Z,0.22,forecast\n2021-07-15T23:15:00Z,0.22,forecast\n2021-07-15T23:30:00Z,0.22,forecast\n2021-07-15T23:45:00Z,0.22,forecast\n2021-07-16T00:00:00Z,0.22,forecast\n2021-07-16T00:15:00Z,0.22,forecast\n2021-07-16T00:30:00Z,0.22,forecast\n2021-07-16T00:45:00Z,0.22,forecast\n2021-07-16T01:00:00Z,0.22,forecast\n2021-07-16T01:15:00Z,0.22,forecast\n2021-07-16T01:30:00Z,0.22,forecast\n2021-07-16T01:45:00Z,0.22,forecast\n2021-07-16T02:00:00Z,0.22,forecast\n2021-07-16T02:15:00Z,0.22,forecast\n2021-07-16T02:30:00Z,0.22,forecast\n2021-07-16T02:45:00Z,0.23,forecast\n2021-07-16T03:00:00Z,0.23,forecast\n2021-07-16T03:15:00Z,0.23,forecast\n2021-07-16T03:30:00Z,0.23,forecast\n2021-07-16T03:45:00Z,0.23,forecast\n2021-07-16T04:00:00Z,0.23,forecast\n2021-07-16T04:15:00Z,0.23,forecast\n2021-07-16T04:30:00Z,0.23,forecast\n2021-07-16T04:45:00Z,0.23,forecast\n2021-07-16T05:00:00Z,0.23,forecast\n2021-07-16T05:15:00Z,0.23,forecast\n2021-07-16T05:30:00Z,0.23,forecast\n2021-07-16T05:45:00Z,0.23,forecast\n2021-07-16T06:00:00Z,0.23,forecast\n2021-07-16T06:15:00Z,0.23,forecast\n2021-07-16T06:30:00Z,0.23,forecast\n2021-07-16T06:45:00Z,0.23,forecast\n2021-07-16T07:00:00Z,0.23,forecast\n2021-07-16T07:15:00Z,0.23,forecast\n2021-07-16T07:30:00Z,0.23,forecast\n2021-07-16T07:45:00Z,0.23,forecast\n2021-07-16T08:00:00Z,0.23,forecast\n2021-07-16T08:15:00Z,0.23,forecast\n2021-07-16T08:30:00Z,0.23,forecast\n2021-07-16T08:45:00Z,0.23,forecast\n2021-07-16T09:00:00Z,0.23,forecast\n2021-07-16T09:15:00Z,0.23,forecast\n2021-07-16T09:30:00Z,0.23,forecast\n2021-07-16T09:45:00Z,0.23,forecast\n2021-07-16T10:00:00Z,0.23,forecast\n2021-07-16T10:15:00Z,0.23,forecast\n2021-07-16T10:30:00Z,0.23,forecast\n2021-07-16T10:45:00Z,0.23,forecast\n2021-07-16T11:00:00Z,0.23,forecast\n2021-07-16T11:15:00Z,0.23,forecast\n2021-07-16T11:30:00Z,0.23,forecast\n2021-07-16T11:45:00Z,0.23,forecast\n2021-07-16T12:00:00Z,0.23,forecast\n2021-07-16T12:15:00Z,0.23,forecast\n2021-07-16T12:30:00Z,0.23,forecast\n2021-07-16T12:45:00Z,0.23,forecast\n2021-07-16T13:00:00Z,0.23,forecast\n2021-07-16T13:15:00Z,0.23,forecast\n2021-07-16T13:30:00Z,0.23,forecast\n2021-07-16T13:45:00Z,0.23,forecast\n2021-07-16T14:00:00Z,0.23,forecast\n2021-07-16T14:15:00Z,0.22,forecast\n2021-07-16T14:30:00Z,0.22,forecast\n2021-07-16T14:45:00Z,0.22,forecast\n2021-07-16T15:00:00Z,0.22,forecast\n2021-07-16T15:15:00Z,0.22,forecast\n2021-07-16T15:30:00Z,0.22,forecast\n2021-07-16T15:45:00Z,0.22,forecast\n2021-07-16T16:00:00Z,0.22,forecast\n2021-07-16T16:15:00Z,0.22,forecast\n2021-07-16T16:30:00Z,0.22,forecast\n2021-07-16T16:45:00Z,0.22,forecast\n2021-07-16T17:00:00Z,0.22,forecast\n2021-07-16T17:15:00Z,0.22,forecast\n2021-07-16T17:30:00Z,0.22,forecast\n2021-07-16T17:45:00Z,0.22,forecast\n2021-07-16T18:00:00Z,0.22,forecast\n2021-07-16T18:15:00Z,0.22,forecast\n2021-07-16T18:30:00Z,0.22,forecast\n2021-07-16T18:45:00Z,0.22,forecast\n2021-07-16T19:00:00Z,0.22,forecast\n2021-07-16T19:15:00Z,0.22,forecast\n2021-07-16T19:30:00Z,0.22,forecast\n2021-07-16T19:45:00Z,0.22,forecast\n2021-07-16T20:00:00Z,0.22,forecast\n2021-07-16T20:15:00Z,0.22,forecast\n2021-07-16T20:30:00Z,0.22,forecast\n2021-07-16T20:45:00Z,0.22,forecast\n2021-07-16T21:00:00Z,0.22,forecast\n2021-07-16T21:15:00Z,0.22,forecast\n2021-07-16T21:30:00Z,0.21,forecast\n2021-07-16T21:45:00Z,0.21,forecast\n2021-07-16T22:00:00Z,0.21,forecast\n2021-07-16T22:15:00Z,0.21,forecast\n2021-07-16T22:30:00Z,0.21,forecast\n2021-07-16T22:45:00Z,0.21,forecast\n2021-07-16T23:00:00Z,0.21,forecast\n2021-07-16T23:15:00Z,0.21,forecast\n2021-07-16T23:30:00Z,0.21,forecast\n2021-07-16T23:45:00Z,0.21,forecast\n2021-07-17T00:00:00Z,1.00,forecast')
+    expect(response.headers['content-type']).to.include('text/csv')
   })
-  lab.test('GET /station-csv/5146', async () => {
+  it('GET /station-csv/5146', async () => {
     const options = {
       method: 'GET',
       url: '/station-csv/5146'
@@ -149,11 +149,11 @@ lab.experiment('Routes test - station-csv', () => {
     sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.result).to.equal('Timestamp (UTC),Height (m)\n2020-03-13T01:30:00Z,1.35')
-    Code.expect(response.headers['content-type']).to.include('text/csv')
+    expect(response.statusCode).to.equal(200)
+    expect(response.result).to.equal('Timestamp (UTC),Height (m)\n2020-03-13T01:30:00Z,1.35')
+    expect(response.headers['content-type']).to.include('text/csv')
   })
-  lab.test('GET /station-csv/7022/downstream downstream station', async () => {
+  it('GET /station-csv/7022/downstream downstream station', async () => {
     const options = {
       method: 'GET',
       url: '/station-csv/7022/downstream'
@@ -222,11 +222,11 @@ lab.experiment('Routes test - station-csv', () => {
     sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.result).to.equal('Timestamp (UTC),Height (m)\n2020-03-13T01:30:00Z,1.35')
-    Code.expect(response.headers['content-type']).to.include('text/csv')
+    expect(response.statusCode).to.equal(200)
+    expect(response.result).to.equal('Timestamp (UTC),Height (m)\n2020-03-13T01:30:00Z,1.35')
+    expect(response.headers['content-type']).to.include('text/csv')
   })
-  lab.test('GET /station-csv/5110 external name has special character that needs substituting', async () => {
+  it('GET /station-csv/5110 external name has special character that needs substituting', async () => {
     const options = {
       method: 'GET',
       url: '/station-csv/5110'
@@ -295,13 +295,13 @@ lab.experiment('Routes test - station-csv', () => {
     sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
 
     const response = await server.inject(options)
-    Code.expect(response.headers['content-disposition']).to.equal('attachment; filename=Pilling-Broadfleet-height-data.csv')
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.result).to.equal('Timestamp (UTC),Height (m)\n2020-03-13T01:30:00Z,1.35')
-    Code.expect(response.headers['content-type']).to.include('text/csv')
+    expect(response.headers['content-disposition']).to.equal('attachment; filename=Pilling-Broadfleet-height-data.csv')
+    expect(response.statusCode).to.equal(200)
+    expect(response.result).to.equal('Timestamp (UTC),Height (m)\n2020-03-13T01:30:00Z,1.35')
+    expect(response.headers['content-type']).to.include('text/csv')
   })
 
-  lab.test('GET /station-csv/10 station invalid', async () => {
+  it('GET /station-csv/10 station invalid', async () => {
     const options = {
       method: 'GET',
       url: '/station-csv/10'
@@ -327,13 +327,13 @@ lab.experiment('Routes test - station-csv', () => {
     sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(400)
-    Code.expect(response.result.statusCode).to.equal(400)
-    Code.expect(response.result.error).to.equal('Bad Request')
-    Code.expect(response.result.message).to.equal('Invalid request params input')
+    expect(response.statusCode).to.equal(400)
+    expect(response.result.statusCode).to.equal(400)
+    expect(response.result.error).to.equal('Bad Request')
+    expect(response.result.message).to.equal('Invalid request params input')
   })
 
-  lab.test('GET /station-csv/500000 station invalid', async () => {
+  it('GET /station-csv/500000 station invalid', async () => {
     const options = {
       method: 'GET',
       url: '/station-csv/500000'
@@ -357,9 +357,9 @@ lab.experiment('Routes test - station-csv', () => {
     sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(400)
-    Code.expect(response.result.statusCode).to.equal(400)
-    Code.expect(response.result.error).to.equal('Bad Request')
-    Code.expect(response.result.message).to.equal('Invalid request params input')
+    expect(response.statusCode).to.equal(400)
+    expect(response.result.statusCode).to.equal(400)
+    expect(response.result.error).to.equal('Bad Request')
+    expect(response.result.message).to.equal('Invalid request params input')
   })
 })

@@ -4,16 +4,16 @@ const Lab = require('@hapi/lab')
 const Hapi = require('@hapi/hapi')
 const boom = require('@hapi/boom')
 const { expect } = require('@hapi/code')
-const lab = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const sinon = require('sinon')
 
-lab.experiment('Plugin - Error Pages', () => {
+describe('Plugin - Error Pages', () => {
   let sandbox
   let server
   let logSpies
   let fakeResponse
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     logSpies = {
       error: sinon.spy(),
       debug: sinon.spy(),
@@ -51,12 +51,12 @@ lab.experiment('Plugin - Error Pages', () => {
     await server.initialize()
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await server.stop()
     await sandbox.restore()
   })
 
-  lab.test('should handle 404', async () => {
+  it('should handle 404', async () => {
     const options = {
       method: 'GET',
       url: '/some/root'
@@ -70,7 +70,7 @@ lab.experiment('Plugin - Error Pages', () => {
     expect(response.payload).to.include('Page not found')
   })
 
-  lab.test('should move 400s with the message \'Invalid request params input\' to 404 pages', async () => {
+  it('should move 400s with the message \'Invalid request params input\' to 404 pages', async () => {
     const options = {
       method: 'GET',
       url: '/some/root'
@@ -85,7 +85,7 @@ lab.experiment('Plugin - Error Pages', () => {
     expect(response.payload).to.include('Page not found')
   })
 
-  lab.test('should handle rate limited requests', async () => {
+  it('should handle rate limited requests', async () => {
     const options = {
       method: 'GET',
       url: '/some/root'
@@ -100,7 +100,7 @@ lab.experiment('Plugin - Error Pages', () => {
     expect(response.payload).to.include('Too many requests made for this page')
   })
 
-  lab.test('should handle 5xx errors', async () => {
+  it('should handle 5xx errors', async () => {
     const options = {
       method: 'GET',
       url: '/some/root'

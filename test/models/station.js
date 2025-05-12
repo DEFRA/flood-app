@@ -2,24 +2,24 @@
 
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const lab = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const sinon = require('sinon')
 const ViewModel = require('../../server/models/views/station')
 const data = require('../data')
 const moment = require('moment-timezone')
 
-lab.experiment('Model - Station', () => {
+describe('Model - Station', () => {
   let sandbox
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     sandbox = await sinon.createSandbox()
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await sandbox.restore()
   })
 
-  lab.test('should return no alerts or warnings', () => {
+  it('should return no alerts or warnings', () => {
     const stationData = data.stationRiver
     const viewModel = new ViewModel(stationData)
 
@@ -60,7 +60,7 @@ lab.experiment('Model - Station', () => {
     ])
   })
 
-  lab.test('should only have FW ATCON thresholds from river station', () => {
+  it('should only have FW ATCON thresholds from river station', () => {
     const stationData = data.stationRiverACTCON
     const viewModel = new ViewModel(stationData)
 
@@ -88,7 +88,7 @@ lab.experiment('Model - Station', () => {
     ])
   })
 
-  lab.test('should set "dataOverHourOld" to be false', () => {
+  it('should set "dataOverHourOld" to be false', () => {
     const stationData = data.stationRiver
     stationData.telemetry[0].ts = new Date().toJSON()
 
@@ -98,7 +98,7 @@ lab.experiment('Model - Station', () => {
     expect(viewModel.dataOverHourOld).to.equal(false)
   })
 
-  lab.test('should return one warning in force', () => {
+  it('should return one warning in force', () => {
     const stationData = data.stationActiveWarning
 
     const viewModel = new ViewModel(stationData)
@@ -110,7 +110,7 @@ lab.experiment('Model - Station', () => {
     expect(viewModel.warningsLink).to.equal('/target-area/012WACFB')
   })
 
-  lab.test('should return one alert in force', () => {
+  it('should return one alert in force', () => {
     const stationData = data.stationActiveAlert
 
     const viewModel = new ViewModel(stationData)
@@ -122,7 +122,7 @@ lab.experiment('Model - Station', () => {
     expect(viewModel.alertsLink).to.equal('/target-area/061FAG30Alton')
   })
 
-  lab.test('should return one severe warning in force', () => {
+  it('should return one severe warning in force', () => {
     const stationData = data.stationSevereWarning
 
     const viewModel = new ViewModel(stationData)
@@ -134,7 +134,7 @@ lab.experiment('Model - Station', () => {
     expect(viewModel.severeLink).to.equal('/target-area/012WACFB')
   })
 
-  lab.test('should return multiple warnings and alerts in force', () => {
+  it('should return multiple warnings and alerts in force', () => {
     const stationData = data.stationMultipleAW
 
     const viewModel = new ViewModel(stationData)
@@ -150,7 +150,7 @@ lab.experiment('Model - Station', () => {
     expect(viewModel.warningsLink).to.equal('/alerts-and-warnings?station=1001#warnings')
   })
 
-  lab.test('should return a groundwater station', () => {
+  it('should return a groundwater station', () => {
     const stationData = data.stationGroudwater
 
     const viewModel = new ViewModel(stationData)
@@ -161,22 +161,22 @@ lab.experiment('Model - Station', () => {
     expect(viewModel.station.hasImpacts).to.equal(false)
   })
 
-  lab.test('should set "plotNegativeValues" as true for groundwater station', () => {
+  it('should set "plotNegativeValues" as true for groundwater station', () => {
     const viewModel = new ViewModel(data.stationGroudwater)
     expect(viewModel.station.plotNegativeValues).to.equal(true)
   })
 
-  lab.test('should set "plotNegativeValues" as false for river station', () => {
+  it('should set "plotNegativeValues" as false for river station', () => {
     const viewModel = new ViewModel(data.stationRiver)
     expect(viewModel.station.plotNegativeValues).to.equal(false)
   })
 
-  lab.test('should set "plotNegativeValues" as true for coastal station', () => {
+  it('should set "plotNegativeValues" as true for coastal station', () => {
     const viewModel = new ViewModel(data.stationCoastal)
     expect(viewModel.station.plotNegativeValues).to.equal(true)
   })
 
-  lab.test('should return impacts for FFOI station', () => {
+  it('should return impacts for FFOI station', () => {
     const stationData = data.stationForecastData
 
     const today = moment().format('YYYY-MM-DD')
@@ -242,7 +242,7 @@ lab.experiment('Model - Station', () => {
     expect(viewModel.severeBanner).to.equal('Severe flood warning for Coast from Fleetwood to Blackpool')
   })
 
-  lab.test('should return 1 alert, 1 warning and 1 severe', () => {
+  it('should return 1 alert, 1 warning and 1 severe', () => {
     const stationData = data.stationAWSW
 
     const viewModel = new ViewModel(stationData)
@@ -251,7 +251,7 @@ lab.experiment('Model - Station', () => {
     expect(viewModel.warningsBanner).to.equal('There is a flood warning within 5 miles of this measuring station')
   })
 
-  lab.test('should remove spike in telemetry', () => {
+  it('should remove spike in telemetry', () => {
     const stationData = data.stationRiverSpike
     const viewModel = new ViewModel(stationData)
 
@@ -259,7 +259,7 @@ lab.experiment('Model - Station', () => {
     expect(viewModel.telemetry.length).to.equal(479)
   })
 
-  lab.test('should return sea level height toggle tip', () => {
+  it('should return sea level height toggle tip', () => {
     const stationData = data.toggleTipSeaLevelStation
 
     const viewModel = new ViewModel(stationData)
@@ -269,7 +269,7 @@ lab.experiment('Model - Station', () => {
     expect(viewModel.infoState).to.equal('There are 3 states: low, normal and high. The latest level is within the normal range. We calculate the normal range using an average of past measurements and other local factors.')
   })
 
-  lab.test('should return below zero height toggle tip', () => {
+  it('should return below zero height toggle tip', () => {
     const stationData = data.toggleTipBelowZeroStation
 
     const viewModel = new ViewModel(stationData)
@@ -279,7 +279,7 @@ lab.experiment('Model - Station', () => {
     expect(viewModel.infoState).to.equal('There are 3 states: low, normal and high. The latest level is below the normal range. We calculate the normal range using an average of past measurements and other local factors.')
   })
 
-  lab.test('should return river bed height toggle tip', () => {
+  it('should return river bed height toggle tip', () => {
     const stationData = data.toggleTipRiverBedStation
 
     const viewModel = new ViewModel(stationData)
@@ -289,7 +289,7 @@ lab.experiment('Model - Station', () => {
     expect(viewModel.infoState).to.equal('There are 3 states: low, normal and high. The latest level is above the normal range. We calculate the normal range using an average of past measurements and other local factors.')
   })
 
-  lab.test('should remove null value telemetry', () => {
+  it('should remove null value telemetry', () => {
     const stationData = data.nullTelemetry
 
     const viewModel = new ViewModel(stationData)

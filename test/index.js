@@ -1,7 +1,7 @@
 'use strict'
 
 const Lab = require('@hapi/lab')
-const lab = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const { expect } = require('@hapi/code')
 const sinon = require('sinon')
 const proxyquire = require('proxyquire').noCallThru()
@@ -22,10 +22,10 @@ const index = () => proxyquire('../index', {
   }
 })
 
-lab.experiment('Server failure - [server/index.js]', () => {
+describe('Server failure - [server/index.js]', () => {
   let originalExit
 
-  lab.beforeEach(() => {
+  beforeEach(() => {
     originalExit = process.exit
     process.exit = mocks.exit
 
@@ -34,14 +34,14 @@ lab.experiment('Server failure - [server/index.js]', () => {
     })
   })
 
-  lab.afterEach(() => {
+  afterEach(() => {
     for (const mock of Object.values(mocks)) {
       mock.reset()
     }
     process.exit = originalExit
   })
 
-  lab.test('should handle errors with createServer()', async () => {
+  it('should handle errors with createServer()', async () => {
     mocks.createServer.rejects(new Error('create server went wrong'))
     mocks.fatal.returns(undefined)
     mocks.flush.callsFake(cb => cb())
@@ -58,7 +58,7 @@ lab.experiment('Server failure - [server/index.js]', () => {
     expect(mocks.exit.lastCall.args[0]).to.equal(1)
   })
 
-  lab.test('should handle errors with server.start()', async () => {
+  it('should handle errors with server.start()', async () => {
     mocks.createServer.resolves({ start: mocks.start, listener: {} })
     mocks.start.rejects(new Error('server start went wrong'))
     mocks.fatal.returns(undefined)
@@ -76,7 +76,7 @@ lab.experiment('Server failure - [server/index.js]', () => {
     expect(mocks.exit.lastCall.args[0]).to.equal(1)
   })
 
-  lab.test('should not fail the server if there is no error', async () => {
+  it('should not fail the server if there is no error', async () => {
     const listener = {}
     mocks.createServer.resolves({ start: mocks.start, listener })
     mocks.start.resolves(undefined)

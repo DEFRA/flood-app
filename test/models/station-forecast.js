@@ -2,24 +2,24 @@
 
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const lab = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const sinon = require('sinon')
 const moment = require('moment-timezone')
 const ViewModel = require('../../server/models/views/station-forecast')
 const data = require('../data')
 
-lab.experiment('Model - Station Forecast', () => {
+describe('Model - Station Forecast', () => {
   let sandbox
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     sandbox = await sinon.createSandbox()
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await sandbox.restore()
   })
 
-  lab.test('should return FFOI station 7377 and set "maxValue._', async () => {
+  it('should return FFOI station 7377 and set "maxValue._', async () => {
     const stationData = data.forcastStationModelData
 
     stationData.values.$.date = moment().subtract(1, 'day').format('YYYY-MM-DD')

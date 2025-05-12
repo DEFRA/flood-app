@@ -1,6 +1,6 @@
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const lab = exports.lab = Lab.script()
+const { describe, it, afterEach, before } = exports.lab = Lab.script()
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
@@ -9,10 +9,10 @@ const mocks = {
   wreckPost: sinon.stub()
 }
 
-lab.experiment('Util - Request', () => {
+describe('Util - Request', () => {
   let util
 
-  lab.before(() => {
+  before(() => {
     util = proxyquire('../../server/util', {
       '@hapi/wreck': {
         defaults: () => ({
@@ -23,13 +23,13 @@ lab.experiment('Util - Request', () => {
     })
   })
 
-  lab.afterEach(() => {
+  afterEach(() => {
     for (const stub of Object.values(mocks)) {
       stub.reset()
     }
   })
 
-  lab.test('should use acts as a proxy for the relevant wreck method', async () => {
+  it('should use acts as a proxy for the relevant wreck method', async () => {
     const getUrl = '/some/get/url'
     const postUrl = '/some/post/url'
 
@@ -61,7 +61,7 @@ lab.experiment('Util - Request', () => {
     expect(postResult).to.equal(mockResponse.payload)
   })
 
-  lab.test('should add the method and url (with query strings removed) to wreck request errors', async () => {
+  it('should add the method and url (with query strings removed) to wreck request errors', async () => {
     const method = 'get'
     const url = '/some/get/url?a=1&b=2&key=secret&c=4'
 
@@ -86,7 +86,7 @@ lab.experiment('Util - Request', () => {
     expect(err.message).to.equal('Response Error: some response error on GET /some/get/url')
   })
 
-  lab.test('should not add the method and url to wreck non-request errors', async () => {
+  it('should not add the method and url to wreck non-request errors', async () => {
     const method = 'get'
     const url = '/some/get/url'
 
@@ -111,7 +111,7 @@ lab.experiment('Util - Request', () => {
     expect(err.message).to.equal('some other error')
   })
 
-  lab.test('should throw a LocationSearchError if the \'x-ms-bm-ws-info\' response header has a value of \'1\'', async () => {
+  it('should throw a LocationSearchError if the \'x-ms-bm-ws-info\' response header has a value of \'1\'', async () => {
     const method = 'get'
     const url = '/some/get/url'
 

@@ -2,24 +2,24 @@
 
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const lab = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const sinon = require('sinon')
 const { referencedStationViewModel, placeViewModel } = require('../../server/models/views/river-and-sea-levels')
 const data = require('../data')
 
-lab.experiment('Model - River and Sea Levels', () => {
+describe('Model - River and Sea Levels', () => {
   let sandbox
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     sandbox = await sinon.createSandbox()
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await sandbox.restore()
   })
 
-  lab.experiment('placeViewModel', () => {
-    lab.test('should return stations', async () => {
+  describe('placeViewModel', () => {
+    it('should return stations', async () => {
       const stationsData = data.riverAndSeaLevelData
 
       const model = placeViewModel(stationsData)
@@ -29,7 +29,7 @@ lab.experiment('Model - River and Sea Levels', () => {
       expect(model.stations[0].region).to.equal('North West')
     })
 
-    lab.test('should return stations in distance order from place', async () => {
+    it('should return stations in distance order from place', async () => {
       const stationsData = data.riverAndSeaLevelDataUnordered
       const firstStation = data.riverAndSeaLevelDataUnordered.stations[0]
       const model = placeViewModel(stationsData)
@@ -39,7 +39,7 @@ lab.experiment('Model - River and Sea Levels', () => {
       expect(model.stations[0].region).to.equal('North West')
     })
 
-    lab.test('should filter stations into groups', async () => {
+    it('should filter stations into groups', async () => {
       const stationsData = data.riverAndSeaLevelData
       const model = placeViewModel(stationsData)
 
@@ -49,14 +49,14 @@ lab.experiment('Model - River and Sea Levels', () => {
       expect(model.filters[3].count).to.equal(0)
     })
 
-    lab.test('should return formatted date time for stations', async () => {
+    it('should return formatted date time for stations', async () => {
       const stationsData = data.riverAndSeaLevelData
       const model = placeViewModel(stationsData)
 
       expect(model.stations[0].latestDatetime).to.equal('Latest at 5:30am on 16 July ')
     })
 
-    lab.test('should return "formattedValue" with correct number of decimal places', async () => {
+    it('should return "formattedValue" with correct number of decimal places', async () => {
       const stationsData = data.riverAndSeaLevelData
       const model = placeViewModel(stationsData)
 
@@ -71,7 +71,7 @@ lab.experiment('Model - River and Sea Levels', () => {
       expect(rainfallStation.formattedValue).to.equal('0m')
     })
 
-    lab.test('should set "displayGetWarningsLink" with the appropriate value', async () => {
+    it('should set "displayGetWarningsLink" with the appropriate value', async () => {
       const stationsData = data.riverAndSeaLevelData
 
       const result = placeViewModel(stationsData)
@@ -80,8 +80,8 @@ lab.experiment('Model - River and Sea Levels', () => {
     })
   })
 
-  lab.experiment('referencedStationViewModel', () => {
-    lab.test('should return stations sorted in distance order from rainfall station', async () => {
+  describe('referencedStationViewModel', () => {
+    it('should return stations sorted in distance order from rainfall station', async () => {
       const stationsData = data.riverAndSeaLevelDataUnordered
       const [rainfallStation] = data.rainfallStation553564
 
@@ -98,7 +98,7 @@ lab.experiment('Model - River and Sea Levels', () => {
       expect(model.stations[2].distance).to.be.greaterThan(model.stations[1].distance)
     })
 
-    lab.test('should set "displayGetWarningsLink" with the appropriate value', async () => {
+    it('should set "displayGetWarningsLink" with the appropriate value', async () => {
       const stationsData = data.riverAndSeaLevelDataUnordered
       const [rainfallStation] = data.rainfallStation553564
 

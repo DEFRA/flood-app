@@ -2,7 +2,7 @@
 
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const { experiment, test } = exports.lab = Lab.script()
+const { describe, it } = exports.lab = Lab.script()
 const OutlookPolys = require('../../server/models/outlook-polys')
 const outlookOverlaping = require('../data/fgsOverlaping.json')
 const outlook = require('../data/fgs.json')
@@ -60,8 +60,8 @@ const newcastle = {
   isScotlandOrNorthernIreland: false
 }
 
-experiment('Model - Outlook Polys', () => {
-  test('should have surface, ground, coastal and river with overlapping outlook', () => {
+describe('Model - Outlook Polys', () => {
+  it('should have surface, ground, coastal and river with overlapping outlook', () => {
     const result = new OutlookPolys(outlookOverlaping, liverpool)
 
     const expected = {
@@ -135,7 +135,7 @@ experiment('Model - Outlook Polys', () => {
     expect(result).to.equal(expected)
   })
 
-  test('should produce surface and river over two days', () => {
+  it('should produce surface and river over two days', () => {
     const result = new OutlookPolys(outlook, london)
 
     const expected = {
@@ -200,7 +200,7 @@ experiment('Model - Outlook Polys', () => {
     expect(result).to.equal(expected)
   })
 
-  test('should produce an empty array from a given location', () => {
+  it('should produce an empty array from a given location', () => {
     const result = new OutlookPolys(outlook, newcastle)
 
     const expected = {

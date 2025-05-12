@@ -2,12 +2,12 @@
 
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const lab = exports.lab = Lab.script()
+const { describe, it } = exports.lab = Lab.script()
 const ViewModel = require('../../server/models/views/location')
 const data = require('../data')
 
-lab.experiment('Model - Outlook', () => {
-  lab.test('should return a flood warning', async () => {
+describe('Model - Outlook', () => {
+  it('should return a flood warning', async () => {
     const floodWarning = data.floodWarning
     const viewModel = new ViewModel(floodWarning)
 
@@ -20,7 +20,7 @@ lab.experiment('Model - Outlook', () => {
     expect(Result.bannerSub).to.equal('Flooding is expected')
   })
 
-  lab.test('should return a flood alert', async () => {
+  it('should return a flood alert', async () => {
     const floodAlert = data.floodAlert
     const viewModel = new ViewModel(floodAlert)
 
@@ -33,7 +33,7 @@ lab.experiment('Model - Outlook', () => {
     expect(Result.bannerSub).to.equal('Some flooding is possible')
   })
 
-  lab.test('should return a Severe flood warning alert', async () => {
+  it('should return a Severe flood warning alert', async () => {
     const fakeSevereFloodWarning = data.severeFloodWarning
     const viewModel = new ViewModel(fakeSevereFloodWarning)
 
@@ -46,7 +46,7 @@ lab.experiment('Model - Outlook', () => {
     expect(Result.floods.length).to.equal(1)
   })
 
-  lab.test('should return no warnings or alerts', async () => {
+  it('should return no warnings or alerts', async () => {
     const noWarningsOrAlerts = data.noWarningsOrAlerts
     const viewModel = new ViewModel(noWarningsOrAlerts)
 
@@ -55,7 +55,7 @@ lab.experiment('Model - Outlook', () => {
     expect(Result.floods.length).to.equal(0)
   })
 
-  lab.test('should return with a blank alert', async () => {
+  it('should return with a blank alert', async () => {
     const noFlooding = data.noFlooding
     const viewModel = new ViewModel(noFlooding)
 
@@ -64,7 +64,7 @@ lab.experiment('Model - Outlook', () => {
     expect(Result.floods.length).to.equal(0)
   })
 
-  lab.test('should return with multiple Flood Alerts', async () => {
+  it('should return with multiple Flood Alerts', async () => {
     const multipleFloodAlerts = data.multipleFloodAlerts
     const viewModel = new ViewModel(multipleFloodAlerts)
 
@@ -76,7 +76,7 @@ lab.experiment('Model - Outlook', () => {
     expect(Result.bannerSub).to.equal('Some flooding is possible')
   })
 
-  lab.test('should return with multiple Flood Warnings', async () => {
+  it('should return with multiple Flood Warnings', async () => {
     const multipleFloodWarnings = data.multipleFloodWarnings
     const viewModel = new ViewModel(multipleFloodWarnings)
 
@@ -89,7 +89,7 @@ lab.experiment('Model - Outlook', () => {
     expect(Result.bannerSub).to.equal('Flooding is expected')
   })
 
-  lab.test('should return with multiple Severe Flood Warnings', async () => {
+  it('should return with multiple Severe Flood Warnings', async () => {
     const multipleSevereFloodWarnings = data.multipleSevereFloodWarnings
     const viewModel = new ViewModel(multipleSevereFloodWarnings)
 
@@ -102,7 +102,7 @@ lab.experiment('Model - Outlook', () => {
     expect(Result.bannerSevereSub).to.equal('There is a danger to life')
   })
 
-  lab.test('should return Flood Warning with Coastal Station', async () => {
+  it('should return Flood Warning with Coastal Station', async () => {
     const floodWarningCoastal = data.floodWarningCoastal
     const viewModel = new ViewModel(floodWarningCoastal)
 
@@ -114,7 +114,7 @@ lab.experiment('Model - Outlook', () => {
     expect(Result.bannerSub).to.equal('Flooding is expected')
   })
 
-  lab.test('should return flood expected when a Station level is High', async () => {
+  it('should return flood expected when a Station level is High', async () => {
     const floodWarningStationHigh = data.floodWarningStationHigh
     const viewModel = new ViewModel(floodWarningStationHigh)
 
@@ -126,7 +126,7 @@ lab.experiment('Model - Outlook', () => {
     expect(Result.bannerSub).to.equal('Flooding is expected')
   })
 
-  lab.test('should return no warnings and no high level stations', async () => {
+  it('should return no warnings and no high level stations', async () => {
     const noFlooding = data.noFlooding
     const viewModel = new ViewModel(noFlooding)
 
@@ -136,7 +136,7 @@ lab.experiment('Model - Outlook', () => {
     expect(Result.hasHighLevels).to.be.false()
   })
 
-  lab.test('should return no warnings and high level stations', async () => {
+  it('should return no warnings and high level stations', async () => {
     const noFlooding = data.noFloodingAndHighLevels
     const viewModel = new ViewModel(noFlooding)
 
@@ -146,7 +146,7 @@ lab.experiment('Model - Outlook', () => {
     expect(Result.hasHighLevels).to.be.true()
   })
 
-  lab.test('should return no warnings and high levels on inactive stations', async () => {
+  it('should return no warnings and high levels on inactive stations', async () => {
     const noFlooding = data.noFloodingAndHighLevelsInactive
     const viewModel = new ViewModel(noFlooding)
 
@@ -156,7 +156,7 @@ lab.experiment('Model - Outlook', () => {
     expect(Result.hasHighLevels).to.be.false()
   })
 
-  lab.test('should return no warnings and high levels with variety of station types', async () => {
+  it('should return no warnings and high levels with variety of station types', async () => {
     const noFlooding = data.noFloodingAndHighLevelsExtra
     const viewModel = new ViewModel(noFlooding)
 

@@ -1,29 +1,29 @@
 'use strict'
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
-const lab = exports.lab = Lab.script()
+const { expect } = require('@hapi/code')
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const sinon = require('sinon')
 const config = require('../../server/config')
 
-lab.experiment('Flood service test', () => {
+describe('Flood service test', () => {
   let sandbox
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/util.js')]
     sandbox = sinon.createSandbox()
     sandbox.stub(config, 'serviceUrl').value('http://server2')
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await sandbox.restore()
   })
 
-  lab.test('Check flood service exists', () => {
+  it('Check flood service exists', () => {
     const floodService = require('../../server/services/flood')
-    Code.expect(floodService).to.be.a.object()
+    expect(floodService).to.be.a.object()
   })
-  lab.test('Test getFloods endpoint', async () => {
+  it('Test getFloods endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -37,9 +37,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getFloods()
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getFloodsWithin endpoint', async () => {
+  it('Test getFloodsWithin endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -53,9 +53,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getFloodsWithin([1, 2, 3, 4])
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getFloodArea endpoint warning', async () => {
+  it('Test getFloodArea endpoint warning', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -69,9 +69,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getFloodArea('1234w')
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getFloodArea endpoint alert', async () => {
+  it('Test getFloodArea endpoint alert', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -85,9 +85,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getFloodArea('1234a')
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getOutlook endpoint', async () => {
+  it('Test getOutlook endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -101,9 +101,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getOutlook()
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getStationById endpoint', async () => {
+  it('Test getStationById endpoint', async () => {
     const direction = 'u'
     const id = 1001
 
@@ -120,9 +120,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationById(id, direction)
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getStationsWithin endpoint', async () => {
+  it('Test getStationsWithin endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -136,9 +136,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationsWithin([1, 2, 3, 4])
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getStationsWithinTargetArea', async () => {
+  it('Test getStationsWithinTargetArea', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -152,9 +152,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationsWithinTargetArea('053FWFPUWI09')
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getWarningsAlertsWithinStationBuffer', async () => {
+  it('Test getWarningsAlertsWithinStationBuffer', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -168,9 +168,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getWarningsAlertsWithinStationBuffer([1001])
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getRiverById', async () => {
+  it('Test getRiverById', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -184,9 +184,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getRiverById('sankey-brook')
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getRiversByName', async () => {
+  it('Test getRiversByName', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -200,9 +200,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getRiversByName('tyne')
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getRiverStationByStationId', async () => {
+  it('Test getRiverStationByStationId', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -216,9 +216,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getRiverStationByStationId(5031, 'u')
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getStationTelemetry endpoint', async () => {
+  it('Test getStationTelemetry endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -232,9 +232,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationTelemetry(7077, 'u')
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getForecastFlag endpoint', async () => {
+  it('Test getForecastFlag endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -248,9 +248,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getForecastFlag(2012, 'u')
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getStationForecastData endpoint', async () => {
+  it('Test getStationForecastData endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -264,9 +264,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationForecastData(7077)
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getStationsGeoJson endpoint', async () => {
+  it('Test getStationsGeoJson endpoint', async () => {
     const util = require('../../server/util')
     sandbox.stub(config, 'geoserverUrl').value('http://server1')
 
@@ -281,9 +281,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationsGeoJson()
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getRainfallGeojson endpoint', async () => {
+  it('Test getRainfallGeojson endpoint', async () => {
     const util = require('../../server/util')
     sandbox.stub(config, 'geoserverUrl').value('http://server1')
 
@@ -298,9 +298,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getRainfallGeojson()
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getIsEngland endpoint', async () => {
+  it('Test getIsEngland endpoint', async () => {
     const lat = 1
     const lng = 2
 
@@ -317,9 +317,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getIsEngland(lng, lat)
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getImpactsData endpoint', async () => {
+  it('Test getImpactsData endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -333,9 +333,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getImpactData(7077)
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getImpactsWithin endpoint', async () => {
+  it('Test getImpactsWithin endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -349,9 +349,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getImpactsWithin([1, 2, 3, 4])
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getRivers endpoint', async () => {
+  it('Test getRivers endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -365,9 +365,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getRivers()
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getStationsOverview endpoint', async () => {
+  it('Test getStationsOverview endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -381,9 +381,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationsOverview()
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getServiceHealth endpoint', async () => {
+  it('Test getServiceHealth endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -397,9 +397,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getServiceHealth()
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getGeoserverHealth endpoint', async () => {
+  it('Test getGeoserverHealth endpoint', async () => {
     sandbox.stub(config, 'geoserverUrl').value('http://server2')
 
     const util = require('../../server/util')
@@ -414,9 +414,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getGeoserverHealth()
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getStationsHealth endpoint', async () => {
+  it('Test getStationsHealth endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -430,9 +430,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationsHealth()
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getTelemetryHealth endpoint', async () => {
+  it('Test getTelemetryHealth endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -446,9 +446,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getTelemetryHealth()
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getFfoiHealth endpoint', async () => {
+  it('Test getFfoiHealth endpoint', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -462,9 +462,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getFfoiHealth()
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getStationsByRadius endpoint', async () => {
+  it('Test getStationsByRadius endpoint', async () => {
     const util = require('../../server/util')
 
     const x = 1
@@ -481,9 +481,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationsByRadius(x, y, 8000)
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getStationsByRadius endpoint with rad', async () => {
+  it('Test getStationsByRadius endpoint with rad', async () => {
     const util = require('../../server/util')
 
     const x = 1
@@ -501,9 +501,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getStationsByRadius(x, y, rad)
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getError', async () => {
+  it('Test getError', async () => {
     const util = require('../../server/util')
     sandbox
       .mock(util)
@@ -516,9 +516,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getError()
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getRainfallStationTelemetry', async () => {
+  it('Test getRainfallStationTelemetry', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -532,9 +532,9 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getRainfallStationTelemetry('E24195')
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
-  lab.test('Test getRainfallStation', async () => {
+  it('Test getRainfallStation', async () => {
     const util = require('../../server/util')
 
     sandbox
@@ -548,6 +548,6 @@ lab.experiment('Flood service test', () => {
 
     const result = await floodService.getRainfallStation('E24195')
 
-    Code.expect(result).to.equal('ok')
+    expect(result).to.equal('ok')
   })
 })

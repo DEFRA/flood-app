@@ -2,14 +2,14 @@
 
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const lab = exports.lab = Lab.script()
+const { describe, it } = exports.lab = Lab.script()
 const OutlookTabsModel = require('../../server/models/outlook-tabs')
 const data = require('../data')
 const moment = require('moment')
 const formatDate = require('../../server/util').formatDate
 
-lab.experiment('Model - Outlook Tabs', () => {
-  lab.test('should return the expected tabs', async () => {
+describe('Model - Outlook Tabs', () => {
+  it('should return the expected tabs', async () => {
     const outlook = data.fgs
 
     const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true, isScotlandOrNorthernIreland: false }
@@ -25,7 +25,7 @@ lab.experiment('Model - Outlook Tabs', () => {
     expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
   })
 
-  lab.test('should return that coastal poly aren\'t failing in turf', async () => {
+  it('should return that coastal poly aren\'t failing in turf', async () => {
     const outlook = data.fgsCoastal
 
     const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true, isScotlandOrNorthernIreland: false }
@@ -41,7 +41,7 @@ lab.experiment('Model - Outlook Tabs', () => {
     expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
   })
 
-  lab.test('should format the date correctly and set"outOfDate" as false for FGS created today', async () => {
+  it('should format the date correctly and set"outOfDate" as false for FGS created today', async () => {
     const outlook = data.fgs
 
     outlook.issued_at = moment().utc()
@@ -55,7 +55,7 @@ lab.experiment('Model - Outlook Tabs', () => {
     expect(viewModel.formattedIssueDate).to.equal(formattedIssueDate)
   })
 
-  lab.test('should not intersect any polygons', async () => {
+  it('should not intersect any polygons', async () => {
     const outlook = data.fgs
 
     const place = {
@@ -93,7 +93,7 @@ lab.experiment('Model - Outlook Tabs', () => {
     expect(viewModel).to.not.contain(lowForFive)
   })
 
-  lab.test('should set the trends', async () => {
+  it('should set the trends', async () => {
     const outlook = data.fgsTrends
 
     const place = {
@@ -125,7 +125,7 @@ lab.experiment('Model - Outlook Tabs', () => {
     expect(viewModel.trend[3]).to.equal('remains')
   })
 
-  lab.test('should filter and not show FGS with all alerts less than very low', async () => {
+  it('should filter and not show FGS with all alerts less than very low', async () => {
     const outlook = data.fgsBelowVeryLow
 
     const place = {
@@ -157,7 +157,7 @@ lab.experiment('Model - Outlook Tabs', () => {
     expect(viewModel.lowForFive).to.equal(true)
   })
 
-  lab.test('should check flood risk is the same on day 3 and day 4 but different on day 5', async () => {
+  it('should check flood risk is the same on day 3 and day 4 but different on day 5', async () => {
     const outlook = {
       id: 1107,
       issued_at: '2019-08-08T09:30:00Z',
@@ -282,7 +282,7 @@ lab.experiment('Model - Outlook Tabs', () => {
     expect(viewModel.dayName[2]).to.equal('Saturday and Sunday')
   })
 
-  lab.test('should issue FGS as yesterday and "tab1" is populated from "day2"', async () => {
+  it('should issue FGS as yesterday and "tab1" is populated from "day2"', async () => {
     const outlook = data.fgs
 
     outlook.issued_at = moment().utc().subtract(1, 'days').format()
@@ -315,7 +315,7 @@ lab.experiment('Model - Outlook Tabs', () => {
     expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
   })
 
-  lab.test('should populate "tab1" from day 3 when FGS issued is > 24 but <= 48 hours', async () => {
+  it('should populate "tab1" from day 3 when FGS issued is > 24 but <= 48 hours', async () => {
     const outlook = data.fgs
 
     // outlook.issued_at = moment().utc().subtract(40, 'hours').format()
@@ -349,7 +349,7 @@ lab.experiment('Model - Outlook Tabs', () => {
     expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
   })
 
-  lab.test('should capitalise source 3-i4-l2', async () => {
+  it('should capitalise source 3-i4-l2', async () => {
     const outlook = data.fgs3i4l2
 
     outlook.issued_at = moment().utc()

@@ -2,24 +2,24 @@
 
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const lab = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const sinon = require('sinon')
 const ViewModel = require('../../server/models/views/rainfall')
 const data = require('../data')
 const moment = require('moment-timezone')
 
-lab.experiment('Model - Rainfall', () => {
+describe('Model - Rainfall', () => {
   let sandbox
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     sandbox = await sinon.createSandbox()
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await sandbox.restore()
   })
 
-  lab.test('should return single-word "stationName" in title case', async () => {
+  it('should return single-word "stationName" in title case', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
     const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'E24195')
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
@@ -30,7 +30,7 @@ lab.experiment('Model - Rainfall', () => {
     expect(Result.telemetryRainfall.latest1hr).to.equal('3.2')
   })
 
-  lab.test('should return mutli-word "stationName" in title case', async () => {
+  it('should return mutli-word "stationName" in title case', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
     const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'N24195')
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
@@ -42,7 +42,7 @@ lab.experiment('Model - Rainfall', () => {
     expect(Result.telemetryRainfall.latest1hr).to.equal('5.0')
   })
 
-  lab.test('should return "telemetryRainfall" data', async () => {
+  it('should return "telemetryRainfall" data', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
     const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'E24195')
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
@@ -61,7 +61,7 @@ lab.experiment('Model - Rainfall', () => {
     expect(Result.telemetryRainfall.minutes.values.length).to.greaterThan(0)
   })
 
-  lab.test('should return formatted dates', async () => {
+  it('should return formatted dates', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
     const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'E24195')
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
@@ -72,7 +72,7 @@ lab.experiment('Model - Rainfall', () => {
     expect(Result.latestTimeFormatted).to.equal('9:15am')
   })
 
-  lab.test('should construct station id correctly', async () => {
+  it('should construct station id correctly', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
     const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'E24195')
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
@@ -82,7 +82,7 @@ lab.experiment('Model - Rainfall', () => {
     expect(Result.id).to.equal('E24195.Anglian')
   })
 
-  lab.test('should populate lat/long in centroid', async () => {
+  it('should populate lat/long in centroid', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
     const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'E24195')
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
@@ -92,7 +92,7 @@ lab.experiment('Model - Rainfall', () => {
     expect(Result.centroid[1]).to.equal(51.34453211)
   })
 
-  lab.test('should return "telemetryRainfall" data with station using 1hr periods', async () => {
+  it('should return "telemetryRainfall" data with station using 1hr periods', async () => {
     const rainfallTelemetryData = data.rainfallStationhrTelemetry
     const rainfallStationData = data.hrRainfallStation
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
@@ -108,7 +108,7 @@ lab.experiment('Model - Rainfall', () => {
     expect(Result.telemetryRainfall).to.not.contain(Result.telemetryRainfall.minutes)
   })
 
-  lab.test('should return metadata and social details correctly', async () => {
+  it('should return metadata and social details correctly', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
     const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'E24195')
     const viewModel = new ViewModel(rainfallTelemetryData, rainfallStationData)
@@ -120,7 +120,7 @@ lab.experiment('Model - Rainfall', () => {
     expect(Result.metaDescription).to.equal('Check the latest recorded rainfall at Lavenham gauge')
   })
 
-  lab.test('should return "displayGetWarningsLink" with appropriate Value', async () => {
+  it('should return "displayGetWarningsLink" with appropriate Value', async () => {
     const rainfallTelemetryData = data.rainfallStationTelemetry
     const rainfallStationData = data.rainfallStation.find(item => item.station_reference === 'E24195')
 

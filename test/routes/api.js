@@ -1,16 +1,16 @@
 'use strict'
 const Hapi = require('@hapi/hapi')
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
+const { expect } = require('@hapi/code')
 const sinon = require('sinon')
-const lab = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const data = require('../data')
 
-lab.experiment('API routes test', () => {
+describe('API routes test', () => {
   let sandbox
   let server
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
     delete require.cache[require.resolve('../../server/util.js')]
@@ -24,12 +24,12 @@ lab.experiment('API routes test', () => {
     })
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await server.stop()
     await sandbox.restore()
   })
 
-  lab.test('GET /api/stations', async () => {
+  it('GET /api/stations', async () => {
     const getStationsGeojson = () => {
       return JSON.parse('{"type": "FeatureCollection", "features": []}')
     }
@@ -63,11 +63,11 @@ lab.experiment('API routes test', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('{"type":"FeatureCollection","features":[]}')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('{"type":"FeatureCollection","features":[]}')
   })
 
-  lab.test('GET /api/rainfall', async () => {
+  it('GET /api/rainfall', async () => {
     const getRainfallGeojson = () => {
       return JSON.parse('{"type": "FeatureCollection", "features": []}')
     }
@@ -101,11 +101,11 @@ lab.experiment('API routes test', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('{"type":"FeatureCollection","features":[]}')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('{"type":"FeatureCollection","features":[]}')
   })
 
-  lab.test('GET /api/warnings with location', async () => {
+  it('GET /api/warnings with location', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -146,13 +146,13 @@ lab.experiment('API routes test', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
 
     const payload = JSON.parse(response.payload)
-    Code.expect(payload.severity).to.equal(3)
-    Code.expect(payload.message).to.equal('There are currently one severe flood warning, one flood warning and 3 flood alerts in force at this location.')
+    expect(payload.severity).to.equal(3)
+    expect(payload.message).to.equal('There are currently one severe flood warning, one flood warning and 3 flood alerts in force at this location.')
   })
-  lab.test('GET /api/warnings with no location', async () => {
+  it('GET /api/warnings with no location', async () => {
     const floodService = require('../../server/services/flood')
     // Create dummy flood data in place of cached data
     const fakeFloodData = () => {
@@ -204,13 +204,13 @@ lab.experiment('API routes test', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
 
     const payload = JSON.parse(response.payload)
-    Code.expect(payload.severity).to.equal(2)
-    Code.expect(payload.message).to.equal('There is currently one flood warning in force.')
+    expect(payload.severity).to.equal(2)
+    expect(payload.message).to.equal('There is currently one flood warning in force.')
   })
-  lab.test('GET /api/warnings with bad query', async () => {
+  it('GET /api/warnings with bad query', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -251,9 +251,9 @@ lab.experiment('API routes test', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(400)
+    expect(response.statusCode).to.equal(400)
   })
-  lab.test('GET /api/warnings with no warnings', async () => {
+  it('GET /api/warnings with no warnings', async () => {
     const floodService = require('../../server/services/flood')
     // Create dummy flood data in place of cached data
     const fakeFloodData = () => {
@@ -288,13 +288,13 @@ lab.experiment('API routes test', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
 
     const payload = JSON.parse(response.payload)
-    Code.expect(payload.severity).to.equal(5)
-    Code.expect(payload.message).to.equal('There are currently no flood warnings or alerts in force.')
+    expect(payload.severity).to.equal(5)
+    expect(payload.message).to.equal('There are currently no flood warnings or alerts in force.')
   })
-  lab.test('GET /api/warnings with no location one alert', async () => {
+  it('GET /api/warnings with no location one alert', async () => {
     const floodService = require('../../server/services/flood')
     // Create dummy flood data in place of cached data
     const fakeFloodData = () => {
@@ -346,13 +346,13 @@ lab.experiment('API routes test', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
 
     const payload = JSON.parse(response.payload)
-    Code.expect(payload.severity).to.equal(1)
-    Code.expect(payload.message).to.equal('There is currently one flood alert in force.')
+    expect(payload.severity).to.equal(1)
+    expect(payload.message).to.equal('There is currently one flood alert in force.')
   })
-  lab.test('GET /api/warnings with no location one severe warning', async () => {
+  it('GET /api/warnings with no location one severe warning', async () => {
     const floodService = require('../../server/services/flood')
     // Create dummy flood data in place of cached data
     const fakeFloodData = () => {
@@ -404,14 +404,14 @@ lab.experiment('API routes test', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
 
     const payload = JSON.parse(response.payload)
-    Code.expect(payload.severity).to.equal(3)
-    Code.expect(payload.message).to.equal('There is currently one severe flood warning in force.')
+    expect(payload.severity).to.equal(3)
+    expect(payload.message).to.equal('There is currently one severe flood warning in force.')
   })
 
-  lab.test('GET /api/webchat/availability', async () => {
+  it('GET /api/webchat/availability', async () => {
     const getAvailability = async () => ({ availability: 'AVAILABLE', date: new Date('2022-09-25T00:00:00.000Z') })
 
     const webchatService = require('../../server/services/webchat')
@@ -440,7 +440,7 @@ lab.experiment('API routes test', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('{"availability":"AVAILABLE","date":"2022-09-25T00:00:00.000Z"}')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('{"availability":"AVAILABLE","date":"2022-09-25T00:00:00.000Z"}')
   })
 })

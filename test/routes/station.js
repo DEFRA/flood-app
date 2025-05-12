@@ -2,20 +2,20 @@
 
 const Hapi = require('@hapi/hapi')
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
+const { expect } = require('@hapi/code')
 const sinon = require('sinon')
-const lab = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const data = require('../data')
 const moment = require('moment-timezone')
 const { parse } = require('node-html-parser')
 const { fullRelatedContentChecker } = require('../lib/helpers/html-expectations')
 const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
 
-lab.experiment('Test - /station/{id}', () => {
+describe('Test - /station/{id}', () => {
   let sandbox
   let server
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     delete require.cache[require.resolve('../../server/util.js')]
     delete require.cache[require.resolve('../../server/services/location.js')]
     delete require.cache[require.resolve('../../server/services/flood.js')]
@@ -31,11 +31,11 @@ lab.experiment('Test - /station/{id}', () => {
     })
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await server.stop()
     await sandbox.restore()
   })
-  lab.test('GET station/7333 Suspended ffoi station to show error banner ', async () => {
+  it('GET station/7333 Suspended ffoi station to show error banner ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -247,13 +247,13 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.not.contain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is offline</h2>')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.not.contain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is offline</h2>')
     // Related Content tests
-    Code.expect(response.payload).to.contain('https://www.gov.uk/sign-up-for-flood-warnings')
-    Code.expect(response.payload).to.contain('Get flood warnings by phone, text or email')
+    expect(response.payload).to.contain('https://www.gov.uk/sign-up-for-flood-warnings')
+    expect(response.payload).to.contain('Get flood warnings by phone, text or email')
   })
-  lab.test('GET station/5146 with Normal river level ', async () => {
+  it('GET station/5146 with Normal river level ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -381,18 +381,18 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('Normal')
-    Code.expect(response.payload).to.contain('Steady')
-    Code.expect(response.payload).to.contain('Normal range 0.15m to 3.50m')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV (12KB)</a>')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).to.contain('Normal')
+    expect(response.payload).to.contain('Steady')
+    expect(response.payload).to.contain('Normal range 0.15m to 3.50m')
+    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
+    expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV (12KB)</a>')
     fullRelatedContentChecker(parse(response.payload))
     validateFooterPresent(response)
   })
-  lab.test('GET station/2042/downstream ', async () => {
+  it('GET station/2042/downstream ', async () => {
     const floodService = require('../../server/services/flood')
     const fakeStationData = () => {
       return {
@@ -518,13 +518,13 @@ lab.experiment('Test - /station/{id}', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('River Avon level downstream at Lilbourne - GOV.UK')
-    Code.expect(response.payload).to.contain('This measuring station takes 2 measurements.')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/2042">Nearby levels</a>')
-    Code.expect(response.payload).to.contain('<a href="/station/2043">Downstream</a>')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('River Avon level downstream at Lilbourne - GOV.UK')
+    expect(response.payload).to.contain('This measuring station takes 2 measurements.')
+    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/2042">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/station/2043">Downstream</a>')
   })
-  lab.test('GET station/5146 with High river level ', async () => {
+  it('GET station/5146 with High river level ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -652,16 +652,16 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('High')
-    Code.expect(response.payload).to.contain('Falling')
-    Code.expect(response.payload).to.contain('Latest at 1:30am')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
-    Code.expect(response.payload).to.not.contain('Go downstream</a>')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).to.contain('High')
+    expect(response.payload).to.contain('Falling')
+    expect(response.payload).to.contain('Latest at 1:30am')
+    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
+    expect(response.payload).to.not.contain('Go downstream</a>')
   })
-  lab.test('GET Closed station  ', async () => {
+  it('GET Closed station  ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -751,12 +751,12 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('No data is available. You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a> or call Floodline for advice.\n')
-    Code.expect(response.payload).to.contain('This measuring station is closed\n')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).to.contain('No data is available. You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a> or call Floodline for advice.\n')
+    expect(response.payload).to.contain('This measuring station is closed\n')
   })
-  lab.test('GET station/5146 with Low Level ', async () => {
+  it('GET station/5146 with Low Level ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -884,15 +884,15 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('Low\n')
-    Code.expect(response.payload).to.contain('Rising')
-    Code.expect(response.payload).to.contain('Latest at 1:30am')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).to.contain('Low\n')
+    expect(response.payload).to.contain('Rising')
+    expect(response.payload).to.contain('Latest at 1:30am')
+    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
   })
-  lab.test('GET station/3130 Coastal ', async () => {
+  it('GET station/3130 Coastal ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -1020,12 +1020,12 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('Sea level at Bude - GOV.UK')
-    Code.expect(response.payload).to.contain('Latest at 6:00am')
-    Code.expect(response.payload).to.contain('3.59m')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('Sea level at Bude - GOV.UK')
+    expect(response.payload).to.contain('Latest at 6:00am')
+    expect(response.payload).to.contain('3.59m')
   })
-  lab.test('GET station/7333 ffoi no max value ', async () => {
+  it('GET station/7333 ffoi no max value ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -1240,12 +1240,12 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.not.contain('The highest level in the forecast is')
-    Code.expect(response.payload).to.not.contain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
-    Code.expect(response.payload).to.contain('Download data CSV (16KB)')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.not.contain('The highest level in the forecast is')
+    expect(response.payload).to.not.contain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
+    expect(response.payload).to.contain('Download data CSV (16KB)')
   })
-  lab.test('GET station/7333 ffoi with max value ', async () => {
+  it('GET station/7333 ffoi with max value ', async () => {
     const floodService = require('../../server/services/flood')
     const fakeStationData = () => {
       return {
@@ -1464,14 +1464,14 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('The highest level in the model is')
-    Code.expect(response.payload).to.not.contain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
-    Code.expect(response.payload).to.contain('<a href="/station/7332">Upstream</a>')
-    Code.expect(response.payload).to.contain('<a href="/station/7357">Downstream</a>')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/7333">Nearby levels</a>')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('The highest level in the model is')
+    expect(response.payload).to.not.contain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
+    expect(response.payload).to.contain('<a href="/station/7332">Upstream</a>')
+    expect(response.payload).to.contain('<a href="/station/7357">Downstream</a>')
+    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/7333">Nearby levels</a>')
   })
-  lab.test('GET station/5146 with latest value over hour old but < 24 hours ', async () => {
+  it('GET station/5146 with latest value over hour old but < 24 hours ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -1601,10 +1601,10 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('We take measurements more often as the risk of flooding increases.')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('We take measurements more often as the risk of flooding increases.')
   })
-  lab.test('GET station/2033 should redirect to new page ', async () => {
+  it('GET station/2033 should redirect to new page ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -1681,9 +1681,9 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(302)
+    expect(response.statusCode).to.equal(302)
   })
-  lab.test('GET station/2042/upstream should redirect as upstream is specified ', async () => {
+  it('GET station/2042/upstream should redirect as upstream is specified ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -1760,9 +1760,9 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(302)
+    expect(response.statusCode).to.equal(302)
   })
-  lab.test('GET station/5146 with status date showing time data interrupted', async () => {
+  it('GET station/5146 with status date showing time data interrupted', async () => {
     const floodService = require('../../server/services/flood')
 
     const dateInterupted = new Date()
@@ -1892,14 +1892,14 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('This data feed was interrupted')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV (12KB)</a>')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).to.contain('This data feed was interrupted')
+    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
+    expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV (12KB)</a>')
   })
-  lab.test('GET station/5146 with Normal river level does no show IMTD thresholds if not present', async () => {
+  it('GET station/5146 with Normal river level does no show IMTD thresholds if not present', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -2025,11 +2025,11 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.not.contain('Low lying land flooding is possible above this level. One or more flood alerts may be issued')
-    Code.expect(response.payload).to.not.contain('Property flooding is possible above this level. One or more flood warnings may be issued')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.not.contain('Low lying land flooding is possible above this level. One or more flood alerts may be issued')
+    expect(response.payload).to.not.contain('Property flooding is possible above this level. One or more flood warnings may be issued')
   })
-  lab.test('GET station/5146 with missing percentile ', async () => {
+  it('GET station/5146 with missing percentile ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -2156,15 +2156,15 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('Steady')
-    Code.expect(response.payload).to.not.contain('Normal range ')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV (12KB)</a>')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).to.contain('Steady')
+    expect(response.payload).to.not.contain('Normal range ')
+    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
+    expect(response.payload).to.contain('<a data-journey-click="Station:Station data:Station - Download csv" href="/station-csv/5146" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4"><svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20"><path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>Download data CSV (12KB)</a>')
   })
-  lab.test('GET station/1034 - Coastal River title check  ', async () => {
+  it('GET station/1034 - Coastal River title check  ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -2298,8 +2298,8 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.match(/<h1 class="govuk-heading-xl govuk-!-margin-bottom-0">\s*River Itchen\s*level\s*at Woolston\s*<\/h1>/)
-    Code.expect(response.payload).to.match(/<title>\s*River Itchen level at Woolston - GOV.UK\s*<\/title>/)
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.match(/<h1 class="govuk-heading-xl govuk-!-margin-bottom-0">\s*River Itchen\s*level\s*at Woolston\s*<\/h1>/)
+    expect(response.payload).to.match(/<title>\s*River Itchen level at Woolston - GOV.UK\s*<\/title>/)
   })
 })

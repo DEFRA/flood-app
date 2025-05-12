@@ -1,17 +1,17 @@
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const lab = exports.lab = Lab.script()
+const { describe, it } = exports.lab = Lab.script()
 const spikeTelem = require('../data/spikeTelem.json')
 const nonSpikeTelem = require('../data/nonSpikeTelem.json')
 const { formatName, toMarked, cleanseLocation, removeSpikes } = require('../../server/util')
 
-lab.experiment('Util', () => {
-  lab.experiment('toMarked', () => {
-    lab.test('should find text that is marked', async () => {
+describe('Util', () => {
+  describe('toMarked', () => {
+    it('should find text that is marked', async () => {
       expect(toMarked('This is some text to be marked', 'text')).to.equal('This is some <mark>text</mark> to be marked')
     })
 
-    lab.test('should find text that is marked when search term is a regex char', async () => {
+    it('should find text that is marked when search term is a regex char', async () => {
       // note: this was required in the scenario where a single ( is used as a search term as the search
       // returns 2 river results containing the character ( which resulted in a template rendering
       // error ("SyntaxError: Invalid regular expression: /(()/: Unterminated group: (unknown path)").
@@ -21,51 +21,51 @@ lab.experiment('Util', () => {
     })
   })
 
-  lab.experiment('cleanLocation', () => {
-    lab.test('should find text that is cleansed', async () => {
+  describe('cleanLocation', () => {
+    it('should find text that is cleansed', async () => {
       expect(cleanseLocation('This is some text to be cleansed', 'text')).to.equal('This is some text to be cleansed')
     })
 
-    lab.test('should find text that is cleansed when search term contains special character', async () => {
+    it('should find text that is cleansed when search term contains special character', async () => {
       expect(cleanseLocation('This is some (text) to be cleansed <script>alert(\'TEST\')</script>', '(')).to.equal('This is some (text) to be cleansed scriptalert(\'TEST\')script')
     })
   })
 
-  lab.experiment('remove spikes in telem', () => {
-    lab.test('should remove spike in telem over 300m and return 479 values', async () => {
+  describe('remove spikes in telem', () => {
+    it('should remove spike in telem over 300m and return 479 values', async () => {
       const telem = removeSpikes(spikeTelem)
       expect(telem.length).to.equal(479)
     })
 
-    lab.test('should contain no spikes in telem all values under 300m and return 480 values', async () => {
+    it('should contain no spikes in telem all values under 300m and return 480 values', async () => {
       const telem = removeSpikes(nonSpikeTelem)
       expect(telem.length).to.equal(480)
     })
   })
 
-  lab.experiment('formatName', () => {
-    lab.test('should remove repeating parts', async () => {
+  describe('formatName', () => {
+    it('should remove repeating parts', async () => {
       expect(formatName('Middlesbrough, Middlesbrough')).to.equal('Middlesbrough')
     })
 
-    lab.test('should not remove similar parts', async () => {
+    it('should not remove similar parts', async () => {
       expect(formatName('Durham, County Durham')).to.equal('Durham, County Durham')
     })
 
-    lab.test('should remove city qualifier "City Of"', async () => {
+    it('should remove city qualifier "City Of"', async () => {
       expect(formatName('Bristol, City Of Bristol')).to.equal('Bristol')
       expect(formatName('Bristol, City of Bristol')).to.equal('Bristol')
     })
 
-    lab.test('should remove City qualifier "Greater"', async () => {
+    it('should remove City qualifier "Greater"', async () => {
       expect(formatName('London, Greater London')).to.equal('London')
     })
 
-    lab.test('should remove City qualifier from neighbourhood', async () => {
+    it('should remove City qualifier from neighbourhood', async () => {
       expect(formatName('Camberwell, London, Greater London')).to.equal('Camberwell, London')
     })
 
-    lab.test('should fail gracefully with undefined name', async () => {
+    it('should fail gracefully with undefined name', async () => {
       expect(formatName()).to.equal('')
     })
   })

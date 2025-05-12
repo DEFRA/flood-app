@@ -2,16 +2,16 @@
 
 const Hapi = require('@hapi/hapi')
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
+const { expect } = require('@hapi/code')
 const sinon = require('sinon')
-const lab = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const data = require('../data')
 const moment = require('moment')
 const LocationSearchError = require('../../server/location-search-error')
 const { parse } = require('node-html-parser')
 const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
 
-lab.experiment('Routes test - location - 2', () => {
+describe('Routes test - location - 2', () => {
   let sandbox
   let server
 
@@ -45,7 +45,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     await server.initialize()
   }
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     delete require.cache[require.resolve('../../server/util.js')]
     delete require.cache[require.resolve('../../server/services/location.js')]
     delete require.cache[require.resolve('../../server/routes/location.js')]
@@ -68,11 +68,11 @@ lab.experiment('Routes test - location - 2', () => {
     })
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await server.stop()
     await sandbox.restore()
   })
-  lab.test('GET /location with legacy query parameters with no results', async () => {
+  it('GET /location with legacy query parameters with no results', async () => {
     const fakeGetJson = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
@@ -118,9 +118,9 @@ lab.experiment('Routes test - location - 2', () => {
       url: '/location?q=fkfflsdfk'
     }
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(404)
+    expect(response.statusCode).to.equal(404)
   })
-  lab.test('GET /location with legacy query parameters', async () => {
+  it('GET /location with legacy query parameters', async () => {
     const fakeGetJson = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
@@ -195,10 +195,10 @@ lab.experiment('Routes test - location - 2', () => {
       url: '/location?q=coxwold&lyr=mv,ts,tw,ta'
     }
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(301)
-    Code.expect(response.headers.location).to.equal('/location/coxwold-north-yorkshire?lyr=mv,ts,tw,ta')
+    expect(response.statusCode).to.equal(301)
+    expect(response.headers.location).to.equal('/location/coxwold-north-yorkshire?lyr=mv,ts,tw,ta')
   })
-  lab.test('GET /location with location query parameter', async () => {
+  it('GET /location with location query parameter', async () => {
     const fakeGetJson = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
@@ -273,10 +273,10 @@ lab.experiment('Routes test - location - 2', () => {
       url: '/location?location=coxwold'
     }
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(301)
-    Code.expect(response.headers.location).to.equal('/location/coxwold-north-yorkshire')
+    expect(response.statusCode).to.equal(301)
+    expect(response.headers.location).to.equal('/location/coxwold-north-yorkshire')
   })
-  lab.test('GET /location with no query parameters', async () => {
+  it('GET /location with no query parameters', async () => {
     const locationPlugin = {
       plugin: {
         name: 'location',
@@ -302,10 +302,10 @@ lab.experiment('Routes test - location - 2', () => {
       url: '/location'
     }
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers.location).to.equal('/')
+    expect(response.statusCode).to.equal(302)
+    expect(response.headers.location).to.equal('/')
   })
-  lab.test('GET /location with query parameters giving undefined location', async () => {
+  it('GET /location with query parameters giving undefined location', async () => {
     const fakeGetJson = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
@@ -351,10 +351,10 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(404)
-    Code.expect(response.payload).to.contain('Page not found')
+    expect(response.statusCode).to.equal(404)
+    expect(response.payload).to.contain('Page not found')
   })
-  lab.test('GET /location with query parameters giving undefined location parameter set as location', async () => {
+  it('GET /location with query parameters giving undefined location parameter set as location', async () => {
     const fakeGetJson = () => {
       return {
         authenticationResultCode: 'ValidCredentials',
@@ -400,11 +400,11 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(404)
-    Code.expect(response.payload).to.contain('Page not found')
+    expect(response.statusCode).to.equal(404)
+    expect(response.payload).to.contain('Page not found')
   })
-  lab.experiment('GET /location with rejected query', () => {
-    lab.beforeEach(async () => {
+  describe('GET /location with rejected query', () => {
+    beforeEach(async () => {
       const fakeIsEngland = () => {
         return { is_england: true }
       }
@@ -419,45 +419,45 @@ lab.experiment('Routes test - location - 2', () => {
 
       setup(fakeIsEngland, fakeFloodsData, fakeStationsData, fakeImpactsData, fakeOutlookData, fakeGetJson)
     })
-    lab.test('returns not found page when entering Wales', async () => {
+    it('returns not found page when entering Wales', async () => {
       const options = {
         method: 'GET',
         url: '/location/Wales'
       }
 
       const response = await server.inject(options)
-      Code.expect(response.statusCode).to.equal(404)
+      expect(response.statusCode).to.equal(404)
     })
-    lab.test('returns not found page when entering Scotland', async () => {
+    it('returns not found page when entering Scotland', async () => {
       const options = {
         method: 'GET',
         url: '/location/Scotland'
       }
 
       const response = await server.inject(options)
-      Code.expect(response.statusCode).to.equal(404)
+      expect(response.statusCode).to.equal(404)
     })
-    lab.test('returns not found page when entering non-alphanumeric only search', async () => {
+    it('returns not found page when entering non-alphanumeric only search', async () => {
       const options = {
         method: 'GET',
         url: '/location/,-+'
       }
 
       const response = await server.inject(options)
-      Code.expect(response.statusCode).to.equal(404)
+      expect(response.statusCode).to.equal(404)
     })
-    lab.test('returns not found page when entering a query containing angle brackets', async () => {
+    it('returns not found page when entering a query containing angle brackets', async () => {
       const options = {
         method: 'GET',
         url: '/location/<script>'
       }
 
       const response = await server.inject(options)
-      Code.expect(response.statusCode).to.equal(404)
+      expect(response.statusCode).to.equal(404)
     })
   })
-  lab.experiment('GET /location with query parameters giving defined location', () => {
-    lab.beforeEach(async () => {
+  describe('GET /location with query parameters giving defined location', () => {
+    beforeEach(async () => {
       const fakeIsEngland = () => {
         return { is_england: true }
       }
@@ -472,16 +472,16 @@ lab.experiment('Routes test - location - 2', () => {
 
       setup(fakeIsEngland, fakeFloodsData, fakeStationsData, fakeImpactsData, fakeOutlookData, fakeGetJson)
     })
-    lab.test('response should be 200', async () => {
+    it('response should be 200', async () => {
       const options = {
         method: 'GET',
         url: '/location/Warrington'
       }
 
       const response = await server.inject(options)
-      Code.expect(response.statusCode).to.equal(200)
+      expect(response.statusCode).to.equal(200)
     })
-    lab.test('river levels link should use location query', async () => {
+    it('river levels link should use location query', async () => {
       const options = {
         method: 'GET',
         url: '/location/Warrington'
@@ -492,11 +492,11 @@ lab.experiment('Routes test - location - 2', () => {
       const root = parse(response.payload)
       const targetText = 'Find a river, sea, groundwater or rainfall level in this area'
       const anchor = root.querySelectorAll('a').find(a => a.text.trim() === targetText)
-      Code.expect(anchor.getAttribute('href')).to.equal('/river-and-sea-levels?q=Warrington')
+      expect(anchor.getAttribute('href')).to.equal('/river-and-sea-levels?q=Warrington')
     })
   })
 
-  lab.test('GET /location with query parameters known and unknown e.g. facebook click id', async () => {
+  it('GET /location with query parameters known and unknown e.g. facebook click id', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -545,9 +545,9 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
   })
-  lab.test('GET /location with query parameters giving defined location query paramter set as location', async () => {
+  it('GET /location with query parameters giving defined location query paramter set as location', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -596,9 +596,9 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
   })
-  lab.test('GET /location with query parameters with no flood service data', async () => {
+  it('GET /location with query parameters with no flood service data', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeGetJson = () => data.warringtonGetJson
@@ -648,16 +648,16 @@ lab.experiment('Routes test - location - 2', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).not.to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/sign-up-for-flood-warnings">\s*Get flood warnings by phone, text or email\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/prepare-for-flooding">\s*Prepare for flooding\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/help-during-flood">\s*What to do before or during a flood\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/after-flood">\s*What to do after a flood\s*<\/a>/)
-    Code.expect(response.payload).not.to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/check-long-term-flood-risk">\s*Check your long term flood risk\s*<\/a>/)
-    Code.expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/report-flood-cause">\s*Report a flood\s*<\/a>/)
-    Code.expect(response.payload).to.contain('There are no flood warnings or alerts in this area.')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).not.to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/sign-up-for-flood-warnings">\s*Get flood warnings by phone, text or email\s*<\/a>/)
+    expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/prepare-for-flooding">\s*Prepare for flooding\s*<\/a>/)
+    expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/help-during-flood">\s*What to do before or during a flood\s*<\/a>/)
+    expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/after-flood">\s*What to do after a flood\s*<\/a>/)
+    expect(response.payload).not.to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/check-long-term-flood-risk">\s*Check your long term flood risk\s*<\/a>/)
+    expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/report-flood-cause">\s*Report a flood\s*<\/a>/)
+    expect(response.payload).to.contain('There are no flood warnings or alerts in this area.')
   })
-  lab.test('GET /location with no query', async () => {
+  it('GET /location with no query', async () => {
     const fakeGetJson = () => {
       throw new Error('test error')
     }
@@ -690,10 +690,10 @@ lab.experiment('Routes test - location - 2', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers.location).to.equal('/')
+    expect(response.statusCode).to.equal(302)
+    expect(response.headers.location).to.equal('/')
   })
-  lab.test('GET /location with query parameters check for 1 alert 1 nlif', async () => {
+  it('GET /location with query parameters check for 1 alert 1 nlif', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -777,12 +777,12 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
 
-    Code.expect(response.payload).to.contain('Flooding is expected')
-    Code.expect(response.payload).to.contain('<time datetime="">Up to date as of ')
+    expect(response.payload).to.contain('Flooding is expected')
+    expect(response.payload).to.contain('<time datetime="">Up to date as of ')
   })
-  lab.test('GET /location with query parameters check for 1 alert 1 nlif', async () => {
+  it('GET /location with query parameters check for 1 alert 1 nlif', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -919,9 +919,9 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
   })
-  lab.test('GET /location with query parameters check for no warnings', async () => {
+  it('GET /location with query parameters check for no warnings', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -1008,10 +1008,10 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('There are no flood warnings or alerts in this area but some')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('There are no flood warnings or alerts in this area but some')
   })
-  lab.test('GET /location with query parameters check for 1 alert 1 nlif', async () => {
+  it('GET /location with query parameters check for 1 alert 1 nlif', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -1087,12 +1087,12 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('Some flooding is possible')
-    Code.expect(response.payload).to.contain('There is a flood alert in this area')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Location :View Warnings:Location - View removed warnings" href="/target-area/053WAF117BED">1 flood alert or warning was removed </a> in the last 24 hours.')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('Some flooding is possible')
+    expect(response.payload).to.contain('There is a flood alert in this area')
+    expect(response.payload).to.contain('<a data-journey-click="Location :View Warnings:Location - View removed warnings" href="/target-area/053WAF117BED">1 flood alert or warning was removed </a> in the last 24 hours.')
   })
-  lab.test('GET /location query not in England', async () => {
+  it('GET /location query not in England', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -1139,9 +1139,9 @@ lab.experiment('Routes test - location - 2', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(404)
+    expect(response.statusCode).to.equal(404)
   })
-  lab.test('GET /location with query parameters for location-1sw-2w-1a', async () => {
+  it('GET /location with query parameters for location-1sw-2w-1a', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -1187,13 +1187,13 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('There is a danger to life')
-    Code.expect(response.payload).to.contain('Severe flood warning for ')
-    Code.expect(response.payload).to.contain('2 flood warnings')
-    Code.expect(response.payload).to.contain('1 flood alert')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('There is a danger to life')
+    expect(response.payload).to.contain('Severe flood warning for ')
+    expect(response.payload).to.contain('2 flood warnings')
+    expect(response.payload).to.contain('1 flood alert')
   })
-  lab.test('GET /location with query parameters check for 1 warning 2 alerts 2 nlif', async () => {
+  it('GET /location with query parameters check for 1 warning 2 alerts 2 nlif', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -1325,13 +1325,13 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain(' also in the wider area, where some flooding is possible.')
-    Code.expect(response.payload).to.contain('Flood warning for')
-    Code.expect(response.payload).to.contain('Flood alerts and warnings were removed')
-    Code.expect(response.payload).to.contain('in the last 24 hours')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain(' also in the wider area, where some flooding is possible.')
+    expect(response.payload).to.contain('Flood warning for')
+    expect(response.payload).to.contain('Flood alerts and warnings were removed')
+    expect(response.payload).to.contain('in the last 24 hours')
   })
-  lab.test('GET /location with query parameters check for 2 severe warnings', async () => {
+  it('GET /location with query parameters check for 2 severe warnings', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -1415,11 +1415,11 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('2 severe flood warnings')
-    Code.expect(response.payload).to.contain('There is a danger to life')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('2 severe flood warnings')
+    expect(response.payload).to.contain('There is a danger to life')
   })
-  lab.test('GET /location with query parameters check for no warnings', async () => {
+  it('GET /location with query parameters check for no warnings', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -1468,10 +1468,10 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('There are no flood warnings or alerts in this area.')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('There are no flood warnings or alerts in this area.')
   })
-  lab.test('GET /location with query parameters check for no warnings', async () => {
+  it('GET /location with query parameters check for no warnings', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -1558,10 +1558,10 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('There are no flood warnings or alerts in this area but some')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('There are no flood warnings or alerts in this area but some')
   })
-  lab.test('GET /location with query parameter England - redirect to national page', async () => {
+  it('GET /location with query parameter England - redirect to national page', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -1605,10 +1605,10 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers.location).to.equal('/')
+    expect(response.statusCode).to.equal(302)
+    expect(response.headers.location).to.equal('/')
   })
-  lab.test('GET /location with FGS that has no riskAreas to hide outlooktabs', async () => {
+  it('GET /location with FGS that has no riskAreas to hide outlooktabs', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -1707,10 +1707,10 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('<p class="govuk-body">The flood risk for the next 5 days is very low.</p>')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('<p class="govuk-body">The flood risk for the next 5 days is very low.</p>')
   })
-  lab.test('GET /location with FGS that is empty', async () => {
+  it('GET /location with FGS that is empty', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -1764,10 +1764,10 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
   })
-  lab.test('GET /location with FGS that is valid json but incorrect format', async () => {
+  it('GET /location with FGS that is valid json but incorrect format', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -1821,10 +1821,10 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
   })
-  lab.test('GET /location with FGS that is invalid json', async () => {
+  it('GET /location with FGS that is invalid json', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -1878,10 +1878,10 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
   })
-  lab.test('GET /location with FGS that is valid json but missing issue_date and other fields', async () => {
+  it('GET /location with FGS that is valid json but missing issue_date and other fields', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -1955,10 +1955,10 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    // Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+    // expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
   })
-  lab.test('GET /location with FGS that is valid json but empty risk_areas', async () => {
+  it('GET /location with FGS that is valid json but empty risk_areas', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeIsEngland = () => {
@@ -2032,11 +2032,11 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('The flood risk for the next 5 days is very low.')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('The flood risk for the next 5 days is very low.')
   })
 
-  lab.test('GET /location with no response from Bing', async () => {
+  it('GET /location with no response from Bing', async () => {
     const fakeGetJson = () => {
       throw new LocationSearchError('Missing or corrupt contents from location search')
     }
@@ -2069,10 +2069,10 @@ lab.experiment('Routes test - location - 2', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(500)
-    Code.expect(response.payload).to.contain('<h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Sorry, there is a problem with the search</h1>')
+    expect(response.statusCode).to.equal(500)
+    expect(response.payload).to.contain('<h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Sorry, there is a problem with the search</h1>')
   })
-  lab.test('GET /location - context footer checks', async () => {
+  it('GET /location - context footer checks', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeGetJson = () => data.warringtonGetJson
@@ -2122,7 +2122,7 @@ lab.experiment('Routes test - location - 2', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
     validateFooterPresent(response)
   })
 })

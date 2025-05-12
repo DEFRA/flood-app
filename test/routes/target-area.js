@@ -2,19 +2,19 @@
 
 const Hapi = require('@hapi/hapi')
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
+const { expect } = require('@hapi/code')
 const sinon = require('sinon')
-const lab = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const { parse } = require('node-html-parser')
 const fakeTargetAreaFloodData = require('../data/fakeTargetAreaFloodData.json')
 const { linkChecker } = require('../lib/helpers/html-expectations')
 const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
 
-lab.experiment('Target-area tests', () => {
+describe('Target-area tests', () => {
   let sandbox
   let server
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
     delete require.cache[require.resolve('../../server/routes/target-area.js')]
@@ -35,12 +35,12 @@ lab.experiment('Target-area tests', () => {
     })
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await server.stop()
     await sandbox.restore()
   })
 
-  lab.test('GET /target-area with no query parameters', async () => {
+  it('GET /target-area with no query parameters', async () => {
     const targetAreaPlugin = {
       plugin: {
         name: 'target-area',
@@ -60,10 +60,10 @@ lab.experiment('Target-area tests', () => {
     }
     const response = await server.inject(options)
     const payload = JSON.parse(response.payload)
-    Code.expect(response.statusCode).to.equal(404)
-    Code.expect(payload.message).to.equal('Not Found')
+    expect(response.statusCode).to.equal(404)
+    expect(payload.message).to.equal('Not Found')
   })
-  lab.test('GET target-area 011WAFDW', async () => {
+  it('GET target-area 011WAFDW', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeFloodData = () => {
@@ -103,10 +103,10 @@ lab.experiment('Target-area tests', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
     const root = parse(response.payload)
     const relatedContentLinks = root.querySelectorAll('.defra-related-items a')
-    Code.expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)
+    expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)
     linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
     linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/help-during-flood')
     linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
@@ -115,15 +115,15 @@ lab.experiment('Target-area tests', () => {
     // context footer check
     validateFooterPresent(response)
     const h1Found = root.querySelectorAll('h1').some(h => h.textContent.trim() === 'Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water')
-    Code.expect(h1Found, 'Heading for target area found').to.be.true()
+    expect(h1Found, 'Heading for target area found').to.be.true()
 
     const anchorFound = root.querySelectorAll('a').some(a =>
       a.text === 'Find a river, sea, groundwater or rainfall level in this area' &&
       a.attributes.href === '/river-and-sea-levels/target-area/011WAFDW'
     )
-    Code.expect(anchorFound, 'Link to levels in the area found').to.be.true()
+    expect(anchorFound, 'Link to levels in the area found').to.be.true()
   })
-  lab.test('GET target-area 011WAFDW  blank situation text', async () => {
+  it('GET target-area 011WAFDW  blank situation text', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeFloodData = () => {
@@ -164,10 +164,10 @@ lab.experiment('Target-area tests', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('We\'ll update this page when there\'s a flood alert in the area, which means flooding to low lying land is possible.')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('We\'ll update this page when there\'s a flood alert in the area, which means flooding to low lying land is possible.')
   })
-  lab.test('GET target-area with unknown parameter e.g. facebook click id', async () => {
+  it('GET target-area with unknown parameter e.g. facebook click id', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeFloodData = () => {
@@ -207,10 +207,10 @@ lab.experiment('Target-area tests', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('We\'ll update this page when there\'s a flood alert in the area, which means flooding to low lying land is possible.')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('We\'ll update this page when there\'s a flood alert in the area, which means flooding to low lying land is possible.')
   })
-  lab.test('Check flood severity banner link for Flood alert', async () => {
+  it('Check flood severity banner link for Flood alert', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeFloodData = () => {
@@ -249,10 +249,10 @@ lab.experiment('Target-area tests', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.match(/<div class="defra-flood-status-item__text">\s*<strong>Flooding is possible - <a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do#flood-alert">\s*be prepared\s*<\/a><\/strong>\s*<\/div>/)
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.match(/<div class="defra-flood-status-item__text">\s*<strong>Flooding is possible - <a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do#flood-alert">\s*be prepared\s*<\/a><\/strong>\s*<\/div>/)
   })
-  lab.test('Check flood severity banner link for Flood warning', async () => {
+  it('Check flood severity banner link for Flood warning', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeFloodData = () => {
@@ -294,10 +294,10 @@ lab.experiment('Target-area tests', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.match(/<div class="defra-flood-status-item__text">\s*<strong>Flooding is expected - <a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do#flood-warning">\s*act now\s*<\/a><\/strong>\s*<\/div>/)
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.match(/<div class="defra-flood-status-item__text">\s*<strong>Flooding is expected - <a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do#flood-warning">\s*act now\s*<\/a><\/strong>\s*<\/div>/)
   })
-  lab.test('Check flood severity banner link for Flood warning', async () => {
+  it('Check flood severity banner link for Flood warning', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeFloodData = () => {
@@ -339,10 +339,10 @@ lab.experiment('Target-area tests', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.match(/<div class="defra-flood-status-item__text">\s*<strong>Danger to life - <a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do#severe-flood-warning">\s*act now\s*<\/a><\/strong>\s*<\/div>/)
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.match(/<div class="defra-flood-status-item__text">\s*<strong>Danger to life - <a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do#severe-flood-warning">\s*act now\s*<\/a><\/strong>\s*<\/div>/)
   })
-  lab.test('GET target-area 011WAFDW with no flood alerts active', async () => {
+  it('GET target-area 011WAFDW with no flood alerts active', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeFloodData = () => {
@@ -382,10 +382,10 @@ lab.experiment('Target-area tests', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
     const root = parse(response.payload)
     const relatedContentLinks = root.querySelectorAll('.defra-related-items a')
-    Code.expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)
+    expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)
     linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
     linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/help-during-flood')
     linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
@@ -395,15 +395,15 @@ lab.experiment('Target-area tests', () => {
     validateFooterPresent(response)
 
     const h1Found = root.querySelectorAll('h1').some(h => h.textContent.trim() === 'Upper River Derwent, Stonethwaite Beck and Derwent Water flood alert area')
-    Code.expect(h1Found, 'Heading for target area found').to.be.true()
+    expect(h1Found, 'Heading for target area found').to.be.true()
 
     const anchorFound = root.querySelectorAll('a').some(a =>
       a.text === 'Find a river, sea, groundwater or rainfall level in this area' &&
       a.attributes.href === '/river-and-sea-levels/target-area/011WAFDW'
     )
-    Code.expect(anchorFound, 'Link to levels in the area found').to.be.true()
+    expect(anchorFound, 'Link to levels in the area found').to.be.true()
   })
-  lab.test('GET target-area 011WAFDW with severe flood alerts active', async () => {
+  it('GET target-area 011WAFDW with severe flood alerts active', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeFloodData = () => {
@@ -443,10 +443,10 @@ lab.experiment('Target-area tests', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
     const root = parse(response.payload)
     const relatedContentLinks = root.querySelectorAll('.defra-related-items a')
-    Code.expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)
+    expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)
     linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
     linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/help-during-flood')
     linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
@@ -454,15 +454,15 @@ lab.experiment('Target-area tests', () => {
     linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
     // context footer check
     validateFooterPresent(response)
-    Code.expect(response.payload).to.contain('Severe flood warning for Upper River Derwent, Stonethwaite Beck and Derwent Water')
+    expect(response.payload).to.contain('Severe flood warning for Upper River Derwent, Stonethwaite Beck and Derwent Water')
 
     const anchorFound = root.querySelectorAll('a').some(a =>
       a.text === 'Find a river, sea, groundwater or rainfall level in this area' &&
       a.attributes.href === '/river-and-sea-levels/target-area/011WAFDW'
     )
-    Code.expect(anchorFound, 'Link to levels in the area found').to.be.true()
+    expect(anchorFound, 'Link to levels in the area found').to.be.true()
   })
-  lab.test('No floods alerts but a flood alert in the wider area message in banner', async () => {
+  it('No floods alerts but a flood alert in the wider area message in banner', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeFloodData = () => {
@@ -502,10 +502,10 @@ lab.experiment('Target-area tests', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
     const root = parse(response.payload)
     const relatedContentLinks = root.querySelectorAll('.defra-related-items a')
-    Code.expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)
+    expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)
     linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
     linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/help-during-flood')
     linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
@@ -513,6 +513,6 @@ lab.experiment('Target-area tests', () => {
     linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
     // context footer check
     validateFooterPresent(response)
-    Code.expect(response.payload).to.contain('There are no flood warnings in this area, but there is <a href="/target-area/123WAF984">a flood alert in the wider area</a>')
+    expect(response.payload).to.contain('There are no flood warnings in this area, but there is <a href="/target-area/123WAF984">a flood alert in the wider area</a>')
   })
 })

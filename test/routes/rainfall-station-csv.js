@@ -2,15 +2,15 @@
 
 const Hapi = require('@hapi/hapi')
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
+const { expect } = require('@hapi/code')
 const sinon = require('sinon')
-const lab = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 
-lab.experiment('Routes test - rainfall-station-csv', () => {
+describe('Routes test - rainfall-station-csv', () => {
   let sandbox
   let server
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     delete require.cache[require.resolve('../../server/routes/rainfall-station-csv.js')]
     delete require.cache[require.resolve('../../server/services/flood.js')]
     sandbox = await sinon.createSandbox()
@@ -34,7 +34,7 @@ lab.experiment('Routes test - rainfall-station-csv', () => {
     await server.initialize()
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await server.stop()
     await sandbox.restore()
     const regex = /.\/server\/models\/./
@@ -44,7 +44,7 @@ lab.experiment('Routes test - rainfall-station-csv', () => {
       }
     })
   })
-  lab.test('GET /rainfall-station-csv rainfall station', async () => {
+  it('GET /rainfall-station-csv rainfall station', async () => {
     const options = {
       method: 'GET', url: '/rainfall-station-csv/E24195'
     }
@@ -79,11 +79,11 @@ lab.experiment('Routes test - rainfall-station-csv', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.result).to.contain('Timestamp (UTC),Rainfall (mm)\n2021-07-15T12:00:00Z,0.2')
-    Code.expect(response.headers['content-type']).to.include('text/csv')
+    expect(response.statusCode).to.equal(200)
+    expect(response.result).to.contain('Timestamp (UTC),Rainfall (mm)\n2021-07-15T12:00:00Z,0.2')
+    expect(response.headers['content-type']).to.include('text/csv')
   })
-  lab.test('GET /rainfall-station-csv test station name not capitalised', async () => {
+  it('GET /rainfall-station-csv test station name not capitalised', async () => {
     const options = {
       method: 'GET', url: '/rainfall-station-csv/E24195'
     }
@@ -118,9 +118,9 @@ lab.experiment('Routes test - rainfall-station-csv', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.headers['content-disposition']).to.include('filename=Lavenham-rainfall-data.csv')
+    expect(response.headers['content-disposition']).to.include('filename=Lavenham-rainfall-data.csv')
   })
-  lab.test('GET /rainfall-station-csv test telemetry results are padded to 5 days', async () => {
+  it('GET /rainfall-station-csv test telemetry results are padded to 5 days', async () => {
     const options = {
       method: 'GET', url: '/rainfall-station-csv/E24195'
     }
@@ -157,10 +157,10 @@ lab.experiment('Routes test - rainfall-station-csv', () => {
 
     const count = (response.result.match(/\n/g) || []).length
 
-    Code.expect(count).to.equal(480)
+    expect(count).to.equal(480)
   })
 
-  lab.test('GET /rainfall-station-csv test return 404 if no station', async () => {
+  it('GET /rainfall-station-csv test return 404 if no station', async () => {
     const options = {
       method: 'GET', url: '/rainfall-station-csv/E24195'
     }
@@ -176,13 +176,13 @@ lab.experiment('Routes test - rainfall-station-csv', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(404)
-    Code.expect(response.result.statusCode).to.equal(404)
-    Code.expect(response.result.error).to.equal('Not Found')
-    Code.expect(response.result.message).to.equal('Rainfall station not found')
+    expect(response.statusCode).to.equal(404)
+    expect(response.result.statusCode).to.equal(404)
+    expect(response.result.error).to.equal('Not Found')
+    expect(response.result.message).to.equal('Rainfall station not found')
   })
 
-  lab.test('GET /rainfall-station-csv test return 404 if no station', async () => {
+  it('GET /rainfall-station-csv test return 404 if no station', async () => {
     const options = {
       method: 'GET', url: '/rainfall-station-csv/E24195'
     }
@@ -215,9 +215,9 @@ lab.experiment('Routes test - rainfall-station-csv', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(404)
-    Code.expect(response.result.statusCode).to.equal(404)
-    Code.expect(response.result.error).to.equal('Not Found')
-    Code.expect(response.result.message).to.equal('No rainfall station telemetry data found')
+    expect(response.statusCode).to.equal(404)
+    expect(response.result.statusCode).to.equal(404)
+    expect(response.result.error).to.equal('Not Found')
+    expect(response.result.message).to.equal('No rainfall station telemetry data found')
   })
 })

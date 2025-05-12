@@ -1,6 +1,6 @@
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const { experiment, test } = exports.lab = Lab.script()
+const { describe, it } = exports.lab = Lab.script()
 const responseTemplate = require('./bing-results-template.json')
 
 const bingResultsParser = require('../../../server/services/lib/bing-results-parser')
@@ -16,13 +16,13 @@ function getBingResponse (resources = []) {
   return response
 }
 
-experiment('bingResultsParser', () => {
-  test('empty resource set should return empty results', async () => {
+describe('bingResultsParser', () => {
+  it('empty resource set should return empty results', async () => {
     const bingResponse = getBingResponse()
     const result = await bingResultsParser(bingResponse, stubGetEngland)
     expect(result).to.equal([])
   })
-  test('successful location search should return populated result', async () => {
+  it('successful location search should return populated result', async () => {
     const resources = [
       {
         __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -94,7 +94,7 @@ experiment('bingResultsParser', () => {
     ]
     expect(result).to.equal(expectedResult)
   })
-  test('successful postcode search should return populated result', async () => {
+  it('successful postcode search should return populated result', async () => {
     const resources = [
       {
         __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -167,7 +167,7 @@ experiment('bingResultsParser', () => {
     ]
     expect(result).to.equal(expectedResult)
   })
-  test('successful outcode search should return populated result', async () => {
+  it('successful outcode search should return populated result', async () => {
     const resources = [
       {
         __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -241,7 +241,7 @@ experiment('bingResultsParser', () => {
     ]
     expect(result).to.equal(expectedResult)
   })
-  test('successful address search should return empty result', async () => {
+  it('successful address search should return empty result', async () => {
     const resources = [
       {
         __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -305,7 +305,7 @@ experiment('bingResultsParser', () => {
 
     expect(result).to.equal([])
   })
-  test('medium confidence response should return populated result', async () => {
+  it('medium confidence response should return populated result', async () => {
     const resources = [
       {
         __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -377,7 +377,7 @@ experiment('bingResultsParser', () => {
     ]
     expect(result).to.equal(expectedResult)
   })
-  test('low confidence response should return empty result', async () => {
+  it('low confidence response should return empty result', async () => {
     const resources = [
       {
         __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -428,7 +428,7 @@ experiment('bingResultsParser', () => {
 
     expect(result).to.equal([])
   })
-  test('multiple items in response should return the first non-low confidence result', async () => {
+  it('multiple items in response should return the first non-low confidence result', async () => {
     // Note: we currently limit the max results returned from bing using the maxResults URL query parameter
     // to just 1
     // The results are still returned as an array with just a single entry but this test demonstrates that

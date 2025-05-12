@@ -1,7 +1,7 @@
 'use strict'
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const { experiment, test, beforeEach, afterEach, after } = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach, after } = exports.lab = Lab.script()
 const { stub } = require('sinon')
 const proxyquire = require('proxyquire')
 const { once } = require('node:events')
@@ -24,7 +24,7 @@ const errbitTransport = proxyquire('../../../server/lib/logging/errbit-transport
   './errbit': stubs.Errbit
 })
 
-experiment('Logging - Errbit', () => {
+describe('Logging - Errbit', () => {
   beforeEach(() => {
     stubs.Notifier.callsFake(() => ({
       notify: stubs.notify,
@@ -42,7 +42,7 @@ experiment('Logging - Errbit', () => {
     }
   })
 
-  test('should not send notices to airbrake when enable is false', async () => {
+  it('should not send notices to airbrake when enable is false', async () => {
     const options = {
       severity: 'comical',
       enabled: false,
@@ -67,7 +67,7 @@ experiment('Logging - Errbit', () => {
     expect(stubs.notify.called).to.equal(false)
   })
 
-  test('should send notices to airbrake when enable is true', async () => {
+  it('should send notices to airbrake when enable is true', async () => {
     const options = {
       severity: 'comical',
       enabled: true,
@@ -92,7 +92,7 @@ experiment('Logging - Errbit', () => {
     expect(stubs.notify.called).to.equal(true)
   })
 
-  test('should remain unflushed (airbrake) when enable is false and close is called', async () => {
+  it('should remain unflushed (airbrake) when enable is false and close is called', async () => {
     const options = {
       severity: 'comical',
       enabled: false,
@@ -110,7 +110,7 @@ experiment('Logging - Errbit', () => {
     expect(stubs.flush.called).to.equal(false)
   })
 
-  test('should be flushed (airbrake) when enable is true and close is called', async () => {
+  it('should be flushed (airbrake) when enable is true and close is called', async () => {
     const options = {
       severity: 'comical',
       enabled: true,
@@ -128,7 +128,7 @@ experiment('Logging - Errbit', () => {
     expect(stubs.flush.called).to.equal(true)
   })
 
-  test('should format the error when incoming data contains an err key', async () => {
+  it('should format the error when incoming data contains an err key', async () => {
     const options = {
       severity: 'comical',
       enabled: true,
@@ -158,7 +158,7 @@ experiment('Logging - Errbit', () => {
     })
   })
 
-  test('should be added to the sent notice when incoming data contains req/res information', async () => {
+  it('should be added to the sent notice when incoming data contains req/res information', async () => {
     const options = {
       severity: 'comical',
       enabled: true,
@@ -206,7 +206,7 @@ experiment('Logging - Errbit', () => {
     })
   })
 
-  test('should add environment, version and severity to notices', async () => {
+  it('should add environment, version and severity to notices', async () => {
     const options = {
       severity: 'comical',
       enabled: true,
@@ -234,7 +234,7 @@ experiment('Logging - Errbit', () => {
   })
 })
 
-experiment('Logging - Errbit Transport', () => {
+describe('Logging - Errbit Transport', () => {
   beforeEach(() => {
     stubs.Errbit.callsFake(() => ({
       send: stubs.send,
@@ -256,7 +256,7 @@ experiment('Logging - Errbit Transport', () => {
     }
   })
 
-  test('should send messages containing an err', async () => {
+  it('should send messages containing an err', async () => {
     const stream = errbitTransport({
       severity: 'comical',
       enabled: false,
@@ -295,7 +295,7 @@ experiment('Logging - Errbit Transport', () => {
     })
   })
 
-  test('should not send messages on sending failures', async () => {
+  it('should not send messages on sending failures', async () => {
     const stream = errbitTransport({
       severity: 'comical',
       enabled: false,
@@ -332,7 +332,7 @@ experiment('Logging - Errbit Transport', () => {
     expect(stubs.consoleError.lastCall.args[0]).to.equal(new Error('not sent'))
   })
 
-  test('should skip messages not containing an err key', async () => {
+  it('should skip messages not containing an err key', async () => {
     const stream = errbitTransport({
       severity: 'comical',
       enabled: false,
@@ -357,7 +357,7 @@ experiment('Logging - Errbit Transport', () => {
     expect(stubs.send.callCount).to.equal(0)
   })
 
-  test('should close successfully when errbit is closed', async () => {
+  it('should close successfully when errbit is closed', async () => {
     const stream = errbitTransport({
       severity: 'comical',
       enabled: false,
@@ -376,7 +376,7 @@ experiment('Logging - Errbit Transport', () => {
     expect(stubs.close.callCount).to.equal(1)
   })
 
-  test('should error on errbit close failure', async () => {
+  it('should error on errbit close failure', async () => {
     const stream = errbitTransport({
       severity: 'comical',
       enabled: false,

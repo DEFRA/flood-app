@@ -2,11 +2,11 @@
 
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const lab = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const sinon = require('sinon')
 const Outlook = require('../../server/models/outlook')
 
-lab.experiment('Model - Outlook', () => {
+describe('Model - Outlook', () => {
   let sandbox
 
   const outlookFakeData = {
@@ -107,15 +107,15 @@ lab.experiment('Model - Outlook', () => {
     }
   }
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     sandbox = await sinon.createSandbox()
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await sandbox.restore()
   })
 
-  lab.test('should return outlook data', () => {
+  it('should return outlook data', () => {
     const outlook = new Outlook(outlookFakeData)
 
     expect(JSON.stringify(outlook.issueDate)).to.be.equal('"2019-08-08T09:30:00.000Z"')
@@ -126,7 +126,7 @@ lab.experiment('Model - Outlook', () => {
     expect(outlook.days[0].level).to.be.equal(0)
   })
 
-  lab.test('should condense multiple lines to single', () => {
+  it('should condense multiple lines to single', () => {
     const outlook = new Outlook(outlookFakeData)
 
     const fullOutput = [
@@ -139,7 +139,7 @@ lab.experiment('Model - Outlook', () => {
     expect(outlook.full).to.be.equal(fullOutput)
   })
 
-  lab.test('should set "hasOutlookConcern" to false', () => {
+  it('should set "hasOutlookConcern" to false', () => {
     const outlookFakeData2 = {
       id: 1107,
       issued_at: '2019-08-08T09:30:00Z',
@@ -239,7 +239,7 @@ lab.experiment('Model - Outlook', () => {
     expect(outlook._hasOutlookConcern).to.be.equal(false)
   })
 
-  lab.test('should convert coastal area (linestring) to a polygon', () => {
+  it('should convert coastal area (linestring) to a polygon', () => {
     const outlookWithCoastal = {
       id: 1830,
       issued_at: '2021-04-06T09:30:00Z',

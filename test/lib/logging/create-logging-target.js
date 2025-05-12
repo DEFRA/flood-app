@@ -2,12 +2,12 @@
 
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const { experiment, test, before, after } = exports.lab = Lab.script()
+const { describe, it, before, after } = exports.lab = Lab.script()
 const config = require('../../../server/config')
 const pino = require('pino')
 const createLoggingTarget = require('../../../server/lib/logging/create-logging-target')
 
-experiment('Logging - Pino', () => {
+describe('Logging - Pino', () => {
   let originalConfig
 
   before(() => {
@@ -18,7 +18,7 @@ experiment('Logging - Pino', () => {
     Object.assign(config, originalConfig)
   })
 
-  test('should log json to file when "isPM2" is true', () => {
+  it('should log json to file when "isPM2" is true', () => {
     config.isPM2 = true
 
     const actual = Object.values(pino.levels.labels).map(level => createLoggingTarget(level))
@@ -38,7 +38,7 @@ experiment('Logging - Pino', () => {
     expect(destinations.fatal).to.endWith('.pino.err.log')
   })
 
-  test('should log pretty print to process when "isPM2" is false', () => {
+  it('should log pretty print to process when "isPM2" is false', () => {
     config.isPM2 = false
 
     const actual = Object.values(pino.levels.labels).map(level => createLoggingTarget(level))

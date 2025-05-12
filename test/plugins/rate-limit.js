@@ -2,16 +2,16 @@
 
 const Lab = require('@hapi/lab')
 const Hapi = require('@hapi/hapi')
-const lab = exports.lab = Lab.script()
-const Code = require('@hapi/code')
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
+const { expect } = require('@hapi/code')
 const sinon = require('sinon')
 const config = require('../../server/config')
 
-lab.experiment('Plugin - Rate Limit', () => {
+describe('Plugin - Rate Limit', () => {
   let sandbox
   let server
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     const floodService = require('../../server/services/flood')
 
     sandbox = await sinon.createSandbox()
@@ -94,14 +94,14 @@ lab.experiment('Plugin - Rate Limit', () => {
     await server.register(require('../../server/plugins/logging'))
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     delete require.cache[require.resolve('../../server/plugins/rate-limit.js')]
 
     await server.stop()
     await sandbox.restore()
   })
 
-  lab.test('should GET station page exceeding rate-limit', async () => {
+  it('should GET station page exceeding rate-limit', async () => {
     sandbox.stub(config, 'localCache').value(true)
     sandbox.stub(config, 'rateLimitEnabled').value(true)
 
@@ -127,14 +127,14 @@ lab.experiment('Plugin - Rate Limit', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
 
     const response2 = await server.inject(options)
 
-    Code.expect(response2.statusCode).to.equal(429)
+    expect(response2.statusCode).to.equal(429)
   })
 
-  lab.test('should GET station page with rate-limit disabled', async () => {
+  it('should GET station page with rate-limit disabled', async () => {
     sandbox.stub(config, 'localCache').value(true)
     sandbox.stub(config, 'rateLimitEnabled').value(false)
 
@@ -160,19 +160,19 @@ lab.experiment('Plugin - Rate Limit', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
 
     const response2 = await server.inject(options)
 
-    Code.expect(response2.statusCode).to.equal(200)
+    expect(response2.statusCode).to.equal(200)
   })
 
-  lab.test('should set the cache setting "userPathCache"', async () => {
+  it('should set the cache setting "userPathCache"', async () => {
     sandbox.stub(config, 'localCache').value(false)
     sandbox.stub(config, 'rateLimitEnabled').value(true)
 
     const rateLimit = require('../../server/plugins/rate-limit.js')
 
-    Code.expect(rateLimit.options.userCache.cache).to.equal('redis_cache')
+    expect(rateLimit.options.userCache.cache).to.equal('redis_cache')
   })
 })

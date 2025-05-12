@@ -2,21 +2,21 @@
 
 const Hapi = require('@hapi/hapi')
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
+const { expect } = require('@hapi/code')
 const sinon = require('sinon')
-const lab = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const data = require('../data')
 const outlookData = require('../data/outlook.json')
 const { parse } = require('node-html-parser')
 const { fullRelatedContentChecker } = require('../lib/helpers/html-expectations')
 const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
 
-lab.experiment('Test - /alerts-warnings', () => {
+describe('Test - /alerts-warnings', () => {
   let server
   let sandbox
   let stubs
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
     delete require.cache[require.resolve('../../server/routes/alerts-and-warnings.js')]
     delete require.cache[require.resolve('../../server/services/location.js')]
@@ -65,7 +65,7 @@ lab.experiment('Test - /alerts-warnings', () => {
     await server.initialize()
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await sandbox.restore()
     await server.stop()
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
@@ -75,7 +75,7 @@ lab.experiment('Test - /alerts-warnings', () => {
     delete require.cache[require.resolve('../../server/util')]
   })
 
-  lab.test('GET /alerts-and-warnings with legacy query parameter', async () => {
+  it('GET /alerts-and-warnings with legacy query parameter', async () => {
     stubs.getJson.callsFake(() => data.warringtonGetJson)
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))
     stubs.getFloodsWithin.callsFake(() => ({ floods: [] }))
@@ -88,11 +88,11 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(301)
-    Code.expect(response.headers.location).to.equal('/alerts-and-warnings/warrington')
+    expect(response.statusCode).to.equal(301)
+    expect(response.headers.location).to.equal('/alerts-and-warnings/warrington')
   })
 
-  lab.test('GET /alerts-and-warnings with legacy query parameter invalid location', async () => {
+  it('GET /alerts-and-warnings with legacy query parameter invalid location', async () => {
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
 
     const options = {
@@ -102,11 +102,11 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(404)
-    Code.expect(response.headers.location).to.equal(undefined)
+    expect(response.statusCode).to.equal(404)
+    expect(response.headers.location).to.equal(undefined)
   })
 
-  lab.test('GET /alerts-and-warnings with legacy query parameter postcode', async () => {
+  it('GET /alerts-and-warnings with legacy query parameter postcode', async () => {
     stubs.getJson.callsFake(() => data.warringtonGetJson)
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))
     stubs.getFloodsWithin.callsFake(() => data.floodsByPostCode)
@@ -118,10 +118,10 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(301)
+    expect(response.statusCode).to.equal(301)
   })
 
-  lab.test('GET /alerts-and-warnings with legacy query parameter england', async () => {
+  it('GET /alerts-and-warnings with legacy query parameter england', async () => {
     stubs.getFloods.callsFake(() => ({
       floods: [
         {
@@ -150,11 +150,11 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers.location).to.equal('/alerts-and-warnings')
+    expect(response.statusCode).to.equal(302)
+    expect(response.headers.location).to.equal('/alerts-and-warnings')
   })
 
-  lab.test('GET /alerts-and-warnings with legacy query parameter valid non-england', async () => {
+  it('GET /alerts-and-warnings with legacy query parameter valid non-england', async () => {
     stubs.getIsEngland.callsFake(() => ({ is_england: false }))
     stubs.getJson.callsFake(() => data.scotlandGetJson)
     const options = {
@@ -164,11 +164,11 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(301)
-    Code.expect(response.headers.location).to.equal('/alerts-and-warnings/kinghorn-fife')
+    expect(response.statusCode).to.equal(301)
+    expect(response.headers.location).to.equal('/alerts-and-warnings/kinghorn-fife')
   })
 
-  lab.test('GET /alerts-and-warnings with legacy query parameter invalid characters', async () => {
+  it('GET /alerts-and-warnings with legacy query parameter invalid characters', async () => {
     stubs.getJson.callsFake(() => data.warringtonGetJson)
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))
     stubs.getFloodsWithin.callsFake(() => ({ floods: [] }))
@@ -180,11 +180,11 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(301)
-    Code.expect(response.headers.location).to.equal('/alerts-and-warnings/warrington')
+    expect(response.statusCode).to.equal(301)
+    expect(response.headers.location).to.equal('/alerts-and-warnings/warrington')
   })
 
-  lab.test('GET /alerts-and-warnings/{location} with location', async () => {
+  it('GET /alerts-and-warnings/{location} with location', async () => {
     stubs.getJson.callsFake(() => data.warringtonGetJson)
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))
     stubs.getFloodsWithin.callsFake(() => data.fakeFloodsData)
@@ -198,17 +198,17 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('1 flood warning')
-    Code.expect(response.payload).to.contain('1 severe flood warning')
-    Code.expect(response.payload).to.contain('3 flood alerts')
-    Code.expect(response.payload).to.contain('1 flood warning removed')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFGL" class="defra-flood-warnings-list-item__title">River Glaze catchment including Leigh and East Wigan</a>')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013FWFCH29" class="defra-flood-warnings-list-item__title">Wider area at risk from Sankey Brook at Dallam</a>')
-    Code.expect(response.payload).to.contain('<a href="/target-area/013WAFDI" class="defra-flood-warnings-list-item__title">River Ditton catchment including areas around Huyton-with-Roby and Widnes</a>')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('1 flood warning')
+    expect(response.payload).to.contain('1 severe flood warning')
+    expect(response.payload).to.contain('3 flood alerts')
+    expect(response.payload).to.contain('1 flood warning removed')
+    expect(response.payload).to.contain('<a href="/target-area/013WAFGL" class="defra-flood-warnings-list-item__title">River Glaze catchment including Leigh and East Wigan</a>')
+    expect(response.payload).to.contain('<a href="/target-area/013FWFCH29" class="defra-flood-warnings-list-item__title">Wider area at risk from Sankey Brook at Dallam</a>')
+    expect(response.payload).to.contain('<a href="/target-area/013WAFDI" class="defra-flood-warnings-list-item__title">River Ditton catchment including areas around Huyton-with-Roby and Widnes</a>')
   })
 
-  lab.test('GET /alerts-and-warnings/{location} with invalid location', async () => {
+  it('GET /alerts-and-warnings/{location} with invalid location', async () => {
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
 
     const options = {
@@ -218,10 +218,10 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(404)
+    expect(response.statusCode).to.equal(404)
   })
 
-  lab.test('GET /alerts-and-warnings/{location} should set the canonical url', async () => {
+  it('GET /alerts-and-warnings/{location} should set the canonical url', async () => {
     stubs.getJson.callsFake(() => data.warringtonGetJson)
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))
     stubs.getFloodsWithin.callsFake(() => data.fakeFloodsData)
@@ -233,11 +233,11 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('<link rel="canonical" href="http://localhost:3000/alerts-and-warnings/warrington"/>')
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('<link rel="canonical" href="http://localhost:3000/alerts-and-warnings/warrington"/>')
+    expect(response.statusCode).to.equal(200)
   })
 
-  lab.test('GET /alerts-and-warnings/{location} with england should redirect to default page', async () => {
+  it('GET /alerts-and-warnings/{location} with england should redirect to default page', async () => {
     stubs.getJson.callsFake(() => ({ floods: [] }))
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))
     stubs.getOutlook.callsFake(() => outlookData.statements[0])
@@ -249,11 +249,11 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers.location).to.equal('/alerts-and-warnings')
+    expect(response.statusCode).to.equal(302)
+    expect(response.headers.location).to.equal('/alerts-and-warnings')
   })
 
-  lab.test('GET /alerts-and-warnings/{location} with valid non-england location', async () => {
+  it('GET /alerts-and-warnings/{location} with valid non-england location', async () => {
     stubs.getIsEngland.callsFake(() => ({ is_england: false }))
     stubs.getJson.callsFake(() => data.scotlandGetJson)
 
@@ -264,10 +264,10 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(404)
+    expect(response.statusCode).to.equal(404)
   })
 
-  lab.test('GET /alerts-and-warnings should show default page', async () => {
+  it('GET /alerts-and-warnings should show default page', async () => {
     stubs.getFloods.callsFake(() => ({ floods: [] }))
     stubs.getStationsWithin.callsFake(() => [])
     stubs.getImpactsWithin.callsFake(() => [])
@@ -277,12 +277,12 @@ lab.experiment('Test - /alerts-warnings', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('No flood alerts or warnings')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('No flood alerts or warnings')
     fullRelatedContentChecker(parse(response.payload))
   })
 
-  lab.test('GET /alerts-and-warnings should show with station', async () => {
+  it('GET /alerts-and-warnings should show with station', async () => {
     stubs.getFloods.callsFake(() => ({ floods: [] }))
     stubs.getStationById.callsFake(() => data.fakeGetStationById)
     stubs.getWarningsAlertsWithinStationBuffer.callsFake(() => [])
@@ -294,11 +294,11 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('Beeding Bridge - flood alerts and warnings - GOV.UK')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('Beeding Bridge - flood alerts and warnings - GOV.UK')
   })
 
-  lab.test('GET /alerts-and-warnings with unknown parameter e.g. facebook click id ', async () => {
+  it('GET /alerts-and-warnings with unknown parameter e.g. facebook click id ', async () => {
     stubs.getStationById.callsFake(() => data.fakeGetStationById)
     stubs.getWarningsAlertsWithinStationBuffer.callsFake(() => [])
     const options = {
@@ -308,11 +308,11 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('Beeding Bridge - flood alerts and warnings - GOV.UK')
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('Beeding Bridge - flood alerts and warnings - GOV.UK')
+    expect(response.statusCode).to.equal(200)
   })
 
-  lab.test('GET /alerts-and-warnings with non-latin characters should 404', async () => {
+  it('GET /alerts-and-warnings with non-latin characters should 404', async () => {
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
     stubs.getFloods.callsFake(() => ({ floods: [] }))
 
@@ -323,10 +323,10 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(404)
+    expect(response.statusCode).to.equal(404)
   })
 
-  lab.test('POST /alerts-and-warnings with non-latin characters should return default page', async () => {
+  it('POST /alerts-and-warnings with non-latin characters should return default page', async () => {
     stubs.getJson.callsFake(() => {})
     stubs.getFloods.callsFake(() => ({ floods: [] }))
 
@@ -340,10 +340,10 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
   })
 
-  lab.test('POST /alerts-and-warnings with location payload', async () => {
+  it('POST /alerts-and-warnings with location payload', async () => {
     stubs.getJson.callsFake(() => data.warringtonGetJson)
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))
     stubs.getFloodsWithin.callsFake(() => data.fakeFloodsData)
@@ -357,11 +357,11 @@ lab.experiment('Test - /alerts-warnings', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(301)
-    Code.expect(response.headers['content-type']).to.include('text/html')
+    expect(response.statusCode).to.equal(301)
+    expect(response.headers['content-type']).to.include('text/html')
   })
 
-  lab.test('POST /alerts-and-warnings with location england should show location not found', async () => {
+  it('POST /alerts-and-warnings with location england should show location not found', async () => {
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
     stubs.getIsEngland.callsFake(() => ({ is_england: true }))
     stubs.getFloodsWithin.callsFake(() => [])
@@ -375,11 +375,11 @@ lab.experiment('Test - /alerts-warnings', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers.location).to.equal('/alerts-and-warnings')
+    expect(response.statusCode).to.equal(302)
+    expect(response.headers.location).to.equal('/alerts-and-warnings')
   })
 
-  lab.test('POST /alerts-and-warnings with invalid payload', async () => {
+  it('POST /alerts-and-warnings with invalid payload', async () => {
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
 
     const options = {
@@ -391,11 +391,11 @@ lab.experiment('Test - /alerts-warnings', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(302)
-    Code.expect(response.headers['content-type']).to.include('text/html')
+    expect(response.statusCode).to.equal(302)
+    expect(response.headers['content-type']).to.include('text/html')
   })
 
-  lab.test('POST /alerts-and-warnings with empty location payload', async () => {
+  it('POST /alerts-and-warnings with empty location payload', async () => {
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
     stubs.getFloods.callsFake(() => ({ floods: [] }))
 
@@ -408,11 +408,11 @@ lab.experiment('Test - /alerts-warnings', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.headers['content-type']).to.include('text/html')
+    expect(response.statusCode).to.equal(200)
+    expect(response.headers['content-type']).to.include('text/html')
   })
 
-  lab.test('POST /alerts-and-warnings with no location payload', async () => {
+  it('POST /alerts-and-warnings with no location payload', async () => {
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
     stubs.getFloods.callsFake(() => ({ floods: [] }))
 
@@ -422,10 +422,10 @@ lab.experiment('Test - /alerts-warnings', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(302)
+    expect(response.statusCode).to.equal(302)
   })
 
-  lab.test('POST /alerts-and-warnings with location payload length exceeds limit', async () => {
+  it('POST /alerts-and-warnings with location payload length exceeds limit', async () => {
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
     stubs.getFloods.callsFake(() => ({ floods: [] }))
 
@@ -438,11 +438,11 @@ lab.experiment('Test - /alerts-warnings', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('Error: Find location - Check for flooding - GOV.UK')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('Error: Find location - Check for flooding - GOV.UK')
   })
 
-  lab.test('POST /alerts-and-warnings with invalid location payload', async () => {
+  it('POST /alerts-and-warnings with invalid location payload', async () => {
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
     stubs.getFloods.callsFake(() => ({ floods: [] }))
 
@@ -456,11 +456,11 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('Error: Find location - Check for flooding - GOV.UK')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('Error: Find location - Check for flooding - GOV.UK')
   })
 
-  lab.test('POST /alerts-and-warnings with non-england location payload', async () => {
+  it('POST /alerts-and-warnings with non-england location payload', async () => {
     stubs.getIsEngland.callsFake(() => ({ is_england: false }))
     stubs.getJson.callsFake(() => data.nonLocationGetJson)
 
@@ -474,10 +474,10 @@ lab.experiment('Test - /alerts-warnings', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('Error: Find location - Check for flooding - GOV.UK')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('Error: Find location - Check for flooding - GOV.UK')
   })
-  lab.test('GET /alerts-and-warnings - context footer checks ', async () => {
+  it('GET /alerts-and-warnings - context footer checks ', async () => {
     stubs.getFloods.callsFake(() => ({
       floods: []
     }))
@@ -489,7 +489,7 @@ lab.experiment('Test - /alerts-warnings', () => {
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).to.equal(200)
     validateFooterPresent(response)
   })
 })

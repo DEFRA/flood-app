@@ -4,22 +4,22 @@ const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
 
 const proxyquire = require('proxyquire').noCallThru()
-const lab = exports.lab = Lab.script()
+const { describe, it, before } = exports.lab = Lab.script()
 const { URL } = require('url')
 
 const HOST = 'https://example.gov.uk'
 
-lab.experiment('Plugin - Request Logging', () => {
+describe('Plugin - Request Logging', () => {
   let loggingPlugin
 
-  lab.before(() => {
+  before(() => {
     loggingPlugin = proxyquire('../../server/plugins/logging', {
       '../lib/logging/pino': {},
       'hapi-pino': {}
     })
   })
 
-  lab.test('should serialize req with query', async () => {
+  it('should serialize req with query', async () => {
     const req = {
       url: new URL('/some/url', HOST),
       method: 'get',
@@ -39,7 +39,7 @@ lab.experiment('Plugin - Request Logging', () => {
     })
   })
 
-  lab.test('should serialize req with an empty query', async () => {
+  it('should serialize req with an empty query', async () => {
     const req = {
       url: new URL('/some/url', HOST),
       method: 'get',
@@ -58,7 +58,7 @@ lab.experiment('Plugin - Request Logging', () => {
     })
   })
 
-  lab.test('should serialize req without query', async () => {
+  it('should serialize req without query', async () => {
     const req = {
       url: new URL('/some/url', HOST),
       method: 'get',
@@ -76,7 +76,7 @@ lab.experiment('Plugin - Request Logging', () => {
     })
   })
 
-  lab.test('should serialize res', async () => {
+  it('should serialize res', async () => {
     const res = {
       output: {
         statusCode: 200
@@ -91,7 +91,7 @@ lab.experiment('Plugin - Request Logging', () => {
     expect(actual).to.equal({ statusCode: 200 })
   })
 
-  lab.test('should serialize err', async () => {
+  it('should serialize err', async () => {
     const err = new TypeError('Something went boom')
     err.code = 'BOOM_0001'
 
