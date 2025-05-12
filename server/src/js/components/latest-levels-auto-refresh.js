@@ -94,20 +94,19 @@ class LatestLevelsAutoRefresh {
         this.hasChanges = true
         elementValue.textContent = itemValue
 
-        this.liveStatusMessages.push(`The ${item.river_name} at ${item.external_name} level was ${itemValue} metres ${itemTime}`)
+        this.liveStatusMessages.push(`The ${item.river_name} at ${item.external_name} level was ${itemValue} metres ${item.formatted_time}`)
       } else {
         this.hasChanges = false
       }
 
       console.log({
-        hasChanges : this.hasChanges,
-        elementValue : elementValue.textContent,
-        elementTime : elementTime.textContent,
+        hasChanges: this.hasChanges,
+        elementValue: elementValue.textContent,
+        elementTime: elementTime.textContent,
         elementTimeStamp,
         itemValue,
         itemTime
       })
-
 
       elementTime.textContent = item.formatted_time
     })

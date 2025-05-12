@@ -17,7 +17,7 @@ describe('latestLevels', () => {
     const html = `
       <output data-live-status></output>
       <div class="defra-live" data-severity-status="severe">
-        <div class="defra-live__item" data-item-status="false" data-item-name="River Thames" data-item-external-name="London" data-item-id="1000">
+        <div class="defra-live__item" data-item-timestamp="2025-05-12T18:00:00.000Z" data-item-status="false" data-item-name="River Thames" data-item-external-name="London" data-item-id="1000">
           <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
             <strong data-item-time>20 minutes ago</strong>
           </p>
@@ -27,7 +27,7 @@ describe('latestLevels', () => {
           </p>
         </div>
 
-        <div class="defra-live__item" data-item-status="false" data-item-name="Sea Cut" data-item-external-name="Mowthorpe" data-item-id="2000">
+        <div class="defra-live__item" data-item-timestamp="2025-05-12T18:00:00.000Z" data-item-status="false" data-item-name="Sea Cut" data-item-external-name="Mowthorpe" data-item-id="2000">
           <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-bottom-0">
             <strong data-item-time>30 minutes ago</strong>
           </p>
@@ -81,7 +81,8 @@ describe('latestLevels', () => {
             latest_level: '0.10',
             threshold_value: '11.50',
             isSuspendedOrOffline: false,
-            value_timestamp: '15 minutes ago'
+            value_timestamp: '2025-05-12T18:15:00.000Z',
+            formatted_time: '15 minutes ago'
           },
           {
             rloi_id: 2000,
@@ -90,7 +91,8 @@ describe('latestLevels', () => {
             latest_level: '0.20',
             threshold_value: '1.57',
             isSuspendedOrOffline: false,
-            value_timestamp: '15 minutes ago'
+            value_timestamp: '2025-05-12T18:15:00.000Z',
+            formatted_time: '15 minutes ago'
           }
         ]
       })
@@ -103,6 +105,7 @@ describe('latestLevels', () => {
         try {
           const elements = document.querySelectorAll('.defra-live__item')
 
+          expect(elements.length).to.equal(2)
           expect(elements[0].querySelector('[data-item-time]').textContent).to.equal('15 minutes ago')
           expect(elements[0].querySelector('[data-item-value]').textContent).to.equal('0.10')
           expect(ll.liveStatusMessages.length).to.equal(2)
@@ -129,7 +132,7 @@ describe('latestLevels', () => {
             latest_level: '0.10',
             threshold_value: '2.17',
             isSuspendedOrOffline: false,
-            value_timestamp: '15 minutes ago'
+            value_timestamp: '2025-05-12T18:00:00.000Z'
           },
           {
             rloi_id: 2000,
@@ -138,7 +141,7 @@ describe('latestLevels', () => {
             latest_level: '0.20',
             threshold_value: '1.10',
             isSuspendedOrOffline: false,
-            value_timestamp: '15 minutes ago'
+            value_timestamp: '2025-05-12T18:00:00.000Z'
           }
         ]
       })
