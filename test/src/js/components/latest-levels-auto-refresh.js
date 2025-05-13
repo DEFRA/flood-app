@@ -117,7 +117,7 @@ describe('latestLevels', () => {
     })
   })
 
-  it('should flag "hasChanges" when there are no changes', async () => {
+  it('should flag "hasChanges" as "false" when there are no changes', async () => {
     mockFetch.returns(Promise.resolve({
       json: () => ({
         severity: 'severe',
@@ -156,6 +156,40 @@ describe('latestLevels', () => {
         }
       })
     })
+  })
+
+  it('should fetch data via retry', async () => {
+    mockFetch.returns(Promise.resolve({
+      json: () => ({
+        severity: 'severe',
+        levels: [
+          {
+            rloi_id: 1000,
+            river_name: 'River Thames',
+            external_name: 'London',
+            latest_level: '0.10',
+            threshold_value: '2.17',
+            isSuspendedOrOffline: false,
+            value_timestamp: '15 minutes ago'
+          },
+          {
+            rloi_id: 2000,
+            river_name: 'Sea Cut',
+            external_name: 'Mowthorpe',
+            latest_level: '0.20',
+            threshold_value: '1.10',
+            isSuspendedOrOffline: false,
+            value_timestamp: '15 minutes ago'
+          }
+        ]
+      })
+    }))
+
+    const ll = new window.LatestLevelsAutoRefresh()
+
+    ll.retry()
+
+    expect(ll.hasChanges).to.equal(null)
   })
 
   it('should set accessibility message when there are missing elements fetched', () => {
