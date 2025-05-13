@@ -133,8 +133,8 @@ lab.experiment('Target-area tests', () => {
 
     // Latest level (single threshold)
     Code.expect(response.payload).to.contain('<h2 class="defra-live__title">Latest level</h2>')
-    Code.expect(response.payload).to.contain('The River Derwent level at Derby St Marys was <span data-item-value>0.54</span> metres. Property flooding is possible when it goes above 3.30 metres.')
-    Code.expect(response.payload).to.contain('<a href="/station/2138?tid=1746074">Monitor the latest level at Derby St Marys</a>')
+    Code.expect(response.payload).to.contain('The River Derwent level at Derby City was <span data-item-value>0.54</span> metres. Property flooding is possible when it goes above 3.30 metres.')
+    Code.expect(response.payload).to.contain('<a href="/station/2138?tid=1746074">Monitor the latest level at Derby City</a>')
     Code.expect(response.payload).to.match(/<div class="defra-flood-status-item__text">\s*<strong>Flooding is possible - <a class="govuk-link" href="https:\/\/www\.gov\.uk\/guidance\/flood-alerts-and-warnings-what-they-are-and-what-to-do#flood-alert">\s*be prepared\s*<\/a><\/strong>\s*<\/div>/)
     Code.expect(response.payload).to.contain('30 minutes ago')
 
