@@ -83,21 +83,34 @@ class LatestLevelsAutoRefresh {
         return this.liveStatusMessages.push('Please refresh the page')
       }
 
+      const elementTimeStamp = element.attributes['data-item-timestamp'].value
       const elementValue = element.querySelector('[data-item-value]')
       const elementTime = element.querySelector('[data-item-time]')
 
       const itemValue = item.latest_level
       const itemTime = item.value_timestamp
 
-      if (itemValue !== elementValue.textContent) {
+      if (itemTime !== elementTimeStamp) {
+        this.hasChanges = true
         elementValue.textContent = itemValue
+        elementTime.textContent = item.formatted_time
+        element.setAttribute('data-item-timestamp', itemTime)
 
-        this.liveStatusMessages.push(`The ${item.river_name} at ${item.external_name} level was ${itemValue} metres ${itemTime}`)
+        this.liveStatusMessages.push(`The ${item.river_name} at ${item.external_name} level was ${itemValue} metres ${item.formatted_time}`)
       } else {
         this.hasChanges = false
       }
 
-      elementTime.textContent = item.value_timestamp
+      const now = new Date()
+      console.log({
+        now: now.toLocaleString(),
+        hasChanges: this.hasChanges,
+        elementValue: elementValue.textContent,
+        elementTime: elementTime.textContent,
+        elementTimeStamp,
+        itemValue,
+        itemTime
+      })
     })
   }
 

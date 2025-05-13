@@ -31,7 +31,6 @@ function getThresholdsForTargetArea (thresholds) {
     threshold.river_name = riverName
     threshold.latest_level = toFixed(threshold.latest_level, 2)
     threshold.threshold_value = toFixed(threshold.threshold_value, 2)
-    threshold.value_timestamp = formatElapsedTime(threshold.value_timestamp)
 
     // Use processThreshold for threshold_value adjustment
     threshold.threshold_value = processThreshold(
