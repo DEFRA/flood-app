@@ -22,6 +22,9 @@ module.exports = {
           env.addFilter('formatDate', util.formatDate)
           env.addFilter('toFixed', util.toFixed)
           env.addFilter('toMarked', util.toMarked)
+
+          env.addGlobal('govukRebrand', true)
+          
           return next()
         }
       }
