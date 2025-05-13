@@ -7,12 +7,16 @@ const sinon = require('sinon')
 const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const { siteUrl } = require('../../server/config')
 
-describe('Get Cookies test', () => {
+describe('Route - Cookies', () => {
   let sandbox
   let server
 
   beforeEach(async () => {
+    delete require.cache[require.resolve('../../server/services/flood.js')]
+    delete require.cache[require.resolve('../../server/plugins/on-post-handler.js')]
+
     sandbox = await sinon.createSandbox()
+
     server = Hapi.server({
       port: 3009,
       host: 'localhost'
@@ -24,22 +28,21 @@ describe('Get Cookies test', () => {
     await sandbox.restore()
   })
 
-  it('GET /cookies and set cookie preferences deal with attempted XSS', async () => {
-    delete require.cache[require.resolve('../../server/services/flood.js')]
-    delete require.cache[require.resolve('../../server/plugins/on-post-handler.js')]
-
+  it('should set cookie preferences to deal with attempted XSS', async () => {
     const fakeFloodsData = () => {
       return { floods: [{ isDummyData: false }] }
     }
 
     const floodService = require('../../server/services/flood')
+
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodsData)
+
     floodService.floods = await floodService.getFloods()
 
     const plugin = {
       plugin: {
         name: 'cookies',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/cookies'))
         }
       }
@@ -48,9 +51,11 @@ describe('Get Cookies test', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/on-post-handler'))
     await server.register(plugin)
+
     await server.state('seen_cookie_message', {
       ttl: 1000 * 60 * 60 * 24 * 7 // 7 days lifetime
     })
+
     await server.initialize()
 
     const options = {
@@ -64,6 +69,7 @@ describe('Get Cookies test', () => {
     }
 
     const response = await server.inject(options)
+
     expect(response.statusCode).to.equal(200)
     expect(response.payload).to.include('cookies')
     expect(response.headers['content-type']).to.include('text/html')
@@ -73,22 +79,22 @@ describe('Get Cookies test', () => {
     expect(response.request.state.set_cookie_usage).to.equal('true')
     expect(response.request.state._ga).to.equal('GA1.1.1682777723.1629978783')
   })
-  it('GET /cookies and set cookie preferences with corrupt referer', async () => {
-    delete require.cache[require.resolve('../../server/services/flood.js')]
-    delete require.cache[require.resolve('../../server/plugins/on-post-handler.js')]
 
+  it('should set cookie preferences with corrupt referer', async () => {
     const fakeFloodsData = () => {
       return { floods: [{ isDummyData: false }] }
     }
 
     const floodService = require('../../server/services/flood')
+
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodsData)
+
     floodService.floods = await floodService.getFloods()
 
     const plugin = {
       plugin: {
         name: 'cookies',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/cookies'))
         }
       }
@@ -97,9 +103,11 @@ describe('Get Cookies test', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/on-post-handler'))
     await server.register(plugin)
+
     await server.state('seen_cookie_message', {
       ttl: 1000 * 60 * 60 * 24 * 7 // 7 days lifetime
     })
+
     await server.initialize()
 
     const options = {
@@ -122,16 +130,16 @@ describe('Get Cookies test', () => {
     expect(response.request.state.set_cookie_usage).to.equal('true')
     expect(response.request.state._ga).to.equal('GA1.1.1682777723.1629978783')
   })
-  it('GET /cookies and set cookie preferences with valid referer', async () => {
-    delete require.cache[require.resolve('../../server/services/flood.js')]
-    delete require.cache[require.resolve('../../server/plugins/on-post-handler.js')]
 
+  it('should set cookie preferences with valid referer', async () => {
     const fakeFloodsData = () => {
       return { floods: [{ isDummyData: false }] }
     }
 
     const floodService = require('../../server/services/flood')
+
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodsData)
+
     floodService.floods = await floodService.getFloods()
 
     const plugin = {
@@ -146,9 +154,11 @@ describe('Get Cookies test', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/on-post-handler'))
     await server.register(plugin)
+
     await server.state('seen_cookie_message', {
       ttl: 1000 * 60 * 60 * 24 * 7 // 7 days lifetime
     })
+
     await server.initialize()
 
     const options = {
