@@ -4,7 +4,7 @@ const { script } = require('@hapi/lab')
 const sinon = require('sinon')
 
 const lab = script()
-const { describe, it, before, afterEach } = lab
+const { describe, it, before, beforeEach, afterEach } = lab
 exports.lab = lab
 
 describe('latestLevels', () => {
@@ -12,9 +12,10 @@ describe('latestLevels', () => {
   let document
   let clock
   let mockFetch
+  let originalHtml
 
   before(() => {
-    const html = `
+    originalHtml = `
       <output data-live-status></output>
       <div class="defra-live" data-severity-status="severe">
         <div class="defra-live__item" data-item-timestamp="2025-05-12T18:00:00.000Z" data-item-status="false" data-item-name="River Thames" data-item-external-name="London" data-item-id="1000">
@@ -39,7 +40,7 @@ describe('latestLevels', () => {
       </div>
     </div>
     `
-    const dom = new JSDOM(html, { url: 'http://localhost' })
+    const dom = new JSDOM(originalHtml, { url: 'http://localhost' })
     window = dom.window
     document = window.document
 
@@ -53,7 +54,12 @@ describe('latestLevels', () => {
 
     require('../../../../server/src/js/components/latest-levels-auto-refresh.js')
   })
-
+  beforeEach(() => {
+    // Reset the HTML before each test to ensure a clean state
+    document.body.innerHTML = originalHtml
+    // Reset the fetch mock for each test
+    mockFetch.reset()
+  })
   afterEach(() => {
     clock.restore()
   })

@@ -93,13 +93,17 @@ class LatestLevelsAutoRefresh {
       if (itemTime !== elementTimeStamp) {
         this.hasChanges = true
         elementValue.textContent = itemValue
+        elementTime.textContent = item.formatted_time
+        element.setAttribute('data-item-timestamp', itemTime)
 
         this.liveStatusMessages.push(`The ${item.river_name} at ${item.external_name} level was ${itemValue} metres ${item.formatted_time}`)
       } else {
         this.hasChanges = false
       }
 
+      const now = new Date()
       console.log({
+        now: now.toLocaleString(),
         hasChanges: this.hasChanges,
         elementValue: elementValue.textContent,
         elementTime: elementTime.textContent,
@@ -107,8 +111,6 @@ class LatestLevelsAutoRefresh {
         itemValue,
         itemTime
       })
-
-      elementTime.textContent = item.formatted_time
     })
   }
 
