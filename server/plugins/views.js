@@ -24,7 +24,7 @@ module.exports = {
           env.addFilter('toMarked', util.toMarked)
 
           env.addGlobal('govukRebrand', true)
-          
+
           return next()
         }
       }
