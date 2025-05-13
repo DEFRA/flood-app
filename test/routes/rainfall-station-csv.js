@@ -6,14 +6,16 @@ const { expect } = require('@hapi/code')
 const sinon = require('sinon')
 const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 
-describe('Routes test - rainfall-station-csv', () => {
+describe('Route - Rainfall Station CSV', () => {
   let sandbox
   let server
 
   beforeEach(async () => {
     delete require.cache[require.resolve('../../server/routes/rainfall-station-csv.js')]
     delete require.cache[require.resolve('../../server/services/flood.js')]
+
     sandbox = await sinon.createSandbox()
+
     server = Hapi.server({
       port: 3000, host: 'localhost'
     })
@@ -21,7 +23,7 @@ describe('Routes test - rainfall-station-csv', () => {
     const rainfallStationCsvPlugin = {
       plugin: {
         name: 'rainfall-station-csv',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/rainfall-station-csv'))
         }
       }
@@ -31,23 +33,28 @@ describe('Routes test - rainfall-station-csv', () => {
     await server.register(require('@hapi/h2o2'))
     await server.register(require('../../server/plugins/views'))
     await server.register(rainfallStationCsvPlugin)
+
     await server.initialize()
   })
 
   afterEach(async () => {
     await server.stop()
     await sandbox.restore()
+
     const regex = /.\/server\/models\/./
+
     Object.keys(require.cache).forEach((key) => {
       if (key.match(regex)) {
         delete require.cache[key]
       }
     })
   })
-  it('GET /rainfall-station-csv rainfall station', async () => {
+
+  it('should 200 returning rainfall station', async () => {
     const options = {
       method: 'GET', url: '/rainfall-station-csv/E24195'
     }
+
     const floodService = require('../../server/services/flood')
 
     const fakeRainfallStationData = () => ({
@@ -70,6 +77,7 @@ describe('Routes test - rainfall-station-csv', () => {
       lat: 56.103262968744666,
       lon: 2.8074515304839753
     })
+
     const fakeRainfallTelemetryData = () => [{
       period: '15 min', value: 0.2, value_timestamp: '2021-07-15T12:00:00Z'
     }]
@@ -83,10 +91,12 @@ describe('Routes test - rainfall-station-csv', () => {
     expect(response.result).to.contain('Timestamp (UTC),Rainfall (mm)\n2021-07-15T12:00:00Z,0.2')
     expect(response.headers['content-type']).to.include('text/csv')
   })
-  it('GET /rainfall-station-csv test station name not capitalised', async () => {
+
+  it('should return station name not capitalised', async () => {
     const options = {
       method: 'GET', url: '/rainfall-station-csv/E24195'
     }
+
     const floodService = require('../../server/services/flood')
 
     const fakeRainfallStationData = () => ({
@@ -109,6 +119,7 @@ describe('Routes test - rainfall-station-csv', () => {
       lat: 56.103262968744666,
       lon: 2.8074515304839753
     })
+
     const fakeRainfallTelemetryData = () => [{
       period: '15 min', value: 0.2, value_timestamp: '2021-07-15T12:00:00Z'
     }]
@@ -120,10 +131,12 @@ describe('Routes test - rainfall-station-csv', () => {
 
     expect(response.headers['content-disposition']).to.include('filename=Lavenham-rainfall-data.csv')
   })
-  it('GET /rainfall-station-csv test telemetry results are padded to 5 days', async () => {
+
+  it('should pad telemetry results to 5 days', async () => {
     const options = {
       method: 'GET', url: '/rainfall-station-csv/E24195'
     }
+
     const floodService = require('../../server/services/flood')
 
     const fakeRainfallStationData = () => ({
@@ -146,6 +159,7 @@ describe('Routes test - rainfall-station-csv', () => {
       lat: 56.103262968744666,
       lon: 2.8074515304839753
     })
+
     const fakeRainfallTelemetryData = () => [{
       period: '15 min', value: 0.2, value_timestamp: '2021-07-15T12:00:00Z'
     }]
@@ -160,13 +174,15 @@ describe('Routes test - rainfall-station-csv', () => {
     expect(count).to.equal(480)
   })
 
-  it('GET /rainfall-station-csv test return 404 if no station', async () => {
+  it('should 404 if no station', async () => {
     const options = {
       method: 'GET', url: '/rainfall-station-csv/E24195'
     }
+
     const floodService = require('../../server/services/flood')
 
     const fakeRainfallStationData = () => {}
+
     const fakeRainfallTelemetryData = () => [{
       period: '15 min', value: 0.2, value_timestamp: '2021-07-15T12:00:00Z'
     }]
@@ -182,10 +198,11 @@ describe('Routes test - rainfall-station-csv', () => {
     expect(response.result.message).to.equal('Rainfall station not found')
   })
 
-  it('GET /rainfall-station-csv test return 404 if no station', async () => {
+  it('should 404 if no station telemetry data', async () => {
     const options = {
       method: 'GET', url: '/rainfall-station-csv/E24195'
     }
+
     const floodService = require('../../server/services/flood')
 
     const fakeRainfallStationData = () => ({
@@ -208,6 +225,7 @@ describe('Routes test - rainfall-station-csv', () => {
       lat: 56.103262968744666,
       lon: 2.8074515304839753
     })
+
     const fakeRainfallTelemetryData = () => {}
 
     sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeRainfallStationData)

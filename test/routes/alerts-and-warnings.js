@@ -8,7 +8,7 @@ const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const data = require('../data')
 const outlookData = require('../data/outlook.json')
 
-describe('Route - alerts-and-warnings', () => {
+describe('Route - Alerts and Warnings', () => {
   let server
   let sandbox
   let stubs

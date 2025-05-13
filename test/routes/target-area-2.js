@@ -35,6 +35,7 @@ describe('target-area route', () => {
     const targetAreaRoute = proxyquire('../../server/routes/target-area', {
       '../../server/models/views/target-area': FakeViewModel
     })
+
     const targetAreaPlugin = {
       plugin: {
         name: 'target',
@@ -43,7 +44,9 @@ describe('target-area route', () => {
         }
       }
     }
+
     await server.register(targetAreaPlugin)
+
     return FakeViewModel
   }
 
@@ -69,8 +72,10 @@ describe('target-area route', () => {
         }
       }
     })
+
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
+
     await server.initialize()
 
     const area = getTargetArea({ code: '011WAFDW' })
@@ -82,6 +87,7 @@ describe('target-area route', () => {
 
   it('should pass area and flood warning to view model constructor', async () => {
     const AREA_CODE = '011WAFDW'
+
     const FakeViewModel = await setupFakeModel({
       pageTitle: 'Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water'
     })
@@ -90,8 +96,11 @@ describe('target-area route', () => {
 
     expect(FakeViewModel.calledOnce).to.be.true()
     expect(FakeViewModel.firstCall.args.length).to.equal(1)
+
     const argument = FakeViewModel.firstCall.args[0]
+
     expect(Object.keys(argument)).to.equal(['area', 'flood', 'parentFlood'])
+
     // Note: the assertions are dependent on the values set up in beforeEach
     expect(argument.area.code).to.equal(AREA_CODE)
     expect(argument.flood.ta_code).to.equal(AREA_CODE)
@@ -100,6 +109,7 @@ describe('target-area route', () => {
 
   it('should display heading', async () => {
     const AREA_CODE = '011WAFDW'
+
     setupFakeModel({
       pageTitle: 'Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water'
     })
@@ -107,10 +117,13 @@ describe('target-area route', () => {
     const response = await getResponse(AREA_CODE)
 
     const root = parse(response.payload)
+
     headingChecker(root, 'h1', 'Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water')
   })
+
   it('should display related content links without sign up for flood warnings', async () => {
     const AREA_CODE = '011WAFDW'
+
     setupFakeModel({
       pageTitle: 'Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water',
       floodRiskUrl: 'https://fake-flood-risk-url.com',
@@ -120,8 +133,10 @@ describe('target-area route', () => {
     const response = await getResponse(AREA_CODE)
 
     expect(response.statusCode).to.equal(200)
+
     const root = parse(response.payload)
     const relatedContentLinks = root.querySelectorAll('.defra-related-items a')
+
     expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)
     linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
     linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/help-during-flood')
@@ -129,8 +144,10 @@ describe('target-area route', () => {
     linkChecker(relatedContentLinks, 'Check your long term flood risk', 'https://fake-flood-risk-url.com')
     linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
   })
+
   it('should display river levels link', async () => {
     const AREA_CODE = '011WAFDW'
+
     setupFakeModel({
       pageTitle: 'Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water',
       targetArea: AREA_CODE
@@ -139,12 +156,15 @@ describe('target-area route', () => {
     const response = await getResponse(undefined)
 
     expect(response.statusCode).to.equal(200)
+
     const root = parse(response.payload)
+
     linkChecker(root.querySelectorAll('a'),
       'Find a river, sea, groundwater or rainfall level in this area',
       `/river-and-sea-levels/target-area/${AREA_CODE}`
     )
   })
+
   it('should return 404 if no code provided', async () => {
     setupFakeModel({})
 

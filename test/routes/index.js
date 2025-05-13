@@ -6,12 +6,13 @@ const { expect } = require('@hapi/code')
 const sinon = require('sinon')
 const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 
-describe('Get Routes test', () => {
+describe('Route - Index', () => {
   let sandbox
   let server
 
   beforeEach(async () => {
     sandbox = await sinon.createSandbox()
+
     server = Hapi.server({
       port: 3009,
       host: 'localhost'
@@ -23,11 +24,11 @@ describe('Get Routes test', () => {
     await sandbox.restore()
   })
 
-  it('GET /start-page', async () => {
+  it('should redirect when visiting: /start-page', async () => {
     const plugin = {
       plugin: {
         name: 'start-page',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/start-page'))
         }
       }
@@ -35,6 +36,7 @@ describe('Get Routes test', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(plugin)
+
     await server.initialize()
 
     const options = {
@@ -46,11 +48,11 @@ describe('Get Routes test', () => {
     expect(response.statusCode).to.equal(301)
   })
 
-  it('GET /sms-auto-opt-in-info', async () => {
+  it('should 200 when visiting: /sms-auto-opt-in-info', async () => {
     const plugin = {
       plugin: {
         name: 'sms-auto-opt-in-info',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/sms-auto-opt-in-info'))
         }
       }
@@ -58,6 +60,7 @@ describe('Get Routes test', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(plugin)
+
     await server.initialize()
 
     const options = {
@@ -66,15 +69,17 @@ describe('Get Routes test', () => {
     }
 
     const response = await server.inject(options)
+
     expect(response.statusCode).to.equal(200)
     expect(response.payload).to.include('This phone number has been automatically opted-in to receive flood warnings')
     expect(response.headers['content-type']).to.include('text/html')
   })
-  it('GET /cookies', async () => {
+
+  it('should 200 when visiting: /cookies', async () => {
     const plugin = {
       plugin: {
         name: 'cookies',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/cookies'))
         }
       }
@@ -82,6 +87,7 @@ describe('Get Routes test', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(plugin)
+
     await server.initialize()
 
     const options = {
@@ -90,16 +96,17 @@ describe('Get Routes test', () => {
     }
 
     const response = await server.inject(options)
+
     expect(response.statusCode).to.equal(200)
     expect(response.payload).to.include('cookies')
     expect(response.headers['content-type']).to.include('text/html')
   })
 
-  it('GET /terms-and-conditions', async () => {
+  it('should 200 when visiting: /terms-and-conditions', async () => {
     const plugin = {
       plugin: {
         name: 'terms-and-conditions',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/terms-and-conditions'))
         }
       }
@@ -107,6 +114,7 @@ describe('Get Routes test', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(plugin)
+
     await server.initialize()
 
     const options = {
@@ -115,15 +123,17 @@ describe('Get Routes test', () => {
     }
 
     const response = await server.inject(options)
+
     expect(response.statusCode).to.equal(200)
     expect(response.payload).to.include('terms and conditions')
     expect(response.headers['content-type']).to.include('text/html')
   })
-  it('GET /privacy-notice', async () => {
+
+  it('should 200 when visiting: /privacy-notice', async () => {
     const plugin = {
       plugin: {
         name: 'privacy-notice',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/privacy-notice'))
         }
       }
@@ -131,6 +141,7 @@ describe('Get Routes test', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(plugin)
+
     await server.initialize()
 
     const options = {
@@ -139,12 +150,67 @@ describe('Get Routes test', () => {
     }
 
     const response = await server.inject(options)
+
     expect(response.statusCode).to.equal(200)
     expect(response.payload).to.include('Privacy notice')
     expect(response.headers['content-type']).to.include('text/html')
   })
 
-  it('GET /api/places.geojson', async () => {
+  it('should 200 when visiting: /how-we-measure-river-sea-groundwater-levels', async () => {
+    const plugin = {
+      plugin: {
+        name: 'about-levels',
+        register: (server) => {
+          server.route(require('../../server/routes/about-levels'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(plugin)
+
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/how-we-measure-river-sea-groundwater-levels'
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.include('How we measure river, sea and groundwater levels')
+    expect(response.headers['content-type']).to.include('text/html')
+  })
+
+  it('should 200 when visiting: /accessibility-statement', async () => {
+    const plugin = {
+      plugin: {
+        name: 'accessibility-statement',
+        register: (server) => {
+          server.route(require('../../server/routes/accessibility-statement'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(plugin)
+
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/accessibility-statement'
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.include('<h1 class="govuk-heading-xl">Accessibility statement for Check for flooding</h1>')
+    expect(response.headers['content-type']).to.include('text/html')
+  })
+
+  it('should 200 when visiting: /api/places.geojson', async () => {
     const plugin = {
       plugin: {
         name: 'places.geojson',
@@ -156,61 +222,16 @@ describe('Get Routes test', () => {
 
     await server.register(require('../../server/plugins/views'))
     await server.register(plugin)
+
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/api/places.geojson'
     }
-    const response = await server.inject(options)
-    expect(response.statusCode).to.equal(200)
-  })
-
-  it('GET /how-we-measure-river-sea-groundwater-levels', async () => {
-    const plugin = {
-      plugin: {
-        name: 'about-levels',
-        register: (server, options) => {
-          server.route(require('../../server/routes/about-levels'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(plugin)
-    await server.initialize()
-
-    const options = {
-      method: 'GET',
-      url: '/how-we-measure-river-sea-groundwater-levels'
-    }
 
     const response = await server.inject(options)
+
     expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('How we measure river, sea and groundwater levels')
-    expect(response.headers['content-type']).to.include('text/html')
-  })
-  it('GET /accessibility-statement', async () => {
-    const plugin = {
-      plugin: {
-        name: 'accessibility-statement',
-        register: (server, options) => {
-          server.route(require('../../server/routes/accessibility-statement'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(plugin)
-    await server.initialize()
-
-    const options = {
-      method: 'GET',
-      url: '/accessibility-statement'
-    }
-
-    const response = await server.inject(options)
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('<h1 class="govuk-heading-xl">Accessibility statement for Check for flooding</h1>')
-    expect(response.headers['content-type']).to.include('text/html')
   })
 })

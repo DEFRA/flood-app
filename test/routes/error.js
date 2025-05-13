@@ -7,7 +7,7 @@ const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const errorPages = require('../../server/plugins/error-pages')
 const boom = require('@hapi/boom')
 
-describe('Error route test', () => {
+describe('Route - Error', () => {
   let sandbox
   let server
 
@@ -27,12 +27,13 @@ describe('Error route test', () => {
     await sandbox.restore()
   })
 
-  it('GET /error', async () => {
+  it('should 400 when visiting the page', async () => {
     const getError = () => {
       return boom.badRequest('test error')
     }
 
     const floodService = require('../../server/services/flood')
+
     sandbox.stub(floodService, 'getError').callsFake(getError)
 
     const route = {
@@ -43,10 +44,12 @@ describe('Error route test', () => {
         }
       }
     }
+
     await server.register(route)
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/logging'))
     await server.register(errorPages)
+
     await server.initialize()
 
     const options = {
@@ -55,6 +58,7 @@ describe('Error route test', () => {
     }
 
     const response = await server.inject(options)
+
     expect(response.statusCode).to.equal(400)
     expect(response.payload).to.contain('Sorry, there is a problem with the service')
   })
