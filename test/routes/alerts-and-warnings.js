@@ -187,7 +187,7 @@ describe('Route - Alerts and Warnings', () => {
       expect(response.headers.location).to.equal('/alerts-and-warnings/warrington')
     })
 
-    it('should return 200 with valid location', async () => {
+    it('should 200 with valid location', async () => {
       stubs.getJson.callsFake(() => data.warringtonGetJson)
       stubs.getIsEngland.callsFake(() => ({ is_england: true }))
       stubs.getFloodsWithin.callsFake(() => data.fakeFloodsData)
