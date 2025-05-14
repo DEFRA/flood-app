@@ -60,7 +60,7 @@ describe('Test - /river-and-sea-levels', () => {
     await server.register({
       plugin: {
         name: 'warnings',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/river-and-sea-levels'))
         }
       }

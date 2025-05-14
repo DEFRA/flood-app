@@ -103,7 +103,7 @@ describe('Route - Location', () => {
       const locationPlugin = {
         plugin: {
           name: 'location',
-          register: (server, options) => {
+          register: (server) => {
             server.route(require('../../server/routes/location'))
           }
         }
@@ -769,7 +769,7 @@ describe('Route - Location', () => {
     const locationPlugin = {
       plugin: {
         name: 'location',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/location'))
         }
       }
@@ -803,7 +803,7 @@ describe('Route - Location', () => {
     const locationPlugin = {
       plugin: {
         name: 'location',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/location'))
         }
       }
@@ -913,7 +913,7 @@ describe('Route - Location', () => {
     const locationPlugin = {
       plugin: {
         name: 'location',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/location'))
         }
       }
@@ -1172,7 +1172,7 @@ describe('Route - Location', () => {
       const locationPlugin = {
         plugin: {
           name: 'location',
-          register: (server, options) => {
+          register: (server) => {
             server.route(require('../../server/routes/location'))
           }
         }
@@ -1270,7 +1270,7 @@ describe('Route - Location', () => {
       const locationPlugin = {
         plugin: {
           name: 'location',
-          register: (server, options) => {
+          register: (server) => {
             server.route(require('../../server/routes/location'))
           }
         }
@@ -1414,7 +1414,7 @@ describe('Route - Location', () => {
       const locationPlugin = {
         plugin: {
           name: 'location',
-          register: (server, options) => {
+          register: (server) => {
             server.route(require('../../server/routes/location'))
           }
         }
@@ -1737,7 +1737,7 @@ describe('Route - Location', () => {
       const locationPlugin = {
         plugin: {
           name: 'location',
-          register: (server, options) => {
+          register: (server) => {
             server.route(require('../../server/routes/location'))
           }
         }

@@ -214,7 +214,7 @@ describe('Route - Index', () => {
     const plugin = {
       plugin: {
         name: 'places.geojson',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/api/places.geojson'))
         }
       }

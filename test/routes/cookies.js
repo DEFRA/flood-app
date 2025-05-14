@@ -145,7 +145,7 @@ describe('Route - Cookies', () => {
     const plugin = {
       plugin: {
         name: 'cookies',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/cookies'))
         }
       }

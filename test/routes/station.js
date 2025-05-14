@@ -226,7 +226,7 @@ describe('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -360,7 +360,7 @@ describe('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -498,7 +498,7 @@ describe('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -631,7 +631,7 @@ describe('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -730,7 +730,7 @@ describe('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -863,7 +863,7 @@ describe('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -999,7 +999,7 @@ describe('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -1219,7 +1219,7 @@ describe('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -1443,7 +1443,7 @@ describe('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -1580,7 +1580,7 @@ describe('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -1659,7 +1659,7 @@ describe('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -1738,7 +1738,7 @@ describe('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -1871,7 +1871,7 @@ describe('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -2004,7 +2004,7 @@ describe('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -2135,7 +2135,7 @@ describe('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -2277,7 +2277,7 @@ describe('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }

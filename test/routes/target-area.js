@@ -44,7 +44,7 @@ describe('Target-area tests', () => {
     const targetAreaPlugin = {
       plugin: {
         name: 'target-area',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/target-area'))
         }
       }
@@ -82,7 +82,7 @@ describe('Target-area tests', () => {
     const targetAreaPlugin = {
       plugin: {
         name: 'target',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/target-area'))
         }
       }
@@ -143,7 +143,7 @@ describe('Target-area tests', () => {
     const targetAreaPlugin = {
       plugin: {
         name: 'target',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/target-area'))
         }
       }
@@ -186,7 +186,7 @@ describe('Target-area tests', () => {
     const targetAreaPlugin = {
       plugin: {
         name: 'target',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/target-area'))
         }
       }
@@ -229,7 +229,7 @@ describe('Target-area tests', () => {
     const targetAreaPlugin = {
       plugin: {
         name: 'target',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/target-area'))
         }
       }
@@ -274,7 +274,7 @@ describe('Target-area tests', () => {
     const targetAreaPlugin = {
       plugin: {
         name: 'target',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/target-area'))
         }
       }
@@ -319,7 +319,7 @@ describe('Target-area tests', () => {
     const targetAreaPlugin = {
       plugin: {
         name: 'target',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/target-area'))
         }
       }
@@ -361,7 +361,7 @@ describe('Target-area tests', () => {
     const targetAreaPlugin = {
       plugin: {
         name: 'target',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/target-area'))
         }
       }
@@ -422,7 +422,7 @@ describe('Target-area tests', () => {
     const targetAreaPlugin = {
       plugin: {
         name: 'target',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/target-area'))
         }
       }
@@ -481,7 +481,7 @@ describe('Target-area tests', () => {
     const targetAreaPlugin = {
       plugin: {
         name: 'target',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/target-area'))
         }
       }

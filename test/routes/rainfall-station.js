@@ -137,7 +137,7 @@ describe('Route - Rainfall Station', () => {
     const rainfallPlugin = {
       plugin: {
         name: 'rainfall-station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/rainfall-station'))
         }
       }

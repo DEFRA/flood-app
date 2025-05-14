@@ -23,7 +23,7 @@ describe('404 - [server/404.js]', () => {
     const routerPlugin = {
       plugin: {
         name: 'router',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../server/routes/national'))
         }
       }

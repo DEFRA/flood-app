@@ -190,7 +190,7 @@ describe('Route - API', () => {
       const warningsPlugin = {
         plugin: {
           name: 'warnings',
-          register: (server, options) => {
+          register: (server) => {
             server.route(require('../../server/routes/api/warnings'))
           }
         }
@@ -240,7 +240,7 @@ describe('Route - API', () => {
       const warningsPlugin = {
         plugin: {
           name: 'warnings',
-          register: (server, options) => {
+          register: (server) => {
             server.route(require('../../server/routes/api/warnings'))
           }
         }
@@ -279,7 +279,7 @@ describe('Route - API', () => {
       const warningsPlugin = {
         plugin: {
           name: 'warnings',
-          register: (server, options) => {
+          register: (server) => {
             server.route(require('../../server/routes/api/warnings'))
           }
         }
@@ -340,7 +340,7 @@ describe('Route - API', () => {
       const warningsPlugin = {
         plugin: {
           name: 'warnings',
-          register: (server, options) => {
+          register: (server) => {
             server.route(require('../../server/routes/api/warnings'))
           }
         }
@@ -401,7 +401,7 @@ describe('Route - API', () => {
       const warningsPlugin = {
         plugin: {
           name: 'warnings',
-          register: (server, options) => {
+          register: (server) => {
             server.route(require('../../server/routes/api/warnings'))
           }
         }

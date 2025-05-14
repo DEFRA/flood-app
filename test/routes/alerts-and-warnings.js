@@ -56,7 +56,7 @@ describe('Route - Alerts and Warnings', () => {
     await server.register({
       plugin: {
         name: 'warnings',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/alerts-and-warnings'))
         }
       }

@@ -39,7 +39,7 @@ describe('target-area route', () => {
     const targetAreaPlugin = {
       plugin: {
         name: 'target',
-        register: (server, options) => {
+        register: (server) => {
           server.route(targetAreaRoute)
         }
       }
