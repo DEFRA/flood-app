@@ -31,14 +31,6 @@ function fullRelatedContentChecker (root, cyltfrLink) {
   linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
 }
 
-// Checks if a heading with specific text exists
-function headingChecker (root, headingLevel, headingText) {
-  const h1Found = root.querySelectorAll(headingLevel).some(h => h.textContent.trim() === headingText)
-  expect(h1Found, errorMessage(`Heading level ${headingLevel} with text ${headingText} not found.`)).to.be.true()
-}
-
 module.exports = {
-  headingChecker,
-  linkChecker,
   fullRelatedContentChecker
 }
