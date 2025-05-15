@@ -123,7 +123,7 @@ describe('Route - Alerts and Warnings', () => {
       expect(response.statusCode).to.equal(301)
     })
 
-    it('should 302 with legacy query parameter: england', async () => {
+    it('should 302 with legacy query parameter: "england"', async () => {
       stubs.getFloods.callsFake(() => ({
         floods: [
           {
@@ -157,7 +157,7 @@ describe('Route - Alerts and Warnings', () => {
       expect(response.headers.location).to.equal('/alerts-and-warnings')
     })
 
-    it('should 301 with legacy query parameter: valid non-england', async () => {
+    it('should 301 with legacy query parameter: valid non-england location', async () => {
       stubs.getIsEngland.callsFake(() => ({ is_england: false }))
       stubs.getJson.callsFake(() => data.scotlandGetJson)
       const options = {
@@ -233,7 +233,7 @@ describe('Route - Alerts and Warnings', () => {
       expect(response.statusCode).to.equal(200)
     })
 
-    it('should redirect to default page with parameter: england', async () => {
+    it('should redirect to default page with parameter: "england"', async () => {
       stubs.getJson.callsFake(() => ({ floods: [] }))
       stubs.getIsEngland.callsFake(() => ({ is_england: true }))
       stubs.getOutlook.callsFake(() => outlookData.statements[0])
@@ -411,7 +411,7 @@ describe('Route - Alerts and Warnings', () => {
       expect(response.headers['content-type']).to.include('text/html')
     })
 
-    it('should 302 with no location parameter', async () => {
+    it('should 302 with no location', async () => {
       stubs.getJson.callsFake(() => data.nonLocationGetJson)
       stubs.getFloods.callsFake(() => ({ floods: [] }))
 
