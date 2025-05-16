@@ -6,7 +6,6 @@ const { expect } = require('@hapi/code')
 const sinon = require('sinon')
 const moment = require('moment-timezone')
 const { parse } = require('node-html-parser')
-// const proxyquire = require('proxyquire')
 
 const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 
@@ -20,7 +19,7 @@ function formatDate (date) {
   return moment.tz(date, 'Europe/London').format('h:mma [on] D MMMM YYYY')
 }
 
-describe('formatDate test', () => {
+describe('Route - National (formatDate)', () => {
   it('before midday', async () => { expect(formatDate(new Date('2024-04-10T09:00:00'))).to.equal('9:00am on 10 April 2024') })
   it('midday', async () => { expect(formatDate(new Date('2024-04-10T12:00:00'))).to.equal('12:00pm on 10 April 2024') })
   it('after midday', async () => { expect(formatDate(new Date('2024-04-10T19:00:00'))).to.equal('7:00pm on 10 April 2024') })
@@ -28,7 +27,7 @@ describe('formatDate test', () => {
   it('invalid date (documenting conterintuitive js date handling)', async () => { expect(formatDate(new Date('2024-04-31T00:00:00'))).to.equal('12:00am on 1 May 2024') })
 })
 
-describe('Routes test - national view', () => {
+describe('Route - National', () => {
   let sandbox
   let server
 

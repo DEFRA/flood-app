@@ -108,7 +108,7 @@ describe('Route - Alerts and Warnings', () => {
       expect(response.headers.location).to.equal(undefined)
     })
 
-    it('should 301 with legacy query parameter: postcode', async () => {
+    it('should 301 redirect with legacy query parameter: postcode', async () => {
       stubs.getJson.callsFake(() => data.warringtonGetJson)
       stubs.getIsEngland.callsFake(() => ({ is_england: true }))
       stubs.getFloodsWithin.callsFake(() => data.floodsByPostCode)
@@ -157,7 +157,7 @@ describe('Route - Alerts and Warnings', () => {
       expect(response.headers.location).to.equal('/alerts-and-warnings')
     })
 
-    it('should 301 with legacy query parameter: valid non-england location', async () => {
+    it('should 301 redirect with legacy query parameter: valid non-england location', async () => {
       stubs.getIsEngland.callsFake(() => ({ is_england: false }))
       stubs.getJson.callsFake(() => data.scotlandGetJson)
       const options = {
@@ -171,7 +171,7 @@ describe('Route - Alerts and Warnings', () => {
       expect(response.headers.location).to.equal('/alerts-and-warnings/kinghorn-fife')
     })
 
-    it('should 301 with legacy query parameter: invalid characters', async () => {
+    it('should 301 redirect with legacy query parameter: invalid characters', async () => {
       stubs.getJson.callsFake(() => data.warringtonGetJson)
       stubs.getIsEngland.callsFake(() => ({ is_england: true }))
       stubs.getFloodsWithin.callsFake(() => ({ floods: [] }))
@@ -341,7 +341,7 @@ describe('Route - Alerts and Warnings', () => {
       expect(response.statusCode).to.equal(200)
     })
 
-    it('should 301 when searching a location', async () => {
+    it('should 301 redirect when searching a location', async () => {
       stubs.getJson.callsFake(() => data.warringtonGetJson)
       stubs.getIsEngland.callsFake(() => ({ is_england: true }))
       stubs.getFloodsWithin.callsFake(() => data.fakeFloodsData)

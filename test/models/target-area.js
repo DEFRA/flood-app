@@ -20,7 +20,7 @@ function getTargetAreaAndWarning (targetAreaValues, floodWarningValues) {
 }
 
 describe('Model - Target Area', () => {
-  describe('Metadata', () => {
+  describe('metadata', () => {
     it('should populate meta details', () => {
       const ViewModel = proxyquire('../../server/models/views/target-area', {})
 
@@ -88,7 +88,7 @@ describe('Model - Target Area', () => {
     })
   })
 
-  describe('parentTargetArea assignment', () => {
+  describe('parentTargetArea', () => {
     const ViewModel = proxyquire('../../server/models/views/target-area', {})
 
     it('should set "parentAreaAlert" to false when no parent TA exists', () => {
@@ -238,7 +238,7 @@ describe('Model - Target Area', () => {
     })
   })
 
-  describe('Severity level', () => {
+  describe('severity level', () => {
     const ViewModel = proxyquire('../../server/models/views/target-area', {})
 
     it('should populate the severity level details from the warning', () => {
@@ -267,7 +267,7 @@ describe('Model - Target Area', () => {
     })
   })
 
-  describe('Situation Changed', () => {
+  describe('situation Changed', () => {
     it('should populate the situation changed from the flood warning details', () => {
       const ViewModel = proxyquire('../../server/models/views/target-area', {})
 

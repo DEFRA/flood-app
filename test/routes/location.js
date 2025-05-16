@@ -130,7 +130,7 @@ describe('Route - Location', () => {
       expect(response.statusCode).to.equal(404)
     })
 
-    it('should 301 with valid location', async () => {
+    it('should 301 redirect with valid location', async () => {
       const fakeGetJson = () => {
         return {
           authenticationResultCode: 'ValidCredentials',

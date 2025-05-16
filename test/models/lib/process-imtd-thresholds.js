@@ -13,7 +13,7 @@ function expectThresholds (thresholds, warningThreshold, alertThreshold) {
 }
 
 describe('Process IMTD Thresholds', () => {
-  describe('Post processing is set to "false"', () => {
+  describe('post processing is set to "false"', () => {
     it('should return thresholds as is', async () => {
       const thresholds = processImtdThresholds({ alert: 1.1, warning: 2.1 }, 0, 0, false)
 
@@ -40,7 +40,7 @@ describe('Process IMTD Thresholds', () => {
     })
   })
 
-  describe('Post processing is set to "true"', () => {
+  describe('post processing is set to "true"', () => {
     it('should return thresholds as is when "stageDatum" is zero', async () => {
       const thresholds = processImtdThresholds({ alert: 1.1, warning: 2.1 }, 0, 0, true)
 

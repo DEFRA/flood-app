@@ -117,7 +117,7 @@ describe('Route - River and Sea Levels', () => {
       expect(response.headers.location).to.equal(undefined)
     })
 
-    it('should 301 with legacy query parameter: postcode', async () => {
+    it('should 301 redirect with legacy query parameter: postcode', async () => {
       stubs.getJson.callsFake(() => data.warringtonGetJson)
       stubs.getIsEngland.callsFake(() => ({ is_england: true }))
       stubs.getRiversByName.callsFake(() => [])
@@ -148,7 +148,7 @@ describe('Route - River and Sea Levels', () => {
       expect(response.headers.location).to.equal('/river-and-sea-levels')
     })
 
-    it('should 301 with legacy query parameter: valid non-england location', async () => {
+    it('should 301 redirect with legacy query parameter: valid non-england location', async () => {
       stubs.getJson.callsFake(() => data.scotlandGetJson)
       stubs.getIsEngland.callsFake(() => ({ is_england: false }))
       stubs.getRiversByName.callsFake(() => [])
@@ -164,7 +164,7 @@ describe('Route - River and Sea Levels', () => {
       expect(response.headers.location).to.equal('/river-and-sea-levels/kinghorn-fife')
     })
 
-    it('should 301 with legacy query parameter: invalid characters', async () => {
+    it('should 301 redirect with legacy query parameter: invalid characters', async () => {
       stubs.getJson.callsFake(() => data.warringtonGetJson)
       stubs.getIsEngland.callsFake(() => ({ is_england: true }))
       stubs.getRiversByName.callsFake(() => [])
@@ -1129,7 +1129,7 @@ describe('Route - River and Sea Levels', () => {
       expect(response.payload).to.not.contain('No results for')
     })
 
-    it('should 301 when search a location', async () => {
+    it('should 301 redirect when search a location', async () => {
       stubs.getJson.callsFake(() => data.warringtonGetJson)
       stubs.getStations.callsFake(() => [])
       stubs.getRiversByName.callsFake(() => [])
