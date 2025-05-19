@@ -17,7 +17,7 @@ function setupStubs (context, locationData, isEngland = true) {
   context.stubs.getIsEngland.returns({ is_england: isEngland })
 }
 
-describe('location service', () => {
+describe('Service - Location', () => {
   let location, util, floodServices, context
 
   beforeEach(() => {
