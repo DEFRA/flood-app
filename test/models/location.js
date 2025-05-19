@@ -6,7 +6,7 @@ const { describe, it } = exports.lab = Lab.script()
 const ViewModel = require('../../server/models/views/location')
 const data = require('../data')
 
-describe('Model - Outlook', () => {
+describe('Model - Location', () => {
   it('should return a flood warning', async () => {
     const floodWarning = data.floodWarning
     const viewModel = new ViewModel(floodWarning)
