@@ -5,10 +5,10 @@ const sinon = require('sinon')
 
 const { expect } = require('@hapi/code')
 const { afterEach, beforeEach, describe, it } = exports.lab = Lab.script()
+
 const populatedPlace = require('./data/location/ashford-kent.json')
 const adminDivision1 = require('./data/location/wales.json')
-const ukButNotEngland = require('./data/location/cardiff.json')
-const notUk = require('./data/location/dublin.json')
+
 const LocationSearchError = require('../../server/location-search-error')
 const flushAppRequireCache = require('../lib/flush-app-require-cache')
 
@@ -25,7 +25,7 @@ describe('Service - Location', () => {
 
     const config = require('../../server/config')
 
-    sinon.stub(config, 'bingUrl').value('http://bing?query=%s&key=%s')
+    sinon.stub(config, 'bingUrl').value('http://bing?query=%s&maxResults=%s&key=%s')
     sinon.stub(config, 'bingKeyLocation').value('12345')
 
     util = require('../../server/util')
@@ -81,6 +81,8 @@ describe('Service - Location', () => {
       expect(result.length).to.equal(1)
       expect(result[0]).to.equal({
         name: 'Ashford, Kent',
+        query: 'Ashford, Kent',
+        slug: 'ashford-kent',
         center: [0.87279475, 51.14772797],
         bbox2k: [
           0.80935719234919,
@@ -95,7 +97,6 @@ describe('Service - Location', () => {
           51.267098001671634
         ],
         isUK: true,
-        isScotlandOrNorthernIreland: false,
         isEngland: { is_england: true }
       })
     })
@@ -108,7 +109,7 @@ describe('Service - Location', () => {
       await location.find(searchTerm)
 
       expect(context.stubs.getJson.callCount).to.equal(1)
-      expect(context.stubs.getJson.args[0][0]).to.equal(`http://bing?query=${searchTerm}&key=12345`)
+      expect(context.stubs.getJson.args[0][0]).to.equal(`http://bing?query=${searchTerm}&maxResults=3&key=12345`)
     })
 
     it('should not query Bing if search term is longer than 60 characters', async () => {
@@ -129,6 +130,15 @@ describe('Service - Location', () => {
       expect(result.length).to.equal(0)
     })
 
+    it('should query Bing if search term contains a mix of alphanumeric and special characters', async () => {
+      setupStubs(context, populatedPlace)
+
+      const result = await location.find('leeds !@£$%^&')
+
+      expect(context.stubs.getJson.callCount).to.equal(1)
+      expect(result.length).to.equal(1)
+    })
+
     it('should not query Bing if search term is empty', async () => {
       setupStubs(context, {})
 
@@ -147,36 +157,8 @@ describe('Service - Location', () => {
       expect(result.length).to.equal(0)
     })
 
-    it('should populate country flags for home nation cities', async () => {
-      setupStubs(context, ukButNotEngland, false)
-
-      const result = await location.find('cardiff')
-
-      expect(context.stubs.getJson.callCount).to.equal(1)
-      expect(result[0]).to.contain({
-        name: 'Cardiff',
-        isUK: true,
-        isScotlandOrNorthernIreland: false,
-        isEngland: { is_england: false }
-      })
-    })
-
-    it('should populate country flags out non-UK cities', async () => {
-      setupStubs(context, notUk, false)
-
-      const result = await location.find('dublin')
-
-      expect(context.stubs.getJson.callCount).to.equal(1)
-      expect(result[0]).to.contain({
-        name: 'Dublin, County Dublin, Ireland',
-        isUK: false,
-        isScotlandOrNorthernIreland: false,
-        isEngland: { is_england: false }
-      })
-    })
-
     describe('confidence test', () => {
-      [['high', 1], ['medium', 1], ['low', 0]].forEach(confidence => {
+      [['high', 1], ['medium', 0], ['low', 0]].forEach(confidence => {
         it(`should return ${confidence[1]} result for confidence level '${confidence[0]}' when Bing returns a ${confidence[0]} result`, async () => {
           const clonePopulatedPlace = { ...populatedPlace }
           clonePopulatedPlace.resourceSets[0].resources[0].confidence = confidence[0]

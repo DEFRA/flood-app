@@ -787,7 +787,7 @@ describe('Route - Location', () => {
 
     const options = {
       method: 'GET',
-      url: '/location/Warrington'
+      url: '/location/warrington'
     }
 
     const response = await server.inject(options)
@@ -796,7 +796,7 @@ describe('Route - Location', () => {
     const targetText = 'Find a river, sea, groundwater or rainfall level in this area'
     const anchor = root.querySelectorAll('a').find(a => a.text.trim() === targetText)
 
-    expect(anchor.getAttribute('href')).to.equal('/river-and-sea-levels?q=Warrington')
+    expect(anchor.getAttribute('href')).to.equal('/river-and-sea-levels/warrington')
   })
 
   it('should 302 with no query parameters', async () => {

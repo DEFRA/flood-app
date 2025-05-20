@@ -413,6 +413,7 @@ describe('Route - National', () => {
           return [
             {
               name: 'Ashford, Kent',
+              slug: 'ashford-kent',
               center: [0.87279475, 51.14772797],
               bbox2k: [
                 0.80935719234919,
@@ -427,7 +428,6 @@ describe('Route - National', () => {
                 51.267098001671634
               ],
               isUK: true,
-              isScotlandOrNorthernIreland: false,
               isEngland: { is_england: true }
             }
           ]

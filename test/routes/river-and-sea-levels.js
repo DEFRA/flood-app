@@ -148,7 +148,7 @@ describe('Route - River and Sea Levels', () => {
       expect(response.headers.location).to.equal('/river-and-sea-levels')
     })
 
-    it('should 301 redirect with legacy query parameter: valid non-england location', async () => {
+    it('should 404 with legacy query parameter: valid non-england location', async () => {
       stubs.getJson.callsFake(() => data.scotlandGetJson)
       stubs.getIsEngland.callsFake(() => ({ is_england: false }))
       stubs.getRiversByName.callsFake(() => [])
@@ -160,8 +160,7 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(301)
-      expect(response.headers.location).to.equal('/river-and-sea-levels/kinghorn-fife')
+      expect(response.statusCode).to.equal(404)
     })
 
     it('should 301 redirect with legacy query parameter: invalid characters', async () => {
@@ -300,10 +299,10 @@ describe('Route - River and Sea Levels', () => {
       const response = await server.inject(options)
 
       expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=warrington&group=river" data-group-type="river">River (0)</a>')
-      expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=warrington&group=sea" data-group-type="sea">Sea (0)</a>')
-      expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=warrington&group=rainfall" data-group-type="rainfall">Rainfall (0)</a>')
-      expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=warrington&group=groundwater" data-group-type="groundwater">Groundwater (1)</a>')
+      expect(response.payload).to.contain('<a href="/river-and-sea-levels/warrington?group=river" data-group-type="river">River (0)</a>')
+      expect(response.payload).to.contain('<a href="/river-and-sea-levels/warrington?group=sea" data-group-type="sea">Sea (0)</a>')
+      expect(response.payload).to.contain('<a href="/river-and-sea-levels/warrington?group=rainfall" data-group-type="rainfall">Rainfall (0)</a>')
+      expect(response.payload).to.contain('<a href="/river-and-sea-levels/warrington?group=groundwater" data-group-type="groundwater">Groundwater (1)</a>')
     })
 
     it('should return only rainfall stations', async () => {
@@ -383,9 +382,9 @@ describe('Route - River and Sea Levels', () => {
       const response = await server.inject(options)
 
       expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=warrington&group=river" data-group-type="river">River (0)</a>')
-      expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=warrington&group=sea" data-group-type="sea">Sea (0)</a>')
-      expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=warrington&group=rainfall" data-group-type="rainfall">Rainfall (2)</a>')
+      expect(response.payload).to.contain('<a href="/river-and-sea-levels/warrington?group=river" data-group-type="river">River (0)</a>')
+      expect(response.payload).to.contain('<a href="/river-and-sea-levels/warrington?group=sea" data-group-type="sea">Sea (0)</a>')
+      expect(response.payload).to.contain('<a href="/river-and-sea-levels/warrington?group=rainfall" data-group-type="rainfall">Rainfall (2)</a>')
     })
 
     it('should handle funny latest value', async () => {

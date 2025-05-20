@@ -104,15 +104,3 @@
     display: none;
   }
 }
-
-// Overides
-.defra-map-key {
-  .govuk-checkboxes__label:before,
-  .govuk-radios__label:before {
-    top:7px;
-  }
-  .govuk-checkboxes__label:after,
-  .govuk-radios__label:after {
-    top:14px;
-  }
-}

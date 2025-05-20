@@ -79,6 +79,8 @@ describe('Service - Bing Results Parser', () => {
     const expectedResult = [
       {
         name: 'Knaresborough, North Yorkshire',
+        query: 'Knaresborough, North Yorkshire',
+        slug: 'knaresborough-north-yorkshire',
         center: [-1.46303844, 54.00714111],
         bbox2k: [
           -1.534142855800849,
@@ -93,10 +95,242 @@ describe('Service - Bing Results Parser', () => {
           54.12413077805586
         ],
         isUK: true,
-        isScotlandOrNorthernIreland: false,
         isEngland: { is_england: true }
       }
     ]
+
+    expect(result).to.equal(expectedResult)
+  })
+
+  it('should return ceremonial county (AdminDivision1) over administrative county (AdminDivision2)', async () => {
+    const resources = [
+      {
+        __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+        bbox: [
+          54.7823600769043,
+          -2.6897950172424316,
+          55.811668395996094,
+          -1.460276484489441
+        ],
+        name: 'Northumberland',
+        point: {
+          type: 'Point',
+          coordinates: [
+            55.24245834,
+            -2.06545234
+          ]
+        },
+        address: {
+          adminDistrict: 'Northumberland',
+          countryRegion: 'United Kingdom',
+          formattedAddress: 'Northumberland',
+          countryRegionIso2: 'GB'
+        },
+        confidence: 'High',
+        entityType: 'AdminDivision1',
+        geocodePoints: [
+          {
+            type: 'Point',
+            coordinates: [
+              55.24245834,
+              -2.06545234
+            ],
+            calculationMethod: 'Rooftop',
+            usageTypes: [
+              'Display'
+            ]
+          }
+        ],
+        matchCodes: [
+          'Good'
+        ]
+      },
+      {
+        __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+        bbox: [
+          54.7823600769043,
+          -2.6897950172424316,
+          55.811668395996094,
+          -1.4027706384658813
+        ],
+        name: 'Northumberland',
+        point: {
+          type: 'Point',
+          coordinates: [
+            55.23395538,
+            -2.04782939
+          ]
+        },
+        address: {
+          adminDistrict: 'Northumberland',
+          countryRegion: 'United Kingdom',
+          formattedAddress: 'Northumberland',
+          countryRegionIso2: 'GB'
+        },
+        confidence: 'High',
+        entityType: 'AdminDivision1',
+        geocodePoints: [
+          {
+            type: 'Point',
+            coordinates: [
+              55.23395538,
+              -2.04782939
+            ],
+            calculationMethod: 'Rooftop',
+            usageTypes: [
+              'Display'
+            ]
+          }
+        ],
+        matchCodes: [
+          'Good'
+        ]
+      },
+      {
+        __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+        bbox: [
+          54.7823600769043,
+          -2.6897950172424316,
+          55.811676025390625,
+          -1.4601497650146484
+        ],
+        name: 'Northumberland',
+        point: {
+          type: 'Point',
+          coordinates: [
+            55.17995834,
+            -1.80139947
+          ]
+        },
+        address: {
+          adminDistrict: 'England',
+          adminDistrict2: 'Northumberland',
+          countryRegion: 'United Kingdom',
+          formattedAddress: 'Northumberland',
+          countryRegionIso2: 'GB'
+        },
+        confidence: 'High',
+        entityType: 'AdminDivision2',
+        geocodePoints: [
+          {
+            type: 'Point',
+            coordinates: [
+              55.17995834,
+              -1.80139947
+            ],
+            calculationMethod: 'Rooftop',
+            usageTypes: [
+              'Display'
+            ]
+          }
+        ],
+        matchCodes: [
+          'Good'
+        ]
+      }
+    ]
+
+    const expectedResult = [
+      // AdminDivision1 should take precedance over other entity types in
+      // response
+      {
+        name: 'Northumberland',
+        query: 'Northumberland',
+        slug: 'northumberland',
+        center: [-2.06545234, 55.24245834],
+        bbox2k: [
+          -2.721803715494745,
+          54.7643744779302,
+          -1.4282677862371271,
+          55.829653988329156
+        ],
+        bbox10k: [
+          -2.8498382313297492,
+          54.692432073840145,
+          -1.300233270402123,
+          55.90159634910422
+        ],
+        isUK: true,
+        isEngland: { is_england: true }
+      }
+    ]
+
+    const bingResponse = getBingResponse(resources)
+    const result = await bingResultsParser(bingResponse, stubGetEngland)
+
+    expect(result).to.equal(expectedResult)
+  })
+
+  it('should return the ceremonial county when there are no administrative counties', async () => {
+    const resources = [
+      {
+        __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+        bbox: [
+          54.03961944580078,
+          -3.6406314373016357,
+          55.18899154663086,
+          -2.1589810848236084
+        ],
+        name: 'Cumbria',
+        point: {
+          type: 'Point',
+          coordinates: [
+            54.57675934,
+            -2.91157079
+          ]
+        },
+        address: {
+          adminDistrict: 'Cumbria',
+          countryRegion: 'United Kingdom',
+          formattedAddress: 'Cumbria',
+          countryRegionIso2: 'GB'
+        },
+        confidence: 'High',
+        entityType: 'AdminDivision1',
+        geocodePoints: [
+          {
+            type: 'Point',
+            coordinates: [
+              54.57675934,
+              -2.91157079
+            ],
+            calculationMethod: 'Rooftop',
+            usageTypes: [
+              'Display'
+            ]
+          }
+        ],
+        matchCodes: [
+          'Good'
+        ]
+      }
+    ]
+
+    const expectedResult = [
+      {
+        name: 'Cumbria',
+        query: 'Cumbria',
+        slug: 'cumbria',
+        center: [-2.91157079, 54.57675934],
+        bbox2k: [
+          -3.672137848226576,
+          54.02163420058362,
+          -2.127474673898669,
+          55.20697678117478
+        ],
+        bbox10k: [
+          -3.798163229693759,
+          53.94969320818414,
+          -2.001449292431486,
+          55.278917707262806
+        ],
+        isUK: true,
+        isEngland: { is_england: true }
+      }
+    ]
+
+    const bingResponse = getBingResponse(resources)
+    const result = await bingResultsParser(bingResponse, stubGetEngland)
 
     expect(result).to.equal(expectedResult)
   })
@@ -155,6 +389,8 @@ describe('Service - Bing Results Parser', () => {
     const expectedResult = [
       {
         name: 'Knaresborough, HG5 0JL',
+        query: 'HG5 0JL',
+        slug: 'hg5-0jl',
         center: [-1.46519089, 54.00955582],
         bbox2k: [
           -1.5045644526149113,
@@ -169,7 +405,6 @@ describe('Service - Bing Results Parser', () => {
           54.10335056978173
         ],
         isUK: true,
-        isScotlandOrNorthernIreland: false,
         isEngland: { is_england: true }
       }
     ]
@@ -232,6 +467,8 @@ describe('Service - Bing Results Parser', () => {
     const expectedResult = [
       {
         name: 'Knaresborough, HG5',
+        query: 'HG5',
+        slug: 'hg5',
         center: [-1.45626473, 54.01323318],
         bbox2k: [
           -1.554794384621328,
@@ -246,7 +483,6 @@ describe('Service - Bing Results Parser', () => {
           54.16625259905653
         ],
         isUK: true,
-        isScotlandOrNorthernIreland: false,
         isEngland: { is_england: true }
       }
     ]
@@ -320,7 +556,7 @@ describe('Service - Bing Results Parser', () => {
     expect(result).to.equal([])
   })
 
-  it('should return populated result from  medium confidence response', async () => {
+  it('should return empty result from  medium confidence response', async () => {
     const resources = [
       {
         __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -370,27 +606,7 @@ describe('Service - Bing Results Parser', () => {
     const bingResponse = getBingResponse(resources)
     const result = await bingResultsParser(bingResponse, stubGetEngland)
 
-    const expectedResult = [
-      {
-        name: 'Knaresborough, North Yorkshire',
-        center: [-1.46303844, 54.00714111],
-        bbox2k: [
-          -1.534142855800849,
-          53.972396744766755,
-          -1.3874332865102472,
-          54.05218516440792
-        ],
-        bbox10k: [
-          -1.6566444925899468,
-          53.90045113102211,
-          -1.2649316497211494,
-          54.12413077805586
-        ],
-        isUK: true,
-        isScotlandOrNorthernIreland: false,
-        isEngland: { is_england: true }
-      }
-    ]
+    const expectedResult = []
 
     expect(result).to.equal(expectedResult)
   })
@@ -633,6 +849,8 @@ describe('Service - Bing Results Parser', () => {
     const expectedResult = [
       {
         name: 'Ashford, Kent',
+        query: 'Ashford, Kent',
+        slug: 'ashford-kent',
         center: [0.87279475, 51.14772797],
         bbox2k: [
           0.80935719234919,
@@ -647,11 +865,124 @@ describe('Service - Bing Results Parser', () => {
           51.267098001671634
         ],
         isUK: true,
-        isScotlandOrNorthernIreland: false,
         isEngland: { is_england: true }
       }
     ]
 
     expect(result).to.equal(expectedResult)
+  })
+
+  describe('non-english searches', () => {
+    const notEngland = async () => { return { is_england: false } }
+
+    it('should return empty result (scottish location)', async () => {
+      const resources = [
+        {
+          __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+          bbox: [
+            56.661529541015625,
+            -2.5852043628692627,
+            56.89529037475586,
+            -2.2232439517974854
+          ],
+          name: 'Montrose, Angus',
+          point: {
+            type: 'Point',
+            coordinates: [
+              56.70924759,
+              -2.46721101
+            ]
+          },
+          address: {
+            adminDistrict: 'Scotland',
+            adminDistrict2: 'Angus',
+            countryRegion: 'United Kingdom',
+            formattedAddress: 'Montrose, Angus',
+            locality: 'Montrose',
+            countryRegionIso2: 'GB'
+          },
+          confidence: 'High',
+          entityType: 'PopulatedPlace',
+          geocodePoints: [
+            {
+              type: 'Point',
+              coordinates: [
+                56.70924759,
+                -2.46721101
+              ],
+              calculationMethod: 'Rooftop',
+              usageTypes: [
+                'Display'
+              ]
+            }
+          ],
+          matchCodes: [
+            'Good'
+          ]
+        }
+      ]
+
+      const expectedResult = []
+
+      const bingResponse = getBingResponse(resources)
+
+      const result = await bingResultsParser(bingResponse, notEngland)
+
+      expect(result).to.equal(expectedResult)
+    })
+
+    it('should return empty result (welsh location)', async () => {
+      const resources = [
+        {
+          __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
+          bbox: [
+            51.59596633911133,
+            -5.670312404632568,
+            52.562416076660156,
+            -3.6471149921417236
+          ],
+          name: 'Dyfed',
+          point: {
+            type: 'Point',
+            coordinates: [
+              51.99719238,
+              -4.3354516
+            ]
+          },
+          address: {
+            adminDistrict: 'Dyfed',
+            countryRegion: 'United Kingdom',
+            formattedAddress: 'Dyfed',
+            countryRegionIso2: 'GB'
+          },
+          confidence: 'High',
+          entityType: 'AdminDivision1',
+          geocodePoints: [
+            {
+              type: 'Point',
+              coordinates: [
+                51.99719238,
+                -4.3354516
+              ],
+              calculationMethod: 'Rooftop',
+              usageTypes: [
+                'Display'
+              ]
+            }
+          ],
+          matchCodes: [
+            'Good'
+          ]
+        }
+      ]
+
+      const expectedResult = []
+
+      const bingResponse = getBingResponse(resources)
+
+      const result = await bingResultsParser(bingResponse, notEngland)
+
+      expect(result).to.equal(expectedResult)
+    })
   })
 })

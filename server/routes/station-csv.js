@@ -1,7 +1,7 @@
 const floodService = require('../services/flood')
 const moment = require('moment-timezone')
 const boom = require('@hapi/boom')
-const joi = require('@hapi/joi')
+const joi = require('joi')
 
 const maxId = 999
 

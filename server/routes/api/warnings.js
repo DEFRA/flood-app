@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi')
+const Joi = require('joi')
 const Floods = require('../../models/floods')
 const floodsMessage = require('../../models/floods-message')
 const locationService = require('../../services/location')

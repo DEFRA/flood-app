@@ -1,4 +1,4 @@
-const joi = require('@hapi/joi')
+const joi = require('joi')
 const ViewModel = require('../models/views/target-area')
 
 module.exports = {
@@ -10,7 +10,8 @@ module.exports = {
     const area = await request.server.methods.flood.getFloodArea(code)
     const flood = floods.find(n => n.ta_code === code)
     const parentFlood = floods.find(n => n.ta_code === area.parent)
-    const model = new ViewModel({ area, flood, parentFlood })
+    const thresholds = flood ? await request.server.methods.flood.getTargetAreaThresholds(code) : []
+    const model = new ViewModel({ area, flood, parentFlood, thresholds })
     return h.view('target-area', { model })
   },
   options: {

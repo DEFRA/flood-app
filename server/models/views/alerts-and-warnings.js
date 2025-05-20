@@ -2,9 +2,9 @@ const { bingKeyMaps } = require('../../config')
 const config = require('../../config')
 
 class ViewModel {
-  constructor ({ q, location, place, floods = [], station, canonical, error }) {
+  constructor ({ location, place, floods = [], station, canonical, error }) {
     Object.assign(this, {
-      q,
+      q: place?.query || '',
       station,
       placeName: place?.name || '',
       placeBbox: place?.bbox2k || [],

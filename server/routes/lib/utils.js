@@ -1,10 +1,6 @@
 const qs = require('qs')
 const boom = require('@hapi/boom')
 
-function slugify (text = '') {
-  return text.replace(/,/g, '').replace(/ /g, '-').toLowerCase()
-}
-
 function hasInvalidCharacters (location, q) {
   return !location && q
 }
@@ -30,7 +26,7 @@ function isPlaceEngland (place) {
 }
 
 function isValidLocationSlug (location, place) {
-  return slugify(place?.name) === location
+  return place?.slug === location
 }
 
 function createQueryParametersString (queryObject) {
@@ -62,7 +58,6 @@ function failActionHandler (request, h, page) {
 }
 
 module.exports = {
-  slugify,
   failActionHandler,
   isLocationEngland,
   isPlaceEngland,

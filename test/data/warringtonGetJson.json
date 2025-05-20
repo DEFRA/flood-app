@@ -30,7 +30,7 @@
                  "locality": "Warrington",
                  "countryRegionIso2": "GB"
               },
-              "confidence": "Medium",
+              "confidence": "High",
               "entityType": "PopulatedPlace",
               "geocodePoints": [
                  {

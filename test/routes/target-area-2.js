@@ -79,7 +79,9 @@ describe('Route - Target Area 2', () => {
 
     const area = getTargetArea({ code: '011WAFDW' })
     const warning = getWarning({ ta_code: '011WAFDW' })
+    const latestLevels = [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
 
+    server.method('flood.getTargetAreaThresholds', sinon.stub().resolves(latestLevels))
     server.method('flood.getFloodArea', sinon.stub().resolves(area))
     server.method('flood.getFloods', sinon.stub().resolves({ floods: [warning] }))
   })
@@ -98,7 +100,7 @@ describe('Route - Target Area 2', () => {
 
     const argument = FakeViewModel.firstCall.args[0]
 
-    expect(Object.keys(argument)).to.equal(['area', 'flood', 'parentFlood'])
+    expect(Object.keys(argument)).to.equal(['area', 'flood', 'parentFlood', 'thresholds'])
 
     expect(argument.area.code).to.equal(AREA_CODE)
     expect(argument.flood.ta_code).to.equal(AREA_CODE)

@@ -79,8 +79,11 @@ describe('Route - Target Area', () => {
       return fakeTargetAreaFloodData.area
     }
 
+    const fakeTAThresholdsData = () => [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
+
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
 
     const targetAreaPlugin = {
       plugin: {
@@ -112,7 +115,6 @@ describe('Route - Target Area', () => {
     const h1 = root.querySelector('h1').textContent.trim()
 
     const anchor = root.querySelectorAll('a').some(a =>
-      a.text === 'Find a river, sea, groundwater or rainfall level in this area' &&
       a.attributes.href === '/river-and-sea-levels/target-area/011WAFDW'
     )
 
@@ -136,8 +138,11 @@ describe('Route - Target Area', () => {
       return fakeTargetAreaFloodData.area
     }
 
+    const fakeTAThresholdsData = () => [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
+
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
 
     const targetAreaPlugin = {
       plugin: {
@@ -180,8 +185,11 @@ describe('Route - Target Area', () => {
       return fakeTargetAreaFloodData.area
     }
 
+    const fakeTAThresholdsData = () => [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
+
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
 
     const targetAreaPlugin = {
       plugin: {
@@ -224,8 +232,11 @@ describe('Route - Target Area', () => {
       return fakeTargetAreaFloodData.area
     }
 
+    const fakeTAThresholdsData = () => [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
+
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
 
     const targetAreaPlugin = {
       plugin: {
@@ -274,8 +285,11 @@ describe('Route - Target Area', () => {
       return fakeTargetAreaFloodData.area
     }
 
+    const fakeTAThresholdsData = () => [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
+
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
 
     const targetAreaPlugin = {
       plugin: {
@@ -320,8 +334,11 @@ describe('Route - Target Area', () => {
       return fakeTargetAreaFloodData.area
     }
 
+    const fakeTAThresholdsData = () => [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
+
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
 
     const targetAreaPlugin = {
       plugin: {
@@ -353,7 +370,6 @@ describe('Route - Target Area', () => {
     const h1 = root.querySelector('h1').textContent.trim()
 
     const anchor = root.querySelectorAll('a').some(a =>
-      a.text === 'Find a river, sea, groundwater or rainfall level in this area' &&
       a.attributes.href === '/river-and-sea-levels/target-area/011WAFDW'
     )
 
@@ -375,8 +391,11 @@ describe('Route - Target Area', () => {
       return fakeTargetAreaFloodData.area
     }
 
+    const fakeTAThresholdsData = () => [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
+
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
 
     const targetAreaPlugin = {
       plugin: {
@@ -406,7 +425,6 @@ describe('Route - Target Area', () => {
     const root = parse(response.payload)
 
     const anchor = root.querySelectorAll('a').some(a =>
-      a.text === 'Find a river, sea, groundwater or rainfall level in this area' &&
       a.attributes.href === '/river-and-sea-levels/target-area/011WAFDW'
     )
 
@@ -428,8 +446,11 @@ describe('Route - Target Area', () => {
       return fakeTargetAreaFloodData.floodsInWiderAreaPlace
     }
 
+    const fakeTAThresholdsData = () => [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
+
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
+    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
 
     const targetAreaPlugin = {
       plugin: {

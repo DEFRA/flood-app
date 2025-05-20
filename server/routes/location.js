@@ -1,4 +1,4 @@
-const joi = require('@hapi/joi')
+const joi = require('joi')
 const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/location')
 const OutlookTabsModel = require('../models/outlook-tabs')
@@ -6,7 +6,6 @@ const locationService = require('../services/location')
 const formatDate = require('../util').formatDate
 const moment = require('moment-timezone')
 const tz = 'Europe/London'
-const { slugify } = require('./lib/utils')
 const qs = require('qs')
 
 function createQueryParametersString (queryObject) {
@@ -20,7 +19,7 @@ async function legacyRouteHandler (request, h) {
   const [place] = await locationService.find(location)
   const queryString = createQueryParametersString(request.query)
   if (place) {
-    return h.redirect(`/location/${slugify(place?.name)}${queryString}`).permanent()
+    return h.redirect(`/location/${place?.slug}${queryString}`).permanent()
   }
   return boom.notFound(`Location ${location} not found`)
 }
@@ -33,7 +32,7 @@ async function routeHandler (request, h) {
 
   const [place] = await locationService.find(location)
 
-  if (slugify(place?.name) !== location) {
+  if (place?.slug !== location) {
     return boom.notFound(`Location ${location} not found`)
   }
 

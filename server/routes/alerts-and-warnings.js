@@ -1,10 +1,9 @@
-const joi = require('@hapi/joi')
+const joi = require('joi')
 const ViewModel = require('../models/views/alerts-and-warnings')
 const Floods = require('../models/floods')
 const locationService = require('../services/location')
 const util = require('../util')
 const {
-  slugify,
   isLocationEngland,
   isValidLocationSlug,
   isPlaceEngland,
@@ -71,7 +70,7 @@ async function routeHandler (request, h) {
 
   const queryString = createQueryParametersString(request.query)
 
-  return h.redirect(`/${route}/${slugify(place?.name)}${queryString}`).permanent()
+  return h.redirect(`/${route}/${place?.slug}${queryString}`).permanent()
 }
 
 async function locationRouteHandler (request, h) {

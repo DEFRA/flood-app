@@ -157,9 +157,10 @@ describe('Route - Alerts and Warnings', () => {
       expect(response.headers.location).to.equal('/alerts-and-warnings')
     })
 
-    it('should 301 redirect with legacy query parameter: valid non-england location', async () => {
+    it('should 404 with legacy query parameter: valid non-england location', async () => {
       stubs.getIsEngland.callsFake(() => ({ is_england: false }))
       stubs.getJson.callsFake(() => data.scotlandGetJson)
+
       const options = {
         method: 'GET',
         url: '/alerts-and-warnings?q=kinghorn'
@@ -167,8 +168,7 @@ describe('Route - Alerts and Warnings', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(301)
-      expect(response.headers.location).to.equal('/alerts-and-warnings/kinghorn-fife')
+      expect(response.statusCode).to.equal(404)
     })
 
     it('should 301 redirect with legacy query parameter: invalid characters', async () => {

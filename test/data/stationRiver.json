@@ -141,5 +141,6 @@
       "value": "4.3",
       "threshold_type": "FW RES FW"
     }
-  ]
+  ],
+  "requestUrl": "http://localhost:3000/station/1001"
 }

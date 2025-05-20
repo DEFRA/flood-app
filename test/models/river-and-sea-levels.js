@@ -4,7 +4,7 @@ const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
 const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const sinon = require('sinon')
-const { referencedStationViewModel, placeViewModel } = require('../../server/models/views/river-and-sea-levels')
+const { referencedStationViewModel, placeViewModel, riverViewModel } = require('../../server/models/views/river-and-sea-levels')
 const data = require('../data')
 
 describe('Model - River and Sea Levels', () => {
@@ -78,6 +78,14 @@ describe('Model - River and Sea Levels', () => {
 
       expect(result.displayGetWarningsLink).to.equal(true)
     })
+
+    it('should populate slug correctly', () => {
+      const stationsData = data.riverAndSeaLevelData
+
+      const result = placeViewModel(stationsData)
+
+      expect(result.slug).to.equal('cheshire')
+    })
   })
 
   describe('referencedStationViewModel', () => {
@@ -111,6 +119,95 @@ describe('Model - River and Sea Levels', () => {
       const result = referencedStationViewModel(referencePoint, stationsData.stations)
 
       expect(result.displayGetWarningsLink).to.equal(true)
+    })
+
+    it('should populate slug correctly', async () => {
+      const stationsData = data.riverAndSeaLevelDataUnordered
+
+      const [rainfallStation] = data.rainfallStation553564
+
+      const referencePoint = {
+        type: 'rainfall',
+        id: 'ABC123',
+        name: rainfallStation.station_name,
+        lat: rainfallStation.lat,
+        lon: rainfallStation.lon
+      }
+
+      const result = referencedStationViewModel(referencePoint, stationsData.stations)
+
+      expect(result.slug).to.equal('rainfall/ABC123')
+    })
+  })
+
+  describe('riverViewModel', () => {
+    it('should set displayData to true for active Welsh stations', async () => {
+      const stations = [{
+        status: 'Active',
+        value: 1.2,
+        value_erred: false,
+        iswales: true,
+        lon: 0,
+        lat: 0,
+        external_name: 'Test Station',
+        station_type: 'R',
+        river_qualified_name: 'Test River',
+        trend: 'steady',
+        percentile_5: '1.0',
+        percentile_95: '0.5',
+        value_timestamp: '2022-03-30T12:00:00Z'
+      }]
+
+      const riverId = 'testRiverId'
+      const result = riverViewModel(riverId, stations, 'river')
+
+      expect(result.stations[0].displayData).to.equal(true)
+    })
+
+    it('should set "displayData" to false for suspended Welsh stations', async () => {
+      const stations = [{
+        status: 'Suspended',
+        value: 1.2,
+        value_erred: false,
+        iswales: true,
+        lon: 0,
+        lat: 0,
+        external_name: 'Test Station',
+        station_type: 'R',
+        river_qualified_name: 'Test River',
+        trend: 'steady',
+        percentile_5: '1.0',
+        percentile_95: '0.5',
+        value_timestamp: '2022-03-30T12:00:00Z'
+      }]
+
+      const riverId = 'testRiverId'
+      const result = riverViewModel(riverId, stations, 'river')
+
+      expect(result.stations[0].displayData).to.equal(false)
+    })
+
+    it('should set "displayData" to false for closed Welsh stations', async () => {
+      const stations = [{
+        status: 'Closed',
+        value: 1.2,
+        value_erred: false,
+        iswales: true,
+        lon: 0,
+        lat: 0,
+        external_name: 'Test Station',
+        station_type: 'R',
+        river_qualified_name: 'Test River',
+        trend: 'steady',
+        percentile_5: '1.0',
+        percentile_95: '0.5',
+        value_timestamp: '2022-03-30T12:00:00Z'
+      }]
+
+      const riverId = 'testRiverId'
+      const result = riverViewModel(riverId, stations, 'river')
+
+      expect(result.stations[0].displayData).to.equal(false)
     })
   })
 })
