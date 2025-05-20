@@ -1,12 +1,12 @@
 'use strict'
 
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
-const lab = exports.lab = Lab.script()
+const { expect } = require('@hapi/code')
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const sinon = require('sinon')
 const Outlook = require('../../server/models/outlook')
 
-lab.experiment('Outlook model test', () => {
+describe('Model - Outlook', () => {
   let sandbox
 
   const outlookFakeData = {
@@ -107,40 +107,27 @@ lab.experiment('Outlook model test', () => {
     }
   }
 
-  const outlook = new Outlook(outlookFakeData)
-
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     sandbox = await sinon.createSandbox()
   })
-  lab.afterEach(async () => {
+
+  afterEach(async () => {
     await sandbox.restore()
   })
-  lab.test('Check outlook issueDate', async () => {
+
+  it('should return outlook data', () => {
     const outlook = new Outlook(outlookFakeData)
 
-    const Result = await outlook.issueDate
-
-    Code.expect(JSON.stringify(Result)).to.be.equal('"2019-08-08T09:30:00.000Z"')
+    expect(JSON.stringify(outlook.issueDate)).to.be.equal('"2019-08-08T09:30:00.000Z"')
+    expect(outlook.timestampOutlook).to.be.equal(1565256600000)
+    expect(outlook.hasOutlookConcern).to.be.equal(true)
+    expect(outlook.riskLevels).to.be.equal([0, 0, 0, 0, 1])
+    expect(outlook.days[0].idx).to.be.equal(1)
+    expect(outlook.days[0].level).to.be.equal(0)
   })
-  lab.test('Check outlook timestampOutlook', async () => {
-    const Result = await outlook.timestampOutlook
 
-    Code.expect(Result).to.be.equal(1565256600000)
-  })
-  lab.test('Check outlook hasOutlookConcern', async () => {
-    const Result = await outlook.hasOutlookConcern
-
-    Code.expect(Result).to.be.equal(true)
-  })
-  lab.test('Check outlook riskLevels', async () => {
-    const Result = await outlook.riskLevels
-
-    const riskLevelsOutput = [0, 0, 0, 0, 1]
-
-    Code.expect(Result).to.be.equal(riskLevelsOutput)
-  })
-  lab.test('Check outlook full changes multiple new lines to single', async () => {
-    const Result = await outlook.full
+  it('should condense multiple lines to single', () => {
+    const outlook = new Outlook(outlookFakeData)
 
     const fullOutput = [
       'Local flooding from surface water and rivers is possible but not expected in places across much of the north of England on Friday due to widespread rain and heavy showers. Local flooding from rivers is possible, and flooding from surface water possible but not expected, across Wales and much of central and southern England on Friday.',
@@ -149,9 +136,10 @@ lab.experiment('Outlook model test', () => {
       'Properties may flood and there may be travel disruption.'
     ]
 
-    Code.expect(Result).to.be.equal(fullOutput)
+    expect(outlook.full).to.be.equal(fullOutput)
   })
-  lab.test('testing this._hasOutlookConcern set to false', async () => {
+
+  it('should set "hasOutlookConcern" to false', () => {
     const outlookFakeData2 = {
       id: 1107,
       issued_at: '2019-08-08T09:30:00Z',
@@ -248,17 +236,10 @@ lab.experiment('Outlook model test', () => {
 
     const outlook = new Outlook(outlookFakeData2)
 
-    const Result = await outlook
-
-    Code.expect(Result._hasOutlookConcern).to.be.equal(false)
+    expect(outlook._hasOutlookConcern).to.be.equal(false)
   })
-  lab.test('Check outlook days', async () => {
-    const Result = await outlook.days
 
-    Code.expect(Result[0].idx).to.be.equal(1)
-    Code.expect(Result[0].level).to.be.equal(0)
-  })
-  lab.test('Test coastal area (linestring) converts to polygon', async () => {
+  it('should convert coastal area (linestring) to a polygon', () => {
     const outlookWithCoastal = {
       id: 1830,
       issued_at: '2021-04-06T09:30:00Z',
@@ -345,8 +326,6 @@ lab.experiment('Outlook model test', () => {
 
     const outlook = new Outlook(outlookWithCoastal)
 
-    const Result = await outlook
-
-    Code.expect(Result._geoJson.features[0].geometry.type).to.be.equal('Polygon')
+    expect(outlook._geoJson.features[0].geometry.type).to.be.equal('Polygon')
   })
 })

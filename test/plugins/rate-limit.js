@@ -2,44 +2,28 @@
 
 const Lab = require('@hapi/lab')
 const Hapi = require('@hapi/hapi')
-const lab = exports.lab = Lab.script()
-const Code = require('@hapi/code')
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
+const { expect } = require('@hapi/code')
 const sinon = require('sinon')
 const config = require('../../server/config')
 
-lab.experiment('rate-limit plugin test', () => {
+describe('Plugin - Rate Limit', () => {
   let sandbox
   let server
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
+    const floodService = require('../../server/services/flood')
+
     sandbox = await sinon.createSandbox()
+
     server = Hapi.server({
       port: 3000,
       host: 'localhost'
     })
-    sandbox.stub(config, 'localCache').value(true)
-    sandbox.stub(config, 'rateLimitEnabled').value(true)
+
     sandbox.stub(config, 'rateLimitExpiresIn').value(1)
     sandbox.stub(config, 'rateLimitRequests').value(1)
     sandbox.stub(config, 'rateLimitWhitelist').value(['1.1.1.1', '2.2.2.2'])
-    await server.register(require('../../server/plugins/rate-limit'))
-    await server.register(require('../../server/plugins/logging'))
-    await server.register(require('../../server/plugins/error-pages'))
-    await server.initialize()
-  })
-
-  lab.afterEach(async () => {
-    await server.stop()
-    await sandbox.res
-  })
-
-  lab.test('Plugin rate-limit successfully loads local cache true', async () => {
-  })
-
-  lab.test('GET station page exceeding rate-limit ', async () => {
-    delete require.cache[require.resolve('../../server/services/flood.js')]
-    delete require.cache[require.resolve('../../server/routes/station.js')]
-    const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
       return {
@@ -88,10 +72,6 @@ lab.experiment('rate-limit plugin test', () => {
       }
     }
 
-    const fakeTelemetryData = () => []
-    const fakeThresholdData = () => []
-
-    const fakeImpactsData = () => []
     const fakeForecastFlag = () => {
       return {
         station_display_time_series_id: '94280',
@@ -100,44 +80,99 @@ lab.experiment('rate-limit plugin test', () => {
         display_time_series: false
       }
     }
-    const fakeWarningsAlertsData = () => []
-    const fakeRiverStationData = () => []
 
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
     sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeThresholdData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
     sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverStationData)
-
-    const stationPlugin = {
-      plugin: {
-        name: 'station',
-        register: (server, options) => {
-          server.route(require('../../server/routes/station'))
-        }
-      }
-    }
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(() => [])
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(() => [])
+    sandbox.stub(floodService, 'getImpactData').callsFake(() => [])
+    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(() => [])
+    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(() => [])
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
-    await server.register(stationPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
+    await server.register(require('../../server/plugins/logging'))
+  })
+
+  afterEach(async () => {
+    delete require.cache[require.resolve('../../server/plugins/rate-limit.js')]
+
+    await server.stop()
+    await sandbox.restore()
+  })
+
+  it('should GET station page exceeding rate-limit', async () => {
+    sandbox.stub(config, 'localCache').value(true)
+    sandbox.stub(config, 'rateLimitEnabled').value(true)
+
+    await server.register(require('../../server/plugins/rate-limit'))
+
+    await server.register({
+      plugin: {
+        name: 'station',
+        register: (server) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    })
+
+    require('../../server/services/server-methods')(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/station/5146'
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
+
+    expect(response.statusCode).to.equal(200)
 
     const response2 = await server.inject(options)
 
-    Code.expect(response2.statusCode).to.equal(429)
+    expect(response2.statusCode).to.equal(429)
+  })
+
+  it('should GET station page with rate-limit disabled', async () => {
+    sandbox.stub(config, 'localCache').value(true)
+    sandbox.stub(config, 'rateLimitEnabled').value(false)
+
+    await server.register(require('../../server/plugins/error-pages'))
+
+    await server.register({
+      plugin: {
+        name: 'station',
+        register: (server) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    })
+
+    require('../../server/services/server-methods')(server)
+
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/station/5146'
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).to.equal(200)
+
+    const response2 = await server.inject(options)
+
+    expect(response2.statusCode).to.equal(200)
+  })
+
+  it('should set the cache setting "userPathCache"', async () => {
+    sandbox.stub(config, 'localCache').value(false)
+    sandbox.stub(config, 'rateLimitEnabled').value(true)
+
+    const rateLimit = require('../../server/plugins/rate-limit.js')
+
+    expect(rateLimit.options.userCache.cache).to.equal('redis_cache')
   })
 })
