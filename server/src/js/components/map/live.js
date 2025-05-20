@@ -74,12 +74,11 @@ function LiveMap (mapId, options) {
 
   // Function to configure z-index for layers
   const configureLayerZIndex = () => {
-    warnings.setZIndex(6) // Severe warnings
-    stations.setZIndex(5) // Measuring stations (River, Sea, Groundwater)
-    rainfall.setZIndex(4) // Rainfall
-    targetAreaPolygons.setZIndex(3) // Polygons (Alert, Warning, Severe)
-    road.setZIndex(2) // Road layer
-    satellite.setZIndex(1) // Satellite layer
+    // Set z-index for each layer to control stacking order on the map.
+    // Higher numbers appear above lower numbers.
+    stations.setZIndex(3) // All measuring stations (River, Sea, Groundwater)
+    rainfall.setZIndex(2) // Rainfall stations
+    warnings.setZIndex(1) // Flood polygons (Severe, Warning, Alert)
   }
 
   // Call the function to set z-index for layers
