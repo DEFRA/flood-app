@@ -11,26 +11,24 @@ jobs:
 
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
               with:
                 fetch-depth: 0
 
+            - name: Set node version
+              run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
+
             - name: Install nodejs
-              uses: actions/setup-node@v1
+              uses: actions/setup-node@v4
               with:
-                node-version: "18.x"
+                node-version: ${{ env.NODE_VERSION }}
             
             - name: Install node dependencies
-              run: npm ci
+              run: npm ci --engine-strict
 
             - name: Run linting
               run: npm run lint
 
-            # This includes an extra run step. The sonarcloud analysis will be run in a docker container with the current
-            # folder mounted as `/github/workspace`. The problem is when the lcov.info file is generated it will reference the
-            # code in the current folder. So to enable sonarcloud to matchup code coverage with the files we use sed to update
-            # the references in lcov.info
-            # https://community.sonarsource.com/t/code-coverage-doesnt-work-with-github-action/16747/6
             - name: Run unit tests
               env:
                 FLOOD_APP_BING_KEY: "${{ secrets.FLOOD_APP_BING_KEY }}"
@@ -41,10 +39,9 @@ jobs:
                 FLOOD_APP_SESSION_PASSWORD: "${{ secrets.FLOOD_APP_SESSION_PASSWORD }}"
               run: |
                 npm run unit-test
-                sed -i 's/\/home\/runner\/work\/flood-app\/flood-app\//\/github\/workspace\//g' coverage/lcov.info
 
             - name: Analyse code quality
-              uses: sonarsource/sonarcloud-github-action@master
+              uses: sonarsource/sonarqube-scan-action@master
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

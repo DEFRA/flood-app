@@ -20,6 +20,3 @@ jobs:
             fi
           fi
           echo "Branches ok to be merged"
-      
-              
-
