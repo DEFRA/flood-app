@@ -515,6 +515,7 @@ describe('Route - API', () => {
       expect(response.statusCode).to.equal(200)
 
       const payload = JSON.parse(response.payload)
+
       expect(payload.severity).to.equal('severe')
       expect(payload.levels.length).to.equal(1)
       expect(payload.levels[0].river_name).to.equal('Groundwater')
