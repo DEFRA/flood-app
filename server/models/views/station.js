@@ -421,6 +421,15 @@ function stationTypeCalculator (stationTypeData) {
   return stationType
 }
 
+/**
+ * Converts a moment object to ISO string format without milliseconds
+ * @param {object} momentObj - Moment.js object
+ * @returns {string} ISO string without milliseconds
+ */
+function toISOStringWithoutMilliseconds (momentObj) {
+  return momentObj.toISOString().split('.')[0] + 'Z'
+}
+
 function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationType) {
   const observed = telemetryRawData
     .filter(telemetry => telemetry._ !== null) // Filter out records where telemetry._ is null
@@ -443,8 +452,8 @@ function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationTyp
   return {
     type: stationTypeCalculator(stationType).toLowerCase(),
     latestDateTime: telemetryRawData[0].ts,
-    dataStartDateTime: moment(telemetryRawData[0].ts).subtract(dataStartDateTimeDaysToSubtract, 'days').toISOString().split('.')[0] + 'Z',
-    dataEndDateTime: moment().toISOString().split('.')[0] + 'Z',
+    dataStartDateTime: toISOStringWithoutMilliseconds(moment(telemetryRawData[0].ts).subtract(dataStartDateTimeDaysToSubtract, 'days')),
+    dataEndDateTime: toISOStringWithoutMilliseconds(moment()),
     forecast: forecastData,
     observed
   }
