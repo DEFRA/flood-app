@@ -11,12 +11,12 @@ const moment = require('moment-timezone')
 lab.experiment('Station view model tests', () => {
   let sandbox
 
-  lab.beforeEach(async () => {
-    sandbox = await sinon.createSandbox()
+  lab.beforeEach(() => {
+    sandbox = sinon.createSandbox()
   })
 
-  lab.afterEach(async () => {
-    await sandbox.restore()
+  lab.afterEach(() => {
+    sandbox.restore()
   })
 
   lab.test('telemetryForecastBuilder formats dataEndDateTime correctly', async () => {
