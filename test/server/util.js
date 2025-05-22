@@ -3,7 +3,7 @@ const Code = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const spikeTelem = require('../data/spikeTelem.json')
 const nonSpikeTelem = require('../data/nonSpikeTelem.json')
-const { formatName, toMarked, cleanseLocation, removeSpikes } = require('../../server/util')
+const { toMarked, cleanseLocation, removeSpikes } = require('../../server/util')
 
 lab.experiment('util', () => {
   lab.experiment('toMarked', () => {
@@ -35,31 +35,6 @@ lab.experiment('util', () => {
     lab.test('No spikes in telem all values under 300m, 480 values returned', async () => {
       const telem = removeSpikes(nonSpikeTelem)
       Code.expect(telem.length).to.equal(480)
-    })
-  })
-  lab.experiment('formatName', () => {
-    lab.test('Repeating parts are removed', async () => {
-      Code.expect(formatName('Middlesbrough, Middlesbrough')).to.equal('Middlesbrough')
-    })
-    lab.test('Similar parts are not removed', async () => {
-      Code.expect(formatName('Durham, County Durham')).to.equal('Durham, County Durham')
-    })
-    lab.test('City qualifier "City Of" is removed', async () => {
-      Code.expect(formatName('Bristol, City Of Bristol')).to.equal('Bristol')
-    })
-    lab.test('City qualifier "City of" is removed (ie case insensitive)', async () => {
-      Code.expect(formatName('Bristol, City of Bristol')).to.equal('Bristol')
-    })
-    lab.test('City qualifier "Greater" is removed', async () => {
-      Code.expect(formatName('London, Greater London')).to.equal('London')
-    })
-    lab.test('City qualifier removed from neighbourhood', async () => {
-      Code.expect(formatName('Camberwell, London, Greater London')).to.equal('Camberwell, London')
-    })
-    lab.experiment('Error handling', () => {
-      lab.test('Fails gracefully with undefined name', async () => {
-        Code.expect(formatName()).to.equal('')
-      })
     })
   })
 })

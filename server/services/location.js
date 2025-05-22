@@ -2,11 +2,8 @@ const joi = require('joi')
 const { bingKeyLocation, bingUrl } = require('../config')
 const { getJson } = require('../util')
 const util = require('util')
-const bingResultsParser = require('./lib/bing-results-parser')
+const { find, get } = require('./lib/bing-results-parser')
 const LocationSearchError = require('../location-search-error')
-const floodServices = require('./flood')
-
-const MAX_BING_RESULTS = 3
 
 function bingSearchNotNeeded (searchTerm) {
   const mustNotMatch = /[<>]|^england$|^scotland$|^wales$|^united kingdom$|^northern ireland$/i
@@ -35,15 +32,16 @@ function validateBingResponse (response) {
   }
 }
 
-async function find (location) {
-  const validatedLocation = validateSearchTerm(location)
+async function getBingResponse (query, maxBingResults) {
+  const validatedQuery = validateSearchTerm(query)
+  const emptyBingResponse = { resourceSets: [{ estimatedTotal: 0 }] }
 
-  if (bingSearchNotNeeded(validatedLocation)) {
-    return []
+  if (bingSearchNotNeeded(validatedQuery)) {
+    return emptyBingResponse
   }
 
-  const query = encodeURIComponent(validatedLocation)
-  const url = util.format(bingUrl, query, MAX_BING_RESULTS, bingKeyLocation)
+  const encodedQuery = encodeURIComponent(validatedQuery)
+  const url = util.format(bingUrl, encodedQuery, maxBingResults, bingKeyLocation)
 
   let bingData
   try {
@@ -54,7 +52,26 @@ async function find (location) {
 
   validateBingResponse(bingData)
 
-  return bingResultsParser(bingData, floodServices.getIsEngland)
+  return bingData
 }
 
-module.exports = { find }
+async function getLocationBySlug (locationSlug) {
+  // inspection shows that for some slug searches (e.g. hoxne-eye-suffolk)
+  // the desired result is not within the first 3 results so need a different
+  // value. 5 seems to be an acceptable value.
+  const MAX_BING_RESULTS = 5
+
+  const bingData = await getBingResponse(locationSlug, MAX_BING_RESULTS)
+  return get(bingData, locationSlug)
+}
+
+async function findLocationByQuery (locationQuery) {
+  const MAX_BING_RESULTS = 3
+  const bingData = await getBingResponse(locationQuery, MAX_BING_RESULTS)
+  return find(bingData)
+}
+
+module.exports = {
+  find: findLocationByQuery,
+  get: getLocationBySlug
+}
