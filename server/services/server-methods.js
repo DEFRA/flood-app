@@ -7,6 +7,9 @@ const cacheType = config.localCache ? undefined : 'redis_cache'
 const seconds = secs => secs * 1000
 const minutes = min => seconds(min * 60)
 
+// Standard timeout value in milliseconds for most API calls
+const STANDARD_TIMEOUT = seconds(10)
+
 const expiresIn15 = 15
 const floodGetOutlookGenerateTimeout = 30
 const floodGetStationsGeoJsonGenerateTimeout = 30
@@ -22,7 +25,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -30,7 +33,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     },
     generateKey: array => array.join(',') // functions with array or object var need a non default key
   })
@@ -39,7 +42,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(expiresIn15),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -55,7 +58,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(expiresIn15),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -63,7 +66,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -71,7 +74,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -79,7 +82,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -87,7 +90,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     },
     generateKey: array => array.join(',') // functions with array or object var need a non default key
   })
@@ -96,7 +99,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -104,7 +107,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -112,7 +115,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -120,7 +123,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -128,7 +131,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -136,7 +139,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -144,7 +147,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -152,7 +155,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -176,7 +179,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -184,7 +187,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -192,7 +195,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     },
     generateKey: array => array.join(',') // functions with array or object var need a non default key
   })
@@ -201,7 +204,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -209,7 +212,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -217,7 +220,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -225,7 +228,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -233,7 +236,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -241,7 +244,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(10)
+      generateTimeout: STANDARD_TIMEOUT
     }
   })
 
@@ -249,7 +252,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: 1 * 60 * 1000, // 1 minute
-      generateTimeout: 10 * 1000 // 10 seconds
+      generateTimeout: STANDARD_TIMEOUT // 10 seconds
     }
   })
 }
