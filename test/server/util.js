@@ -156,5 +156,4 @@ describe('Util', () => {
       expect(telem.length).to.equal(480)
     })
   })
-
 })
