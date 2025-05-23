@@ -163,5 +163,4 @@ lab.experiment('util', () => {
       Code.expect(telem.length).to.equal(480)
     })
   })
-
 })
