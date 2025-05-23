@@ -1,13 +1,18 @@
-/* global DOMParser */
-
 class LatestLevelsAutoRefresh {
-  constructor (targetMinutes = [3, 18, 33, 48]) {
+  constructor (targetMinutes = [4, 19, 34, 49]) {
     this.timeout = null
     this.timeAgoInterval = null
     this.liveStatusMessages = []
     this.targetMinutes = targetMinutes
 
+    this.hasChanges = null
+
     this.latestLevels = document.querySelectorAll('.defra-live__item')
+  }
+
+  fetchData = async () => {
+    const res = await fetch(`/api/latest-levels/${window.location.pathname.split('/').pop()}`, { cache: 'no-store' })
+    return await res.json()
   }
 
   updateLiveStatus = () => {
@@ -28,7 +33,7 @@ class LatestLevelsAutoRefresh {
     element.append(p)
   }
 
-  updateTimeAgo = () => {
+  initializeTimeAgoUpdates = () => {
     setTimeout(() => {
       this.renderTimeAgo()
       this.timeAgoInterval = setInterval(this.renderTimeAgo, 60000)
@@ -52,93 +57,95 @@ class LatestLevelsAutoRefresh {
     })
   }
 
-  fetchRiverLevels = (callback) => {
-    this.liveStatusMessages = []
+  renderRiverLevels = (data) => {
+    const { levels, severity } = data
 
-    fetch(window.location.href)
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Failed to fetch data')
-        }
+    const currentSeverity = document.querySelector('[data-severity-status]')?.getAttribute('data-severity-status')
 
-        return res.text()
-      })
-      .then(html => {
-        this.updateRiverLevels(html)
-
-        if (callback) {
-          callback()
-        }
-      })
-      .catch(error => {
-        console.error('Error updating levels:', error)
-
-        this.liveStatusMessages.push('There was an error getting the latest level')
-      })
-      .finally(() => {
-        this.updateLiveStatus()
-      })
-  }
-
-  updateRiverLevels = (html) => {
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(html, 'text/html')
-
-    const currentStatus = document.querySelector('[data-severity-status]')?.getAttribute('data-severity-status')
-    const newStatus = doc.querySelector('[data-severity-status]')?.getAttribute('data-severity-status')
-
-    if (currentStatus !== newStatus) {
+    if (currentSeverity !== severity) {
       return window.location.reload()
     }
 
-    // Get elements from fetched content
-    const fetchedElements = Array.from(doc.querySelectorAll('.defra-live .defra-live__item'))
-
-    // Check if any elements are missing in the fetched data
-    const isMissingElements = this.latestLevels.length !== fetchedElements.length
+    const isMissingElements = this.latestLevels.length !== levels.length
 
     if (isMissingElements) {
       return this.liveStatusMessages.push('Warnings have been removed, please refresh the page.')
     }
 
-    fetchedElements.forEach((fetchedElement) => {
-      const itemId = fetchedElement.getAttribute('data-item-id')
-      const itemRiverName = fetchedElement.getAttribute('data-item-name')
-      const itemRiverAgency = fetchedElement.getAttribute('data-item-agency')
+    levels.forEach(item => {
+      const element = document.querySelector(`[data-item-id="${item.rloi_id}"]`)
 
-      const fetchedTime = fetchedElement.querySelector('[data-item-time]')
-      const fetchedValue = fetchedElement.querySelector('[data-item-value]')
-      const fetchedStatus = fetchedElement.getAttribute('data-item-status')
-
-      const currentItem = document.querySelector(`[data-item-id="${itemId}"]`)
-
-      if (currentItem) {
-        const currentTime = currentItem.querySelector('[data-item-time]')
-        const currentValue = currentItem.querySelector('[data-item-value]')
-
-        // if isSuspendedOrOffline
-        if (fetchedStatus === 'false') {
-          if (fetchedValue?.textContent !== currentValue?.textContent) {
-            clearInterval(this.timeAgoInterval)
-
-            currentValue.textContent = fetchedValue.textContent
-
-            this.liveStatusMessages.push(`The ${itemRiverName} at ${itemRiverAgency} level was ${fetchedValue.textContent} metres ${fetchedTime.textContent}`)
-
-            this.updateTimeAgo()
-          }
-
-          currentTime.textContent = fetchedTime.textContent
-        } else {
-          this.liveStatusMessages.push('Please refresh the page')
-        }
-      } else {
-        this.liveStatusMessages.push('Please refresh the page')
+      if (item.isSuspendedOrOffline) {
+        return this.liveStatusMessages.push('Please refresh the page')
       }
+
+      if (!element) {
+        return this.liveStatusMessages.push('Please refresh the page')
+      }
+
+      const elementValue = element.querySelector('[data-item-value]')
+      const elementTime = element.querySelector('[data-item-time]')
+
+      const itemValue = item.latest_level
+      const itemTime = item.value_timestamp
+
+      if (itemValue !== elementValue.textContent) {
+        elementValue.textContent = itemValue
+
+        this.liveStatusMessages.push(`The ${item.river_name} at ${item.external_name} level was ${itemValue} metres ${itemTime}`)
+      } else {
+        this.hasChanges = false
+      }
+
+      elementTime.textContent = item.value_timestamp
     })
   }
 
-  nextUpdate = () => {
+  retry = async () => {
+    this.hasChanges = null
+
+    try {
+      const data = await this.fetchData()
+
+      this.renderRiverLevels(data)
+    } catch (err) {
+      console.error('[Error] retrying to fetch latest levels', err)
+      this.liveStatusMessages.push('There was an error retrying to get the latest level')
+    } finally {
+      this.updateLiveStatus()
+    }
+  }
+
+  fetchRiverLevels = async (callback) => {
+    this.liveStatusMessages = []
+
+    try {
+      const data = await this.fetchData()
+
+      clearInterval(this.timeAgoInterval)
+
+      this.renderRiverLevels(data)
+
+      if (this.hasChanges === false) {
+        setTimeout(() => {
+          this.retry()
+        }, 10000)
+      }
+
+      this.initializeTimeAgoUpdates()
+
+      if (callback) {
+        callback(data)
+      }
+    } catch (err) {
+      console.error('[Error] fetching latest levels data', err)
+      this.liveStatusMessages.push('There was an error getting the latest level')
+    } finally {
+      this.updateLiveStatus()
+    }
+  }
+
+  nextUpdate = async () => {
     clearTimeout(this.timeout)
 
     const now = new Date()
