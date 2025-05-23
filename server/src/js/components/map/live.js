@@ -72,9 +72,17 @@ function LiveMap (mapId, options) {
   ]
   const layers = defaultLayers.concat(dataLayers)
 
-  // Assign z-index to ensure visibility
-  stations.setZIndex(2) // Higher priority
-  rainfall.setZIndex(1) // Lower priority
+  // Function to configure z-index for layers
+  const configureLayerZIndex = () => {
+    // Set z-index for each layer to control stacking order on the map.
+    // Higher numbers appear above lower numbers.
+    stations.setZIndex(3) // All measuring stations (River, Sea, Groundwater)
+    rainfall.setZIndex(2) // Rainfall stations
+    warnings.setZIndex(1) // Flood polygons (Severe, Warning, Alert)
+  }
+
+  // Call the function to set z-index for layers
+  configureLayerZIndex()
 
   // Configure default interactions
   const interactions = defaultInteractions({
