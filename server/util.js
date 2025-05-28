@@ -104,7 +104,6 @@ function rainfallTelemetryPadOut (values, valueDuration) {
 }
 
 module.exports = {
-  request: httpUtils.request,
   get: httpUtils.get,
   post: httpUtils.post,
   getJson: httpUtils.getJson,
