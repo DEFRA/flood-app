@@ -1,53 +1,7 @@
 const moment = require('moment-timezone')
-const config = require('./config')
-const wreck = require('@hapi/wreck').defaults({
-  timeout: config.httpTimeoutMs
-})
-const LocationSearchError = require('./location-search-error')
 const ALLOWED_SEARCH_CHARS = 'a-zA-Z0-9\',-.& ()!'
 const timezone = 'Europe/London'
-
-async function request (method, url, options) {
-  let res, payload
-
-  const HTTP_STATUS_CODE_OK = 200
-
-  try {
-    const response = await wreck[method](url, options)
-    res = response.res
-    payload = response.payload
-  } catch (error) {
-    if (error?.message?.startsWith('Response Error:')) {
-      error.message += ` on ${method.toUpperCase()} ${url.replace(/\?[^]*$/, '')}`
-    }
-    throw error
-  }
-  if (res.headers['x-ms-bm-ws-info'] === '1') {
-    throw new LocationSearchError('Empty location search response indicated by header check of x-ms-bm-ws-info')
-  }
-  if (res.statusCode !== HTTP_STATUS_CODE_OK) {
-    throw (payload || new Error('Unknown error'))
-  }
-  return payload
-}
-
-function get (url, options) {
-  return request('get', url, options)
-}
-
-function post (url, options) {
-  return request('post', url, options)
-}
-
-function postJson (url, options) {
-  options = options || {}
-  options.json = true
-  return post(url, options)
-}
-
-function getJson (url) {
-  return get(url, { json: true })
-}
+const httpUtils = require('./http-utils') // Added to maintain backwards compatibility, can be removed once all references to http methods in this file are updated.
 
 function formatDate (value, format = 'D/M/YY h:mma') {
   return moment(value).tz(timezone).format(format)
@@ -150,11 +104,11 @@ function rainfallTelemetryPadOut (values, valueDuration) {
 }
 
 module.exports = {
-  get,
-  post,
-  getJson,
-  postJson,
-  request,
+  request: httpUtils.request,
+  get: httpUtils.get,
+  post: httpUtils.post,
+  getJson: httpUtils.getJson,
+  postJson: httpUtils.postJson,
   formatDate,
   formatElapsedTime,
   toFixed,
