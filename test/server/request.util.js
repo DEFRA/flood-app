@@ -9,10 +9,10 @@ const mocks = {
   wreckPost: sinon.stub()
 }
 
-lab.experiment('util / outbound request helpers : request', () => {
-  let util
+lab.experiment('http-utils / outbound request helpers', () => {
+  let httpUtils
   lab.before(() => {
-    util = proxyquire('../../server/util', {
+    httpUtils = proxyquire('../../server/http-utils', {
       '@hapi/wreck': {
         defaults: () => ({
           get: mocks.wreckGet,
@@ -27,96 +27,188 @@ lab.experiment('util / outbound request helpers : request', () => {
     }
   })
 
-  lab.test('request uses acts as a proxy for the relevant wreck method', async () => {
-    const getUrl = '/some/get/url'
-    const postUrl = '/some/post/url'
-    const requestOptions = {
-      headers: {
-        'some-header': 'some-value'
+  lab.experiment('request', () => {
+    lab.test('uses acts as a proxy for the relevant wreck method', async () => {
+      const getUrl = 'http://example.com/some/get/url'
+      const postUrl = 'http://example.com/some/post/url'
+      const requestOptions = {
+        headers: {
+          'some-header': 'some-value'
+        }
       }
-    }
-    const mockResponse = { res: { statusCode: 200, headers: {} }, payload: { ok: true } }
-    mocks.wreckGet.resolves(mockResponse)
-    mocks.wreckPost.resolves(mockResponse)
+      const mockResponse = { res: { statusCode: 200, headers: {} }, payload: { ok: true } }
+      mocks.wreckGet.resolves(mockResponse)
+      mocks.wreckPost.resolves(mockResponse)
 
-    const [
-      getResult,
-      postResult
-    ] = await Promise.all([
-      util.request('get', getUrl, requestOptions),
-      util.request('post', postUrl, requestOptions)
-    ])
+      const [
+        getResult,
+        postResult
+      ] = await Promise.all([
+        httpUtils.request('get', getUrl, requestOptions),
+        httpUtils.request('post', postUrl, requestOptions)
+      ])
 
-    expect(mocks.wreckGet.callCount).to.equal(1)
-    expect(mocks.wreckGet.firstCall.args).to.equal([getUrl, requestOptions])
-    expect(getResult).to.equal(mockResponse.payload)
+      expect(mocks.wreckGet.callCount).to.equal(1)
+      expect(mocks.wreckGet.firstCall.args).to.equal([getUrl, requestOptions])
+      expect(getResult).to.equal(mockResponse.payload)
 
-    expect(mocks.wreckPost.callCount).to.equal(1)
-    expect(mocks.wreckPost.firstCall.args).to.equal([postUrl, requestOptions])
-    expect(postResult).to.equal(mockResponse.payload)
+      expect(mocks.wreckPost.callCount).to.equal(1)
+      expect(mocks.wreckPost.firstCall.args).to.equal([postUrl, requestOptions])
+      expect(postResult).to.equal(mockResponse.payload)
+    })
+
+    lab.test('does not add the method and url to non-request errors', async () => {
+      const method = 'get'
+      const url = 'http://example.com/some/get/url'
+      const requestOptions = {
+        headers: {
+          'some-header': 'some-value'
+        }
+      }
+      const requestError = new Error('some other error')
+      mocks.wreckGet.rejects(requestError)
+
+      let err
+      try {
+        await httpUtils.request(method, url, requestOptions)
+      } catch (e) {
+        err = e
+      }
+
+      expect(err.message).to.equal('some other error')
+    })
   })
 
-  lab.test('request adds the method and url (with query strings removed) to wreck request errors', async () => {
-    const method = 'get'
-    const url = '/some/get/url?a=1&b=2&key=secret&c=4'
-    const requestOptions = {
-      headers: {
-        'some-header': 'some-value'
-      }
-    }
-    const requestError = new Error('Response Error: some response error')
-    mocks.wreckGet.rejects(requestError)
+  lab.experiment('get and getJson', () => {
+    lab.test('should successfully get data from a URL', async () => {
+      // Mock successful response
+      const mockPayload = { data: 'test data' }
+      mocks.wreckGet.resolves({
+        res: { statusCode: 200, headers: {} },
+        payload: mockPayload
+      })
 
-    let err
-    try {
-      await util.request(method, url, requestOptions)
-    } catch (e) {
-      err = e
-    }
+      const result = await httpUtils.get('https://example.com/api', { option: 'value' })
 
-    expect(err.message).to.equal('Response Error: some response error on GET /some/get/url')
+      expect(result).to.equal(mockPayload)
+      expect(mocks.wreckGet.calledOnce).to.be.true()
+      expect(mocks.wreckGet.firstCall.args[0]).to.equal('https://example.com/api')
+      expect(mocks.wreckGet.firstCall.args[1]).to.equal({ option: 'value' })
+    })
+
+    lab.test('should handle JSON responses with getJson', async () => {
+      // Mock successful JSON response
+      const mockPayload = { data: 'test data' }
+      mocks.wreckGet.resolves({
+        res: { statusCode: 200, headers: {} },
+        payload: mockPayload
+      })
+
+      const result = await httpUtils.getJson('https://example.com/api')
+
+      expect(result).to.equal(mockPayload)
+      expect(mocks.wreckGet.calledOnce).to.be.true()
+      expect(mocks.wreckGet.firstCall.args[0]).to.equal('https://example.com/api')
+      expect(mocks.wreckGet.firstCall.args[1]).to.equal({ json: true })
+    })
   })
 
-  lab.test('request does not add the method and url to wreck non-request errors', async () => {
-    const method = 'get'
-    const url = '/some/get/url'
-    const requestOptions = {
-      headers: {
-        'some-header': 'some-value'
+  lab.experiment('error handling', () => {
+    lab.test('should throw error for invalid URLs', async () => {
+      // Test with a single invalid URL
+      const invalidUrl = 'not-a-url'
+
+      await expect(httpUtils.get(invalidUrl)).to.reject(`Invalid URL: ${invalidUrl}`)
+    })
+
+    lab.test('should throw error object from payload when response status code is not 200', async () => {
+      // Mock error response with JSON error object (typical API error response)
+      const errorPayload = {
+        error: true,
+        message: 'Resource not found',
+        code: 'NOT_FOUND'
       }
-    }
-    const requestError = new Error('some other error')
-    mocks.wreckGet.rejects(requestError)
 
-    let err
-    try {
-      await util.request(method, url, requestOptions)
-    } catch (e) {
-      err = e
-    }
+      mocks.wreckGet.resolves({
+        res: { statusCode: 404, headers: {} },
+        payload: errorPayload
+      })
 
-    expect(err.message).to.equal('some other error')
-  })
-
-  lab.test('request throws a LocationSearchError if the \'x-ms-bm-ws-info\' response header has a value of \'1\'', async () => {
-    const method = 'get'
-    const url = '/some/get/url'
-    const requestOptions = {
-      headers: {
-        'some-header': 'some-value'
+      let err
+      try {
+        await httpUtils.get('https://example.com/api')
+      } catch (e) {
+        err = e
       }
-    }
-    const mockResponse = { res: { statusCode: 200, headers: { 'x-ms-bm-ws-info': '1' } }, payload: { ok: true } }
-    mocks.wreckGet.resolves(mockResponse)
 
-    let err
-    try {
-      await util.request(method, url, requestOptions)
-    } catch (e) {
-      err = e
-    }
+      // The error thrown should be the payload object itself
+      expect(err).to.equal(errorPayload)
+    })
 
-    expect(err.name).to.equal('LocationSearchError')
-    expect(err.message).to.equal('Empty location search response indicated by header check of x-ms-bm-ws-info')
+    lab.test('should throw "Unknown error" when response status code is not 200 with falsy payload', async () => {
+      // Mock error response with null payload
+      mocks.wreckGet.resolves({
+        res: { statusCode: 500, headers: {} },
+        payload: null
+      })
+
+      // Should throw the default "Unknown error"
+      await expect(httpUtils.get('https://example.com/api')).to.reject('Unknown error')
+    })
+
+    lab.test('should throw LocationSearchError when x-ms-bm-ws-info header is 1', async () => {
+      // Mock response with special header
+      mocks.wreckGet.resolves({
+        res: {
+          statusCode: 200,
+          headers: { 'x-ms-bm-ws-info': '1' }
+        },
+        payload: {}
+      })
+
+      let err
+      try {
+        await httpUtils.request('get', 'http://example.com/some/get/url', {})
+      } catch (e) {
+        err = e
+      }
+
+      expect(err.name).to.equal('LocationSearchError')
+      expect(err.message).to.equal('Empty location search response indicated by header check of x-ms-bm-ws-info')
+    })
+
+    lab.test('should add method and URL info to request errors', async () => {
+      // Mock network error
+      const error = new Error('Response Error: Connection refused')
+      mocks.wreckGet.rejects(error)
+
+      await expect(httpUtils.get('https://example.com/api?param=value')).to.reject('Response Error: Connection refused on GET https://example.com/api')
+    })
+
+    lab.test('should remove query parameters from URL in error messages', async () => {
+      // Test with various URL formats
+      const testUrls = [
+        {
+          input: 'https://example.com/api?param=value&another=123',
+          expected: 'https://example.com/api'
+        },
+        {
+          input: 'https://example.com/api?param=special&chars=a+b%20c',
+          expected: 'https://example.com/api'
+        },
+        {
+          input: 'https://example.com/api?multiline=value\nwith\nnewlines',
+          expected: 'https://example.com/api'
+        }
+      ]
+
+      for (const testCase of testUrls) {
+        // Reset the stub for each test case
+        mocks.wreckGet.reset()
+        mocks.wreckGet.rejects(new Error('Response Error: Connection refused'))
+
+        await expect(httpUtils.get(testCase.input)).to.reject(`Response Error: Connection refused on GET ${testCase.expected}`)
+      }
+    })
   })
 })
