@@ -1,7 +1,7 @@
 # Check For Flooding Release
 
 - Version: 8.16.0
-- Proposed Release Date: 
+- Proposed Release Date: 10th June 2025
 - Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/21662/tab/release-report-all-issues
 
 ## Sense Check
@@ -16,17 +16,20 @@
 
 ## Tickets
 
+  
+- FSR-1426 | Latest levels updates
+  
+- FSR-1386 | Fix 404 error which occurs for a small number of towns
 
+- FSR-1376 | Latest level content and hyperlink uses agency_name instead of external_name
   
-- Merge pull request #960 from DEFRA/feature/FSR-1444-sonarcloud-issue-regex
-  
-- Merge pull request #916 from DEFRA/feature/FSR-1324-sonar-cloud-issues
-  
-- FSR-1426 | latest levels updates (#941)
-  
-- FSR-1386 : fix 404 error which occurs for a small number of towns (#948)
-  
-- FSR-000 : switch to using node-version-file in workflows (#915)
+- FSR-1408 | "Minutes ago" does not update as expected on scheduled refresh
+
+- FSR-1410 | Incorrect content in latest levels box for warnings
+
+- FSR-1415 | Redis upgrade v5 to v7
+
+- FSR-1444 | Fix issue with regex vulnerability
   
 
 
@@ -35,9 +38,8 @@
 
 1. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
 
-
 Execute smoke tests and forward results
 
 ## Related Infrastructure Changes Required
 
-- None
+- Web-Ops to complete Elasticache/Redis upgrade
