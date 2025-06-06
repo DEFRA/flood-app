@@ -21,7 +21,8 @@
 - FSR-1415 | Redis upgrade v5 to v7
 
 - FSR-1444 | Fix issue with regex vulnerability
-  
+
+- FSR-1455 | WEBOPS: RDS Engine Upgrade
 
 
 ## Instructions
