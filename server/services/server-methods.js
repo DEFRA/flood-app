@@ -11,8 +11,8 @@ const minutes = min => seconds(min * 60)
 const STANDARD_TIMEOUT = seconds(10)
 
 const expiresIn15 = 15
-const floodGetRainfallGeoJsonGenerateTimeout = 30
 const floodGetOutlookGenerateTimeout = 30
+const floodGetRainfallGeoJsonGenerateTimeout = 30
 const floodGetStationsGeoJsonGenerateTimeout = 30
 
 // Cache method wrapper for hapi server
