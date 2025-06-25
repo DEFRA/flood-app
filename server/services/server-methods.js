@@ -11,6 +11,7 @@ const minutes = min => seconds(min * 60)
 const STANDARD_TIMEOUT = seconds(10)
 
 const expiresIn15 = 15
+const floodGetRainfallGeoJsonGenerateTimeout = 30
 const floodGetOutlookGenerateTimeout = 30
 const floodGetStationsGeoJsonGenerateTimeout = 30
 
@@ -171,7 +172,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(expiresIn15),
-      generateTimeout: seconds(30)
+      generateTimeout: seconds(floodGetRainfallGeoJsonGenerateTimeout)
     }
   })
 
