@@ -10,6 +10,8 @@
 
   
 - FSR-1458 | WebOps: Ubuntu Update 20.04 -->24.04
+
+- FSR-1464 | Fix code smell: remove magic number and correct release note linting
   
 
 
