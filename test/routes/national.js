@@ -1,33 +1,33 @@
 'use strict'
+
 const Hapi = require('@hapi/hapi')
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
+const { expect } = require('@hapi/code')
 const sinon = require('sinon')
-const config = require('../../server/config')
-const lab = exports.lab = Lab.script()
 const moment = require('moment-timezone')
 const { parse } = require('node-html-parser')
-const { linkChecker } = require('../lib/helpers/html-expectations')
+
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
+
+const config = require('../../server/config')
 const flushAppRequireCache = require('../lib/flush-app-require-cache')
-const proxyquire = require('proxyquire')
 
 const fgs = require('../data/fgs.json')
 const floods = require('../data/floods.json')
-const { validateFloodlineContactDetails, validateWebChatFooterPresent, validateWebChatFooterNotPresent } = require('../lib/helpers/context-footer-checker')
 
 function formatDate (date) {
   return moment.tz(date, 'Europe/London').format('h:mma [on] D MMMM YYYY')
 }
 
-lab.experiment('formatDate test', () => {
-  lab.test('before midday', async () => { Code.expect(formatDate(new Date('2024-04-10T09:00:00'))).to.equal('9:00am on 10 April 2024') })
-  lab.test('midday', async () => { Code.expect(formatDate(new Date('2024-04-10T12:00:00'))).to.equal('12:00pm on 10 April 2024') })
-  lab.test('after midday', async () => { Code.expect(formatDate(new Date('2024-04-10T19:00:00'))).to.equal('7:00pm on 10 April 2024') })
-  lab.test('midnight', async () => { Code.expect(formatDate(new Date('2024-04-10T00:00:00'))).to.equal('12:00am on 10 April 2024') })
-  lab.test('invalid date (documenting conterintuitive js date handling)', async () => { Code.expect(formatDate(new Date('2024-04-31T00:00:00'))).to.equal('12:00am on 1 May 2024') })
+describe('Route - National (formatDate)', () => {
+  it('before midday', async () => { expect(formatDate(new Date('2024-04-10T09:00:00'))).to.equal('9:00am on 10 April 2024') })
+  it('midday', async () => { expect(formatDate(new Date('2024-04-10T12:00:00'))).to.equal('12:00pm on 10 April 2024') })
+  it('after midday', async () => { expect(formatDate(new Date('2024-04-10T19:00:00'))).to.equal('7:00pm on 10 April 2024') })
+  it('midnight', async () => { expect(formatDate(new Date('2024-04-10T00:00:00'))).to.equal('12:00am on 10 April 2024') })
+  it('invalid date (documenting conterintuitive js date handling)', async () => { expect(formatDate(new Date('2024-04-31T00:00:00'))).to.equal('12:00am on 1 May 2024') })
 })
 
-lab.experiment('Routes test - national view', () => {
+describe('Route - National', () => {
   let sandbox
   let server
 
@@ -38,7 +38,6 @@ lab.experiment('Routes test - national view', () => {
 
     const floodService = require('../../server/services/flood')
     const locationService = require('../../server/services/location')
-    // Create dummy flood data in place of cached data
 
     sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
     sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
@@ -47,7 +46,7 @@ lab.experiment('Routes test - national view', () => {
     const nationalPlugin = {
       plugin: {
         name: 'national',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/national'))
         }
       }
@@ -58,13 +57,14 @@ lab.experiment('Routes test - national view', () => {
     await server.register(require('../../server/plugins/logging'))
     await server.register(require('../../server/plugins/error-pages'))
     await server.register(nationalPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
+
     await server.initialize()
   }
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     sandbox = await sinon.createSandbox()
 
     server = Hapi.server({
@@ -73,24 +73,27 @@ lab.experiment('Routes test - national view', () => {
     })
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await server.stop()
     await sandbox.restore()
   })
 
-  lab.experiment('GET', () => {
-    lab.experiment('with flood and outlook data', () => {
+  describe('GET', () => {
+    describe('with flood and outlook data', () => {
       const context = {}
 
-      lab.beforeEach(async () => {
+      beforeEach(async () => {
         const fakeFloodData = () => { return floods }
+
         const fakeOutlookData = () => {
           context.now = new Date()
           return { ...fgs, issued_at: context.now.toISOString() }
         }
+
         setup(fakeFloodData, fakeOutlookData)
       })
-      lab.test('national view should display CYLTFR link taken from the floodRiskUrl config value', async () => {
+
+      it('should contain CYLTFR link taken from the floodRiskUrl config value', async () => {
         const options = {
           method: 'GET',
           url: '/'
@@ -98,18 +101,16 @@ lab.experiment('Routes test - national view', () => {
 
         const response = await server.inject(options)
 
-        Code.expect(response.statusCode).to.equal(200)
+        expect(response.statusCode).to.equal(200)
+
         const root = parse(response.payload)
-        const anchors = root
-          .querySelectorAll('a')
-          .filter((element) => {
-            return element.text.trim() === 'Check your long term flood risk'
-          })
-        Code.expect(anchors.length).to.equal(1)
-        Code.expect(anchors[0].text).to.contain('Check your long term flood risk')
-        Code.expect(anchors[0].getAttribute('href')).to.equal('http://server/cyltfr')
+        const link = root.querySelectorAll('a').find(a => a.text.trim() === 'Check your long term flood risk')
+
+        expect(link).to.exist()
+        expect(link.getAttribute('href')).to.equal('http://server/cyltfr')
       })
-      lab.test('national view should display updated time and date for flood warnings', async () => {
+
+      it('should display updated time and date for flood warnings', async () => {
         const options = {
           method: 'GET',
           url: '/'
@@ -117,15 +118,18 @@ lab.experiment('Routes test - national view', () => {
 
         const response = await server.inject(options)
 
-        Code.expect(response.statusCode).to.equal(200)
+        expect(response.statusCode).to.equal(200)
+
         const root = parse(response.payload)
         const updateParagraphs = root.querySelectorAll('p.defra-flood-meta')
-        Code.expect(updateParagraphs.length).to.equal(2)
+
+        expect(updateParagraphs.length).to.equal(2)
         // note: it is possible for the expectation below to fail if the minute ticks over between to setting of
         // context.now and the use of moment() within the code to set the flood update string
-        Code.expect(updateParagraphs[0].text).to.contain(`Updated at ${formatDate(context.now)}`)
+        expect(updateParagraphs[0].text).to.contain(`Updated at ${formatDate(context.now)}`)
       })
-      lab.test('national view should display updated time and date for outlook', async () => {
+
+      it('should display updated time and date for outlook', async () => {
         const options = {
           method: 'GET',
           url: '/'
@@ -133,199 +137,59 @@ lab.experiment('Routes test - national view', () => {
 
         const response = await server.inject(options)
 
-        Code.expect(response.statusCode).to.equal(200)
+        expect(response.statusCode).to.equal(200)
+
         const root = parse(response.payload)
         const updateParagraphs = root.querySelectorAll('p.defra-flood-meta')
-        Code.expect(updateParagraphs.length).to.equal(2)
-        Code.expect(updateParagraphs[1].text).to.contain(`Updated at ${formatDate(context.now)}`)
-        Code.expect(updateParagraphs[1].text).to.contain('Produced by the Met Office and Environment Agency')
+
+        expect(updateParagraphs.length).to.equal(2)
+        expect(updateParagraphs[1].text).to.contain(`Updated at ${formatDate(context.now)}`)
+        expect(updateParagraphs[1].text).to.contain('Produced by the Met Office and Environment Agency')
       })
     })
-    lab.test('GET /national view no outlook data', async () => {
-      const locationPlugin = {
-        plugin: {
-          name: 'national',
-          register: (server, options) => {
-            server.route(require('../../server/routes/national'))
+
+    describe('without flood and outlook data', () => {
+      beforeEach(async () => {
+        const fakeFloodData = () => {
+          return {
+            floods: []
           }
         }
-      }
-      const floodService = require('../../server/services/flood')
-      // Create dummy flood data in place of cached data
-      const fakeFloodData = () => {
-        return {
-          floods: []
+
+        const fakeOutlookData = () => {
+          return {}
         }
-      }
 
-      const fakeOutlookData = () => {
-        return {}
-      }
+        setup(fakeFloodData, fakeOutlookData)
+      })
 
-      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      it('should 200', async () => {
+        const options = {
+          method: 'GET',
+          url: '/'
+        }
 
-      await server.register(require('../../server/plugins/views'))
-      await server.register(require('../../server/plugins/session'))
-      await server.register(require('../../server/plugins/logging'))
-      await server.register(locationPlugin)
-      // Add Cache methods to server
-      const registerServerMethods = require('../../server/services/server-methods')
-      registerServerMethods(server)
-      await server.initialize()
+        const response = await server.inject(options)
 
-      const options = {
-        method: 'GET',
-        url: '/'
-      }
+        expect(response.statusCode).to.equal(200)
+        expect(response.payload).to.contain('No flood alerts or warnings')
+      })
 
-      const response = await server.inject(options)
+      it('should not contain CYLTFR link', async () => {
+        const options = {
+          method: 'GET',
+          url: '/'
+        }
 
-      Code.expect(response.statusCode).to.equal(200)
-      Code.expect(response.payload).to.contain('No flood alerts or warnings')
+        const response = await server.inject(options)
+        const root = parse(response.payload)
+
+        expect(response.statusCode).to.equal(200)
+        expect(root.querySelectorAll('.defra-related-items a').find(a => a.text.trim() === 'Check your long term flood risk')).to.not.exist()
+      })
     })
-    lab.test('GET / - related content should include all links except CYLTFR', async () => {
-      const locationPlugin = {
-        plugin: {
-          name: 'national',
-          register: (server, options) => {
-            server.route(require('../../server/routes/national'))
-          }
-        }
-      }
-      const floodService = require('../../server/services/flood')
-      // Create dummy flood data in place of cached data
-      const fakeFloodData = () => {
-        return {
-          floods: []
-        }
-      }
 
-      const fakeOutlookData = () => {
-        return {}
-      }
-
-      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-
-      await server.register(require('../../server/plugins/views'))
-      await server.register(require('../../server/plugins/session'))
-      await server.register(require('../../server/plugins/logging'))
-      await server.register(locationPlugin)
-      // Add Cache methods to server
-      const registerServerMethods = require('../../server/services/server-methods')
-      registerServerMethods(server)
-      await server.initialize()
-
-      const options = {
-        method: 'GET',
-        url: '/'
-      }
-
-      const response = await server.inject(options)
-
-      Code.expect(response.statusCode).to.equal(200)
-      const root = parse(response.payload)
-      const relatedContentLinks = root.querySelectorAll('.defra-related-items a')
-      Code.expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)
-      linkChecker(relatedContentLinks, 'Get flood warnings by phone, text or email', 'https://www.gov.uk/sign-up-for-flood-warnings')
-      linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
-      linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/help-during-flood')
-      linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
-      linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
-    })
-    lab.test('GET / - context footer checks with webchat enabled', async () => {
-      const locationPlugin = {
-        plugin: {
-          name: 'national',
-          register: (server, options) => {
-            server.route(require('../../server/routes/national'))
-          }
-        }
-      }
-      const floodService = require('../../server/services/flood')
-      // Create dummy flood data in place of cached data
-      const fakeFloodData = () => {
-        return {
-          floods: []
-        }
-      }
-
-      const fakeOutlookData = () => {
-        return {}
-      }
-
-      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-
-      await server.register(proxyquire('../../server/plugins/views', {
-        '../../server/config': { webchat: { enabled: true } }
-      }))
-      await server.register(require('../../server/plugins/session'))
-      await server.register(require('../../server/plugins/logging'))
-      await server.register(locationPlugin)
-      // Add Cache methods to server
-      const registerServerMethods = require('../../server/services/server-methods')
-      registerServerMethods(server)
-      await server.initialize()
-
-      const options = {
-        method: 'GET',
-        url: '/'
-      }
-      const response = await server.inject(options)
-
-      Code.expect(response.statusCode).to.equal(200)
-      validateFloodlineContactDetails(response)
-      validateWebChatFooterPresent(response)
-    })
-    lab.test('GET / - context footer checks with webchat disabled', async () => {
-      const locationPlugin = {
-        plugin: {
-          name: 'national',
-          register: (server, options) => {
-            server.route(require('../../server/routes/national'))
-          }
-        }
-      }
-      const floodService = require('../../server/services/flood')
-      // Create dummy flood data in place of cached data
-      const fakeFloodData = () => {
-        return {
-          floods: []
-        }
-      }
-
-      const fakeOutlookData = () => {
-        return {}
-      }
-
-      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-
-      await server.register(proxyquire('../../server/plugins/views', {
-        '../../server/config': { webchat: { enabled: false } }
-      }))
-      await server.register(require('../../server/plugins/session'))
-      await server.register(require('../../server/plugins/logging'))
-      await server.register(locationPlugin)
-      // Add Cache methods to server
-      const registerServerMethods = require('../../server/services/server-methods')
-      registerServerMethods(server)
-      await server.initialize()
-
-      const options = {
-        method: 'GET',
-        url: '/'
-      }
-      const response = await server.inject(options)
-
-      Code.expect(response.statusCode).to.equal(200)
-      validateFloodlineContactDetails(response)
-      validateWebChatFooterNotPresent(response)
-    })
-    lab.test('GET /national view no alerts or warnings', async () => {
-    // Create dummy flood data in place of cached data
+    it('should return no alerts or warnings', async () => {
       const fakeFloodData = () => {
         return {
           floods: []
@@ -338,13 +202,14 @@ lab.experiment('Routes test - national view', () => {
       }
 
       const floodService = require('../../server/services/flood')
+
       sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
       sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
       const locationPlugin = {
         plugin: {
           name: 'national',
-          register: (server, options) => {
+          register: (server) => {
             server.route(require('../../server/routes/national'))
           }
         }
@@ -354,9 +219,10 @@ lab.experiment('Routes test - national view', () => {
       await server.register(require('../../server/plugins/session'))
       await server.register(require('../../server/plugins/logging'))
       await server.register(locationPlugin)
-      // Add Cache methods to server
+
       const registerServerMethods = require('../../server/services/server-methods')
       registerServerMethods(server)
+
       await server.initialize()
 
       const options = {
@@ -366,12 +232,12 @@ lab.experiment('Routes test - national view', () => {
 
       const response = await server.inject(options)
 
-      Code.expect(response.statusCode).to.equal(200)
-      Code.expect(response.payload).to.contain('No flood alerts or warnings')
-      Code.expect(response.payload).to.contain('Contact Floodline for advice')
+      expect(response.statusCode).to.equal(200)
+      expect(response.payload).to.contain('No flood alerts or warnings')
+      expect(response.payload).to.contain('Contact Floodline for advice')
     })
-    lab.test('GET /national view with incorrect outlook structure', async () => {
-      // Create dummy flood data in place of cached data
+
+    it('should 200 with valid json but incorrect format', async () => {
       const fakeFloodData = () => {
         return {
           floods: []
@@ -379,18 +245,18 @@ lab.experiment('Routes test - national view', () => {
       }
 
       const fakeOutlookData = () => {
-        const outlook = []
-        return outlook
+        return { statement: { id: '1234' } }
       }
 
       const floodService = require('../../server/services/flood')
+
       sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
       sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
       const locationPlugin = {
         plugin: {
           name: 'national',
-          register: (server, options) => {
+          register: (server) => {
             server.route(require('../../server/routes/national'))
           }
         }
@@ -400,9 +266,10 @@ lab.experiment('Routes test - national view', () => {
       await server.register(require('../../server/plugins/session'))
       await server.register(require('../../server/plugins/logging'))
       await server.register(locationPlugin)
-      // Add Cache methods to server
+
       const registerServerMethods = require('../../server/services/server-methods')
       registerServerMethods(server)
+
       await server.initialize()
 
       const options = {
@@ -412,58 +279,12 @@ lab.experiment('Routes test - national view', () => {
 
       const response = await server.inject(options)
 
-      Code.expect(response.statusCode).to.equal(200)
-      Code.expect(response.payload).to.contain('No flood alerts or warnings')
-      Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+      expect(response.statusCode).to.equal(200)
+      expect(response.payload).to.contain('No flood alerts or warnings')
+      expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
     })
-    lab.test('GET /national view with valid json but incorrect format', async () => {
-      // Create dummy flood data in place of cached data
-      const fakeFloodData = () => {
-        return {
-          floods: []
-        }
-      }
 
-      const fakeOutlookData = () => {
-        const outlook = { statement: { id: '1234' } }
-        return outlook
-      }
-
-      const floodService = require('../../server/services/flood')
-      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-
-      const locationPlugin = {
-        plugin: {
-          name: 'national',
-          register: (server, options) => {
-            server.route(require('../../server/routes/national'))
-          }
-        }
-      }
-
-      await server.register(require('../../server/plugins/views'))
-      await server.register(require('../../server/plugins/session'))
-      await server.register(require('../../server/plugins/logging'))
-      await server.register(locationPlugin)
-      // Add Cache methods to server
-      const registerServerMethods = require('../../server/services/server-methods')
-      registerServerMethods(server)
-      await server.initialize()
-
-      const options = {
-        method: 'GET',
-        url: '/'
-      }
-
-      const response = await server.inject(options)
-
-      Code.expect(response.statusCode).to.equal(200)
-      Code.expect(response.payload).to.contain('No flood alerts or warnings')
-      Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
-    })
-    lab.test('GET /national view with valid fgs but no risk_areas', async () => {
-      // Create dummy flood data in place of cached data
+    it('should 200 with valid FGS but no risk_areas', async () => {
       const fakeFloodData = () => {
         return {
           floods: []
@@ -496,13 +317,14 @@ lab.experiment('Routes test - national view', () => {
       }
 
       const floodService = require('../../server/services/flood')
+
       sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
       sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
       const locationPlugin = {
         plugin: {
           name: 'national',
-          register: (server, options) => {
+          register: (server) => {
             server.route(require('../../server/routes/national'))
           }
         }
@@ -512,9 +334,10 @@ lab.experiment('Routes test - national view', () => {
       await server.register(require('../../server/plugins/session'))
       await server.register(require('../../server/plugins/logging'))
       await server.register(locationPlugin)
-      // Add Cache methods to server
+
       const registerServerMethods = require('../../server/services/server-methods')
       registerServerMethods(server)
+
       await server.initialize()
 
       const options = {
@@ -524,11 +347,12 @@ lab.experiment('Routes test - national view', () => {
 
       const response = await server.inject(options)
 
-      Code.expect(response.statusCode).to.equal(200)
-      Code.expect(response.payload).to.contain('No flood alerts or warnings')
-      Code.expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+      expect(response.statusCode).to.equal(200)
+      expect(response.payload).to.contain('No flood alerts or warnings')
+      expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
     })
-    lab.test('GET national view with FGS stale data warning', async () => {
+
+    it('should 200 view with FGS stale data warning', async () => {
       const fakeFloodData = () => {
         return {
           floods: []
@@ -537,18 +361,21 @@ lab.experiment('Routes test - national view', () => {
 
       const fakeOutlookData = () => {
         const outlook = require('../data/outlook.json')
+
         outlook.statements[0].issued_at = moment().utc().subtract(3, 'days').format()
+
         return outlook.statements[0]
       }
 
       const floodService = require('../../server/services/flood')
+
       sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
       sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
 
       const locationPlugin = {
         plugin: {
           name: 'national',
-          register: (server, options) => {
+          register: (server) => {
             server.route(require('../../server/routes/national'))
           }
         }
@@ -559,7 +386,6 @@ lab.experiment('Routes test - national view', () => {
       await server.register(require('../../server/plugins/logging'))
       await server.register(locationPlugin)
 
-      // Add Cache methods to server
       const registerServerMethods = require('../../server/services/server-methods')
       registerServerMethods(server)
 
@@ -572,14 +398,15 @@ lab.experiment('Routes test - national view', () => {
 
       const response = await server.inject(options)
 
-      Code.expect(response.statusCode).to.equal(200)
-      Code.expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>')
-      Code.expect(response.payload).to.contain('<p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>')
+      expect(response.statusCode).to.equal(200)
+      expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>')
+      expect(response.payload).to.contain('<p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>')
     })
   })
-  lab.experiment('POST', () => {
-    lab.experiment('No flood or outlook data', () => {
-      lab.beforeEach(async () => {
+
+  describe('POST', () => {
+    describe('without flood or outlook data', () => {
+      beforeEach(async () => {
         const fakeFloodData = () => { return { floods: [] } }
         const fakeOutlookData = () => { return {} }
         const fakeSearchData = () => {
@@ -605,9 +432,11 @@ lab.experiment('Routes test - national view', () => {
             }
           ]
         }
+
         setup(fakeFloodData, fakeOutlookData, fakeSearchData)
       })
-      lab.test('an empty location will not result in a redirect away from the page', async () => {
+
+      it('should 200 and not redirect with an empty location', async () => {
         const options = {
           method: 'POST',
           url: '/',
@@ -618,10 +447,11 @@ lab.experiment('Routes test - national view', () => {
 
         const response = await server.inject(options)
 
-        Code.expect(response.statusCode).to.equal(200)
-        Code.expect(response.request.url.pathname).to.equal('/')
+        expect(response.statusCode).to.equal(200)
+        expect(response.request.url.pathname).to.equal('/')
       })
-      lab.test('the search term England will not result in a redirect away from the page', async () => {
+
+      it('should 200 and not redirect with "england" location', async () => {
         const options = {
           method: 'POST',
           url: '/',
@@ -632,10 +462,11 @@ lab.experiment('Routes test - national view', () => {
 
         const response = await server.inject(options)
 
-        Code.expect(response.statusCode).to.equal(200)
-        Code.expect(response.request.url.pathname).to.equal('/')
+        expect(response.statusCode).to.equal(200)
+        expect(response.request.url.pathname).to.equal('/')
       })
-      lab.test('the search term England with spaces will not result in a redirect away from the page', async () => {
+
+      it('should 200 and not redirect with "england" (with spaces)', async () => {
         const options = {
           method: 'POST',
           url: '/',
@@ -646,10 +477,11 @@ lab.experiment('Routes test - national view', () => {
 
         const response = await server.inject(options)
 
-        Code.expect(response.statusCode).to.equal(200)
-        Code.expect(response.request.url.pathname).to.equal('/')
+        expect(response.statusCode).to.equal(200)
+        expect(response.request.url.pathname).to.equal('/')
       })
-      lab.test('a non-empty location should result in a redirect to the location page', async () => {
+
+      it('should redirect to location page on valid location', async () => {
         const options = {
           method: 'POST',
           url: '/',
@@ -660,12 +492,13 @@ lab.experiment('Routes test - national view', () => {
 
         const response = await server.inject(options)
 
-        Code.expect(response.statusCode).to.equal(302)
-        Code.expect(response.headers.location).to.equal('/location/ashford-kent')
+        expect(response.statusCode).to.equal(302)
+        expect(response.headers.location).to.equal('/location/ashford-kent')
       })
     })
-    lab.experiment('Scottish results', () => {
-      lab.beforeEach(async () => {
+
+    describe('scottish results', () => {
+      beforeEach(async () => {
         const fakeFloodData = () => { return { floods: [] } }
         const fakeOutlookData = () => { return {} }
         const fakeSearchData = () => {
@@ -686,13 +519,16 @@ lab.experiment('Routes test - national view', () => {
                 51.267098001671634
               ],
               isUK: true,
+              isScotlandOrNorthernIreland: true,
               isEngland: { is_england: false }
             }
           ]
         }
+
         setup(fakeFloodData, fakeOutlookData, fakeSearchData)
       })
-      lab.test('a scottish city should not result in a redirect to the location page', async () => {
+
+      it('should 200 and not redirect with a scottish location', async () => {
         const options = {
           method: 'POST',
           url: '/',
@@ -703,19 +539,22 @@ lab.experiment('Routes test - national view', () => {
 
         const response = await server.inject(options)
 
-        Code.expect(response.statusCode).to.equal(200)
-        Code.expect(response.request.url.pathname).to.equal('/')
-        Code.expect(response.payload).to.contain("We couldn't find 'glasgow', England")
+        expect(response.statusCode).to.equal(200)
+        expect(response.request.url.pathname).to.equal('/')
+        expect(response.payload).to.contain("We couldn't find 'glasgow', England")
       })
     })
-    lab.experiment('Empty results', () => {
-      lab.beforeEach(async () => {
+
+    describe('empty results', () => {
+      beforeEach(async () => {
         const fakeFloodData = () => { return { floods: [] } }
         const fakeOutlookData = () => { return {} }
         const fakeSearchData = () => { return [] }
+
         setup(fakeFloodData, fakeOutlookData, fakeSearchData)
       })
-      lab.test('no match should not result in a redirect to the location page', async () => {
+
+      it('should 200 and not redirect with a non-match location', async () => {
         const options = {
           method: 'POST',
           url: '/',
@@ -726,9 +565,9 @@ lab.experiment('Routes test - national view', () => {
 
         const response = await server.inject(options)
 
-        Code.expect(response.statusCode).to.equal(200)
-        Code.expect(response.request.url.pathname).to.equal('/')
-        Code.expect(response.payload).to.contain("We couldn't find 'fhfhsflkh', England")
+        expect(response.statusCode).to.equal(200)
+        expect(response.request.url.pathname).to.equal('/')
+        expect(response.payload).to.contain("We couldn't find 'fhfhsflkh', England")
       })
     })
   })
