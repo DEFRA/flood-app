@@ -33,7 +33,7 @@
     "@airbrake/node": "^2.1.8",
     "@babel/cli": "^7.25.9",
     "@babel/core": "^7.26.0",
-    "@babel/plugin-transform-runtime": "^7.23.4",
+    "@babel/plugin-transform-runtime": "^7.28.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/traverse": "^7.23.2",
     "@defra/flood-webchat": "^1.0.3",
