@@ -43,7 +43,7 @@
         </span>
         <div class="defra-flood-status-item__text">
           <strong>
-            <a data-journey-click="National:View Warnings:National-View-{{ group.severity.hash }}" href="/alerts-and-warnings{% if group.severity.id === model.highestSeverityId %}{% else %}#{{ group.severity.pluralisedHash }}{% endif %}">
+            <a href="/alerts-and-warnings{% if group.severity.id === model.highestSeverityId %}{% else %}#{{ group.severity.pluralisedHash }}{% endif %}">
               {{ group.title | lower }}
             </a>
           </strong>
@@ -56,7 +56,7 @@
       </div>
       {% else %}
       <p class="defra-flood-status__text">
-        <a data-journey-click="National:View Warnings:National - View removed warnings" href="/alerts-and-warnings#{{ group.severity.pluralisedHash }}">{{ group.title | lower }}</a> {{ group.severity.subTitle }}
+        <a href="/alerts-and-warnings#{{ group.severity.pluralisedHash }}">{{ group.title | lower }}</a> {{ group.severity.subTitle }}
       </p>
       {% endif %}
       {% endif %}
@@ -101,7 +101,7 @@
 
     <h2 class="govuk-heading-m">River, sea, groundwater and rainfall levels</h2>
     <p>Measuring stations provide the latest river, sea, groundwater and rainfall levels. These levels can help you understand your flood risk now and over the next few days.</p>
-    <p><a data-journey-click="National:station list:National-view station list" href="/river-and-sea-levels">Find a river, sea, groundwater or rainfall level</a></p>
+    <p><a href="/river-and-sea-levels">Find a river, sea, groundwater or rainfall level</a></p>
 
     {% include "partials/context-footer.html" %}
   </div>

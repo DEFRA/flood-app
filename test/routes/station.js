@@ -384,7 +384,7 @@ describe('Route - Station', () => {
     expect(response.payload).to.contain('Normal')
     expect(response.payload).to.contain('Steady')
     expect(response.payload).to.contain('Normal range 0.15m to 3.50m')
-    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
     expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
     expect(response.payload).to.contain('href="/station-csv/5146"')
     expect(response.payload).to.contain('Download data CSV (12KB)')
@@ -524,7 +524,7 @@ describe('Route - Station', () => {
     expect(response.payload).to.contain('High')
     expect(response.payload).to.contain('Falling')
     expect(response.payload).to.contain('Latest at 1:30am')
-    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
     expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
     expect(response.payload).to.not.contain('Go downstream</a>')
   })
@@ -663,7 +663,7 @@ describe('Route - Station', () => {
     expect(response.payload).to.contain('Low\n')
     expect(response.payload).to.contain('Rising')
     expect(response.payload).to.contain('Latest at 1:30am')
-    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
     expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
   })
 
@@ -798,7 +798,7 @@ describe('Route - Station', () => {
     expect(response.statusCode).to.equal(200)
     expect(response.payload).to.contain('River Avon level downstream at Lilbourne - GOV.UK')
     expect(response.payload).to.contain('This measuring station takes 2 measurements.')
-    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/2042">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/river-and-sea-levels/rloi/2042">Nearby levels</a>')
     expect(response.payload).to.contain('<a href="/station/2043">Downstream</a>')
   })
 
@@ -1480,7 +1480,7 @@ describe('Route - Station', () => {
     expect(response.payload).to.not.contain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
     expect(response.payload).to.contain('<a href="/station/7332">Upstream</a>')
     expect(response.payload).to.contain('<a href="/station/7357">Downstream</a>')
-    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/7333">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/river-and-sea-levels/rloi/7333">Nearby levels</a>')
   })
 
   it('should 200 with latest value over hour old but under 24 hours ', async () => {
@@ -1913,7 +1913,7 @@ describe('Route - Station', () => {
     expect(response.statusCode).to.equal(200)
     expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
     expect(response.payload).to.contain('This data feed was interrupted')
-    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
     expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
     expect(response.payload).to.contain('href="/station-csv/5146"')
     expect(response.payload).to.contain('Download data CSV (12KB)')
@@ -2183,7 +2183,7 @@ describe('Route - Station', () => {
     expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
     expect(response.payload).to.contain('Steady')
     expect(response.payload).to.not.contain('Normal range ')
-    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
     expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
   })
 

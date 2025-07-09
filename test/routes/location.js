@@ -1522,7 +1522,7 @@ describe('Route - Location', () => {
       expect(response.statusCode).to.equal(200)
       expect(response.payload).to.contain('Some flooding is possible')
       expect(response.payload).to.contain('There is a flood alert in this area')
-      expect(response.payload).to.contain('<a data-journey-click="Location :View Warnings:Location - View removed warnings" href="/target-area/053WAF117BED">1 flood alert or warning was removed </a> in the last 24 hours.')
+      expect(response.payload).to.contain('<a href="/target-area/053WAF117BED">1 flood alert or warning was removed </a> in the last 24 hours.')
     })
 
     it('should return 1 warning 2 alerts 2 nlif', async () => {

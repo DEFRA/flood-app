@@ -43,7 +43,7 @@
           </span>
           <div class="defra-flood-status-item__text">
             <strong>
-              <a data-journey-click="Location :View Warnings:Location - View severe flood warnings" href="{{ model.bannerSevereMainLink }}">{{ model.bannerSevereMainText }}</a>
+              <a href="{{ model.bannerSevereMainLink }}">{{ model.bannerSevereMainText }}</a>
             </strong>
             <span class="defra-flood-status-item__text-secondary">{{ model.bannerSevereSub }}</span>
           </div>
@@ -57,7 +57,7 @@
           </span>
           <div class="defra-flood-status-item__text">
             <strong>
-              <a data-journey-click="Location :View Warnings:Location - View {{model.severity}}" href="{{ model.bannerMainLink }}">{{ model.bannerMainText }}</a>
+              <a href="{{ model.bannerMainLink }}">{{ model.bannerMainText }}</a>
             </strong>
             <span class="defra-flood-status-item__text-secondary">{{ model.bannerSub }}</span>
           </div>
@@ -77,16 +77,16 @@
     {% if model.hasFloods %}
       {% if model.alerts  %}
       <p class="govuk-body">
-        <a data-journey-click="Location :View Warnings:Location - View flood alerts" href="{{ model.alertsSummaryLink }}">{{ model.alertsSummaryLinkText }}</a> {{ model.alertsSummaryText }} also in the wider area, where some flooding is possible. 
+        <a href="{{ model.alertsSummaryLink }}">{{ model.alertsSummaryLinkText }}</a> {{ model.alertsSummaryText }} also in the wider area, where some flooding is possible. 
       </p>
       {% endif %}
       {% if model.removed  %}
       <p class="govuk-body">
-        <a data-journey-click="Location :View Warnings:Location - View removed warnings" href="{{ model.removedLink }}">{{ model.removedLinkText }}</a> {{ model.removedText }}
+        <a href="{{ model.removedLink }}">{{ model.removedLinkText }}</a> {{ model.removedText }}
       </p>
       {% endif %}
     {% else %}
-      <p>This service tells you your risk of flooding from rivers, the sea and groundwater. <a data-journey-click="Location:Surface water:Location - Contact local council"        href="https://www.gov.uk/find-local-council">Contact your local council about surface water flooding</a> (also known as flash flooding).</p>
+      <p>This service tells you your risk of flooding from rivers, the sea and groundwater. <a        href="https://www.gov.uk/find-local-council">Contact your local council about surface water flooding</a> (also known as flash flooding).</p>
     {% endif %}
 
     {% if model.hasActiveFloods %}
@@ -118,8 +118,7 @@
     <!-- River and sea levels -->
     <h2 class="govuk-heading-m">River, sea, groundwater and rainfall levels</h2>
     <p>Measuring stations provide the latest river, sea, groundwater and rainfall levels. These levels can help you understand your flood risk now and over the next few days.</p>
-    <p><a data-journey-click="Location:Station list:Location - View station
-      list" href="/river-and-sea-levels/{{ model.place.slug }}">Find a river, sea, groundwater or rainfall level in this area</a></p>
+    <p><a href="/river-and-sea-levels/{{ model.place.slug }}">Find a river, sea, groundwater or rainfall level in this area</a></p>
     <!-- end river and sea levels -->
     {% include "partials/context-footer.html" %}
 
