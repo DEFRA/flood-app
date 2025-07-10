@@ -41,7 +41,6 @@ module.exports = (env, argv) => ({
   target: ['web', 'es5'],
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.SITE_URL': JSON.stringify(process.env.FLOOD_APP_SITE_URL),
       'process.env.GA4_ID': JSON.stringify(process.env.FLOOD_APP_GA4_ID),
       'process.env.GTM_ID': JSON.stringify(process.env.FLOOD_APP_GTM_ID)
     })
