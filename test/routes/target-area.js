@@ -288,7 +288,7 @@ lab.experiment('Target-area tests', () => {
     Code.expect(response.statusCode).to.equal(200)
     const root = parse(response.payload)
     Code.expect(response.payload).to.contain('Find a river, sea, groundwater or rainfall level in this area')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Target Area:Station list:TA - View station list" href="/river-and-sea-levels/target-area/011WAFDW">')
+    Code.expect(response.payload).to.contain('<a href="/river-and-sea-levels/target-area/011WAFDW">')
 
     const relatedContentLinks = root.querySelectorAll('.defra-related-items a')
     Code.expect(relatedContentLinks.length, 'Should be 5 related content links').to.equal(5)

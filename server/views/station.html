@@ -51,7 +51,7 @@
             </li>
           {% endif %}
             <li class="defra-navbar__item">
-              <a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/{{model.station.id}}">Nearby levels</a>
+              <a href="/river-and-sea-levels/rloi/{{model.station.id}}">Nearby levels</a>
             </li>
           </ul>
         </div>
@@ -65,9 +65,9 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         {% if model.station.isDownstream %}
-        <p>This measuring station takes 2 measurements. You're viewing the downstream level. <a data-journey-click="Station:Station navigation:Station - Upstream" href="/station/{{ model.station.id }}">View the upstream level.</a></p>
+        <p>This measuring station takes 2 measurements. You're viewing the downstream level. <a href="/station/{{ model.station.id }}">View the upstream level.</a></p>
         {% else %}
-        <p>This measuring station takes 2 measurements. You're viewing the upstream level. <a data-journey-click="Station:Station navigation:Station - Downstream" href="/station/{{ model.station.id }}/downstream">View the downstream level.</a></p>
+        <p>This measuring station takes 2 measurements. You're viewing the upstream level. <a href="/station/{{ model.station.id }}/downstream">View the downstream level.</a></p>
         {% endif %}
       </div>
   </div>

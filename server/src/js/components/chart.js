@@ -87,8 +87,6 @@ export function updatePagination ({
   pageBack.setAttribute('data-start', previousStart)
   pageBack.setAttribute('data-end', previousEnd)
   pageForward.setAttribute('aria-disabled', !(nextStart && nextEnd))
-  pageBack.setAttribute('data-journey-click', 'Rainfall:Chart Interaction:Rainfall - Previous 24hrs')
-  pageForward.setAttribute('data-journey-click', 'Rainfall:Chart Interaction:Rainfall - Next 24hrs')
   pageBack.setAttribute('aria-disabled', !(previousStart && previousEnd))
   pageForwardText.innerText = 'Forward'
   pageBackText.innerText = 'Back'
