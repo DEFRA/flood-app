@@ -111,6 +111,7 @@ document.addEventListener('readystatechange', () => {
       // First button in banner (Accept)
       acceptButton.addEventListener('click', function (e) {
         e.preventDefault()
+        console.log(e)
         window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
         window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
         calledGTag = true
