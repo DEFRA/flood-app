@@ -111,7 +111,7 @@ window.flood.utils = {
       window.dataLayer = window.dataLayer || []
       function gtag () { window.dataLayer.push(arguments) }
       gtag('js', new Date())
-      gtag('config', process.env.GA4_ID, { cookie_domain: '.lfw-tst.aws-int.defra.cloud' })
+      gtag('config', process.env.GA4_ID, { cookie_domain: window.location.hostname })
     }
 
     const gtagManager = document.createElement('script')
