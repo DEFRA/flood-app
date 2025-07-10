@@ -115,7 +115,6 @@ document.addEventListener('readystatechange', () => {
         window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
         calledGTag = true
         window.flood.utils.setGTagAnalyticsCookies()
-        window.flood.utils.setGoogleAnalyticsEvent()
         document.getElementById('cookie-message').style.display = 'none'
         document.getElementById('cookie-confirmation-type').innerText = 'accepted'
         document.getElementById('cookie-confirmation').style.display = ''
@@ -229,7 +228,5 @@ document.addEventListener('readystatechange', () => {
         window.flood.utils.setGTagAnalyticsCookies()
       }
     }
-
-    window.flood.utils.setGoogleAnalyticsEvent()
   }
 })
