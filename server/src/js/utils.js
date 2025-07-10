@@ -100,10 +100,9 @@ window.flood.utils = {
     return v ? v[2] : null
   },
   setCookie: (name, value, days) => {
-    console.log(process.env.SITE_URL)
     const d = new Date()
     d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
-    document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + process.env.SITE_URL
+    document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + window.location.hostname
   },
   setGTagAnalyticsCookies: () => {
     const script = document.createElement('script')
@@ -112,7 +111,7 @@ window.flood.utils = {
       window.dataLayer = window.dataLayer || []
       function gtag () { window.dataLayer.push(arguments) }
       gtag('js', new Date())
-      gtag('config', process.env.GA4_ID, { cookie_domain: process.env.SITE_URL })
+      gtag('config', process.env.GA4_ID, { cookie_domain: window.location.hostname })
     }
 
     const gtagManager = document.createElement('script')
