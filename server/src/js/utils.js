@@ -105,12 +105,14 @@ window.flood.utils = {
     document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + window.location.hostname
   },
   setGTagAnalyticsCookies: () => {
+    window.dataLayer = window.dataLayer || []
+    function gtag () { window.dataLayer.push(arguments) }
+
     const script = document.createElement('script')
     script.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.GA4_ID}`
     script.async = true
+
     script.onload = () => {
-      window.dataLayer = window.dataLayer || []
-      function gtag () { window.dataLayer.push(arguments) }
       gtag('js', new Date())
       gtag('config', process.env.GA4_ID)
     }
@@ -120,7 +122,7 @@ window.flood.utils = {
 
     const noscript = document.createElement('noscript')
     const iframe = document.createElement('iframe')
-    iframe.setAttribute('src', `https://www.googletagmanager.com/ns.html?id=${process.env.GA4_ID}`)
+    iframe.setAttribute('src', `https://www.googletagmanager.com/ns.html?id=${process.env.GTM_ID}`)
     iframe.setAttribute('height', '0')
     iframe.setAttribute('width', '0')
     iframe.setAttribute('style', 'display:none;visibility:hidden')
