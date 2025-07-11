@@ -111,24 +111,11 @@ document.addEventListener('readystatechange', () => {
       // First button in banner (Accept)
       acceptButton.addEventListener('click', function (e) {
         e.preventDefault()
-
-        const script = document.createElement('script')
-        script.async = true
-        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-TM9QYEJJPC'
-        script.onload = () => {
-          window.dataLayer = window.dataLayer || []
-          function gtag(){dataLayer.push(arguments)}
-          gtag('js', new Date())
-
-          gtag('config', 'G-TM9QYEJJPC')
-        }
-        document.head.append(script)
-
         window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
         window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
         calledGTag = true
-        // window.flood.utils.setGTagAnalyticsCookies()
-        // window.flood.utils.setGoogleAnalyticsEvent()
+        window.flood.utils.setGTagAnalyticsCookies()
+        window.flood.utils.setGoogleAnalyticsEvent()
         document.getElementById('cookie-message').style.display = 'none'
         document.getElementById('cookie-confirmation-type').innerText = 'accepted'
         document.getElementById('cookie-confirmation').style.display = ''

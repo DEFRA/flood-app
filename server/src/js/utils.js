@@ -107,11 +107,12 @@ window.flood.utils = {
   setGTagAnalyticsCookies: () => {
     const script = document.createElement('script')
     script.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.GA4_ID}`
+    script.async = true
     script.onload = () => {
       window.dataLayer = window.dataLayer || []
       function gtag () { window.dataLayer.push(arguments) }
       gtag('js', new Date())
-      gtag('config', process.env.GA4_ID, { cookie_domain: window.location.hostname })
+      gtag('config', process.env.GA4_ID)
     }
 
     const gtagManager = document.createElement('script')
