@@ -46,7 +46,12 @@ jobs:
                 args: >
                   -Dsonar.organization=defra
                   -Dsonar.projectKey=DEFRA_flood-app
+                  -Dsonar.sources=.
                   -Dsonar.exclusions=**/node_modules/**,**/test/**,**/test-output/**
                   -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
                   -Dsonar.javascript.exclusions=**/node_modules/**,**/test/**,**/test-output/**,**/mock/**,**/server/dist/**,**/server/src/**,**/service-down/**
                   -Dsonar.coverage.exclusions=**/server/routes/status.js
+                  -Dsonar.branch.name=${{ github.head_ref || github.ref_name }}
+                  -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+                  -Dsonar.pullrequest.branch=${{ github.head_ref }}
+                  -Dsonar.pullrequest.base=${{ github.base_ref }}
