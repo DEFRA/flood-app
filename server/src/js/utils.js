@@ -114,6 +114,7 @@ window.flood.utils = {
 
     script.onload = () => {
       gtag('js', new Date())
+      gtag('set', 'cookie_domain', window.location.hostname)
       gtag('config', process.env.GA4_ID)
     }
 
