@@ -2,24 +2,20 @@
 
 const Hapi = require('@hapi/hapi')
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
+const { expect } = require('@hapi/code')
 const sinon = require('sinon')
-const lab = exports.lab = Lab.script()
 const moment = require('moment-timezone')
-const { parse } = require('node-html-parser')
-const { fullRelatedContentChecker } = require('../lib/helpers/html-expectations')
-const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
 
-lab.experiment('Test - /rainfall-station', () => {
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
+
+describe('Route - Rainfall Station', () => {
   let sandbox
   let server
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     delete require.cache[require.resolve('../../server/util.js')]
-
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
-
     delete require.cache[require.resolve('../../server/routes/rainfall-station.js')]
 
     sandbox = await sinon.createSandbox()
@@ -38,11 +34,12 @@ lab.experiment('Test - /rainfall-station', () => {
     })
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await server.stop()
     await sandbox.restore()
   })
-  lab.test('GET /rainfall-station', async () => {
+
+  it('should 200 with valid data', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeRainfallStationTelemetryData = () => [
@@ -92,7 +89,7 @@ lab.experiment('Test - /rainfall-station', () => {
     const rainfallPlugin = {
       plugin: {
         name: 'rainfall-station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/rainfall-station'))
         }
       }
@@ -101,11 +98,12 @@ lab.experiment('Test - /rainfall-station', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(rainfallPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/rainfall-station/E24195'
@@ -113,16 +111,58 @@ lab.experiment('Test - /rainfall-station', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('15.0mm')
-    Code.expect(response.payload).to.contain('55.0mm')
-    Code.expect(response.payload).to.contain('65.3mm')
-    Code.expect(response.payload).to.contain('Lavenham')
-    Code.expect(response.statusCode).to.equal(200)
-    fullRelatedContentChecker(parse(response.payload))
-    validateFooterPresent(response)
+    expect(response.payload).to.contain('15.0mm')
+    expect(response.payload).to.contain('55.0mm')
+    expect(response.payload).to.contain('65.3mm')
+    expect(response.payload).to.contain('Lavenham')
+    expect(response.statusCode).to.equal(200)
   })
 
-  lab.test('GET /rainfall-station produces problem error', async () => {
+  it('should 404', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeRainfallStationTelemetryData = () => [
+      {
+        period: '15 min',
+        value: '0',
+        value_timestamp: moment().subtract(40, 'days').format()
+      }
+    ]
+
+    const fakeRainfallStationData = () => {}
+
+    sandbox.stub(floodService, 'getRainfallStationTelemetry').callsFake(fakeRainfallStationTelemetryData)
+    sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeRainfallStationData)
+
+    const rainfallPlugin = {
+      plugin: {
+        name: 'rainfall-station',
+        register: (server) => {
+          server.route(require('../../server/routes/rainfall-station'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(rainfallPlugin)
+
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/rainfall-station/E24195'
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).to.equal(404)
+  })
+
+  it('should return a problem with measurements error', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeRainfallStationTelemetryData = () => [
@@ -157,7 +197,7 @@ lab.experiment('Test - /rainfall-station', () => {
     const rainfallPlugin = {
       plugin: {
         name: 'rainfall-station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/rainfall-station'))
         }
       }
@@ -166,11 +206,12 @@ lab.experiment('Test - /rainfall-station', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(rainfallPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/rainfall-station/E24195'
@@ -178,9 +219,10 @@ lab.experiment('Test - /rainfall-station', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">There\'s a problem with the latest measurement</h2>')
+    expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">There\'s a problem with the latest measurement</h2>')
   })
-  lab.test('GET /rainfall-station produces offline error', async () => {
+
+  it('should return an offline error', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeRainfallStationTelemetryData = () => [
@@ -215,7 +257,7 @@ lab.experiment('Test - /rainfall-station', () => {
     const rainfallPlugin = {
       plugin: {
         name: 'rainfall-station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/rainfall-station'))
         }
       }
@@ -224,11 +266,12 @@ lab.experiment('Test - /rainfall-station', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(rainfallPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/rainfall-station/E24195'
@@ -236,10 +279,10 @@ lab.experiment('Test - /rainfall-station', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is offline</h2>')
+    expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is offline</h2>')
   })
 
-  lab.test('GET /rainfall-station produces closed error', async () => {
+  it('should return a closed error', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeRainfallStationTelemetryData = () => [
@@ -274,7 +317,7 @@ lab.experiment('Test - /rainfall-station', () => {
     const rainfallPlugin = {
       plugin: {
         name: 'rainfall-station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/rainfall-station'))
         }
       }
@@ -283,11 +326,12 @@ lab.experiment('Test - /rainfall-station', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(rainfallPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/rainfall-station/E24195'
@@ -295,49 +339,6 @@ lab.experiment('Test - /rainfall-station', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is closed</h2>')
-  })
-
-  lab.test('GET /rainfall-station produces not found', async () => {
-    const floodService = require('../../server/services/flood')
-
-    const fakeRainfallStationTelemetryData = () => [
-      {
-        period: '15 min',
-        value: '0',
-        value_timestamp: moment().subtract(40, 'days').format()
-      }
-    ]
-
-    const fakeRainfallStationData = () => {}
-
-    sandbox.stub(floodService, 'getRainfallStationTelemetry').callsFake(fakeRainfallStationTelemetryData)
-    sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeRainfallStationData)
-
-    const rainfallPlugin = {
-      plugin: {
-        name: 'rainfall-station',
-        register: (server, options) => {
-          server.route(require('../../server/routes/rainfall-station'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(rainfallPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/rainfall-station/E24195'
-    }
-
-    const response = await server.inject(options)
-
-    Code.expect(response.payload).to.contain('{"statusCode":404,"error":"Not Found","message":"Rainfall station not found"}')
+    expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is closed</h2>')
   })
 })

@@ -1,17 +1,19 @@
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const lab = exports.lab = Lab.script()
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
+const Lab = require('@hapi/lab')
+const { expect } = require('@hapi/code')
+
+const { describe, it, before, afterEach } = exports.lab = Lab.script()
 
 const mocks = {
   wreckGet: sinon.stub(),
   wreckPost: sinon.stub()
 }
 
-lab.experiment('http-utils / outbound request helpers', () => {
+describe('Util - Request / outbound request helpers', () => {
   let httpUtils
-  lab.before(() => {
+
+  before(() => {
     httpUtils = proxyquire('../../server/http-utils', {
       '@hapi/wreck': {
         defaults: () => ({
@@ -21,14 +23,15 @@ lab.experiment('http-utils / outbound request helpers', () => {
       }
     })
   })
-  lab.afterEach(() => {
+
+  afterEach(() => {
     for (const stub of Object.values(mocks)) {
       stub.reset()
     }
   })
 
-  lab.experiment('request', () => {
-    lab.test('uses acts as a proxy for the relevant wreck method', async () => {
+  describe('request', () => {
+    it('should act as a proxy for the relevant wreck method', async () => {
       const getUrl = 'http://example.com/some/get/url'
       const postUrl = 'http://example.com/some/post/url'
       const requestOptions = {
@@ -57,7 +60,7 @@ lab.experiment('http-utils / outbound request helpers', () => {
       expect(postResult).to.equal(mockResponse.payload)
     })
 
-    lab.test('does not add the method and url to non-request errors', async () => {
+    it('should not add the method and url to non-request errors', async () => {
       const method = 'get'
       const url = 'http://example.com/some/get/url'
       const requestOptions = {
@@ -79,10 +82,10 @@ lab.experiment('http-utils / outbound request helpers', () => {
     })
   })
 
-  lab.experiment('get and getJson', () => {
-    lab.test('should successfully get data from a URL', async () => {
-      // Mock successful response
+  describe('get and getJson', () => {
+    it('should successfully get data from a URL', async () => {
       const mockPayload = { data: 'test data' }
+
       mocks.wreckGet.resolves({
         res: { statusCode: 200, headers: {} },
         payload: mockPayload
@@ -96,9 +99,9 @@ lab.experiment('http-utils / outbound request helpers', () => {
       expect(mocks.wreckGet.firstCall.args[1]).to.equal({ option: 'value' })
     })
 
-    lab.test('should handle JSON responses with getJson', async () => {
-      // Mock successful JSON response
+    it('should handle JSON responses with getJson', async () => {
       const mockPayload = { data: 'test data' }
+
       mocks.wreckGet.resolves({
         res: { statusCode: 200, headers: {} },
         payload: mockPayload
@@ -113,16 +116,14 @@ lab.experiment('http-utils / outbound request helpers', () => {
     })
   })
 
-  lab.experiment('error handling', () => {
-    lab.test('should throw error for invalid URLs', async () => {
-      // Test with a single invalid URL
+  describe('error handling', () => {
+    it('should throw error for invalid URLs', async () => {
       const invalidUrl = 'not-a-url'
 
       await expect(httpUtils.get(invalidUrl)).to.reject(`Invalid URL: ${invalidUrl}`)
     })
 
-    lab.test('should throw error object from payload when response status code is not 200', async () => {
-      // Mock error response with JSON error object (typical API error response)
+    it('should throw error object from payload when response status code is not 200', async () => {
       const errorPayload = {
         error: true,
         message: 'Resource not found',
@@ -141,23 +142,19 @@ lab.experiment('http-utils / outbound request helpers', () => {
         err = e
       }
 
-      // The error thrown should be the payload object itself
       expect(err).to.equal(errorPayload)
     })
 
-    lab.test('should throw "Unknown error" when response status code is not 200 with falsy payload', async () => {
-      // Mock error response with null payload
+    it('should throw "Unknown error" when response status code is not 200 with falsy payload', async () => {
       mocks.wreckGet.resolves({
         res: { statusCode: 500, headers: {} },
         payload: null
       })
 
-      // Should throw the default "Unknown error"
       await expect(httpUtils.get('https://example.com/api')).to.reject('Unknown error')
     })
 
-    lab.test('should throw LocationSearchError when x-ms-bm-ws-info header is 1', async () => {
-      // Mock response with special header
+    it('should throw LocationSearchError when x-ms-bm-ws-info header is 1', async () => {
       mocks.wreckGet.resolves({
         res: {
           statusCode: 200,
@@ -177,16 +174,14 @@ lab.experiment('http-utils / outbound request helpers', () => {
       expect(err.message).to.equal('Empty location search response indicated by header check of x-ms-bm-ws-info')
     })
 
-    lab.test('should add method and URL info to request errors', async () => {
-      // Mock network error
+    it('should add method and URL info to request errors', async () => {
       const error = new Error('Response Error: Connection refused')
       mocks.wreckGet.rejects(error)
 
       await expect(httpUtils.get('https://example.com/api?param=value')).to.reject('Response Error: Connection refused on GET https://example.com/api')
     })
 
-    lab.test('should remove query parameters from URL in error messages', async () => {
-      // Test with various URL formats
+    it('should remove query parameters from URL in error messages', async () => {
       const testUrls = [
         {
           input: 'https://example.com/api?param=value&another=123',
@@ -203,7 +198,6 @@ lab.experiment('http-utils / outbound request helpers', () => {
       ]
 
       for (const testCase of testUrls) {
-        // Reset the stub for each test case
         mocks.wreckGet.reset()
         mocks.wreckGet.rejects(new Error('Response Error: Connection refused'))
 

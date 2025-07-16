@@ -1,10 +1,10 @@
 const Lab = require('@hapi/lab')
-const lab = exports.lab = Lab.script()
-const Code = require('@hapi/code')
+const { describe, it } = exports.lab = Lab.script()
+const { expect } = require('@hapi/code')
 
-lab.experiment('Ensure config is correct', () => {
-  lab.test('test valid config', () => {
-    Code.expect(() => {
+describe('Config - [server/config.js]', () => {
+  it('should load the config file', () => {
+    expect(() => {
       require('../server/config')
     }).not.to.throw()
   })

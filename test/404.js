@@ -1,14 +1,13 @@
 const hapi = require('@hapi/hapi')
 const config = require('../server/config')
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
-const lab = exports.lab = Lab.script()
-// const createServer = require('../server')
+const { expect } = require('@hapi/code')
+const { describe, it, before, after } = exports.lab = Lab.script()
 
-lab.experiment('Missing resource test', () => {
+describe('404 - [server/404.js]', () => {
   let server
 
-  lab.before(async () => {
+  before(async () => {
     server = await hapi.server({
       port: config.port,
       routes: {
@@ -23,7 +22,7 @@ lab.experiment('Missing resource test', () => {
     const routerPlugin = {
       plugin: {
         name: 'router',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../server/routes/national'))
         }
       }
@@ -39,18 +38,18 @@ lab.experiment('Missing resource test', () => {
   })
 
   // Stop server after the tests.
-  lab.after(async () => {
+  after(async () => {
     await server.stop()
   })
 
-  lab.test('Missing resources are handled correctly', async () => {
+  it('should return 404 when visiting a missing resource', async () => {
     const options = {
       method: 'GET',
       url: '/missing/resource'
     }
 
     const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(404)
-    Code.expect(response.headers['content-type']).to.include('text/html')
+    expect(response.statusCode).to.equal(404)
+    expect(response.headers['content-type']).to.include('text/html')
   })
 })
