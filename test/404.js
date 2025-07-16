@@ -3,7 +3,6 @@ const config = require('../server/config')
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
 const { describe, it, before, after } = exports.lab = Lab.script()
-// const createServer = require('../server')
 
 describe('404 - [server/404.js]', () => {
   let server
