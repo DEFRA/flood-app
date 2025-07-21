@@ -1,6 +1,6 @@
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const { experiment, test } = exports.lab = Lab.script()
+const { describe, it } = exports.lab = Lab.script()
 const responseTemplate = require('./bing-results-template.json')
 
 const { find, get } = require('../../../server/services/lib/bing-results-parser')
@@ -20,10 +20,10 @@ async function checkParsedResponse (resources, expectedResult) {
   expect(result).to.equal(expectedResult)
 }
 
-experiment('bingResultsParser', () => {
-  experiment('english searches', () => {
-    experiment('get by slug', () => {
-      test('can find a result in the response by slug regardless of confidence level', async () => {
+describe('Service/Lib - bingResultsParser', () => {
+  describe('english searches', () => {
+    describe('get by slug', () => {
+      it('should find a result in the response by slug regardless of confidence level', async () => {
         const resources = [
           {
             __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -224,7 +224,8 @@ experiment('bingResultsParser', () => {
         ]
         expect(result).to.equal(expectedResult)
       })
-      test('can find a result in the response by slug even when name has been de-duplicated', async () => {
+
+      it('should find a result in the response by slug even when name has been de-duplicated', async () => {
         const resources = [
           {
             __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -383,11 +384,13 @@ experiment('bingResultsParser', () => {
         expect(result).to.equal(expectedResult)
       })
     })
-    experiment('find by query string', () => {
-      test('empty resource set should return empty results', async () => {
+
+    describe('find by query string', () => {
+      it('should return empty results', async () => {
         checkParsedResponse([], [])
       })
-      test('english town location search should return populated result', async () => {
+
+      it('should return populated result with english town location search', async () => {
         const resources = [
           {
             __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -458,7 +461,8 @@ experiment('bingResultsParser', () => {
         ]
         checkParsedResponse(resources, expectedResult)
       })
-      test('english county search should return ceremonial county (AdminDivision1) over administrative county (AdminDivision2)', async () => {
+
+      it('should return ceremonial county (AdminDivision1) over administrative county (AdminDivision2) with english county search', async () => {
         const resources = [
           {
             __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -612,7 +616,8 @@ experiment('bingResultsParser', () => {
         ]
         checkParsedResponse(resources, expectedResult)
       })
-      test('english county search for ceremonial county should return the ceremonial county when there are no administrative counties', async () => {
+
+      it('should return the ceremonial county when there are no administrative counties  withenglish county search for ceremonial county', async () => {
         const resources = [
           {
             __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -682,7 +687,8 @@ experiment('bingResultsParser', () => {
         ]
         checkParsedResponse(resources, expectedResult)
       })
-      test('successful postcode search should return populated result', async () => {
+
+      it('should return populated result with successful postcode search', async () => {
         const resources = [
           {
             __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -753,7 +759,8 @@ experiment('bingResultsParser', () => {
         ]
         checkParsedResponse(resources, expectedResult)
       })
-      test('successful outcode search should return populated result', async () => {
+
+      it('should return populated result with successful outcode search', async () => {
         const resources = [
           {
             __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -825,7 +832,8 @@ experiment('bingResultsParser', () => {
         ]
         checkParsedResponse(resources, expectedResult)
       })
-      test('successful address search should return empty result', async () => {
+
+      it('should return empty result with successful address search', async () => {
         const resources = [
           {
             __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -886,7 +894,8 @@ experiment('bingResultsParser', () => {
         ]
         checkParsedResponse(resources, [])
       })
-      test('high confidence response should return populated result', async () => {
+
+      it('should return populated result with high confidence response', async () => {
         const resources = [
           {
             __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -956,7 +965,8 @@ experiment('bingResultsParser', () => {
         ]
         checkParsedResponse(resources, expectedResult)
       })
-      test('medium confidence response should return empty result', async () => {
+
+      it('should return empty result with medium confidence response', async () => {
         const resources = [
           {
             __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -1005,7 +1015,8 @@ experiment('bingResultsParser', () => {
         const expectedResult = []
         checkParsedResponse(resources, expectedResult)
       })
-      test('low confidence response should return empty result', async () => {
+
+      it('should return empty result with low confidence response', async () => {
         const resources = [
           {
             __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -1053,7 +1064,8 @@ experiment('bingResultsParser', () => {
         ]
         checkParsedResponse(resources, [])
       })
-      test('multiple items in response should return the only high confidence result', async () => {
+
+      it('should return the only high confidence result with multiple items in response', async () => {
         // Note: we currently limit the max results returned from bing using the maxResults URL query parameter
         // to just 1
         // The results are still returned as an array with just a single entry but this test demonstrates that
@@ -1258,8 +1270,9 @@ experiment('bingResultsParser', () => {
       })
     })
   })
-  experiment('non-english searches', () => {
-    test('scottish town location search should return empty result', async () => {
+
+  describe('non-english searches', () => {
+    it('should return empty result with scottish town location search', async () => {
       const resources = [
         {
           __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -1309,7 +1322,8 @@ experiment('bingResultsParser', () => {
       ]
       checkParsedResponse(resources, expectedResult)
     })
-    test('welsh preserved county location search should return empty result', async () => {
+
+    it('should return empty result with welsh preserved county location search', async () => {
       const resources = [
         {
           __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',

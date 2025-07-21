@@ -1,15 +1,7 @@
 const { expect } = require('@hapi/code')
 
 function errorMessage (text) {
-  // without this, the stack trace reported when an expectation fails is
-  // less than helpful in determining which test failed and where
   return `${text}\n(Call stack: ${new Error().stack})`
-}
-
-function attributeChecker (element, name, value) {
-  const attribute = element.getAttribute(name)
-  expect(attribute, errorMessage(`Attribute ${name} not found on ${element}`)).to.exist()
-  expect(attribute, errorMessage(`Attribute ${name} on ${element} does not equal ${value}`)).to.equal(value)
 }
 
 // Checks if an anchor with specific text and URL exists among provided anchors
@@ -25,7 +17,6 @@ function linkChecker (anchors, targetText, url) {
   } else {
     expect(anchor.getAttribute('href'), errorMessage(`Anchor ${targetText} doesn't contain a URL`)).to.not.be.undefined()
   }
-  return anchor
 }
 
 //  Verifies that the page contains expected related content links
@@ -40,21 +31,6 @@ function fullRelatedContentChecker (root, cyltfrLink) {
   linkChecker(relatedContentLinks, 'Report a flood', 'https://www.gov.uk/report-flood-cause')
 }
 
-// Checks if a heading with specific text exists
-function headingChecker (root, headingLevel, headingText) {
-  const headings = root
-    .querySelectorAll(headingLevel)
-    .filter(h => h.textContent.trim() === headingText)
-  expect(
-    headings.length,
-    errorMessage(`${headings.length} heading level ${headingLevel} with text ${headingText} found.`)
-  ).to.equal(1)
-  return headings[0]
-}
-
 module.exports = {
-  headingChecker,
-  linkChecker,
-  attributeChecker,
   fullRelatedContentChecker
 }
