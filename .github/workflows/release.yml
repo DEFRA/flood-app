@@ -18,7 +18,6 @@ on:
         options:
         - major
         - minor
-        - patch
 
 env:
   TZ: 'Europe/London'
@@ -59,6 +58,49 @@ jobs:
           version=$(jq -r '.version' package.json)
           echo VERSION=$version >> "$GITHUB_ENV"
           echo RELEASE_BRANCH="release/$version" >> "$GITHUB_ENV"
+
+      - name: Format release date
+        run: |
+          # Convert dd/mm/yyyy to format like "9th July 2025"
+          input_date="${{ github.event.inputs.proposed_release_date }}"
+          if [ -n "$input_date" ]; then
+            # Parse dd/mm/yyyy format
+            day=$(echo $input_date | cut -d'/' -f1)
+            month=$(echo $input_date | cut -d'/' -f2)
+            year=$(echo $input_date | cut -d'/' -f3)
+            
+            # Add ordinal suffix to day
+            case $day in
+              1|21|31) day_suffix="st" ;;
+              2|22) day_suffix="nd" ;;
+              3|23) day_suffix="rd" ;;
+              *) day_suffix="th" ;;
+            esac
+            
+            # Convert month number to name
+            case $month in
+              01|1) month_name="January" ;;
+              02|2) month_name="February" ;;
+              03|3) month_name="March" ;;
+              04|4) month_name="April" ;;
+              05|5) month_name="May" ;;
+              06|6) month_name="June" ;;
+              07|7) month_name="July" ;;
+              08|8) month_name="August" ;;
+              09|9) month_name="September" ;;
+              10) month_name="October" ;;
+              11) month_name="November" ;;
+              12) month_name="December" ;;
+            esac
+            
+            # Remove leading zero from day
+            day=$(echo $day | sed 's/^0//')
+            
+            formatted_date="${day}${day_suffix} ${month_name} ${year}"
+            echo FORMATTED_DATE="$formatted_date" >> "$GITHUB_ENV"
+          else
+            echo FORMATTED_DATE="" >> "$GITHUB_ENV"
+          fi
 
       - name: Check branch doesn't already exist
         run: |
