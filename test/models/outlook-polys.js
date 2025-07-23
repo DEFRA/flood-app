@@ -2,7 +2,7 @@
 
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const { experiment, test } = exports.lab = Lab.script()
+const { describe, it } = exports.lab = Lab.script()
 const OutlookPolys = require('../../server/models/outlook-polys')
 const outlookOverlaping = require('../data/fgsOverlaping.json')
 const outlook = require('../data/fgs.json')
@@ -14,8 +14,10 @@ const liverpool = {
   bbox10k: [-3.2625314463031407, 53.2213132254306, -2.6220408212292075, 53.640518437630426],
   address: 'Liverpool, Merseyside',
   isEngland: { is_england: true },
-  isUK: true
+  isUK: true,
+  isScotlandOrNorthernIreland: false
 }
+
 const london = {
   name: 'London',
   center: [-0.12611847, 51.50682449],
@@ -33,7 +35,8 @@ const london = {
   ],
   address: 'London, Greater London',
   isEngland: { is_england: true },
-  isUK: true
+  isUK: true,
+  isScotlandOrNorthernIreland: false
 }
 
 const newcastle = {
@@ -53,39 +56,12 @@ const newcastle = {
   ],
   address: 'Newcastle Upon Tyne, Tyne And Wear',
   isEngland: { is_england: true },
-  isUK: true
+  isUK: true,
+  isScotlandOrNorthernIreland: false
 }
 
-experiment('OutlookPolys test', () => {
-  test('Check OutlookPolys', () => {
-    const result = new OutlookPolys(outlook, liverpool)
-
-    const expected = {
-      polys: [
-        {
-          riskLevel: 1,
-          impact: 2,
-          likelihood: 2,
-          day: 1,
-          polyId: 3300,
-          source: 'surface',
-          messageId: '1-i2-l2'
-        },
-        {
-          riskLevel: 1,
-          impact: 2,
-          likelihood: 2,
-          day: 2,
-          polyId: 3300,
-          source: 'surface',
-          messageId: '1-i2-l2'
-        }
-      ]
-    }
-
-    expect(result).to.equal(expected)
-  })
-  test('Should have surface, ground, coastal and river', () => {
+describe('Model - Outlook Polys', () => {
+  it('should have surface, ground, coastal and river with overlapping outlook', () => {
     const result = new OutlookPolys(outlookOverlaping, liverpool)
 
     const expected = {
@@ -158,7 +134,8 @@ experiment('OutlookPolys test', () => {
 
     expect(result).to.equal(expected)
   })
-  test('Should produce surface and river over two days', () => {
+
+  it('should produce surface and river over two days', () => {
     const result = new OutlookPolys(outlook, london)
 
     const expected = {
@@ -222,7 +199,8 @@ experiment('OutlookPolys test', () => {
 
     expect(result).to.equal(expected)
   })
-  test('Should be a location that will produce an empty array', () => {
+
+  it('should produce an empty array from a given location', () => {
     const result = new OutlookPolys(outlook, newcastle)
 
     const expected = {

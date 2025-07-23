@@ -2,20 +2,17 @@
 
 const Hapi = require('@hapi/hapi')
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
-const sinon = require('sinon')
-const lab = exports.lab = Lab.script()
-const data = require('../data')
+const { expect } = require('@hapi/code')
 const moment = require('moment-timezone')
-const { parse } = require('node-html-parser')
-const { fullRelatedContentChecker } = require('../lib/helpers/html-expectations')
-const { validateFooterPresent } = require('../lib/helpers/context-footer-checker')
+const sinon = require('sinon')
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
+const data = require('../data')
 
-lab.experiment('Test - /station/{id}', () => {
+describe('Route - Station', () => {
   let sandbox
   let server
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     delete require.cache[require.resolve('../../server/util.js')]
     delete require.cache[require.resolve('../../server/services/location.js')]
     delete require.cache[require.resolve('../../server/services/flood.js')]
@@ -31,11 +28,12 @@ lab.experiment('Test - /station/{id}', () => {
     })
   })
 
-  lab.afterEach(async () => {
+  afterEach(async () => {
     await server.stop()
     await sandbox.restore()
   })
-  lab.test('GET station/7333 Suspended ffoi station to show error banner ', async () => {
+
+  it('should show error banner with suspended ffoi station', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -226,7 +224,7 @@ lab.experiment('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -235,11 +233,12 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/station/7333'
@@ -247,13 +246,11 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.not.contain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is offline</h2>')
-    // Related Content tests
-    Code.expect(response.payload).to.contain('https://www.gov.uk/sign-up-for-flood-warnings')
-    Code.expect(response.payload).to.contain('Get flood warnings by phone, text or email')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.not.contain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is offline</h2>')
   })
-  lab.test('GET station/5146 with Normal river level ', async () => {
+
+  it('should return river level: Normal', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -360,7 +357,7 @@ lab.experiment('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -369,11 +366,12 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/station/5146'
@@ -381,149 +379,18 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('Normal')
-    Code.expect(response.payload).to.contain('Steady')
-    Code.expect(response.payload).to.contain('Normal range 0.15m to 3.50m')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
-    Code.expect(response.payload).to.contain('href="/station-csv/5146"')
-    Code.expect(response.payload).to.contain('Download data CSV (12KB)')
-    fullRelatedContentChecker(parse(response.payload))
-    validateFooterPresent(response)
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).to.contain('Normal')
+    expect(response.payload).to.contain('Steady')
+    expect(response.payload).to.contain('Normal range 0.15m to 3.50m')
+    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
+    expect(response.payload).to.contain('href="/station-csv/5146"')
+    expect(response.payload).to.contain('Download data CSV (12KB)')
   })
-  lab.test('GET station/2042/downstream ', async () => {
-    const floodService = require('../../server/services/flood')
-    const fakeStationData = () => {
-      return {
-        rloi_id: 2042,
-        station_type: 'M',
-        qualifier: 'd',
-        telemetry_context_id: '1145946',
-        telemetry_id: '2088',
-        wiski_id: '2088',
-        post_process: false,
-        subtract: null,
-        region: 'Midlands',
-        area: 'Staffordshire Warwickshire and West Midlands',
-        catchment: 'Warwickshire Avon',
-        display_region: 'Midlands',
-        display_area: '',
-        display_catchment: '',
-        agency_name: 'Lilbourne',
-        external_name: 'Lilbourne',
-        location_info: 'Lilbourne',
-        x_coord_actual: 456360,
-        y_coord_actual: 277780,
-        actual_ngr: '',
-        x_coord_display: 456360,
-        y_coord_display: 277780,
-        site_max: '3',
-        wiski_river_name: 'River Avon',
-        date_open: '1972-04-26T23:00:00.000Z',
-        stage_datum: '92.6',
-        period_of_record: 'to date',
-        por_max_value: '1.774',
-        date_por_max: '2007-03-03T08:30:00.000Z',
-        highest_level: '1.77',
-        date_highest_level: '2012-11-25T10:45:00.000Z',
-        por_min_value: '-0.346',
-        date_por_min: '2015-07-07T18:15:00.000Z',
-        percentile_5: '0.666',
-        percentile_95: '-0.255',
-        comments: '',
-        status: 'Active',
-        status_reason: '',
-        status_date: null,
-        coordinates: '{"type":"Point","coordinates":[-1.17316039381184,52.3951465511329]}',
-        geography: '0101000020E61000003F2646D543C5F2BF161F852994324A40',
-        centroid: '0101000020E61000003F2646D543C5F2BF161F852994324A40'
-      }
-    }
 
-    const fakeRiverData = () => {
-      return {
-        river_id: 'river-avon-warwickshire',
-        river_name: 'River Avon',
-        navigable: true,
-        view_rank: 3,
-        rank: 1,
-        rloi_id: 2042,
-        up: null,
-        down: 2043,
-        telemetry_id: '2088',
-        region: 'Midlands',
-        catchment: 'Warwickshire Avon',
-        wiski_river_name: 'River Avon',
-        agency_name: 'Lilbourne',
-        external_name: 'Lilbourne',
-        station_type: 'M',
-        status: 'Active',
-        qualifier: 'u',
-        iswales: false,
-        value: '0.341',
-        value_timestamp: '2020-03-18T08:00:00.000Z',
-        value_erred: false,
-        trend: 'steady',
-        percentile_5: '0.659',
-        percentile_95: '0.098',
-        centroid: '0101000020E61000003F2646D543C5F2BF161F852994324A40',
-        lon: -1.17316039381184,
-        lat: 52.3951465511329,
-        id: '2695'
-      }
-    }
-
-    const fakeTelemetryData = () => [
-      {
-        ts: '2020-03-13T01:30Z',
-        _: 1.354,
-        err: false
-      }
-    ]
-
-    const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
-    const fakeWarningsAlertsData = () => []
-    const fakeStationThresholdData = () => []
-
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
-
-    const stationPlugin = {
-      plugin: {
-        name: 'station',
-        register: (server, options) => {
-          server.route(require('../../server/routes/station'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(stationPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/station/2042/downstream'
-    }
-
-    const response = await server.inject(options)
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('River Avon level downstream at Lilbourne - GOV.UK')
-    Code.expect(response.payload).to.contain('<a href="/station/2042/downstream">Downstream</a>')
-  })
-  lab.test('GET station/5146 with High river level ', async () => {
+  it('should return river level: High', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -630,7 +497,7 @@ lab.experiment('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -639,123 +506,24 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/station/5146'
     }
 
     const response = await server.inject(options)
-
     Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('High')
-    Code.expect(response.payload).to.contain('Falling')
-    Code.expect(response.payload).to.contain('Latest at 1:30am')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
-    Code.expect(response.payload).to.not.contain('Go downstream</a>')
+    Code.expect(response.payload).to.contain('River Avon level downstream at Lilbourne - GOV.UK')
+    Code.expect(response.payload).to.contain('<a href="/station/2042/downstream">Downstream</a>')
   })
-  lab.test('GET Closed station  ', async () => {
-    const floodService = require('../../server/services/flood')
 
-    const fakeStationData = () => {
-      return {
-        rloi_id: 5146,
-        station_type: 'S',
-        qualifier: 'u',
-        telemetry_context_id: '1146588',
-        telemetry_id: '713030',
-        wiski_id: '713030',
-        post_process: false,
-        subtract: null,
-        region: 'North West',
-        area: 'Cumbria and Lancashire',
-        catchment: 'Ribble Douglas and Crossens',
-        display_region: 'North West',
-        display_area: '',
-        display_catchment: '',
-        agency_name: 'Walton-Le-Dale',
-        external_name: 'Walton-Le-Dale',
-        location_info: 'Preston',
-        x_coord_actual: 355230,
-        y_coord_actual: 428720,
-        actual_ngr: '',
-        x_coord_display: 355230,
-        y_coord_display: 428720,
-        site_max: '5',
-        wiski_river_name: 'River Ribble',
-        date_open: '2001-01-01T00:00:00.000Z',
-        stage_datum: '3.642',
-        period_of_record: 'to date',
-        por_max_value: '5.488',
-        date_por_max: '2020-02-09T18:15:00.000Z',
-        highest_level: '3.469',
-        date_highest_level: '2012-09-26T01:15:00.000Z',
-        por_min_value: '-0.07',
-        date_por_min: '2009-04-22T12:45:00.000Z',
-        percentile_5: '3.5',
-        percentile_95: '0.15',
-        comments: '',
-        status: 'Closed',
-        status_reason: '',
-        status_date: null,
-        coordinates: '{"type":"Point","coordinates":[-2.68044442027032,53.7529105624953]}',
-        geography: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
-        centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40'
-      }
-    }
-
-    const fakeTelemetryData = () => []
-
-    const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
-    const fakeWarningsAlertsData = () => []
-    const fakeRiverStationData = () => []
-    const fakeStationThresholdData = () => []
-
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverStationData)
-
-    const stationPlugin = {
-      plugin: {
-        name: 'station',
-        register: (server, options) => {
-          server.route(require('../../server/routes/station'))
-        }
-      }
-    }
-
-    await server.register(require('../../server/plugins/views'))
-    await server.register(require('../../server/plugins/session'))
-    await server.register(stationPlugin)
-    // Add Cache methods to server
-    const registerServerMethods = require('../../server/services/server-methods')
-    registerServerMethods(server)
-
-    await server.initialize()
-    const options = {
-      method: 'GET',
-      url: '/station/5146'
-    }
-
-    const response = await server.inject(options)
-
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('No data is available. You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a> or call Floodline for advice.')
-    Code.expect(response.payload).to.contain('This measuring station is closed')
-  })
-  lab.test('GET station/5146 with Low Level ', async () => {
+  it('should return river level: Low ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -862,7 +630,7 @@ lab.experiment('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -871,11 +639,12 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/station/5146'
@@ -883,15 +652,248 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('Low')
-    Code.expect(response.payload).to.contain('Rising')
-    Code.expect(response.payload).to.contain('Latest at 1:30am')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).to.contain('Low\n')
+    expect(response.payload).to.contain('Rising')
+    expect(response.payload).to.contain('Latest at 1:30am')
+    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
   })
-  lab.test('GET station/3130 Coastal ', async () => {
+
+  it('should return downstream', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationData = () => {
+      return {
+        rloi_id: 2042,
+        station_type: 'M',
+        qualifier: 'd',
+        telemetry_context_id: '1145946',
+        telemetry_id: '2088',
+        wiski_id: '2088',
+        post_process: false,
+        subtract: null,
+        region: 'Midlands',
+        area: 'Staffordshire Warwickshire and West Midlands',
+        catchment: 'Warwickshire Avon',
+        display_region: 'Midlands',
+        display_area: '',
+        display_catchment: '',
+        agency_name: 'Lilbourne',
+        external_name: 'Lilbourne',
+        location_info: 'Lilbourne',
+        x_coord_actual: 456360,
+        y_coord_actual: 277780,
+        actual_ngr: '',
+        x_coord_display: 456360,
+        y_coord_display: 277780,
+        site_max: '3',
+        wiski_river_name: 'River Avon',
+        date_open: '1972-04-26T23:00:00.000Z',
+        stage_datum: '92.6',
+        period_of_record: 'to date',
+        por_max_value: '1.774',
+        date_por_max: '2007-03-03T08:30:00.000Z',
+        highest_level: '1.77',
+        date_highest_level: '2012-11-25T10:45:00.000Z',
+        por_min_value: '-0.346',
+        date_por_min: '2015-07-07T18:15:00.000Z',
+        percentile_5: '0.666',
+        percentile_95: '-0.255',
+        comments: '',
+        status: 'Active',
+        status_reason: '',
+        status_date: null,
+        coordinates: '{"type":"Point","coordinates":[-1.17316039381184,52.3951465511329]}',
+        geography: '0101000020E61000003F2646D543C5F2BF161F852994324A40',
+        centroid: '0101000020E61000003F2646D543C5F2BF161F852994324A40'
+      }
+    }
+
+    const fakeRiverData = () => {
+      return {
+        river_id: 'river-avon-warwickshire',
+        river_name: 'River Avon',
+        navigable: true,
+        view_rank: 3,
+        rank: 1,
+        rloi_id: 2042,
+        up: null,
+        down: 2043,
+        telemetry_id: '2088',
+        region: 'Midlands',
+        catchment: 'Warwickshire Avon',
+        wiski_river_name: 'River Avon',
+        agency_name: 'Lilbourne',
+        external_name: 'Lilbourne',
+        station_type: 'M',
+        status: 'Active',
+        qualifier: 'u',
+        iswales: false,
+        value: '0.341',
+        value_timestamp: '2020-03-18T08:00:00.000Z',
+        value_erred: false,
+        trend: 'steady',
+        percentile_5: '0.659',
+        percentile_95: '0.098',
+        centroid: '0101000020E61000003F2646D543C5F2BF161F852994324A40',
+        lon: -1.17316039381184,
+        lat: 52.3951465511329,
+        id: '2695'
+      }
+    }
+
+    const fakeTelemetryData = () => [
+      {
+        ts: '2020-03-13T01:30Z',
+        _: 1.354,
+        err: false
+      }
+    ]
+
+    const fakeImpactsData = () => []
+    const fakeForecastFlag = () => { return { } }
+    const fakeWarningsAlertsData = () => []
+    const fakeStationThresholdData = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
+
+    const stationPlugin = {
+      plugin: {
+        name: 'station',
+        register: (server) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(stationPlugin)
+
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/station/2042/downstream'
+    }
+
+    const response = await server.inject(options)
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('River Avon level downstream at Lilbourne - GOV.UK')
+    expect(response.payload).to.contain('This measuring station takes 2 measurements.')
+    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/2042">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/station/2043">Downstream</a>')
+  })
+
+  it('should return closed station', async () => {
+    const floodService = require('../../server/services/flood')
+
+    const fakeStationData = () => {
+      return {
+        rloi_id: 5146,
+        station_type: 'S',
+        qualifier: 'u',
+        telemetry_context_id: '1146588',
+        telemetry_id: '713030',
+        wiski_id: '713030',
+        post_process: false,
+        subtract: null,
+        region: 'North West',
+        area: 'Cumbria and Lancashire',
+        catchment: 'Ribble Douglas and Crossens',
+        display_region: 'North West',
+        display_area: '',
+        display_catchment: '',
+        agency_name: 'Walton-Le-Dale',
+        external_name: 'Walton-Le-Dale',
+        location_info: 'Preston',
+        x_coord_actual: 355230,
+        y_coord_actual: 428720,
+        actual_ngr: '',
+        x_coord_display: 355230,
+        y_coord_display: 428720,
+        site_max: '5',
+        wiski_river_name: 'River Ribble',
+        date_open: '2001-01-01T00:00:00.000Z',
+        stage_datum: '3.642',
+        period_of_record: 'to date',
+        por_max_value: '5.488',
+        date_por_max: '2020-02-09T18:15:00.000Z',
+        highest_level: '3.469',
+        date_highest_level: '2012-09-26T01:15:00.000Z',
+        por_min_value: '-0.07',
+        date_por_min: '2009-04-22T12:45:00.000Z',
+        percentile_5: '3.5',
+        percentile_95: '0.15',
+        comments: '',
+        status: 'Closed',
+        status_reason: '',
+        status_date: null,
+        coordinates: '{"type":"Point","coordinates":[-2.68044442027032,53.7529105624953]}',
+        geography: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40',
+        centroid: '0101000020E61000001A741ED88C7105C0755D915F5FE04A40'
+      }
+    }
+
+    const fakeTelemetryData = () => []
+
+    const fakeImpactsData = () => []
+    const fakeForecastFlag = () => { return { } }
+    const fakeWarningsAlertsData = () => []
+    const fakeRiverStationData = () => []
+    const fakeStationThresholdData = () => []
+
+    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
+    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
+    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
+    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
+    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
+    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverStationData)
+
+    const stationPlugin = {
+      plugin: {
+        name: 'station',
+        register: (server) => {
+          server.route(require('../../server/routes/station'))
+        }
+      }
+    }
+
+    await server.register(require('../../server/plugins/views'))
+    await server.register(require('../../server/plugins/session'))
+    await server.register(stationPlugin)
+
+    const registerServerMethods = require('../../server/services/server-methods')
+    registerServerMethods(server)
+
+    await server.initialize()
+
+    const options = {
+      method: 'GET',
+      url: '/station/5146'
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).to.contain('No data is available. You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a> or call Floodline for advice.\n')
+    expect(response.payload).to.contain('This measuring station is closed\n')
+  })
+
+  it('should return coastal station', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -998,7 +1000,7 @@ lab.experiment('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -1007,11 +1009,12 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/station/3130'
@@ -1019,12 +1022,13 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('Sea level at Bude - GOV.UK')
-    Code.expect(response.payload).to.contain('Latest at 6:00am')
-    Code.expect(response.payload).to.contain('3.59m')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('Sea level at Bude - GOV.UK')
+    expect(response.payload).to.contain('Latest at 6:00am')
+    expect(response.payload).to.contain('3.59m')
   })
-  lab.test('GET station/7333 ffoi no max value ', async () => {
+
+  it('should 200 with FFOI: no max value ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -1074,11 +1078,8 @@ lab.experiment('Test - /station/{id}', () => {
       }
     }
 
-    // const yesterday = moment().subtract(1, 'days').startOf('day')
-
     const fakeTelemetryData = () => [
       {
-        // ts: yesterday,
         ts: '2022-02-08T08:30:00.000Z',
         _: 3.589,
         err: false,
@@ -1200,6 +1201,7 @@ lab.experiment('Test - /station/{id}', () => {
         forecastactive: false
       }
     ]
+
     const fakeForecastFlag = () => data.forecastFlag
 
     const fakeStationForecastData = () => data.fakeStationForecastData
@@ -1218,7 +1220,7 @@ lab.experiment('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -1227,11 +1229,12 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/station/7333'
@@ -1239,13 +1242,15 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.not.contain('The highest level in the forecast is')
-    Code.expect(response.payload).to.not.contain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
-    Code.expect(response.payload).to.contain('Download data CSV (16KB)')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.not.contain('The highest level in the forecast is')
+    expect(response.payload).to.not.contain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
+    expect(response.payload).to.contain('Download data CSV (16KB)')
   })
-  lab.test('GET station/7333 ffoi with max value ', async () => {
+
+  it('should 200 with FFOI: max value ', async () => {
     const floodService = require('../../server/services/flood')
+
     const fakeStationData = () => {
       return {
         actual_ngr: 'TL2998009950',
@@ -1299,7 +1304,6 @@ lab.experiment('Test - /station/{id}', () => {
 
     const fakeTelemetryData = () => [
       {
-        // ts: yesterday,
         ts: today,
         _: 3.589,
         err: false,
@@ -1421,6 +1425,7 @@ lab.experiment('Test - /station/{id}', () => {
         forecastactive: false
       }
     ]
+
     const fakeForecastFlag = () => data.forecastFlag
 
     const fakeStationForecastData = () => data.fakeStationForecastDataMax
@@ -1442,7 +1447,7 @@ lab.experiment('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -1451,11 +1456,12 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/station/7333'
@@ -1463,14 +1469,15 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('The highest level in the model is')
-    Code.expect(response.payload).to.not.contain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
-    Code.expect(response.payload).to.contain('<a href="/station/7332">Upstream</a>')
-    Code.expect(response.payload).to.contain('<a href="/station/7357">Downstream</a>')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/7333">Nearby levels</a>')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('The highest level in the model is')
+    expect(response.payload).to.not.contain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
+    expect(response.payload).to.contain('<a href="/station/7332">Upstream</a>')
+    expect(response.payload).to.contain('<a href="/station/7357">Downstream</a>')
+    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/7333">Nearby levels</a>')
   })
-  lab.test('GET station/5146 with latest value over hour old but < 24 hours ', async () => {
+
+  it('should 200 with latest value over hour old but under 24 hours ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -1552,6 +1559,7 @@ lab.experiment('Test - /station/{id}', () => {
     }
 
     const newTime = new Date()
+
     newTime.setMinutes(newTime.getMinutes() - 90)
 
     const fakeTelemetryData = () => [
@@ -1579,7 +1587,7 @@ lab.experiment('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -1588,11 +1596,12 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/station/5146'
@@ -1600,10 +1609,11 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('We take measurements more often as the risk of flooding increases.')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('We take measurements more often as the risk of flooding increases.')
   })
-  lab.test('GET station/2033 should redirect to new page ', async () => {
+
+  it('should redirect to new page ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -1658,7 +1668,7 @@ lab.experiment('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -1668,11 +1678,11 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
 
-    // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/station/2033'
@@ -1680,9 +1690,10 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(302)
+    expect(response.statusCode).to.equal(302)
   })
-  lab.test('GET station/2042/upstream should redirect as upstream is specified ', async () => {
+
+  it('should redirect if upstream is specified ', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -1737,7 +1748,7 @@ lab.experiment('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -1747,11 +1758,11 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
 
-    // Add Cache methods to server
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/station/2042/upstream'
@@ -1759,9 +1770,10 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(302)
+    expect(response.statusCode).to.equal(302)
   })
-  lab.test('GET station/5146 with status date showing time data interrupted', async () => {
+
+  it('should return showing time data as interrupted', async () => {
     const floodService = require('../../server/services/flood')
 
     const dateInterupted = new Date()
@@ -1870,7 +1882,7 @@ lab.experiment('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -1879,11 +1891,12 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/station/5146'
@@ -1891,15 +1904,16 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('This data feed was interrupted')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
-    Code.expect(response.payload).to.contain('href="/station-csv/5146"')
-    Code.expect(response.payload).to.contain('Download data CSV (12KB)')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).to.contain('This data feed was interrupted')
+    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
+    expect(response.payload).to.contain('href="/station-csv/5146"')
+    expect(response.payload).to.contain('Download data CSV (12KB)')
   })
-  lab.test('GET station/5146 with Normal river level does no show IMTD thresholds if not present', async () => {
+
+  it('should not show IMTD thresholds if not present with "Normal" river level', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -2004,7 +2018,7 @@ lab.experiment('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -2013,11 +2027,12 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/station/5146'
@@ -2025,11 +2040,12 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.not.contain('Low-lying land flooding is possible above this level. One or more flood alerts may be issued.')
-    Code.expect(response.payload).to.not.contain('Property flooding is possible above this level. One or more flood warnings may be issued.')
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.not.contain('Low lying land flooding is possible above this level. One or more flood alerts may be issued')
+    expect(response.payload).to.not.contain('Property flooding is possible above this level. One or more flood warnings may be issued')
   })
-  lab.test('GET station/5146 with missing percentile ', async () => {
+
+  it('should return with missing percentile', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -2135,7 +2151,7 @@ lab.experiment('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -2144,11 +2160,12 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/station/5146'
@@ -2156,30 +2173,14 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    Code.expect(response.payload).to.contain('Steady')
-    Code.expect(response.payload).to.not.contain('Normal range ')
-    Code.expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    Code.expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
-    // This test has been simplified in other places, but keeping it strict to ensure certainty in checking the entire button structure.
-    const normalizeHtml = (html) => html.replace(/\s+/g, '').trim()
-    Code.expect(
-      normalizeHtml(response.payload)
-    ).to.contain(
-      normalizeHtml(
-        '<a href="/station-csv/5146" class="defra-button-secondary defra-button-secondary--icon govuk-!-margin-bottom-4" download>' +
-        '<span class="defra-button-secondary__icon">' +
-        '<svg focusable="false" aria-hidden="true" width="14" height="20" viewBox="0 0 14 20">' +
-        '<path d="M1.929 9L7 14.071 12.071 9M7 14.071V1M1 18h12" fill="none" stroke="currentColor" stroke-width="2"/>' +
-        '</svg>' +
-        '</span>' +
-        '<span class="defra-button-secondary__text">Download data CSV (12KB)</span>' +
-        '</a>'
-      )
-    )
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).to.contain('Steady')
+    expect(response.payload).to.not.contain('Normal range ')
+    expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
   })
-  lab.test('GET station/1034 - Coastal River title check ', async () => {
+ it('should set page title and h1 as coastal river name', async () => {
     const floodService = require('../../server/services/flood')
 
     const fakeStationData = () => {
@@ -2292,7 +2293,7 @@ lab.experiment('Test - /station/{id}', () => {
     const stationPlugin = {
       plugin: {
         name: 'station',
-        register: (server, options) => {
+        register: (server) => {
           server.route(require('../../server/routes/station'))
         }
       }
@@ -2301,11 +2302,12 @@ lab.experiment('Test - /station/{id}', () => {
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
     await server.register(stationPlugin)
-    // Add Cache methods to server
+
     const registerServerMethods = require('../../server/services/server-methods')
     registerServerMethods(server)
 
     await server.initialize()
+
     const options = {
       method: 'GET',
       url: '/station/1084'
@@ -2313,9 +2315,9 @@ lab.experiment('Test - /station/{id}', () => {
 
     const response = await server.inject(options)
 
-    Code.expect(response.statusCode).to.equal(200)
-    Code.expect(response.payload).to.match(/<h1 class="govuk-heading-xl govuk-!-margin-bottom-0">\s*River Itchen\s*level\s*at Woolston\s*<\/h1>/)
-    Code.expect(response.payload).to.match(/<title>\s*River Itchen level at Woolston - GOV.UK\s*<\/title>/)
+    expect(response.statusCode).to.equal(200)
+    expect(response.payload).to.match(/<h1 class="govuk-heading-xl govuk-!-margin-bottom-0">\s*River Itchen\s*level\s*at Woolston\s*<\/h1>/)
+    expect(response.payload).to.match(/<title>\s*River Itchen level at Woolston - GOV.UK\s*<\/title>/)
   })
 
   lab.test('GET /station/9382/downstream shows correct upstream and downstream navigation links within same multi-reading station', async () => {

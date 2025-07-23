@@ -12,6 +12,7 @@ const STANDARD_TIMEOUT = seconds(10)
 
 const expiresIn15 = 15
 const floodGetOutlookGenerateTimeout = 30
+const floodGetRainfallGeoJsonGenerateTimeout = 30
 const floodGetStationsGeoJsonGenerateTimeout = 30
 
 // Cache method wrapper for hapi server
@@ -171,7 +172,7 @@ module.exports = server => {
     cache: {
       cache: cacheType,
       expiresIn: minutes(expiresIn15),
-      generateTimeout: seconds(30)
+      generateTimeout: seconds(floodGetRainfallGeoJsonGenerateTimeout)
     }
   })
 

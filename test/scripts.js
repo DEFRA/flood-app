@@ -7,6 +7,7 @@ const { describe, it } = exports.lab = Lab.script()
 async function executeNpmScript (scriptName) {
   const util = require('util')
   const exec = util.promisify(require('child_process').exec)
+
   try {
     const { stdout, stderr } = await exec(`npm run ${scriptName}`)
     return { stdout, stderr }
@@ -14,8 +15,9 @@ async function executeNpmScript (scriptName) {
     return { stdout: '', stderr: error.stderr }
   }
 }
-describe('scripts', () => {
-  it('should run help for create-release-notes successfully', async () => {
+
+describe('scripts.js', () => {
+  it('should run help for create-release-notes', async () => {
     // this test is to check that all the necessary modules are installed following the accidental
     // removal of nunjucks and yargs which wasn't picked up until the create release github action
     // was run

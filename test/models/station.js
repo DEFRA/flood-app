@@ -1,40 +1,40 @@
 'use strict'
 
 const Lab = require('@hapi/lab')
-const Code = require('@hapi/code')
-const lab = exports.lab = Lab.script()
+const { expect } = require('@hapi/code')
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const sinon = require('sinon')
 const ViewModel = require('../../server/models/views/station')
 const data = require('../data')
 const moment = require('moment-timezone')
 
-lab.experiment('Station model test', () => {
+describe('Model - Station', () => {
   let sandbox
 
-  lab.beforeEach(async () => {
+  beforeEach(async () => {
     sandbox = await sinon.createSandbox()
   })
-  lab.afterEach(async () => {
+
+  afterEach(async () => {
     await sandbox.restore()
   })
-  lab.test('Test station viewModel river station 1001, no alerts or warnings', async () => {
+
+  it('should return no alerts or warnings', () => {
     const stationData = data.stationRiver
     const viewModel = new ViewModel(stationData)
 
-    const Result = viewModel
-
-    Code.expect(Result.station.id).to.equal(1001)
-    Code.expect(Result.station.hasPercentiles).to.equal(true)
-    Code.expect(Result.station.isSingle).to.equal(true)
-    Code.expect(Result.station.state).to.equal('Normal')
-    Code.expect(Result.station.stateInformation).to.equal('0.35m to 2.84m')
-    Code.expect(Result.station.status).to.equal('active')
-    Code.expect(Result.trend).to.equal('steady')
-    Code.expect(Result.banner).to.equal(0)
-    Code.expect(Result.pageTitle).to.equal('River Adur level at Beeding Bridge')
-    Code.expect(Result.dataOverHourOld).to.equal(true)
-    Code.expect(Result.postTitle).to.equal('Latest river level information for the River Adur at Beeding Bridge ')
-    Code.expect(Result.thresholds[0].values).to.equal([
+    expect(viewModel.station.id).to.equal(1001)
+    expect(viewModel.station.hasPercentiles).to.equal(true)
+    expect(viewModel.station.isSingle).to.equal(true)
+    expect(viewModel.station.state).to.equal('Normal')
+    expect(viewModel.station.stateInformation).to.equal('0.35m to 2.84m')
+    expect(viewModel.station.status).to.equal('active')
+    expect(viewModel.trend).to.equal('steady')
+    expect(viewModel.banner).to.equal(0)
+    expect(viewModel.pageTitle).to.equal('River Adur level at Beeding Bridge')
+    expect(viewModel.dataOverHourOld).to.equal(true)
+    expect(viewModel.postTitle).to.equal('Latest river level information for the River Adur at Beeding Bridge ')
+    expect(viewModel.thresholds[0].values).to.equal([
       {
         id: 'warningThreshold',
         description: 'Property flooding is possible above this level',
@@ -42,7 +42,7 @@ lab.experiment('Station model test', () => {
         value: '3.64'
       }
     ])
-    Code.expect(Result.thresholds[2].values).to.equal([
+    expect(viewModel.thresholds[2].values).to.equal([
       {
         id: 'alertThreshold',
         description: 'Low-lying land flooding possible above this level. One or more flood alerts may be issued.',
@@ -50,7 +50,7 @@ lab.experiment('Station model test', () => {
         value: '3.22'
       }
     ])
-    Code.expect(Result.thresholds[4].values).to.equal([
+    expect(viewModel.thresholds[4].values).to.equal([
       {
         id: 'latest',
         value: '0.81',
@@ -59,12 +59,12 @@ lab.experiment('Station model test', () => {
       }
     ])
   })
-  lab.test('Test station viewModel river station 1001 only has FW ATCON thresholds', async () => {
+
+  it('should only have FW ATCON thresholds from river station', () => {
     const stationData = data.stationRiverACTCON
     const viewModel = new ViewModel(stationData)
 
-    const Result = viewModel
-    Code.expect(Result.thresholds[1].values).to.equal([
+    expect(viewModel.thresholds[1].values).to.equal([
       {
         id: 'warningThreshold',
         description: 'Property flooding is possible above this level',
@@ -72,7 +72,7 @@ lab.experiment('Station model test', () => {
         value: '3.22'
       }
     ])
-    Code.expect(Result.thresholds[2].values).to.equal([
+    expect(viewModel.thresholds[2].values).to.equal([
       {
         id: 'alertThreshold',
         description: 'Top of normal range. Low-lying land flooding possible above this level. One or more flood alerts may be issued.',
@@ -81,98 +81,96 @@ lab.experiment('Station model test', () => {
       }
     ])
   })
-  lab.test('Test station viewModel dataOverHourOld to be false', async () => {
+
+  it('should set "dataOverHourOld" to be false', () => {
     const stationData = data.stationRiver
     stationData.telemetry[0].ts = new Date().toJSON()
 
     const viewModel = new ViewModel(stationData)
 
-    const Result = viewModel
-
-    Code.expect(Result.station.id).to.equal(1001)
-    Code.expect(Result.dataOverHourOld).to.equal(false)
+    expect(viewModel.station.id).to.equal(1001)
+    expect(viewModel.dataOverHourOld).to.equal(false)
   })
-  lab.test('Test station viewModel one warning in force', async () => {
+
+  it('should return one warning in force', () => {
     const stationData = data.stationActiveWarning
 
     const viewModel = new ViewModel(stationData)
 
-    const Result = viewModel
-
-    Code.expect(Result.station.id).to.equal(1001)
-    Code.expect(Result.banner).to.equal(1)
-    Code.expect(Result.severityLevel).to.equal('warning')
-    Code.expect(Result.warningsBanner).to.equal('Flood warning for Coast from Fleetwood to Blackpool')
-    Code.expect(Result.warningsLink).to.equal('/target-area/012WACFB')
+    expect(viewModel.station.id).to.equal(1001)
+    expect(viewModel.banner).to.equal(1)
+    expect(viewModel.severityLevel).to.equal('warning')
+    expect(viewModel.warningsBanner).to.equal('Flood warning for Coast from Fleetwood to Blackpool')
+    expect(viewModel.warningsLink).to.equal('/target-area/012WACFB')
   })
-  lab.test('Test station viewModel one alert in force', async () => {
+
+  it('should return one alert in force', () => {
     const stationData = data.stationActiveAlert
 
     const viewModel = new ViewModel(stationData)
 
-    const Result = viewModel
-
-    Code.expect(Result.station.id).to.equal(1001)
-    Code.expect(Result.banner).to.equal(1)
-    Code.expect(Result.severityLevel).to.equal('alert')
-    Code.expect(Result.alertsBanner).to.equal('There is a flood alert within 5 miles of this measuring station')
-    Code.expect(Result.alertsLink).to.equal('/target-area/061FAG30Alton')
+    expect(viewModel.station.id).to.equal(1001)
+    expect(viewModel.banner).to.equal(1)
+    expect(viewModel.severityLevel).to.equal('alert')
+    expect(viewModel.alertsBanner).to.equal('There is a flood alert within 5 miles of this measuring station')
+    expect(viewModel.alertsLink).to.equal('/target-area/061FAG30Alton')
   })
-  lab.test('Test station viewModel one Severe Warning in force', async () => {
+
+  it('should return one severe warning in force', () => {
     const stationData = data.stationSevereWarning
 
     const viewModel = new ViewModel(stationData)
 
-    const Result = viewModel
-
-    Code.expect(Result.station.id).to.equal(1001)
-    Code.expect(Result.banner).to.equal(1)
-    Code.expect(Result.severityLevel).to.equal('severe')
-    Code.expect(Result.severeBanner).to.equal('Severe flood warning for Coast from Fleetwood to Blackpool')
-    Code.expect(Result.severeLink).to.equal('/target-area/012WACFB')
+    expect(viewModel.station.id).to.equal(1001)
+    expect(viewModel.banner).to.equal(1)
+    expect(viewModel.severityLevel).to.equal('severe')
+    expect(viewModel.severeBanner).to.equal('Severe flood warning for Coast from Fleetwood to Blackpool')
+    expect(viewModel.severeLink).to.equal('/target-area/012WACFB')
   })
-  lab.test('Test station viewModel multiple Warnings and Alerts in force', async () => {
+
+  it('should return multiple warnings and alerts in force', () => {
     const stationData = data.stationMultipleAW
 
     const viewModel = new ViewModel(stationData)
 
-    const Result = viewModel
-
-    Code.expect(Result.station.id).to.equal(1001)
-    Code.expect(Result.banner).to.equal(2)
-    Code.expect(Result.severityLevel).to.equal('severe')
-    Code.expect(Result.severeBanner).to.equal('There are severe flood warnings within 5 miles of this measuring station')
-    Code.expect(Result.severeLink).to.equal('/alerts-and-warnings?station=1001#severe')
-    Code.expect(Result.alertsBanner).to.equal('There are flood alerts within 5 miles of this measuring station')
-    Code.expect(Result.alertsLink).to.equal('/alerts-and-warnings?station=1001#alerts')
-    Code.expect(Result.warningsBanner).to.equal('There are flood warnings within 5 miles of this measuring station')
-    Code.expect(Result.warningsLink).to.equal('/alerts-and-warnings?station=1001#warnings')
+    expect(viewModel.station.id).to.equal(1001)
+    expect(viewModel.banner).to.equal(2)
+    expect(viewModel.severityLevel).to.equal('severe')
+    expect(viewModel.severeBanner).to.equal('There are severe flood warnings within 5 miles of this measuring station')
+    expect(viewModel.severeLink).to.equal('/alerts-and-warnings?station=1001#severe')
+    expect(viewModel.alertsBanner).to.equal('There are flood alerts within 5 miles of this measuring station')
+    expect(viewModel.alertsLink).to.equal('/alerts-and-warnings?station=1001#alerts')
+    expect(viewModel.warningsBanner).to.equal('There are flood warnings within 5 miles of this measuring station')
+    expect(viewModel.warningsLink).to.equal('/alerts-and-warnings?station=1001#warnings')
   })
-  lab.test('Test station viewModel groundwater station', async () => {
+
+  it('should return a groundwater station', () => {
     const stationData = data.stationGroudwater
 
     const viewModel = new ViewModel(stationData)
 
-    const Result = viewModel
+    expect(viewModel.station.id).to.equal(9302)
+    expect(viewModel.station.river).to.equal('Groundwater Level')
+    expect(viewModel.station.hasPercentiles).to.equal(true)
+    expect(viewModel.station.hasImpacts).to.equal(false)
+  })
 
-    Code.expect(Result.station.id).to.equal(9302)
-    Code.expect(Result.station.river).to.equal('Groundwater Level')
-    Code.expect(Result.station.hasPercentiles).to.equal(true)
-    Code.expect(Result.station.hasImpacts).to.equal(false)
-  })
-  lab.test('Test station viewModel plotNegativeValues should be true for groundwater station', async () => {
+  it('should set "plotNegativeValues" as true for groundwater station', () => {
     const viewModel = new ViewModel(data.stationGroudwater)
-    Code.expect(viewModel.station.plotNegativeValues).to.equal(true)
+    expect(viewModel.station.plotNegativeValues).to.equal(true)
   })
-  lab.test('Test station viewModel plotNegativeValues should be false for river station', async () => {
+
+  it('should set "plotNegativeValues" as false for river station', () => {
     const viewModel = new ViewModel(data.stationRiver)
-    Code.expect(viewModel.station.plotNegativeValues).to.equal(false)
+    expect(viewModel.station.plotNegativeValues).to.equal(false)
   })
-  lab.test('Test station viewModel plotNegativeValues should be true for coastal station', async () => {
+
+  it('should set "plotNegativeValues" as true for coastal station', () => {
     const viewModel = new ViewModel(data.stationCoastal)
-    Code.expect(viewModel.station.plotNegativeValues).to.equal(true)
+    expect(viewModel.station.plotNegativeValues).to.equal(true)
   })
-  lab.test('Test station viewModel FFOI station with Impacts ', async () => {
+
+  it('should return impacts for FFOI station', () => {
     const stationData = data.stationForecastData
 
     const today = moment().format('YYYY-MM-DD')
@@ -208,14 +206,12 @@ lab.experiment('Station model test', () => {
 
     const viewModel = new ViewModel(stationData)
 
-    const Result = viewModel
-
-    Code.expect(Result.station.id).to.equal(7177)
-    Code.expect(Result.station.hasImpacts).to.equal(true)
-    Code.expect(Result.station.formattedPorMaxDate).to.equal('10/02/09')
+    expect(viewModel.station.id).to.equal(7177)
+    expect(viewModel.station.hasImpacts).to.equal(true)
+    expect(viewModel.station.formattedPorMaxDate).to.equal('10/02/09')
 
     // Should have FW ACT FAL 3.88 and FW ACT FW 4.20 thresholds as the are no FW RES FAL and FW RES FW in imtdThresholds
-    Code.expect(Result.thresholds[0].values).to.equal(
+    expect(viewModel.thresholds[0].values).to.equal(
       [
         {
           description: 'Property flooding is possible above this level',
@@ -225,7 +221,7 @@ lab.experiment('Station model test', () => {
         }
       ]
     )
-    Code.expect(Result.thresholds[1].values).to.equal(
+    expect(viewModel.thresholds[1].values).to.equal(
       [
         {
           id: 'alertThreshold',
@@ -235,129 +231,63 @@ lab.experiment('Station model test', () => {
         }
       ]
     )
-    Code.expect(Result.isUpstream).to.equal(true)
-    Code.expect(Result.isDownstream).to.equal(false)
-    Code.expect(Result.severeBanner).to.equal('Severe flood warning for Coast from Fleetwood to Blackpool')
+    expect(viewModel.isUpstream).to.equal(true)
+    expect(viewModel.isDownstream).to.equal(false)
+    expect(viewModel.severeBanner).to.equal('Severe flood warning for Coast from Fleetwood to Blackpool')
   })
-  lab.test('Test station viewModel 1 alert 1 warning 1 severe', async () => {
+
+  it('should return 1 alert, 1 warning and 1 severe', () => {
     const stationData = data.stationAWSW
 
     const viewModel = new ViewModel(stationData)
 
-    const Result = viewModel
-
-    Code.expect(Result.station.id).to.equal(1001)
-    Code.expect(Result.warningsBanner).to.equal('There is a flood warning within 5 miles of this measuring station')
+    expect(viewModel.station.id).to.equal(1001)
+    expect(viewModel.warningsBanner).to.equal('There is a flood warning within 5 miles of this measuring station')
   })
-  lab.test('Test station viewModel removes spike in telemetry', async () => {
+
+  it('should remove spike in telemetry', () => {
     const stationData = data.stationRiverSpike
     const viewModel = new ViewModel(stationData)
 
-    const Result = viewModel
-
     // 480 telemetry values went in to the model, should be one less
-    Code.expect(Result.telemetry.length).to.equal(479)
+    expect(viewModel.telemetry.length).to.equal(479)
   })
-  lab.test('Test station viewModel returns Sea Level Height ToggleTip', async () => {
+
+  it('should return sea level height toggle tip', () => {
     const stationData = data.toggleTipSeaLevelStation
 
     const viewModel = new ViewModel(stationData)
 
-    const Result = viewModel
-
-    Code.expect(Result.infoHeight).to.equal('This station measures height from sea level.')
-    Code.expect(Result.infoTrend).to.equal('The trend is based on the last 5 readings.')
-    Code.expect(Result.infoState).to.equal('There are 3 states: low, normal and high. The latest level is within the normal range. We calculate the normal range using an average of past measurements and other local factors.')
+    expect(viewModel.infoHeight).to.equal('This station measures height from sea level.')
+    expect(viewModel.infoTrend).to.equal('The trend is based on the last 5 readings.')
+    expect(viewModel.infoState).to.equal('There are 3 states: low, normal and high. The latest level is within the normal range. We calculate the normal range using an average of past measurements and other local factors.')
   })
-  lab.test('Test station viewModel returns Below Zero Height ToggleTip', async () => {
+
+  it('should return below zero height toggle tip', () => {
     const stationData = data.toggleTipBelowZeroStation
 
     const viewModel = new ViewModel(stationData)
 
-    const Result = viewModel
-
-    Code.expect(Result.infoHeight).to.equal('This station measures height from a fixed point on or close to the riverbed. A reading of 0 metres can be normal for some stations because of natural changes to the riverbed.')
-    Code.expect(Result.infoTrend).to.equal('The trend is based on the last 5 readings.')
-    Code.expect(Result.infoState).to.equal('There are 3 states: low, normal and high. The latest level is below the normal range. We calculate the normal range using an average of past measurements and other local factors.')
+    expect(viewModel.infoHeight).to.equal('This station measures height from a fixed point on or close to the riverbed. A reading of 0 metres can be normal for some stations because of natural changes to the riverbed.')
+    expect(viewModel.infoTrend).to.equal('The trend is based on the last 5 readings.')
+    expect(viewModel.infoState).to.equal('There are 3 states: low, normal and high. The latest level is below the normal range. We calculate the normal range using an average of past measurements and other local factors.')
   })
-  lab.test('Test station viewModel returns River Bed Height ToggleTip', async () => {
+
+  it('should return river bed height toggle tip', () => {
     const stationData = data.toggleTipRiverBedStation
 
     const viewModel = new ViewModel(stationData)
 
-    const Result = viewModel
-
-    Code.expect(Result.infoHeight).to.equal('This station measures height from a fixed point on or close to the riverbed. This point is 5.63m above sea level.')
-    Code.expect(Result.infoTrend).to.equal('The trend is based on the last 5 readings.')
-    Code.expect(Result.infoState).to.equal('There are 3 states: low, normal and high. The latest level is above the normal range. We calculate the normal range using an average of past measurements and other local factors.')
+    expect(viewModel.infoHeight).to.equal('This station measures height from a fixed point on or close to the riverbed. This point is 5.63m above sea level.')
+    expect(viewModel.infoTrend).to.equal('The trend is based on the last 5 readings.')
+    expect(viewModel.infoState).to.equal('There are 3 states: low, normal and high. The latest level is above the normal range. We calculate the normal range using an average of past measurements and other local factors.')
   })
 
-  lab.test('Test null telemetry values are removed', async () => {
+  it('should remove null value telemetry', () => {
     const stationData = data.nullTelemetry
 
     const viewModel = new ViewModel(stationData)
 
-    const Result = viewModel
-
-    Code.expect(Result.telemetryRefined.observed.length).to.equal(4)
-  })
-  lab.test('Test station viewModel one warning in force', async () => {
-    const stationData = data.stationActiveWarning
-
-    const viewModel = new ViewModel(stationData)
-
-    const Result = viewModel
-
-    Code.expect(Result.station.id).to.equal(1001)
-    Code.expect(Result.banner).to.equal(1)
-    Code.expect(Result.severityLevel).to.equal('warning')
-    Code.expect(Result.warningsBanner).to.equal('Flood warning for Coast from Fleetwood to Blackpool')
-    Code.expect(Result.warningsLink).to.equal('/target-area/012WACFB')
-  })
-
-  lab.test('Test station viewModel one alert in force', async () => {
-    const stationData = data.stationActiveAlert
-
-    const viewModel = new ViewModel(stationData)
-
-    const Result = viewModel
-
-    Code.expect(Result.station.id).to.equal(1001)
-    Code.expect(Result.banner).to.equal(1)
-    Code.expect(Result.severityLevel).to.equal('alert')
-    Code.expect(Result.alertsBanner).to.equal('There is a flood alert within 5 miles of this measuring station')
-    Code.expect(Result.alertsLink).to.equal('/target-area/061FAG30Alton')
-  })
-
-  lab.test('Test station viewModel one Severe Warning in force', async () => {
-    const stationData = data.stationSevereWarning
-
-    const viewModel = new ViewModel(stationData)
-
-    const Result = viewModel
-
-    Code.expect(Result.station.id).to.equal(1001)
-    Code.expect(Result.banner).to.equal(1)
-    Code.expect(Result.severityLevel).to.equal('severe')
-    Code.expect(Result.severeBanner).to.equal('Severe flood warning for Coast from Fleetwood to Blackpool')
-    Code.expect(Result.severeLink).to.equal('/target-area/012WACFB')
-  })
-
-  lab.test('Test station viewModel multiple Warnings and Alerts in force', async () => {
-    const stationData = data.stationMultipleAW
-
-    const viewModel = new ViewModel(stationData)
-
-    const Result = viewModel
-
-    Code.expect(Result.station.id).to.equal(1001)
-    Code.expect(Result.banner).to.equal(2)
-    Code.expect(Result.severityLevel).to.equal('severe')
-    Code.expect(Result.severeBanner).to.equal('There are severe flood warnings within 5 miles of this measuring station')
-    Code.expect(Result.severeLink).to.equal('/alerts-and-warnings?station=1001#severe')
-    Code.expect(Result.alertsBanner).to.equal('There are flood alerts within 5 miles of this measuring station')
-    Code.expect(Result.alertsLink).to.equal('/alerts-and-warnings?station=1001#alerts')
-    Code.expect(Result.warningsBanner).to.equal('There are flood warnings within 5 miles of this measuring station')
-    Code.expect(Result.warningsLink).to.equal('/alerts-and-warnings?station=1001#warnings')
+    expect(viewModel.telemetryRefined.observed.length).to.equal(4)
   })
 })
