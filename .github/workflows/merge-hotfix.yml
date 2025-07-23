@@ -1,0 +1,97 @@
+name: Merge Hotfix Branch and Tag Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        description: Version to merge and tag (e.g. 2.5.1)
+
+jobs:
+  merge_hotfix_branch:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Show input version
+        run: echo "Merging hotfix version: ${{ github.event.inputs.version }}"
+
+      - name: Check PAT token
+        run: |
+          gh workflow list --repo "$GITHUB_REPOSITORY_OWNER/flood-app"
+        env:
+          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
+
+      - name: Checkout code (start from master)
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Set version vars
+        run: |
+          version=${{ github.event.inputs.version }}
+          echo HOTFIX_BRANCH="hotfix/$version" >> "$GITHUB_ENV"
+          echo VERSION=$version >> "$GITHUB_ENV"
+          echo TAG_VERSION="v$version" >> "$GITHUB_ENV"
+
+      - name: Check hotfix branch exists
+        run: |
+          if ! git ls-remote --exit-code origin "refs/heads/${HOTFIX_BRANCH}"; then
+            echo "Branch ${HOTFIX_BRANCH} does not exist." >&2
+            exit 1
+          fi
+
+      - name: Check PR approvals for master and development
+        run: |
+          function check_pr() {
+            TARGET=$1
+            STATUS=$(gh pr list \
+              --repo $GITHUB_REPOSITORY \
+              --state open \
+              --base $TARGET \
+              --head $HOTFIX_BRANCH \
+              --json mergeStateStatus,reviews \
+              --jq '.[] | select(.mergeStateStatus == "CLEAN" and .reviews[-1].state == "APPROVED") | .reviews[-1].state')
+            if [ "$STATUS" != "APPROVED" ]; then
+              echo "PR to $TARGET is not approved or ready to merge." >&2
+              exit 1
+            fi
+          }
+
+          check_pr master
+          check_pr development
+        env:
+          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Merge hotfix into master
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git fetch origin $HOTFIX_BRANCH
+          git switch master
+          git merge --no-edit origin/$HOTFIX_BRANCH
+          git push origin master
+
+      - name: Create GitHub Release tag
+        run: |
+          gh release create $TAG_VERSION \
+            --title "Hotfix $VERSION" \
+            --notes "Hotfix release $VERSION"
+        env:
+          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
+
+      - name: Merge hotfix into development
+        run: |
+          git fetch origin $HOTFIX_BRANCH
+          git switch development
+          git merge --no-edit origin/$HOTFIX_BRANCH
+          git push origin development
