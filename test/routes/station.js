@@ -735,7 +735,7 @@ describe('Route - Station', () => {
         external_name: 'Lilbourne',
         station_type: 'M',
         status: 'Active',
-        qualifier: 'u',
+        qualifier: 'd',
         iswales: false,
         value: '0.341',
         value_timestamp: '2020-03-18T08:00:00.000Z',
@@ -796,14 +796,15 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    // KEEP - for multi station debugging
-    const matches = response.payload.match(/<nav class="defra-navbar defra-navbar--secondary"[\s\S]*?<\/nav>|<p>This measuring station takes 2 measurements\.[\s\S]*?<\/p>/g)
-    console.log('Targeted Blocks:', matches)
+    // // KEEP - for multi station debugging
+    // const matches = response.payload.match(/<nav class="defra-navbar defra-navbar--secondary"[\s\S]*?<\/nav>|<p>This measuring station takes 2 measurements\.[\s\S]*?<\/p>/g)
+    // console.log('Targeted Blocks:', matches)
 
     expect(response.statusCode).to.equal(200)
     expect(response.payload).to.contain('River Avon level downstream at Lilbourne - GOV.UK')
     expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/2042">Nearby levels</a>')
-    // expect(response.payload).to.contain('<a href="/station/2043">Downstream</a>') // TODO: Fix this - should be /2043
+    expect(response.payload).to.contain('<a href="/station/2042">Upstream</a>')
+    expect(response.payload).to.contain('<a href="/station/2043">Downstream</a>') 
   })
 
   it('should return closed station', async () => {
