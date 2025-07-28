@@ -796,9 +796,7 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    // // KEEP - for multi station debugging
-    // const matches = response.payload.match(/<nav class="defra-navbar defra-navbar--secondary"[\s\S]*?<\/nav>|<p>This measuring station takes 2 measurements\.[\s\S]*?<\/p>/g)
-    // console.log('Targeted Blocks:', matches)
+    // Debugging code removed for clarity and maintainability.
 
     expect(response.statusCode).to.equal(200)
     expect(response.payload).to.contain('River Avon level downstream at Lilbourne - GOV.UK')
