@@ -26,6 +26,12 @@ class ViewModel {
     this.river = river
     const isForecast = forecast ? forecast.forecastFlag.display_time_series : false
 
+    // Define station navigation properties based on the station type and qualifier
+    const upstreamNavigationLink = createNavigationLink(river, 'upstream')
+    const downstreamNavigationLink = createNavigationLink(river, 'downstream')
+
+    this.navigationLink = { upstream: upstreamNavigationLink, downstream: downstreamNavigationLink }
+
     this.station.trend = river.trend
 
     Object.assign(this, {
@@ -402,6 +408,85 @@ class ViewModel {
       telemetryData = telemetryForecastBuilder(this.telemetry, forecastData, this.station.type)
     }
     this.telemetryRefined = telemetryData || []
+  }
+}
+
+function createNavigationLink (river, direction) {
+  const {
+    rloi_id: currentStationId,
+    station_type: currentStationType,
+    qualifier,
+    isMulti,
+    up,
+    down,
+    up_station_type: upStationType,
+    down_station_type: downStationType
+  } = river
+  const currentStationQualifier = qualifier || (isMulti ? 'u' : null)
+  const targetStationId = direction === 'upstream' ? up : down
+  const targetStationType = direction === 'upstream' ? upStationType : downStationType
+
+  if (targetStationId) {
+    return determineNavigationLink(
+      currentStationId,
+      currentStationType,
+      currentStationQualifier,
+      targetStationType,
+      targetStationId,
+      direction
+    )
+  }
+
+  return getQualifierSwitchLink(currentStationType, currentStationQualifier, currentStationId, direction)
+}
+
+function getQualifierSwitchLink (currentStationType, currentStationQualifier, currentStationId, direction) {
+  if (
+    currentStationType === 'M' &&
+    ((direction === 'upstream' && currentStationQualifier === 'd') ||
+      (direction === 'downstream' && currentStationQualifier === 'u'))
+  ) {
+    return direction === 'upstream' ? `${currentStationId}` : `${currentStationId}/downstream`
+  }
+  return null
+}
+
+function determineNavigationLink (
+  currentStationId,
+  currentStationType,
+  currentStationQualifier,
+  targetStationType,
+  targetStationId,
+  direction
+) {
+  // Handle switching between qualifiers within the same station
+  if (currentStationType === 'M') {
+    if (direction === 'upstream' && currentStationQualifier === 'd') {
+      // From downstream to upstream within the same station
+      return `${currentStationId}`
+    } else if (direction === 'downstream' && currentStationQualifier === 'u') {
+      // From upstream to downstream within the same station
+      return `${currentStationId}/downstream`
+    } else {
+      // No qualifier switch needed; proceed to target station navigation
+    }
+  }
+
+  // Upstream Navigation Logic
+  if (direction === 'upstream') {
+    if (targetStationType === 'M') {
+      // Navigate to the downstream view of the multi-reading station
+      return `${targetStationId}/downstream`
+    } else {
+      // Navigate to the single-reading station
+      return `${targetStationId}`
+    }
+  } else if (direction === 'downstream') {
+    // For downstream navigation, navigate to the target station ID
+    return `${targetStationId}`
+  } else {
+    // Handle unexpected direction values
+    return `${targetStationId}`
   }
 }
 
