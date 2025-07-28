@@ -804,7 +804,7 @@ describe('Route - Station', () => {
     expect(response.payload).to.contain('River Avon level downstream at Lilbourne - GOV.UK')
     expect(response.payload).to.contain('<a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/2042">Nearby levels</a>')
     expect(response.payload).to.contain('<a href="/station/2042">Upstream</a>')
-    expect(response.payload).to.contain('<a href="/station/2043">Downstream</a>') 
+    expect(response.payload).to.contain('<a href="/station/2043">Downstream</a>')
   })
 
   it('should return closed station', async () => {
