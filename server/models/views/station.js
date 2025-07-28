@@ -412,7 +412,16 @@ class ViewModel {
 }
 
 function createNavigationLink (river, direction) {
-  const { rloi_id: currentStationId, station_type: currentStationType, qualifier, isMulti, up, down, up_station_type: upStationType, down_station_type: downStationType } = river
+  const {
+    rloi_id: currentStationId,
+    station_type: currentStationType,
+    qualifier,
+    isMulti,
+    up,
+    down,
+    up_station_type: upStationType,
+    down_station_type: downStationType
+  } = river
   const currentStationQualifier = qualifier || (isMulti ? 'u' : null)
   const targetStationId = direction === 'upstream' ? up : down
   const targetStationType = direction === 'upstream' ? upStationType : downStationType
