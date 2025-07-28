@@ -107,7 +107,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
   // Create the open key button
   const openKeyButtonElement = document.createElement('button')
   openKeyButtonElement.className = 'defra-map__open-key'
-  openKeyButtonElement.innerHTML = '<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20"><path d="M17.215,11.31L19,12.5L10,18.5L1,12.5L2.785,11.31L9.945,16.083C9.978,16.106 10.022,16.106 10.055,16.083L17.215,11.31Z" style="fill:currentColor;"/><path d="M10,1.5L1,7.5L10,13.5L19,7.5L10,1.5ZM10,3.88L15.43,7.5L10,11.12L4.57,7.5L10,3.88Z" style="fill:currentColor;"/></svg><span class="govuk-visually-hidden">Open key</span>'
+  openKeyButtonElement.innerHTML = '<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20"><path d="M17.215,11.31L19,12.5L10,18.5L1,12.5L2.785,11.31L9.945,16.083C9.978,16.106 10.022,16.106 10.055,16.083L17.215,11.31Z" style="fill:currentColor;"/><path d="M10,1.5L1,7.5L10,13.5L19,7.5L10,1.5ZM10,3.88L15.43,7.5L10,11.12L4.57,7.5L10,3.88Z" style="fill:currentColor;"/></svg><span>Key</span>'
   const openKeyButton = new Control({
     element: openKeyButtonElement,
     target: controlsElement

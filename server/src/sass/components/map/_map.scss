@@ -175,16 +175,19 @@
   margin-left: 5px;
   margin-top: 10px;
   height: 40px;
-  width: 40px;
-  padding: 0;
+  width: auto;
+  min-width: 40px;
+  padding: 0 10px;
   border: 0;
   cursor: pointer;
   background-color: white;
   color: govuk-colour('black');
   font-size: 16px;
+  font-weight: bold;
   line-height: 40px;
-  text-indent: -5000px;
-  color: govuk-colour('black');
+  display: flex;
+  align-items: center;
+  gap: 5px;
 
   @include mq ($from: desktop) {
     display: none;
@@ -192,7 +195,12 @@
 
   svg {
     display: block;
-    margin: 10px;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  span {
+    white-space: nowrap;
   }
 
   &:hover {
