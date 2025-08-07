@@ -72,9 +72,28 @@ function LiveMap (mapId, options) {
   ]
   const layers = defaultLayers.concat(dataLayers)
 
-  // Assign z-index to ensure visibility
-  stations.setZIndex(2) // Higher priority
-  rainfall.setZIndex(1) // Lower priority
+  // Function to configure z-index for layers
+  const configureLayerZIndex = () => {
+    // Set z-index for each layer to control stacking order on the map.
+    // Higher numbers appear above lower numbers.
+
+    // Base layers (lowest)
+    road.setZIndex(0)
+    satellite.setZIndex(0)
+
+    // Data layers (middle) - flood polygons should be below stations
+    warnings.setZIndex(1) // Flood polygons (Severe, Warning, Alert)
+    targetAreaPolygons.setZIndex(1) // Target area polygons (same level as warnings)
+    rainfall.setZIndex(2) // Rainfall stations
+    stations.setZIndex(3) // All measuring stations (River, Sea, Groundwater)
+
+    // Interactive/overlay layers (highest)
+    selected.setZIndex(4) // Selected feature highlighting
+    labels.setZIndex(5) // Feature labels (should be on top)
+  }
+
+  // Call the function to set z-index for layers
+  configureLayerZIndex()
 
   // Configure default interactions
   const interactions = defaultInteractions({
@@ -449,6 +468,8 @@ function LiveMap (mapId, options) {
         if (layer.get('ref') === 'warnings') {
           maps.warningsSource = warnings.getSource()
           map.addLayer(targetAreaPolygons)
+          // Ensure z-index is set for targetAreaPolygons after it's added to the map
+          targetAreaPolygons.setZIndex(1)
         }
         // Attempt to set selected feature when layer is ready
         setSelectedFeature(state.selectedFeatureId)
