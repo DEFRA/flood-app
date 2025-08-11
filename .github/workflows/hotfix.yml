@@ -1,0 +1,85 @@
+name: Create Hotfix Branch and PRs (Flood App)
+
+on:
+  workflow_dispatch:
+
+env:
+  TZ: 'Europe/London'
+
+jobs:
+  create_hotfix:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Show input
+        run: echo "Creating hotfix with patch increment"
+
+      - name: Validate PAT
+        run: gh workflow list --repo "$GITHUB_REPOSITORY_OWNER/flood-app"
+        env:
+          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
+
+      - name: Checkout flood-app @ master
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Install dependencies
+        run: npm ci --engine-strict
+
+      - name: Bump version (auto patch)
+        run: |
+          current=$(jq -r '.version' package.json)
+          npm version --no-git-tag-version patch
+          version=$(jq -r '.version' package.json)
+          echo "HOTFIX_BRANCH=hotfix/$version" >> $GITHUB_ENV
+          echo "VERSION=$version" >> $GITHUB_ENV
+          echo "Current: $current → New: $version"
+
+      - name: Check if branch exists
+        run: |
+          if git ls-remote --exit-code origin "refs/heads/${HOTFIX_BRANCH}"; then
+            echo "Branch ${HOTFIX_BRANCH} already exists." >&2
+            exit 1
+          fi
+
+      - name: Create hotfix branch and commit
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git switch -c $HOTFIX_BRANCH
+          git add .
+          git commit -m "Hotfix bump: $VERSION"
+
+      - name: Push branch
+        run: git push origin $HOTFIX_BRANCH
+
+      - name: Create PR to master
+        run: |
+          gh pr create --base master --head $HOTFIX_BRANCH \
+            --title "Hotfix $VERSION → master" \
+            --body "Emergency hotfix - see commit messages for details"
+        env:
+          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
+
+      - name: Create PR to development
+        run: |
+          gh pr create --base development --head $HOTFIX_BRANCH \
+            --title "Hotfix $VERSION → development" \
+            --body "Emergency hotfix - see commit messages for details"
+        env:
+          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
+
+      - name: Clean up on failure
+        if: ${{ failure() }}
+        run: |
+          if git ls-remote --exit-code origin "refs/heads/${HOTFIX_BRANCH}"; then
+            echo "Deleting hotfix branch due to failure"
+            git push --delete origin $HOTFIX_BRANCH
