@@ -37,8 +37,7 @@ jobs:
               run: |
                 npm run unit-test
 
-            - name: Analyse code quality (pull_request)
-              if: github.event_name == 'pull_request'
+            - name: Analyse code quality
               uses: sonarsource/sonarqube-scan-action@master
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -48,6 +47,8 @@ jobs:
                   -Dsonar.organization=defra
                   -Dsonar.projectKey=DEFRA_flood-app
                   -Dsonar.sources=server
+                  -Dsonar.test=server
+                  -Dsonar.test.inclusions=**/test/**
                   -Dsonar.exclusions=**/node_modules/**,**/test/**,**/test-output/**
                   -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
                   -Dsonar.javascript.exclusions=**/node_modules/**,**/test/**,**/test-output/**,**/mock/**,**/server/dist/**,**/server/src/**,**/service-down/**
