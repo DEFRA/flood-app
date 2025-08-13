@@ -331,7 +331,8 @@
     aerial: 'Station:Map interaction:View-satelite-basemap'
   }
   window.flood.model.centre = window.flood.model.centre.split(','),
-  window.flood.model.selectedId = 'stations.' + window.flood.model.id,
+  window.flood.model.selectedId = 'stations.' + window.flood.model.id + 
+    (window.location.pathname.includes('/downstream') ? '/downstream' : ''),
   window.flood.model.zoom = 14
 
   window.flood.model.toggletip = {
