@@ -143,29 +143,28 @@
 
 
   {{ govukFooter({
-    meta: {
-      items: [
-        {
-          href: "/accessibility-statement",
-          text: "Accessibility statement"
-        },
-        {
-          href: "/cookies",
-          text: "Cookies"
-        },
-        {
-          href: "/privacy-notice",
-          text: "Privacy notice"
-        },
-        {
-          href: "/terms-and-conditions",
-          text: "Terms and conditions"
-        },
-        {
-          href: "https://www.gov.uk/government/organisations/environment-agency",
-          text: "Built by the Environment Agency"
-        }
-      ]
+    "classes": "app-footer",
+    "containerClasses" : "app-width-container",
+      meta: {
+        items: [
+          {
+            href: "/accessibility-statement",
+            text: "Accessibility statement"
+          },
+          {
+            href: "/cookies",
+            text: "Cookies"
+          },
+          {
+            href: "/privacy-notice",
+            text: "Privacy notice"
+          },
+          {
+            href: "/terms-and-conditions",
+            text: "Terms and conditions"
+          }
+        ],
+        "html": 'Built by the <a href="https://www.gov.uk/government/organisations/environment-agency" class="govuk-footer__link">Environment Agency</a>'
     }
   }) }}
 {% endblock %}
