@@ -1,98 +1,55 @@
 name: CI
 
-on:
-  push:
-    branches: [ "**" ]
-  pull_request:
-    branches: [ "**" ]
-  workflow_dispatch:
-    inputs:
-      target_ref:
-        description: "Branch (or SHA) to analyze as a PR against main"
-        type: string
-        required: false
-        default: main
+on: [push, pull_request]
 
 env:
   TZ: 'Europe/London'
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    steps:
-      # Checkout: use selected ref for manual runs; otherwise use the event's default ref
-      - name: Checkout (manual run)
-        if: github.event_name == 'workflow_dispatch'
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.target_ref }}
-          fetch-depth: 0
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
 
-      - name: Checkout (push/PR)
-        if: github.event_name != 'workflow_dispatch'
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+            - name: Install nodejs
+              uses: actions/setup-node@v4
+              with:
+                node-version-file: '.nvmrc'
+            
+            - name: Install node dependencies
+              run: npm ci --engine-strict
 
-      - name: Install nodejs
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-      
-      - name: Install node dependencies
-        run: npm ci --engine-strict
+            - name: Run linting
+              run: npm run lint
 
-      - name: Run linting
-        run: npm run lint
+            - name: Run unit tests
+              env:
+                FLOOD_APP_BING_KEY: "${{ secrets.FLOOD_APP_BING_KEY }}"
+                FLOOD_APP_BING_KEY_LOCATION: "${{ secrets.FLOOD_APP_BING_KEY_LOCATION }}"
+                FLOOD_APP_BING_KEY_MAP: "${{ secrets.FLOOD_APP_BING_KEY_MAP }}"
+                FLOOD_APP_BING_URL: "${{ secrets.FLOOD_APP_BING_URL }}"
+                FLOOD_APP_NRW_STATION_URL: "${{ secrets.FLOOD_APP_NRW_STATION_URL }}"
+                FLOOD_APP_SESSION_PASSWORD: "${{ secrets.FLOOD_APP_SESSION_PASSWORD }}"
+              run: |
+                npm run unit-test
 
-      - name: Run unit tests
-        env:
-          FLOOD_APP_BING_KEY: "${{ secrets.FLOOD_APP_BING_KEY }}"
-          FLOOD_APP_BING_KEY_LOCATION: "${{ secrets.FLOOD_APP_BING_KEY_LOCATION }}"
-          FLOOD_APP_BING_KEY_MAP: "${{ secrets.FLOOD_APP_BING_KEY_MAP }}"
-          FLOOD_APP_BING_URL: "${{ secrets.FLOOD_APP_BING_URL }}"
-          FLOOD_APP_NRW_STATION_URL: "${{ secrets.FLOOD_APP_NRW_STATION_URL }}"
-          FLOOD_APP_SESSION_PASSWORD: "${{ secrets.FLOOD_APP_SESSION_PASSWORD }}"
-        run: npm run unit-test
-
-      # -------- Sonar: normal branch/PR behaviour on push/pull_request ----------
-      - name: Analyse code quality (normal CI)
-        if: github.event_name != 'workflow_dispatch'
-        uses: sonarsource/sonarqube-scan-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.organization=defra
-            -Dsonar.projectKey=DEFRA_flood-app
-            -Dsonar.sources=server
-            -Dsonar.tests=server
-            -Dsonar.test.inclusions=**/test/**
-            -Dsonar.exclusions=**/node_modules/**,**/test/**,**/test-output/**
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-            -Dsonar.javascript.exclusions=**/node_modules/**,**/test/**,**/test-output/**,**/mock/**,**/server/dist/**,**/server/src/**,**/service-down/**
-            -Dsonar.coverage.exclusions=**/server/routes/status.js
-
-      # -------- Sonar: PR-style analysis against main for manual runs ----------
-      - name: Analyse code quality (manual run as PR → main)
-        if: github.event_name == 'workflow_dispatch'
-        uses: sonarsource/sonarqube-scan-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.organization=defra
-            -Dsonar.projectKey=DEFRA_flood-app
-            -Dsonar.sources=server
-            -Dsonar.tests=server
-            -Dsonar.test.inclusions=**/test/**
-            -Dsonar.exclusions=**/node_modules/**,**/test/**,**/test-output/**
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-            -Dsonar.javascript.exclusions=**/node_modules/**,**/test/**,**/test-output/**,**/mock/**,**/server/dist/**,**/server/src/**,**/service-down/**
-            -Dsonar.coverage.exclusions=**/server/routes/status.js
-            -Dsonar.pullrequest.key=${{ github.run_id }}
-            -Dsonar.pullrequest.branch=${{ inputs.target_ref }}
-            -Dsonar.pullrequest.base=main
+            - name: Analyse code quality
+              uses: sonarsource/sonarqube-scan-action@master
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+              with:
+                args: >
+                  -Dsonar.organization=defra
+                  -Dsonar.projectKey=DEFRA_flood-app
+                  -Dsonar.sources=server
+                  -Dsonar.tests=server
+                  -Dsonar.test.inclusions=**/test/**
+                  -Dsonar.exclusions=**/node_modules/**,**/test/**,**/test-output/**
+                  -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+                  -Dsonar.javascript.exclusions=**/node_modules/**,**/test/**,**/test-output/**,**/mock/**,**/server/dist/**,**/server/src/**,**/service-down/**
+                  -Dsonar.coverage.exclusions=**/server/routes/status.js

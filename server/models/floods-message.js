@@ -11,6 +11,7 @@ const formatFloodWarnings = (floods, isLocalised) => {
 const getSonar = () => {
   return {
     sonar: {
+      num: 5032000,
       organization: 'defra',
       projectKey: 'DEFRA_flood-app'
     }
