@@ -3,20 +3,10 @@
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
 const { describe, it } = (exports.lab = Lab.script())
-const { getSevereWarnings, displayGetWarningsLink, getSonar } = require('../../server/models/floods-message')
+const { getSevereWarnings, displayGetWarningsLink } = require('../../server/models/floods-message')
 
 describe('Model - Flood Message', () => {
   describe('getSevereWarnings', () => {
-    it('should get sonar', () => {
-      expect(getSonar()).to.equal({
-        sonar: {
-          num: 5032000,
-          organization: 'defra',
-          projectKey: 'DEFRA_flood-app'
-        }
-      })
-    })
-
     it('should return "one severe flood warning" for a single severe warning', () => {
       expect(getSevereWarnings(1)).to.equal('one severe flood warning')
     })
