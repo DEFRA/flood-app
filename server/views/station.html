@@ -51,9 +51,9 @@
               </li>
             {% endif %}
               <li class="defra-navbar__item">
-                <a data-journey-click="Station:Station navigation:Station - Nearby levels" href="/river-and-sea-levels/rloi/{{model.station.id}}">Nearby levels</a>
-              </li>
-            </ul>
+                <a href="/river-and-sea-levels/rloi/{{model.station.id}}">Nearby levels</a>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>
@@ -331,8 +331,7 @@
     aerial: 'Station:Map interaction:View-satelite-basemap'
   }
   window.flood.model.centre = window.flood.model.centre.split(','),
-  window.flood.model.selectedId = 'stations.' + window.flood.model.id + 
-    (window.location.pathname.includes('/downstream') ? '/downstream' : ''),
+  window.flood.model.selectedId = 'stations.' + window.flood.model.id,
   window.flood.model.zoom = 14
 
   window.flood.model.toggletip = {
@@ -342,4 +341,3 @@
 </script>
 <script src="{{ assetPath }}/js/chart.js"></script>
 {% endblock %}
-
