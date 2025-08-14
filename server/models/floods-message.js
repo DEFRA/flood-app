@@ -18,6 +18,16 @@ const getSonar = () => {
   }
 }
 
+const getSonars = () => {
+  return {
+    sonar: {
+      num: 5032000,
+      organization: 'defra',
+      projectKey: 'DEFRA_flood-app'
+    }
+  }
+}
+
 const getText = (all, isLocalised) => `There ${all === 1 ? 'is' : 'are'} currently $counts in force${isLocalised ? ' at this location' : ''}.`
 
 const getCounts = (severeWarnings, warnings, alerts) => {
@@ -44,4 +54,4 @@ const getSevereWarnings = severeWarnings => `${severeWarnings === 1 ? 'one' : se
 const displayGetWarningsLink = warnings => `${warnings === 1 ? 'one' : warnings} flood warning${warnings > 1 ? 's' : ''}`
 const getAlerts = alerts => `${alerts === 1 ? 'one' : alerts} flood alert${alerts > 1 ? 's' : ''}`
 
-module.exports = { formatFloodWarnings, getSevereWarnings, displayGetWarningsLink, getSonar }
+module.exports = { formatFloodWarnings, getSevereWarnings, displayGetWarningsLink, getSonar, getSonars }
