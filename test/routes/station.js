@@ -2317,7 +2317,7 @@ describe('Route - Station', () => {
 
     const options = {
       method: 'GET',
-      url: '/station/1084'
+      url: '/station/100034'
     }
 
     const response = await server.inject(options)
@@ -2457,7 +2457,7 @@ describe('Route - Station', () => {
 
     const options = {
       method: 'GET',
-      url: '/station/1084'
+      url: '/station/1034'
     }
 
     const response = await server.inject(options)
