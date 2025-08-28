@@ -30,7 +30,7 @@
 {% elif model.type === 'S' or model.type === 'M' or model.type === 'G' or model.type === 'C' %}
 <div id="infoDescription">
     <strong class="defra-map-info__name">
-        <a href="/station/{{ model.id }}">
+        <a data-journey-click="Map:Map interaction:Map - Open station from tooltip" href="/station/{{ model.id }}">
             {% if model.type === 'C' and model.river_name !== 'Sea Levels' %}{{model.river_name}}{%elif model.type === 'C'%}Sea Level{% elif model.type === 'G' %}Groundwater{% else %}{{ model.river }}{% endif %} at
             {{ model.name }}
             {% if model.iswales %} (Natural Resources Wales){% endif %}
@@ -96,18 +96,18 @@
     {% if model.status !== 'Closed' and model.status !== 'Suspended' and model.value %}
     <p class="defra-map-info__meta">Latest at {{ model.date }}</p>
     {% endif %}
-    {% if model.up or model.down %}
+    {% if model.up or model.down or model.type === 'M' %}
     <div class="defra-map-info__buttons">
-        {% if model.up %}
-        <button class="defra-button-secondary" data-id="stations.{{ model.up }}" aria-controls="viewport infoDescription">
+        {% if model.up or (model.type === 'M' and model.direction === 'd') %}
+        <button id="btn-upstream-nav" class="defra-button-secondary" data-id="{% if model.type === 'M' and model.direction === 'd' %}stations.{{ model.base_rloi_id }}{% else %}stations.{{ model.up }}{% if model.up_station_type === 'M' %}/downstream{% endif %}{% endif %}" aria-controls="viewport infoDescription">
                 <span class="defra-button-secondary__icon">
                     <svg focusable="false" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16"><path d="M8,6.4l0,9.6" style="fill:none;stroke:currentColor;stroke-width:2px;"></path><path d="M8,0l4,6.4l-8,0l4,-6.4Z" style="fill:currentColor"></path></svg>
                 </span>
             <span class="govuk-visually-hidden">Select next</span> Upstream  <span class="govuk-visually-hidden">measurement</span>
         </button>
         {% endif %}
-        {% if model.down %}
-        <button class="defra-button-secondary" data-id="stations.{{ model.down }}" aria-controls="viewport infoDescription">
+        {% if model.down or (model.type === 'M' and model.direction === 'u') %}
+        <button id="btn-downstream-nav" class="defra-button-secondary" data-id="{% if model.type === 'M' and model.direction === 'u' %}stations.{{ model.base_rloi_id }}/downstream{% else %}stations.{{ model.down }}{% endif %}" aria-controls="viewport infoDescription">
                 <span class="defra-button-secondary__icon">
                     <svg focusable="false" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16"><path d="M8,9.6l-0,-9.6" style="fill:none;stroke:currentColor;stroke-width:2px;"/><path d="M8,16l-4,-6.4l8,0l-4,6.4Z" style="fill:currentColor"/></svg>
                 </span>

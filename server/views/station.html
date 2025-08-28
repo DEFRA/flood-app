@@ -40,18 +40,18 @@
         <span id="map-live"></span>
         <div class="defra-navbar__group">
           <ul class="defra-navbar__list">
-          {% if model.station.riverNavigation.up %}
-            <li class="defra-navbar__item">
-              <a href="/station/{{model.station.riverNavigation.up}}">Upstream</a>
-            </li>
-          {% endif %}
-          {% if model.station.riverNavigation.down %}
-            <li class="defra-navbar__item">
-              <a href="/station/{{model.station.riverNavigation.down}}">Downstream</a>
-            </li>
-          {% endif %}
-            <li class="defra-navbar__item">
-              <a href="/river-and-sea-levels/rloi/{{model.station.id}}">Nearby levels</a>
+            {% if model.navigationLink.upstream %}
+              <li class="defra-navbar__item">
+                <a href="/station/{{model.navigationLink.upstream}}">Upstream</a>
+              </li>
+            {% endif %}
+            {% if model.navigationLink.downstream %}
+              <li class="defra-navbar__item">
+                <a href="/station/{{model.navigationLink.downstream}}">Downstream</a>
+              </li>
+            {% endif %}
+              <li class="defra-navbar__item">
+                <a href="/river-and-sea-levels/rloi/{{model.station.id}}">Nearby levels</a>
             </li>
           </ul>
         </div>
@@ -59,19 +59,6 @@
     </nav>
   </div>
 </div>
-
-{# For multi station #}
-{% if model.station.isMulti %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-        {% if model.station.isDownstream %}
-        <p>This measuring station takes 2 measurements. You're viewing the downstream level. <a href="/station/{{ model.station.id }}">View the upstream level.</a></p>
-        {% else %}
-        <p>This measuring station takes 2 measurements. You're viewing the upstream level. <a href="/station/{{ model.station.id }}/downstream">View the downstream level.</a></p>
-        {% endif %}
-      </div>
-  </div>
-{% endif %}
 
 {# if station is suspended #}
 {% if model.status === 'suspended' %}
@@ -344,7 +331,8 @@
     aerial: 'Station:Map interaction:View-satelite-basemap'
   }
   window.flood.model.centre = window.flood.model.centre.split(','),
-  window.flood.model.selectedId = 'stations.' + window.flood.model.id,
+  window.flood.model.selectedId = 'stations.' + window.flood.model.id + 
+    (window.location.pathname.includes('/downstream') ? '/downstream' : ''),
   window.flood.model.zoom = 14
 
   window.flood.model.toggletip = {
@@ -354,4 +342,3 @@
 </script>
 <script src="{{ assetPath }}/js/chart.js"></script>
 {% endblock %}
-
