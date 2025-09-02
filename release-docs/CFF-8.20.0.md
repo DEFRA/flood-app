@@ -1,32 +1,35 @@
 # Check For Flooding Release
 
 - Version: 8.20.0
-- Proposed Release Date: 
+- Proposed Release Date: 4th September 2025
 - Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/24825/tab/release-report-all-issues
-
-## Sense Check
-
-- Note that this is the definitive release notes for WebOps. The release notes in flood-service and flood-db are for CFF dev team use only.
-- Cross check the list of Jira tickets below with those in the Jira release linked to above and update where needed
-- Add additional Jira tickets from the related release notes in the 'Release 8.20.0' PR's created in:
-  - [flood-service](https://github.com/DEFRA/flood-service)
-
-- Add any required infrastructure changes such as redirects to the infrastructure changes section below
-- Once this sense check is done, delete this section
 
 ## Tickets
 
 
   
-- FSR-1006 | Enhance Station and Map Navigation Logic for Multi-Stations (#1015)
-  
+- FSR-1006 | Enhance Station and Map Navigation Logic for Multi-Stations
+- FSR-212 | Error in Creating New Empty Database  
+- FSR-1039 | Error in Creating New Empty Database  
+- FSR-1136 | Update aws-sdk to latest version for CFF  
+- FSR-1461 | (DB Update) Fix Liquibase Scripts  
+- FSR-1498 | (DB Setup) Fix rds_initial_setup.sql 
+
 
 
 ## Instructions
 
 
-1. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+1. Execute LFW_{STAGE}_02_UPDATE_DATABASE
+2. Execute LFW_{STAGE}_03_UPDATE_GEOSERVER_PIPELINE
+3. Execute LFW_{STAGE}_99_DEPLOY_FLOOD_DATA_PIPELINE_TF  
 
+   Ensure build parameters are set as follows:  
+   - **TERRAGRUNT_BRANCH:** `master`  
+   - **TERRAFORM_BRANCH:** `RITM1275647-NewLambdaVars`  
+   - **MODULE_DEPLOY:** `lambda`
+
+4. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
 
 Execute smoke tests and forward results
 
