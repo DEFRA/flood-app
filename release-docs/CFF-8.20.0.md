@@ -37,8 +37,7 @@ Execute smoke tests and forward results
 
 - None
 
-
-
+---
 
 ### Fixing Checksums
 
