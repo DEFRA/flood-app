@@ -46,8 +46,6 @@ If a change has been made to an old changelog sql file or ordering has been chan
 
 This will look something like:
 
-bash
-# example
 changelog/db.changelog-0.4.1.xml::3::username was: 9:d969a0b04f0b1c582d04774622630636 but is now: 9:b41459975317ac437f2c2b9985ac6141
 
 To fix this, either:
