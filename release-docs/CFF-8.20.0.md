@@ -26,7 +26,7 @@
 
    Ensure build parameters are set as follows:  
    - **TERRAGRUNT_BRANCH:** `master`  
-   - **TERRAFORM_BRANCH:** `RITM1275647-NewLambdaVars`  
+   - **TERRAFORM_BRANCH:** `terraform-main`  
    - **MODULE_DEPLOY:** `lambda`
 
 4. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
