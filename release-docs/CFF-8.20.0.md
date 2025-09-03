@@ -28,13 +28,8 @@
    - **TERRAGRUNT_BRANCH:** `master`  
    - **TERRAFORM_BRANCH:** `terraform-main`  
    - **MODULE_DEPLOY:** `lambda`
-  
-4. Update environment variables in production as follows:
 
-    - LFW_DATA_S3_MAX_SOCKETS 3500
-    - LFW_DATA_S3_REGION eu-west-2
-
-5. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+4. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
 
 Execute smoke tests and forward results
 
