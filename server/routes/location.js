@@ -1,9 +1,9 @@
 const joi = require('joi')
 const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/location')
-const OutlookTabsModel = require('../models/outlook-tabs')
+const OutlookPolys = require('../models/outlook-polys')
+const Outlook = require('../models/outlook')
 const locationService = require('../services/location')
-const formatDate = require('../util').formatDate
 const moment = require('moment-timezone')
 const tz = 'Europe/London'
 const qs = require('qs')
@@ -43,7 +43,7 @@ async function routeHandler (request, h) {
     return boom.notFound(`Location ${location} not found`)
   }
 
-  const { tabs, outOfDate, dataError } = await createOutlookTabs(place, request)
+  const { messageIds, outOfDate, dataError, outlookDays, outlookData } = await createOutlookMessageIds(place, request)
 
   const [
     impacts,
@@ -54,7 +54,7 @@ async function routeHandler (request, h) {
     request.server.methods.flood.getFloodsWithin(place.bbox2k),
     request.server.methods.flood.getStationsWithin(place.bbox10k)
   ])
-  const model = new ViewModel({ location, place, floods, stations, impacts, tabs, outOfDate, dataError })
+  const model = new ViewModel({ location, place, floods, stations, impacts, messageIds, outOfDate, dataError, outlookDays, outlookData })
   return h.view('location', { model })
 }
 
@@ -107,9 +107,11 @@ module.exports = [{
   }
 }]
 
-const createOutlookTabs = async (place, request) => {
-  let tabs = {}
+const createOutlookMessageIds = async (place, request) => {
+  let messageIds = []
   let outOfDate = true
+  let outlookDays = []
+  let outlookData = null
   const now = moment().tz(tz).valueOf()
   const hours48 = 2 * 60 * 60 * 24 * 1000
   let issueDate = moment().valueOf() // Default issueDate to today
@@ -132,16 +134,18 @@ const createOutlookTabs = async (place, request) => {
 
       const riskAreasCount = outlook.risk_areas ? outlook.risk_areas.length : 0
 
-      const outlookTabsModel = new OutlookTabsModel(outlook, place)
-      tabs = outOfDate || riskAreasCount === 0 ? { lowForFive: true } : outlookTabsModel
+      const outlookPolys = new OutlookPolys(outlook, place)
+      messageIds = outOfDate || riskAreasCount === 0 ? [] : outlookPolys.messageIds
 
-      if (riskAreasCount === 0) {
-        tabs.formattedIssueDate = `${formatDate(outlook.issued_at, 'h:mma')} on ${formatDate(outlook.issued_at, 'D MMMM YYYY')}`
-        tabs.issueUTC = moment(outlook.issued_at).tz('Europe/London').format()
+      // Create full outlook instance for map data
+      const outlookInstance = new Outlook(outlook, request.logger)
+      if (!outlookInstance.dataError) {
+        outlookDays = outlookInstance.days
+        outlookData = outlookInstance.geoJson
       }
     }
   }
-  return { tabs, outOfDate, dataError }
+  return { messageIds, outOfDate, dataError, outlookDays, outlookData }
 }
 
 const getOutlook = async request => {

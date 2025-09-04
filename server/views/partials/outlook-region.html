@@ -1,53 +1,19 @@
-{% if model.tabs.lowForFive %}
-<p class="govuk-body">The flood risk for the next 5 days is very low.</p>
+{% if model.messageIds and model.messageIds.length > 0 %}
+<div class="defra-flood-forecast">
+    <h3>Raw Message IDs:</h3>
+    <ul>
+        {% for item in model.messageIds %}
+        <li>{{ item.messageId }} (Day: {{ item.day }}, Source: {{ item.source }}, Poly: {{ item.polyId }})</li>
+        {% endfor %}
+    </ul>
+</div>
 {% else %}
 <div class="defra-flood-forecast">
-    <p class="govuk-body">
-        {% if model.tabs.tab1 %}
-            Today there's a {{ model.tabs.dailyRisk[0] | lower }} risk of flooding.
-            {% for messageId, sources in model.tabs.tab1 %}
-                {% if messageId !== '1-i2-l2' %}
-                    {% if loop.first %} {% endif %}
-                    {% include "partials/outlook-region-messages.html" %}
-                    {% if not loop.last %} {% endif %}
-                {% endif %}
-            {% endfor %}
-        {% else %}
-            Today the flood risk is very low.
-        {% endif %}
-
-        {% if model.tabs.tab2 %}
-            On {{ model.tabs.dayName[1] }} the risk of flooding {{ model.tabs.trend[1] }} {{ model.tabs.dailyRisk[1] | lower }}.
-            {% for messageId, sources in model.tabs.tab2 %}
-                {% if messageId !== '1-i2-l2' %}
-                    {% if loop.first %} {% endif %}
-                    {% include "partials/outlook-region-messages.html" %}
-                    {% if not loop.last %} {% endif %}
-                {% endif %}
-            {% endfor %}
-        {% else %}
-            On {{ model.tabs.dayName[1] }} the flood risk is very low.
-        {% endif %}
-
-        {% if model.tabs.tab3 %}
-            {% for day in model.tabs.tab3 %}
-                {% set dayNum = loop.index + 2 %}
-                On {{ model.tabs.dayName[dayNum - 1] }} the risk of flooding {{ model.tabs.trend[dayNum - 1]}} {{ model.tabs.dailyRisk[dayNum - 1] | lower }}.
-                {% for messageId, sources in day %}
-                    {% if messageId !== '1-i2-l2' %}
-                        {% if loop.first %} {% endif %}
-                        {% include "partials/outlook-region-messages.html" %}
-                        {% if not loop.last %} {% endif %}
-                    {% endif %}
-                {% endfor %}
-            {% endfor %}
-        {% else %}
-            For the remaining days, there's a very low risk of flooding.
-        {% endif %}
-    </p>
+    <p>No flood risk data available for this location.</p>
 </div>
-<span id="map-outlook"></span>
 {% endif %}
+
+<span id="map-outlook"></span>
 
 <p class="defra-flood-meta">Updated at <time datetime="{{model.tabs.issueUTC}}">{{model.tabs.formattedIssueDate}}</time>
   <br>Produced by the Met Office and Environment Agency
