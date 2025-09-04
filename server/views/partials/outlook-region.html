@@ -1,17 +1,22 @@
-{% if model.messageIds and model.messageIds.length > 0 %}
-<div class="defra-flood-forecast">
-    <h3>Raw Message IDs:</h3>
-    <ul>
-        {% for item in model.messageIds %}
-        <li>{{ item.messageId }} (Day: {{ item.day }}, Source: {{ item.source }}, Poly: {{ item.polyId }})</li>
-        {% endfor %}
-    </ul>
-</div>
-{% else %}
-<div class="defra-flood-forecast">
+<div id="flood-matrix-container">
+{% if model.matrixData and model.matrixData.length > 0 %}
+  {% set hasRisk = false %}
+  {% for day in model.matrixData %}
+    {% for source in day %}
+      {% if source[0] > 0 or source[1] > 0 %}
+        {% set hasRisk = true %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+  {% if hasRisk %}
+    {{ model.matrixData | dump | safe }}
+  {% else %}
     <p class="govuk-body">The flood risk for the next 5 days is very low.</p>
-</div>
+  {% endif %}
+{% else %}
+  <p class="govuk-body">The flood risk for the next 5 days is very low.</p>
 {% endif %}
+</div>
 
 <span id="map-outlook"></span>
 

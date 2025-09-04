@@ -1,7 +1,7 @@
 const joi = require('joi')
 const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/location')
-const OutlookPolys = require('../models/outlook-polys')
+const OutlookMatrix = require('../models/outlook-matrix')
 const Outlook = require('../models/outlook')
 const locationService = require('../services/location')
 const moment = require('moment-timezone')
@@ -43,7 +43,7 @@ async function routeHandler (request, h) {
     return boom.notFound(`Location ${location} not found`)
   }
 
-  const { messageIds, outOfDate, dataError, outlookDays, outlookData } = await createOutlookMessageIds(place, request)
+  const { matrixData, outOfDate, dataError, outlookDays, outlookData } = await createOutlookMessageIds(place, request)
 
   const [
     impacts,
@@ -54,7 +54,7 @@ async function routeHandler (request, h) {
     request.server.methods.flood.getFloodsWithin(place.bbox2k),
     request.server.methods.flood.getStationsWithin(place.bbox10k)
   ])
-  const model = new ViewModel({ location, place, floods, stations, impacts, messageIds, outOfDate, dataError, outlookDays, outlookData })
+  const model = new ViewModel({ location, place, floods, stations, impacts, matrixData, outOfDate, dataError, outlookDays, outlookData })
   return h.view('location', { model })
 }
 
@@ -108,7 +108,7 @@ module.exports = [{
 }]
 
 const createOutlookMessageIds = async (place, request) => {
-  let messageIds = []
+  let matrixData = []
   let outOfDate = true
   let outlookDays = []
   let outlookData = null
@@ -134,8 +134,8 @@ const createOutlookMessageIds = async (place, request) => {
 
       const riskAreasCount = outlook.risk_areas ? outlook.risk_areas.length : 0
 
-      const outlookPolys = new OutlookPolys(outlook, place)
-      messageIds = outOfDate || riskAreasCount === 0 ? [] : outlookPolys.messageIds
+      const outlookPolys = new OutlookMatrix(outlook, place)
+      matrixData = outOfDate || riskAreasCount === 0 ? [] : outlookPolys.matrixData
 
       // Create full outlook instance for map data
       const outlookInstance = new Outlook(outlook, request.logger)
@@ -145,7 +145,7 @@ const createOutlookMessageIds = async (place, request) => {
       }
     }
   }
-  return { messageIds, outOfDate, dataError, outlookDays, outlookData }
+  return { matrixData, outOfDate, dataError, outlookDays, outlookData }
 }
 
 const getOutlook = async request => {
