@@ -1,107 +1,50 @@
 {% if model.tabs.lowForFive %}
 <p class="govuk-body">The flood risk for the next 5 days is very low.</p>
 {% else %}
-<div class="defra-flood-tabs" data-module="govuk-tabs">
-    <h2 class="govuk-tabs__title">
-        Contents
-    </h2>
-    <ul class="govuk-tabs__list">
-        <li class="govuk-tabs__list-item">
-            <a class="govuk-tabs__tab" href="#today">
-                <span class="defra-flood-tabs__label">Today</span>
-            </a>
-            {% if model.tabs.dailyRiskAsNum[0] > 2 %}
-            <span class="defra-flood-tabs__icon defra-flood-tabs__icon--{{ model.tabs.dailyRisk[0] | lower }}">Warning</span>
-            {% endif %}
-            <span class="defra-flood-tabs__label-risk">{{ model.tabs.dailyRisk[0] }} risk</span>
-        </li>
-        <li class="govuk-tabs__list-item">
-            <a class="govuk-tabs__tab" href="#tomorrow">
-                <span class="defra-flood-tabs__label">Tomorrow</span>
-            </a>
-            {% if model.tabs.dailyRiskAsNum[1] > 2 %}
-            <span class="defra-flood-tabs__icon defra-flood-tabs__icon--{{ model.tabs.dailyRisk[1] | lower }}">Warning</span>
-            {% endif %}
-            <span class="defra-flood-tabs__label-risk">{{ model.tabs.dailyRisk[1] }} risk</span>
-        </li>
-        <li class="govuk-tabs__list-item">
-            <a class="govuk-tabs__tab" href="#outlook">
-                <span class="defra-flood-tabs__label">Outlook</span>
-            </a>
-            {% if model.tabs.dailyRiskOutlookMax > 2 %}
-            <span class="defra-flood-tabs__icon defra-flood-tabs__icon--{{ model.tabs.dailyRiskOutlookMaxText | lower }}">Warning</span>
-            {% endif %}
-            <span class="defra-flood-tabs__label-risk">{{ model.tabs.dailyRiskOutlookMaxText }} risk</span>
-        </li>
-    </ul>
-    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="today">
-        <h3 class="govuk-heading-s">Today</h3>
-
-
+<div class="defra-flood-forecast">
+    <p class="govuk-body">
         {% if model.tabs.tab1 %}
-
-        <p>Today there's a {{ model.tabs.dailyRisk[0] | lower }} risk of flooding.</p>
-
-        {% for messageId, sources in model.tabs.tab1 %}
-        {% if messageId !== '1-i2-l2' %}
-        {% if loop.first %}<p>{% endif %}
-            {% include "partials/outlook-region-messages.html" %}
-        {% if loop.last %}</p>{% endif %}
-        {% endif %}
-        {% endfor %}
-
+            Today there's a {{ model.tabs.dailyRisk[0] | lower }} risk of flooding.
+            {% for messageId, sources in model.tabs.tab1 %}
+                {% if messageId !== '1-i2-l2' %}
+                    {% if loop.first %} {% endif %}
+                    {% include "partials/outlook-region-messages.html" %}
+                    {% if not loop.last %} {% endif %}
+                {% endif %}
+            {% endfor %}
         {% else %}
-
-        <p>Today the flood risk is very low.</p>
-
+            Today the flood risk is very low.
         {% endif %}
-    </div>
-    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tomorrow">
-        <h3 class="govuk-heading-s">Tomorrow</h3>
 
         {% if model.tabs.tab2 %}
-
-        <p>On {{ model.tabs.dayName[1] }} the risk of flooding {{ model.tabs.trend[1] }} {{ model.tabs.dailyRisk[1] | lower }}.</p>
-
-        {% for messageId, sources in model.tabs.tab2 %}
-        {% if messageId !== '1-i2-l2' %}
-        {% if loop.first %}<p>{% endif %}
-        {% include "partials/outlook-region-messages.html" %}
-        {% if loop.last %}</p>{% endif %}
-        {% endif %}
-        {% endfor %}
-
+            On {{ model.tabs.dayName[1] }} the risk of flooding {{ model.tabs.trend[1] }} {{ model.tabs.dailyRisk[1] | lower }}.
+            {% for messageId, sources in model.tabs.tab2 %}
+                {% if messageId !== '1-i2-l2' %}
+                    {% if loop.first %} {% endif %}
+                    {% include "partials/outlook-region-messages.html" %}
+                    {% if not loop.last %} {% endif %}
+                {% endif %}
+            {% endfor %}
         {% else %}
-
-        <p>The flood risk is very low.</p>
-
+            On {{ model.tabs.dayName[1] }} the flood risk is very low.
         {% endif %}
-    </div>
-    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="outlook">
-        <h3 class="govuk-heading-s">Outlook</h3>
 
         {% if model.tabs.tab3 %}
-
-        {% for day in model.tabs.tab3 %}
-        {% set dayNum = loop.index + 2 %}
-
-        <p> On {{ model.tabs.dayName[dayNum - 1] }} the risk of flooding {{ model.tabs.trend[dayNum - 1]}} {{ model.tabs.dailyRisk[dayNum - 1] | lower }}.</p>
-            
-        {% for messageId, sources in day %}
-        {% if messageId !== '1-i2-l2' %}
-        {% if loop.first %}<p>{% endif %}
-        {% include "partials/outlook-region-messages.html" %}
-        {% if loop.last %}</p>{% endif %}
-        {% endif %}
-        {% endfor %}
-        {% endfor %}
-
+            {% for day in model.tabs.tab3 %}
+                {% set dayNum = loop.index + 2 %}
+                On {{ model.tabs.dayName[dayNum - 1] }} the risk of flooding {{ model.tabs.trend[dayNum - 1]}} {{ model.tabs.dailyRisk[dayNum - 1] | lower }}.
+                {% for messageId, sources in day %}
+                    {% if messageId !== '1-i2-l2' %}
+                        {% if loop.first %} {% endif %}
+                        {% include "partials/outlook-region-messages.html" %}
+                        {% if not loop.last %} {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
         {% else %}
-
-        <p>There's a very low risk of flooding.</p>
-
+            For the remaining days, there's a very low risk of flooding.
         {% endif %}
-    </div>
+    </p>
 </div>
 <span id="map-outlook"></span>
 {% endif %}
