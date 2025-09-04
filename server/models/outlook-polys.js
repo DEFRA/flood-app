@@ -15,7 +15,6 @@ const RISK_LEVELS = new Map([
 module.exports = class OutlookPolys {
   constructor (outlook, place) {
     this.polys = []
-    this.messageIds = []
 
     const locationCoords = turf.polygon([
       [
@@ -36,6 +35,15 @@ module.exports = class OutlookPolys {
     this.polys.sort(sortPolys)
   }
 
+  get messageIds () {
+    return this.polys.map(poly => ({
+      messageId: poly.messageId,
+      day: poly.day,
+      source: poly.source,
+      polyId: poly.polyId
+    }))
+  }
+
   polyIntersectCheck (riskAreaBlock, locationCoords) {
     riskAreaBlock.polys.forEach(poly => {
       // build array of polys that intersect
@@ -53,12 +61,6 @@ module.exports = class OutlookPolys {
       if (impact > 1 && !(impact === 2 && likelihood === 1)) {
         const riskLevel = RISK_LEVELS.get(impact).get(likelihood)
         const messageId = `${riskLevel}-i${impact}-l${likelihood}`
-        this.messageIds.push({
-          messageId,
-          day,
-          source: key,
-          polyId: poly.id
-        })
 
         this.polys.push({
           riskLevel,
