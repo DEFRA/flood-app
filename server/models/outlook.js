@@ -1,4 +1,5 @@
 const turf = require('@turf/turf')
+const messageContent = require('./outlook-content.json')
 
 class Outlook {
   constructor (outlook, logger = console) {
@@ -145,7 +146,7 @@ class Outlook {
       if (messageGroupObj[key]) {
         messageGroupObj[key].sources.push(expandedSource[pos])
       } else {
-        messageGroupObj[key] = { sources: [expandedSource[pos]] }
+        messageGroupObj[key] = { sources: [expandedSource[pos]], message: messageContent[key] }
       }
     }
 
