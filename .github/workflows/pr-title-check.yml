@@ -1,15 +1,48 @@
 name: PR Title Check
 
 on:
-    pull_request:
-        types: [opened, edited, synchronize]
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  pull-requests: read
+
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' }}
-        steps:
-          - name: 🛂 Enforce Jira Issue Key in Pull Request Title
-            if: ${{ github.base_ref == 'development' && (startsWith(github.head_ref, 'feature') || startsWith(github.head_ref, 'fix'))}}
-            uses: ryanvade/enforce-pr-title-style-action@v1
-            with:
-              projectKey: FSR
+  title-checks:
+    name: Validate PR title
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' }}
+    steps:
+      - name: Show context
+        run: |
+          echo "Head: ${{ github.head_ref }}"
+          echo "Base: ${{ github.base_ref }}"
+          echo "Title: ${{ github.event.pull_request.title }}"
+
+      - name: Check Conventional Commit format
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          # type(scope?): description
+          if echo "$PR_TITLE" | grep -Eq '^(feat|fix|chore|docs|refactor|test|perf|build|ci|revert)(\([^)]+\))?: .{1,}$'; then
+            echo "Conventional Commit format OK"
+          else
+            echo "Invalid PR title. Use Conventional Commits, e.g.:"
+            echo "feat: add onboarding wizard"
+            echo "fix(auth): handle token refresh"
+            exit 1
+          fi
+      - name: Enforce Jira key for feature/* & hotfix/* → develop
+        if: >
+          startsWith(github.base_ref, 'develop') &&
+          (startsWith(github.head_ref, 'feature/') || startsWith(github.head_ref, 'hotfix/'))
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          # Require FSR-123 style key anywhere in the title
+          if echo "$PR_TITLE" | grep -Eq '\bFSR-[0-9]+\b'; then
+            echo "Jira key present"
+          else
+            echo "Missing Jira key (FSR-###) in PR title for feature/hotfix into develop."
+            exit 1
+          fi
