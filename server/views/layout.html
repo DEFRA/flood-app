@@ -29,6 +29,7 @@
 {% from "textarea/macro.njk"            import govukTextarea %}
 {% from "warning-text/macro.njk"        import govukWarningText %}
 {% from "footer/macro.njk"              import govukFooter %}
+{% from "service-navigation/macro.njk" import govukServiceNavigation %}
 
 {% set metaTitle = (pageTitle or model.pageTitle or 'Check for flooding') + ' - GOV.UK' %}
 {% set metaDescription = model.metaDescription | default('Check your risk of flooding. View the latest flood warnings and alerts, get a flood forecast for the next 5 days, and check the latest river, sea, groundwater and rainfall levels.') %}
@@ -83,9 +84,11 @@
 
   {{ govukHeader({
     homepageUrl: "https://www.gov.uk/",
-    serviceName: serviceName,
-    serviceUrl: "/",
-    useTudorCrown: true
+    rebrand: true 
+  }) }}
+  {{ govukServiceNavigation({
+    serviceName: "Check for flooding",
+    serviceUrl: "/"
   }) }}
 
 {% endblock %}
