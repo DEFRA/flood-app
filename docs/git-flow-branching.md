@@ -24,28 +24,15 @@ Our GitHub Actions enforce PR validation:
 - `release/*` → must target `master` and/or `development` (automation handles both)
 
 ### PR Title Rules
-PR titles must satisfy **both**:
+PR titles must be formatted as:
 
-1. **Conventional Commits format**  
-   ```
-   type(scope?): short description
-   ```
-   Examples:  
-   - `feat: add onboarding wizard`  
-   - `fix(auth): handle token refresh`  
+```
+FSR-<ticket number> | <short description>
+```
 
-   Allowed types:  
-   `feat | fix | chore | docs | refactor | test | perf | build | ci | revert`
-
-2. **Jira Issue Key (FSR-###)**  
-   Required when:  
-   - The PR is from a `feature/*` or `hotfix/*` branch  
-   - And targets the `development` branch  
-
-   Example:  
-   ```
-   feat(auth): handle token refresh [FSR-123]
-   ```
+Examples:
+- `FSR-1436 | GOV UK rebrand to 5.10`
+- `FSR-1520 | Fix login session expiry issue`
 
  PRs that don’t meet these rules will **fail CI checks** until corrected.
 
@@ -68,7 +55,7 @@ PR titles must satisfy **both**:
 
 ---
 
-## 🛠 Hotfix Process
+## Hotfix Process
 
 1. Branch from `master`:  
    ```bash
