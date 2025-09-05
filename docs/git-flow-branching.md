@@ -1,4 +1,4 @@
-# 📘 GitFlow Branching & CI/CD Workflows
+# GitFlow Branching & CI/CD Workflows
 
 This repository follows a **GitFlow workflow** with automated checks and release management powered by **GitHub Actions**.  
 
