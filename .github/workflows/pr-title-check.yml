@@ -18,31 +18,17 @@ jobs:
           echo "Head: ${{ github.head_ref }}"
           echo "Base: ${{ github.base_ref }}"
           echo "Title: ${{ github.event.pull_request.title }}"
-
-      - name: Check Conventional Commit format
+      - name: Validate PR title (FSR-### | description)
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          # type(scope?): description
-          if echo "$PR_TITLE" | grep -Eq '^(feat|fix|chore|docs|refactor|test|perf|build|ci|revert)(\([^)]+\))?: .{1,}$'; then
-            echo "Conventional Commit format OK"
+          echo "PR title: $PR_TITLE"
+          # Require: FSR-<digits> | <anything after the pipe>
+          # Note: the '|' must be escaped for grep -E; allow leading/trailing spaces around the pipe.
+          if echo "$PR_TITLE" | grep -Eq '^FSR-[0-9]+ *\| *.+$'; then
+            echo "Title matches: FSR-### | short description"
           else
-            echo "Invalid PR title. Use Conventional Commits, e.g.:"
-            echo "feat: add onboarding wizard"
-            echo "fix(auth): handle token refresh"
-            exit 1
-          fi
-      - name: Enforce Jira key for feature/* & hotfix/* → develop
-        if: >
-          startsWith(github.base_ref, 'develop') &&
-          (startsWith(github.head_ref, 'feature/') || startsWith(github.head_ref, 'hotfix/'))
-        env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
-        run: |
-          # Require FSR-123 style key anywhere in the title
-          if echo "$PR_TITLE" | grep -Eq '\bFSR-[0-9]+\b'; then
-            echo "Jira key present"
-          else
-            echo "Missing Jira key (FSR-###) in PR title for feature/hotfix into develop."
+            echo "Invalid PR title. Use: FSR-### | short description"
+            echo "Example: FSR-1436 | GOV UK rebrand to 5.10"
             exit 1
           fi
