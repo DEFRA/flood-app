@@ -1,14 +1,16 @@
 {% extends 'layout.html' %}
+{% from "service-navigation/macro.njk" import govukServiceNavigation %}
 
 {% block header %}
   {{ govukHeader({
     homepageUrl: "https://www.gov.uk/",
     containerClasses: "govuk-width-container",
-    serviceName: serviceName,
-    serviceUrl: "/",
-    useTudorCrown: true
+    rebrand: true
   }) }}
-
+  {{ govukServiceNavigation({
+    serviceName: serviceName,
+    serviceUrl: "/"
+  }) }}
 {% endblock %}
 {% block content %}
 <div class="govuk-grid-row">
