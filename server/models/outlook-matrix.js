@@ -23,6 +23,11 @@ module.exports = class OutlookMatrix {
       return DEV_MATRIX_OVERRIDE
     }
 
+    // If no location is provided, return empty matrix (no national fallback)
+    if (!this.location || !this.location.bbox2k) {
+      return Array(5).fill().map(() => Array(4).fill().map(() => [0, 0]))
+    }
+
     // Create 5x4 matrix: [day][source][impact, likelihood]
     // Sources: [river, coastal, surface, ground]
     const matrix = Array(5).fill().map(() =>
@@ -37,15 +42,14 @@ module.exports = class OutlookMatrix {
       ground: 3
     }
 
-    // Process all risk areas (national view, not location-specific)
+    // Process risk areas that intersect with the location
     if (this.outlook && this.outlook.risk_areas) {
       this.outlook.risk_areas.forEach(riskArea => {
         riskArea.risk_area_blocks.forEach(riskAreaBlock => {
-          // If location is provided, filter risk areas that intersect with location bbox
-          if (this.location && !this.riskAreaIntersectsLocation(riskAreaBlock)) {
-            return // Skip this risk area block
+          // Only include risk areas that intersect with location bbox
+          if (this.riskAreaIntersectsLocation(riskAreaBlock)) {
+            this.processRiskAreaBlock(riskAreaBlock, matrix, sourceMap)
           }
-          this.processRiskAreaBlock(riskAreaBlock, matrix, sourceMap)
         })
       })
     }
@@ -78,7 +82,7 @@ module.exports = class OutlookMatrix {
 
   riskAreaIntersectsLocation (riskAreaBlock) {
     if (!this.location || !this.location.bbox2k) {
-      return true // If no location provided, include all risk areas
+      return false // Should not be called without location, but safety check
     }
 
     const locationBbox = this.location.bbox2k
