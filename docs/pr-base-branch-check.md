@@ -58,11 +58,3 @@ Error: Process completed with exit code 1.
 ```
 
 ---
-
-## Notes
-
-- The workflow ignores PRs opened by `dependabot[bot]`.  
-- Rules are based on `github.event.pull_request.base.ref` (e.g., `master`) and `github.event.pull_request.head.ref` (e.g., `feature/foo`).  
-- Adjust the patterns (`feature/*`, `release/*`, `hotfix/*`) if your team uses different naming.
-
----
