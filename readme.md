@@ -8,9 +8,9 @@ This is the front end application to check the flooding service
 
 ### Prerequisites
 
-Running flood-db: https://github.com/DEFRA/flood-db
-Running flood-gis: https://github.com/DEFRA/flood-gis
-Running flood-service: https://github.com/DEFRA/flood-service
+- Running flood-db: https://github.com/DEFRA/flood-db
+- Running flood-gis: https://github.com/DEFRA/flood-gis
+- Running flood-service: https://github.com/DEFRA/flood-service
 
 Node.js v20.x.x
 
