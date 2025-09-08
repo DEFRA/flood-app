@@ -18,6 +18,8 @@ Node.js v20.x.x
 
 - [GitFlow Branching](docs/git-flow-branching.md)
 - [PR Base Branch Check](docs/pr-base-branch-check.md)
+- [Technical guide to the Release GitHub Action](docs/release-workflow.md)
+- [Release management playbook](https://gitlab-dev.aws-int.defra.cloud/flood/flood-docs/-/blob/master/processes/CFF-Releases.md?ref_type=heads)
 
 ### Testing the application
 
