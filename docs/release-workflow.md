@@ -86,14 +86,3 @@ Goal: **Cut a `release/x.y.z` branch from `development`, bump the version, push 
 - Rotate PATs regularly.  
 
 ---
-
-## Checklist for Release Manager
-
-- [ ] Run workflow with correct inputs  
-- [ ] Verify branch + notes exist  
-- [ ] Review draft PRs  
-- [ ] Merge into `master`  
-- [ ] Merge back into `development`  
-- [ ] Tag/publish release (if not automated)  
-
----
