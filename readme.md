@@ -12,7 +12,12 @@ Running flood-db: https://github.com/DEFRA/flood-db
 Running flood-gis: https://github.com/DEFRA/flood-gis
 Running flood-service: https://github.com/DEFRA/flood-service
 
-Node.js v16.x.x
+Node.js v20.x.x
+
+### Workflow Documentation
+
+- [GitFlow Branching](docs/git-flow-branching.md)
+- [PR Base Branch Check](docs/pr-base-branch-check.md)
 
 ### Testing the application
 
