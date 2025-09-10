@@ -1,4 +1,4 @@
-# 🚀 Create Release Branch and Draft PRs (Workflow Guide)
+# Create Release Branch and Draft PRs (Workflow Guide)
 
 This document explains how the **Create Release Branch and Pull Requests** workflow works and how to run it safely.  
 File: `.github/workflows/release.yml`  
