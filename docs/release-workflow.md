@@ -8,10 +8,6 @@ Goal: **Cut a `release/x.y.z` branch from `development`, bump the version, push 
 
 ---
 
-## Triggers
-
-- **Manual only** via **Actions → Create Release Branch and Pull Requests → Run workflow** (`workflow_dispatch`).
-
 ### Inputs
 - `jira_release_id` – ID from your Jira release URL (used in notes).
 - `proposed_release_date` – `dd/mm/yyyy` (passed to notes generator).
@@ -23,7 +19,6 @@ Goal: **Cut a `release/x.y.z` branch from `development`, bump the version, push 
 ## Required Secrets & Permissions
 
 - `GH_WORKFLOW` – **Classic PAT (repo scope)** for GitHub CLI (`gh`) to create PRs and trigger downstream workflows.
-- App/runtime secrets (`FLOOD_APP_*`) – used when committing generated notes.
 - Repo settings:  
   - Actions → General → Workflow permissions → **Read and write**  
   - (Recommended) Allow GitHub Actions to create and approve PRs  
@@ -53,7 +48,7 @@ Goal: **Cut a `release/x.y.z` branch from `development`, bump the version, push 
 2. Provide inputs (`increment`, `jira_release_id`, `proposed_release_date`, `db_changes`).  
 3. Run workflow.  
 4. After completion, check:  
-   - `release/x.y.z` branch exists  
+   - `release/x.y.z` branch exists on app and on Flood-service repo  
    - Draft PRs into `master` and `development` are created  
    - Release notes committed (if template exists)  
 
@@ -65,7 +60,6 @@ Goal: **Cut a `release/x.y.z` branch from `development`, bump the version, push 
 - Version bump committed  
 - Optional release notes file in `release-docs/`  
 - Draft PRs into `master` and `development`  
-- (Optional) Downstream workflow triggered  
 
 ---
 
@@ -76,13 +70,5 @@ Goal: **Cut a `release/x.y.z` branch from `development`, bump the version, push 
 - **`npm ci` fails** – check `.nvmrc`, engines, lockfile.  
 - **No notes generated** – ensure `release-docs/template.njk` exists.  
 - **Downstream workflow didn’t trigger** – check PAT scope and target file name.  
-
----
-
-## Governance
-
-- Keep `master` & `development` protected.  
-- Draft PRs prevent accidental merges until marked “Ready for review.”  
-- Rotate PATs regularly.  
 
 ---

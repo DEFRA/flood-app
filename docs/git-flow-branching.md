@@ -40,18 +40,7 @@ Examples:
 
 ## Release Process
 
-1. Run the **"Create Release Branch"** workflow in **Actions**  
-   - Input version (e.g. `1.4.0`)  
-   - Creates `release/1.4.0` from `development`  
-
-2. Commit any fixes to the `release/1.4.0` branch  
-
-3. The **Release Automation** workflow will:  
-   - Open PRs:  
-     - `release/1.4.0` → `master`  
-     - `release/1.4.0` → `development` (back-merge)  
-   - Enable **auto-merge** once checks pass  
-   - Tag `v1.4.0` on `master` and create a GitHub Release  
+Can be found in the [Release Workflow documentation](./release-workflow.md)
 
 ---
 

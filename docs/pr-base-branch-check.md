@@ -25,10 +25,6 @@ The job checks the **source branch** (head) and the **target branch** (base) aga
   - `hotfix/*` (back-merge) → allowed  
   - Any other branch type → workflow fails
 
-- **Into other branches**  
-  - By default the workflow allows these but prints an informational message.  
-  - You can make this a failure if you want to lock the repo down further.
-
 ---
 
 ## Why This Matters
@@ -44,15 +40,15 @@ This protects the repository by enforcing the GitFlow strategy:
 ## Example Output
 
 ```
-PR: feature/add-login  →  development
-Allowed: feature/add-login → development
+PR:  FSR-123 | feature/add-login  →  development
+Allowed:  FSR-123 |feature/add-login → development
 Branches OK per policy.
 ```
 
 If the rules are broken:
 
 ```
-PR: feature/add-login  →  master
+PR: add-login  →  master
 Only release/* or hotfix/* branches may target master.
 Error: Process completed with exit code 1.
 ```
