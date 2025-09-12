@@ -38,27 +38,14 @@ class ViewModel {
     }
 
     // Count stations that are 'high'
-    let hasHighLevels = false
-    for (const s in stations) {
-      if (
-        stations[s].station_type !== 'C' && stations[s].station_type !== 'G' && stations[s].value && stations[s].status.toLowerCase() === 'active' &&
-        parseFloat(stations[s].value) > parseFloat(stations[s].percentile_5)
-      ) {
-        hasHighLevels = true
-      }
-    }
-    this.hasHighLevels = hasHighLevels
+    this.processStations(stations)
 
     // River and sea levels
     this.hasLevels = !!stations.length
     this.levels = groupBy(stations, 'wiski_river_name')
 
     // Impacts
-    // sort impacts order by value
-    impacts.sort((a, b) => b.value - a.value)
-    // create an array of all active impacts
-    this.activeImpacts = impacts.filter(active => active.telemetryactive === true)
-    this.hasActiveImpacts = !!this.activeImpacts.length
+    this.processImpacts(impacts)
 
     // Outlook message IDs
 
@@ -177,6 +164,27 @@ class ViewModel {
       this.removedLinkText = 'Flood alerts and warnings were removed'
       this.removedText = 'in the last 24 hours.'
     }
+  }
+
+  processStations (stations) {
+    let hasHighLevels = false
+    for (const s in stations) {
+      if (
+        stations[s].station_type !== 'C' && stations[s].station_type !== 'G' && stations[s].value && stations[s].status.toLowerCase() === 'active' &&
+        parseFloat(stations[s].value) > parseFloat(stations[s].percentile_5)
+      ) {
+        hasHighLevels = true
+      }
+    }
+    this.hasHighLevels = hasHighLevels
+  }
+
+  processImpacts (impacts) {
+    // sort impacts order by value
+    impacts.sort((a, b) => b.value - a.value)
+    // create an array of all active impacts
+    this.activeImpacts = impacts.filter(active => active.telemetryactive === true)
+    this.hasActiveImpacts = !!this.activeImpacts.length
   }
 }
 
