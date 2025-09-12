@@ -4,7 +4,7 @@ const { floodFisUrl, bingKeyMaps, floodRiskUrl } = require('../../config')
 const moment = require('moment-timezone')
 
 class ViewModel {
-  constructor ({ location, place, floods, stations, impacts, tabs, outOfDate, dataError }) {
+  constructor ({ location, place, floods, stations, impacts, matrixData, outOfDate, dataError, outlookDays, outlookData }) {
     const title = place.name
 
     Object.assign(this, {
@@ -14,7 +14,7 @@ class ViewModel {
       floods,
       impacts,
       floodRiskUrl,
-      tabs,
+      matrixData,
       outOfDate,
       pageTitle: `Check for flooding in ${title}`,
       metaDescription: `View current flood warnings and alerts for the ${title} area,` +
@@ -38,37 +38,26 @@ class ViewModel {
     }
 
     // Count stations that are 'high'
-    let hasHighLevels = false
-    for (const s in stations) {
-      if (
-        stations[s].station_type !== 'C' && stations[s].station_type !== 'G' && stations[s].value && stations[s].status.toLowerCase() === 'active' &&
-        parseFloat(stations[s].value) > parseFloat(stations[s].percentile_5)
-      ) {
-        hasHighLevels = true
-      }
-    }
-    this.hasHighLevels = hasHighLevels
+    this.processStations(stations)
 
     // River and sea levels
     this.hasLevels = !!stations.length
     this.levels = groupBy(stations, 'wiski_river_name')
 
     // Impacts
-    // sort impacts order by value
-    impacts.sort((a, b) => b.value - a.value)
-    // create an array of all active impacts
-    this.activeImpacts = impacts.filter(active => active.telemetryactive === true)
-    this.hasActiveImpacts = !!this.activeImpacts.length
+    this.processImpacts(impacts)
 
-    // Outlook tabs
+    // Outlook message IDs
 
     // Expose model values for client side javascript
     this.expose = {
       hasWarnings: this.hasActiveFloods,
       mapButtonText: this.hasActiveFloods ? 'View map of flood warnings and alerts' : 'View map',
       placeBbox: this.placeBbox,
-      outlookDays: tabs.days,
-      bingMaps: bingKeyMaps
+      bingMaps: bingKeyMaps,
+      outlookDays: outlookDays || [],
+      outlookData: outlookData || null,
+      matrixData: matrixData || []
     }
   }
 
@@ -175,6 +164,27 @@ class ViewModel {
       this.removedLinkText = 'Flood alerts and warnings were removed'
       this.removedText = 'in the last 24 hours.'
     }
+  }
+
+  processStations (stations) {
+    let hasHighLevels = false
+    for (const s in stations) {
+      if (
+        stations[s].station_type !== 'C' && stations[s].station_type !== 'G' && stations[s].value && stations[s].status.toLowerCase() === 'active' &&
+        parseFloat(stations[s].value) > parseFloat(stations[s].percentile_5)
+      ) {
+        hasHighLevels = true
+      }
+    }
+    this.hasHighLevels = hasHighLevels
+  }
+
+  processImpacts (impacts) {
+    // sort impacts order by value
+    impacts.sort((a, b) => b.value - a.value)
+    // create an array of all active impacts
+    this.activeImpacts = impacts.filter(active => active.telemetryactive === true)
+    this.hasActiveImpacts = !!this.activeImpacts.length
   }
 }
 
