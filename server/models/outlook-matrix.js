@@ -9,6 +9,8 @@ const DEV_MATRIX_OVERRIDE = [
   [[0, 0], [0, 0], [0, 0], [0, 0]] // Day 5
 ]
 
+const MATRIX_DAYS = 5
+
 const turf = require('@turf/turf')
 
 module.exports = class OutlookMatrix {
@@ -24,13 +26,13 @@ module.exports = class OutlookMatrix {
     }
 
     // If no location is provided, return empty matrix (no national fallback)
-    if (!this.location || !this.location.bbox2k) {
-      return Array(5).fill().map(() => Array(4).fill().map(() => [0, 0]))
+    if (!this.location?.bbox2k) {
+      return Array(MATRIX_DAYS).fill().map(() => Array(4).fill().map(() => [0, 0]))
     }
 
     // Create 5x4 matrix: [day][source][impact, likelihood]
     // Sources: [river, coastal, surface, ground]
-    const matrix = Array(5).fill().map(() =>
+    const matrix = Array(MATRIX_DAYS).fill().map(() =>
       Array(4).fill().map(() => [0, 0])
     )
 
@@ -43,7 +45,7 @@ module.exports = class OutlookMatrix {
     }
 
     // Process risk areas that intersect with the location
-    if (this.outlook && this.outlook.risk_areas) {
+    if (this.outlook?.risk_areas) {
       this.outlook.risk_areas.forEach(riskArea => {
         riskArea.risk_area_blocks.forEach(riskAreaBlock => {
           // Only include risk areas that intersect with location bbox
@@ -61,27 +63,27 @@ module.exports = class OutlookMatrix {
     // Process each source type in the risk levels
     for (const [sourceKey, [impact, likelihood]] of Object.entries(riskAreaBlock.risk_levels)) {
       const sourceIndex = sourceMap[sourceKey]
-
-      if (sourceIndex !== undefined) {
-        // Apply to each day this risk area block covers
-        riskAreaBlock.days.forEach(day => {
-          const dayIndex = day - 1 // Convert 1-based day to 0-based index
-
-          if (dayIndex >= 0 && dayIndex < 5) {
-            // Take maximum values if multiple risk areas affect same day/source
-            const current = matrix[dayIndex][sourceIndex]
-            matrix[dayIndex][sourceIndex] = [
-              Math.max(current[0], impact),
-              Math.max(current[1], likelihood)
-            ]
-          }
-        })
+      if (sourceIndex === undefined) {
+        continue
       }
+
+      // Apply to each day this risk area block covers
+      riskAreaBlock.days.forEach(day => {
+        const dayIndex = day - 1 // Convert 1-based day to 0-based index
+        if (dayIndex >= 0 && dayIndex < MATRIX_DAYS) {
+          // Take maximum values if multiple risk areas affect same day/source
+          const current = matrix[dayIndex][sourceIndex]
+          matrix[dayIndex][sourceIndex] = [
+            Math.max(current[0], impact),
+            Math.max(current[1], likelihood)
+          ]
+        }
+      })
     }
   }
 
   riskAreaIntersectsLocation (riskAreaBlock) {
-    if (!this.location || !this.location.bbox2k) {
+    if (!this.location?.bbox2k) {
       return false // Should not be called without location, but safety check
     }
 
@@ -90,24 +92,22 @@ module.exports = class OutlookMatrix {
 
     // Check if any polygon in this risk area block intersects with the location
     for (const poly of riskAreaBlock.polys) {
-      try {
-        let riskAreaPolygon
+      let riskAreaPolygon
 
-        if (poly.poly_type === 'inland' && poly.coordinates && poly.coordinates.length > 0) {
-          // Inland polygons are already polygons
-          riskAreaPolygon = turf.polygon(poly.coordinates)
-        } else if (poly.poly_type === 'coastal' && poly.coordinates && poly.coordinates.length > 0) {
-          // Coastal areas are linestrings, convert to polygon with buffer
-          const lineString = turf.lineString(poly.coordinates[0])
-          riskAreaPolygon = turf.buffer(lineString, 1, { units: 'miles' })
-        }
+      if (poly.poly_type === 'inland' && poly.coordinates?.length > 0) {
+        // Inland polygons are already polygons
+        riskAreaPolygon = turf.polygon(poly.coordinates)
+      } else if (poly.poly_type === 'coastal' && poly.coordinates?.length > 0) {
+        // Coastal areas are linestrings, convert to polygon with buffer
+        const lineString = turf.lineString(poly.coordinates?.[0])
+        riskAreaPolygon = turf.buffer(lineString, 1, { units: 'miles' })
+      } else {
+        // Skip unknown poly_type
+        riskAreaPolygon = null
+      }
 
-        if (riskAreaPolygon && turf.intersect(locationPolygon, riskAreaPolygon)) {
-          return true // Found intersection
-        }
-      } catch (error) {
-        // Skip malformed polygons and continue checking others
-        continue
+      if (riskAreaPolygon && turf.intersect(locationPolygon, riskAreaPolygon)) {
+        return true // Found intersection
       }
     }
 
