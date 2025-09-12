@@ -1,7 +1,7 @@
 const turf = require('@turf/turf')
-const messageContent = require('./outlook-content.json')
+const messageContent = require('./outlook-map-content.json')
 
-class Outlook {
+class OutlookMap {
   constructor (outlook, logger = console) {
     if (!outlook || Object.keys(outlook).length === 0 || this.dataError) {
       this.dataError = true
@@ -238,4 +238,4 @@ class Outlook {
   }
 }
 
-module.exports = Outlook
+module.exports = OutlookMap

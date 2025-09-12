@@ -2,7 +2,7 @@ const joi = require('joi')
 const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/location')
 const OutlookMatrix = require('../models/outlook-matrix')
-const Outlook = require('../models/outlook')
+const OutlookMap = require('../models/outlook-map')
 const locationService = require('../services/location')
 const moment = require('moment-timezone')
 const tz = 'Europe/London'
@@ -138,7 +138,7 @@ const createOutlookMessageIds = async (place, request) => {
       matrixData = outOfDate || riskAreasCount === 0 ? [] : outlookPolys.matrixData
 
       // Create full outlook instance for map data
-      const outlookInstance = new Outlook(outlook, request.logger)
+      const outlookInstance = new OutlookMap(outlook, request.logger)
       if (!outlookInstance.dataError) {
         outlookDays = outlookInstance.days
         outlookData = outlookInstance.geoJson
