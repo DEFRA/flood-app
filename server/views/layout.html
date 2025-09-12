@@ -1,4 +1,5 @@
 {% extends "template.njk" %}
+{% set govukRebrand = true %}
 
 {% from "accordion/macro.njk"           import govukAccordion %}
 {% from "back-link/macro.njk"           import govukBackLink %}
@@ -28,6 +29,7 @@
 {% from "textarea/macro.njk"            import govukTextarea %}
 {% from "warning-text/macro.njk"        import govukWarningText %}
 {% from "footer/macro.njk"              import govukFooter %}
+{% from "service-navigation/macro.njk" import govukServiceNavigation %}
 
 {% set metaTitle = (pageTitle or model.pageTitle or 'Check for flooding') + ' - GOV.UK' %}
 {% set metaDescription = model.metaDescription | default('Check your risk of flooding. View the latest flood warnings and alerts, get a flood forecast for the next 5 days, and check the latest river, sea, groundwater and rainfall levels.') %}
@@ -58,11 +60,21 @@
     <link rel="canonical" href="{{ model.canonicalUrl if model.canonicalUrl else fullUrl }}"/>
   {% endif %}
 
+  <meta name="theme-color" content="#1d70b8">
+  <link rel="icon" sizes="48x48" href="/assets/rebrand/images/favicon.ico">
+  <link rel="icon" sizes="any" href="/assets/rebrand/images/favicon.svg" type="image/svg+xml">
+  <link rel="mask-icon" href="/assets/rebrand/images/govuk-icon-mask.svg" color="#1d70b8">
+  <link rel="apple-touch-icon" href="/assets/rebrand/images/govuk-icon-180.png">
+  <link rel="manifest" href="/assets/rebrand/manifest.json">
+  <meta property="og:image" content="node_modules/assets/rebrand/images/govuk-opengraph-image.png">
+
   <script>
     if (window.location.hash === '#webchat' && window.matchMedia('(max-width: 640px)').matches) {
       document.body.classList.add('wc-hidden')
     }
   </script>
+
+  <script src="{{ assetPath }}/javascripts/canvas-patch.js"></script>
 
 {% endblock %}
 
@@ -74,9 +86,11 @@
 
   {{ govukHeader({
     homepageUrl: "https://www.gov.uk/",
-    serviceName: serviceName,
-    serviceUrl: "/",
-    useTudorCrown: true
+    rebrand: true 
+  }) }}
+  {{ govukServiceNavigation({
+    serviceName: "Check for flooding",
+    serviceUrl: "/"
   }) }}
 
 {% endblock %}
@@ -151,12 +165,10 @@
         {
           href: "/terms-and-conditions",
           text: "Terms and conditions"
-        },
-        {
-          href: "https://www.gov.uk/government/organisations/environment-agency",
-          text: "Built by the Environment Agency"
         }
       ]
+      ,
+      html: 'Built by the <a class="govuk-footer__link" href="https://www.gov.uk/government/organisations/environment-agency">Environment Agency</a>'
     }
   }) }}
 {% endblock %}
