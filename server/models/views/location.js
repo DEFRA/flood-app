@@ -4,7 +4,7 @@ const { floodFisUrl, bingKeyMaps, floodRiskUrl } = require('../../config')
 const moment = require('moment-timezone')
 
 class ViewModel {
-  constructor ({ location, place, floods, stations, impacts, matrixData, outOfDate, dataError, outlookDays, outlookData }) {
+  constructor ({ location, place, floods, stations, impacts, matrixData, outOfDate, dataError, outlookDays, outlookData, outlookContent }) {
     const title = place.name
 
     Object.assign(this, {
@@ -16,6 +16,7 @@ class ViewModel {
       floodRiskUrl,
       matrixData,
       outOfDate,
+      outlookContent,
       pageTitle: `Check for flooding in ${title}`,
       metaDescription: `View current flood warnings and alerts for the ${title} area,` +
         ' and the regional flood forecast for the next 5 days. Also check local river, sea, groundwater and rainfall levels.',
@@ -57,7 +58,8 @@ class ViewModel {
       bingMaps: bingKeyMaps,
       outlookDays: outlookDays || [],
       outlookData: outlookData || null,
-      matrixData: matrixData || []
+      matrixData: matrixData || [],
+      outlookContent: outlookContent || ''
     }
   }
 
