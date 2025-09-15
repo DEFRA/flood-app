@@ -25,11 +25,6 @@ module.exports = class OutlookMatrix {
       return DEV_MATRIX_OVERRIDE
     }
 
-    // If no location is provided, return empty matrix (no national fallback)
-    if (!this.location?.bbox2k) {
-      return Array(MATRIX_DAYS).fill().map(() => Array(4).fill().map(() => [0, 0]))
-    }
-
     // Create 5x4 matrix: [day][source][impact, likelihood]
     // Sources: [river, coastal, surface, ground]
     const matrix = Array(MATRIX_DAYS).fill().map(() =>
@@ -44,8 +39,8 @@ module.exports = class OutlookMatrix {
       ground: 3
     }
 
-    // Process risk areas that intersect with the location
-    if (this.outlook?.risk_areas) {
+    // Process risk areas that intersect with the location (only if location exists)
+    if (this.location?.bbox2k && this.outlook?.risk_areas) {
       this.outlook.risk_areas.forEach(riskArea => {
         riskArea.risk_area_blocks.forEach(riskAreaBlock => {
           // Only include risk areas that intersect with location bbox
@@ -92,18 +87,17 @@ module.exports = class OutlookMatrix {
 
     // Check if any polygon in this risk area block intersects with the location
     for (const poly of riskAreaBlock.polys) {
-      let riskAreaPolygon
+      let riskAreaPolygon = null
 
-      if (poly.poly_type === 'inland' && poly.coordinates?.length > 0) {
+      if (poly.poly_type === 'inland' && this.isValidPolygonCoordinates(poly.coordinates)) {
         // Inland polygons are already polygons
         riskAreaPolygon = turf.polygon(poly.coordinates)
-      } else if (poly.poly_type === 'coastal' && poly.coordinates?.length > 0) {
+      } else if (poly.poly_type === 'coastal' && this.isValidLineStringCoordinates(poly.coordinates?.[0])) {
         // Coastal areas are linestrings, convert to polygon with buffer
-        const lineString = turf.lineString(poly.coordinates?.[0])
+        const lineString = turf.lineString(poly.coordinates[0])
         riskAreaPolygon = turf.buffer(lineString, 1, { units: 'miles' })
       } else {
-        // Skip unknown poly_type
-        riskAreaPolygon = null
+        // Skip unknown poly_type or invalid coordinates
       }
 
       if (riskAreaPolygon && turf.intersect(locationPolygon, riskAreaPolygon)) {
@@ -112,5 +106,30 @@ module.exports = class OutlookMatrix {
     }
 
     return false // No intersection found
+  }
+
+  // Helper to validate polygon coordinates (array of rings, each ring is array of [lng, lat])
+  isValidPolygonCoordinates (coordinates) {
+    if (!Array.isArray(coordinates) || coordinates.length === 0) {
+      return false
+    }
+    return coordinates.every(ring =>
+      Array.isArray(ring) && ring.length > 0 &&
+      ring.every(coord => Array.isArray(coord) && coord.length >= 2 &&
+        typeof coord[0] === 'number' && typeof coord[1] === 'number' &&
+        !isNaN(coord[0]) && !isNaN(coord[1])
+      )
+    )
+  }
+
+  // Helper to validate linestring coordinates (array of [lng, lat])
+  isValidLineStringCoordinates (coordinates) {
+    if (!Array.isArray(coordinates) || coordinates.length < 2) {
+      return false
+    }
+    return coordinates.every(coord => Array.isArray(coord) && coord.length >= 2 &&
+      typeof coord[0] === 'number' && typeof coord[1] === 'number' &&
+      !isNaN(coord[0]) && !isNaN(coord[1])
+    )
   }
 }
