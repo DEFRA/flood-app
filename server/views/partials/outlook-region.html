@@ -1,20 +1,8 @@
 <div id="flood-matrix-container">
-{% if model.matrixData and model.matrixData.length > 0 %}
-  {% set hasRisk = false %}
-  {% for day in model.matrixData %}
-    {% for source in day %}
-      {% if source[0] > 0 or source[1] > 0 %}
-        {% set hasRisk = true %}
-      {% endif %}
-    {% endfor %}
-  {% endfor %}
-  {% if hasRisk %}
-    {{ model.matrixData | dump | safe }}
-  {% else %}
-    <p class="govuk-body">The flood risk for the next 5 days is very low.</p>
-  {% endif %}
-{% else %}
-  <p class="govuk-body">The flood risk for the next 5 days is very low.</p>
+{% if model.outlookContent %}
+  <p class="govuk-body">{{ model.outlookContent }}</p>
+  <!-- Matrix Data -->
+  {{ model.matrixData | dump | safe }}
 {% endif %}
 </div>
 
