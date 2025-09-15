@@ -1,6 +1,20 @@
 const turf = require('@turf/turf')
 const messageContent = require('./outlook-map-content.json')
 
+// Risk level constants to avoid magic numbers
+const VERY_LOW = 1
+const LOW = 2
+const MEDIUM = 3
+const HIGH = 4
+
+// Impact and likelihood constants
+const IMPACT_LOW = 1
+const IMPACT_MEDIUM = 2
+const LIKELIHOOD_LOW = 1
+
+// Number of outlook days
+const OUTLOOK_DAYS = 5
+
 class OutlookMap {
   constructor (outlook, logger = console) {
     if (!outlook || Object.keys(outlook).length === 0 || this.dataError) {
@@ -13,10 +27,10 @@ class OutlookMap {
     this._outOfDate = true
 
     // Highest daily risk
-    this._riskLevels = [0, 0, 0, 0, 0]
+    this._riskLevels = Array(OUTLOOK_DAYS).fill(0)
 
     // Build outlook GeoJSON
-    const riskMatrix = [[1, 1, 1, 1], [1, 1, 2, 2], [2, 2, 3, 3], [2, 3, 3, 4]]
+    const riskMatrix = [[VERY_LOW, VERY_LOW, VERY_LOW, VERY_LOW], [VERY_LOW, VERY_LOW, LOW, LOW], [LOW, LOW, MEDIUM, MEDIUM], [LOW, MEDIUM, MEDIUM, HIGH]]
     const riskBands = ['Very low', 'Low', 'Medium', 'High']
 
     this._geoJson = {
@@ -52,7 +66,7 @@ class OutlookMap {
 
     const issueDate = new Date(outlook.issued_at)
 
-    this._days = [0, 1, 2, 3, 4].map(i => {
+    this._days = Array.from({ length: OUTLOOK_DAYS }, (_, i) => {
       const date = new Date(issueDate)
       return {
         idx: i + 1,
@@ -191,8 +205,11 @@ class OutlookMap {
         feature.properties.polyType = 'coastal'
         // Put coastal areas on top of inland areas
         feature.properties['z-index'] += 1
+      } else {
+        // Unknown poly_type, skip this polygon
+        return
       }
-      if (impactLevel > 1 && !(impactLevel === 2 && likelihoodLevel === 1)) {
+      if (impactLevel > IMPACT_LOW && !(impactLevel === IMPACT_MEDIUM && likelihoodLevel === LIKELIHOOD_LOW)) {
         this._geoJson.features.push(feature)
       }
 
