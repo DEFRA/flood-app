@@ -3,6 +3,7 @@ const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/location')
 const OutlookMatrix = require('../models/outlook-matrix')
 const OutlookMap = require('../models/outlook-map')
+const { generateOutlookContent } = require('../models/outlook-content-generator')
 const locationService = require('../services/location')
 const moment = require('moment-timezone')
 const tz = 'Europe/London'
@@ -43,7 +44,7 @@ async function routeHandler (request, h) {
     return boom.notFound(`Location ${location} not found`)
   }
 
-  const { matrixData, outOfDate, dataError, outlookDays, outlookData } = await createOutlookMessageIds(place, request)
+  const { matrixData, outOfDate, dataError, outlookDays, outlookData, outlookContent } = await createOutlookMessageIds(place, request)
 
   const [
     impacts,
@@ -54,7 +55,7 @@ async function routeHandler (request, h) {
     request.server.methods.flood.getFloodsWithin(place.bbox2k),
     request.server.methods.flood.getStationsWithin(place.bbox10k)
   ])
-  const model = new ViewModel({ location, place, floods, stations, impacts, matrixData, outOfDate, dataError, outlookDays, outlookData })
+  const model = new ViewModel({ location, place, floods, stations, impacts, matrixData, outOfDate, dataError, outlookDays, outlookData, outlookContent })
   return h.view('location', { model })
 }
 
@@ -112,6 +113,7 @@ const createOutlookMessageIds = async (place, request) => {
   let outOfDate = true
   let outlookDays = []
   let outlookData = null
+  let outlookContent = '' // Initialize to empty string
   const now = moment().tz(tz).valueOf()
   const hours48 = 2 * 60 * 60 * 24 * 1000
   let issueDate = moment().valueOf() // Default issueDate to today
@@ -137,6 +139,9 @@ const createOutlookMessageIds = async (place, request) => {
       const outlookPolys = new OutlookMatrix(outlook, place)
       matrixData = outOfDate || riskAreasCount === 0 ? [] : outlookPolys.matrixData
 
+      // Generate outlook content from matrix data
+      outlookContent = generateOutlookContent(matrixData)
+
       // Create full outlook instance for map data
       const outlookInstance = new OutlookMap(outlook, request.logger)
       if (!outlookInstance.dataError) {
@@ -145,7 +150,7 @@ const createOutlookMessageIds = async (place, request) => {
       }
     }
   }
-  return { matrixData, outOfDate, dataError, outlookDays, outlookData }
+  return { matrixData, outOfDate, dataError, outlookDays, outlookData, outlookContent }
 }
 
 const getOutlook = async request => {
