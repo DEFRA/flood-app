@@ -1,6 +1,6 @@
 <div id="flood-matrix-container">
 {% if model.outlookContent %}
-  <p class="govuk-body">{{ model.outlookContent }}</p>
+  <p class="govuk-body">{{ model.outlookContent | safe }}</p>
   <!-- Matrix Data -->
   {{ model.matrixData | dump | safe }}
 {% endif %}
