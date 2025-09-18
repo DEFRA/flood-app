@@ -66,6 +66,8 @@ const THREE_SENTENCES_TOTAL = 5
 const FIRST_SOURCE_INDEX = 0
 // Constants for array sorting
 const sortAscending = (a, b) => a - b
+// Constants for content messages
+const VERY_LOW_RISK_MESSAGE = 'The flood risk is very low.'
 
 // Utility functions for data validation and formatting
 const isNullOrUndefined = value => value === null || value === undefined
@@ -166,13 +168,13 @@ const generateGroupContent = (group, startDate) => {
 
   // Special case: all days in group have very low likelihood
   if (group.days.every(dayData => dayData.hasOnlyVeryLowLikelihood)) {
-    return { label, sentences: ['The flood risk is very low.'] }
+    return { label, sentences: [VERY_LOW_RISK_MESSAGE] }
   }
 
   // Standard case: process risk pairs for the group
   const groupRiskPairs = group.days[0].filteredRiskPairs
   if (groupRiskPairs.length === 0) {
-    return { label, sentences: ['The flood risk is very low.'] }
+    return { label, sentences: [VERY_LOW_RISK_MESSAGE] }
   }
 
   // Categorize risk combinations and determine how many sentences to generate
@@ -422,7 +424,7 @@ function generateOutlookContent (riskMatrixData, startDate = new Date()) {
 
   // Check for all-zero risk matrix (no flood risk)
   if (isMatrixAllZero(riskMatrixData)) {
-    return [{ sentences: ['The flood risk for the next 5 days is very low.'] }]
+    return [{ sentences: [VERY_LOW_RISK_MESSAGE] }]
   }
 
   // Transform raw risk data into processed day objects

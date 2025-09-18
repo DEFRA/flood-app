@@ -7,6 +7,11 @@ class ViewModel {
   constructor ({ location, place, floods, stations, impacts, matrixData, outOfDate, dataError, outlookDays, outlookData, outlookContent, issuedAt }) {
     const title = place.name
 
+    // Constants for repeated literals
+    const TIMEZONE = 'Europe/London'
+    const TIME_FORMAT = 'h:mma'
+    const DATE_FORMAT = 'D MMMM YYYY'
+
     Object.assign(this, {
       q: location,
       place,
@@ -18,10 +23,9 @@ class ViewModel {
       outOfDate,
       outlookContent,
       pageTitle: `Check for flooding in ${title}`,
-      metaDescription: `View current flood warnings and alerts for the ${title} area,` +
-        ' and the regional flood forecast for the next 5 days. Also check local river, sea, groundwater and rainfall levels.',
+      metaDescription: `View current flood warnings and alerts for the ${title} area, and the regional flood forecast for the next 5 days. Also check local river, sea, groundwater and rainfall levels.`,
       floodFisUrl,
-      dateFormatted: 'Up to date as of ' + moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY'),
+      dateFormatted: 'Up to date as of ' + moment.tz(TIMEZONE).format(TIME_FORMAT) + ' on ' + moment.tz(TIMEZONE).format(DATE_FORMAT),
       feedback: false,
       dataError,
       signUpForFloodWarnings: 'Location:Get warnings:Location - Get warnings',
@@ -50,8 +54,8 @@ class ViewModel {
 
     // Outlook issue date/time for display
     this.outlookIssue = {
-      issueUTC: issuedAt ? moment(issuedAt).tz('Europe/London').format() : moment().tz('Europe/London').format(),
-      formattedIssueDate: issuedAt ? `${moment(issuedAt).tz('Europe/London').format('h:mma')} on ${moment(issuedAt).tz('Europe/London').format('D MMMM YYYY')}` : `${moment().tz('Europe/London').format('h:mma')} on ${moment().tz('Europe/London').format('D MMMM YYYY')}`
+      issueUTC: issuedAt ? moment(issuedAt).tz(TIMEZONE).format() : moment().tz(TIMEZONE).format(),
+      formattedIssueDate: issuedAt ? `${moment(issuedAt).tz(TIMEZONE).format(TIME_FORMAT)} on ${moment(issuedAt).tz(TIMEZONE).format(DATE_FORMAT)}` : `${moment().tz(TIMEZONE).format(TIME_FORMAT)} on ${moment().tz(TIMEZONE).format(DATE_FORMAT)}`
     }
 
     // Expose model values for client side javascript
