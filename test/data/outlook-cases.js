@@ -12,7 +12,7 @@ module.exports = [
     matrix: [zeroDay(), zeroDay(), zeroDay(), zeroDay(), zeroDay()],
     expected: [
       {
-        sentences: ['The flood risk for the next 5 days is very low.']
+        sentences: ['The flood risk is very low.']
       }
     ]
   },
