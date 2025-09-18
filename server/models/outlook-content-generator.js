@@ -186,7 +186,10 @@ const generateGroupContent = (group, startDate) => {
     index === 0 ? createFirstSentence(riskCombination) : createSubsequentSentence(riskCombination)
   )
 
-  return { label, sentences }
+  // Combine all sentences into one for the day
+  const combinedSentence = sentences.join(' ')
+
+  return { label, sentences: [combinedSentence] }
 }
 
 // Generate day labels with special cases

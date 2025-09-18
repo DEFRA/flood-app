@@ -4,7 +4,7 @@ const { floodFisUrl, bingKeyMaps, floodRiskUrl } = require('../../config')
 const moment = require('moment-timezone')
 
 class ViewModel {
-  constructor ({ location, place, floods, stations, impacts, matrixData, outOfDate, dataError, outlookDays, outlookData, outlookContent }) {
+  constructor ({ location, place, floods, stations, impacts, matrixData, outOfDate, dataError, outlookDays, outlookData, outlookContent, issuedAt }) {
     const title = place.name
 
     Object.assign(this, {
@@ -48,7 +48,11 @@ class ViewModel {
     // Impacts
     this.processImpacts(impacts)
 
-    // Outlook message IDs
+    // Outlook issue date/time for display
+    this.outlookIssue = {
+      issueUTC: issuedAt ? moment(issuedAt).tz('Europe/London').format() : moment().tz('Europe/London').format(),
+      formattedIssueDate: issuedAt ? `${moment(issuedAt).tz('Europe/London').format('h:mma')} on ${moment(issuedAt).tz('Europe/London').format('D MMMM YYYY')}` : `${moment().tz('Europe/London').format('h:mma')} on ${moment().tz('Europe/London').format('D MMMM YYYY')}`
+    }
 
     // Expose model values for client side javascript
     this.expose = {
