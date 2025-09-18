@@ -210,7 +210,7 @@ function generateDayLabel (dayIndices, startDate = new Date()) {
 // Helper function for single day labels
 function generateSingleDayLabel (dayIndex, startDate, dayNames) {
   const targetDate = new Date(startDate)
-  targetDate.setDate(startDate.getDate() + dayIndex)
+  targetDate.setUTCDate(startDate.getUTCDate() + dayIndex)
 
   if (dayIndex === 0) {
     return 'Today'
@@ -218,7 +218,7 @@ function generateSingleDayLabel (dayIndex, startDate, dayNames) {
   if (dayIndex === 1) {
     return 'Tomorrow'
   }
-  return dayNames[targetDate.getDay()]
+  return dayNames[targetDate.getUTCDay()]
 }
 
 // Helper function for two day labels
@@ -230,12 +230,12 @@ function generateTwoDayLabel (dayIndices, startDate, dayNames) {
   }
 
   const firstDate = new Date(startDate)
-  firstDate.setDate(startDate.getDate() + firstDay)
+  firstDate.setUTCDate(startDate.getUTCDate() + firstDay)
   const lastDate = new Date(startDate)
-  lastDate.setDate(startDate.getDate() + lastDay)
+  lastDate.setUTCDate(startDate.getUTCDate() + lastDay)
 
-  const firstDayName = firstDay === 1 ? 'Tomorrow' : dayNames[firstDate.getDay()]
-  const lastDayName = dayNames[lastDate.getDay()]
+  const firstDayName = firstDay === 1 ? 'Tomorrow' : dayNames[firstDate.getUTCDay()]
+  const lastDayName = dayNames[lastDate.getUTCDay()]
 
   if (firstDayName === 'Saturday' && lastDayName === 'Sunday') {
     return 'Saturday and Sunday'
@@ -250,12 +250,12 @@ function generateMultiDayLabel (dayIndices, startDate, dayNames) {
   const lastDay = dayIndices[dayIndices.length - 1]
 
   const firstDate = new Date(startDate)
-  firstDate.setDate(startDate.getDate() + firstDay)
+  firstDate.setUTCDate(startDate.getUTCDate() + firstDay)
   const lastDate = new Date(startDate)
-  lastDate.setDate(startDate.getDate() + lastDay)
+  lastDate.setUTCDate(startDate.getUTCDate() + lastDay)
 
   const firstDayName = getDayName(firstDay, firstDate, dayNames)
-  const lastDayName = dayNames[lastDate.getDay()]
+  const lastDayName = dayNames[lastDate.getUTCDay()]
 
   if (firstDayName === 'Saturday' && lastDayName === 'Monday') {
     return 'Saturday through to Monday'
@@ -272,7 +272,7 @@ function getDayName (dayIndex, date, dayNames) {
   if (dayIndex === 1) {
     return 'Tomorrow'
   }
-  return dayNames[date.getDay()]
+  return dayNames[date.getUTCDay()]
 }
 
 // Generate fingerprint for day comparison
