@@ -44,7 +44,7 @@ async function routeHandler (request, h) {
     return boom.notFound(`Location ${location} not found`)
   }
 
-  const { matrixData, outOfDate, dataError, outlookDays, outlookData, outlookContent } = await createOutlookMessageIds(place, request)
+  const { matrixData, outOfDate, dataError, outlookDays, outlookData, outlookContent, issuedAt } = await createOutlookMessageIds(place, request)
 
   const [
     impacts,
@@ -55,7 +55,7 @@ async function routeHandler (request, h) {
     request.server.methods.flood.getFloodsWithin(place.bbox2k),
     request.server.methods.flood.getStationsWithin(place.bbox10k)
   ])
-  const model = new ViewModel({ location, place, floods, stations, impacts, matrixData, outOfDate, dataError, outlookDays, outlookData, outlookContent })
+  const model = new ViewModel({ location, place, floods, stations, impacts, matrixData, outOfDate, dataError, outlookDays, outlookData, outlookContent, issuedAt })
   return h.view('location', { model })
 }
 
@@ -116,7 +116,7 @@ const createOutlookMessageIds = async (place, request) => {
   let outlookContent = '' // Initialize to empty string
   const now = moment().tz(tz).valueOf()
   const hours48 = 2 * 60 * 60 * 24 * 1000
-  let issueDate = moment().valueOf() // Default issueDate to today
+  let issuedAt = moment().valueOf() // Default issuedAt to today
 
   let {
     outlook,
@@ -130,9 +130,9 @@ const createOutlookMessageIds = async (place, request) => {
       })
       dataError = true
     } else {
-      issueDate = moment(outlook.issued_at).valueOf()
+      issuedAt = moment(outlook.issued_at).valueOf()
 
-      outOfDate = (now - issueDate) > hours48
+      outOfDate = (now - issuedAt) > hours48
 
       const outlookPolys = new OutlookMatrix(outlook, place)
       matrixData = outOfDate ? [] : outlookPolys.matrixData
@@ -148,7 +148,7 @@ const createOutlookMessageIds = async (place, request) => {
       }
     }
   }
-  return { matrixData, outOfDate, dataError, outlookDays, outlookData, outlookContent }
+  return { matrixData, outOfDate, dataError, outlookDays, outlookData, outlookContent, issuedAt }
 }
 
 const getOutlook = async request => {
