@@ -2,10 +2,12 @@ const severity = require('../severity')
 const { groupBy } = require('../../util')
 const { floodFisUrl, bingKeyMaps, floodRiskUrl } = require('../../config')
 const moment = require('moment-timezone')
+const { matrixToSentences } = require('./risk-to-sentences')
 
 class ViewModel {
   constructor ({ location, place, floods, stations, impacts, matrixData, outOfDate, dataError, outlookDays, outlookData, outlookContent }) {
     const title = place.name
+    const outlookText = matrixData
 
     Object.assign(this, {
       q: location,
@@ -29,7 +31,8 @@ class ViewModel {
       whatToDo: 'Location:Related-content:What-to-do-in-a-flood',
       recoverAfter: 'Location:Related-content:Recover-after-a-flood',
       reportFlood: 'Location:Related-content:Report-a-flood',
-      displayGetWarningsLink: 'Location:Related-content:Get-warnings'
+      displayGetWarningsLink: 'Location:Related-content:Get-warnings',
+      outlookText: matrixData && matrixData.length ? matrixToSentences(matrixData) : null
     })
 
     const hasFloods = !!floods.length
@@ -56,10 +59,9 @@ class ViewModel {
       mapButtonText: this.hasActiveFloods ? 'View map of flood warnings and alerts' : 'View map',
       placeBbox: this.placeBbox,
       bingMaps: bingKeyMaps,
+      outlookText: outlookText || [],
       outlookDays: outlookDays || [],
-      outlookData: outlookData || null,
-      matrixData: matrixData || [],
-      outlookContent: outlookContent || ''
+      outlookData: outlookData || null
     }
   }
 
