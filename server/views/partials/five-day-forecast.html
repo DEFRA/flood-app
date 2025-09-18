@@ -1,8 +1,13 @@
 <div id="flood-matrix-container">
 {% if model.outlookContent %}
-  <p class="govuk-body">{{ model.outlookContent | safe }}</p>
-  <!-- Matrix Data -->
-  {{ model.matrixData | dump | safe }}
+  {% for item in model.outlookContent %}
+    {% if item.sentences %}
+      {% if item.label %}<h3 class="govuk-heading-s">{{ item.label }}</h3>{% endif %}
+      {% for sentence in item.sentences %}
+        <p class="govuk-body">{{ sentence }}</p>
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
 {% endif %}
 </div>
 
