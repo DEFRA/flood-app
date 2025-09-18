@@ -12,7 +12,7 @@ describe('generateOutlookContent (fixtures)', () => {
     it(name, () => {
       const fixedNow = now ? new Date(now) : new Date('2025-01-01T00:00:00Z')
       const result = generateOutlookContent(matrix, fixedNow)
-      expect(result).to.equal(expected)
+      expect(result).to.equal(expected, { message: `Failed for test case: ${name}` })
     })
   })
 })
