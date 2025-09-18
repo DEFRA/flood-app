@@ -134,10 +134,8 @@ const createOutlookMessageIds = async (place, request) => {
 
       outOfDate = (now - issueDate) > hours48
 
-      const riskAreasCount = outlook.risk_areas ? outlook.risk_areas.length : 0
-
       const outlookPolys = new OutlookMatrix(outlook, place)
-      matrixData = outOfDate || riskAreasCount === 0 ? [] : outlookPolys.matrixData
+      matrixData = outOfDate ? [] : outlookPolys.matrixData
 
       // Generate outlook content from matrix data
       outlookContent = generateOutlookContent(matrixData)
