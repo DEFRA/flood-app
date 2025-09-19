@@ -1,19 +1,20 @@
 const turf = require('@turf/turf')
 const messageContent = require('./outlook-map-content.json')
+const { Impact, Likelihood, DAYS_COUNT } = require('./outlook-constants')
 
 // Risk level constants to avoid magic numbers
-const VERY_LOW = 1
-const LOW = 2
-const MEDIUM = 3
-const HIGH = 4
+const VERY_LOW = Likelihood.VeryLow
+const LOW = Likelihood.Low
+const MEDIUM = Likelihood.Medium
+const HIGH = Likelihood.High
 
 // Impact and likelihood constants
-const IMPACT_LOW = 1
-const IMPACT_MEDIUM = 2
-const LIKELIHOOD_LOW = 1
+const IMPACT_LOW = Impact.Minimal
+const IMPACT_MEDIUM = Impact.Minor
+const LIKELIHOOD_LOW = Likelihood.VeryLow
 
 // Number of outlook days
-const OUTLOOK_DAYS = 5
+const OUTLOOK_DAYS = DAYS_COUNT
 
 class OutlookMap {
   constructor (outlook, logger = console) {
