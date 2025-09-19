@@ -25,7 +25,7 @@ class ViewModel {
       pageTitle: `Check for flooding in ${title}`,
       metaDescription: `View current flood warnings and alerts for the ${title} area, and the regional flood forecast for the next 5 days. Also check local river, sea, groundwater and rainfall levels.`,
       floodFisUrl,
-      dateFormatted: 'Up to date as of ' + moment.tz(TIMEZONE).format(TIME_FORMAT) + ' on ' + moment.tz(TIMEZONE).format(DATE_FORMAT),
+      dateFormatted: `Up to date as of ${moment.tz(TIMEZONE).format(TIME_FORMAT)} on ${moment.tz(TIMEZONE).format(DATE_FORMAT)}`,
       feedback: false,
       dataError,
       signUpForFloodWarnings: 'Location:Get warnings:Location - Get warnings',
