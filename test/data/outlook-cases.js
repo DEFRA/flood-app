@@ -32,7 +32,7 @@ module.exports = [
   // Test single day risks
   {
     name: 'severe impact with high likelihood',
-    now: '2025-01-01T00:00:00Z',
+    now: '2025-09-15T00:00:00Z',
     matrix: [
       [[4, 4], [0, 0], [0, 0], [0, 0]], // Severe, High for river
       zeroDay(),
@@ -48,7 +48,7 @@ module.exports = [
         ]
       },
       {
-        label: 'Tomorrow through to Sunday',
+        label: 'Tomorrow through to Friday',
         sentences: ['The flood risk is very low.']
       }
     ]
@@ -57,7 +57,7 @@ module.exports = [
   // Test multiple sources
   {
     name: 'combine sources with same risk into one sentence',
-    now: '2025-01-01T00:00:00Z',
+    now: '2025-09-16T00:00:00Z',
     matrix: [
       [[3, 3], [0, 0], [3, 3], [0, 0]], // Significant, Medium for river and surface
       zeroDay(),
@@ -73,14 +73,14 @@ module.exports = [
         ]
       },
       {
-        label: 'Tomorrow through to Sunday',
+        label: 'Tomorrow through to Saturday',
         sentences: ['The flood risk is very low.']
       }
     ]
   },
   {
     name: 'multiple sources including sea and ground',
-    now: '2025-01-01T00:00:00Z',
+    now: '2025-09-17T00:00:00Z',
     matrix: [
       [[2, 3], [2, 3], [0, 0], [2, 3]], // Minor, Medium for river, sea, ground
       zeroDay(),
@@ -105,12 +105,12 @@ module.exports = [
   // Test day grouping and fallbacks
   {
     name: 'today has risk then 3 "very low" days (grouped) (plus final zero day treated as very low)',
-    now: '2025-01-01T00:00:00Z',
+    now: '2025-09-18T00:00:00Z',
     matrix: [
-      [[2, 4], [0, 0], [0, 0], [0, 0]], // Minor, High
-      [[0, 1], [0, 0], [0, 0], [0, 0]], // Very Low
-      [[0, 1], [0, 0], [0, 0], [0, 0]], // Very Low
-      [[0, 1], [0, 0], [0, 0], [0, 0]], // Very Low
+      [[2, 4], [0, 0], [0, 0], [0, 0]],
+      [[0, 1], [0, 0], [0, 0], [0, 0]],
+      [[0, 1], [0, 0], [0, 0], [0, 0]],
+      [[0, 1], [0, 0], [0, 0], [0, 0]],
       zeroDay() // Zero
     ],
     expected: [
@@ -121,17 +121,17 @@ module.exports = [
         ]
       },
       {
-        label: 'Tomorrow through to Sunday',
+        label: 'Tomorrow through to Monday',
         sentences: ['The flood risk is very low.']
       }
     ]
   },
   {
     name: 'empty-kept fallback: tomorrow..Sunday becomes very low',
-    now: '2025-01-01T00:00:00Z',
+    now: '2025-09-19T00:00:00Z',
     matrix: [
-      [[2, 4], [0, 0], [0, 0], [0, 0]], // Today has content
-      zeroDay(), // Fallback to very low
+      [[2, 4], [0, 0], [0, 0], [0, 0]],
+      zeroDay(),
       zeroDay(),
       zeroDay(),
       zeroDay()
@@ -144,7 +144,7 @@ module.exports = [
         ]
       },
       {
-        label: 'Tomorrow through to Sunday',
+        label: 'Tomorrow through to Tuesday',
         sentences: ['The flood risk is very low.']
       }
     ]
@@ -153,7 +153,7 @@ module.exports = [
   // Test mixed daily risks
   {
     name: 'mixed risks on different days',
-    now: '2025-01-01T00:00:00Z',
+    now: '2025-09-20T00:00:00Z',
     matrix: [
       [[2, 4], [0, 0], [0, 0], [0, 0]], // Today: Minor, High
       [[3, 3], [0, 0], [0, 0], [0, 0]], // Tomorrow: Significant, Medium
@@ -175,7 +175,7 @@ module.exports = [
         ]
       },
       {
-        label: 'Friday through to Sunday',
+        label: 'Monday through to Wednesday',
         sentences: ['The flood risk is very low.']
       }
     ]
