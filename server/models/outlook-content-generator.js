@@ -122,6 +122,16 @@ const groupConsecutiveDays = (days) => {
   return dayGroupings
 }
 
+// Helper function to find the insert position after the last combination with the same impact
+function findInsertIndex (chosenCombinations, impactLevel) {
+  for (let i = chosenCombinations.length - 1; i >= 0; i--) {
+    if (chosenCombinations[i].impact === impactLevel) {
+      return i + 1
+    }
+  }
+  return chosenCombinations.length
+}
+
 // Select risk combinations for sentence generation
 const selectRiskCombinations = (riskCombinations, requiredSentenceCount) => {
   const impactLevelsInPriorityOrder = IMPACT_PRIORITY_ORDER.filter(level =>
@@ -153,7 +163,8 @@ const selectRiskCombinations = (riskCombinations, requiredSentenceCount) => {
     const availableCombinations = impactCombinations[impactLevel]
     const nextAvailableCombination = availableCombinations.find(riskCombination => !chosenCombinations.includes(riskCombination))
     if (nextAvailableCombination) {
-      chosenCombinations.splice(impactIndex, 0, nextAvailableCombination)
+      const insertIndex = findInsertIndex(chosenCombinations, impactLevel)
+      chosenCombinations.splice(insertIndex, 0, nextAvailableCombination)
     }
     impactIndex++
   }
