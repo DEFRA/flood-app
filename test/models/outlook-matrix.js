@@ -3,7 +3,7 @@
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
 const { describe, it } = exports.lab = Lab.script()
-const OutlookMatrix = require('../../server/models/outlook-matrix')
+const OutlookMatrix = require('../../server/models/forecast-outlook/outlook-matrix')
 const outlookOverlaping = require('../data/fgsOverlaping.json')
 const outlook = require('../data/fgs.json')
 
