@@ -5,21 +5,10 @@
 const {
   Impact,
   Likelihood,
-  SOURCE_ORDER,
-  IMPACT_PRIORITY_ORDER,
-  LIKELIHOOD_PRIORITY_ORDER,
-  IMPACT_CONTENT,
-  LIKELIHOOD_CONTENT,
-  LOCATION_CONTENT,
   VALID_RISK_PAIRS,
-  MAX_ITERATIONS,
-  DAYS_COUNT,
-  ONE_SENTENCE_MAX,
-  TWO_SENTENCES_MIN,
-  TWO_SENTENCES_MAX,
-  THREE_SENTENCES_TOTAL,
-  FIRST_SOURCE_INDEX,
-  VERY_LOW_RISK_MESSAGE
+  CONFIG,
+  CONTENT,
+  PRIORITIES
 } = require('./outlook-constants')
 
 // Utility functions for data validation and formatting
@@ -29,7 +18,7 @@ const isAllowedPair = (impact, likelihood) => VALID_RISK_PAIRS.has(`${impact}-${
 // Build location phrase from source IDs
 const buildLocationPhrase = (sourceIds) => { // TODO: write unit test for this function
   const sourceKey = [...sourceIds].sort((a, b) => a - b).join(',')
-  return LOCATION_CONTENT[sourceKey] || 'in affected areas'
+  return CONTENT.LOCATION[sourceKey] || 'in affected areas'
 }
 
 // Capitalize first letter of string
@@ -87,7 +76,7 @@ function findInsertIndex (chosenCombinations, impactLevel) {
 
 // Select risk combinations for sentence generation
 const selectRiskCombinations = (riskCombinations, requiredSentenceCount) => {
-  const impactLevelsInPriorityOrder = IMPACT_PRIORITY_ORDER.filter(level =>
+  const impactLevelsInPriorityOrder = PRIORITIES.IMPACT_PRIORITY_ORDER.filter(level =>
     riskCombinations.some(riskCombination => riskCombination.impact === level)
   )
 
@@ -96,7 +85,7 @@ const selectRiskCombinations = (riskCombinations, requiredSentenceCount) => {
     impactCombinations[impactLevel] = riskCombinations
       .filter(riskCombination => riskCombination.impact === impactLevel)
       .sort((first, second) =>
-        LIKELIHOOD_PRIORITY_ORDER.indexOf(first.likelihood) - LIKELIHOOD_PRIORITY_ORDER.indexOf(second.likelihood)
+        PRIORITIES.LIKELIHOOD_PRIORITY_ORDER.indexOf(first.likelihood) - PRIORITIES.LIKELIHOOD_PRIORITY_ORDER.indexOf(second.likelihood)
       )
   }
 
@@ -111,7 +100,7 @@ const selectRiskCombinations = (riskCombinations, requiredSentenceCount) => {
 
   // Add additional combinations if more sentences are required
   let impactIndex = 0
-  while (chosenCombinations.length < requiredSentenceCount && impactIndex <= MAX_ITERATIONS) {
+  while (chosenCombinations.length < requiredSentenceCount && impactIndex <= CONFIG.MAX_ITERATIONS) {
     const impactLevel = impactLevelsInPriorityOrder[impactIndex % impactLevelsInPriorityOrder.length]
     const availableCombinations = impactCombinations[impactLevel]
     const nextAvailableCombination = availableCombinations.find(riskCombination => !chosenCombinations.includes(riskCombination))
@@ -132,13 +121,13 @@ const generateGroupContent = (group, startDate) => {
 
   // Special case: all days in group have very low likelihood
   if (group.days.every(dayData => dayData.hasOnlyVeryLowLikelihood)) {
-    return { label, sentences: [VERY_LOW_RISK_MESSAGE] }
+    return { label, sentences: [CONTENT.VERY_LOW_RISK_MESSAGE] }
   }
 
   // Standard case: process risk pairs for the group
   const groupRiskPairs = group.days[0].filteredRiskPairs
   if (groupRiskPairs.length === 0) {
-    return { label, sentences: [VERY_LOW_RISK_MESSAGE] }
+    return { label, sentences: [CONTENT.VERY_LOW_RISK_MESSAGE] }
   }
 
   // Categorize risk combinations and determine how many sentences to generate
@@ -257,13 +246,13 @@ function calculateRequiredSentenceCount (riskPairs) {
   const DOUBLE_SENTENCES = 2
   const TRIPLE_SENTENCES = 3
   const QUADRUPLE_SENTENCES = 4
-  if (total <= ONE_SENTENCE_MAX) {
+  if (total <= CONFIG.ONE_SENTENCE_MAX) {
     return SINGLE_SENTENCE
   }
-  if (total >= TWO_SENTENCES_MIN && total <= TWO_SENTENCES_MAX) {
+  if (total >= CONFIG.TWO_SENTENCES_MIN && total <= CONFIG.TWO_SENTENCES_MAX) {
     return DOUBLE_SENTENCES
   }
-  if (total === THREE_SENTENCES_TOTAL) {
+  if (total === CONFIG.THREE_SENTENCES_TOTAL) {
     return TRIPLE_SENTENCES
   }
   return QUADRUPLE_SENTENCES
@@ -302,36 +291,36 @@ function convertGroupsToCombinations (impactLikelihoodGroups) {
 function sortRiskCombinations (riskCombinations) {
   return riskCombinations.sort((first, second) => {
     // First sort by impact priority
-    const impactDiff = IMPACT_PRIORITY_ORDER.indexOf(first.impact) - IMPACT_PRIORITY_ORDER.indexOf(second.impact)
+    const impactDiff = PRIORITIES.IMPACT_PRIORITY_ORDER.indexOf(first.impact) - PRIORITIES.IMPACT_PRIORITY_ORDER.indexOf(second.impact)
     if (impactDiff !== 0) {
       return impactDiff
     }
 
     // Then sort by likelihood priority
-    const likelihoodDiff = LIKELIHOOD_PRIORITY_ORDER.indexOf(first.likelihood) - LIKELIHOOD_PRIORITY_ORDER.indexOf(second.likelihood)
+    const likelihoodDiff = PRIORITIES.LIKELIHOOD_PRIORITY_ORDER.indexOf(first.likelihood) - PRIORITIES.LIKELIHOOD_PRIORITY_ORDER.indexOf(second.likelihood)
     if (likelihoodDiff !== 0) {
       return likelihoodDiff
     }
 
     // Finally sort by first source
-    return first.sources[FIRST_SOURCE_INDEX] - second.sources[FIRST_SOURCE_INDEX]
+    return first.sources[CONFIG.FIRST_SOURCE_INDEX] - second.sources[CONFIG.FIRST_SOURCE_INDEX]
   })
 }
 
 // Create first sentence: Impact + Likelihood + Source
 const createFirstSentence = ({ impact, likelihood, sources }) =>
-  `${IMPACT_CONTENT[impact]} ${LIKELIHOOD_CONTENT[likelihood]} ${buildLocationPhrase(sources)}.`
+  `${CONTENT.IMPACT[impact]} ${CONTENT.LIKELIHOOD[likelihood]} ${buildLocationPhrase(sources)}.`
 
 // Create subsequent sentences: Source + Impact + Likelihood
 const createSubsequentSentence = ({ impact, likelihood, sources }) =>
-  `${capitalize(buildLocationPhrase(sources))}, ${IMPACT_CONTENT[impact].toLowerCase()} ${LIKELIHOOD_CONTENT[likelihood]}.`
+  `${capitalize(buildLocationPhrase(sources))}, ${CONTENT.IMPACT[impact].toLowerCase()} ${CONTENT.LIKELIHOOD[likelihood]}.`
 
 // Process and filter risk data for a single day, removing invalid pairs
 function processDayRiskData (dayRiskData) {
   const filteredRiskPairs = []
   let hasVeryLowLikelihood = false
 
-  for (const source of SOURCE_ORDER) {
+  for (const source of PRIORITIES.SOURCE_ORDER) {
     const result = processSourceRiskPair(dayRiskData, source)
     if (result.hasVeryLowLikelihood) {
       hasVeryLowLikelihood = true
@@ -382,13 +371,13 @@ function isInvalidRiskPair (impact, likelihood) {
 
 // Main function to process 5×4×2 risk matrix and generate flood outlook content
 function generateOutlookContent (riskMatrixData, startDate = new Date()) {
-  if (!Array.isArray(riskMatrixData) || riskMatrixData.length !== DAYS_COUNT) {
+  if (!Array.isArray(riskMatrixData) || riskMatrixData.length !== CONFIG.DAYS_COUNT) {
     return []
   }
 
   // Check for all-zero risk matrix (no flood risk)
   if (isMatrixAllZero(riskMatrixData)) {
-    return [{ sentences: [VERY_LOW_RISK_MESSAGE] }]
+    return [{ sentences: [CONTENT.VERY_LOW_RISK_MESSAGE] }]
   }
 
   // Transform raw risk data into processed day objects
