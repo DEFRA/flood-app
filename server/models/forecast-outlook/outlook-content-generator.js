@@ -19,7 +19,6 @@ const {
   TWO_SENTENCES_MAX,
   THREE_SENTENCES_TOTAL,
   FIRST_SOURCE_INDEX,
-  sortAscending,
   VERY_LOW_RISK_MESSAGE
 } = require('./outlook-constants')
 
@@ -295,7 +294,7 @@ function convertGroupsToCombinations (impactLikelihoodGroups) {
   return Object.values(impactLikelihoodGroups).map(riskCombination => ({
     impact: riskCombination.impact,
     likelihood: riskCombination.likelihood,
-    sources: riskCombination.sources.sort(sortAscending)
+    sources: riskCombination.sources.sort((a, b) => a - b)
   }))
 }
 
