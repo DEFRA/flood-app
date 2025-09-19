@@ -1,5 +1,5 @@
 const turf = require('@turf/turf')
-const { Impact, Likelihood, DAYS_COUNT, MAP_MESSAGE_CONTENT } = require('./outlook-constants')
+const { Impact, Likelihood, CONFIG, CONTENT } = require('./outlook-constants')
 
 // Risk level constants to avoid magic numbers
 const VERY_LOW = Likelihood.VeryLow
@@ -13,7 +13,7 @@ const IMPACT_MEDIUM = Impact.Minor
 const LIKELIHOOD_LOW = Likelihood.VeryLow
 
 // Number of outlook days
-const OUTLOOK_DAYS = DAYS_COUNT
+const OUTLOOK_DAYS = CONFIG.DAYS_COUNT
 
 class OutlookMap {
   constructor (outlook, logger = console) {
@@ -160,7 +160,7 @@ class OutlookMap {
       if (messageGroupObj[key]) {
         messageGroupObj[key].sources.push(expandedSource[pos])
       } else {
-        messageGroupObj[key] = { sources: [expandedSource[pos]], message: MAP_MESSAGE_CONTENT[key] }
+        messageGroupObj[key] = { sources: [expandedSource[pos]], message: CONTENT.MAP_MESSAGE[key] }
       }
     }
 

@@ -78,24 +78,37 @@ const MAP_MESSAGE_CONTENT = {
   '4-i4-l4': 'High risk, impact severe (4), likelihood high (4).'
 }
 
-module.exports = {
-  Source,
-  Impact,
-  Likelihood,
-  SOURCE_ORDER,
-  IMPACT_PRIORITY_ORDER,
-  LIKELIHOOD_PRIORITY_ORDER,
-  IMPACT_CONTENT,
-  LIKELIHOOD_CONTENT,
-  LOCATION_CONTENT,
-  VALID_RISK_PAIRS,
+// Grouped constants for better organization
+const CONFIG = Object.freeze({
   MAX_ITERATIONS,
   DAYS_COUNT,
   ONE_SENTENCE_MAX,
   TWO_SENTENCES_MIN,
   TWO_SENTENCES_MAX,
   THREE_SENTENCES_TOTAL,
-  FIRST_SOURCE_INDEX,
-  VERY_LOW_RISK_MESSAGE,
-  MAP_MESSAGE_CONTENT
+  FIRST_SOURCE_INDEX
+})
+
+const CONTENT = Object.freeze({
+  IMPACT: IMPACT_CONTENT,
+  LIKELIHOOD: LIKELIHOOD_CONTENT,
+  LOCATION: LOCATION_CONTENT,
+  MAP_MESSAGE: MAP_MESSAGE_CONTENT,
+  VERY_LOW_RISK_MESSAGE
+})
+
+const PRIORITIES = Object.freeze({
+  SOURCE_ORDER,
+  IMPACT_PRIORITY_ORDER,
+  LIKELIHOOD_PRIORITY_ORDER
+})
+
+module.exports = {
+  Source,
+  Impact,
+  Likelihood,
+  VALID_RISK_PAIRS,
+  CONFIG,
+  CONTENT,
+  PRIORITIES
 }
