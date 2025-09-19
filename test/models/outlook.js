@@ -4,7 +4,7 @@ const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
 const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const sinon = require('sinon')
-const OutlookMap = require('../../server/models/outlook-map')
+const OutlookMap = require('../../server/models/forecast-outlook/outlook-map')
 
 describe('Model - Outlook', () => {
   let sandbox

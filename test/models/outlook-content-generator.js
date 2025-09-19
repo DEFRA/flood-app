@@ -4,7 +4,7 @@ const { expect } = require('@hapi/code')
 const lab = exports.lab = Lab.script()
 const { describe, it } = lab
 
-const { generateOutlookContent } = require('../../server/models/outlook-content-generator.js')
+const { generateOutlookContent } = require('../../server/models/forecast-outlook/outlook-content-generator.js')
 const cases = require('../data/outlook-cases.js')
 
 describe('generateOutlookContent (fixtures)', () => {
