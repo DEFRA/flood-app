@@ -60,10 +60,23 @@ const TWO_SENTENCES_MAX = 4
 const THREE_SENTENCES_TOTAL = 5
 // Constants for sorting priorities
 const FIRST_SOURCE_INDEX = 0
-// Constants for array sorting
-const sortAscending = (a, b) => a - b
 // Constants for content messages
 const VERY_LOW_RISK_MESSAGE = 'The flood risk is very low.'
+
+// Map content messages for risk levels -- For MAP tooltip content generation only
+const MAP_MESSAGE_CONTENT = {
+  '1-i2-l2': 'Very low risk, impact minor (2), likelihood low (2).',
+  '2-i2-l3': 'Low risk, impact minor (2), likelihood medium (3).',
+  '2-i2-l4': 'Low risk, impact minor (2), likelihood high (4).',
+  '2-i3-l1': 'Low risk, impact significant (3), likelihood very low (1).',
+  '2-i3-l2': 'Low risk, impact significant (3), likelihood low (2).',
+  '2-i4-l1': 'Low risk, impact severe (4), likelihood very low (1).',
+  '3-i3-l3': 'Medium risk, impact significant (3), likelihood medium (3).',
+  '3-i3-l4': 'Medium risk, impact significant (3), likelihood high (4).',
+  '3-i4-l2': 'Medium risk, impact severe (4), likelihood low (2).',
+  '3-i4-l3': 'Medium risk, impact severe (4), likelihood medium (3).',
+  '4-i4-l4': 'High risk, impact severe (4), likelihood high (4).'
+}
 
 module.exports = {
   Source,
@@ -83,6 +96,6 @@ module.exports = {
   TWO_SENTENCES_MAX,
   THREE_SENTENCES_TOTAL,
   FIRST_SOURCE_INDEX,
-  sortAscending,
-  VERY_LOW_RISK_MESSAGE
+  VERY_LOW_RISK_MESSAGE,
+  MAP_MESSAGE_CONTENT
 }

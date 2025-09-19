@@ -1,6 +1,5 @@
 const turf = require('@turf/turf')
-const messageContent = require('./outlook-map-content.json')
-const { Impact, Likelihood, DAYS_COUNT } = require('./outlook-constants')
+const { Impact, Likelihood, DAYS_COUNT, MAP_MESSAGE_CONTENT } = require('./outlook-constants')
 
 // Risk level constants to avoid magic numbers
 const VERY_LOW = Likelihood.VeryLow
@@ -161,7 +160,7 @@ class OutlookMap {
       if (messageGroupObj[key]) {
         messageGroupObj[key].sources.push(expandedSource[pos])
       } else {
-        messageGroupObj[key] = { sources: [expandedSource[pos]], message: messageContent[key] }
+        messageGroupObj[key] = { sources: [expandedSource[pos]], message: MAP_MESSAGE_CONTENT[key] }
       }
     }
 
