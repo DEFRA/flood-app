@@ -1,4 +1,4 @@
-const OutlookModel = require('../../models/outlook')
+const OutlookModel = require('../../models/forecast-outlook/outlook-map')
 
 module.exports = {
   method: 'GET',
