@@ -1,9 +1,9 @@
 const joi = require('joi')
 const boom = require('@hapi/boom')
 const ViewModel = require('../models/views/location')
-const OutlookMatrix = require('../models/outlook-matrix')
-const OutlookMap = require('../models/outlook-map')
-const { generateOutlookContent } = require('../models/outlook-content-generator')
+const OutlookMatrix = require('../models/forecast-outlook/outlook-matrix')
+const OutlookMap = require('../models/forecast-outlook/outlook-map')
+const { generateOutlookContent } = require('../models/forecast-outlook/outlook-content-generator')
 const locationService = require('../services/location')
 const moment = require('moment-timezone')
 const tz = 'Europe/London'
