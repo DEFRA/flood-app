@@ -1,15 +1,34 @@
 name: PR Title Check
 
 on:
-    pull_request:
-        types: [opened, edited, synchronize]
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  pull-requests: read
+
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' }}
-        steps:
-          - name: 🛂 Enforce Jira Issue Key in Pull Request Title
-            if: ${{ github.base_ref == 'development' && (startsWith(github.head_ref, 'feature') || startsWith(github.head_ref, 'fix'))}}
-            uses: ryanvade/enforce-pr-title-style-action@v1
-            with:
-              projectKey: FSR
+  title-checks:
+    name: Validate PR title
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' }}
+    steps:
+      - name: Show context
+        run: |
+          echo "Head: ${{ github.head_ref }}"
+          echo "Base: ${{ github.base_ref }}"
+          echo "Title: ${{ github.event.pull_request.title }}"
+      - name: Validate PR title (FSR-### | description)
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          echo "PR title: $PR_TITLE"
+          # Require: FSR-<digits> | <anything after the pipe>
+          # Note: the '|' must be escaped for grep -E; allow leading/trailing spaces around the pipe.
+          if echo "$PR_TITLE" | grep -Eq '^FSR-[0-9]+ *\| *.+$'; then
+            echo "Title matches: FSR-### | short description"
+          else
+            echo "Invalid PR title. Use: FSR-### | short description"
+            echo "Example: FSR-1436 | GOV UK rebrand to 5.10"
+            exit 1
+          fi

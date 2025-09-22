@@ -8,11 +8,18 @@ This is the front end application to check the flooding service
 
 ### Prerequisites
 
-Running flood-db: https://github.com/DEFRA/flood-db
-Running flood-gis: https://github.com/DEFRA/flood-gis
-Running flood-service: https://github.com/DEFRA/flood-service
+- Running flood-db: https://github.com/DEFRA/flood-db
+- Running flood-gis: https://github.com/DEFRA/flood-gis
+- Running flood-service: https://github.com/DEFRA/flood-service
 
-Node.js v16.x.x
+Node.js v20.x.x
+
+### Workflow Documentation
+
+- [GitFlow Branching](docs/git-flow-branching.md)
+- [PR Base Branch Check](docs/pr-base-branch-check.md)
+- [Technical guide to the Release GitHub Action](docs/release-workflow.md)
+- [Release management playbook](https://gitlab-dev.aws-int.defra.cloud/flood/flood-docs/-/blob/master/processes/CFF-Releases.md?ref_type=heads)
 
 ### Testing the application
 
