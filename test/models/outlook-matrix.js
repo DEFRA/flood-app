@@ -151,4 +151,175 @@ describe('Model - Outlook Matrix', () => {
       })
     })
   })
+
+  it('should return empty matrix when location has no bbox2k', () => {
+    const result = new OutlookMatrix(outlook, {})
+
+    // Should return empty matrix (all zeros) when location has no bbox2k
+    expect(result.matrixData).to.be.an.array()
+    expect(result.matrixData).to.have.length(5)
+
+    // All values should be [0, 0] - no national fallback
+    result.matrixData.forEach(day => {
+      day.forEach(source => {
+        expect(source).to.equal([0, 0])
+      })
+    })
+  })
+
+  it('should skip inland polygons with invalid coordinates', () => {
+    const matrix = new OutlookMatrix({}, { bbox2k: [0, 0, 1, 1] })
+    const riskAreaBlock = {
+      polys: [{
+        poly_type: 'inland',
+        coordinates: [[[-1], [1], [2], []]] // Invalid coordinates
+      }]
+    }
+
+    // Should return false because coordinates are invalid
+    expect(matrix.riskAreaIntersectsLocation(riskAreaBlock)).to.be.false()
+  })
+
+  it('should process inland polygons when coordinates are valid', () => {
+    const matrix = new OutlookMatrix({}, { bbox2k: [0, 0, 2, 2] })
+    const riskAreaBlock = {
+      polys: [{
+        poly_type: 'inland',
+        coordinates: [[[1, 1], [1, 2], [2, 2], [1, 1]]] // Valid coordinates
+      }]
+    }
+
+    // Should return true because coordinates are valid and intersect
+    expect(matrix.riskAreaIntersectsLocation(riskAreaBlock)).to.be.true()
+  })
+
+  it('should skip coastal polygons with invalid coordinates', () => {
+    const matrix = new OutlookMatrix({}, { bbox2k: [0, 0, 1, 1] })
+    const riskAreaBlock = {
+      polys: [{
+        poly_type: 'coastal',
+        coordinates: [[], []] // Invalid coordinates
+      }]
+    }
+
+    // Should return false because coordinates are invalid
+    expect(matrix.riskAreaIntersectsLocation(riskAreaBlock)).to.be.false()
+  })
+
+  it('should process coastal polygons when coordinates are valid', () => {
+    const matrix = new OutlookMatrix({}, { bbox2k: [0, 0, 2, 2] })
+    const riskAreaBlock = {
+      polys: [{
+        poly_type: 'coastal',
+        coordinates: [[[1, 1], [3, 1]]] // Valid linestring coordinates
+      }]
+    }
+
+    // Should return true because coordinates are valid and intersect
+    expect(matrix.riskAreaIntersectsLocation(riskAreaBlock)).to.be.true()
+  })
+
+  it('should return false when inland risk area does not intersect with location', () => {
+    const matrix = new OutlookMatrix({}, { bbox2k: [0, 0, 1, 1] })
+    const riskAreaBlock = {
+      polys: [{
+        poly_type: 'inland',
+        coordinates: [[[10, 10], [11, 10], [11, 11], [10, 10]]]
+      }]
+    }
+
+    expect(matrix.riskAreaIntersectsLocation(riskAreaBlock)).to.be.false()
+  })
+
+  it('should return true when inland risk area intersects with location', () => {
+    const matrix = new OutlookMatrix({}, { bbox2k: [0, 0, 2, 2] })
+    const riskAreaBlock = {
+      polys: [{
+        poly_type: 'inland',
+        coordinates: [[[1, 1], [1, 2], [2, 2], [1, 1]]]
+      }]
+    }
+
+    expect(matrix.riskAreaIntersectsLocation(riskAreaBlock)).to.be.true()
+  })
+
+  it('should return false when coastal risk area does not intersect with location', () => {
+    const matrix = new OutlookMatrix({}, { bbox2k: [0, 0, 1, 1] })
+    const riskAreaBlock = {
+      polys: [{
+        poly_type: 'coastal',
+        coordinates: [[[10, 10], [11, 10], [11, 11], [10, 10]]]
+      }]
+    }
+
+    expect(matrix.riskAreaIntersectsLocation(riskAreaBlock)).to.be.false()
+  })
+
+  it('should return true when coastal risk area intersects with location', () => {
+    const matrix = new OutlookMatrix({}, { bbox2k: [0, 0, 2, 2] })
+    const riskAreaBlock = {
+      polys: [{
+        poly_type: 'coastal',
+        coordinates: [[[1, 1], [3, 1], [3, 3], [1, 1]]]
+      }]
+    }
+
+    expect(matrix.riskAreaIntersectsLocation(riskAreaBlock)).to.be.true()
+  })
+
+  it('should validate polygon coordinates correctly', () => {
+    const matrix = new OutlookMatrix({})
+
+    // Valid polygon coordinates
+    expect(matrix.isValidPolygonCoordinates([[[-1, 53], [-2, 53], [-2, 54], [-1, 53]]])).to.be.true()
+
+    // Invalid: not an array
+    expect(matrix.isValidPolygonCoordinates('invalid')).to.be.false()
+
+    // Invalid: empty array
+    expect(matrix.isValidPolygonCoordinates([])).to.be.false()
+
+    // Invalid: ring not array
+    expect(matrix.isValidPolygonCoordinates(['invalid'])).to.be.false()
+
+    // Invalid: empty ring
+    expect(matrix.isValidPolygonCoordinates([[]])).to.be.false()
+
+    // Invalid: coord not array
+    expect(matrix.isValidPolygonCoordinates([[['invalid']]])).to.be.false()
+
+    // Invalid: coord too short
+    expect(matrix.isValidPolygonCoordinates([[[-1]]])).to.be.false()
+
+    // Invalid: non-number coord
+    expect(matrix.isValidPolygonCoordinates([[[-1, 'invalid']]])).to.be.false()
+
+    // Invalid: NaN coord
+    expect(matrix.isValidPolygonCoordinates([[[NaN, 53]]])).to.be.false()
+  })
+
+  it('should validate linestring coordinates correctly', () => {
+    const matrix = new OutlookMatrix({})
+
+    // Valid linestring coordinates
+    expect(matrix.isValidLineStringCoordinates([[-1, 53], [-2, 53]])).to.be.true()
+
+    // Invalid: not an array
+    expect(matrix.isValidLineStringCoordinates('invalid')).to.be.false()
+
+    // Invalid: too short
+    expect(matrix.isValidLineStringCoordinates([[-1, 53]])).to.be.false()
+
+    // Invalid: coord not array
+    expect(matrix.isValidLineStringCoordinates(['invalid', [-2, 53]])).to.be.false()
+
+    // Invalid: coord too short
+    expect(matrix.isValidLineStringCoordinates([[-1], [-2, 53]])).to.be.false()
+
+    // Invalid: non-number coord
+    expect(matrix.isValidLineStringCoordinates([[-1, 'invalid'], [-2, 53]])).to.be.false()
+
+    // Invalid: NaN coord
+    expect(matrix.isValidLineStringCoordinates([[NaN, 53], [-2, 53]])).to.be.false()
+  })
 })

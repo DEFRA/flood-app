@@ -40,7 +40,7 @@ module.exports = class OutlookMatrix {
     }
 
     // Process risk areas that intersect with the location (only if location exists)
-    if (this.location?.bbox2k && this.outlook?.risk_areas) { // TODO: write test for this
+    if (this.location?.bbox2k && this.outlook?.risk_areas) {
       this.outlook.risk_areas.forEach(riskArea => {
         riskArea.risk_area_blocks.forEach(riskAreaBlock => {
           // Only include risk areas that intersect with location bbox
@@ -89,10 +89,10 @@ module.exports = class OutlookMatrix {
     for (const poly of riskAreaBlock.polys) {
       let riskAreaPolygon = null
 
-      if (poly.poly_type === 'inland' && this.isValidPolygonCoordinates(poly.coordinates)) { // TODO: write test for this
+      if (poly.poly_type === 'inland' && this.isValidPolygonCoordinates(poly.coordinates)) {
         // Inland polygons are already polygons
         riskAreaPolygon = turf.polygon(poly.coordinates)
-      } else if (poly.poly_type === 'coastal' && this.isValidLineStringCoordinates(poly.coordinates?.[0])) { // TODO: write test for this till 99
+      } else if (poly.poly_type === 'coastal' && this.isValidLineStringCoordinates(poly.coordinates?.[0])) {
         // Coastal areas are linestrings, convert to polygon with buffer
         const lineString = turf.lineString(poly.coordinates[0])
         riskAreaPolygon = turf.buffer(lineString, 1, { units: 'miles' })
@@ -100,7 +100,7 @@ module.exports = class OutlookMatrix {
         // Skip unknown poly_type or invalid coordinates
       }
 
-      if (riskAreaPolygon && turf.intersect(locationPolygon, riskAreaPolygon)) { // TODO: write test for this where it doesn't intersect
+      if (riskAreaPolygon && turf.intersect(locationPolygon, riskAreaPolygon)) {
         return true // Found intersection
       }
     }
@@ -110,7 +110,7 @@ module.exports = class OutlookMatrix {
 
   // Helper to validate polygon coordinates (array of rings, each ring is array of [lng, lat])
   isValidPolygonCoordinates (coordinates) {
-    if (!Array.isArray(coordinates) || coordinates.length === 0) { // TODO: write unit test for this function
+    if (!Array.isArray(coordinates) || coordinates.length === 0) {
       return false
     }
     return coordinates.every(ring =>
@@ -123,7 +123,7 @@ module.exports = class OutlookMatrix {
   }
 
   // Helper to validate linestring coordinates (array of [lng, lat])
-  isValidLineStringCoordinates (coordinates) { // TODO: write unit test for this function
+  isValidLineStringCoordinates (coordinates) {
     if (!Array.isArray(coordinates) || coordinates.length < 2) {
       return false
     }
