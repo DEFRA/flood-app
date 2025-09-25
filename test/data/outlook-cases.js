@@ -2,6 +2,7 @@ const zeroDay = () => [[0, 0], [0, 0], [0, 0], [0, 0]]
 
 module.exports = [
   // ===== INVALID INPUTS =====
+  // Tests for handling malformed or invalid input matrices
   {
     name: 'null matrix returns empty array',
     matrix: null,
@@ -18,7 +19,28 @@ module.exports = [
     expected: []
   },
 
-  // ===== ALL-ZERO SCENARIOS =====
+  // ===== ALL-ZERO AND VERY LOW SCENARIOS =====
+  // Tests for matrices with no risk or very low risk across days
+  {
+    name: 'severe high risk on first day followed by all-zero days',
+    matrix: [
+      [[4, 4], [4, 4], [4, 4], [4, 4]], // Day 1: All sources Severe High - tests risk processing and grouping
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]]
+    ],
+    expected: [
+      {
+        label: 'Today',
+        sentences: ['Severe or widespread property flooding and travel disruption is expected in riverside and coastal areas, and areas at risk from surface water and groundwater.']
+      },
+      {
+        label: 'Tomorrow through to Sunday',
+        sentences: ['The flood risk is very low.']
+      }
+    ]
+  },
   {
     name: 'all-zero 5-day matrix returns very low risk summary',
     matrix: [zeroDay(), zeroDay(), zeroDay(), zeroDay(), zeroDay()],
@@ -29,9 +51,10 @@ module.exports = [
     ]
   },
 
-  // ===== SINGLE SOURCE RISKS =====
+  // ===== SINGLE SOURCE RISK VARIATIONS =====
+  // Tests for different impact and likelihood combinations on a single source
   {
-    name: 'single source variations: severe/significant/minor with high/medium/low',
+    name: 'single source variations: severe/significant/minor with high/medium/low likelihood',
     now: '2025-09-15T00:00:00Z',
     matrix: [
       [[4, 4], [0, 0], [0, 0], [0, 0]], // Day 1: River Severe High
@@ -74,7 +97,7 @@ module.exports = [
     ]
   },
   {
-    name: 'single source variations: significant low, minor high/medium/low',
+    name: 'single source variations: significant low, minor high/medium/low likelihood',
     now: '2025-09-15T00:00:00Z',
     matrix: [
       [[3, 2], [0, 0], [0, 0], [0, 0]], // Day 1: River Significant Low
@@ -115,10 +138,10 @@ module.exports = [
     ]
   },
   {
-    name: 'invalid pairs: minimal medium, minor verylow, minor none, none medium',
+    name: 'invalid risk pairs result in very low risk',
     now: '2025-09-15T00:00:00Z',
     matrix: [
-      [[1, 3], [2, 1], [2, 0], [0, 3]], // River: Minimal Medium (invalid), Sea: Minor VeryLow (invalid), Surface: Minor None (invalid), Ground: None Medium (invalid)
+      [[1, 3], [2, 1], [2, 0], [0, 3]], // Day 1: Invalid pairs - Minimal Medium, Minor VeryLow, Minor None, None Medium
       zeroDay(),
       zeroDay(),
       zeroDay(),
@@ -132,9 +155,10 @@ module.exports = [
     ]
   },
 
-  // ===== MULTIPLE SOURCES SAME RISK =====
+  // ===== MULTIPLE SOURCES WITH SAME RISK =====
+  // Tests for multiple sources having the same risk level
   {
-    name: 'two sources: significant impact medium likelihood',
+    name: 'two sources with significant impact medium likelihood',
     now: '2025-09-16T00:00:00Z',
     matrix: [
       [[3, 3], [0, 0], [3, 3], [0, 0]], // River and Surface: Significant Medium
@@ -157,7 +181,7 @@ module.exports = [
     ]
   },
   {
-    name: 'three sources: minor impact medium likelihood',
+    name: 'three sources with minor impact medium likelihood',
     now: '2025-09-17T00:00:00Z',
     matrix: [
       [[2, 3], [2, 3], [0, 0], [2, 3]], // River, Sea, Ground: Minor Medium
@@ -181,8 +205,9 @@ module.exports = [
   },
 
   // ===== DAY GROUPING AND VERY LOW FALLBACKS =====
+  // Tests for how consecutive days with similar risks are grouped
   {
-    name: 'day grouping: risk day followed by very low days',
+    name: 'day grouping: risk day followed by consecutive very low days',
     now: '2025-09-18T00:00:00Z',
     matrix: [
       [[2, 4], [0, 0], [0, 0], [0, 0]], // Today: Minor High
@@ -205,7 +230,7 @@ module.exports = [
     ]
   },
   {
-    name: 'fallback to very low: consecutive zero days',
+    name: 'fallback to very low: risk day followed by consecutive zero days',
     now: '2025-09-19T00:00:00Z',
     matrix: [
       [[2, 4], [0, 0], [0, 0], [0, 0]], // Today: Minor High
@@ -229,8 +254,9 @@ module.exports = [
   },
 
   // ===== MIXED DAILY RISKS =====
+  // Tests for days with multiple different risks or sources
   {
-    name: 'mixed impacts: minor high and significant medium on same day',
+    name: 'mixed impacts on same day: minor high and significant medium',
     now: '2025-09-20T00:00:00Z',
     matrix: [
       [[2, 4], [3, 3], [0, 0], [0, 0]], // Today: River Minor High, Sea Significant Medium
@@ -253,7 +279,7 @@ module.exports = [
     ]
   },
   {
-    name: 'mixed likelihoods: severe medium and severe low on same day',
+    name: 'mixed likelihoods on same day: severe medium and severe low',
     now: '2025-09-19T10:00:00Z',
     matrix: [
       [[0, 1], [0, 0], [0, 0], [0, 0]], // Very Low
@@ -276,26 +302,32 @@ module.exports = [
     ]
   },
   {
-    name: 'comprehensive mixed scenario: multiple sources, impacts, likelihoods, and day grouping',
+    name: 'comprehensive mixed scenario with day grouping',
     now: '2025-09-19T00:00:00Z', // Friday start for weekend labeling
     matrix: [
       [[4, 4], [3, 3], [0, 0], [0, 0]], // Day 1: River Severe High, Sea Significant Medium
-      [[4, 4], [3, 3], [0, 0], [0, 0]], // Day 2: Same as Day 1 (should group)
-      [[2, 2], [0, 0], [4, 2], [4, 2]], // Day 3: River Minor Low, Surface Severe Low, Ground Severe Low
+      [[4, 4], [4, 3], [0, 0], [0, 0]], // Day 2: Same as Day 1 (should group)
+      [[2, 2], [4, 2], [4, 2], [4, 2]], // Day 3: River Minor Low, Surface Severe Low, Ground Severe Low
       [[0, 1], [0, 0], [0, 0], [0, 0]], // Day 4: Very Low
       zeroDay() // Day 5: Zero
     ],
     expected: [
       {
-        label: 'Today and Tomorrow',
+        label: 'Today',
         sentences: [
           'Severe or widespread property flooding and travel disruption is expected in riverside areas. In coastal areas, property flooding and significant travel disruption is likely.'
         ]
       },
       {
+        label: 'Tomorrow',
+        sentences: [
+          'Severe or widespread property flooding and travel disruption is expected in riverside areas. In coastal areas, severe or widespread property flooding and travel disruption is likely.'
+        ]
+      },
+      {
         label: 'Sunday',
         sentences: [
-          'Severe or widespread property flooding and travel disruption is possible in areas at risk from surface water and groundwater. In riverside areas, localised property flooding and travel disruption is possible.'
+          'Severe or widespread property flooding and travel disruption is possible in coastal areas, and areas at risk from surface water and groundwater. In riverside areas, localised property flooding and travel disruption is possible.'
         ]
       },
       {
@@ -305,11 +337,11 @@ module.exports = [
     ]
   },
   {
-    name: 'edge case coverage: invalid pairs, boundary dates, and max combinations',
+    name: 'edge case: invalid pairs, boundary dates, and max combinations',
     now: '2025-09-20T00:00:00Z', // Saturday start for weekend labeling
     matrix: [
-      [[1, 3], [2, 1], [2, 0], [0, 3]], // Day 1: Invalid pairs (Minimal Medium, Minor VeryLow, Minor None, None Medium) + valid? Wait, all invalid, so very low
-      [[4, 4], [4, 3], [4, 2], [3, 3]], // Day 2: All 4 sources: River Severe High, Sea Severe Medium, Surface Severe Low, Ground Significant Medium
+      [[1, 3], [2, 1], [2, 0], [0, 3]], // Day 1: Invalid pairs - all filtered out to very low
+      [[4, 4], [4, 3], [4, 2], [3, 3]], // Day 2: All 4 sources with different impacts/likelihoods
       [[4, 4], [4, 3], [4, 2], [3, 3]], // Day 3: Same as Day 2 (should group)
       [[0, 1], [0, 0], [0, 0], [0, 0]], // Day 4: Very Low
       zeroDay() // Day 5: Zero
@@ -327,6 +359,104 @@ module.exports = [
       },
       {
         label: 'Tuesday and Wednesday',
+        sentences: ['The flood risk is very low.']
+      }
+    ]
+  },
+
+  // ===== LOCATION PHRASE BUILDING =====
+  // Tests for how location phrases are constructed from multiple sources
+  {
+    name: 'buildLocationPhrase with multiple sources: riverside, surface, ground',
+    matrix: [
+      [[3, 3], [0, 0], [3, 3], [3, 3]], // Day 1: River, Surface, Ground all Significant Medium
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]]
+    ],
+    expected: [
+      {
+        label: 'Today',
+        sentences: ['Property flooding and significant travel disruption is likely in riverside areas, and areas at risk from surface water and groundwater.']
+      },
+      {
+        label: 'Tomorrow through to Sunday',
+        sentences: ['The flood risk is very low.']
+      }
+    ]
+  },
+
+  // ===== ADDITIONAL COVERAGE TESTS =====
+  // Tests for edge cases and code coverage
+  {
+    name: 'null/undefined impact and likelihood values handling',
+    matrix: [
+      [[null, 3], [3, null], [undefined, 2], [2, undefined]], // Day 1: Mixed null/undefined values
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]]
+    ],
+    expected: [
+      {
+        label: 'Today through to Sunday',
+        sentences: ['The flood risk is very low.']
+      }
+    ]
+  },
+  {
+    name: 'valid risk pairs to exercise isAllowedPair check',
+    matrix: [
+      [[2, 2], [3, 3], [4, 4], [0, 0]], // Day 1: Valid pairs for all sources
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]]
+    ],
+    expected: [
+      {
+        label: 'Today',
+        sentences: ['Severe or widespread property flooding and travel disruption is expected in areas at risk from surface water. In coastal areas, property flooding and significant travel disruption is likely. In riverside areas, localised property flooding and travel disruption is possible.']
+      },
+      {
+        label: 'Tomorrow through to Sunday',
+        sentences: ['The flood risk is very low.']
+      }
+    ]
+  },
+  {
+    name: 'invalid risk pairs result in very low risk (isInvalidRiskPair coverage)',
+    matrix: [
+      [[1, 3], [0, 0], [2, 1], [0, 0]], // Day 1: Minimal impact (invalid), Minor VeryLow (invalid)
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]]
+    ],
+    expected: [
+      {
+        label: 'Today through to Sunday',
+        sentences: ['The flood risk is very low.']
+      }
+    ]
+  },
+  {
+    name: 'all sources with severe high risk (highestLikelihoodCombination coverage)',
+    matrix: [
+      [[4, 4], [4, 4], [4, 4], [4, 4]], // Day 1: All sources Severe High
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]]
+    ],
+    expected: [
+      {
+        label: 'Today',
+        sentences: ['Severe or widespread property flooding and travel disruption is expected in riverside and coastal areas, and areas at risk from surface water and groundwater.']
+      },
+      {
+        label: 'Tomorrow through to Sunday',
         sentences: ['The flood risk is very low.']
       }
     ]
