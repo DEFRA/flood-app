@@ -37,7 +37,7 @@ function generateOutlookContent (riskMatrixData, startDate = new Date()) {
 // Helper functions for day processing
 function processAllDays (riskMatrixData) {
   return riskMatrixData.map((dayRiskMatrix, dayIndex) => {
-    const { filteredRiskPairs, hasOnlyVeryLowLikelihood } = processDayRiskData(dayRiskMatrix || [])
+    const { filteredRiskPairs, hasOnlyVeryLowLikelihood } = processDayRiskData(dayRiskMatrix || []) // Passing empty array if dayRiskMatrix is not present for defensive programming
     return {
       index: dayIndex,
       filteredRiskPairs,
@@ -66,23 +66,23 @@ function processDayRiskData (dayRiskData) {
 
 function processSourceRiskPair (dayRiskData, source) {
   const sourceRiskPair = dayRiskData?.[source]
-  if (!sourceRiskPair || sourceRiskPair.length !== 2) {
+  if (!sourceRiskPair) { // TODO: write test for this
     return { hasVeryLowLikelihood: false, riskPair: null }
   }
 
   const [rawImpactValue, rawLikelihoodValue] = sourceRiskPair
-  const impact = isNullOrUndefined(rawImpactValue) ? null : Number(rawImpactValue)
-  const likelihood = isNullOrUndefined(rawLikelihoodValue) ? null : Number(rawLikelihoodValue)
+  const impact = isNullOrUndefined(rawImpactValue) ? null : Number(rawImpactValue) // Test for this should be covered by test for isNullOrUndefined
+  const likelihood = isNullOrUndefined(rawLikelihoodValue) ? null : Number(rawLikelihoodValue) // Test for this should be covered by test for isNullOrUndefined
 
   if (likelihood === Likelihood.VeryLow) {
     return { hasVeryLowLikelihood: true, riskPair: null }
   }
 
-  if (isInvalidRiskPair(impact, likelihood)) {
+  if (isInvalidRiskPair(impact, likelihood)) { // TODO: write test for this
     return { hasVeryLowLikelihood: false, riskPair: null }
   }
 
-  if (isAllowedPair(impact, likelihood)) {
+  if (isAllowedPair(impact, likelihood)) { // TODO: write test for this
     return { hasVeryLowLikelihood: false, riskPair: { source, impact, likelihood } }
   }
 
@@ -177,7 +177,7 @@ function selectRiskCombinations (riskCombinations, requiredSentenceCount) {
   const chosenCombinations = []
   for (const impactLevel of impactLevelsInPriorityOrder) {
     const highestLikelihoodCombination = impactCombinations[impactLevel][0]
-    if (highestLikelihoodCombination) {
+    if (highestLikelihoodCombination) { // TODO: write test for this
       chosenCombinations.push(highestLikelihoodCombination)
     }
   }
@@ -188,7 +188,7 @@ function selectRiskCombinations (riskCombinations, requiredSentenceCount) {
     const impactLevel = impactLevelsInPriorityOrder[impactIndex % impactLevelsInPriorityOrder.length]
     const availableCombinations = impactCombinations[impactLevel]
     const nextAvailableCombination = availableCombinations.find(riskCombination => !chosenCombinations.includes(riskCombination))
-    if (nextAvailableCombination) {
+    if (nextAvailableCombination) { // TODO: write test for this
       const insertIndex = findInsertIndex(chosenCombinations, impactLevel)
       chosenCombinations.splice(insertIndex, 0, nextAvailableCombination)
     }
@@ -322,10 +322,6 @@ function generateTwoDayLabel (dayIndices, startDate, dayNames) {
 
   const firstDayName = firstDay === 1 ? 'Tomorrow' : dayNames[firstDate.getUTCDay()]
   const lastDayName = dayNames[lastDate.getUTCDay()]
-
-  if (firstDayName === 'Saturday' && lastDayName === 'Sunday') {
-    return 'Saturday and Sunday'
-  }
 
   return `${firstDayName} and ${lastDayName}`
 }
