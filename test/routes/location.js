@@ -278,7 +278,7 @@ describe('Route - Location', () => {
   })
 
   describe('FGS', () => {
-    it('should 200 with no riskAreas to hide outlooktabs', async () => {
+    it('should 200 with no riskAreas to hide outlook message IDs', async () => {
       const floodService = require('../../server/services/flood')
 
       const fakeIsEngland = () => {
@@ -383,7 +383,7 @@ describe('Route - Location', () => {
       const response = await server.inject(options)
 
       expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('<p class="govuk-body">The flood risk for the next 5 days is very low.</p>')
+      expect(response.payload).to.contain('The flood risk is very low.')
     })
 
     it('should 200 with error message on empty data', async () => {
@@ -735,7 +735,7 @@ describe('Route - Location', () => {
       const response = await server.inject(options)
 
       expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('The flood risk for the next 5 days is very low.')
+      expect(response.payload).to.contain('The flood risk is very low.')
     })
   })
 
