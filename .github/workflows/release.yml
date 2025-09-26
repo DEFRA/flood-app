@@ -93,7 +93,9 @@ jobs:
             require("fs").appendFileSync(process.env.GITHUB_ENV, `FORMATTED_DATE=${formatted}\n`)
           '
         env:
-          INPUT: ${{ github.event.inputs.proposed_release_date }}- name: Check branch doesn't already exist
+          INPUT: ${{ github.event.inputs.proposed_release_date }}
+
+      - name: Check branch doesn't already exist
         run: |
           if git ls-remote --exit-code origin "refs/heads/${RELEASE_BRANCH}"; then
             echo "Error: Branch ${RELEASE_BRANCH} already exists." >&2
