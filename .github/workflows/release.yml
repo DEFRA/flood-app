@@ -18,7 +18,6 @@ on:
         options:
         - major
         - minor
-        - patch
 
 env:
   TZ: 'Europe/London'
@@ -59,6 +58,42 @@ jobs:
           version=$(jq -r '.version' package.json)
           echo VERSION=$version >> "$GITHUB_ENV"
           echo RELEASE_BRANCH="release/$version" >> "$GITHUB_ENV"
+
+      - name: Validate and format release date
+        run: |
+          node -e '
+            const input = process.env.INPUT
+            if (!input) {
+              console.log("No release date provided")
+              process.exit(0)
+            }
+      
+            const [d, m, y] = input.split("/").map(Number)
+            const dt = new Date(y, m - 1, d)
+      
+            // validate (exact match with input parts)
+            if (dt.getFullYear() !== y || dt.getMonth() + 1 !== m || dt.getDate() !== d) {
+              console.error("Error: Invalid date " + input + " (must be valid dd/mm/yyyy)")
+              process.exit(1)
+            }
+      
+            // day suffix
+            const suffix = (n) => {
+              if (n % 10 === 1 && n % 100 !== 11) return "st"
+              if (n % 10 === 2 && n % 100 !== 12) return "nd"
+              if (n % 10 === 3 && n % 100 !== 13) return "rd"
+              return "th"
+            }
+      
+            // month name (full)
+            const month = new Intl.DateTimeFormat("en-GB", { month: "long" }).format(dt)
+            const formatted = `${d}${suffix(d)} ${month} ${y}`
+      
+            console.log("Formatted date:", formatted)
+            require("fs").appendFileSync(process.env.GITHUB_ENV, `FORMATTED_DATE=${formatted}\n`)
+          '
+        env:
+          INPUT: ${{ github.event.inputs.proposed_release_date }}
 
       - name: Check branch doesn't already exist
         run: |
@@ -113,7 +148,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
 
       - name: Trigger release creation for flood-service
-        run: gh workflow run --repo "$GITHUB_REPOSITORY_OWNER/flood-service" release.yml -f increment="${{ github.event.inputs.increment }}" -f proposed_release_date="${{ github.event.inputs.proposed_release_date }}" -f jira_release_id="${{ github.event.inputs.jira_release_id }}"
+        run: gh workflow run --repo "$GITHUB_REPOSITORY_OWNER/flood-service" release.yml -f increment="${{ github.event.inputs.increment }}" -f proposed_release_date="${{ env.FORMATTED_DATE }}" -f jira_release_id="${{ github.event.inputs.jira_release_id }}"
         env:
           # use PAT token with repo scope (github.token didn't work)
           GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
