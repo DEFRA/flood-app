@@ -59,50 +59,41 @@ jobs:
           echo VERSION=$version >> "$GITHUB_ENV"
           echo RELEASE_BRANCH="release/$version" >> "$GITHUB_ENV"
 
-      - name: Format release date
+      - name: Validate and format release date
         run: |
-          # Convert dd/mm/yyyy to format like "9th July 2025"
-          input_date="${{ github.event.inputs.proposed_release_date }}"
-          if [ -n "$input_date" ]; then
-            # Parse dd/mm/yyyy format
-            day=$(echo $input_date | cut -d'/' -f1)
-            month=$(echo $input_date | cut -d'/' -f2)
-            year=$(echo $input_date | cut -d'/' -f3)
-            
-            # Add ordinal suffix to day
-            case $day in
-              1|21|31) day_suffix="st" ;;
-              2|22) day_suffix="nd" ;;
-              3|23) day_suffix="rd" ;;
-              *) day_suffix="th" ;;
-            esac
-            
-            # Convert month number to name
-            case $month in
-              01|1) month_name="January" ;;
-              02|2) month_name="February" ;;
-              03|3) month_name="March" ;;
-              04|4) month_name="April" ;;
-              05|5) month_name="May" ;;
-              06|6) month_name="June" ;;
-              07|7) month_name="July" ;;
-              08|8) month_name="August" ;;
-              09|9) month_name="September" ;;
-              10) month_name="October" ;;
-              11) month_name="November" ;;
-              12) month_name="December" ;;
-            esac
-            
-            # Remove leading zero from day
-            day=$(echo $day | sed 's/^0//')
-            
-            formatted_date="${day}${day_suffix} ${month_name} ${year}"
-            echo FORMATTED_DATE="$formatted_date" >> "$GITHUB_ENV"
-          else
-            echo FORMATTED_DATE="" >> "$GITHUB_ENV"
-          fi
-
-      - name: Check branch doesn't already exist
+          node -e '
+            const input = process.env.INPUT
+            if (!input) {
+              console.log("No release date provided")
+              process.exit(0)
+            }
+      
+            const [d, m, y] = input.split("/").map(Number)
+            const dt = new Date(y, m - 1, d)
+      
+            // validate (exact match with input parts)
+            if (dt.getFullYear() !== y || dt.getMonth() + 1 !== m || dt.getDate() !== d) {
+              console.error("Error: Invalid date " + input + " (must be valid dd/mm/yyyy)")
+              process.exit(1)
+            }
+      
+            // day suffix
+            const suffix = (n) => {
+              if (n % 10 === 1 && n % 100 !== 11) return "st"
+              if (n % 10 === 2 && n % 100 !== 12) return "nd"
+              if (n % 10 === 3 && n % 100 !== 13) return "rd"
+              return "th"
+            }
+      
+            // month name (full)
+            const month = new Intl.DateTimeFormat("en-GB", { month: "long" }).format(dt)
+            const formatted = `${d}${suffix(d)} ${month} ${y}`
+      
+            console.log("Formatted date:", formatted)
+            require("fs").appendFileSync(process.env.GITHUB_ENV, `FORMATTED_DATE=${formatted}\n`)
+          '
+        env:
+          INPUT: ${{ github.event.inputs.proposed_release_date }}- name: Check branch doesn't already exist
         run: |
           if git ls-remote --exit-code origin "refs/heads/${RELEASE_BRANCH}"; then
             echo "Error: Branch ${RELEASE_BRANCH} already exists." >&2
@@ -155,7 +146,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
 
       - name: Trigger release creation for flood-service
-        run: gh workflow run --repo "$GITHUB_REPOSITORY_OWNER/flood-service" release.yml -f increment="${{ github.event.inputs.increment }}" -f proposed_release_date="${{ github.event.inputs.proposed_release_date }}" -f jira_release_id="${{ github.event.inputs.jira_release_id }}"
+        run: gh workflow run --repo "$GITHUB_REPOSITORY_OWNER/flood-service" release.yml -f increment="${{ github.event.inputs.increment }}" -f proposed_release_date="${{ env.FORMATTED_DATE }}" -f jira_release_id="${{ github.event.inputs.jira_release_id }}"
         env:
           # use PAT token with repo scope (github.token didn't work)
           GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
