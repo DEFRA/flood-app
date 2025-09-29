@@ -1,4 +1,4 @@
-name: Create Hotfix Branch and PRs (Flood App)
+name: '**HOTFIX** - Create Branch and PRs (Flood App)'
 
 on:
   workflow_dispatch:

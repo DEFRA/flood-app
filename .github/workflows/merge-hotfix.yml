@@ -1,4 +1,4 @@
-name: Merge Hotfix Branch and Tag Release
+name: '**HOTFIX** - Merge Hotfix Branch and Tag Release'
 
 on:
   workflow_dispatch:
