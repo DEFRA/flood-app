@@ -460,5 +460,21 @@ module.exports = [
         sentences: ['The flood risk is very low.']
       }
     ]
+  },
+  {
+    name: 'falsy sourceRiskPair handling (processSourceRiskPair coverage)',
+    matrix: [
+      [null, [0, 0], [0, 0], [0, 0]], // Day 1: First source is null
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]]
+    ],
+    expected: [
+      {
+        label: 'Today through to Sunday',
+        sentences: ['The flood risk is very low.']
+      }
+    ]
   }
 ]
