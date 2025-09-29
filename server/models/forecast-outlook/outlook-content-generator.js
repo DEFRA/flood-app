@@ -1,5 +1,8 @@
 // 5 Day Forecast (5DF) Content Generator
 // Processes 5×4×2 risk matrix: [day][source][impact, likelihood]
+//   - 5 days (today + 4 future days)
+//   - 4 sources (river, sea, surface water, groundwater)
+//   - 2 values per source (impact level + likelihood level)
 // Generates human-readable flood risk content following specification rules
 
 const {
@@ -12,6 +15,9 @@ const {
 } = require('./outlook-constants')
 
 // Main function to process 5×4×2 risk matrix and generate flood outlook content
+// Input: Array of 5 days, each containing 4 sources with [impact, likelihood] pairs
+// Output: Array of day groups with human-readable labels and sentences
+// Flow: Validate → Check for no-risk → Process days → Group days → Generate content
 function generateOutlookContent (riskMatrixData, startDate = new Date()) {
   if (!Array.isArray(riskMatrixData) || riskMatrixData.length !== CONFIG.DAYS_COUNT) {
     return []
@@ -35,6 +41,9 @@ function generateOutlookContent (riskMatrixData, startDate = new Date()) {
 }
 
 // Helper functions for day processing
+
+// Takes the raw 5-day risk matrix and turns each day into a processed object
+// with filtered risk pairs and a fingerprint for grouping similar days
 function processAllDays (riskMatrixData) {
   return riskMatrixData.map((dayRiskMatrix, dayIndex) => {
     const { filteredRiskPairs, hasOnlyVeryLowLikelihood } = processDayRiskData(dayRiskMatrix || []) // Passing empty array if dayRiskMatrix is not present for defensive programming
@@ -47,6 +56,7 @@ function processAllDays (riskMatrixData) {
   })
 }
 
+// Processes one day's risk data, filtering out invalid pairs and checking for very low likelihood
 function processDayRiskData (dayRiskData) {
   const filteredRiskPairs = []
   let hasVeryLowLikelihood = false
@@ -64,9 +74,10 @@ function processDayRiskData (dayRiskData) {
   return { filteredRiskPairs, hasOnlyVeryLowLikelihood: filteredRiskPairs.length === 0 && hasVeryLowLikelihood }
 }
 
+// Handles the risk pair for one specific source (like river or sea), validating and filtering it
 function processSourceRiskPair (dayRiskData, source) {
   const sourceRiskPair = dayRiskData?.[source]
-  if (!sourceRiskPair) { // TODO: write test for this
+  if (!sourceRiskPair) {
     return { hasVeryLowLikelihood: false, riskPair: null }
   }
 
@@ -78,17 +89,18 @@ function processSourceRiskPair (dayRiskData, source) {
     return { hasVeryLowLikelihood: true, riskPair: null }
   }
 
-  if (isInvalidRiskPair(impact, likelihood)) { // TODO: write test for this
+  if (isInvalidRiskPair(impact, likelihood)) {
     return { hasVeryLowLikelihood: false, riskPair: null }
   }
 
-  if (isAllowedPair(impact, likelihood)) { // TODO: write test for this
+  if (isAllowedPair(impact, likelihood)) {
     return { hasVeryLowLikelihood: false, riskPair: { source, impact, likelihood } }
   }
 
   return { hasVeryLowLikelihood: false, riskPair: null }
 }
 
+// Checks if a risk pair is invalid based on business rules (none values, minimal impact, etc.)
 function isInvalidRiskPair (impact, likelihood) {
   return (
     likelihood === Likelihood.None ||
@@ -98,6 +110,7 @@ function isInvalidRiskPair (impact, likelihood) {
   )
 }
 
+// Creates a string "fingerprint" that represents the risk pattern for a day, used for grouping similar days
 function generateDayFingerprint (filteredRiskPairs) {
   const sourceSlots = ['-', '-', '-', '-'] // river, sea, surface, ground
   for (const riskPair of filteredRiskPairs) {
@@ -107,6 +120,8 @@ function generateDayFingerprint (filteredRiskPairs) {
 }
 
 // Helper functions for day grouping
+
+// Groups consecutive days that have the same risk pattern or both have very low likelihood
 function groupConsecutiveDays (days) {
   const dayGroupings = []
   for (let start = 0; start < days.length;) {
@@ -127,6 +142,8 @@ function groupConsecutiveDays (days) {
 }
 
 // Helper functions for content generation
+
+// Generates the final human-readable content for a group of days
 function generateGroupContent (group, startDate) {
   const dayIndices = group.days.map(dayData => dayData.index)
   const label = generateDayLabel(dayIndices, startDate)
@@ -159,11 +176,15 @@ function generateGroupContent (group, startDate) {
   return { label, sentences: [combinedSentence] }
 }
 
+// Selects which risk combinations to include in the sentences, prioritizing by impact and likelihood
+// Algorithm: Start with highest-likelihood combo for each impact level, then add more if needed
 function selectRiskCombinations (riskCombinations, requiredSentenceCount) {
+  // Get impact levels that exist in our data, in priority order (severe first, then minor)
   const impactLevelsInPriorityOrder = PRIORITIES.IMPACT_PRIORITY_ORDER.filter(level =>
     riskCombinations.some(riskCombination => riskCombination.impact === level)
   )
 
+  // Group combinations by impact level and sort each group by likelihood priority
   const impactCombinations = {}
   for (const impactLevel of impactLevelsInPriorityOrder) {
     impactCombinations[impactLevel] = riskCombinations
@@ -177,7 +198,7 @@ function selectRiskCombinations (riskCombinations, requiredSentenceCount) {
   const chosenCombinations = []
   for (const impactLevel of impactLevelsInPriorityOrder) {
     const highestLikelihoodCombination = impactCombinations[impactLevel][0]
-    if (highestLikelihoodCombination) { // TODO: write test for this
+    if (highestLikelihoodCombination) {
       chosenCombinations.push(highestLikelihoodCombination)
     }
   }
@@ -188,7 +209,7 @@ function selectRiskCombinations (riskCombinations, requiredSentenceCount) {
     const impactLevel = impactLevelsInPriorityOrder[impactIndex % impactLevelsInPriorityOrder.length]
     const availableCombinations = impactCombinations[impactLevel]
     const nextAvailableCombination = availableCombinations.find(riskCombination => !chosenCombinations.includes(riskCombination))
-    if (nextAvailableCombination) { // TODO: write test for this
+    if (nextAvailableCombination) {
       const insertIndex = findInsertIndex(chosenCombinations, impactLevel)
       chosenCombinations.splice(insertIndex, 0, nextAvailableCombination)
     }
@@ -198,6 +219,7 @@ function selectRiskCombinations (riskCombinations, requiredSentenceCount) {
   return chosenCombinations
 }
 
+// Finds where to insert a new combination in the list to keep them grouped by impact
 function findInsertIndex (chosenCombinations, impactLevel) {
   for (let i = chosenCombinations.length - 1; i >= 0; i--) {
     if (chosenCombinations[i].impact === impactLevel) {
@@ -207,10 +229,12 @@ function findInsertIndex (chosenCombinations, impactLevel) {
   return chosenCombinations.length
 }
 
+// Decides how many sentences to generate based on the variety of impacts and likelihoods
+// More variety = more sentences (up to 4 max) to avoid cramming too much info
 function calculateRequiredSentenceCount (riskPairs) {
   const impacts = new Set(riskPairs.map(riskPair => riskPair.impact)).size
   const likelihoods = new Set(riskPairs.map(riskPair => riskPair.likelihood)).size
-  const total = impacts + likelihoods
+  const total = impacts + likelihoods // Total unique risk levels
   const SINGLE_SENTENCE = 1
   const DOUBLE_SENTENCES = 2
   const TRIPLE_SENTENCES = 3
@@ -227,12 +251,14 @@ function calculateRequiredSentenceCount (riskPairs) {
   return QUADRUPLE_SENTENCES
 }
 
+// Groups risk pairs by their impact and likelihood levels, combining sources
 function groupRiskPairsByImpactLikelihood (filteredRiskPairs) {
   const impactLikelihoodGroups = createImpactLikelihoodGroups(filteredRiskPairs)
   const riskCombinations = convertGroupsToCombinations(impactLikelihoodGroups)
   return sortRiskCombinations(riskCombinations)
 }
 
+// Creates groups of risk pairs that share the same impact and likelihood
 function createImpactLikelihoodGroups (filteredRiskPairs) {
   const groups = {}
   for (const riskPair of filteredRiskPairs) {
@@ -245,6 +271,7 @@ function createImpactLikelihoodGroups (filteredRiskPairs) {
   return groups
 }
 
+// Turns the groups into combination objects with sorted sources
 function convertGroupsToCombinations (impactLikelihoodGroups) {
   return Object.values(impactLikelihoodGroups).map(riskCombination => ({
     impact: riskCombination.impact,
@@ -253,6 +280,7 @@ function convertGroupsToCombinations (impactLikelihoodGroups) {
   }))
 }
 
+// Sorts the combinations by priority: impact first, then likelihood, then source
 function sortRiskCombinations (riskCombinations) {
   return riskCombinations.sort((first, second) => {
     // First sort by impact priority
@@ -272,17 +300,21 @@ function sortRiskCombinations (riskCombinations) {
   })
 }
 
+// Builds the first sentence of the content, like "Minor flooding is possible from rivers."
 function createFirstSentence (riskCombination) {
   const { impact, likelihood, sources } = riskCombination
   return `${CONTENT.IMPACT[impact]} ${CONTENT.LIKELIHOOD[likelihood]} ${buildLocationPhrase(sources)}.`
 }
 
+// Builds additional sentences, like "From surface water, minor flooding is possible."
 function createSubsequentSentence (riskCombination) {
   const { impact, likelihood, sources } = riskCombination
   return `${capitalize(buildLocationPhrase(sources))}, ${CONTENT.IMPACT[impact].toLowerCase()} ${CONTENT.LIKELIHOOD[likelihood]}.`
 }
 
 // Helper functions for day labels
+
+// Creates a readable label for the days, like "Today" or "Monday through Wednesday"
 function generateDayLabel (dayIndices, startDate = new Date()) {
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
@@ -295,6 +327,7 @@ function generateDayLabel (dayIndices, startDate = new Date()) {
   }
 }
 
+// Labels for single days
 function generateSingleDayLabel (dayIndex, startDate, dayNames) {
   const targetDate = new Date(startDate)
   targetDate.setUTCDate(startDate.getUTCDate() + dayIndex)
@@ -308,6 +341,7 @@ function generateSingleDayLabel (dayIndex, startDate, dayNames) {
   return dayNames[targetDate.getUTCDay()]
 }
 
+// Labels for two consecutive days
 function generateTwoDayLabel (dayIndices, startDate, dayNames) {
   const [firstDay, lastDay] = dayIndices
 
@@ -326,6 +360,7 @@ function generateTwoDayLabel (dayIndices, startDate, dayNames) {
   return `${firstDayName} and ${lastDayName}`
 }
 
+// Labels for three or more days
 function generateMultiDayLabel (dayIndices, startDate, dayNames) {
   const firstDay = dayIndices[0]
   const lastDay = dayIndices[dayIndices.length - 1]
@@ -345,6 +380,7 @@ function generateMultiDayLabel (dayIndices, startDate, dayNames) {
   return `${firstDayName} through to ${lastDayName}`
 }
 
+// Gets the day name or special labels like "Today"
 function getDayName (dayIndex, date, dayNames) {
   if (dayIndex === 0) {
     return 'Today'
@@ -356,16 +392,25 @@ function getDayName (dayIndex, date, dayNames) {
 }
 
 // Utility functions
+
+// Small helper functions for common checks and string operations
+// VALID_RISK_PAIRS: Set of allowed impact-likelihood combinations
+// CONFIG: App settings like sentence limits and iteration counts
+// CONTENT: Text templates for impacts, likelihoods, and location phrases
+// PRIORITIES: Ordering rules for impacts, likelihoods, and sources
+
 const isNullOrUndefined = value => value === null || value === undefined
 const isAllowedPair = (impact, likelihood) => VALID_RISK_PAIRS.has(`${impact}-${likelihood}`)
 
-const buildLocationPhrase = (sourceIds) => { // TODO: write unit test for this function
+// Turns source IDs into readable location phrases like "from rivers and surface water"
+const buildLocationPhrase = (sourceIds) => {
   const sourceKey = [...sourceIds].sort((a, b) => a - b).join(',')
   return CONTENT.LOCATION[sourceKey] || 'in affected areas'
 }
 
 const capitalize = str => (str ? str[0].toUpperCase() + str.slice(1) : str)
 
+// Checks if the entire risk matrix has no risk (all zeros)
 const isMatrixAllZero = (riskMatrixData) =>
   riskMatrixData.every(dayRiskData =>
     Array.isArray(dayRiskData) &&
