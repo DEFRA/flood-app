@@ -28,7 +28,7 @@ Functional testing: https://github.com/DEFRA/flood-service-tests-v2
 
 ### Running the application
 
-Before running the applciation, ensure that your environment variables are set.
+Before running the application, ensure that your environment variables are set.
 
 ```
 $ npm i
@@ -42,6 +42,10 @@ Go to http://localhost:3009
 When making changes to the application, bear in mind that certain aspects and components are only updated when you perform the **npm run build** stage.
 
 If your changes are not reflected in the browser/console, you should check this first.
+
+## Documentation
+
+- **[Flood Risk Outlook System](docs/outlook-system.md)** - Comprehensive technical documentation for the 5-day flood forecast system, including architecture, data flow, business rules, and testing
 
 # Environment variables
 
