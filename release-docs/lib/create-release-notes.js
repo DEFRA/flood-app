@@ -1,8 +1,9 @@
 const fs = require('fs')
 const nunjucks = require('nunjucks')
 const yargs = require('yargs')
+const { hideBin } = require('yargs/helpers')
 
-const options = yargs
+const options = yargs(hideBin(process.argv))
   .option('f', {
     alias: 'file',
     describe: 'Input file path',
