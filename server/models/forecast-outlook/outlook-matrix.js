@@ -1,14 +1,3 @@
-// Development override for matrix data - set to true to use override, false to use original outlook data
-const USE_DEV_MATRIX_OVERRIDE = false
-
-const DEV_MATRIX_OVERRIDE = [
-  [[0, 0], [0, 0], [0, 0], [0, 0]], // Day 1 - All zeros to test "very low" message
-  [[0, 0], [0, 0], [0, 0], [0, 0]], // Day 2
-  [[0, 0], [0, 0], [0, 0], [0, 0]], // Day 3
-  [[0, 0], [0, 0], [0, 0], [0, 0]], // Day 4
-  [[0, 0], [0, 0], [0, 0], [0, 0]] // Day 5
-]
-
 const MATRIX_DAYS = 5
 
 const turf = require('@turf/turf')
@@ -28,11 +17,6 @@ module.exports = class OutlookMatrix {
   // Main method: Returns the 5×4×2 risk matrix for the given outlook and location
   // If location provided, only includes risk areas that affect that location
   get matrixData () {
-    // Return override matrix if enabled (for development/testing)
-    if (USE_DEV_MATRIX_OVERRIDE) {
-      return DEV_MATRIX_OVERRIDE
-    }
-
     // Create empty 5×4 matrix initialized with [0, 0] for each source
     // Format: matrix[dayIndex][sourceIndex] = [impact, likelihood]
     const matrix = Array(MATRIX_DAYS).fill().map(() =>
