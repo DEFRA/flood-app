@@ -10,7 +10,9 @@ const processThreshold = require('./lib/process-threshold')
 const processWarningThresholds = require('./lib/process-warning-thresholds')
 const filterImtdThresholds = require('./lib/find-min-threshold')
 
-const bannerIconId3 = 3
+const bannerIconIdOne = 1
+const bannerIconIdTwo = 2
+const bannerIconIdThree = 3
 const outOfDateMax = 5
 const dataStartDateTimeDaysToSubtract = 5
 
@@ -115,19 +117,23 @@ class ViewModel {
       }
     }
 
-    if (numSevereWarnings && (numWarnings || numAlerts)) {
-      this.isSevereLinkRenedered = true
-      this.isWarningLinkRendered = false
-      this.isAlertLinkRendered = false
-      this.mainIcon = getBannerIcon(bannerIconId3)
-    } else if (numWarnings && numAlerts) {
-      this.isWarningLinkRendered = true
-      this.isAlertLinkRendered = false
-      this.mainIcon = getBannerIcon(2)
-    } else {
-      this.isAlertLinkRendered = true
-      this.mainIcon = getBannerIcon(1)
+    function setBannerState ({ severe, warning, alert, iconId }) {
+      this.isSevereLinkRenedered = severe
+      this.isWarningLinkRendered = warning
+      this.isAlertLinkRendered = alert
+      this.mainIcon = getBannerIcon(iconId)
     }
+
+    if (numSevereWarnings) {
+      setBannerState.call(this, { severe: true, warning: false, alert: false, iconId: bannerIconIdThree })
+    } else if (numWarnings) {
+      setBannerState.call(this, { severe: false, warning: true, alert: false, iconId: bannerIconIdTwo })
+    } else if (numAlerts) {
+      setBannerState.call(this, { severe: false, warning: false, alert: true, iconId: bannerIconIdOne })
+    } else {
+      setBannerState.call(this, { severe: false, warning: false, alert: false, iconId: null })
+    }
+
     this.id = this.station.id
     this.telemetry = telemetry || []
     this.catchments = []
@@ -329,7 +335,7 @@ class ViewModel {
           return 'This station measures height from sea level.'
         } else if (this.recentValueBelowZero) {
           return 'This station measures height from a fixed point on or close to the riverbed.' +
-          ' A reading of 0 metres can be normal for some stations because of natural changes to the riverbed.'
+            ' A reading of 0 metres can be normal for some stations because of natural changes to the riverbed.'
         } else {
           return `This station measures height from a fixed point on or close to the riverbed. This point is ${this.station.stageDatum}m above sea level.`
         }
@@ -347,7 +353,7 @@ class ViewModel {
             state = 'within'
         }
         return `There are 3 states: low, normal and high. The latest level is ${state} the normal range. ` +
-        'We calculate the normal range using an average of past measurements and other local factors.'
+          'We calculate the normal range using an average of past measurements and other local factors.'
       })()
     }
     this.infoTrend = 'The trend is based on the last 5 readings.'
