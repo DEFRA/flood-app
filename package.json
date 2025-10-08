@@ -81,7 +81,7 @@
     "qs": "6.12.1",
     "regenerator-runtime": "0.14.0",
     "sass": "1.93.2",
-    "sinon": "18.0.0",
+    "sinon": "21.0.0",
     "standard": "17.1.0",
     "uglify-js": "3.14.4",
     "webpack": "5.102.0",
