@@ -52,7 +52,7 @@
     "@turf/polygon-smooth": "6.5.0",
     "@turf/simplify": "6.5.0",
     "@turf/turf": "6.5.0",
-    "@turf/union": "7.1.0",
+    "@turf/union": "7.2.0",
     "accessible-autocomplete": "2.0.4",
     "assert": "2.1.0",
     "babel-loader": "9.2.1",
