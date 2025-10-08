@@ -117,13 +117,7 @@ class ViewModel {
       }
     }
 
-    function setBannerState ({ severe, warning, alert, iconId }) {
-      this.isSevereLinkRenedered = severe
-      this.isWarningLinkRendered = warning
-      this.isAlertLinkRendered = alert
-      this.mainIcon = getBannerIcon(iconId)
-    }
-
+    // Function to set banner state and icon
     if (numSevereWarnings) {
       setBannerState.call(this, { severe: true, warning: false, alert: false, iconId: bannerIconIdThree })
     } else if (numWarnings) {
@@ -548,6 +542,13 @@ function telemetryForecastBuilder (telemetryRawData, forecastRawData, stationTyp
     forecast: forecastData,
     observed
   }
+}
+
+function setBannerState ({ severe, warning, alert, iconId }) {
+  this.isSevereLinkRenedered = severe
+  this.isWarningLinkRendered = warning
+  this.isAlertLinkRendered = alert
+  this.mainIcon = getBannerIcon(iconId)
 }
 
 // Function to retrieve a threshold by tid or fall back to 'pc5' or 'alertThreshold'
