@@ -218,7 +218,7 @@ function getFormattedTime (station) {
 function formatValue (station, val) {
   if (!station.displayData) {
     return null
-  } else if (val <= 0) {
+  } else if (station.station_type !== 'C' && val <= 0) {
     return '0m'
   } else {
     const dp = station.station_type === 'R' ? 1 : 2
