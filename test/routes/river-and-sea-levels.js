@@ -471,7 +471,7 @@ describe('Route - River and Sea Levels', () => {
       expect(response.headers.location).to.equal('/river-and-sea-levels/rainfall/E24195')
     })
 
-    it('should return with radius show coast in river with minues value showing', async () => {
+    it('should return with radius and show coastal station in river with minus value showing', async () => {
       stubs.getStationsByRadius.callsFake(() => data.stationsWithRadiusRainfallid)
       stubs.getRainfallStation.callsFake(() => data.cachedRainfallStation)
       stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
