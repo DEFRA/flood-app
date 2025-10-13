@@ -57,50 +57,52 @@
 
 // Symbols
 .defra-map-key__symbol-container {
-  position:relative;
-  display:block;
-  margin-left:34px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 0; 
+  position: relative;
+
   &--multi {
-    margin-top:24px;
-    @include mq ($from: tablet) {
-      margin-top:19px;
+    margin-top: 24px;
+    @include mq($from: tablet) {
+      margin-top: 19px;
     }
   }
 }
+
 .defra-map-key__symbol {
-  position:absolute;
-  top:0;
-  left:0;
-  width:32px;
-  height:32px;
-  margin-left:-38px;
-  margin-top:-8px;
-  text-indent:-5000px;
-  @include mq ($from: tablet) {
-    margin-top:-6px;
-  }
-  & {
-    background-size: 32px;
-    background-repeat: no-repeat;
-    border:0;
-    color: govuk-color('black');
-  }
+  position: static; 
+  width: 32px;
+  height: 32px;
+  text-indent: -5000px;
+  background-size: 32px;
+  background-repeat: no-repeat;
+  border: 0;
+  color: govuk-color('black');
+
   svg {
     display: block;
   }
+
   &[data-display="toggle-image"] svg {
     display: none;
   }
+
   &--big svg:first-child {
     display: none;
   }
+
   &--big svg:last-child {
     display: block;
   }
+
   &--small svg:first-child {
     display: block;
   }
+
   &--small svg:last-child {
     display: none;
   }
 }
+
