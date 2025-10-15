@@ -471,7 +471,7 @@ describe('Route - River and Sea Levels', () => {
       expect(response.headers.location).to.equal('/river-and-sea-levels/rainfall/E24195')
     })
 
-    it('should return with radius', async () => {
+    it('should return with radius and show coastal station in river with minus value showing', async () => {
       stubs.getStationsByRadius.callsFake(() => data.stationsWithRadiusRainfallid)
       stubs.getRainfallStation.callsFake(() => data.cachedRainfallStation)
       stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
@@ -492,6 +492,10 @@ describe('Route - River and Sea Levels', () => {
       const searchBoxValue = root.querySelectorAll('input.defra-search__input#location')[0].attributes.value
       const paragraphs = root.querySelectorAll('p.govuk-body').some(p => p.textContent.trim() === 'Showing levels within 5 miles of EASTHAVEN BARRIER.')
 
+      const numericSpans = root.querySelectorAll('span.defra-flood-levels-table-numeric')
+      const hasNegativeValue = numericSpans.some(span => /^-\d/.test(span.text.trim()))
+
+      expect(hasNegativeValue).to.be.true()
       expect(response.statusCode).to.equal(200)
       expect(h1).to.equal('Find river, sea, groundwater and rainfall levels')
       expect(searchBoxValue).to.equal('')
