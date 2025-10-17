@@ -86,6 +86,12 @@ function formatRainfallTelemetry (telemetry, valueDuration) {
   return values
 }
 
+function formatRainfallValue (val, dp = 1) {
+  return isNaN(val) || val === null
+    ? null
+    : (Math.round(Number(val) * Math.pow(10, dp)) / Math.pow(10, dp)).toFixed(dp)
+}
+
 function rainfallTelemetryPadOut (values, valueDuration) {
   // Extend telemetry upto latest interval, could be 15 or 60 minute intervals
   const fifteenMinutes = 15
@@ -117,6 +123,7 @@ module.exports = {
   toMarked,
   dateDiff,
   formatRainfallTelemetry,
+  formatRainfallValue,
   rainfallTelemetryPadOut,
   ALLOWED_SEARCH_CHARS,
   removeSpikes

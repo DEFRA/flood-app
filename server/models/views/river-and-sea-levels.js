@@ -271,6 +271,13 @@ function setStationProperties (station) {
   station.group_type = getStationGroup(station)
   station.trend = station.displayData ? station.trend : null
   station.trendSvgPath = trendSvgPaths[station.trend]
+
+  // Ensure rainfall totals are always 2dp for rainfall stations
+  if (station.group_type === 'rainfall') {
+    station.one_hr_total = util.formatRainfallValue(station.one_hr_total, 2)
+    station.six_hr_total = util.formatRainfallValue(station.six_hr_total, 2)
+    station.day_total = util.formatRainfallValue(station.day_total, 2)
+  }
 }
 
 function getClientModel (placeBox = []) {
