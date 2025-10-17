@@ -87,7 +87,7 @@ function formatRainfallTelemetry (telemetry, valueDuration) {
 }
 
 function formatRainfallValue (val, dp = 1) {
-  return isNaN(val) || val === null
+  return Number.isNaN(val) || val === null
     ? null
     : (Math.round(Number(val) * Math.pow(10, dp)) / Math.pow(10, dp)).toFixed(dp)
 }
