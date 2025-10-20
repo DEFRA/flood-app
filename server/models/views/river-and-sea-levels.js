@@ -273,7 +273,7 @@ function setStationProperties (station) {
   station.trend = station.displayData ? station.trend : null
   station.trendSvgPath = trendSvgPaths[station.trend]
 
-  // Ensure rainfall totals are always 2dp for rainfall stations
+  // Ensure rainfall totals are displayed to 1dp for rainfall stations
   if (station.group_type === 'rainfall') {
     station.one_hr_total = util.formatNumberToFixed(station.one_hr_total, 1)
     station.six_hr_total = util.formatNumberToFixed(station.six_hr_total, 1)
