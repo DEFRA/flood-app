@@ -86,7 +86,7 @@ function formatRainfallTelemetry (telemetry, valueDuration) {
   return values
 }
 
-function formatRainfallValue (val, dp = 1) {
+function formatNumberToFixed (val, dp = 1) {
   return Number.isNaN(val) || val === null
     ? null
     : (Math.round(Number(val) * Math.pow(10, dp)) / Math.pow(10, dp)).toFixed(dp)
@@ -123,7 +123,7 @@ module.exports = {
   toMarked,
   dateDiff,
   formatRainfallTelemetry,
-  formatRainfallValue,
+  formatNumberToFixed,
   rainfallTelemetryPadOut,
   ALLOWED_SEARCH_CHARS,
   removeSpikes

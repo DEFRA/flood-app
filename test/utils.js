@@ -4,7 +4,7 @@ const { createSandbox } = require('sinon')
 const { parse } = require('node-html-parser')
 const util = require('../server/util')
 const floodService = require('../server/services/flood')
-const { formatRainfallValue } = require('../server/util')
+const { formatNumberToFixed } = require('../server/util')
 const { expect } = require('@hapi/code')
 const { describe, it } = exports.lab = Lab.script()
 
@@ -67,24 +67,24 @@ module.exports.initStubs = () => {
   }
 }
 
-describe('formatRainfallValue', () => {
+describe('formatNumberToFixed', () => {
   it('formats a number to 1 decimal place by default', () => {
-    expect(formatRainfallValue(1.234)).to.equal('1.2')
-    expect(formatRainfallValue(2)).to.equal('2.0')
+    expect(formatNumberToFixed(1.234)).to.equal('1.2')
+    expect(formatNumberToFixed(2)).to.equal('2.0')
   })
 
   it('formats a number to specified decimal places', () => {
-    expect(formatRainfallValue(1.236, 2)).to.equal('1.24')
-    expect(formatRainfallValue(1.236, 3)).to.equal('1.236')
+    expect(formatNumberToFixed(1.236, 2)).to.equal('1.24')
+    expect(formatNumberToFixed(1.236, 3)).to.equal('1.236')
   })
 
   it('returns null for NaN or null input', () => {
-    expect(formatRainfallValue(NaN)).to.be.null()
-    expect(formatRainfallValue(null)).to.be.null()
+    expect(formatNumberToFixed(NaN)).to.be.null()
+    expect(formatNumberToFixed(null)).to.be.null()
   })
 
   it('handles string numbers', () => {
-    expect(formatRainfallValue('3.456')).to.equal('3.5')
-    expect(formatRainfallValue('3.456', 2)).to.equal('3.46')
+    expect(formatNumberToFixed('3.456')).to.equal('3.5')
+    expect(formatNumberToFixed('3.456', 2)).to.equal('3.46')
   })
 })

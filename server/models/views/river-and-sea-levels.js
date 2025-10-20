@@ -275,9 +275,9 @@ function setStationProperties (station) {
 
   // Ensure rainfall totals are always 2dp for rainfall stations
   if (station.group_type === 'rainfall') {
-    station.one_hr_total = util.formatRainfallValue(station.one_hr_total, 2)
-    station.six_hr_total = util.formatRainfallValue(station.six_hr_total, 2)
-    station.day_total = util.formatRainfallValue(station.day_total, 2)
+    station.one_hr_total = util.formatNumberToFixed(station.one_hr_total, 1)
+    station.six_hr_total = util.formatNumberToFixed(station.six_hr_total, 1)
+    station.day_total = util.formatNumberToFixed(station.day_total, 1)
   }
 }
 
