@@ -206,16 +206,18 @@ describe('Model - Outlook Matrix', () => {
     expect(matrix.riskAreaIntersectsLocation(riskAreaBlock)).to.be.false()
   })
 
-  it('should process coastal polygons when coordinates are valid', () => {
-    const matrix = new OutlookMatrix({}, { bbox2k: [0, 0, 2, 2] })
+  it('should process coastal polygons when coordinates are valid and intersect', () => {
+    const matrix = new OutlookMatrix({}, { bbox2k: [0, 0, 4, 4] })
+
     const riskAreaBlock = {
       polys: [{
         poly_type: 'coastal',
-        coordinates: [[[1, 1], [3, 1]]] // Valid linestring coordinates
-      }]
+        coordinates: [[1, 1], [3, 1]] // Valid linestring
+      }],
+      risk_levels: { coastal: [3, 2] },
+      days: [1]
     }
 
-    // Should return true because coordinates are valid and intersect
     expect(matrix.riskAreaIntersectsLocation(riskAreaBlock)).to.be.true()
   })
 
@@ -256,12 +258,15 @@ describe('Model - Outlook Matrix', () => {
   })
 
   it('should return true when coastal risk area intersects with location', () => {
-    const matrix = new OutlookMatrix({}, { bbox2k: [0, 0, 2, 2] })
+    const matrix = new OutlookMatrix({}, { bbox2k: [0, 0, 4, 4] })
+
     const riskAreaBlock = {
       polys: [{
         poly_type: 'coastal',
-        coordinates: [[[1, 1], [3, 1], [3, 3], [1, 1]]]
-      }]
+        coordinates: [[1, 1], [3, 1], [3, 3], [1, 1]] // valid linestring
+      }],
+      risk_levels: { coastal: [3, 2] },
+      days: [1]
     }
 
     expect(matrix.riskAreaIntersectsLocation(riskAreaBlock)).to.be.true()
