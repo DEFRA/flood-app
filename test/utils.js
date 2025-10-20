@@ -4,6 +4,7 @@ const { parse } = require('node-html-parser')
 
 const util = require('../server/util')
 const floodService = require('../server/services/flood')
+const { formatRainfallValue } = require('../server/util')
 
 module.exports.getPageTitle = (payload) => {
   return parse(payload).removeWhitespace().querySelector('title')?.text.trim()
@@ -63,3 +64,25 @@ module.exports.initStubs = () => {
     getRiversByName: sandbox.stub(floodService, 'getRiversByName')
   }
 }
+
+describe('formatRainfallValue', () => {
+  it('formats a number to 1 decimal place by default', () => {
+    expect(formatRainfallValue(1.234)).toBe('1.2')
+    expect(formatRainfallValue(2)).toBe('2.0')
+  })
+
+  it('formats a number to specified decimal places', () => {
+    expect(formatRainfallValue(1.236, 2)).toBe('1.24')
+    expect(formatRainfallValue(1.2, 3)).toBe('1.200')
+  })
+
+  it('returns null for NaN or null input', () => {
+    expect(formatRainfallValue(NaN)).toBeNull()
+    expect(formatRainfallValue(null)).toBeNull()
+  })
+
+  it('handles string numbers', () => {
+    expect(formatRainfallValue('3.456')).toBe('3.5')
+    expect(formatRainfallValue('3.456', 2)).toBe('3.46')
+  })
+})
