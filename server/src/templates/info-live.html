@@ -40,7 +40,7 @@
     <p class="defra-map-info__error">
         Closed or temporarily out of service
     </p>
-    {% elif not model.value %}
+    {% elif model.value === null or model.value === undefined %}
     <p class="defra-map-info__error">
         Data not available
     </p>
