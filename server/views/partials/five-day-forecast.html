@@ -11,8 +11,9 @@
 {% endif %}
 </div>
 
-
-<span id="map-outlook"></span>
+{% if not model.outlookAllLow %}
+  <span id="map-outlook"></span>
+{% endif %}
 
 
 <p class="defra-flood-meta">Updated at <time datetime="{{model.outlookIssue.issueUTC}}">{{model.outlookIssue.formattedIssueDate}}</time>
