@@ -58,7 +58,7 @@ class ViewModel {
       formattedIssueDate: issuedAt ? `${moment(issuedAt).tz(TIMEZONE).format(TIME_FORMAT)} on ${moment(issuedAt).tz(TIMEZONE).format(DATE_FORMAT)}` : `${moment().tz(TIMEZONE).format(TIME_FORMAT)} on ${moment().tz(TIMEZONE).format(DATE_FORMAT)}`
     }
 
-    this.outlookAllLow = outlookContent?.[0]?.sentences?.[0] === 'The flood risk is very low.'
+    this.outlookAllLow = JSON.stringify(outlookContent ?? []) === JSON.stringify([{ sentences: ['The flood risk is very low.'] }])
 
     // Expose model values for client side javascript
     this.expose = {
