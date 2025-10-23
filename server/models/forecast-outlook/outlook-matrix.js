@@ -32,6 +32,15 @@ module.exports = class OutlookMatrix {
     return matrix
   }
 
+  // Priority ranking logic
+  getPriorityRank ([impact, likelihood]) {
+    const priorityOrder = [
+      [4, 4], [4, 3], [3, 4], [2, 3],
+      [4, 2], [3, 3], [2, 2], [3, 2], [2, 0]
+    ]
+    return priorityOrder.findIndex(([i, l]) => i === impact && l === likelihood)
+  }
+
   processRiskAreaBlock (riskAreaBlock, matrix, sourceMap) {
     for (const [sourceKey, [impact, likelihood]] of Object.entries(riskAreaBlock.risk_levels)) {
       const sourceIndex = sourceMap[sourceKey]
@@ -41,10 +50,12 @@ module.exports = class OutlookMatrix {
         const dayIndex = day - 1
         if (dayIndex >= 0 && dayIndex < MATRIX_DAYS) {
           const current = matrix[dayIndex][sourceIndex]
-          matrix[dayIndex][sourceIndex] = [
-            Math.max(current[0], impact),
-            Math.max(current[1], likelihood)
-          ]
+          const currentRank = this.getPriorityRank(current)
+          const newRank = this.getPriorityRank([impact, likelihood])
+
+          if (newRank !== -1 && (currentRank === -1 || newRank < currentRank)) {
+            matrix[dayIndex][sourceIndex] = [impact, likelihood]
+          }
         }
       })
     }
@@ -73,6 +84,7 @@ module.exports = class OutlookMatrix {
 
         if (this.isValidLineStringCoordinates(lineCoords)) {
           const lineString = turf.lineString(lineCoords)
+          // ✅ Apply buffer for coastal lines (1 mile)
           riskAreaPolygon = turf.buffer(lineString, 1, { units: 'miles' })
         }
       }
@@ -87,9 +99,7 @@ module.exports = class OutlookMatrix {
 
   isValidPolygonCoordinates (coordinates) {
     if (!Array.isArray(coordinates) || coordinates.length === 0) return false
-
     const rings = Array.isArray(coordinates[0][0]) ? coordinates : [coordinates]
-
     return rings.every(ring =>
       Array.isArray(ring) && ring.length > 0 &&
       ring.every(coord =>
@@ -102,7 +112,6 @@ module.exports = class OutlookMatrix {
 
   isValidLineStringCoordinates (coordinates) {
     if (!Array.isArray(coordinates) || coordinates.length < 2) return false
-
     return coordinates.every(coord =>
       Array.isArray(coord) && coord.length >= 2 &&
       typeof coord[0] === 'number' && typeof coord[1] === 'number' &&
