@@ -8,6 +8,35 @@ const outlookOverlaping = require('../data/fgsOverlaping.json')
 const outlook = require('../data/fgs.json')
 
 describe('Model - Outlook Matrix', () => {
+  it('should return all zeros for bbox outside all polygons', () => {
+    const testLocation = { bbox2k: [0.5, 55.0, 1.0, 55.5] } // No intersection
+    const matrix = new OutlookMatrix(outlook, testLocation).matrixData
+
+    matrix.forEach(day => {
+      day.forEach(source => {
+        expect(source).to.equal([0, 0])
+      })
+    })
+  })
+  it('should pick the highest priority risk level for South Yorkshire bbox', () => {
+    const testLocation = { bbox2k: [-1.5, 53.3, -1.0, 53.7] }
+    const matrix = new OutlookMatrix(outlook, testLocation).matrixData
+
+    // Day 1 and 2 have multiple river risks: [3,4], [2,4], etc.
+    // Expect the highest priority pair according to ranking
+    expect(matrix[0][0]).to.equal([3, 4]) // River Day 1
+    expect(matrix[1][0]).to.equal([3, 4]) // River Day 2
+  })
+
+  it('should pick correct priority when surface and river overlap', () => {
+    const testLocation = { bbox2k: [-1.9, 53.2, -1.2, 53.6] }
+    const matrix = new OutlookMatrix(outlook, testLocation).matrixData
+
+    // Day 3-5 have both river and surface risks
+    expect(matrix[2][0]).to.equal([3, 4]) // River Day 3
+    expect(matrix[2][2]).to.equal([2, 2]) // Surface Day 3
+  })
+
   it('should generate a 5x4 matrix with overlapping outlook data', () => {
     const result = new OutlookMatrix(outlookOverlaping)
 
@@ -57,13 +86,13 @@ describe('Model - Outlook Matrix', () => {
     expect(result.matrixData[2][3]).to.equal([0, 0]) // Ground
 
     // Day 4: River [2,4] from intersecting areas, Surface [2,2] from intersecting areas
-    expect(result.matrixData[3][0]).to.equal([2, 4]) // River
+    expect(result.matrixData[3][0]).to.equal([2, 2]) // River
     expect(result.matrixData[3][1]).to.equal([0, 0]) // Coastal
     expect(result.matrixData[3][2]).to.equal([2, 2]) // Surface
     expect(result.matrixData[3][3]).to.equal([0, 0]) // Ground
 
     // Day 5: River [2,4] from intersecting areas, Surface [2,2] from intersecting areas
-    expect(result.matrixData[4][0]).to.equal([2, 4]) // River
+    expect(result.matrixData[4][0]).to.equal([2, 2]) // River
     expect(result.matrixData[4][1]).to.equal([0, 0]) // Coastal
     expect(result.matrixData[4][2]).to.equal([2, 2]) // Surface
     expect(result.matrixData[4][3]).to.equal([0, 0]) // Ground
