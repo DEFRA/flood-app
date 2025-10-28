@@ -217,9 +217,7 @@ function LiveMap (mapId, options) {
         // Ground
         (ref === 'stations' && props.type === 'G' && lyrCodes.includes('gr')) ||
         // Rainfall
-        (ref === 'rainfall' && props.type === 'R' && lyrCodes.includes('rf')) ||
-        // Target area provided
-        (targetArea.pointFeature && targetArea.pointFeature.getId() === feature.getId())
+        (ref === 'rainfall' && props.type === 'R' && lyrCodes.includes('rf'))
       )
       // WebGl: Feature properties must be strings or numbers
       feature.set('isVisible', isVisible)
