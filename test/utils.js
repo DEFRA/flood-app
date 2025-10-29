@@ -1,9 +1,12 @@
 const Hapi = require('@hapi/hapi')
+const Lab = require('@hapi/lab')
 const { createSandbox } = require('sinon')
 const { parse } = require('node-html-parser')
-
 const util = require('../server/util')
 const floodService = require('../server/services/flood')
+const { formatNumberToFixed } = require('../server/util')
+const { expect } = require('@hapi/code')
+const { describe, it } = exports.lab = Lab.script()
 
 module.exports.getPageTitle = (payload) => {
   return parse(payload).removeWhitespace().querySelector('title')?.text.trim()
@@ -63,3 +66,25 @@ module.exports.initStubs = () => {
     getRiversByName: sandbox.stub(floodService, 'getRiversByName')
   }
 }
+
+describe('formatNumberToFixed', () => {
+  it('formats a number to 1 decimal place by default', () => {
+    expect(formatNumberToFixed(1.234)).to.equal('1.2')
+    expect(formatNumberToFixed(2)).to.equal('2.0')
+  })
+
+  it('formats a number to specified decimal places', () => {
+    expect(formatNumberToFixed(1.236, 2)).to.equal('1.24')
+    expect(formatNumberToFixed(1.236, 3)).to.equal('1.236')
+  })
+
+  it('returns null for NaN or null input', () => {
+    expect(formatNumberToFixed(NaN)).to.be.null()
+    expect(formatNumberToFixed(null)).to.be.null()
+  })
+
+  it('handles string numbers', () => {
+    expect(formatNumberToFixed('3.456')).to.equal('3.5')
+    expect(formatNumberToFixed('3.456', 2)).to.equal('3.46')
+  })
+})
