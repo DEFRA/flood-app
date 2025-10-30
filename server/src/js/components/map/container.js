@@ -419,7 +419,7 @@ window.flood.maps.MapContainer = function MapContainer (mapId, options) {
     // New code should use the `infoDescription` CSS class instead.
     // The id can be removed once all references relying on it are confirmed unused.
     infoDescription.id = 'infoDescription'
-    infoDescription.classList.add('infoDescription') 
+    infoDescription.classList.add('infoDescription')
     state.isAttributionsOpen = true
     const attribution = new Attribution({
       collapsible: false,
