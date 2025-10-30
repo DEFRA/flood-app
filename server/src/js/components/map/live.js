@@ -171,7 +171,7 @@ function LiveMap (mapId, options) {
       let state = ''
       if (['S', 'M', 'G'].includes(props.type)) {
         // River or groundwater
-        if (props.status === 'Suspended' || props.status === 'Closed' || (props.value == null && !props.iswales)) {
+        if (props.status === 'Suspended' || props.status === 'Closed' || (props.value === null && !props.iswales)) {
           state = props.type === 'G' ? 'groundError' : 'riverError'
         } else if (props.value && props.atrisk && props.type !== 'C' && !props.iswales) {
           state = props.type === 'G' ? 'groundHigh' : 'riverHigh'
@@ -183,7 +183,7 @@ function LiveMap (mapId, options) {
         if (props.river_name !== 'Sea Levels') {
           state = 'river'
         } else {
-          if (props.status === 'Suspended' || props.status === 'Closed' || (props.value == null && !props.iswales)) {
+          if (props.status === 'Suspended' || props.status === 'Closed' || (props.value === null && !props.iswales)) {
             state = 'seaError'
           } else {
             state = 'sea'
