@@ -23,7 +23,7 @@ function linkChecker (anchors, targetText, url) {
 function fullRelatedContentChecker (root, cyltfrLink) {
   const relatedContentLinks = root.querySelectorAll('.defra-related-items a')
   expect(relatedContentLinks.length, 'Should be 6 related content links').to.equal(6)
-  linkChecker(relatedContentLinks, 'Get flood warnings by phone, text or email', 'https://www.gov.uk/sign-up-for-flood-warnings')
+  linkChecker(relatedContentLinks, 'Get flood warnings by phone, text or email', 'https://www.gov.uk/get-flood-warnings')
   linkChecker(relatedContentLinks, 'Prepare for flooding', 'https://www.gov.uk/prepare-for-flooding')
   linkChecker(relatedContentLinks, 'What to do before or during a flood', 'https://www.gov.uk/help-during-flood')
   linkChecker(relatedContentLinks, 'What to do after a flood', 'https://www.gov.uk/after-flood')
