@@ -35,8 +35,10 @@ module.exports = class OutlookMatrix {
   // Priority ranking logic
   getPriorityRank ([impact, likelihood]) {
     const priorityOrder = [
-      [4, 4], [4, 3], [3, 4], [2, 3],
-      [4, 2], [3, 3], [2, 2], [3, 2], [2, 2]
+      [4, 4], // Red
+      [4, 3], [3, 4], [3, 3], [4, 2], // Orange
+      [2, 4], [3, 2], [2, 3], // Yellow
+      [2, 2] // Green
     ]
     return priorityOrder.findIndex(([i, l]) => i === impact && l === likelihood)
   }
