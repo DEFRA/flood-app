@@ -1,6 +1,6 @@
 <!-- Warnings/target areas -->
 {% if model.ta_name %}
-<div id="infoDescription">
+<div class="infoDescription">
     <strong class="defra-map-info__name defra-map-info__name--emphasis">
         {% if model.severity_value  %}
             {% if model.severity_value === 3 %}
@@ -28,7 +28,7 @@
 </div>
 <!-- River, sea and groundwater levels -->
 {% elif model.type === 'S' or model.type === 'M' or model.type === 'G' or model.type === 'C' %}
-<div id="infoDescription">
+<div class="infoDescription">
     <strong class="defra-map-info__name">
         <a data-journey-click="Map:Map interaction:Map - Open station from tooltip" href="/station/{{ model.id }}">
             {% if model.type === 'C' and model.river_name !== 'Sea Levels' %}{{model.river_name}}{%elif model.type === 'C'%}Sea Level{% elif model.type === 'G' %}Groundwater{% else %}{{ model.river }}{% endif %} at
@@ -40,7 +40,7 @@
     <p class="defra-map-info__error">
         Closed or temporarily out of service
     </p>
-    {% elif not model.value %}
+    {% elif model.value === null or model.value === undefined %}
     <p class="defra-map-info__error">
         Data not available
     </p>
@@ -119,7 +119,7 @@
 </div>
 <!-- Rainfall levels -->
 {% elif model.type === 'R' %}
-<div id="infoDescription">
+<div class="infoDescription">
     <strong class="defra-map-info__name">
         <a href="/rainfall-station/{{ model.id }}">Rainfall at {{ model.name }}</a>
     </strong>
