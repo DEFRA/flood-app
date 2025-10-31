@@ -86,13 +86,13 @@ describe('Model - Outlook Matrix', () => {
     expect(result.matrixData[2][3]).to.equal([0, 0]) // Ground
 
     // Day 4: River [2,4] from intersecting areas, Surface [2,2] from intersecting areas
-    expect(result.matrixData[3][0]).to.equal([2, 2]) // River
+    expect(result.matrixData[3][0]).to.equal([2, 4]) // River
     expect(result.matrixData[3][1]).to.equal([0, 0]) // Coastal
     expect(result.matrixData[3][2]).to.equal([2, 2]) // Surface
     expect(result.matrixData[3][3]).to.equal([0, 0]) // Ground
 
     // Day 5: River [2,4] from intersecting areas, Surface [2,2] from intersecting areas
-    expect(result.matrixData[4][0]).to.equal([2, 2]) // River
+    expect(result.matrixData[4][0]).to.equal([2, 4]) // River
     expect(result.matrixData[4][1]).to.equal([0, 0]) // Coastal
     expect(result.matrixData[4][2]).to.equal([2, 2]) // Surface
     expect(result.matrixData[4][3]).to.equal([0, 0]) // Ground
