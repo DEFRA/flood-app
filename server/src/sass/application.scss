@@ -78,5 +78,5 @@ $govuk-breakpoints: (
 @import "utilities/summary-list";
 
 // Datatables
-@import "../../../node_modules/datatables.net-dt/css/dataTables.dataTables.css";
+@import "../../../node_modules/datatables.net-dt/css/jquery.dataTables";
 @import "../../../node_modules/datatables.net-buttons-dt/css/buttons.dataTables";
