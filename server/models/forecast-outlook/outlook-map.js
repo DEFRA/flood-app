@@ -97,69 +97,73 @@ class OutlookMap {
   outlookRiskAreas (outlook, riskMatrix, riskBands) {
     // Process each risk area in the outlook data
     for (const riskArea of outlook.risk_areas) {
-      for (const riskAreaBlock of riskArea.risk_area_blocks) {
-        // Initialize variables to track risk data for each source type
-        let sources = [] // List of affected sources (for display)
-        let rImpact = 0; let rLikelihood = 0 // River risk values
-        let sImpact = 0; let sLikelihood = 0 // Surface water risk values
-        let cImpact = 0; let cLikelihood = 0 // Coastal risk values
-        let gImpact = 0; let gLikelihood = 0 // Groundwater risk values
-        let rRisk = 0; let sRisk = 0; let cRisk = 0; let gRisk = 0 // Calculated risk levels
+      this.outlookRiskAreaBlocks(riskArea.risk_area_blocks, riskMatrix, riskBands)
+    }
+  }
 
-        // Extract and calculate risk levels for each source type
-        if (riskAreaBlock.risk_levels.river) {
-          rImpact = riskAreaBlock.risk_levels.river[0]
-          rLikelihood = riskAreaBlock.risk_levels.river[1]
-          rRisk = riskMatrix[rImpact - 1][rLikelihood - 1] // Look up in risk matrix
-          sources.push('river')
-        }
-        if (riskAreaBlock.risk_levels.surface) {
-          sImpact = riskAreaBlock.risk_levels.surface[0]
-          sLikelihood = riskAreaBlock.risk_levels.surface[1]
-          sRisk = riskMatrix[sImpact - 1][sLikelihood - 1]
-          sources.push('surface water')
-        }
-        if (riskAreaBlock.risk_levels.ground) {
-          gImpact = riskAreaBlock.risk_levels.ground[0]
-          gLikelihood = riskAreaBlock.risk_levels.ground[1]
-          gRisk = riskMatrix[gImpact - 1][gLikelihood - 1]
-          sources.push('ground water')
-        }
-        if (riskAreaBlock.risk_levels.coastal) {
-          cImpact = riskAreaBlock.risk_levels.coastal[0]
-          cLikelihood = riskAreaBlock.risk_levels.coastal[1]
-          cRisk = riskMatrix[cImpact - 1][cLikelihood - 1]
-          sources.push('coastal')
-        }
+  outlookRiskAreaBlocks (riskAreaBlocks, riskMatrix, riskBands) {
+    for (const riskAreaBlock of riskAreaBlocks) {
+      // Initialize variables to track risk data for each source type
+      let sources = [] // List of affected sources (for display)
+      let rImpact = 0; let rLikelihood = 0 // River risk values
+      let sImpact = 0; let sLikelihood = 0 // Surface water risk values
+      let cImpact = 0; let cLikelihood = 0 // Coastal risk values
+      let gImpact = 0; let gLikelihood = 0 // Groundwater risk values
+      let rRisk = 0; let sRisk = 0; let cRisk = 0; let gRisk = 0 // Calculated risk levels
 
-        // Calculate overall risk level as the highest across all sources
-        const riskLevel = Math.max(rRisk, sRisk, cRisk, gRisk)
-        const impactLevel = Math.max(rImpact, sImpact, cImpact, gImpact)
-        const likelihoodLevel = Math.max(rLikelihood, sLikelihood, cLikelihood, gLikelihood)
-
-        // Build human-readable source description (e.g., "rivers and surface water")
-        sources = sources.length > 1 ? `${sources.slice(0, -1).join(', ')} and ${sources.at(-1)}` : sources
-
-        // Create feature name like "Medium risk of river flooding"
-        const featureName = `${riskBands[riskLevel - 1]} risk of ${sources} flooding`
-
-        // Set flag if there are any flood concerns in this outlook
-        if (riskLevel > 0) {
-          this._hasOutlookConcern = true
-        }
-
-        // Create unique keys for each source's risk combination
-        const rKey = [rRisk, `i${rImpact}`, `l${rLikelihood}`].join('-')
-        const sKey = [sRisk, `i${sImpact}`, `l${sLikelihood}`].join('-')
-        const cKey = [cRisk, `i${cImpact}`, `l${cLikelihood}`].join('-')
-        const gKey = [gRisk, `i${gImpact}`, `l${gLikelihood}`].join('-')
-
-        // Build detailed messages for each risk combination
-        const messageGroupObj = this.expandSourceDescription(rKey, sKey, cKey, gKey)
-
-        // Create the actual GeoJSON features for the map
-        this.generatePolyFeature(riskAreaBlock, featureName, messageGroupObj, riskLevel, impactLevel, likelihoodLevel)
+      // Extract and calculate risk levels for each source type
+      if (riskAreaBlock.risk_levels.river) {
+        rImpact = riskAreaBlock.risk_levels.river[0]
+        rLikelihood = riskAreaBlock.risk_levels.river[1]
+        rRisk = riskMatrix[rImpact - 1][rLikelihood - 1] // Look up in risk matrix
+        sources.push('river')
       }
+      if (riskAreaBlock.risk_levels.surface) {
+        sImpact = riskAreaBlock.risk_levels.surface[0]
+        sLikelihood = riskAreaBlock.risk_levels.surface[1]
+        sRisk = riskMatrix[sImpact - 1][sLikelihood - 1]
+        sources.push('surface water')
+      }
+      if (riskAreaBlock.risk_levels.ground) {
+        gImpact = riskAreaBlock.risk_levels.ground[0]
+        gLikelihood = riskAreaBlock.risk_levels.ground[1]
+        gRisk = riskMatrix[gImpact - 1][gLikelihood - 1]
+        sources.push('ground water')
+      }
+      if (riskAreaBlock.risk_levels.coastal) {
+        cImpact = riskAreaBlock.risk_levels.coastal[0]
+        cLikelihood = riskAreaBlock.risk_levels.coastal[1]
+        cRisk = riskMatrix[cImpact - 1][cLikelihood - 1]
+        sources.push('coastal')
+      }
+
+      // Calculate overall risk level as the highest across all sources
+      const riskLevel = Math.max(rRisk, sRisk, cRisk, gRisk)
+      const impactLevel = Math.max(rImpact, sImpact, cImpact, gImpact)
+      const likelihoodLevel = Math.max(rLikelihood, sLikelihood, cLikelihood, gLikelihood)
+
+      // Build human-readable source description (e.g., "rivers and surface water")
+      sources = sources.length > 1 ? `${sources.slice(0, -1).join(', ')} and ${sources.at(-1)}` : sources
+
+      // Create feature name like "Medium risk of river flooding"
+      const featureName = `${riskBands[riskLevel - 1]} risk of ${sources} flooding`
+
+      // Set flag if there are any flood concerns in this outlook
+      if (riskLevel > 0) {
+        this._hasOutlookConcern = true
+      }
+
+      // Create unique keys for each source's risk combination
+      const rKey = [rRisk, `i${rImpact}`, `l${rLikelihood}`].join('-')
+      const sKey = [sRisk, `i${sImpact}`, `l${sLikelihood}`].join('-')
+      const cKey = [cRisk, `i${cImpact}`, `l${cLikelihood}`].join('-')
+      const gKey = [gRisk, `i${gImpact}`, `l${gLikelihood}`].join('-')
+
+      // Build detailed messages for each risk combination
+      const messageGroupObj = this.expandSourceDescription(rKey, sKey, cKey, gKey)
+
+      // Create the actual GeoJSON features for the map
+      this.generatePolyFeature(riskAreaBlock, featureName, messageGroupObj, riskLevel, impactLevel, likelihoodLevel)
     }
   }
 
