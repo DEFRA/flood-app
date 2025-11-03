@@ -73,41 +73,45 @@ module.exports = class OutlookMatrix {
     const locationPolygon = turf.bboxPolygon(this.location.bbox2k)
 
     for (const poly of riskAreaBlock.polys) {
-      let riskAreaPolygon = null
-
-      switch (poly.poly_type) {
-        case 'inland': {
-          const coords = Array.isArray(poly.coordinates?.[0]?.[0])
-            ? poly.coordinates
-            : [poly.coordinates]
-
-          if (this.isValidPolygonCoordinates(coords)) {
-            riskAreaPolygon = turf.polygon(coords)
-          }
-          break
-        }
-        case 'coastal': {
-          const lineCoords = Array.isArray(poly.coordinates?.[0])
-            ? poly.coordinates
-            : [poly.coordinates]
-
-          if (this.isValidLineStringCoordinates(lineCoords)) {
-            const lineString = turf.lineString(lineCoords)
-            // ✅ Apply buffer for coastal lines (1 mile)
-            riskAreaPolygon = turf.buffer(lineString, 1, { units: 'miles' })
-          }
-          break
-        }
-        default:
-          // Do nothing
-      }
-
+      const riskAreaPolygon = this.getRiskAreaPolygon(poly)
       if (riskAreaPolygon && turf.booleanIntersects(locationPolygon, riskAreaPolygon)) {
         return true
       }
     }
 
     return false
+  }
+
+  getRiskAreaPolygon (poly) {
+    let riskAreaPolygon = null
+
+    switch (poly.poly_type) {
+      case 'inland': {
+        const coords = Array.isArray(poly.coordinates?.[0]?.[0])
+          ? poly.coordinates
+          : [poly.coordinates]
+
+        if (this.isValidPolygonCoordinates(coords)) {
+          riskAreaPolygon = turf.polygon(coords)
+        }
+        break
+      }
+      case 'coastal': {
+        const lineCoords = Array.isArray(poly.coordinates?.[0])
+          ? poly.coordinates
+          : [poly.coordinates]
+
+        if (this.isValidLineStringCoordinates(lineCoords)) {
+          const lineString = turf.lineString(lineCoords)
+          // ✅ Apply buffer for coastal lines (1 mile)
+          riskAreaPolygon = turf.buffer(lineString, 1, { units: 'miles' })
+        }
+        break
+      }
+      default:
+        // Do nothing
+    }
+    return riskAreaPolygon
   }
 
   isValidPolygonCoordinates (coordinates) {
