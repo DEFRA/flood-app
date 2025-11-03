@@ -111,16 +111,19 @@ module.exports = class OutlookMatrix {
   }
 
   isValidPolygonCoordinates (coordinates) {
-    if (!Array.isArray(coordinates) || coordinates.length === 0) return false
-    const rings = Array.isArray(coordinates[0][0]) ? coordinates : [coordinates]
-    return rings.every(ring =>
-      Array.isArray(ring) && ring.length > 0 &&
-      ring.every(coord =>
-        Array.isArray(coord) && coord.length >= 2 &&
-        typeof coord[0] === 'number' && typeof coord[1] === 'number' &&
-        !isNaN(coord[0]) && !isNaN(coord[1])
+    if (!Array.isArray(coordinates) || coordinates.length === 0) {
+      return false
+    } else {
+      const rings = Array.isArray(coordinates[0][0]) ? coordinates : [coordinates]
+      return rings.every(ring =>
+        Array.isArray(ring) && ring.length > 0 &&
+        ring.every(coord =>
+          Array.isArray(coord) && coord.length >= 2 &&
+          typeof coord[0] === 'number' && typeof coord[1] === 'number' &&
+          !isNaN(coord[0]) && !isNaN(coord[1])
+        )
       )
-    )
+    }
   }
 
   isValidLineStringCoordinates (coordinates) {
