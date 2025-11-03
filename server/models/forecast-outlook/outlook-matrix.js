@@ -46,7 +46,9 @@ module.exports = class OutlookMatrix {
   processRiskAreaBlock (riskAreaBlock, matrix, sourceMap) {
     for (const [sourceKey, [impact, likelihood]] of Object.entries(riskAreaBlock.risk_levels)) {
       const sourceIndex = sourceMap[sourceKey]
-      if (sourceIndex === undefined) continue
+      if (sourceIndex === undefined) {
+        continue
+      }
 
       riskAreaBlock.days.forEach(day => {
         const dayIndex = day - 1
@@ -64,31 +66,40 @@ module.exports = class OutlookMatrix {
   }
 
   riskAreaIntersectsLocation (riskAreaBlock) {
-    if (!this.location?.bbox2k) return false
+    if (!this.location?.bbox2k) {
+      return false
+    }
 
     const locationPolygon = turf.bboxPolygon(this.location.bbox2k)
 
     for (const poly of riskAreaBlock.polys) {
       let riskAreaPolygon = null
 
-      if (poly.poly_type === 'inland') {
-        const coords = Array.isArray(poly.coordinates?.[0]?.[0])
-          ? poly.coordinates
-          : [poly.coordinates]
+      switch (poly.poly_type) {
+        case 'inland': {
+          const coords = Array.isArray(poly.coordinates?.[0]?.[0])
+            ? poly.coordinates
+            : [poly.coordinates]
 
-        if (this.isValidPolygonCoordinates(coords)) {
-          riskAreaPolygon = turf.polygon(coords)
+          if (this.isValidPolygonCoordinates(coords)) {
+            riskAreaPolygon = turf.polygon(coords)
+          }
+          break
         }
-      } else if (poly.poly_type === 'coastal') {
-        const lineCoords = Array.isArray(poly.coordinates?.[0])
-          ? poly.coordinates
-          : [poly.coordinates]
+        case 'coastal': {
+          const lineCoords = Array.isArray(poly.coordinates?.[0])
+            ? poly.coordinates
+            : [poly.coordinates]
 
-        if (this.isValidLineStringCoordinates(lineCoords)) {
-          const lineString = turf.lineString(lineCoords)
-          // ✅ Apply buffer for coastal lines (1 mile)
-          riskAreaPolygon = turf.buffer(lineString, 1, { units: 'miles' })
+          if (this.isValidLineStringCoordinates(lineCoords)) {
+            const lineString = turf.lineString(lineCoords)
+            // ✅ Apply buffer for coastal lines (1 mile)
+            riskAreaPolygon = turf.buffer(lineString, 1, { units: 'miles' })
+          }
+          break
         }
+        default:
+          // Do nothing
       }
 
       if (riskAreaPolygon && turf.booleanIntersects(locationPolygon, riskAreaPolygon)) {
@@ -113,11 +124,14 @@ module.exports = class OutlookMatrix {
   }
 
   isValidLineStringCoordinates (coordinates) {
-    if (!Array.isArray(coordinates) || coordinates.length < 2) return false
-    return coordinates.every(coord =>
-      Array.isArray(coord) && coord.length >= 2 &&
-      typeof coord[0] === 'number' && typeof coord[1] === 'number' &&
-      !isNaN(coord[0]) && !isNaN(coord[1])
-    )
+    if (!Array.isArray(coordinates) || coordinates.length < 2) {
+      return false
+    } else {
+      return coordinates.every(coord =>
+        Array.isArray(coord) && coord.length >= 2 &&
+        typeof coord[0] === 'number' && typeof coord[1] === 'number' &&
+        !isNaN(coord[0]) && !isNaN(coord[1])
+      )
+    }
   }
 }
