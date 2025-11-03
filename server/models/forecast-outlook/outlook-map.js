@@ -37,7 +37,7 @@ class OutlookMap {
     this._outOfDate = true
 
     // Array to track the highest risk level for each of the 5 outlook days
-    this._riskLevels = Array(OUTLOOK_DAYS).fill(0)
+    this._riskLevels = new Array(OUTLOOK_DAYS).fill(0)
 
     // Initialize empty GeoJSON structure for map features
     const riskMatrix = [[VERY_LOW, VERY_LOW, VERY_LOW, VERY_LOW], [VERY_LOW, VERY_LOW, LOW, LOW], [LOW, LOW, MEDIUM, MEDIUM], [LOW, MEDIUM, MEDIUM, HIGH]]
@@ -66,7 +66,7 @@ class OutlookMap {
     }
 
     // Convert coastal linestrings to polygons for better map display
-    this._geoJson.features.forEach((feature) => {
+    for (const feature of this._geoJson.features) {
       if (feature.geometry.type === 'LineString') {
         // Add 1-mile buffer around coastlines to create visible polygons
         const buffer = turf.buffer(feature, 1, { units: 'miles' })
@@ -74,7 +74,7 @@ class OutlookMap {
         feature.geometry.type = 'Polygon'
         feature.geometry.coordinates = coordinates
       }
-    })
+    }
 
     // Split the full England forecast text into paragraphs
     this._full = outlook.public_forecast.england_forecast.split('\n\n')
@@ -96,8 +96,8 @@ class OutlookMap {
   // and creates map features for visualization
   outlookRiskAreas (outlook, riskMatrix, riskBands) {
     // Process each risk area in the outlook data
-    outlook.risk_areas.forEach(riskArea => {
-      riskArea.risk_area_blocks.forEach(riskAreaBlock => {
+    for (const riskArea of outlook.risk_areas) {
+      for (const riskAreaBlock of riskArea.risk_area_blocks) {
         // Initialize variables to track risk data for each source type
         let sources = [] // List of affected sources (for display)
         let rImpact = 0; let rLikelihood = 0 // River risk values
@@ -138,7 +138,7 @@ class OutlookMap {
         const likelihoodLevel = Math.max(rLikelihood, sLikelihood, cLikelihood, gLikelihood)
 
         // Build human-readable source description (e.g., "rivers and surface water")
-        sources = sources.length > 1 ? `${sources.slice(0, -1).join(', ')} and ${sources[sources.length - 1]}` : sources
+        sources = sources.length > 1 ? `${sources.slice(0, -1).join(', ')} and ${sources.at(-1)}` : sources
 
         // Create feature name like "Medium risk of river flooding"
         const featureName = `${riskBands[riskLevel - 1]} risk of ${sources} flooding`
@@ -159,8 +159,8 @@ class OutlookMap {
 
         // Create the actual GeoJSON features for the map
         this.generatePolyFeature(riskAreaBlock, featureName, messageGroupObj, riskLevel, impactLevel, likelihoodLevel)
-      })
-    })
+      }
+    }
   }
 
   // Takes risk keys for each source and builds detailed descriptions
@@ -210,7 +210,7 @@ class OutlookMap {
   // These features will be displayed on the map with appropriate styling and popups
   generatePolyFeature (riskAreaBlock, featureName, messageGroupObj, riskLevel, impactLevel, likelihoodLevel) {
     // Process each polygon in this risk area block
-    riskAreaBlock.polys.forEach(poly => {
+    for (const poly of riskAreaBlock.polys) {
       // Create the basic GeoJSON feature structure
       const feature = {
         type: 'Feature',
@@ -255,12 +255,12 @@ class OutlookMap {
       }
 
       // Update the highest daily risk levels
-      riskAreaBlock.days.forEach(day => {
+      for (const day of riskAreaBlock.days) {
         if (riskLevel > this._riskLevels[day - 1]) {
           this._riskLevels[day - 1] = riskLevel
         }
-      })
-    })
+      }
+    }
   }
 
   // Getter methods to access processed outlook data
