@@ -6,8 +6,8 @@
 // Generates human-readable flood risk content following specification rules
 
 const {
-  Impact,
-  Likelihood,
+  IMPACT,
+  LIKELIHOOD,
   VALID_RISK_PAIRS,
   CONFIG,
   CONTENT,
@@ -85,7 +85,7 @@ function processSourceRiskPair (dayRiskData, source) {
   const impact = isNullOrUndefined(rawImpactValue) ? null : Number(rawImpactValue) // Test for this should be covered by test for isNullOrUndefined
   const likelihood = isNullOrUndefined(rawLikelihoodValue) ? null : Number(rawLikelihoodValue) // Test for this should be covered by test for isNullOrUndefined
 
-  if (likelihood === Likelihood.VeryLow) {
+  if (likelihood === LIKELIHOOD.VeryLow) {
     return { hasVeryLowLikelihood: true, riskPair: null }
   }
 
@@ -103,10 +103,10 @@ function processSourceRiskPair (dayRiskData, source) {
 // Checks if a risk pair is invalid based on business rules (none values, minimal impact, etc.)
 function isInvalidRiskPair (impact, likelihood) {
   return (
-    likelihood === Likelihood.None ||
-    impact === Impact.None ||
-    impact === Impact.Minimal ||
-    (likelihood === Likelihood.VeryLow && impact >= Impact.Minor)
+    likelihood === LIKELIHOOD.None ||
+    impact === IMPACT.None ||
+    impact === IMPACT.Minimal ||
+    (likelihood === LIKELIHOOD.VeryLow && impact >= IMPACT.Minor)
   )
 }
 
