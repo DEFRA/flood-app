@@ -1,5 +1,6 @@
 const MATRIX_DAYS = 5
 const turf = require('@turf/turf')
+const { LIKELIHOOD, IMPACT } = require('./outlook-constants')
 
 module.exports = class OutlookMatrix {
   constructor (outlook, location = null) {
@@ -35,10 +36,10 @@ module.exports = class OutlookMatrix {
   // Priority ranking logic
   getPriorityRank ([impact, likelihood]) {
     const priorityOrder = [
-      [4, 4], // Red
-      [4, 3], [3, 4], [3, 3], [4, 2], // Orange
-      [2, 4], [3, 2], [2, 3], // Yellow
-      [2, 2] // Green
+      [IMPACT.Severe, LIKELIHOOD.High], // Red
+      [IMPACT.Severe, LIKELIHOOD.Medium], [IMPACT.Significant, LIKELIHOOD.High], [IMPACT.Significant, LIKELIHOOD.Medium], [IMPACT.Severe, LIKELIHOOD.Low], // Orange
+      [IMPACT.Minor, LIKELIHOOD.High], [IMPACT.Significant, LIKELIHOOD.Low], [IMPACT.Minor, LIKELIHOOD.Medium], // Yellow
+      [IMPACT.Minor, LIKELIHOOD.Low] // Green
     ]
     return priorityOrder.findIndex(([i, l]) => i === impact && l === likelihood)
   }

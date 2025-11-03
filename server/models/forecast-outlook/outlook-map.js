@@ -1,16 +1,16 @@
 const turf = require('@turf/turf')
-const { Impact, Likelihood, CONFIG, CONTENT } = require('./outlook-constants')
+const { IMPACT, LIKELIHOOD, CONFIG, CONTENT } = require('./outlook-constants')
 
 // Risk level constants to avoid magic numbers
-const VERY_LOW = Likelihood.VeryLow
-const LOW = Likelihood.Low
-const MEDIUM = Likelihood.Medium
-const HIGH = Likelihood.High
+const VERY_LOW = LIKELIHOOD.VeryLow
+const LOW = LIKELIHOOD.Low
+const MEDIUM = LIKELIHOOD.Medium
+const HIGH = LIKELIHOOD.High
 
 // Impact and likelihood constants
-const IMPACT_LOW = Impact.Minimal
-const IMPACT_MEDIUM = Impact.Minor
-const LIKELIHOOD_LOW = Likelihood.VeryLow
+const IMPACT_LOW = IMPACT.Minimal
+const IMPACT_MEDIUM = IMPACT.Minor
+const LIKELIHOOD_LOW = LIKELIHOOD.VeryLow
 
 // Number of outlook days
 const OUTLOOK_DAYS = CONFIG.DAYS_COUNT

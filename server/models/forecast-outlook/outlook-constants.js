@@ -4,35 +4,35 @@
 
 // ===== RISK LEVEL DEFINITIONS =====
 // These enums represent the core flood risk assessment scales
-const Source = { River: 0, Sea: 1, Surface: 2, Ground: 3 }
-const Impact = { None: 0, Minimal: 1, Minor: 2, Significant: 3, Severe: 4 }
-const Likelihood = { None: 0, VeryLow: 1, Low: 2, Medium: 3, High: 4 }
+const SOURCE = { River: 0, Sea: 1, Surface: 2, Ground: 3 }
+const IMPACT = { None: 0, Minimal: 1, Minor: 2, Significant: 3, Severe: 4 }
+const LIKELIHOOD = { None: 0, VeryLow: 1, Low: 2, Medium: 3, High: 4 }
 
 // ===== PROCESSING ORDER RULES =====
 // These determine the order in which different risk factors are processed and displayed
 
 // Source processing order - rivers first, then coastal, surface, groundwater
-const SOURCE_ORDER = [Source.River, Source.Sea, Source.Surface, Source.Ground]
+const SOURCE_ORDER = [SOURCE.River, SOURCE.Sea, SOURCE.Surface, SOURCE.Ground]
 
 // Priority orders for sorting risks (highest impact/likelihood first)
-const IMPACT_PRIORITY_ORDER = [Impact.Severe, Impact.Significant, Impact.Minor]
-const LIKELIHOOD_PRIORITY_ORDER = [Likelihood.High, Likelihood.Medium, Likelihood.Low]
+const IMPACT_PRIORITY_ORDER = [IMPACT.Severe, IMPACT.Significant, IMPACT.Minor]
+const LIKELIHOOD_PRIORITY_ORDER = [LIKELIHOOD.High, LIKELIHOOD.Medium, LIKELIHOOD.Low]
 
 // ===== CONTENT MAPPINGS =====
 // These convert numeric risk levels into human-readable text
 
 // Impact descriptions for flood content generation
 const IMPACT_CONTENT = {
-  [Impact.Minor]: 'Localised property flooding and travel disruption',
-  [Impact.Significant]: 'Property flooding and significant travel disruption',
-  [Impact.Severe]: 'Severe or widespread property flooding and travel disruption'
+  [IMPACT.Minor]: 'Localised property flooding and travel disruption',
+  [IMPACT.Significant]: 'Property flooding and significant travel disruption',
+  [IMPACT.Severe]: 'Severe or widespread property flooding and travel disruption'
 }
 
 // Likelihood descriptions for flood content generation
 const LIKELIHOOD_CONTENT = {
-  [Likelihood.Low]: 'is possible',
-  [Likelihood.Medium]: 'is likely',
-  [Likelihood.High]: 'is expected'
+  [LIKELIHOOD.Low]: 'is possible',
+  [LIKELIHOOD.Medium]: 'is likely',
+  [LIKELIHOOD.High]: 'is expected'
 }
 
 // Location descriptions based on which sources are affected
@@ -143,9 +143,9 @@ const PRIORITIES = Object.freeze({
 })
 
 module.exports = {
-  Source,
-  Impact,
-  Likelihood,
+  SOURCE,
+  IMPACT,
+  LIKELIHOOD,
   VALID_RISK_PAIRS,
   CONFIG,
   CONTENT,
