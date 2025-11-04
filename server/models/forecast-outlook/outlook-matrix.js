@@ -9,8 +9,8 @@ module.exports = class OutlookMatrix {
   }
 
   get matrixData () {
-    const matrix = Array(MATRIX_DAYS).fill().map(() =>
-      Array(4).fill().map(() => [0, 0])
+    const matrix = Array.from({ length: MATRIX_DAYS }).fill().map(() =>
+      Array.from({ length: 4 }).fill().map(() => [0, 0])
     )
 
     const sourceMap = {
