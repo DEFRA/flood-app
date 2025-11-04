@@ -21,13 +21,13 @@ module.exports = class OutlookMatrix {
     }
 
     if (this.location?.bbox2k && this.outlook?.risk_areas) {
-      this.outlook.risk_areas.forEach(riskArea => {
-        riskArea.risk_area_blocks.forEach(riskAreaBlock => {
+      for (const riskArea of this.outlook.risk_areas) {
+        for (const riskAreaBlock of riskArea.risk_area_blocks) {
           if (this.riskAreaIntersectsLocation(riskAreaBlock)) {
             this.processRiskAreaBlock(riskAreaBlock, matrix, sourceMap)
           }
-        })
-      })
+        }
+      }
     }
 
     return matrix
@@ -51,7 +51,7 @@ module.exports = class OutlookMatrix {
         continue
       }
 
-      riskAreaBlock.days.forEach(day => {
+      for (const day of riskAreaBlock.days) {
         const dayIndex = day - 1
         if (dayIndex >= 0 && dayIndex < MATRIX_DAYS) {
           const current = matrix[dayIndex][sourceIndex]
@@ -62,7 +62,7 @@ module.exports = class OutlookMatrix {
             matrix[dayIndex][sourceIndex] = [impact, likelihood]
           }
         }
-      })
+      }
     }
   }
 
