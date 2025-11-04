@@ -21,13 +21,7 @@ module.exports = class OutlookMatrix {
     }
 
     if (this.location?.bbox2k && this.outlook?.risk_areas) {
-      for (const riskArea of this.outlook.risk_areas) {
-        for (const riskAreaBlock of riskArea.risk_area_blocks) {
-          if (this.riskAreaIntersectsLocation(riskAreaBlock)) {
-            this.processRiskAreaBlock(riskAreaBlock, matrix, sourceMap)
-          }
-        }
-      }
+      this.processRiskAreas(this.outlook.risk_areas, matrix, sourceMap)
     }
 
     return matrix
@@ -42,6 +36,16 @@ module.exports = class OutlookMatrix {
       [IMPACT.Minor, LIKELIHOOD.Low] // Green
     ]
     return priorityOrder.findIndex(([i, l]) => i === impact && l === likelihood)
+  }
+
+  processRiskAreas (riskAreas, matrix, sourceMap) {
+    for (const riskArea of riskAreas) {
+      for (const riskAreaBlock of riskArea.risk_area_blocks) {
+        if (this.riskAreaIntersectsLocation(riskAreaBlock)) {
+          this.processRiskAreaBlock(riskAreaBlock, matrix, sourceMap)
+        }
+      }
+    }
   }
 
   processRiskAreaBlock (riskAreaBlock, matrix, sourceMap) {
