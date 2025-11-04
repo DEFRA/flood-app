@@ -37,7 +37,7 @@ class OutlookMap {
     this._outOfDate = true
 
     // Array to track the highest risk level for each of the 5 outlook days
-    this._riskLevels = new Array(OUTLOOK_DAYS).fill(0)
+    this._riskLevels = Array.from({ length: OUTLOOK_DAYS }).fill(0)
 
     // Initialize empty GeoJSON structure for map features
     const riskMatrix = [[VERY_LOW, VERY_LOW, VERY_LOW, VERY_LOW], [VERY_LOW, VERY_LOW, LOW, LOW], [LOW, LOW, MEDIUM, MEDIUM], [LOW, MEDIUM, MEDIUM, HIGH]]
