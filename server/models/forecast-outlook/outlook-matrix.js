@@ -133,7 +133,7 @@ module.exports = class OutlookMatrix {
         ring.every(coord =>
           Array.isArray(coord) && coord.length >= 2 &&
           typeof coord[0] === 'number' && typeof coord[1] === 'number' &&
-          !isNaN(coord[0]) && !isNaN(coord[1])
+          !Number.isNaN(coord[0]) && !Number.isNaN(coord[1])
         )
       )
     }
@@ -146,7 +146,7 @@ module.exports = class OutlookMatrix {
       return coordinates.every(coord =>
         Array.isArray(coord) && coord.length >= 2 &&
         typeof coord[0] === 'number' && typeof coord[1] === 'number' &&
-        !isNaN(coord[0]) && !isNaN(coord[1])
+        !Number.isNaN(coord[0]) && !Number.isNaN(coord[1])
       )
     }
   }
