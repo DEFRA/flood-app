@@ -54,17 +54,21 @@ module.exports = class OutlookMatrix {
       if (sourceIndex === undefined) {
         continue
       }
+      const riskAreaBlockDaysConfig = { riskAreaBlock, matrix, impact, likelihood, sourceIndex }
+      this.processRiskAreaBlockDays(riskAreaBlockDaysConfig)
+    }
+  }
 
-      for (const day of riskAreaBlock.days) {
-        const dayIndex = day - 1
-        if (dayIndex >= 0 && dayIndex < MATRIX_DAYS) {
-          const current = matrix[dayIndex][sourceIndex]
-          const currentRank = this.getPriorityRank(current)
-          const newRank = this.getPriorityRank([impact, likelihood])
+  processRiskAreaBlockDays (config) {
+    for (const day of config.riskAreaBlock.days) {
+      const dayIndex = day - 1
+      if (dayIndex >= 0 && dayIndex < MATRIX_DAYS) {
+        const current = config.matrix[dayIndex][config.sourceIndex]
+        const currentRank = this.getPriorityRank(current)
+        const newRank = this.getPriorityRank([config.impact, config.likelihood])
 
-          if (newRank !== -1 && (currentRank === -1 || newRank < currentRank)) {
-            matrix[dayIndex][sourceIndex] = [impact, likelihood]
-          }
+        if (newRank !== -1 && (currentRank === -1 || newRank < currentRank)) {
+          config.matrix[dayIndex][config.sourceIndex] = [config.impact, config.likelihood]
         }
       }
     }
