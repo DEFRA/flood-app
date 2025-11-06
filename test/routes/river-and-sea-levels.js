@@ -1204,6 +1204,31 @@ describe('Route - River and Sea Levels', () => {
 
       expect(response.statusCode).to.equal(200)
     })
+
+    it('should redirect when POST returns disambiguation results (PRG pattern)', async () => {
+      stubs.getJson.callsFake(() => data.avonGetJson)
+      stubs.getStationsWithin.callsFake(() => [])
+      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+      stubs.getRiversByName.callsFake(() => [
+        {
+          river_id: 'river-devon',
+          qualified_name: 'River Devon'
+        }
+      ])
+
+      const options = {
+        method: 'POST',
+        url: '/river-and-sea-levels',
+        payload: {
+          location: 'devon'
+        }
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).to.equal(302)
+      expect(response.headers.location).to.equal('/river-and-sea-levels?q=devon')
+    })
   })
 
   describe('RLOI Id', () => {
