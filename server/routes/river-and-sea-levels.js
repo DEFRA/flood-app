@@ -33,7 +33,7 @@ const joiValidationQMax = 200
 const joiValidationGroupMax = 11
 const joiValidationSearchTypeMax = 11
 
-async function locationRouteHandler(request, h) {
+async function locationRouteHandler (request, h) {
   const referer = request.headers.referer
   const queryGroup = request.query.group
 
@@ -59,7 +59,7 @@ async function locationRouteHandler(request, h) {
   }
 }
 
-async function locationQueryHandler(request, h) {
+async function locationQueryHandler (request, h) {
   let location = request.query.q || request.payload?.location
 
   location = util.cleanseLocation(location)
@@ -117,7 +117,7 @@ async function locationQueryHandler(request, h) {
   return h.redirect(`/${route}/${place?.slug}${queryString}`).permanent()
 }
 
-async function findPlaces(location) {
+async function findPlaces (location) {
   // NOTE: at the moment locationService.find just returns a single place
   // using the [] for no results and with a nod to upcoming work to return >1 result
   const [place] = await locationService.find(location)
