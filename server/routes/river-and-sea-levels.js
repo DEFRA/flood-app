@@ -59,9 +59,45 @@ async function locationRouteHandler (request, h) {
   }
 }
 
+async function handleDisambiguation (request, h, location, places, rivers) {
+  places = filterDisambiguationPlaces(places)
+  const path = getDisambiguationPath(places[0], location)
+
+  if (request.method === 'post') {
+    return h.redirect(`/${route}?q=${encodeURIComponent(location)}`)
+  }
+
+  return h.view(route, { model: disambiguationModel(location, places, rivers), path })
+}
+
+async function handleNoPlacesFound (request, h, location, rivers) {
+  if (rivers.length === 0) {
+    if (request.method === 'get') {
+      return renderNotFound(location)
+    }
+    return renderLocationNotFound(route, location, h)
+  }
+
+  return h.redirect(`/${route}/river/${rivers[0].id}`)
+}
+
+async function handleSinglePlace (request, h, location, place) {
+  if (!isPlaceEngland(place)) {
+    request.logger.warn({
+      situation: 'Location search error: Valid response but location not in England.'
+    })
+
+    if (request.method === 'post') {
+      return renderLocationNotFound(route, location, h)
+    }
+  }
+
+  const queryString = createQueryParametersString(request.query)
+  return h.redirect(`/${route}/${place?.slug}${queryString}`).permanent()
+}
+
 async function locationQueryHandler (request, h) {
   let location = request.query.q || request.payload?.location
-
   location = util.cleanseLocation(location)
 
   request.yar.set('q', { location })
@@ -75,46 +111,17 @@ async function locationQueryHandler (request, h) {
   }
 
   const rivers = await request.server.methods.flood.getRiversByName(location)
-  let places = await findPlaces(location)
+  const places = await findPlaces(location)
 
   if (places.length + rivers.length > 1) {
-    places = filterDisambiguationPlaces(places)
-
-    const path = getDisambiguationPath(places[0], location)
-    if (request.method === 'post') {
-      return h.redirect(`/${route}?q=${encodeURIComponent(location)}`)
-    }
-
-    return h.view(route, { model: disambiguationModel(location, places, rivers), path })
+    return handleDisambiguation(request, h, location, places, rivers)
   }
 
   if (places.length === 0) {
-    if (rivers.length === 0) {
-      if (request.method === 'get') {
-        return renderNotFound(location)
-      }
-
-      return renderLocationNotFound(route, location, h)
-    }
-
-    return h.redirect(`/${route}/river/${rivers[0].id}`)
+    return handleNoPlacesFound(request, h, location, rivers)
   }
 
-  const place = places[0]
-
-  if (!isPlaceEngland(place)) {
-    request.logger.warn({
-      situation: 'Location search error: Valid response but location not in England.'
-    })
-
-    if (request.method === 'post') {
-      return renderLocationNotFound(route, location, h)
-    }
-  }
-
-  const queryString = createQueryParametersString(request.query)
-
-  return h.redirect(`/${route}/${place?.slug}${queryString}`).permanent()
+  return handleSinglePlace(request, h, location, places[0])
 }
 
 async function findPlaces (location) {
