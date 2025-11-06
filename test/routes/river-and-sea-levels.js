@@ -1211,7 +1211,7 @@ describe('Route - River and Sea Levels', () => {
       stubs.getIsEngland.callsFake(() => ({ is_england: true }))
       stubs.getRiversByName.callsFake(() => [
         {
-          river_id: 'river-devon',
+          id: 'river-devon',
           qualified_name: 'River Devon'
         }
       ])
@@ -1228,6 +1228,83 @@ describe('Route - River and Sea Levels', () => {
 
       expect(response.statusCode).to.equal(302)
       expect(response.headers.location).to.equal('/river-and-sea-levels?q=devon')
+    })
+
+    it('should redirect to river when POST returns only rivers and no places', async () => {
+      stubs.getJson.callsFake(() => data.nonLocationGetJson)
+      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+      stubs.getRiversByName.callsFake(() => [
+        {
+          id: 'river-thames',
+          qualified_name: 'River Thames'
+        }
+      ])
+
+      const options = {
+        method: 'POST',
+        url: '/river-and-sea-levels',
+        payload: {
+          location: 'thames'
+        }
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).to.equal(302)
+      expect(response.headers.location).to.equal('/river-and-sea-levels/river/river-thames')
+    })
+
+    it('should show location not found page when POST with no results', async () => {
+      stubs.getJson.callsFake(() => data.nonLocationGetJson)
+      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+      stubs.getRiversByName.callsFake(() => [])
+
+      const options = {
+        method: 'POST',
+        url: '/river-and-sea-levels',
+        payload: {
+          location: 'nonexistentplace'
+        }
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).to.equal(200)
+      expect(response.payload).to.contain("We couldn't find 'nonexistentplace', England")
+    })
+
+    it('should show location not found page when POST returns single place outside England', async () => {
+      stubs.getJson.callsFake(() => ({
+        authenticationResultCode: 'ValidCredentials',
+        statusCode: 200,
+        resourceSets: [{
+          resources: [{
+            address: {
+              locality: 'Edinburgh',
+              adminDistrict: 'Scotland',
+              countryRegion: 'United Kingdom'
+            },
+            name: 'Edinburgh',
+            confidence: 'High',
+            entityType: 'PopulatedPlace'
+          }]
+        }]
+      }))
+      stubs.getIsEngland.callsFake(() => ({ is_england: false }))
+      stubs.getRiversByName.callsFake(() => [])
+
+      const options = {
+        method: 'POST',
+        url: '/river-and-sea-levels',
+        payload: {
+          location: 'edinburgh'
+        }
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).to.equal(200)
+      expect(response.payload).to.contain("We couldn't find 'edinburgh', England")
     })
   })
 
