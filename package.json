@@ -55,7 +55,7 @@
     "@turf/union": "7.1.0",
     "accessible-autocomplete": "2.0.4",
     "assert": "2.1.0",
-    "babel-loader": "9.2.1",
+    "babel-loader": "10.0.0",
     "body-scroll-lock": "3.1.5",
     "core-js": "3.45.1",
     "d3": "7.9.0",
