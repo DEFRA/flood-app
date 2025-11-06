@@ -49,7 +49,7 @@
     "@hapi/yar": "11.0.1",
     "@turf/helpers": "6.5.0",
     "@turf/intersect": "6.5.0",
-    "@turf/polygon-smooth": "6.5.0",
+    "@turf/polygon-smooth": "7.2.0",
     "@turf/simplify": "6.5.0",
     "@turf/turf": "6.5.0",
     "@turf/union": "7.1.0",
