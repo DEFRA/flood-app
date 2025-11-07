@@ -240,6 +240,21 @@ describe('Route - River and Sea Levels', () => {
       expect(response.headers.location).to.equal('/river-and-sea-levels')
     })
 
+    it('should 404 when accessing non-England location directly', async () => {
+      stubs.getJson.callsFake(() => data.scotlandGetJson)
+      stubs.getIsEngland.callsFake(() => ({ is_england: false }))
+
+      const options = {
+        method: 'GET',
+        url: '/river-and-sea-levels/nowhere'
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).to.equal(404)
+      expect(response.result.message).to.contain('Location nowhere not found')
+    })
+
     it('should redirect with query parameters', async () => {
       stubs.getJson.callsFake(() => data.warringtonGetJson)
       stubs.getIsEngland.callsFake(() => ({ is_england: true }))
