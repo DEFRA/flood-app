@@ -246,13 +246,13 @@ describe('Route - River and Sea Levels', () => {
 
       const options = {
         method: 'GET',
-        url: '/river-and-sea-levels/nowhere'
+        url: '/river-and-sea-levels/kinghorn'
       }
 
       const response = await server.inject(options)
 
       expect(response.statusCode).to.equal(404)
-      expect(response.result.message).to.contain('Location nowhere not found')
+      expect(response.result.message).to.contain('Location kinghorn not found')
     })
 
     it('should redirect with query parameters', async () => {
