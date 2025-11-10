@@ -241,7 +241,21 @@ describe('Route - River and Sea Levels', () => {
     })
 
     it('should 404 when accessing non-England location directly', async () => {
-      stubs.getJson.callsFake(() => data.scotlandGetJson)
+      // Stub locationService.get to return a non-England place (bypassing Bing parser filter)
+      const locationService = require('../../server/services/location')
+      const locationServiceGetStub = sandbox.stub(locationService, 'get')
+
+      const scotlandPlace = {
+        name: 'Kinghorn, Fife',
+        query: 'Kinghorn',
+        slug: 'kinghorn',
+        center: [-3.17, 56.07],
+        bbox2k: [[-3.18, 56.06], [-3.16, 56.08]],
+        bbox10k: [[-3.20, 56.04], [-3.14, 56.10]],
+        isUK: true,
+        isEngland: { is_england: false }
+      }
+      locationServiceGetStub.returns([scotlandPlace])
       stubs.getIsEngland.callsFake(() => ({ is_england: false }))
 
       const options = {
