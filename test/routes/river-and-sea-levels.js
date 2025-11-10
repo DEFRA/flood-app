@@ -1303,22 +1303,21 @@ describe('Route - River and Sea Levels', () => {
     })
 
     it('should show location not found page when POST returns single place outside England', async () => {
-      stubs.getJson.callsFake(() => ({
-        authenticationResultCode: 'ValidCredentials',
-        statusCode: 200,
-        resourceSets: [{
-          resources: [{
-            address: {
-              locality: 'Edinburgh',
-              adminDistrict: 'Scotland',
-              countryRegion: 'United Kingdom'
-            },
-            name: 'Edinburgh',
-            confidence: 'High',
-            entityType: 'PopulatedPlace'
-          }]
-        }]
-      }))
+      // Stub locationService.find to return a non-England place (bypassing Bing parser filter)
+      const locationService = require('../../server/services/location')
+      const locationServiceFindStub = sandbox.stub(locationService, 'find')
+
+      const scotlandPlace = {
+        name: 'Edinburgh',
+        query: 'Edinburgh',
+        slug: 'edinburgh',
+        center: [-3.19, 55.95],
+        bbox2k: [[-3.20, 55.94], [-3.18, 55.96]],
+        bbox10k: [[-3.25, 55.90], [-3.13, 56.00]],
+        isUK: true,
+        isEngland: { is_england: false }
+      }
+      locationServiceFindStub.returns([scotlandPlace])
       stubs.getIsEngland.callsFake(() => ({ is_england: false }))
       stubs.getRiversByName.callsFake(() => [])
 
@@ -1334,6 +1333,36 @@ describe('Route - River and Sea Levels', () => {
 
       expect(response.statusCode).to.equal(200)
       expect(response.payload).to.contain("We couldn't find 'edinburgh', England")
+    })
+
+    it('should show location not found page when GET query returns single place outside England', async () => {
+      // Stub locationService.find to return a non-England place (bypassing Bing parser filter)
+      const locationService = require('../../server/services/location')
+      const locationServiceFindStub = sandbox.stub(locationService, 'find')
+
+      const scotlandPlace = {
+        name: 'Edinburgh',
+        query: 'Edinburgh',
+        slug: 'edinburgh',
+        center: [-3.19, 55.95],
+        bbox2k: [[-3.20, 55.94], [-3.18, 55.96]],
+        bbox10k: [[-3.25, 55.90], [-3.13, 56.00]],
+        isUK: true,
+        isEngland: { is_england: false }
+      }
+      locationServiceFindStub.returns([scotlandPlace])
+      stubs.getIsEngland.callsFake(() => ({ is_england: false }))
+      stubs.getRiversByName.callsFake(() => [])
+
+      const options = {
+        method: 'GET',
+        url: '/river-and-sea-levels?q=edinburgh'
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).to.equal(301)
+      expect(response.headers.location).to.equal('/river-and-sea-levels/edinburgh')
     })
   })
 
