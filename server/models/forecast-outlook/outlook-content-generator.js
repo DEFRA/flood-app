@@ -197,9 +197,8 @@ function selectRiskCombinations (riskCombinations, requiredSentenceCount) {
   // Initialize with the highest-likelihood combination for each impact level
   const chosenCombinations = []
   for (const impactLevel of impactLevelsInPriorityOrder) {
-    const highestLikelihoodCombination = impactCombinations[impactLevel][0]
-    if (highestLikelihoodCombination) {
-      chosenCombinations.push(highestLikelihoodCombination)
+    for (const combo of impactCombinations[impactLevel]) {
+      chosenCombinations.push(combo)
     }
   }
 
