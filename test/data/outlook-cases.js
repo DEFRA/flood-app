@@ -354,7 +354,7 @@ module.exports = [
       {
         label: 'Tomorrow and Monday',
         sentences: [
-          'Severe or widespread property flooding and travel disruption is expected in riverside areas. In coastal areas, severe or widespread property flooding and travel disruption is likely. In areas at risk from groundwater, property flooding and significant travel disruption is likely.'
+          'Severe or widespread property flooding and travel disruption is expected in riverside areas. In coastal areas, severe or widespread property flooding and travel disruption is likely. In areas at risk from surface water, severe or widespread property flooding and travel disruption is possible. In areas at risk from groundwater, property flooding and significant travel disruption is likely.'
         ]
       },
       {
