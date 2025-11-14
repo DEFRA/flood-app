@@ -4,7 +4,7 @@ const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
 const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const sinon = require('sinon')
-const Outlook = require('../../server/models/outlook')
+const OutlookMap = require('../../server/models/forecast-outlook/outlook-map')
 
 describe('Model - Outlook', () => {
   let sandbox
@@ -116,7 +116,7 @@ describe('Model - Outlook', () => {
   })
 
   it('should return outlook data', () => {
-    const outlook = new Outlook(outlookFakeData)
+    const outlook = new OutlookMap(outlookFakeData)
 
     expect(JSON.stringify(outlook.issueDate)).to.be.equal('"2019-08-08T09:30:00.000Z"')
     expect(outlook.timestampOutlook).to.be.equal(1565256600000)
@@ -127,7 +127,7 @@ describe('Model - Outlook', () => {
   })
 
   it('should condense multiple lines to single', () => {
-    const outlook = new Outlook(outlookFakeData)
+    const outlook = new OutlookMap(outlookFakeData)
 
     const fullOutput = [
       'Local flooding from surface water and rivers is possible but not expected in places across much of the north of England on Friday due to widespread rain and heavy showers. Local flooding from rivers is possible, and flooding from surface water possible but not expected, across Wales and much of central and southern England on Friday.',
@@ -234,7 +234,7 @@ describe('Model - Outlook', () => {
       }
     }
 
-    const outlook = new Outlook(outlookFakeData2)
+    const outlook = new OutlookMap(outlookFakeData2)
 
     expect(outlook._hasOutlookConcern).to.be.equal(false)
   })
@@ -324,7 +324,7 @@ describe('Model - Outlook', () => {
       }
     }
 
-    const outlook = new Outlook(outlookWithCoastal)
+    const outlook = new OutlookMap(outlookWithCoastal)
 
     expect(outlook._geoJson.features[0].geometry.type).to.be.equal('Polygon')
   })
