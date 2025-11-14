@@ -123,14 +123,14 @@
           {% endif %}
           <div class="defra-flood-statistics defra-flood-statistics--border">
             <div class="govuk-!-margin-top-4" data-toggletip data-toggletip-label="More information about the latest reading" data-toggletip-content="We get readings more often as the risk of flooding increases.">
-              <h2 class="govuk-heading-s govuk-!-margin-bottom-0">
+              <h2 class="govuk-heading-s govuk-!-margin-bottom-0" data-testid="heading-latest-timestamp">
                 Latest at {{ model.station.recentValue.formattedTime }} on {{ model.station.recentValue.latestDayFormatted }}
               </h2>
             </div>
             <dl class="defra-flood-statistics__list" aria-label="Latest readings">
               <div class="defra-flood-statistics__item">
-                <dt class="defra-flood-statistics__key">Height</dt>
-                <dd class="defra-flood-statistics__value">
+                <dt class="defra-flood-statistics__key" data-testid="height-title">Height</dt>
+                <dd class="defra-flood-statistics__value" data-testid="height-value">
                   <span {% if model.station.isGroundwater or model.station.isRiver or model.station.isTidal %} data-toggletip data-toggletip-label="More information about the height" data-toggletip-content="{{ model.infoHeight }}"{% endif %}>
                     {% if model.station.isRiver and model.recentValueBelowZero %}
                       0m
@@ -142,10 +142,10 @@
               </div>
               {% if model.station.trend %}
               <div class="defra-flood-statistics__item">
-                <dt class="defra-flood-statistics__key">
+                <dt class="defra-flood-statistics__key" data-testid="trend-title">
                   Trend
                 </dt>
-                <dd class="defra-flood-statistics__value">
+                <dd class="defra-flood-statistics__value" data-testid="trend-value">
                   <span data-toggletip data-toggletip-label="More information about the trend" data-toggletip-content="{{ model.infoTrend }}">
                     {{ model.station.trend | capitalize }}
                   </span>
@@ -155,8 +155,8 @@
             {# if station has hasPercentiles, this should exclude Coastal #}
               {% if model.station.hasPercentiles and not model.station.isCoastal  %}
               <div class="defra-flood-statistics__item">
-                <dt class="defra-flood-statistics__key">State</dt>
-                <dd class="defra-flood-statistics__value">
+                <dt class="defra-flood-statistics__key" data-testid="state-title">State</dt>
+                <dd class="defra-flood-statistics__value" data-testid="state-value">
                   <span {% if model.station.isGroundwater or model.station.isRiver %}data-toggletip data-toggletip-label="More information about the state" data-toggletip-content="{{ model.infoState }}"{% endif %}>
                     {{ model.station.state | capitalize }}
                     </span>
