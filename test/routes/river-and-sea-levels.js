@@ -240,6 +240,35 @@ describe('Route - River and Sea Levels', () => {
       expect(response.headers.location).to.equal('/river-and-sea-levels')
     })
 
+    it('should 404 when accessing non-England location directly', async () => {
+      // Stub locationService.get to return a non-England place (bypassing Bing parser filter)
+      const locationService = require('../../server/services/location')
+      const locationServiceGetStub = sandbox.stub(locationService, 'get')
+
+      const scotlandPlace = {
+        name: 'Kinghorn, Fife',
+        query: 'Kinghorn',
+        slug: 'kinghorn',
+        center: [-3.17, 56.07],
+        bbox2k: [[-3.18, 56.06], [-3.16, 56.08]],
+        bbox10k: [[-3.20, 56.04], [-3.14, 56.10]],
+        isUK: true,
+        isEngland: { is_england: false }
+      }
+      locationServiceGetStub.returns([scotlandPlace])
+      stubs.getIsEngland.callsFake(() => ({ is_england: false }))
+
+      const options = {
+        method: 'GET',
+        url: '/river-and-sea-levels/kinghorn'
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).to.equal(404)
+      expect(response.result.message).to.contain('Location kinghorn not found')
+    })
+
     it('should redirect with query parameters', async () => {
       stubs.getJson.callsFake(() => data.warringtonGetJson)
       stubs.getIsEngland.callsFake(() => ({ is_england: true }))
@@ -1203,6 +1232,137 @@ describe('Route - River and Sea Levels', () => {
       const response = await server.inject(options)
 
       expect(response.statusCode).to.equal(200)
+    })
+
+    it('should redirect when POST returns disambiguation results (PRG pattern)', async () => {
+      stubs.getJson.callsFake(() => data.avonGetJson)
+      stubs.getStationsWithin.callsFake(() => [])
+      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+      stubs.getRiversByName.callsFake(() => [
+        {
+          id: 'river-devon',
+          qualified_name: 'River Devon'
+        }
+      ])
+
+      const options = {
+        method: 'POST',
+        url: '/river-and-sea-levels',
+        payload: {
+          location: 'devon'
+        }
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).to.equal(302)
+      expect(response.headers.location).to.equal('/river-and-sea-levels?q=devon')
+    })
+
+    it('should redirect to river when POST returns only rivers and no places', async () => {
+      stubs.getJson.callsFake(() => data.nonLocationGetJson)
+      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+      stubs.getRiversByName.callsFake(() => [
+        {
+          id: 'river-thames',
+          qualified_name: 'River Thames'
+        }
+      ])
+
+      const options = {
+        method: 'POST',
+        url: '/river-and-sea-levels',
+        payload: {
+          location: 'thames'
+        }
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).to.equal(302)
+      expect(response.headers.location).to.equal('/river-and-sea-levels/river/river-thames')
+    })
+
+    it('should show location not found page when POST with no results', async () => {
+      stubs.getJson.callsFake(() => data.nonLocationGetJson)
+      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+      stubs.getRiversByName.callsFake(() => [])
+
+      const options = {
+        method: 'POST',
+        url: '/river-and-sea-levels',
+        payload: {
+          location: 'nonexistentplace'
+        }
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).to.equal(200)
+      expect(response.payload).to.contain("We couldn't find 'nonexistentplace', England")
+    })
+
+    it('should show location not found page when POST returns single place outside England', async () => {
+      // Stub locationService.find to return a non-England place (bypassing Bing parser filter)
+      const locationService = require('../../server/services/location')
+      const locationServiceFindStub = sandbox.stub(locationService, 'find')
+
+      const scotlandPlace = {
+        name: 'Edinburgh',
+        query: 'Edinburgh',
+        slug: 'edinburgh',
+        center: [-3.19, 55.95],
+        bbox2k: [[-3.20, 55.94], [-3.18, 55.96]],
+        bbox10k: [[-3.25, 55.90], [-3.13, 56.00]],
+        isUK: true,
+        isEngland: { is_england: false }
+      }
+      locationServiceFindStub.returns([scotlandPlace])
+      stubs.getIsEngland.callsFake(() => ({ is_england: false }))
+      stubs.getRiversByName.callsFake(() => [])
+
+      const options = {
+        method: 'POST',
+        url: '/river-and-sea-levels',
+        payload: {
+          location: 'edinburgh'
+        }
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).to.equal(200)
+      expect(response.payload).to.contain("We couldn't find 'edinburgh', England")
+    })
+
+    it('should show location not found page when GET query returns single place outside England', async () => {
+      // Stub locationService.find to return a non-England place (bypassing Bing parser filter)
+      const locationService = require('../../server/services/location')
+      const locationServiceFindStub = sandbox.stub(locationService, 'find')
+
+      const scotlandPlace = {
+        name: 'Edinburgh',
+        query: 'Edinburgh',
+        slug: 'edinburgh',
+        center: [-3.19, 55.95],
+        bbox2k: [[-3.20, 55.94], [-3.18, 55.96]],
+        bbox10k: [[-3.25, 55.90], [-3.13, 56.00]],
+        isUK: true,
+        isEngland: { is_england: false }
+      }
+      locationServiceFindStub.returns([scotlandPlace])
+      stubs.getIsEngland.callsFake(() => ({ is_england: false }))
+      stubs.getRiversByName.callsFake(() => [])
+
+      const options = {
+        method: 'GET',
+        url: '/river-and-sea-levels?q=edinburgh'
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).to.equal(301)
+      expect(response.headers.location).to.equal('/river-and-sea-levels/edinburgh')
     })
   })
 
