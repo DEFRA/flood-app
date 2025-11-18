@@ -137,8 +137,6 @@ const createOutlookMessageIds = async (place, request) => {
       const outlookPolys = new OutlookMatrix(outlook, place)
       matrixData = outOfDate ? [] : outlookPolys.matrixData
 
-      console.log('OUTLOOK MATRIX DATA:', matrixData)
-
       // Generate outlook content from matrix data
       outlookContent = generateOutlookContent(matrixData)
 
