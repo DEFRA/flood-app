@@ -127,30 +127,60 @@ The system uses a 5×5 impact-likelihood matrix, but only specific combinations 
 - Any None (0) values
 
 ### Content Generation Rules
+
+**Priority-Based Sentence Ordering**:
+Risk combinations are ordered by **combined impact+likelihood priority ranking**, not impact-first sorting:
+
+**Priority Order** (rank 0-8, lower = higher priority):
+1. **Rank 0**: Severe High [4,4]
+2. **Rank 1**: Severe Medium [4,3]
+3. **Rank 2**: Significant High [3,4]
+4. **Rank 3**: Significant Medium [3,3]
+5. **Rank 4**: Severe Low [4,2]
+6. **Rank 5**: Minor High [2,4]
+7. **Rank 6**: Significant Low [3,2]
+8. **Rank 7**: Minor Medium [2,3]
+9. **Rank 8**: Minor Low [2,2]
+
+**Key Specification Rule**: Significant Medium [3,3] (rank 3) comes **before** Severe Low [4,2] (rank 4), prioritizing higher likelihood over higher impact in certain combinations.
+
 **Sentence Count Logic**:
-- 1-2 unique impacts/likelihoods → 1 sentence
-- 3-4 unique impacts/likelihoods → 2 sentences
-- 5 unique impacts/likelihoods → 3 sentences
-- 6+ unique impacts/likelihoods → 4 sentences maximum
+- Based on **unique impact+likelihood combinations** present in the data
+- Each unique combination gets its own sentence (maximum 4 per day)
+- Example: 4 different combinations → 4 sentences
 
 **Sentence Structure**:
 - **First sentence**: Full Impact Description + Likelihood + Location ("Localised property flooding and travel disruption is possible in riverside areas")
 - **Subsequent sentences**: Capitalized Location + lowercase Impact + Likelihood ("In coastal areas, severe or widespread property flooding and travel disruption is expected")
 
-**Risk Prioritization**:
-1. Sort by impact severity (Severe → Significant → Minor)
-2. Within same impact, sort by likelihood (High → Medium → Low)
-3. Within same impact/likelihood, sort by lowest source ID (River → Sea → Surface → Ground)
+**Source Ordering**: 
+When multiple sources share the same risk level, they appear in fixed order:
+- River (0) → Coastal (1) → Surface Water (2) → Groundwater (3)
 
-### Geographic Processing Rules
-**Location Filtering**: Uses bounding box intersection to show only risks affecting user's area
-**Risk Aggregation**: Takes maximum risk levels when multiple geographic areas overlap
-**Coordinate Validation**: Handles malformed geographic data gracefully
+## Key Technical Components
 
-### Map Visualization Rules
-**Feature Filtering**: Only displays risks with impact > Minimal, except Minor impact with Very Low likelihood
-**Geometric Processing**: Converts coastal linestrings to polygons with 1-mile buffer for visibility
-**Layer Ordering**: Higher risk levels get higher z-index values for proper map rendering
+### Priority Map (`outlook-constants.js`)
+Defines the 9-level priority ranking system:
+```javascript
+const PRIORITY_RANKS = {
+  SEVERE_HIGH: 0,        // [4,4]
+  SEVERE_MEDIUM: 1,      // [4,3]
+  SIGNIFICANT_HIGH: 2,   // [3,4]
+  SIGNIFICANT_MEDIUM: 3, // [3,3]
+  SEVERE_LOW: 4,         // [4,2]
+  MINOR_HIGH: 5,         // [2,4]
+  SIGNIFICANT_LOW: 6,    // [3,2]
+  MINOR_MEDIUM: 7,       // [2,3]
+  MINOR_LOW: 8           // [2,2]
+}
+```
+
+### Risk Sorting (`outlook-content-generator.js`)
+The `sortRiskCombinations()` function sorts risk combinations by:
+1. **Primary**: Priority rank (0-8, lower first)
+2. **Secondary**: Source ID (0-3, lower first) when ranks are equal
+
+This ensures sentences always appear in specification-compliant priority order.
 
 ## Testing
 
