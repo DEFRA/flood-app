@@ -51,12 +51,6 @@ async function createServer () {
 
   registerServerMethods(server)
 
-  if (process.env.NODE_ENV === 'development' || config.localCache) {
-    server.methods.flood.getOutlook = async () => {
-      return require('../server/models/5df.json')
-    }
-  }
-
   return server
 }
 
