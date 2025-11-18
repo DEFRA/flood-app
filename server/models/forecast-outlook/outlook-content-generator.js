@@ -11,7 +11,9 @@ const {
   VALID_RISK_PAIRS,
   CONFIG,
   CONTENT,
-  PRIORITIES
+  PRIORITIES,
+  PRIORITY_MAP,
+  PRIORITY_RANKS
 } = require('./outlook-constants')
 
 // Main function to process 5×4×2 risk matrix and generate flood outlook content
@@ -244,25 +246,13 @@ function convertGroupsToCombinations (impactLikelihoodGroups) {
   }))
 }
 
-// Sorts the combinations by priority: impact first, then likelihood, then source
+// Sorts the combinations by priority: combined impact+likelihood ranking
 function sortRiskCombinations (riskCombinations) {
-  const priorityMap = new Map([
-    ['4-4', 0], // Severe/High
-    ['4-3', 1], // Severe/Medium
-    ['3-4', 2], // Significant/High
-    ['3-3', 3], // Significant/Medium
-    ['4-2', 4], // Severe/Low
-    ['2-4', 5], // Minor/High
-    ['3-2', 6], // Significant/Low
-    ['2-3', 7], // Minor/Medium
-    ['2-2', 8] // Minor/Low
-  ])
-
   return riskCombinations.sort((first, second) => {
     const firstKey = `${first.impact}-${first.likelihood}`
     const secondKey = `${second.impact}-${second.likelihood}`
-    const firstRank = priorityMap.get(firstKey) ?? 999
-    const secondRank = priorityMap.get(secondKey) ?? 999
+    const firstRank = PRIORITY_MAP.get(firstKey) ?? PRIORITY_RANKS.INVALID
+    const secondRank = PRIORITY_MAP.get(secondKey) ?? PRIORITY_RANKS.INVALID
 
     if (firstRank !== secondRank) {
       return firstRank - secondRank

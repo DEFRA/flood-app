@@ -112,6 +112,36 @@ const MAP_MESSAGE_CONTENT = {
   '4-i4-l4': 'High risk, impact severe (4), likelihood high (4).'
 }
 
+// ===== PRIORITY RANKING =====
+// Priority ranking for combined impact+likelihood combinations
+// Lower rank = higher priority in sentence ordering
+// Based on specification: Significant/Medium [3,3] comes before Severe/Low [4,2]
+const PRIORITY_RANKS = {
+  SEVERE_HIGH: 0, // [4,4]
+  SEVERE_MEDIUM: 1, // [4,3]
+  SIGNIFICANT_HIGH: 2, // [3,4]
+  SIGNIFICANT_MEDIUM: 3, // [3,3]
+  SEVERE_LOW: 4, // [4,2]
+  MINOR_HIGH: 5, // [2,4]
+  SIGNIFICANT_LOW: 6, // [3,2]
+  MINOR_MEDIUM: 7, // [2,3]
+  MINOR_LOW: 8, // [2,2]
+  INVALID: 999 // Fallback for unrecognized combinations
+}
+
+// Map of impact-likelihood keys to priority ranks
+const PRIORITY_MAP = new Map([
+  ['4-4', PRIORITY_RANKS.SEVERE_HIGH],
+  ['4-3', PRIORITY_RANKS.SEVERE_MEDIUM],
+  ['3-4', PRIORITY_RANKS.SIGNIFICANT_HIGH],
+  ['3-3', PRIORITY_RANKS.SIGNIFICANT_MEDIUM],
+  ['4-2', PRIORITY_RANKS.SEVERE_LOW],
+  ['2-4', PRIORITY_RANKS.MINOR_HIGH],
+  ['3-2', PRIORITY_RANKS.SIGNIFICANT_LOW],
+  ['2-3', PRIORITY_RANKS.MINOR_MEDIUM],
+  ['2-2', PRIORITY_RANKS.MINOR_LOW]
+])
+
 // ===== EXPORT GROUPING =====
 // Group related constants together for cleaner imports
 
@@ -149,5 +179,7 @@ module.exports = {
   VALID_RISK_PAIRS,
   CONFIG,
   CONTENT,
-  PRIORITIES
+  PRIORITIES,
+  PRIORITY_RANKS,
+  PRIORITY_MAP
 }
