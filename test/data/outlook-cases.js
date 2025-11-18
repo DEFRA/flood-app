@@ -338,13 +338,13 @@ module.exports = [
   },
   {
     name: 'edge case: invalid pairs, boundary dates, and max combinations',
-    now: '2025-09-20T00:00:00Z', // Saturday start for weekend labeling
+    now: '2025-09-20T00:00:00Z',
     matrix: [
-      [[1, 3], [2, 1], [2, 0], [0, 3]], // Day 1: Invalid pairs - all filtered out to very low
-      [[4, 4], [4, 3], [4, 2], [3, 3]], // Day 2: All 4 sources with different impacts/likelihoods
-      [[4, 4], [4, 3], [4, 2], [3, 3]], // Day 3: Same as Day 2 (should group)
-      [[0, 1], [0, 0], [0, 0], [0, 0]], // Day 4: Very Low
-      zeroDay() // Day 5: Zero
+      [[1, 3], [2, 1], [2, 0], [0, 3]],
+      [[4, 4], [4, 3], [4, 2], [3, 3]], // River [4,4] rank 0, Coastal [4,3] rank 1, Surface [4,2] rank 4, Ground [3,3] rank 3
+      [[4, 4], [4, 3], [4, 2], [3, 3]],
+      [[0, 1], [0, 0], [0, 0], [0, 0]],
+      zeroDay()
     ],
     expected: [
       {
@@ -354,7 +354,7 @@ module.exports = [
       {
         label: 'Tomorrow and Monday',
         sentences: [
-          'Severe or widespread property flooding and travel disruption is expected in riverside areas. In coastal areas, severe or widespread property flooding and travel disruption is likely. In areas at risk from surface water, severe or widespread property flooding and travel disruption is possible. In areas at risk from groundwater, property flooding and significant travel disruption is likely.'
+          'Severe or widespread property flooding and travel disruption is expected in riverside areas. In coastal areas, severe or widespread property flooding and travel disruption is likely. In areas at risk from groundwater, property flooding and significant travel disruption is likely. In areas at risk from surface water, severe or widespread property flooding and travel disruption is possible.'
         ]
       },
       {
@@ -474,6 +474,129 @@ module.exports = [
       {
         label: 'Today through to Sunday',
         sentences: ['The flood risk is very low.']
+      }
+    ]
+  },
+
+  // ===== PRIORITY ORDERING TESTS =====
+  // Tests to verify sentences are ordered by combined impact+likelihood priority
+  {
+    name: 'Priority ordering: Surface [3,3] before Coastal [4,2]',
+    now: '2025-01-01T00:00:00Z',
+    matrix: [
+      [[0, 0], [0, 0], [0, 0], [0, 0]], // Day 1: No risk
+      [[4, 3], [4, 2], [3, 3], [2, 2]], // Day 2: River [4,3] rank 1, Coastal [4,2] rank 4, Surface [3,3] rank 3, Ground [2,2] rank 8
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]]
+    ],
+    expected: [
+      {
+        label: 'Today',
+        sentences: ['The flood risk is very low.']
+      },
+      {
+        label: 'Tomorrow',
+        sentences: [
+          'Severe or widespread property flooding and travel disruption is likely in riverside areas. In areas at risk from surface water, property flooding and significant travel disruption is likely. In coastal areas, severe or widespread property flooding and travel disruption is possible. In areas at risk from groundwater, localised property flooding and travel disruption is possible.'
+        ]
+      },
+      {
+        label: 'Friday through to Sunday',
+        sentences: ['The flood risk is very low.']
+      }
+    ]
+  },
+  {
+    name: 'Priority ordering: Significant High [3,4] before Severe Low [4,2]',
+    now: '2025-01-01T00:00:00Z',
+    matrix: [
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[4, 3], [4, 2], [3, 4], [0, 0]], // Day 2: River [4,3] rank 1, Coastal [4,2] rank 4, Surface [3,4] rank 2
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]]
+    ],
+    expected: [
+      {
+        label: 'Today',
+        sentences: ['The flood risk is very low.']
+      },
+      {
+        label: 'Tomorrow',
+        sentences: [
+          'Severe or widespread property flooding and travel disruption is likely in riverside areas. In areas at risk from surface water, property flooding and significant travel disruption is expected. In coastal areas, severe or widespread property flooding and travel disruption is possible.'
+        ]
+      },
+      {
+        label: 'Friday through to Sunday',
+        sentences: ['The flood risk is very low.']
+      }
+    ]
+  },
+  {
+    name: 'Priority ordering: Minor High [2,4] before Severe Low [4,2]',
+    now: '2025-01-01T00:00:00Z',
+    matrix: [
+      [[4, 3], [4, 2], [2, 4], [3, 2]], // Day 1: River [4,3] rank 1, Coastal [4,2] rank 4, Surface [2,4] rank 5, Ground [3,2] rank 6
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]]
+    ],
+    expected: [
+      {
+        label: 'Today',
+        sentences: [
+          'Severe or widespread property flooding and travel disruption is likely in riverside areas. In coastal areas, severe or widespread property flooding and travel disruption is possible. In areas at risk from surface water, localised property flooding and travel disruption is expected. In areas at risk from groundwater, property flooding and significant travel disruption is possible.'
+        ]
+      },
+      {
+        label: 'Tomorrow through to Sunday',
+        sentences: ['The flood risk is very low.']
+      }
+    ]
+  },
+  {
+    name: 'Priority ordering: All 9 priority ranks in order',
+    now: '2025-01-01T00:00:00Z',
+    matrix: [
+      [[4, 4], [0, 0], [0, 0], [0, 0]], // Day 1: rank 0
+      [[4, 3], [3, 4], [0, 0], [0, 0]], // Day 2: rank 1, rank 2
+      [[3, 3], [4, 2], [0, 0], [0, 0]], // Day 3: rank 3, rank 4
+      [[2, 4], [3, 2], [0, 0], [0, 0]], // Day 4: rank 5, rank 6
+      [[2, 3], [2, 2], [0, 0], [0, 0]] // Day 5: rank 7, rank 8
+    ],
+    expected: [
+      {
+        label: 'Today',
+        sentences: [
+          'Severe or widespread property flooding and travel disruption is expected in riverside areas.'
+        ]
+      },
+      {
+        label: 'Tomorrow',
+        sentences: [
+          'Severe or widespread property flooding and travel disruption is likely in riverside areas. In coastal areas, property flooding and significant travel disruption is expected.'
+        ]
+      },
+      {
+        label: 'Friday',
+        sentences: [
+          'Property flooding and significant travel disruption is likely in riverside areas. In coastal areas, severe or widespread property flooding and travel disruption is possible.'
+        ]
+      },
+      {
+        label: 'Saturday',
+        sentences: [
+          'Localised property flooding and travel disruption is expected in riverside areas. In coastal areas, property flooding and significant travel disruption is possible.'
+        ]
+      },
+      {
+        label: 'Sunday',
+        sentences: [
+          'Localised property flooding and travel disruption is likely in riverside areas. In coastal areas, localised property flooding and travel disruption is possible.'
+        ]
       }
     ]
   }

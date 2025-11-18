@@ -82,8 +82,8 @@ function processSourceRiskPair (dayRiskData, source) {
   }
 
   const [rawImpactValue, rawLikelihoodValue] = sourceRiskPair
-  const impact = isNullOrUndefined(rawImpactValue) ? null : Number(rawImpactValue) // Test for this should be covered by test for isNullOrUndefined
-  const likelihood = isNullOrUndefined(rawLikelihoodValue) ? null : Number(rawLikelihoodValue) // Test for this should be covered by test for isNullOrUndefined
+  const impact = isNullOrUndefined(rawImpactValue) ? null : Number(rawImpactValue)
+  const likelihood = isNullOrUndefined(rawLikelihoodValue) ? null : Number(rawLikelihoodValue)
 
   if (likelihood === LIKELIHOOD.VeryLow) {
     return { hasVeryLowLikelihood: true, riskPair: null }
@@ -161,8 +161,7 @@ function generateGroupContent (group, startDate) {
 
   // Categorize risk combinations and determine how many sentences to generate
   const riskCombinations = groupRiskPairsByImpactLikelihood(groupRiskPairs)
-  const requiredSentenceCount = Math.min(calculateRequiredSentenceCount(groupRiskPairs), riskCombinations.length)
-
+  const requiredSentenceCount = calculateRequiredSentenceCount(groupRiskPairs)
   const chosenCombinations = selectRiskCombinations(riskCombinations, requiredSentenceCount)
 
   // Construct human-readable sentences from selected combinations
@@ -176,78 +175,44 @@ function generateGroupContent (group, startDate) {
   return { label, sentences: [combinedSentence] }
 }
 
-// Selects which risk combinations to include in the sentences, prioritizing by impact and likelihood
-// Algorithm: Start with highest-likelihood combo for each impact level, then add more if needed
+// Selects which risk combinations to include in the sentences, prioritizing by combined priority ranking
 function selectRiskCombinations (riskCombinations, requiredSentenceCount) {
-  // Get impact levels that exist in our data, in priority order (severe first, then minor)
-  const impactLevelsInPriorityOrder = PRIORITIES.IMPACT_PRIORITY_ORDER.filter(level =>
-    riskCombinations.some(riskCombination => riskCombination.impact === level)
-  )
-
-  // Group combinations by impact level and sort each group by likelihood priority
-  const impactCombinations = {}
-  for (const impactLevel of impactLevelsInPriorityOrder) {
-    impactCombinations[impactLevel] = riskCombinations
-      .filter(riskCombination => riskCombination.impact === impactLevel)
-      .sort((first, second) =>
-        PRIORITIES.LIKELIHOOD_PRIORITY_ORDER.indexOf(first.likelihood) - PRIORITIES.LIKELIHOOD_PRIORITY_ORDER.indexOf(second.likelihood)
-      )
+  if (riskCombinations.length === 0 || requiredSentenceCount === 0) {
+    return []
   }
 
-  // Initialize with the highest-likelihood combination for each impact level
-  const chosenCombinations = []
-  for (const impactLevel of impactLevelsInPriorityOrder) {
-    for (const combo of impactCombinations[impactLevel]) {
-      chosenCombinations.push(combo)
+  // Risk combinations are already sorted by priority in sortRiskCombinations
+  // Just take the top N based on required sentence count
+  const selected = []
+  const seenImpactLikelihood = new Set()
+
+  for (const combo of riskCombinations) {
+    const key = `${combo.impact}-${combo.likelihood}`
+
+    // Skip duplicates
+    if (seenImpactLikelihood.has(key)) {
+      continue
+    }
+
+    selected.push(combo)
+    seenImpactLikelihood.add(key)
+
+    if (selected.length >= requiredSentenceCount) {
+      break
     }
   }
 
-  // Add additional combinations if more sentences are required
-  let impactIndex = 0
-  while (chosenCombinations.length < requiredSentenceCount && impactIndex <= CONFIG.MAX_ITERATIONS) {
-    const impactLevel = impactLevelsInPriorityOrder[impactIndex % impactLevelsInPriorityOrder.length]
-    const availableCombinations = impactCombinations[impactLevel]
-    const nextAvailableCombination = availableCombinations.find(riskCombination => !chosenCombinations.includes(riskCombination))
-    if (nextAvailableCombination) {
-      const insertIndex = findInsertIndex(chosenCombinations, impactLevel)
-      chosenCombinations.splice(insertIndex, 0, nextAvailableCombination)
-    }
-    impactIndex++
-  }
-
-  return chosenCombinations
+  return selected
 }
 
-// Finds where to insert a new combination in the list to keep them grouped by impact
-function findInsertIndex (chosenCombinations, impactLevel) {
-  for (let i = chosenCombinations.length - 1; i >= 0; i--) {
-    if (chosenCombinations[i].impact === impactLevel) {
-      return i + 1
-    }
-  }
-  return chosenCombinations.length
-}
-
-// Decides how many sentences to generate based on the variety of impacts and likelihoods
-// More variety = more sentences (up to 4 max) to avoid cramming too much info
+// Decides how many sentences to generate based on the number of unique risk combinations
+// Each unique impact+likelihood combination should get its own sentence (up to 4 max)
 function calculateRequiredSentenceCount (riskPairs) {
-  const impacts = new Set(riskPairs.map(riskPair => riskPair.impact)).size
-  const likelihoods = new Set(riskPairs.map(riskPair => riskPair.likelihood)).size
-  const total = impacts + likelihoods // Total unique risk levels
-  const SINGLE_SENTENCE = 1
-  const DOUBLE_SENTENCES = 2
-  const TRIPLE_SENTENCES = 3
-  const QUADRUPLE_SENTENCES = 4
-  if (total <= CONFIG.ONE_SENTENCE_MAX) {
-    return SINGLE_SENTENCE
-  }
-  if (total >= CONFIG.TWO_SENTENCES_MIN && total <= CONFIG.TWO_SENTENCES_MAX) {
-    return DOUBLE_SENTENCES
-  }
-  if (total === CONFIG.THREE_SENTENCES_TOTAL) {
-    return TRIPLE_SENTENCES
-  }
-  return QUADRUPLE_SENTENCES
+  // Count unique impact+likelihood combinations
+  const uniqueCombinations = new Set(riskPairs.map(riskPair => `${riskPair.impact}-${riskPair.likelihood}`)).size
+
+  // Maximum of 4 sentences (one per source at most)
+  return Math.min(uniqueCombinations, CONFIG.DAYS_COUNT - 1)
 }
 
 // Groups risk pairs by their impact and likelihood levels, combining sources
@@ -281,20 +246,29 @@ function convertGroupsToCombinations (impactLikelihoodGroups) {
 
 // Sorts the combinations by priority: impact first, then likelihood, then source
 function sortRiskCombinations (riskCombinations) {
+  const priorityMap = new Map([
+    ['4-4', 0], // Severe/High
+    ['4-3', 1], // Severe/Medium
+    ['3-4', 2], // Significant/High
+    ['3-3', 3], // Significant/Medium
+    ['4-2', 4], // Severe/Low
+    ['2-4', 5], // Minor/High
+    ['3-2', 6], // Significant/Low
+    ['2-3', 7], // Minor/Medium
+    ['2-2', 8] // Minor/Low
+  ])
+
   return riskCombinations.sort((first, second) => {
-    // First sort by impact priority
-    const impactDiff = PRIORITIES.IMPACT_PRIORITY_ORDER.indexOf(first.impact) - PRIORITIES.IMPACT_PRIORITY_ORDER.indexOf(second.impact)
-    if (impactDiff !== 0) {
-      return impactDiff
+    const firstKey = `${first.impact}-${first.likelihood}`
+    const secondKey = `${second.impact}-${second.likelihood}`
+    const firstRank = priorityMap.get(firstKey) ?? 999
+    const secondRank = priorityMap.get(secondKey) ?? 999
+
+    if (firstRank !== secondRank) {
+      return firstRank - secondRank
     }
 
-    // Then sort by likelihood priority
-    const likelihoodDiff = PRIORITIES.LIKELIHOOD_PRIORITY_ORDER.indexOf(first.likelihood) - PRIORITIES.LIKELIHOOD_PRIORITY_ORDER.indexOf(second.likelihood)
-    if (likelihoodDiff !== 0) {
-      return likelihoodDiff
-    }
-
-    // Finally sort by first source
+    // If same priority rank, maintain original source order
     return first.sources[CONFIG.FIRST_SOURCE_INDEX] - second.sources[CONFIG.FIRST_SOURCE_INDEX]
   })
 }
