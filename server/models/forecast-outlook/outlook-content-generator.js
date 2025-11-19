@@ -309,7 +309,7 @@ function generateTwoDayLabel (dayIndices, startDate, dayNames) {
   const [firstDay, lastDay] = dayIndices
 
   if (firstDay === 0) {
-    return 'Today and tomorrow'
+    return 'Today and Tomorrow'
   }
 
   const firstDate = new Date(startDate)

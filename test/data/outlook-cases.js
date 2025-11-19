@@ -599,5 +599,28 @@ module.exports = [
         ]
       }
     ]
+  },
+  {
+    name: 'Day label: "Today and Tomorrow" both capitalized when grouped',
+    now: '2025-01-01T00:00:00Z',
+    matrix: [
+      [[4, 4], [0, 0], [0, 0], [0, 0]], // Today: River Severe High
+      [[4, 4], [0, 0], [0, 0], [0, 0]], // Tomorrow: Same risk - should group
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]],
+      [[0, 0], [0, 0], [0, 0], [0, 0]]
+    ],
+    expected: [
+      {
+        label: 'Today and Tomorrow',
+        sentences: [
+          'Severe or widespread property flooding and travel disruption is expected in riverside areas.'
+        ]
+      },
+      {
+        label: 'Friday through to Sunday',
+        sentences: ['The flood risk is very low.']
+      }
+    ]
   }
 ]
