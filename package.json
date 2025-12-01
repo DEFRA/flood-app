@@ -6,6 +6,7 @@
   "repository": "github:defra/flood-app",
   "engines": {
     "node": "22.x"
+    "node": "22.x"
   },
   "browserslist": [
     "IE 11"
