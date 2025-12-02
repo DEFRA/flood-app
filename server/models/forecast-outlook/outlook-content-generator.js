@@ -62,7 +62,7 @@ function generateOutlookContent (riskMatrixData, startDate = new Date(), daysSin
 
 // Takes the raw 5-day risk matrix and turns each day into a processed object
 // with filtered risk pairs and a fingerprint for grouping similar days
-function processAllDays (riskMatrixData, dayOffset = 0) {
+function processAllDays (riskMatrixData) {
   return riskMatrixData.map((dayRiskMatrix, relativeIndex) => {
     // Use relativeIndex (0, 1, 2, 3) for label generation, not the original day index
     const { filteredRiskPairs, hasOnlyVeryLowLikelihood } = processDayRiskData(dayRiskMatrix || [])
