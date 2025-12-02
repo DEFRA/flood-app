@@ -126,6 +126,63 @@ The system uses a 5×5 impact-likelihood matrix, but only specific combinations 
 - Very Low likelihood (1) with Minor impact or higher
 - Any None (0) values
 
+### Time-Based Forecast Management
+
+**Day Skipping Logic**:
+The system automatically adjusts which forecast days are shown based on when the FGS was issued versus the current date:
+
+- **`daysSinceIssue = 0`** (Issued today): Shows all 5 days, Day 0 labeled "Today"
+- **`daysSinceIssue = 1`** (Issued yesterday): Skips Day 0, shows 4 remaining days, Day 1 becomes "Today"
+- **`daysSinceIssue = 2`** (Issued 2 days ago): Skips Days 0-1, shows 3 remaining days, Day 2 becomes "Today"
+
+**Calculation**:
+```javascript
+const issuedDate = moment(outlook.issued_at).tz('UTC').startOf('day')
+const currentDate = moment().tz('UTC').startOf('day')
+const daysSinceIssue = currentDate.diff(issuedDate, 'days')
+```
+
+**Matrix Processing**:
+- `outlook-content-generator.js` uses `.slice(daysSinceIssue)` to remove expired days
+- Remaining days are re-indexed starting from 0 for label generation
+- Day labels ("Today", "Tomorrow", day names) are calculated relative to current date, not issue date
+
+**Expiry Handling**:
+- Forecasts older than 48 hours trigger `outOfDate = true` flag
+- When `outOfDate`, the template displays an error message instead of forecast content
+- This happens at the route level (`location.js`), not in the content generator
+
+**Example - Midnight Transition**:
+
+A forecast issued on Tuesday:
+```
+Day 0: [0,0] (Tuesday - Today)
+Day 1: [0,0] (Wednesday - Tomorrow)
+Day 2: [2,3] (Thursday)
+Day 3: [2,3] (Friday)
+Day 4: [2,3] (Saturday)
+```
+
+**On Tuesday** (`daysSinceIssue=0`):
+```
+Today and tomorrow
+The flood risk is very low.
+
+Thursday through to Saturday
+Localised property flooding and travel disruption is likely in riverside areas.
+```
+
+**After midnight on Wednesday** (`daysSinceIssue=1`):
+```
+Today
+The flood risk is very low.
+
+Tomorrow through to Saturday
+Localised property flooding and travel disruption is likely in riverside areas.
+```
+
+Day 0 (Tuesday) is automatically removed, and remaining days are relabeled accordingly.
+
 ### Content Generation Rules
 
 **Priority-Based Sentence Ordering**:
