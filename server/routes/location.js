@@ -113,10 +113,10 @@ const createOutlookMessageIds = async (place, request) => {
   let outOfDate = true
   let outlookDays = []
   let outlookData = null
-  let outlookContent = '' // Initialize to empty string
+  let outlookContent = ''
   const now = moment().tz(tz).valueOf()
   const hours48 = 2 * 60 * 60 * 24 * 1000
-  let issuedAt = moment().valueOf() // Default issuedAt to today
+  let issuedAt = moment().valueOf()
 
   let {
     outlook,
@@ -131,16 +131,19 @@ const createOutlookMessageIds = async (place, request) => {
       dataError = true
     } else {
       issuedAt = moment(outlook.issued_at).valueOf()
-
       outOfDate = (now - issuedAt) > hours48
 
       const outlookPolys = new OutlookMatrix(outlook, place)
       matrixData = outOfDate ? [] : outlookPolys.matrixData
 
-      // Generate outlook content from matrix data
-      outlookContent = generateOutlookContent(matrixData)
+      // Calculate how many days have passed since issue
+      const issuedDate = moment(outlook.issued_at).tz('UTC').startOf('day')
+      const currentDate = moment().tz('UTC').startOf('day')
+      const daysSinceIssue = currentDate.diff(issuedDate, 'days')
 
-      // Create full outlook instance for map data
+      // Generate outlook content, passing number of days to skip
+      outlookContent = generateOutlookContent(matrixData, issuedDate.toDate(), daysSinceIssue)
+
       const outlookInstance = new OutlookMap(outlook, request.logger)
       if (!outlookInstance.dataError) {
         outlookDays = outlookInstance.days

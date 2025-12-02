@@ -20,24 +20,40 @@ const {
 // Input: Array of 5 days, each containing 4 sources with [impact, likelihood] pairs
 // Output: Array of day groups with human-readable labels and sentences
 // Flow: Validate → Check for no-risk → Process days → Group days → Generate content
-function generateOutlookContent (riskMatrixData, startDate = new Date()) {
+function generateOutlookContent (riskMatrixData, startDate = new Date(), daysSinceIssue = 0) {
   if (!Array.isArray(riskMatrixData) || riskMatrixData.length !== CONFIG.DAYS_COUNT) {
     return []
   }
 
-  // Check for all-zero risk matrix (no flood risk)
-  if (isMatrixAllZero(riskMatrixData)) {
+  const processedMatrix = riskMatrixData.slice(daysSinceIssue)
+
+  if (processedMatrix.length === 0) {
+    return []
+  }
+
+  // Check for all-zero risk matrix first (quick check)
+  if (isMatrixAllZero(processedMatrix)) {
     return [{ sentences: [CONTENT.VERY_LOW_RISK_MESSAGE] }]
   }
 
   // Transform raw risk data into processed day objects
-  const days = processAllDays(riskMatrixData)
+  const days = processAllDays(processedMatrix)
+
+  // Check if all days only have very low likelihood after filtering
+  const allDaysVeryLow = days.every(day => day.hasOnlyVeryLowLikelihood)
+  if (allDaysVeryLow) {
+    return [{ sentences: [CONTENT.VERY_LOW_RISK_MESSAGE] }]
+  }
 
   // Group consecutive days with similar risk patterns
   const dayGroupings = groupConsecutiveDays(days)
 
+  // Adjust startDate to account for days since issue
+  const adjustedStartDate = new Date(startDate)
+  adjustedStartDate.setUTCDate(startDate.getUTCDate() + daysSinceIssue)
+
   // Generate human-readable content for each day group
-  const forecastContent = dayGroupings.map(group => generateGroupContent(group, startDate))
+  const forecastContent = dayGroupings.map(group => generateGroupContent(group, adjustedStartDate))
 
   return forecastContent
 }
@@ -46,11 +62,12 @@ function generateOutlookContent (riskMatrixData, startDate = new Date()) {
 
 // Takes the raw 5-day risk matrix and turns each day into a processed object
 // with filtered risk pairs and a fingerprint for grouping similar days
-function processAllDays (riskMatrixData) {
-  return riskMatrixData.map((dayRiskMatrix, dayIndex) => {
-    const { filteredRiskPairs, hasOnlyVeryLowLikelihood } = processDayRiskData(dayRiskMatrix || []) // Passing empty array if dayRiskMatrix is not present for defensive programming
+function processAllDays (riskMatrixData, dayOffset = 0) {
+  return riskMatrixData.map((dayRiskMatrix, relativeIndex) => {
+    // Use relativeIndex (0, 1, 2, 3) for label generation, not the original day index
+    const { filteredRiskPairs, hasOnlyVeryLowLikelihood } = processDayRiskData(dayRiskMatrix || [])
     return {
-      index: dayIndex,
+      index: relativeIndex, // Use relative index, not absolute
       filteredRiskPairs,
       hasOnlyVeryLowLikelihood,
       fingerprint: generateDayFingerprint(filteredRiskPairs)
@@ -292,15 +309,32 @@ function generateDayLabel (dayIndices, startDate = new Date()) {
 
 // Labels for single days
 function generateSingleDayLabel (dayIndex, startDate, dayNames) {
+  // dayIndex is the original day index (e.g., 1 when we skipped day 0)
+  // startDate has been adjusted to account for daysSinceIssue
+  // So we need to calculate the offset from the adjusted startDate
+
   const targetDate = new Date(startDate)
   targetDate.setUTCDate(startDate.getUTCDate() + dayIndex)
 
-  if (dayIndex === 0) {
+  // "Today" is the adjusted startDate
+  const today = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate()))
+  const tomorrow = new Date(today)
+  tomorrow.setUTCDate(today.getUTCDate() + 1)
+
+  const targetDateNormalized = new Date(Date.UTC(
+    targetDate.getUTCFullYear(),
+    targetDate.getUTCMonth(),
+    targetDate.getUTCDate()
+  ))
+
+  if (targetDateNormalized.getTime() === today.getTime()) {
     return 'Today'
   }
-  if (dayIndex === 1) {
+
+  if (targetDateNormalized.getTime() === tomorrow.getTime()) {
     return 'Tomorrow'
   }
+
   return dayNames[targetDate.getUTCDay()]
 }
 
@@ -309,7 +343,7 @@ function generateTwoDayLabel (dayIndices, startDate, dayNames) {
   const [firstDay, lastDay] = dayIndices
 
   if (firstDay === 0) {
-    return 'Today and Tomorrow'
+    return 'Today and tomorrow'
   }
 
   const firstDate = new Date(startDate)

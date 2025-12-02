@@ -601,7 +601,7 @@ module.exports = [
     ]
   },
   {
-    name: 'Day label: "Today and Tomorrow" both capitalized when grouped',
+    name: 'Day label: "Today and tomorrow" both capitalized when grouped',
     now: '2025-01-01T00:00:00Z',
     matrix: [
       [[4, 4], [0, 0], [0, 0], [0, 0]], // Today: River Severe High
@@ -612,7 +612,7 @@ module.exports = [
     ],
     expected: [
       {
-        label: 'Today and Tomorrow',
+        label: 'Today and tomorrow',
         sentences: [
           'Severe or widespread property flooding and travel disruption is expected in riverside areas.'
         ]
