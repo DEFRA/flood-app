@@ -41,7 +41,7 @@ class OutlookMap {
 
     // Initialize empty GeoJSON structure for map features
     const riskMatrix = [[VERY_LOW, VERY_LOW, VERY_LOW, VERY_LOW], [VERY_LOW, VERY_LOW, LOW, LOW], [LOW, LOW, MEDIUM, MEDIUM], [LOW, MEDIUM, MEDIUM, HIGH]]
-    const riskBands = ['Very low', 'Low', 'Medium', 'High']
+    const riskBands = ['Low', 'Minor', 'Moderate', 'Severe']
 
     this._geoJson = {
       type: 'FeatureCollection',
@@ -224,7 +224,7 @@ class OutlookMap {
           days: riskAreaBlock.days, // Which days this risk applies to
           labelPosition: poly.label_position, // Where to place labels on map
           name: featureName, // Human-readable name like "Medium risk of river flooding"
-          message: messageGroupObj, // Detailed risk descriptions for popups
+          // message: messageGroupObj, // Detailed risk descriptions for popups
           'risk-level': riskLevel, // Numeric risk level for styling
           'z-index': (riskLevel * 10) // Drawing order (higher risks on top)
         }
