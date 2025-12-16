@@ -128,7 +128,7 @@ class OutlookMap {
         gImpact = riskAreaBlock.risk_levels.ground[0]
         gLikelihood = riskAreaBlock.risk_levels.ground[1]
         gRisk = riskMatrix[gImpact - 1][gLikelihood - 1]
-        sources.push('ground water')
+        sources.push('groundwater')
       }
       if (riskAreaBlock.risk_levels.coastal) {
         cImpact = riskAreaBlock.risk_levels.coastal[0]
