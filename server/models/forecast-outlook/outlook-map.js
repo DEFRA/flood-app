@@ -1,5 +1,5 @@
 const turf = require('@turf/turf')
-const { IMPACT, LIKELIHOOD, CONFIG, CONTENT } = require('./outlook-constants')
+const { IMPACT, LIKELIHOOD, CONFIG } = require('./outlook-constants')
 
 // Risk level constants to avoid magic numbers
 const VERY_LOW = LIKELIHOOD.VeryLow
@@ -41,7 +41,7 @@ class OutlookMap {
 
     // Initialize empty GeoJSON structure for map features
     const riskMatrix = [[VERY_LOW, VERY_LOW, VERY_LOW, VERY_LOW], [VERY_LOW, VERY_LOW, LOW, LOW], [LOW, LOW, MEDIUM, MEDIUM], [LOW, MEDIUM, MEDIUM, HIGH]]
-    const riskBands = ['Low', 'Minor', 'Moderate', 'Severe']
+    const riskBands = ['Minimal', 'Minor', 'Significant', 'Severe']
 
     this._geoJson = {
       type: 'FeatureCollection',
@@ -153,66 +153,14 @@ class OutlookMap {
         this._hasOutlookConcern = true
       }
 
-      // Create unique keys for each source's risk combination
-      const rKey = [rRisk, `i${rImpact}`, `l${rLikelihood}`].join('-')
-      const sKey = [sRisk, `i${sImpact}`, `l${sLikelihood}`].join('-')
-      const cKey = [cRisk, `i${cImpact}`, `l${cLikelihood}`].join('-')
-      const gKey = [gRisk, `i${gImpact}`, `l${gLikelihood}`].join('-')
-
-      // Build detailed messages for each risk combination
-      const messageGroupObj = this.expandSourceDescription(rKey, sKey, cKey, gKey)
-
       // Create the actual GeoJSON features for the map
-      this.generatePolyFeature(riskAreaBlock, featureName, messageGroupObj, riskLevel, impactLevel, likelihoodLevel)
+      this.generatePolyFeature(riskAreaBlock, featureName, riskLevel, impactLevel, likelihoodLevel)
     }
-  }
-
-  // Takes risk keys for each source and builds detailed descriptions
-  // Groups sources with the same risk level and creates human-readable messages
-  // Example: Turns "2-i2-l3" into "Medium risk from overflowing rivers and runoff from rainfall"
-  expandSourceDescription (rKey, sKey, cKey, gKey) {
-    const messageGroupObj = {}
-
-    // Full descriptions for each source type (more detailed than just "river")
-    const expandedSource = [
-      'overflowing rivers', // river
-      'runoff from rainfall or blocked drains', // surface
-      'high tides or large waves', // coastal
-      'a high water table' // ground
-    ]
-
-    // Process each source's risk key
-    const keyArr = [rKey, sKey, cKey, gKey]
-    for (const [pos, key] of keyArr.entries()) {
-      if (messageGroupObj[key]) {
-        // If this risk level already exists, add this source to it
-        messageGroupObj[key].sources.push(expandedSource[pos])
-      } else {
-        // Create new entry for this risk level
-        messageGroupObj[key] = {
-          sources: [expandedSource[pos]],
-          message: CONTENT.MAP_MESSAGE[key] // Get pre-written message from constants
-        }
-      }
-    }
-
-    // Combine multiple sources into readable format (e.g., "rivers and surface water")
-    for (const [messageId, messageObj] of Object.entries(messageGroupObj)) {
-      if (messageObj.sources.length > 1) {
-        const lastSource = messageObj.sources.pop() // Remove last source
-        // Join remaining sources with commas, then add "and" before last
-        messageGroupObj[messageId].sources[0] = `${messageObj.sources.slice(0).join(', ')} and ${lastSource}`
-      }
-    }
-
-    // Remove empty risk entries (no risk)
-    delete messageGroupObj['0-i0-l0']
-    return messageGroupObj
   }
 
   // Creates GeoJSON features for each polygon in the risk area block
   // These features will be displayed on the map with appropriate styling and popups
-  generatePolyFeature (riskAreaBlock, featureName, messageGroupObj, riskLevel, impactLevel, likelihoodLevel) {
+  generatePolyFeature (riskAreaBlock, featureName, riskLevel, impactLevel, likelihoodLevel) {
     // Process each polygon in this risk area block
     for (const poly of riskAreaBlock.polys) {
       // Create the basic GeoJSON feature structure
