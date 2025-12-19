@@ -22,7 +22,7 @@ const maps = window.flood.maps
 const { setExtentFromLonLat, getLonLatFromExtent } = window.flood.maps
 const MapContainer = maps.MapContainer
 
-function LiveMap (mapId, options) {
+function LiveMap(mapId, options) {
   // Set maxBigZoom value
   maps.liveMaxBigZoom = 100
 
@@ -207,7 +207,6 @@ function LiveMap (mapId, options) {
         (props.severity_value && props.severity_value === 3 && lyrCodes.includes('ts')) ||
         (props.severity_value && props.severity_value === 2 && lyrCodes.includes('tw')) ||
         (props.severity_value && props.severity_value === 1 && lyrCodes.includes('ta')) ||
-        (props.severity_value && props.severity_value === 4 && lyrCodes.includes('tr')) ||
         // Rivers
         (ref === 'stations' && ['S', 'M'].includes(props.type) && lyrCodes.includes('ri')) ||
         // Tidal Rivers
@@ -218,8 +217,9 @@ function LiveMap (mapId, options) {
         (ref === 'stations' && props.type === 'G' && lyrCodes.includes('gr')) ||
         // Rainfall
         (ref === 'rainfall' && props.type === 'R' && lyrCodes.includes('rf')) ||
-        // Target area provided
-        (targetArea.pointFeature && targetArea.pointFeature.getId() === feature.getId())
+        // Target area provided - show by default, but hide when all warning checkboxes unchecked
+        (targetArea.pointFeature && targetArea.pointFeature.getId() === feature.getId() &&
+          (lyrCodes.includes('ts') || lyrCodes.includes('tw') || lyrCodes.includes('ta')))
       )
       // WebGl: Feature properties must be strings or numbers
       feature.set('isVisible', isVisible)
