@@ -22,8 +22,8 @@ const maps = window.flood.maps
 const { setExtentFromLonLat, getLonLatFromExtent } = window.flood.maps
 const MapContainer = maps.MapContainer
 
-function LiveMap(mapId, options) {
-  // Set maxBigZoom value 
+function LiveMap (mapId, options) {
+  // Set maxBigZoom value
   maps.liveMaxBigZoom = 100
 
   // Optional target area features
