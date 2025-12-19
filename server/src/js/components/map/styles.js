@@ -23,7 +23,12 @@ window.flood.maps.styles = {
       warningId = 'flood.' + feature.getId()
     }
     const warning = warningsSource.getFeatureById(warningId)
-    if (!warning || !warning.get('isVisible')) { return new Style() }
+    if (!warning) {
+      return null
+    }
+    if (!warning.get('isVisible')) {
+      return null
+    }
     const alpha = resolution <= 14 ? resolution >= 4 ? (Math.floor(resolution) / 20) : 0.4 : 0.7
     const severity = warning.get('severity_value')
     const isSelected = warning.get('isSelected')
