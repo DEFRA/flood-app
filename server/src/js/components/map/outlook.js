@@ -186,7 +186,6 @@ function OutlookMap (mapId, options) {
       newFeature.set('isSelected', true)
       setFeatureHtml(newFeature)
       hideDays()
-      container.showInfo('Selected feature information', newFeature.get('html'))
     } else {
       showDays()
     }

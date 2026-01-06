@@ -145,22 +145,19 @@ class OutlookMap {
       // Build human-readable source description (e.g., "rivers and surface water")
       sources = sources.length > 1 ? `${sources.slice(0, -1).join(', ')} and ${sources.at(-1)}` : sources
 
-      // Create feature name like "Medium risk of river flooding"
-      const featureName = `${riskBands[riskLevel - 1]} risk of ${sources} flooding`
-
       // Set flag if there are any flood concerns in this outlook
       if (riskLevel > 0) {
         this._hasOutlookConcern = true
       }
 
       // Create the actual GeoJSON features for the map
-      this.generatePolyFeature(riskAreaBlock, featureName, riskLevel, impactLevel, likelihoodLevel)
+      this.generatePolyFeature(riskAreaBlock, riskLevel, impactLevel, likelihoodLevel)
     }
   }
 
   // Creates GeoJSON features for each polygon in the risk area block
   // These features will be displayed on the map with appropriate styling and popups
-  generatePolyFeature (riskAreaBlock, featureName, riskLevel, impactLevel, likelihoodLevel) {
+  generatePolyFeature (riskAreaBlock, riskLevel, impactLevel, likelihoodLevel) {
     // Process each polygon in this risk area block
     for (const poly of riskAreaBlock.polys) {
       // Create the basic GeoJSON feature structure
@@ -171,7 +168,7 @@ class OutlookMap {
           type: 'concernArea', // Identifies this as a flood concern area
           days: riskAreaBlock.days, // Which days this risk applies to
           labelPosition: poly.label_position, // Where to place labels on map
-          name: featureName, // Human-readable name like "Medium risk of river flooding"
+          name: '', // Human-readable name like "Medium risk of river flooding"
           // message: messageGroupObj, // Detailed risk descriptions for popups
           'risk-level': riskLevel, // Numeric risk level for styling
           'z-index': (riskLevel * 10) // Drawing order (higher risks on top)
