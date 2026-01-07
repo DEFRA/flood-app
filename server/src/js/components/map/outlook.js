@@ -186,7 +186,6 @@ function OutlookMap (mapId, options) {
       newFeature.set('isSelected', true)
       setFeatureHtml(newFeature)
       hideDays()
-      container.showInfo('Selected feature information', newFeature.get('html'))
     } else {
       showDays()
     }
@@ -303,30 +302,6 @@ function OutlookMap (mapId, options) {
       // Show overlays for visible features
       showOverlays()
     }, 350)
-  })
-
-  // Show cursor when hovering over features
-  map.addEventListener('pointermove', (e) => {
-    // Detect vector feature at mouse coords
-    const hit = map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
-      if (layer === areasOfConcern) { return true }
-    })
-    map.getTarget().style.cursor = hit ? 'pointer' : ''
-  })
-
-  // Set selected feature if map is clicked
-  // Clear overlays if non-keyboard interaction
-  map.addEventListener('click', (e) => {
-    // Hide overlays if non-keyboard interaction
-    if (!maps.isKeyboard) { hideOverlays() }
-    // Get mouse coordinates and check for feature
-    const featureId = map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
-      if (layer === areasOfConcern) {
-        const id = feature.getId()
-        return id
-      }
-    })
-    setSelectedFeature(featureId)
   })
 
   // Show overlays on first tab in from browser controls
