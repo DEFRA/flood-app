@@ -119,6 +119,13 @@ function OutlookMap (mapId, options) {
   const keyElement = container.keyElement
   const map = container.map
 
+  // Create a separate live region for selection announcements
+  const selectionAnnouncer = document.createElement('div')
+  selectionAnnouncer.className = 'govuk-visually-hidden'
+  selectionAnnouncer.setAttribute('aria-live', 'assertive')
+  selectionAnnouncer.setAttribute('aria-atomic', 'true')
+  containerElement.appendChild(selectionAnnouncer)
+
   //
   // Private methods
   //
@@ -133,10 +140,13 @@ function OutlookMap (mapId, options) {
       if (feature.get('labelPosition').length) {
         labelPosition = new Point(transform(feature.get('labelPosition'), 'EPSG:4326', 'EPSG:3857')).getCoordinates()
       }
+      const riskLevel = parseInt(feature.get('risk-level'), 10)
+      const riskLabels = { 1: 'Very low risk', 2: 'Low risk', 3: 'Medium risk', 4: 'High risk' }
       features.push({
         id: feature.getId(),
         centre: labelPosition,
-        name: feature.get('name')
+        name: feature.get('name'),
+        riskLevel: riskLabels[riskLevel] || 'Unknown risk'
       })
     })
     return features
@@ -185,9 +195,18 @@ function OutlookMap (mapId, options) {
     if (newFeature) {
       newFeature.set('isSelected', true)
       setFeatureHtml(newFeature)
-      hideDays()
+      // Announce selection to screen readers
+      const riskLevel = parseInt(newFeature.get('risk-level'), 10)
+      const riskLabels = { 1: 'Very low risk', 2: 'Low risk', 3: 'Medium risk', 4: 'High risk' }
+      const riskText = riskLabels[riskLevel] || 'Unknown risk'
+      // Clear first to force re-announcement even if same text
+      selectionAnnouncer.textContent = ''
+      setTimeout(() => {
+        selectionAnnouncer.textContent = `Selected: ${newFeature.get('name')}, ${riskText} area`
+      }, 10)
     } else {
       showDays()
+      selectionAnnouncer.textContent = ''
     }
     // Toggle overlay selected state
     if (state.hasOverlays) {
@@ -295,13 +314,39 @@ function OutlookMap (mapId, options) {
   let timer = null
   map.addEventListener('moveend', (e) => {
     viewportDescription.innerHTML = ''
+    viewportDescription.setAttribute('aria-busy', 'true')
     // Timer used to control screen reader pace
     clearTimeout(timer)
     // Tasks dependent on a time delay
     timer = setTimeout(() => {
       // Show overlays for visible features
       showOverlays()
+      viewportDescription.removeAttribute('aria-busy')
     }, 350)
+  })
+
+  // Show cursor when hovering over features
+  map.addEventListener('pointermove', (e) => {
+    // Detect vector feature at mouse coords
+    const hit = map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
+      if (layer === areasOfConcern) { return true }
+    })
+    map.getTarget().style.cursor = hit ? 'pointer' : ''
+  })
+
+  // Set selected feature if map is clicked
+  // Clear overlays if non-keyboard interaction
+  map.addEventListener('click', (e) => {
+    // Hide overlays if non-keyboard interaction
+    if (!maps.isKeyboard) { hideOverlays() }
+    // Get mouse coordinates and check for feature
+    const featureId = map.forEachFeatureAtPixel(e.pixel, (feature, layer) => {
+      if (layer === areasOfConcern) {
+        const id = feature.getId()
+        return id
+      }
+    })
+    setSelectedFeature(featureId)
   })
 
   // Show overlays on first tab in from browser controls
@@ -311,20 +356,23 @@ function OutlookMap (mapId, options) {
 
   // Handle all Outlook Map specific key presses
   containerElement.addEventListener('keyup', (e) => {
+    // Check if it's a number key for selection first
+    const isNumberKey = !isNaN(e.key) && e.key >= 1 && e.key <= 9
+    
     // Re-instate days when key has been closed
     if (e.key === 'Escape') {
       showDays()
     }
-    // Show overlays when any key is pressed other than Escape
-    if (e.key !== 'Escape') {
+    // Show overlays when any key is pressed other than Escape or number keys
+    if (e.key !== 'Escape' && !isNumberKey) {
       showOverlays()
     }
     // Clear selected feature when pressing escape
     if (e.key === 'Escape' && state.selectedFeatureId !== '') {
       setSelectedFeature()
     }
-    // Set selected feature on [1-9] key presss
-    if (!isNaN(e.key) && e.key >= 1 && e.key <= state.visibleFeatures.length && state.visibleFeatures.length <= 9) {
+    // Set selected feature on [1-9] key press
+    if (isNumberKey && e.key <= state.visibleFeatures.length && state.visibleFeatures.length <= 9) {
       setSelectedFeature(state.visibleFeatures[e.key - 1].id)
     }
   })
