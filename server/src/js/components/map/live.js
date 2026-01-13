@@ -217,9 +217,12 @@ function LiveMap (mapId, options) {
         (ref === 'stations' && props.type === 'G' && lyrCodes.includes('gr')) ||
         // Rainfall
         (ref === 'rainfall' && props.type === 'R' && lyrCodes.includes('rf')) ||
-        // Target area provided - show by default, but hide when all warning checkboxes unchecked
+        // Target area provided - match severity to correct checkbox
         (targetArea.pointFeature && targetArea.pointFeature.getId() === feature.getId() &&
-          (lyrCodes.includes('ts') || lyrCodes.includes('tw') || lyrCodes.includes('ta')))
+          ((props.severity_value === 3 && lyrCodes.includes('ts')) ||
+            (props.severity_value === 2 && lyrCodes.includes('tw')) ||
+            (props.severity_value === 1 && lyrCodes.includes('ta')) ||
+            (!props.severity_value || props.severity_value === 4)))
       )
       // WebGl: Feature properties must be strings or numbers
       feature.set('isVisible', isVisible)
@@ -384,7 +387,8 @@ function LiveMap (mapId, options) {
       targetArea.pointFeature = new Feature({
         geometry: new Point(getCenter(targetArea.polygonFeature.getGeometry().getExtent())),
         ta_code: options.targetArea.id,
-        ta_name: options.targetArea.name
+        ta_name: options.targetArea.name,
+        severity_value: options.targetArea.severityValue
       })
       targetArea.pointFeature.setId('flood.' + options.targetArea.id)
       // Transform id

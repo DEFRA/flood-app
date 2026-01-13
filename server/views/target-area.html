@@ -123,7 +123,8 @@
    window.flood.model.targetArea = {
       id: window.flood.model.area.code,
       name: window.flood.model.area.name,
-      polygon: JSON.parse(window.flood.model.area.geom).coordinates
+      polygon: JSON.parse(window.flood.model.area.geom).coordinates,
+      severityValue: window.flood.model.severity ? window.flood.model.severity.id : null
    }
    window.flood.model.selectedId = 'flood.' + window.flood.model.area.code
 </script>
