@@ -219,10 +219,10 @@ function LiveMap (mapId, options) {
         (ref === 'rainfall' && props.type === 'R' && lyrCodes.includes('rf')) ||
         // Target area provided - match severity to correct checkbox
         (targetArea.pointFeature && targetArea.pointFeature.getId() === feature.getId() &&
-          ((props.severity_value === 3 && lyrCodes.includes('ts')) ||
+          ((!props.severity_value || props.severity_value === 4) ||
+            (props.severity_value === 3 && lyrCodes.includes('ts')) ||
             (props.severity_value === 2 && lyrCodes.includes('tw')) ||
-            (props.severity_value === 1 && lyrCodes.includes('ta')) ||
-            (!props.severity_value || props.severity_value === 4)))
+            (props.severity_value === 1 && lyrCodes.includes('ta'))))
       )
       // WebGl: Feature properties must be strings or numbers
       feature.set('isVisible', isVisible)
