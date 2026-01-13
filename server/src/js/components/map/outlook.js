@@ -358,7 +358,7 @@ function OutlookMap (mapId, options) {
   containerElement.addEventListener('keyup', (e) => {
     // Check if it's a number key for selection first
     const isNumberKey = !isNaN(e.key) && e.key >= 1 && e.key <= 9
-    
+
     // Re-instate days when key has been closed
     if (e.key === 'Escape') {
       showDays()
