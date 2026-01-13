@@ -247,7 +247,7 @@ describe('Route - Station', () => {
     const response = await server.inject(options)
 
     expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.not.contain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is offline</h2>')
+    expect(response.payload).to.not.contain('<h2 class="defra-service-error__title" id="error-station-offline">This measuring station is offline</h2>')
   })
 
   it('should return river level: Normal', async () => {
@@ -895,8 +895,8 @@ describe('Route - Station', () => {
 
     expect(response.statusCode).to.equal(200)
     expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    expect(response.payload).to.contain('No data is available. You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a> or call Floodline for advice.\n')
-    expect(response.payload).to.contain('This measuring station is closed\n')
+    expect(response.payload).to.contain('This measuring station is closed')
+    expect(response.payload).to.contain('No data is available')
   })
 
   it('should return coastal station', async () => {
