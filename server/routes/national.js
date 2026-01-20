@@ -1,5 +1,5 @@
 const joi = require('joi')
-const OutlookModel = require('../models/outlook')
+const OutlookModel = require('../models/forecast-outlook/outlook-map')
 const FloodsModel = require('../models/floods')
 const ViewModel = require('../models/views/national')
 const locationService = require('../services/location')
