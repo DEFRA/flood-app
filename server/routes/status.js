@@ -1,6 +1,6 @@
 const floodService = require('../services/flood')
 const locationService = require('../services/location')
-const OutlookModel = require('../models/outlook')
+const OutlookModel = require('../models/forecast-outlook/outlook-map')
 const FloodsModel = require('../models/floods')
 
 module.exports = {
