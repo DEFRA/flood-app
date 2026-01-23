@@ -13,7 +13,16 @@
         z-index: 1;
         white-space: nowrap;
         -webkit-appearance: none;
-        background-color: govuk-colour('white');
+        -moz-appearance: none;
+        appearance: none;
+        background-color: govuk-colour('white') !important;
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+    }
+
+    &__input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 1000px white inset !important;
+        background-color: govuk-colour('white') !important;
     }
 
     &__input::-webkit-search-decoration {
