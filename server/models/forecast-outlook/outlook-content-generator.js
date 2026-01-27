@@ -208,16 +208,14 @@ function selectRiskCombinations (riskCombinations, requiredSentenceCount) {
   for (const combo of riskCombinations) {
     const key = `${combo.impact}-${combo.likelihood}`
 
-    // Skip duplicates
-    if (seenImpactLikelihood.has(key)) {
-      continue
-    }
+    // Only process unique impact-likelihood combinations
+    if (!seenImpactLikelihood.has(key)) {
+      selected.push(combo)
+      seenImpactLikelihood.add(key)
 
-    selected.push(combo)
-    seenImpactLikelihood.add(key)
-
-    if (selected.length >= requiredSentenceCount) {
-      break
+      if (selected.length >= requiredSentenceCount) {
+        break
+      }
     }
   }
 
