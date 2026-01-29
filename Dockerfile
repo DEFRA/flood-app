@@ -19,7 +19,7 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 
 # Copy only manifests first to maximize layer caching
-COPY --chown=node:node package*.json .
+COPY --chown=node:node --chmod=755 package*.json .
 
 # Timezone applied to both stages
 ENV TZ=Europe/London
@@ -33,11 +33,11 @@ FROM base AS development
 RUN npm ci --engine-strict --ignore-scripts --include=dev
 
 # Copy source after dependencies to preserve caching
-COPY --chown=node:node ./webpack.config.js .
-COPY --chown=node:node ./build ./build
-COPY --chown=node:node ./server ./server
-COPY --chown=node:node ./test ./test
-COPY --chown=node:node ./index.js .
+COPY --chown=node:node --chmod=755 ./webpack.config.js .
+COPY --chown=node:node --chmod=755 ./build ./build
+COPY --chown=node:node --chmod=755 ./server ./server
+COPY --chown=node:node --chmod=755 ./test ./test
+COPY --chown=node:node --chmod=755 ./index.js .
 
 # Build the application (AFTER source files are copied)
 RUN npm run build
@@ -68,10 +68,10 @@ RUN npm ci --engine-strict --ignore-scripts --omit=dev
 
 # Copy only what's needed to run
 # (No /test; include build if you serve prebuilt assets)
-COPY --chown=node:node ./webpack.config.js .
-COPY --chown=node:node ./build ./build
-COPY --chown=node:node ./server ./server
-COPY --chown=node:node ./index.js .
+COPY --chown=node:node --chmod=755 ./webpack.config.js .
+COPY --chown=node:node --chmod=755 ./build ./build
+COPY --chown=node:node --chmod=755 ./server ./server
+COPY --chown=node:node --chmod=755 ./index.js .
 
 # Build the application (AFTER source files are copied)
 RUN npm run build
