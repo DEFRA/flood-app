@@ -1,88 +1,83 @@
+
 ARG PARENT_VERSION=2.10.3-node20.19.6
 
+# ------------------------------
+# Base stage (shared)
+# ------------------------------
 FROM defradigital/node:${PARENT_VERSION} AS base
 ARG PORT=3000
 ENV PORT=${PORT}
 
-# App workdir
+# Working directory
 WORKDIR /usr/src/app
 
-# Root for system package setup; drop privileges later
+# Must start as root to install system packages
 USER root
 
-# Install required system tools (shared) - Alpine uses apk
-# netcat-openbsd -> netcat-openbsd, redis-tools -> redis
+# Install system tools (Alpine)
 RUN apk update \
   && apk add --no-cache \
-     netcat-openbsd \
-     redis \
+       netcat-openbsd \
+       redis \
   && rm -rf /var/cache/apk/*
 
-# Copy only manifests first to maximize layer caching
-COPY --chown=node:node --chmod=755 package*.json .
+# Copy package manifests (root-owned, secure permissions)
+COPY --chown=root:root --chmod=644 package*.json .
 
-# Timezone applied to both stages
+# Timezone config
 ENV TZ=Europe/London
 
-# ----- Development stage -----
+
+
+# ------------------------------
+# Development stage
+# ------------------------------
 FROM base AS development
 
-
-# Deterministic dev install (includes devDeps)
-# NOTE: Remove --ignore-scripts if you rely on postinstall scripts.
+# Install ALL dependencies for dev (but ensure no scripts run)
 RUN npm ci --engine-strict --ignore-scripts --include=dev
 
-# Copy source after dependencies to preserve caching
-COPY --chown=node:node --chmod=755 ./webpack.config.js .
-COPY --chown=node:node --chmod=755 ./build ./build
-COPY --chown=node:node --chmod=755 ./server ./server
-COPY --chown=node:node --chmod=755 ./test ./test
-COPY --chown=node:node --chmod=755 ./index.js .
+# Copy application source (root-owned, read-only)
+COPY --chown=root:root --chmod=755 ./webpack.config.js .
+COPY --chown=root:root --chmod=755 ./build ./build
+COPY --chown=root:root --chmod=755 ./server ./server
+COPY --chown=root:root --chmod=755 ./test ./test
+COPY --chown=root:root --chmod=755 ./index.js .
 
-# Build the application (AFTER source files are copied)
+# Build application
 RUN npm run build
 
-# Drop privileges
+# Drop privileges (DEFRA requirement: never run container as root)
 USER node
 
-# Expose typical app port (adjust if different)
-ARG PORT=3000
-ENV PORT=${PORT}
 EXPOSE ${PORT}
 
-# If you want to wait on Redis before starting, uncomment next CMD:
-# CMD ["bash", "-lc", "wait-on tcp:redis:6379 && nodemon index.js"]
-
-# Default dev command with auto-restart
 CMD ["nodemon", "index.js"]
 
-# ----- Production stage -----
+
+
+# ------------------------------
+# Production stage
+# ------------------------------
 FROM base AS production
 
-# Production environment
 ENV NODE_ENV=production
 
-# Deterministic production install (no devDeps)
-# NOTE: Remove --ignore-scripts if you rely on postinstall scripts.
+# Install only production deps
 RUN npm ci --engine-strict --ignore-scripts --omit=dev
 
-# Copy only what's needed to run
-# (No /test; include build if you serve prebuilt assets)
-COPY --chown=node:node --chmod=755 ./webpack.config.js .
-COPY --chown=node:node --chmod=755 ./build ./build
-COPY --chown=node:node --chmod=755 ./server ./server
-COPY --chown=node:node --chmod=755 ./index.js .
+# Copy only what is required to run the service
+COPY --chown=root:root --chmod=755 ./webpack.config.js .
+COPY --chown=root:root --chmod=755 ./build ./build
+COPY --chown=root:root --chmod=755 ./server ./server
+COPY --chown=root:root --chmod=755 ./index.js .
 
-# Build the application (AFTER source files are copied)
+# Build production assets
 RUN npm run build
 
-# Drop privileges
+# Runtime user must NOT be root (DEFRA standard)
 USER node
 
-# Expose app port
-ARG PORT=3000
-ENV PORT=${PORT}
 EXPOSE ${PORT}
 
-# Start the app
 CMD ["node", "index.js"]
