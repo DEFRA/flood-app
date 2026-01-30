@@ -22,7 +22,7 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 
 # Copy package manifests (root-owned, secure permissions)
-COPY --chown=root:root --chmod=644 package*.json .
+COPY --chown=root:root package*.json .
 
 # Timezone config
 ENV TZ=Europe/London
@@ -38,11 +38,11 @@ FROM base AS development
 RUN npm ci --engine-strict --ignore-scripts --include=dev
 
 # Copy application source (root-owned, read-only)
-COPY --chown=root:root --chmod=755 ./webpack.config.js .
-COPY --chown=root:root --chmod=755 ./build ./build
-COPY --chown=root:root --chmod=755 ./server ./server
-COPY --chown=root:root --chmod=755 ./test ./test
-COPY --chown=root:root --chmod=755 ./index.js .
+COPY --chown=root:root ./webpack.config.js .
+COPY --chown=root:root ./build ./build
+COPY --chown=root:root ./server ./server
+COPY --chown=root:root ./test ./test
+COPY --chown=root:root ./index.js .
 
 # Build application
 RUN npm run build
@@ -67,10 +67,10 @@ ENV NODE_ENV=production
 RUN npm ci --engine-strict --ignore-scripts --omit=dev
 
 # Copy only what is required to run the service
-COPY --chown=root:root --chmod=755 ./webpack.config.js .
-COPY --chown=root:root --chmod=755 ./build ./build
-COPY --chown=root:root --chmod=755 ./server ./server
-COPY --chown=root:root --chmod=755 ./index.js .
+COPY --chown=root:root ./webpack.config.js .
+COPY --chown=root:root ./build ./build
+COPY --chown=root:root ./server ./server
+COPY --chown=root:root ./index.js .
 
 # Build production assets
 RUN npm run build
