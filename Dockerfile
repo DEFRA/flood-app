@@ -9,7 +9,7 @@ ARG PORT=3000
 ENV PORT=${PORT}
 
 # Working directory
-WORKDIR /usr/src/app
+WORKDIR /home/node/app
 
 # Must start as root to install system packages
 USER root
