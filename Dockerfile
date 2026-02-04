@@ -1,5 +1,5 @@
 
-ARG PARENT_VERSION=2.10.3-node20.19.6
+ARG PARENT_VERSION=2.10.3-node22.21.1
 
 # ------------------------------
 # Base stage (shared)
