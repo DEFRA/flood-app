@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "start": "pm2 start config/pm2.json",
-    "start:local": "nodemon --ext js,json,html,env -r dotenv/config index.js",
+    "start:local": "npx nodemon --ext js,json,html,env -r dotenv/config index.js",
     "start:local:no-watch": "node -r dotenv/config index.js",
     "build:clean": "build/clean-src",
     "build:cp-assets": "build/cp-assets",
