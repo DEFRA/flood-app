@@ -79,7 +79,7 @@
     "pino-abstract-transport": "1.1.0",
     "pino-pretty": "10.2.3",
     "qs": "6.12.1",
-    "regenerator-runtime": "0.14.0",
+    "regenerator-runtime": "0.14.1",
     "sass": "1.93.2",
     "sinon": "18.0.0",
     "standard": "17.1.0",
