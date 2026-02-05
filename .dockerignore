@@ -28,12 +28,9 @@ server/dist
 # Documentation
 docs
 readme.md
-LICENSE
 
 # Release notes
 release-docs
 
 # Misc
 Dockerfile
-.dockerignore
-.gitignore
