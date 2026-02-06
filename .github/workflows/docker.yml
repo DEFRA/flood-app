@@ -55,6 +55,8 @@ jobs:
             type=raw,priority=800,value=${{ steps.raw-tag.outputs.raw_tag }},enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
             type=raw,priority=800,value=${{ steps.raw-tag.outputs.raw_tag }},enable=${{ github.ref == format('refs/heads/{0}', 'development') }}
             type=raw,event=branch,value={{branch}}-{{sha}},enable=${{ contains(github.ref, '/FSR-') }}
+            type=raw,event=branch,value={{branch}}-{{sha}},enable=${{ contains(github.ref, 'release') }}
+            type=raw,event=branch,value={{branch}}-{{sha}},enable=${{ contains(github.ref, 'hotfix') }}
           labels: |
             org.opencontainers.image.licenses=OGL-UK-3.0
 
