@@ -66,7 +66,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       <div class="defra-service-error govuk-!-margin-bottom-2">
-        <h2 class="defra-service-error__title" id="error-summary-title-suspended">
+        <h2 class="defra-service-error__title" id="error-summary-title">
           This measuring station is offline
         </h2>
         <p class="govuk-body govuk-!-margin-bottom-0">
@@ -87,7 +87,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       <div class="defra-service-error govuk-!-margin-bottom-2">
-        <h2 class="defra-service-error__title" id="error-summary-title-closed">
+        <h2 class="defra-service-error__title" id="error-summary-title">
           This measuring station is closed
         </h2>
         <p class="govuk-body govuk-!-margin-bottom-0">
@@ -101,7 +101,7 @@
 
 {% if model.isFfoi and model.forecastOutOfDate %}
   <div class="defra-service-error govuk-!-margin-bottom-8">
-    <h2 class="defra-service-error__title" id="error-summary-title-forecast">There's a problem with the forecast data</h2>
+    <h2 class="defra-service-error__title" id="error-summary-title">There's a problem with the forecast data</h2>
     <p class="govuk-body govuk-!-margin-bottom-0">
       The forecast data is missing or more than 24 hours old. Try again later.
     </p>
@@ -115,7 +115,7 @@
         <div class="govuk-grid-column-full">
           {% if model.outOfDate === true %}
             <div class="defra-service-error govuk-!-margin-bottom-8">
-              <h2 class="defra-service-error__title" id="error-summary-title-datafeed">This data feed was interrupted</h2>
+              <h2 class="defra-service-error__title" id="error-summary-title">This data feed was interrupted</h2>
               <p class="govuk-body govuk-!-margin-bottom-0">
                 Normal service resumed at {{ model.station.formattedStatusTime }} on {{ model.station.formattedStatusDate }}.
               </p>
@@ -179,7 +179,7 @@
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
           <div class="defra-service-error govuk-!-margin-bottom-3">
-            <h2 class="defra-service-error__title" id="error-summary-title-measurement">
+            <h2 class="defra-service-error__title" id="error-summary-title">
               There's a problem with the latest measurement
             </h2>
             <p class="govuk-body govuk-!-margin-bottom-0">
@@ -193,7 +193,7 @@
   {% else %}
 
   <div class="defra-service-error govuk-!-margin-bottom-3">
-    <h2 class="defra-service-error__title" id="error-summary-title-nodata">There's a problem with the data</h2>
+    <h2 class="defra-service-error__title" id="error-summary-title">There's a problem with the data</h2>
     <p class="govuk-body govuk-!-margin-bottom-0">There's no recent data. Try again later.</p>
   </div>
 

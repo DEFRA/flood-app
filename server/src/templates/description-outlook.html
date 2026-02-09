@@ -2,7 +2,11 @@
 <p>{{ model.numFeatures }} flood risk areas in the current map area. To list these zoom in to nine or fewer.</p>
 {% elif model.numFeatures >= 1 %}
 <p>{{ model.numFeatures }} flood risk area{% if model.numFeatures > 1 %}s{% endif %} in the current map area. Use number keys to select.</p>
-<p>{% for feature in model.features %}{{ loop.index }}: {{ feature.name }}, {{ feature.riskLevel }}{% if not loop.last %}; {% endif %}{% endfor %}</p>
+<ol>
+    {% for feature in model.features %}
+    <li>{{ feature.name }}</li>
+    {% endfor %}
+</ol>
 {% else %}
 <p>No flood risk areas in the current map area.</p>
 {% endif %}

@@ -1,3 +1,33 @@
 <div id="infoDescription">
-    <p  class="govuk-body govuk-!-margin-bottom-1">{{ model.name }}</p>
+    <h2 class="govuk-heading-s">{{ model.name }}</h2>
+
+    <p class="defra-map-info__description">
+    {% for messageID, messageText in model.message %}
+    {% switch messageID %}
+        {% case "2-i2-l3" %}
+        <span>It’s likely that {{ messageText.sources[0] }} will flood low lying land and roads.</span>
+        {% case "2-i2-l4" %}
+        <span>We expect that {{ messageText.sources[0] }} will flood low lying land and roads.</span>
+        {% case "2-i3-l1" %}
+        <span>It’s possible but not expected that {{ messageText.sources[0] }}  will cause properties and roads to flood.</span>
+        {% case "2-i3-l2" %}
+        <span>It’s possible that {{ messageText.sources[0] }} will cause properties and roads to flood.</span>
+        {% case "2-i4-l1" %}
+        <span>It’s possible but not expected that {{ messageText.sources[0] }} will cause severe flooding and travel disruption.</span>
+        {% case "3-i3-l3" %}
+        <span>It’s likely that {{ messageText.sources[0] }} will cause properties and roads to flood. If this happens, your life might be in danger.</span>
+        {% case "3-i3-l4" %}
+        <span>We expect {{ messageText.sources[0] }} to cause properties and roads to flood. If this happens, your life might be in danger.</span>
+        {% case "3-i4-l2" %}
+        <span>{{ messageText.sources[0] | capitalize }} could cause severe flooding and travel disruption. If this happens, your life might be in danger. Be prepared to evacuate.</span>
+        {% case "3-i4-l3" %}
+        <span>It’s likely that {{ messageText.sources[0] }} will cause severe flooding and travel disruption. If this happens, your life might be in danger. Be prepared to evacuate.</span>
+        {% case "4-i4-l4" %}
+        <span>We expect {{ messageText.sources[0] }} to cause severe flooding and travel disruption. If this happens, your life might be in danger. Be prepared to evacuate.</span>
+        {% default %}
+        <span>There's a very low risk of flooding.</span>
+    {% endswitch %}
+    {% endfor %}
+    </p>
+
 </div>

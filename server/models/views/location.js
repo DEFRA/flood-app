@@ -4,13 +4,8 @@ const { floodFisUrl, bingKeyMaps, floodRiskUrl } = require('../../config')
 const moment = require('moment-timezone')
 
 class ViewModel {
-  constructor ({ location, place, floods, stations, impacts, matrixData, outOfDate, dataError, outlookDays, outlookData, outlookContent, issuedAt }) {
+  constructor ({ location, place, floods, stations, impacts, tabs, outOfDate, dataError }) {
     const title = place.name
-
-    // Constants for repeated literals
-    const TIMEZONE = 'Europe/London'
-    const TIME_FORMAT = 'h:mma'
-    const DATE_FORMAT = 'D MMMM YYYY'
 
     Object.assign(this, {
       q: location,
@@ -19,13 +14,13 @@ class ViewModel {
       floods,
       impacts,
       floodRiskUrl,
-      matrixData,
+      tabs,
       outOfDate,
-      outlookContent,
       pageTitle: `Check for flooding in ${title}`,
-      metaDescription: `View current flood warnings and alerts for the ${title} area, and the regional flood forecast for the next 5 days. Also check local river, sea, groundwater and rainfall levels.`,
+      metaDescription: `View current flood warnings and alerts for the ${title} area,` +
+        ' and the regional flood forecast for the next 5 days. Also check local river, sea, groundwater and rainfall levels.',
       floodFisUrl,
-      dateFormatted: `Up to date as of ${moment.tz(TIMEZONE).format(TIME_FORMAT)} on ${moment.tz(TIMEZONE).format(DATE_FORMAT)}`,
+      dateFormatted: 'Up to date as of ' + moment.tz('Europe/London').format('h:mma') + ' on ' + moment.tz('Europe/London').format('D MMMM YYYY'),
       feedback: false,
       dataError,
       signUpForFloodWarnings: 'Location:Get warnings:Location - Get warnings',
@@ -43,32 +38,37 @@ class ViewModel {
     }
 
     // Count stations that are 'high'
-    this.processStations(stations)
+    let hasHighLevels = false
+    for (const s in stations) {
+      if (
+        stations[s].station_type !== 'C' && stations[s].station_type !== 'G' && stations[s].value && stations[s].status.toLowerCase() === 'active' &&
+        parseFloat(stations[s].value) > parseFloat(stations[s].percentile_5)
+      ) {
+        hasHighLevels = true
+      }
+    }
+    this.hasHighLevels = hasHighLevels
 
     // River and sea levels
     this.hasLevels = !!stations.length
     this.levels = groupBy(stations, 'wiski_river_name')
 
     // Impacts
-    this.processImpacts(impacts)
+    // sort impacts order by value
+    impacts.sort((a, b) => b.value - a.value)
+    // create an array of all active impacts
+    this.activeImpacts = impacts.filter(active => active.telemetryactive === true)
+    this.hasActiveImpacts = !!this.activeImpacts.length
 
-    // Outlook issue date/time for display
-    this.outlookIssue = {
-      issueUTC: issuedAt ? moment(issuedAt).tz(TIMEZONE).format() : moment().tz(TIMEZONE).format(),
-      formattedIssueDate: issuedAt ? `${moment(issuedAt).tz(TIMEZONE).format(TIME_FORMAT)} on ${moment(issuedAt).tz(TIMEZONE).format(DATE_FORMAT)}` : `${moment().tz(TIMEZONE).format(TIME_FORMAT)} on ${moment().tz(TIMEZONE).format(DATE_FORMAT)}`
-    }
-
-    this.outlookAllLow = JSON.stringify(outlookContent ?? []) === JSON.stringify([{ sentences: ['The flood risk is very low.'] }])
+    // Outlook tabs
 
     // Expose model values for client side javascript
     this.expose = {
       hasWarnings: this.hasActiveFloods,
       mapButtonText: this.hasActiveFloods ? 'View map of flood warnings and alerts' : 'View map',
       placeBbox: this.placeBbox,
-      bingMaps: bingKeyMaps,
-      outlookDays: outlookDays || [],
-      outlookData: outlookData || null,
-      outlookContent: outlookContent || ''
+      outlookDays: tabs.days,
+      bingMaps: bingKeyMaps
     }
   }
 
@@ -175,27 +175,6 @@ class ViewModel {
       this.removedLinkText = 'Flood alerts and warnings were removed'
       this.removedText = 'in the last 24 hours.'
     }
-  }
-
-  processStations (stations) {
-    let hasHighLevels = false
-    for (const s in stations) {
-      if (
-        stations[s].station_type !== 'C' && stations[s].station_type !== 'G' && stations[s].value && stations[s].status.toLowerCase() === 'active' &&
-        parseFloat(stations[s].value) > parseFloat(stations[s].percentile_5)
-      ) {
-        hasHighLevels = true
-      }
-    }
-    this.hasHighLevels = hasHighLevels
-  }
-
-  processImpacts (impacts) {
-    // sort impacts order by value
-    impacts.sort((a, b) => b.value - a.value)
-    // create an array of all active impacts
-    this.activeImpacts = impacts.filter(active => active.telemetryactive === true)
-    this.hasActiveImpacts = !!this.activeImpacts.length
   }
 }
 
