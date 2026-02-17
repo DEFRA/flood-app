@@ -478,6 +478,6 @@ describe('Route - Target Area', () => {
     const response = await server.inject(options)
 
     expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.contain('There are no flood warnings in this area, but there is <a href="/target-area/123WAF984">a flood alert in the wider area</a>')
+    expect(response.payload.replace(/\s+/g, ' ')).to.contain('There are no flood warnings in this area, but there is <a href="/target-area/123WAF984">a flood alert in the wider area</a>')
   })
 })
