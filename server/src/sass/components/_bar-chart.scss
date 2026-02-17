@@ -1,161 +1,202 @@
 // Bar graph
 .defra-bar-chart {
   &__caption {
-    display:block;
+    display: block;
     @extend .govuk-body;
-    margin-bottom:30px;
+    margin-bottom: 30px;
+
     @include mq ($from: tablet) {
-      margin-bottom:40px;
+      margin-bottom: 40px;
     }
+
     & {
-      margin-right:0px;
-      text-align:left;
+      margin-right: 0px;
+      text-align: left;
     }
   }
+
   &__container {
-    position:relative;
-    margin:0;
+    position: relative;
+    margin: 0;
     outline: 0px;
   }
 }
+
 .defra-bar-chart svg {
-  position:relative;
-  overflow:visible;
-  height:300px;
-  width:100%;
+  position: relative;
+  overflow: visible;
+  height: 300px;
+  width: 100%;
+
   @include mq ($from: desktop) {
-    height:450px;
+    height: 450px;
   }
+
   .axis.y {
     @include govuk-font($size: 16, $tabular: true);
   }
+
   .axis.x {
     @include govuk-font($size: 16);
   }
+
   .axis.y text,
   .axis.x text {
     fill: $govuk-secondary-text-colour;
+
     @include high-contrast-mode-only {
       fill: currentColor;
     }
   }
+
   .axis.y .tick line,
   .axis.y path,
   .grid.y path.domain {
     display: none;
   }
+
   .axis path,
   .axis line {
     fill: none;
     stroke: $govuk-border-colour;
     stroke-width: 1;
     shape-rendering: crispEdges;
+
     @include high-contrast-mode-only {
       stroke: currentColor;
     }
   }
+
   .bar {
     pointer-events: none;
     outline: 0px;
+
     text {
       font-size: 0;
     }
   }
+
   .bar__fill {
     fill: govuk-colour('blue');
+
     @include high-contrast-mode-only {
       fill: currentColor;
     }
   }
+
   .bar--selected .bar__fill {
     fill: govuk-colour('dark-blue');
+
     @include high-contrast-mode-only {
       fill: currentColor;
     }
   }
+
   .bar--incomplete .bar__fill {
     fill: govuk-colour('mid-grey');
+
     @include high-contrast-mode-only {
       fill: currentColor;
     }
   }
+
   .grid {
     pointer-events: none;
   }
+
   .grid line {
     fill: none;
     stroke: #E6E6E6;
     stroke-width: 1;
     shape-rendering: crispEdges;
   }
+
   .latest-line {
     pointer-events: none;
     stroke-width: 1;
     stroke: govuk-colour('dark-grey');
     stroke-dasharray: 3 3;
     shape-rendering: crispEdges;
+
     @include high-contrast-mode-only {
       stroke: currentColor;
     }
   }
+
   .bar--selected .latest-line {
     stroke: govuk-colour('black');
+
     @include high-contrast-mode-only {
       stroke: currentColor;
     }
   }
+
   // Locator line
   .locator {
     visibility: hidden;
+
     &--visible {
       visibility: visible;
       pointer-events: none;
     }
+
     &__background {
       visibility: hidden;
     }
+
     &__background--visible {
       visibility: visible;
       fill: $govuk-focus-colour;
+
       @include high-contrast-mode-only {
         fill: currentColor;
       }
     }
+
     &__line {
       visibility: hidden;
       stroke-width: 1;
       stroke: govuk-colour('mid-grey');
       shape-rendering: crispEdges;
     }
+
     &__line--visible {
       visibility: visible;
     }
   }
+
   // Tooltip
   .tooltip {
     visibility: hidden;
   }
+
   .tooltip--visible {
-      visibility: visible;
+    visibility: visible;
   }
+
   .tooltip-bg {
-      fill: window;
-      stroke-width: 1;
-      stroke: $govuk-secondary-text-colour;
-      shape-rendering: geometricPrecision;
-      @include high-contrast-mode-only {
-        stroke: currentColor;
-      }
+    fill: white;
+    stroke-width: 1;
+    stroke: $govuk-secondary-text-colour;
+    shape-rendering: geometricPrecision;
+
+    @include high-contrast-mode-only {
+      stroke: currentColor;
+    }
   }
+
   .tooltip-text {
-      @include govuk-font($size: 16);
-      & {
-        fill: currentColor;
-      }
+    @include govuk-font($size: 16);
+
+    & {
+      fill: currentColor;
+    }
   }
+
   .tooltip-text__strong {
-      @include govuk-font($size: 19, $weight:bold);
+    @include govuk-font($size: 19, $weight: bold);
   }
+
   .tooltip-text__small {
     @include govuk-font($size: 16);
   }
