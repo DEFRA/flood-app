@@ -27,11 +27,8 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-0">
-      {% if model.station.isGroundwater %}Groundwater{% elif model.station.isCoastal and model.river.river_name != 'Sea
-      Levels' %}{{ model.river.river_name }}{% elif model.station.isCoastal %}Sea{% else %}{{ model.station.river }}{%
-      endif %} level
-      {% if model.station.isMulti %}{% if model.station.isDownstream %}downstream{% else %}upstream{% endif %}{% endif
-      %} at {{ model.station.name }}
+      {% if model.station.isGroundwater %}Groundwater{% elif model.station.isCoastal and model.river.river_name != 'Sea Levels' %}{{ model.river.river_name }}{% elif model.station.isCoastal %}Sea{% else %}{{ model.station.river }}{% endif %} level
+      {% if model.station.isMulti %}{% if model.station.isDownstream %}downstream{% else %}upstream{% endif %}{% endif %} at {{ model.station.name }}
     </h1>
   </div>
 </div>
