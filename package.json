@@ -46,7 +46,7 @@
     "@hapi/lab": "26.0.0",
     "@hapi/vision": "7.0.3",
     "@hapi/wreck": "18.0.1",
-    "@hapi/yar": "11.0.1",
+    "@hapi/yar": "11.0.3",
     "@turf/helpers": "6.5.0",
     "@turf/intersect": "6.5.0",
     "@turf/polygon-smooth": "6.5.0",
