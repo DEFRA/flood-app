@@ -74,7 +74,7 @@
     "moment-timezone": "0.5.48",
     "node-schedule": "2.1.0",
     "nunjucks": "3.2.4",
-    "ol": "10.6.0",
+    "ol": "10.6.1",
     "pino": "9.12.0",
     "pino-abstract-transport": "1.1.0",
     "pino-pretty": "10.2.3",
