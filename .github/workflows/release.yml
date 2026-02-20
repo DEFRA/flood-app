@@ -51,7 +51,7 @@ jobs:
           node-version-file: '.nvmrc'
       
       - name: Install node dependencies
-        run: npm ci --engine-strict
+        run: npm ci --engine-strict --ignore-scripts
         
       - name: Bump version
         run: |

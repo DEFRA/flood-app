@@ -6,86 +6,90 @@
    <div class="govuk-grid-column-two-thirds">
       <!-- FIRST BANNER FOR ACTIVE ALERTS/WARNING -->
       <div class="defra-flood-status govuk-!-margin-bottom-3">
-         {% if model.flood and model.severity.id < 4 %}
-         <div class="defra-flood-status-item defra-flood-status-item--{{model.severity.hash}}" data-severity-status="{{model.severity.hash}}">
+         {% if model.flood and model.severity.id < 4 %} <div
+            class="defra-flood-status-item defra-flood-status-item--{{model.severity.hash}}"
+            data-severity-status="{{model.severity.hash}}">
             <span class="defra-flood-status-item__icon">
                {{model.severity.icon | safe }}
             </span>
             <div class="defra-flood-status-item__text">
-               <strong>{{model.severity.subTitle}} - <a class="govuk-link" href="{{model.severity.actionLink}}">{{model.severity.tagline}}</a></strong>
+               <strong>{{model.severity.subTitle}} - <a class="govuk-link"
+                     href="{{model.severity.actionLink}}">{{model.severity.tagline}}</a></strong>
             </div>
+      </div>
+      {% endif %}
+
+      <!-- SECOND 'GREY' BANNER FOR Inactive or Removed and there is no active alert in parent area -->
+      {% if ((model.flood and model.severity.id == 4) or not model.flood) and not model.parentAreaAlert %}
+      <div class="defra-flood-status-item">
+         {% if not model.flood %}
+         <div class="defra-flood-status-item__text">
+            There are no flood {% if model.area.code.slice(4,5).toLowerCase() == 'w' %}warnings{% else %}alerts{% endif
+            %} in this area
+         </div>
+         {% else %}
+         <div class="defra-flood-status-item__text">
+            The flood {% if model.area.code.slice(4,5).toLowerCase() == 'w' %}warning{% else %}alert{% endif %} was
+            removed
          </div>
          {% endif %}
+      </div>
+      {% endif %}
+   </div>
 
-         <!-- SECOND 'GREY' BANNER FOR Inactive or Removed and there is no active alert in parent area -->
-         {% if ((model.flood and model.severity.id == 4) or not model.flood) and not model.parentAreaAlert %}
-         <div class="defra-flood-status-item">
+   <!-- THIRD 'ORANGE' BANNER in case of active alert in parent area -->
+   {% if model.parentAreaAlert %}
+   <div class="defra-flood-status govuk-!-margin-bottom-3">
+      <div class="defra-flood-status-item defra-flood-status-item--alert">
+         <span class="defra-flood-status-item__icon"></span>
+         <div class="defra-flood-status-item__text">
             {% if not model.flood %}
-            <div class="defra-flood-status-item__text">
-               There are no flood {% if model.area.code.slice(4,5).toLowerCase() == 'w' %}warnings{% else %}alerts{% endif %} in this area
-            </div>
+            There are no flood warnings in this area, but there is <a href="/target-area/{{model.area.parent}}">a flood
+               alert in the wider area</a>
             {% else %}
-            <div class="defra-flood-status-item__text">
-               The flood {% if model.area.code.slice(4,5).toLowerCase() == 'w' %}warning{% else %}alert{% endif %} was removed
-            </div>
+            The flood warning was removed, but there's still <a href="/target-area/{{model.area.parent}}">a flood alert
+               in the wider area</a>
             {% endif %}
          </div>
-         {% endif %}
       </div>
+   </div>
+   {% endif %}
 
-      <!-- THIRD 'ORANGE' BANNER in case of active alert in parent area -->
-      {% if model.parentAreaAlert %}
-      <div class="defra-flood-status govuk-!-margin-bottom-3">
-         <div class="defra-flood-status-item defra-flood-status-item--alert">
-            <span class="defra-flood-status-item__icon"></span>
-            <div class="defra-flood-status-item__text">
-               {% if not model.flood %}
-               There are no flood warnings in this area, but there is <a href="/target-area/{{model.area.parent}}">a flood alert in the wider area</a>
-               {% else %}
-               The flood warning was removed, but there's still <a href="/target-area/{{model.area.parent}}">a flood alert in the wider area</a>
-               {% endif %}
-            </div>
-         </div>
-      </div>
-      {% endif %}
+   <!-- Page title -->
+   <h1 class="govuk-heading-xl govuk-!-margin-bottom-1">{{ model.pageTitle }}</h1>
 
-      <!-- Page title -->
-      <h1 class="govuk-heading-xl govuk-!-margin-bottom-1">{{ model.pageTitle }}</h1>
+   <!-- Sign-up -->
+   <p>{% include "partials/sign-up-for-flood-warnings.html" %}</p>
 
-      <!-- Sign-up -->
-      <p>{% include "partials/sign-up-for-flood-warnings.html" %}</p>
+   <!-- Last situation change time -->
+   <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-top-1 govuk-!-margin-bottom-0">
+      <time datetime="{{model.situationChanged}}">{{model.situationChanged}}</time>
+   </p>
 
-      <!-- Last situation change time -->
-      <p class="defra-flood-meta defra-flood-meta--no-border govuk-!-margin-top-1 govuk-!-margin-bottom-0">
-         <time datetime="{{model.situationChanged}}">{{model.situationChanged}}</time>
-      </p>
+   <!-- Situation description -->
+   <div class="govuk-!-padding-top-6">
+      {{ model.situation | safe }}
+   </div>
 
-      <!-- Situation description -->
-      <div class="govuk-!-padding-top-6">
-         {{ model.situation | safe }}
-      </div>
+   <!-- Map placeholder -->
+   <span id="map-live"></span>
 
-      <!-- Map placeholder -->
-      <span id="map-live" ></span>
+   <!-- Area description -->
+   <p>{{ model.areaDescription | safe }}</p>
 
-      <!-- Area description -->
-      <p>{{ model.areaDescription | safe }}</p>
+   <!-- Feedback link  -->
+   {% if model.severity %}
+   <p>
+      <a href="https://defragroup.eu.qualtrics.com/jfe/form/SV_26xlu1fVwKTHkwu?Source={{fullUrl}}">
+         Give feedback on this flood warning information
+      </a>
+   </p>
+   {% endif %}
 
-      <!-- Feedback link  -->
-      {% if model.severity %}
-      <p>
-         <a href="https://defragroup.eu.qualtrics.com/jfe/form/SV_26xlu1fVwKTHkwu?Source={{fullUrl}}">
-            Give feedback on this flood warning information
-         </a>
-      </p>
-      {% endif %}
-
-      <!-- Latest water level information -->
-      {% if model.latestLevels and model.latestLevels.length > 0 and model.latestLevels.length <= 4 %}
-      {% include "partials/latest-levels.html" %}
-      {% endif %}
-
-      <!-- Link to river, sea, groundwater, or rainfall levels in the area -->
+   <!-- Latest water level information -->
+   {% if model.latestLevels and model.latestLevels.length > 0 and model.latestLevels.length <= 4 %} {%
+      include "partials/latest-levels.html" %} {% endif %} <!-- Link to river, sea, groundwater, or rainfall levels in
+      the area -->
       <p>
          <a href="/river-and-sea-levels/target-area/{{ model.targetArea }}">
             Find a river, sea, groundwater or rainfall level in this area
@@ -94,12 +98,12 @@
 
       <!-- Context footer -->
       {% include "partials/context-footer.html" %}
-   </div>
+</div>
 
-   <!-- Related content section -->
-   <div class="govuk-grid-column-one-third">
-      {% include "partials/related-content.html" %}
-   </div>
+<!-- Related content section -->
+<div class="govuk-grid-column-one-third">
+   {% include "partials/related-content.html" %}
+</div>
 </div>
 {% endblock %}
 {% block bodyEnd %}
@@ -107,20 +111,21 @@
 {% endblock %}
 
 {% block pageScripts %}
-  <script>
-    window.flood = {}
-    window.flood.model = {{ model | dump(2) | safe }}
-    window.flood.model.mapButtonText = {{ model.mapButtonText | dump | safe }}
-    window.flood.model.mapButtonClass = 'defra-button-secondary govuk-!-margin-top-4'
-    window.flood.model.mapLayers = 'mv,ts,tw,ta',
-    window.flood.model.data = {
-      button: 'Target Area:Map view:TA - Map view'
-    }
-    window.flood.model.targetArea = {
+<script>
+   window.flood = {}
+   window.flood.model = {{ model | dump(2) | safe }}
+   window.flood.model.mapButtonText = {{ model.mapButtonText | dump | safe }}
+   window.flood.model.mapButtonClass = 'defra-button-secondary govuk-!-margin-top-4'
+   window.flood.model.mapLayers = 'mv,ts,tw,ta',
+      window.flood.model.data = {
+         button: 'Target Area:Map view:TA - Map view'
+      }
+   window.flood.model.targetArea = {
       id: window.flood.model.area.code,
       name: window.flood.model.area.name,
-      polygon: JSON.parse(window.flood.model.area.geom).coordinates
-    }
-    window.flood.model.selectedId = 'flood.' + window.flood.model.area.code
-  </script>
+      polygon: JSON.parse(window.flood.model.area.geom).coordinates,
+      severityValue: window.flood.model.severity ? window.flood.model.severity.id : null
+   }
+   window.flood.model.selectedId = 'flood.' + window.flood.model.area.code
+</script>
 {% endblock %}
