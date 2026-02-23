@@ -21,7 +21,9 @@
 
 1. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
 
-2. Execute smoke tests and forward results
+2. Run the Check for Flooding Ansible playbook
+
+3. Execute smoke tests and forward results
 
 ## Related Infrastructure Changes Required
 
