@@ -8,9 +8,6 @@ FROM defradigital/node:${PARENT_VERSION} AS base
 ARG PORT=3000
 ENV PORT=${PORT}
 
-# Working directory
-WORKDIR /home/node/app
-
 # Must start as root to install system packages
 USER root
 
@@ -21,28 +18,31 @@ RUN apk update \
        redis \
   && rm -rf /var/cache/apk/*
 
-# Copy package manifests (root-owned, secure permissions)
+# Working directory
+WORKDIR /home/node/app
+
+# Copy application source (root-owned, read-only)
+COPY --chown=root:root ./webpack.config.js .
+COPY --chown=root:root ./build ./build
+COPY --chown=root:root ./server ./server
+COPY --chown=root:root ./index.js .
 COPY --chown=root:root package*.json .
 
 # Timezone config
 ENV TZ=Europe/London
-
-
 
 # ------------------------------
 # Development stage
 # ------------------------------
 FROM base AS development
 
+# Copy test resources
+COPY --chown=root:root ./test ./test
+# The coverage directory needs to be writable by the node user for reports to be generated.
+COPY --chown=node:node ./coverage ./coverage
+
 # Install ALL dependencies for dev (but ensure no scripts run)
 RUN npm ci --engine-strict --ignore-scripts --include=dev
-
-# Copy application source (root-owned, read-only)
-COPY --chown=root:root ./webpack.config.js .
-COPY --chown=root:root ./build ./build
-COPY --chown=root:root ./server ./server
-COPY --chown=root:root ./test ./test
-COPY --chown=root:root ./index.js .
 
 # Build application
 RUN npm run build
@@ -54,8 +54,6 @@ EXPOSE ${PORT}
 
 CMD ["nodemon", "index.js"]
 
-
-
 # ------------------------------
 # Production stage
 # ------------------------------
@@ -65,12 +63,6 @@ ENV NODE_ENV=production
 
 # Install only production deps
 RUN npm ci --engine-strict --ignore-scripts --omit=dev
-
-# Copy only what is required to run the service
-COPY --chown=root:root ./webpack.config.js .
-COPY --chown=root:root ./build ./build
-COPY --chown=root:root ./server ./server
-COPY --chown=root:root ./index.js .
 
 # Build production assets
 RUN npm run build
