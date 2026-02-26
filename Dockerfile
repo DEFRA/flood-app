@@ -40,10 +40,9 @@ FROM base AS development
 COPY --chown=root:root ./test ./test
 
 # Install ALL dependencies for dev (but ensure no scripts run)
-RUN npm ci --engine-strict --ignore-scripts --include=dev
-
-# Build application
-RUN npm run build
+RUN npm ci --engine-strict --ignore-scripts --include=dev \
+# Build application \
+&& npm run build
 
 # Drop privileges (DEFRA requirement: never run container as root)
 USER node
@@ -60,10 +59,9 @@ FROM base AS production
 ENV NODE_ENV=production
 
 # Install only production deps
-RUN npm ci --engine-strict --ignore-scripts --omit=dev
-
-# Build production assets
-RUN npm run build
+RUN npm ci --engine-strict --ignore-scripts --omit=dev \
+# Build production assets \
+&& npm run build
 
 # Runtime user must NOT be root (DEFRA standard)
 USER node
