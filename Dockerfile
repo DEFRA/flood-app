@@ -31,6 +31,10 @@ COPY --chown=root:root package*.json .
 # Timezone config
 ENV TZ=Europe/London
 
+ARG BUILD_VERSION=v8.24.0-1-g287f0121
+ARG GIT_COMMIT=0
+RUN echo -e "module.exports = { version: '$BUILD_VERSION', revision: '$GIT_COMMIT' }" > ./version.js
+
 # ------------------------------
 # Development stage
 # ------------------------------
@@ -61,7 +65,7 @@ ENV NODE_ENV=production
 # Install only production deps
 RUN npm ci --engine-strict --ignore-scripts --omit=dev \
 # Build production assets \
-&& npm run build
+&& npm run build && chmod -R a-w /home/node
 
 # Runtime user must NOT be root (DEFRA standard)
 USER node
