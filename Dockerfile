@@ -22,6 +22,8 @@ RUN apk update \
 WORKDIR /home/node/app
 
 # Copy application source (root-owned, read-only)
+# When developing/debugging within a container locally, --chown=root:root should be replaced with --chown=node:node to provide
+# required write permissions. SonarQube cloud will raise a security issue if analysing these changes.
 COPY --chown=root:root ./webpack.config.js .
 COPY --chown=root:root ./build ./build
 COPY --chown=root:root ./server ./server
@@ -41,6 +43,8 @@ RUN echo -e "module.exports = { version: '$BUILD_VERSION', revision: '$GIT_COMMI
 FROM base AS development
 
 # Copy test resources
+# When developing/debugging within a container locally, --chown=root:root should be replaced with --chown=node:node to provide
+# required write permissions. SonarQube cloud will raise a security issue if analysing these changes.
 COPY --chown=root:root ./test ./test
 
 # Install ALL dependencies for dev (but ensure no scripts run)
