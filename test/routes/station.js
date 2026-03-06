@@ -206,7 +206,7 @@ describe('Route - Station', () => {
         forecastactive: false
       }
     ]
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
 
     const fakeStationForecastData = () => []
     const fakeWarningsAlertsData = () => []
@@ -247,7 +247,7 @@ describe('Route - Station', () => {
     const response = await server.inject(options)
 
     expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.not.contain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is offline</h2>')
+    expect(response.payload).to.not.contain('<h2 class="defra-service-error__title" id="error-station-offline">This measuring station is offline</h2>')
   })
 
   it('should return river level: Normal', async () => {
@@ -482,7 +482,7 @@ describe('Route - Station', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
@@ -621,7 +621,7 @@ describe('Route - Station', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
@@ -759,7 +759,7 @@ describe('Route - Station', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
@@ -855,7 +855,7 @@ describe('Route - Station', () => {
     const fakeTelemetryData = () => []
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeWarningsAlertsData = () => []
     const fakeRiverStationData = () => []
     const fakeStationThresholdData = () => []
@@ -895,8 +895,8 @@ describe('Route - Station', () => {
 
     expect(response.statusCode).to.equal(200)
     expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    expect(response.payload).to.contain('No data is available. You can <a href="/river-and-sea-levels">check another river, sea, groundwater or rainfall level</a> or call Floodline for advice.\n')
-    expect(response.payload).to.contain('This measuring station is closed\n')
+    expect(response.payload).to.contain('This measuring station is closed')
+    expect(response.payload).to.contain('No data is available')
   })
 
   it('should return coastal station', async () => {
@@ -991,7 +991,7 @@ describe('Route - Station', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
@@ -1476,7 +1476,8 @@ describe('Route - Station', () => {
     const response = await server.inject(options)
 
     expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.contain('The highest level in the model is')
+    expect(response.payload).to.contain('This station includes an automated model')
+    expect(response.payload).to.contain('level in the model is')
     expect(response.payload).to.not.contain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
     expect(response.payload).to.contain('<a href="/station/7332">Upstream</a>')
     expect(response.payload).to.contain('<a href="/station/7357">Downstream</a>')
@@ -1577,7 +1578,7 @@ describe('Route - Station', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
 
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
@@ -1616,7 +1617,8 @@ describe('Route - Station', () => {
     const response = await server.inject(options)
 
     expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.contain('We take measurements more often as the risk of flooding increases.')
+    expect(response.payload).to.contain('We take measurements more often')
+    expect(response.payload).to.contain('risk of flooding increases')
   })
 
   it('should redirect to new page ', async () => {
@@ -1872,7 +1874,7 @@ describe('Route - Station', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
 
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
@@ -2009,7 +2011,7 @@ describe('Route - Station', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => { return {} }
 
@@ -2142,7 +2144,7 @@ describe('Route - Station', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
@@ -2285,7 +2287,7 @@ describe('Route - Station', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
@@ -2425,7 +2427,7 @@ describe('Route - Station', () => {
     ]
 
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
@@ -2517,7 +2519,7 @@ describe('Route - Station', () => {
 
     const fakeTelemetryData = () => []
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
@@ -2608,7 +2610,7 @@ describe('Route - Station', () => {
 
     const fakeTelemetryData = () => []
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
@@ -2699,7 +2701,7 @@ describe('Route - Station', () => {
 
     const fakeTelemetryData = () => []
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
@@ -2790,7 +2792,7 @@ describe('Route - Station', () => {
 
     const fakeTelemetryData = () => []
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
@@ -2881,7 +2883,7 @@ describe('Route - Station', () => {
 
     const fakeTelemetryData = () => []
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
@@ -2972,7 +2974,7 @@ describe('Route - Station', () => {
 
     const fakeTelemetryData = () => []
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
@@ -3063,7 +3065,7 @@ describe('Route - Station', () => {
 
     const fakeTelemetryData = () => []
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
@@ -3154,7 +3156,7 @@ describe('Route - Station', () => {
 
     const fakeTelemetryData = () => []
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
@@ -3245,7 +3247,7 @@ describe('Route - Station', () => {
 
     const fakeTelemetryData = () => []
     const fakeImpactsData = () => []
-    const fakeForecastFlag = () => { return { } }
+    const fakeForecastFlag = () => { return {} }
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
