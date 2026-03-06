@@ -6,6 +6,7 @@ const util = require('../../util')
 const telemetryDaysAgo = 5
 const valueDuration15 = 15
 const valueDuration45 = 45
+const rainfallTelemetryDp = 2
 const latestHourDateTimeMinutesToAdd = 45
 const batchDataMinutes = 15
 const batchDataDateTimeMinutesToAdd = 45
@@ -54,7 +55,7 @@ class ViewModel {
       this.id = `${this.stationId}.${this.region}`
       const latestHourDateTime = moment(latestDateTime).add(latestHourDateTimeMinutesToAdd, 'minutes').minutes(0).seconds(0).milliseconds(0).toDate()
 
-      const values = util.formatRainfallTelemetry(this.telemetry, valueDuration)
+      const values = util.formatRainfallTelemetry(this.telemetry, valueDuration, rainfallTelemetryDp)
 
       // If hourly requested and raw telemetry is in minutes then batch data into hourly totals
 

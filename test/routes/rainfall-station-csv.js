@@ -92,6 +92,43 @@ describe('Route - Rainfall Station CSV', () => {
     expect(response.headers['content-type']).to.include('text/csv')
   })
 
+  it('should preserve 0.01 rainfall values in CSV output', async () => {
+    const options = {
+      method: 'GET', url: '/rainfall-station-csv/E24195'
+    }
+
+    const floodService = require('../../server/services/flood')
+
+    const fakeRainfallStationData = () => ({
+      telemetry_station_id: 950,
+      station_reference: 'E24195',
+      region: 'Anglian',
+      station_name: 'LAVENHAM',
+      period: '15 min',
+      units: 'mm',
+      value: 0,
+      value_timestamp: '2022-02-09T09:15:00.000Z',
+      day_total: 20.00,
+      six_hr_total: 15.23,
+      one_hr_total: 3.21,
+      type: 'R',
+      lat: 56.103262968744666,
+      lon: 2.8074515304839753
+    })
+
+    const fakeRainfallTelemetryData = () => [{
+      period: '15 min', value: 0.01, value_timestamp: '2021-07-15T12:00:00Z'
+    }]
+
+    sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeRainfallStationData)
+    sandbox.stub(floodService, 'getRainfallStationTelemetry').callsFake(fakeRainfallTelemetryData)
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).to.equal(200)
+    expect(response.result).to.contain('Timestamp (UTC),Rainfall (mm)\n2021-07-15T12:00:00Z,0.01')
+  })
+
   it('should return station name not capitalised', async () => {
     const options = {
       method: 'GET', url: '/rainfall-station-csv/E24195'
