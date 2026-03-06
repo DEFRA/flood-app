@@ -4,7 +4,7 @@ const { createSandbox } = require('sinon')
 const { parse } = require('node-html-parser')
 const util = require('../server/util')
 const floodService = require('../server/services/flood')
-const { formatNumberToFixed } = require('../server/util')
+const { formatNumberToFixed, formatRainfallValue } = require('../server/util')
 const { expect } = require('@hapi/code')
 const { describe, it } = exports.lab = Lab.script()
 
@@ -86,5 +86,19 @@ describe('formatNumberToFixed', () => {
   it('handles string numbers', () => {
     expect(formatNumberToFixed('3.456')).to.equal('3.5')
     expect(formatNumberToFixed('3.456', 2)).to.equal('3.46')
+  })
+})
+
+describe('formatRainfallValue', () => {
+  it('formats rainfall values to 1 decimal place by default', () => {
+    expect(formatRainfallValue(0.24)).to.equal('0.2')
+  })
+
+  it('supports custom decimal places', () => {
+    expect(formatRainfallValue(0.01, 2)).to.equal('0.01')
+  })
+
+  it('supports comma decimal values', () => {
+    expect(formatRainfallValue('0,01', 2)).to.equal('0.01')
   })
 })
