@@ -2,7 +2,7 @@ const fs = require('fs')
 const nunjucks = require('nunjucks')
 const yargs = require('yargs')
 
-const options = yargs
+const options = yargs()
   .option('f', {
     alias: 'file',
     describe: 'Input file path',
