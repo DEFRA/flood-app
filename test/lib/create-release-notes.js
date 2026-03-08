@@ -5,14 +5,13 @@ const { expect } = require('@hapi/code')
 const { describe, it, before, after } = exports.lab = Lab.script()
 const fs = require('fs')
 const path = require('path')
-const util = require('util')
 const { spawn } = require('child_process')
 
 const testDir = path.join(__dirname, '..', 'test-output')
 const fixturesDir = path.join(__dirname, 'data', 'release-notes-fixtures')
 
 // Helper function to execute the create-release-notes script
-async function executeCreateReleaseNotes(argsArray) {
+async function executeCreateReleaseNotes (argsArray) {
   const scriptPath = path.join(__dirname, '..', '..', 'release-docs', 'lib', 'create-release-notes.js')
 
   return new Promise((resolve) => {
