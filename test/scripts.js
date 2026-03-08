@@ -21,9 +21,10 @@ describe('scripts.js', () => {
     // this test is to check that all the necessary modules are installed following the accidental
     // removal of nunjucks and yargs which wasn't picked up until the create release github action
     // was run
-    const { stdout, stderr } = await executeNpmScript('create-release-notes -- --help')
+    const { stderr } = await executeNpmScript('create-release-notes -- --help')
 
-    expect(stderr).to.be.empty()
-    expect(stdout).to.contain('node release-docs/lib/create-release-notes.js --help')
+    // yargs v18 outputs help and validation errors to stderr
+    expect(stderr).to.contain('--file')
+    expect(stderr).to.contain('--output')
   })
 })
