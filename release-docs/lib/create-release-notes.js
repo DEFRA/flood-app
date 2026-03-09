@@ -3,7 +3,7 @@ const nunjucks = require('nunjucks')
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 
-function main () {
+function main() {
   const options = yargs(hideBin(process.argv))
     .option('f', {
       alias: 'file',
@@ -68,9 +68,11 @@ function main () {
   return outputStr
 }
 
-// Only run if called directly (not required)
+// Excluded from coverage as this IS tested but not detected as covered
+/* $lab:coverage:off$ */
 if (require.main === module) {
   main()
 }
+/* $lab:coverage:on$ */
 
 module.exports = { main }
