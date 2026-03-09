@@ -10,7 +10,7 @@ const { spawn } = require('child_process')
 const testDir = path.join(__dirname, '..', 'test-output')
 const fixturesDir = path.join(__dirname, 'data', 'release-notes-fixtures')
 
-// Helper function to execute the create-release-notes script
+// Helper function to execute the create-release-notes script via CLI
 async function executeCreateReleaseNotes (argsArray) {
   const scriptPath = path.join(__dirname, '..', '..', 'release-docs', 'lib', 'create-release-notes.js')
 
@@ -35,6 +35,22 @@ async function executeCreateReleaseNotes (argsArray) {
       })
     })
   })
+}
+
+// Helper function to test the main function directly with mocked argv
+function testMainFunction (args) {
+  const originalArgv = process.argv
+  try {
+    process.argv = ['node', 'create-release-notes.js', ...args]
+    // Clear the require cache to get fresh instance
+    delete require.cache[require.resolve('../../release-docs/lib/create-release-notes.js')]
+    const { main } = require('../../release-docs/lib/create-release-notes.js')
+    return main()
+  } finally {
+    process.argv = originalArgv
+    // Clear cache again for next test
+    delete require.cache[require.resolve('../../release-docs/lib/create-release-notes.js')]
+  }
 }
 
 describe('create-release-notes.js', () => {
@@ -329,5 +345,71 @@ FSR-789 Add new feature
     expect(output).to.contain('--id')
     expect(output).to.contain('--template')
     expect(output).to.contain('--dbChanges')
+  })
+
+  // Direct function tests using require and process.argv mocking (for coverage)
+  describe('main function (coverage tests)', () => {
+    it('should generate release notes when called directly', () => {
+      const outputFile = path.join(testDir, 'direct-test-1.md')
+      const result = testMainFunction([
+        '-f', path.join(fixturesDir, 'test-commits.txt'),
+        '-o', outputFile,
+        '-d', '2024-03-15',
+        '-r', '8.26.0',
+        '-i', '12345',
+        '-t', path.join(fixturesDir, 'test-template.njk')
+      ])
+
+      expect(fs.existsSync(outputFile)).to.be.true()
+      expect(result).to.contain('Release 8.26.0')
+      expect(result).to.contain('Date: 2024-03-15')
+    })
+
+    it('should include database changes when flag is set', () => {
+      const outputFile = path.join(testDir, 'direct-test-2.md')
+      const result = testMainFunction([
+        '-f', path.join(fixturesDir, 'test-commits.txt'),
+        '-o', outputFile,
+        '-d', '2024-03-15',
+        '-r', '8.26.0',
+        '-i', '12345',
+        '-t', path.join(fixturesDir, 'test-template.njk'),
+        '--dbChanges'
+      ])
+
+      expect(result).to.contain('Database changes included')
+    })
+
+    it('should filter empty lines and process tickets correctly', () => {
+      const outputFile = path.join(testDir, 'direct-test-3.md')
+      const result = testMainFunction([
+        '-f', path.join(fixturesDir, 'test-commits.txt'),
+        '-o', outputFile,
+        '-d', '2024-03-15',
+        '-r', '8.26.0',
+        '-i', '12345',
+        '-t', path.join(fixturesDir, 'test-template.njk')
+      ])
+
+      expect(result).to.contain('- FSR-123')
+      expect(result).to.contain('- FSR-456')
+      expect(result).to.contain('- FSR-789')
+    })
+
+    it('should handle empty commit list', () => {
+      const outputFile = path.join(testDir, 'direct-test-4.md')
+      const result = testMainFunction([
+        '-f', path.join(fixturesDir, 'empty-commits.txt'),
+        '-o', outputFile,
+        '-d', '2024-03-15',
+        '-r', '8.26.0',
+        '-i', '12345',
+        '-t', path.join(fixturesDir, 'test-template.njk')
+      ])
+
+      expect(result).to.contain('Release 8.26.0')
+      const ticketLines = result.split('\n').filter(line => line.trim().startsWith('-'))
+      expect(ticketLines).to.have.length(0)
+    })
   })
 })
