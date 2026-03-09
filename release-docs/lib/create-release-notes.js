@@ -3,7 +3,7 @@ const nunjucks = require('nunjucks')
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 
-function main() {
+function main () {
   const options = yargs(hideBin(process.argv))
     .option('f', {
       alias: 'file',
