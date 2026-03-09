@@ -4,7 +4,7 @@ const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
 const { describe, it } = exports.lab = Lab.script()
 
-async function executeNpmScript(scriptName) {
+async function executeNpmScript (scriptName) {
   const util = require('util')
   const exec = util.promisify(require('child_process').exec)
 
