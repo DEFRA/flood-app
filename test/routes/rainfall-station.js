@@ -111,9 +111,9 @@ describe('Route - Rainfall Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.payload).to.contain('15.0mm')
-    expect(response.payload).to.contain('55.0mm')
-    expect(response.payload).to.contain('65.3mm')
+    expect(response.payload).to.contain('15.00mm')
+    expect(response.payload).to.contain('55.00mm')
+    expect(response.payload).to.contain('65.27mm')
     expect(response.payload).to.contain('Lavenham')
     expect(response.statusCode).to.equal(200)
   })

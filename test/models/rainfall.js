@@ -27,7 +27,7 @@ describe('Model - Rainfall', () => {
 
     expect(Result.stationName).to.equal('Lavenham')
     expect(Result.telemetry.length).to.greaterThan(0)
-    expect(Result.telemetryRainfall.latest1hr).to.equal('3.2')
+    expect(Result.telemetryRainfall.latest1hr).to.equal('3.21')
   })
 
   it('should return mutli-word "stationName" in title case', async () => {
@@ -39,7 +39,7 @@ describe('Model - Rainfall', () => {
 
     expect(Result.stationName).to.equal('Newcastle Upon Tyne')
     expect(Result.telemetry.length).to.greaterThan(0)
-    expect(Result.telemetryRainfall.latest1hr).to.equal('5.0')
+    expect(Result.telemetryRainfall.latest1hr).to.equal('5.02')
   })
 
   it('should return "telemetryRainfall" data', async () => {
@@ -54,9 +54,9 @@ describe('Model - Rainfall', () => {
     expect(Result.telemetryRainfall.latestDateTime).to.equal('2022-02-09T09:15:00.000Z')
     expect(Result.telemetryRainfall.dataStartDateTime).to.contain(todayYearMonDay)
     expect(Result.telemetryRainfall.rangeStartDateTime).to.contain(todayYearMonDay)
-    expect(Result.telemetryRainfall.latest1hr).to.equal('3.2')
-    expect(Result.telemetryRainfall.latest6hr).to.equal('15.2')
-    expect(Result.telemetryRainfall.latest24hr).to.equal('20.0')
+    expect(Result.telemetryRainfall.latest1hr).to.equal('3.21')
+    expect(Result.telemetryRainfall.latest6hr).to.equal('15.23')
+    expect(Result.telemetryRainfall.latest24hr).to.equal('20.00')
     expect(Result.telemetryRainfall.minutes.latestDateTime).to.equal('2022-02-09T09:15:00.000Z')
     expect(Result.telemetryRainfall.minutes.values.length).to.greaterThan(0)
   })
@@ -102,9 +102,9 @@ describe('Model - Rainfall', () => {
     expect(Result.telemetryRainfall.latestDateTime).to.equal('2022-02-15T09:00:00.000Z')
     expect(Result.telemetryRainfall.dataStartDateTime).to.equal(moment().subtract(5, 'days').format())
     expect(Result.telemetryRainfall.rangeStartDateTime).to.equal(moment().subtract(5, 'days').format())
-    expect(Result.telemetryRainfall.latest1hr).to.equal('0.0')
-    expect(Result.telemetryRainfall.latest6hr).to.equal('0.0')
-    expect(Result.telemetryRainfall.latest24hr).to.equal('1.1')
+    expect(Result.telemetryRainfall.latest1hr).to.equal('0.00')
+    expect(Result.telemetryRainfall.latest6hr).to.equal('0.00')
+    expect(Result.telemetryRainfall.latest24hr).to.equal('1.10')
     expect(Result.telemetryRainfall).to.not.contain(Result.telemetryRainfall.minutes)
   })
 

@@ -350,18 +350,18 @@ function LiveMap (mapId, options) {
       model.name = capitalise(model.station_name)
     }
 
-    // format rainfall to 1dp
+    // format rainfall to 2dp
     model.one_hr_total = isNaN(model.one_hr_total)
       ? null
-      : (Math.round(model.one_hr_total * 10) / 10).toFixed(1)
+      : (Math.round(model.one_hr_total * 100) / 100).toFixed(2)
 
     model.six_hr_total = isNaN(model.six_hr_total)
       ? null
-      : (Math.round(model.six_hr_total * 10) / 10).toFixed(1)
+      : (Math.round(model.six_hr_total * 100) / 100).toFixed(2)
 
     model.day_total = isNaN(model.day_total)
       ? null
-      : (Math.round(model.day_total * 10) / 10).toFixed(1)
+      : (Math.round(model.day_total * 100) / 100).toFixed(2)
 
     const html = window.nunjucks.render('info-live.html', { model })
     feature.set('html', html)
