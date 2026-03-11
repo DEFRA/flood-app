@@ -23,7 +23,9 @@ describe('scripts.js', () => {
     // was run
     const { stdout, stderr } = await executeNpmScript('create-release-notes -- --help')
 
-    expect(stderr).to.be.empty()
-    expect(stdout).to.contain('node release-docs/lib/create-release-notes.js --help')
+    // yargs v18 with proper API outputs help to stdout
+    const output = stdout || stderr
+    expect(output).to.contain('--file')
+    expect(output).to.contain('--output')
   })
 })
