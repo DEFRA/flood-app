@@ -12,9 +12,9 @@
 ## Instructions
 
 
-1. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
-
-2. Execute smoke tests and forward results
+1.  Execute LFW_{STAGE}_99_DEPLOY_FLOOD_DATA_PIPELINE_TF  
+2.  Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+3.  Execute smoke tests and forward results
 
 ## Related Infrastructure Changes Required
 
