@@ -91,7 +91,7 @@ function formatRainfallTelemetry (telemetry, valueDuration, dp = 1) {
     const formattedValue = formatRainfallValue(data.value, dp)
     return {
       dateTime: data.value_timestamp,
-      value: formattedValue === null ? NaN : Number(formattedValue)
+      value: formattedValue === null ? Number.NaN : Number(formattedValue)
     }
   })
   values = rainfallTelemetryPadOut(values, valueDuration)
