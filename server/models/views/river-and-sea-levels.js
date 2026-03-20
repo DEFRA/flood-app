@@ -276,9 +276,9 @@ function setStationProperties (station) {
 
   // Ensure rainfall totals are displayed to 2dp for rainfall stations
   if (station.group_type === 'rainfall') {
-    station.one_hr_total = util.formatRainfallValue(station.one_hr_total, rainfallTotalsDp)
-    station.six_hr_total = util.formatRainfallValue(station.six_hr_total, rainfallTotalsDp)
-    station.day_total = util.formatRainfallValue(station.day_total, rainfallTotalsDp)
+    station.one_hr_total = util.formatNumberToFixed(station.one_hr_total, rainfallTotalsDp)
+    station.six_hr_total = util.formatNumberToFixed(station.six_hr_total, rainfallTotalsDp)
+    station.day_total = util.formatNumberToFixed(station.day_total, rainfallTotalsDp)
   }
 }
 

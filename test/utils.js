@@ -4,7 +4,7 @@ const { createSandbox } = require('sinon')
 const { parse } = require('node-html-parser')
 const util = require('../server/util')
 const floodService = require('../server/services/flood')
-const { formatNumberToFixed, formatRainfallValue, formatRainfallTelemetry } = require('../server/util')
+const { formatNumberToFixed, formatRainfallTelemetry } = require('../server/util')
 const { expect } = require('@hapi/code')
 const { describe, it } = exports.lab = Lab.script()
 
@@ -89,26 +89,12 @@ describe('formatNumberToFixed', () => {
   })
 })
 
-describe('formatRainfallValue', () => {
-  it('formats rainfall values to 1 decimal place by default', () => {
-    expect(formatRainfallValue(0.24)).to.equal('0.2')
-  })
-
-  it('supports custom decimal places', () => {
-    expect(formatRainfallValue(0.01, 2)).to.equal('0.01')
-  })
-
-  it('supports comma decimal values', () => {
-    expect(formatRainfallValue('0,01', 2)).to.equal('0.01')
-  })
-})
-
 describe('formatRainfallTelemetry', () => {
   it('maps null formatted values to Number.NaN', () => {
     const values = formatRainfallTelemetry([
       {
         value_timestamp: '2026-03-19T10:00:00.000Z',
-        value: ''
+        value: null
       }
     ], 60, 2)
 

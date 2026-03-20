@@ -62,17 +62,6 @@ function formatValue (val) {
   return parseFloat(Math.round(val * Math.pow(10, 1)) / (Math.pow(10, 1))).toFixed(1)
 }
 
-function formatRainfallValue (val, dp = 1) {
-  if (val === null || val === undefined || val === '') {
-    return null
-  }
-
-  const normalized = typeof val === 'string' ? val.trim().replace(',', '.') : val
-  const numberValue = Number(normalized)
-
-  return Number.isNaN(numberValue) ? null : formatNumberToFixed(numberValue, dp)
-}
-
 function escapeRegExp (string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
@@ -87,11 +76,11 @@ function dateDiff (date1, date2) {
 }
 
 function formatRainfallTelemetry (telemetry, valueDuration, dp = 1) {
+  const factor = Math.pow(10, dp)
   let values = telemetry.map(data => {
-    const formattedValue = formatRainfallValue(data.value, dp)
     return {
       dateTime: data.value_timestamp,
-      value: formattedValue === null ? Number.NaN : Number(formattedValue)
+      value: data.value === null ? Number.NaN : Math.round(data.value * factor) / factor
     }
   })
   values = rainfallTelemetryPadOut(values, valueDuration)
@@ -132,7 +121,6 @@ module.exports = {
   groupBy,
   cleanseLocation,
   formatValue,
-  formatRainfallValue,
   toMarked,
   dateDiff,
   formatRainfallTelemetry,
