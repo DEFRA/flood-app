@@ -4,7 +4,7 @@ const { createSandbox } = require('sinon')
 const { parse } = require('node-html-parser')
 const util = require('../server/util')
 const floodService = require('../server/services/flood')
-const { formatNumberToFixed } = require('../server/util')
+const { formatNumberToFixed, formatRainfallTelemetry } = require('../server/util')
 const { expect } = require('@hapi/code')
 const { describe, it } = exports.lab = Lab.script()
 
@@ -86,5 +86,19 @@ describe('formatNumberToFixed', () => {
   it('handles string numbers', () => {
     expect(formatNumberToFixed('3.456')).to.equal('3.5')
     expect(formatNumberToFixed('3.456', 2)).to.equal('3.46')
+  })
+})
+
+describe('formatRainfallTelemetry', () => {
+  it('maps null formatted values to Number.NaN', () => {
+    const values = formatRainfallTelemetry([
+      {
+        value_timestamp: '2026-03-19T10:00:00.000Z',
+        value: null
+      }
+    ], 60, 2)
+
+    expect(values).to.have.length(120)
+    expect(Number.isNaN(values[values.length - 1].value)).to.be.true()
   })
 })

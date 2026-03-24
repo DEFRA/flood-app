@@ -33,11 +33,10 @@ module.exports = {
 
     const valueDuration = rainfallStationTelemetry[0].period === '15 min' ? valueDuration15 : valueDuration45
 
-    const values = util.formatRainfallTelemetry(rainfallStationTelemetry, valueDuration)
+    const values = util.formatRainfallTelemetry(rainfallStationTelemetry, valueDuration, 2)
 
     values.forEach(function (item) {
       item.ts = moment.utc(item.dateTime).format()
-      item.value = Number(util.formatValue(item.value))
     })
 
     values.sort(function (a, b) {

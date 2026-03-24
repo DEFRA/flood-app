@@ -4,6 +4,7 @@ const { bingKeyMaps, floodRiskUrl } = require('../../config')
 const pageTitle = 'Find river, sea, groundwater and rainfall levels'
 const metaDescription = 'Find river, sea, groundwater and rainfall levels in England. Check the last updated height, trend and state recorded by the measuring station.'
 const util = require('../../util')
+const rainfallTotalsDp = 2
 
 function getDataJourneyClickStrings () {
   return {
@@ -273,11 +274,11 @@ function setStationProperties (station) {
   station.trend = station.displayData ? station.trend : null
   station.trendSvgPath = trendSvgPaths[station.trend]
 
-  // Ensure rainfall totals are displayed to 1dp for rainfall stations
+  // Ensure rainfall totals are displayed to 2dp for rainfall stations
   if (station.group_type === 'rainfall') {
-    station.one_hr_total = util.formatNumberToFixed(station.one_hr_total, 1)
-    station.six_hr_total = util.formatNumberToFixed(station.six_hr_total, 1)
-    station.day_total = util.formatNumberToFixed(station.day_total, 1)
+    station.one_hr_total = util.formatNumberToFixed(station.one_hr_total, rainfallTotalsDp)
+    station.six_hr_total = util.formatNumberToFixed(station.six_hr_total, rainfallTotalsDp)
+    station.day_total = util.formatNumberToFixed(station.day_total, rainfallTotalsDp)
   }
 }
 

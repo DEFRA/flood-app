@@ -75,11 +75,12 @@ function dateDiff (date1, date2) {
   return moment(date1).diff(moment(date2), 'days')
 }
 
-function formatRainfallTelemetry (telemetry, valueDuration) {
+function formatRainfallTelemetry (telemetry, valueDuration, dp = 1) {
+  const factor = Math.pow(10, dp)
   let values = telemetry.map(data => {
     return {
       dateTime: data.value_timestamp,
-      value: Number(formatValue(data.value))
+      value: data.value === null ? Number.NaN : Math.round(data.value * factor) / factor
     }
   })
   values = rainfallTelemetryPadOut(values, valueDuration)
