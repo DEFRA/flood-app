@@ -38,7 +38,7 @@ module.exports = class OutlookPolys {
   polyIntersectCheck (riskAreaBlock, locationCoords) {
     riskAreaBlock.polys.forEach(poly => {
       // build array of polys that intersect
-      if (!turf.intersect(getPolyCoords(poly), locationCoords)) {
+      if (!turf.intersect(turf.featureCollection([getPolyCoords(poly), locationCoords]))) {
         return
       }
       riskAreaBlock.days.forEach(day => {
