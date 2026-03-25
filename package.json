@@ -26,7 +26,7 @@
     "test:no-coverage": "npm run lint && npm run unit-test:no-coverage",
     "create-release-notes": "node release-docs/lib/create-release-notes.js",
     "postinstall": "npm run build",
-    "prepare": "node -e \"try { require.resolve('husky/package.json'); require('child_process').execSync('husky', { stdio: 'inherit' }) } catch (e) { if (e.code !== 'MODULE_NOT_FOUND') { throw e } }\""
+    "prepare": "node -e \"try { require('husky').install() } catch (e) {if (e.code !== 'MODULE_NOT_FOUND') { throw e } }\""
   },
   "author": "defra",
   "license": "ISC",
