@@ -1,7 +1,7 @@
 # Check For Flooding Release
 
 - Version: 8.28.0
-- Proposed Release Date: 
+- Proposed Release Date: 22/04/2026
 - Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/34953/tab/release-report-all-issues
 
 ## Sense Check
@@ -22,6 +22,7 @@ No flood-app feature tickets included in this release
 
 ## Instructions
 
+* CCoE AWS WebOps update routing to traffic to Fortigate
 
 1. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
 
