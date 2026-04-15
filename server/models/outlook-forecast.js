@@ -5,7 +5,7 @@ const isEqual = require('lodash.isequal')
 const OutlookPolys = require('./outlook-polys')
 const OutLookTabGroupMessages = require('./outlook-tabs-group-messages')
 
-class OutlookTabs {
+class OutlookForecast {
   constructor (outlook, place) {
     const issueDate = moment(outlook.issued_at)
 
@@ -45,9 +45,9 @@ class OutlookTabs {
       groupByDayMessage = outLookTabGroupMessages.groupByDayMessage
     }
 
-    // Build content for each outlook tab.
+    // Build content for each outlook section.
 
-    // Create highest daily risk for days in the Outlook tab
+    // Create highest daily risk for days in the outlook section
 
     const dailyRiskOutlookMax = Math.max(...dailyRiskAsNum.slice(2))
 
@@ -72,24 +72,24 @@ class OutlookTabs {
       moment(issueDate).add(4, 'days').format('dddd') // Day 5
     ]
 
-    // if FGS is from yesterday push 1 in to tab1 instead of 0
+    // if FGS is from yesterday push 1 in to today instead of 0
 
     const issueDateMinus1 = moment(issueDate).isSame(yesterday, 'day')
     const issueDateMinus2 = (moment(issueDate).isSame(dayMinus2, 'day'))
 
-    this.createTabs(issueDateMinus1, groupByDayMessage, dailyRisk, dailyRiskAsNum, trend, issueDateMinus2)
+    this.createOutlookSections(issueDateMinus1, groupByDayMessage, dailyRisk, dailyRiskAsNum, trend, issueDateMinus2)
 
-    // Check if all tabs have no data
+    // Check if all outlook sections have no data
 
-    // Tab 3 may have up to 3 days content
-    let tab3Empty = true
-    this.tab3.forEach(item => {
+    // Outlook days may have up to 3 days content
+    let outlookDaysEmpty = true
+    this.outlookDays.forEach(item => {
       if (Object.keys(item).length !== 0) {
-        tab3Empty = false
+        outlookDaysEmpty = false
       }
     })
 
-    this.areTabsLow(tab3Empty)
+    this.isOutlookLow(outlookDaysEmpty)
 
     this.days = days
     this.issueDate = issueDate
@@ -102,11 +102,11 @@ class OutlookTabs {
     this.trend = trend
   }
 
-  createTabs (issueDateMinus1, groupByDayMessage, dailyRisk, dailyRiskAsNum, trend, issueDateMinus2) {
+  createOutlookSections (issueDateMinus1, groupByDayMessage, dailyRisk, dailyRiskAsNum, trend, issueDateMinus2) {
     if (issueDateMinus1) {
-      this.tab1 = groupByDayMessage['1'] // Day 2
-      this.tab2 = groupByDayMessage['2'] // Day 3
-      this.tab3 = [groupByDayMessage['3'],
+      this.today = groupByDayMessage['1'] // Day 2
+      this.tomorrow = groupByDayMessage['2'] // Day 3
+      this.outlookDays = [groupByDayMessage['3'],
         groupByDayMessage['4']] // Day 4, 5
 
       // dayName and daily risk arrays need to tie in with the above
@@ -115,11 +115,11 @@ class OutlookTabs {
       dailyRiskAsNum.shift()
       trend.shift()
 
-      // if FGS is day before yesterday push 2 in to tab1 instead of 0
+      // if FGS is day before yesterday push 2 in to today instead of 0
     } else if (issueDateMinus2) {
-      this.tab1 = groupByDayMessage['2'] // Day 3
-      this.tab2 = groupByDayMessage['3'] // Day 4
-      this.tab3 = [groupByDayMessage['4']] // Day 5
+      this.today = groupByDayMessage['2'] // Day 3
+      this.tomorrow = groupByDayMessage['3'] // Day 4
+      this.outlookDays = [groupByDayMessage['4']] // Day 5
 
       // dayName and daily risk arrays need to tie in with the above
       this.dayName.splice(0, 2)
@@ -127,11 +127,11 @@ class OutlookTabs {
       dailyRiskAsNum.splice(0, 2)
       trend.splice(0, 2)
     } else {
-      this.tab1 = groupByDayMessage['0'] // Day 1
+      this.today = groupByDayMessage['0'] // Day 1
 
-      this.tab2 = groupByDayMessage['1'] // Day 2
+      this.tomorrow = groupByDayMessage['1'] // Day 2
 
-      // Tab 3 day combinations.
+      // Outlook days combinations.
       //
       // day 3, day 4, day 5 messageIds all different
       // day 3 and day 4 equal, day 5 different
@@ -142,10 +142,10 @@ class OutlookTabs {
       const day5 = groupByDayMessage['4']
 
       if (isEqual(day3, day4) && isEqual(day3, day5)) {
-        this.tab3 = [day3]
+        this.outlookDays = [day3]
         this.dayName[2] = `${this.dayName[2]}, ${this.dayName[3]} and ${this.dayName[4]}`
       } else if (isEqual(day3, day4)) {
-        this.tab3 = [day3, day5]
+        this.outlookDays = [day3, day5]
         this.dayName[2] = `${this.dayName[2]} and ${this.dayName[3]}`
 
         // Shuffle down fifth day into fourth day slot as days 3 & 4 have been merged into day 3.
@@ -155,21 +155,26 @@ class OutlookTabs {
         trend[3] = trend[4]
         dailyRisk[3] = dailyRisk[4]
       } else if (isEqual(day4, day5)) {
-        this.tab3 = [day3, day4]
+        this.outlookDays = [day3, day4]
         this.dayName[3] = `${this.dayName[3]} and ${this.dayName[4]}`
       } else {
-        this.tab3 = [day3, day4, day5]
+        this.outlookDays = [day3, day4, day5]
       }
     }
+
+    // Backward-compatible aliases for callers not yet migrated.
+    this.tab1 = this.today
+    this.tab2 = this.tomorrow
+    this.tab3 = this.outlookDays
   }
 
-  areTabsLow (tab3Empty) {
-    if (Object.keys(this.tab1).length === 0 &&
-      Object.keys(this.tab2).length === 0 &&
-      tab3Empty) {
+  isOutlookLow (outlookDaysEmpty) {
+    if (Object.keys(this.today).length === 0 &&
+      Object.keys(this.tomorrow).length === 0 &&
+      outlookDaysEmpty) {
       this.lowForFive = true
     }
   }
 }
 
-module.exports = OutlookTabs
+module.exports = OutlookForecast

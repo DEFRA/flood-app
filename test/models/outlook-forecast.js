@@ -3,13 +3,13 @@
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
 const { describe, it } = exports.lab = Lab.script()
-const OutlookTabsModel = require('../../server/models/outlook-tabs')
+const OutlookForecastModel = require('../../server/models/outlook-forecast')
 const data = require('../data')
 const moment = require('moment')
 const formatDate = require('../../server/util').formatDate
 
-describe('Model - Outlook Tabs', () => {
-  it('should return the expected tabs', async () => {
+describe('Model - Outlook Forecast', () => {
+  it('should return the expected outlook sections', async () => {
     const outlook = data.fgs
 
     const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true, isScotlandOrNorthernIreland: false }
@@ -18,11 +18,11 @@ describe('Model - Outlook Tabs', () => {
     const expectedOutlookTab2 = '{"3-i3-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]}'
     const expectedOutlookTab3 = '[{"3-i3-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]},{"2-i2-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]}]'
 
-    const viewModel = new OutlookTabsModel(outlook, place)
+    const outlookModel = new OutlookForecastModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
-    expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
-    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
+    expect(JSON.stringify(outlookModel.today)).to.equal(expectedOutlookTab1)
+    expect(JSON.stringify(outlookModel.tomorrow)).to.equal(expectedOutlookTab2)
+    expect(JSON.stringify(outlookModel.outlookDays)).to.equal(expectedOutlookTab3)
   })
 
   it('should return that coastal poly aren\'t failing in turf', async () => {
@@ -34,11 +34,11 @@ describe('Model - Outlook Tabs', () => {
     const expectedOutlookTab2 = '{"1-i2-l2":"runoff from rainfall or blocked drains, overflowing rivers and high tides or large waves"}'
     const expectedOutlookTab3 = '[{}]'
 
-    const viewModel = new OutlookTabsModel(outlook, place)
+    const outlookModel = new OutlookForecastModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
-    expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
-    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
+    expect(JSON.stringify(outlookModel.today)).to.equal(expectedOutlookTab1)
+    expect(JSON.stringify(outlookModel.tomorrow)).to.equal(expectedOutlookTab2)
+    expect(JSON.stringify(outlookModel.outlookDays)).to.equal(expectedOutlookTab3)
   })
 
   it('should format the date correctly and set"outOfDate" as false for FGS created today', async () => {
@@ -50,9 +50,9 @@ describe('Model - Outlook Tabs', () => {
 
     const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true, isScotlandOrNorthernIreland: false }
 
-    const viewModel = new OutlookTabsModel(outlook, place)
+    const outlookModel = new OutlookForecastModel(outlook, place)
 
-    expect(viewModel.formattedIssueDate).to.equal(formattedIssueDate)
+    expect(outlookModel.formattedIssueDate).to.equal(formattedIssueDate)
   })
 
   it('should not intersect any polygons', async () => {
@@ -85,12 +85,12 @@ describe('Model - Outlook Tabs', () => {
 
     const lowForFive = true
 
-    const viewModel = new OutlookTabsModel(outlook, place)
+    const outlookModel = new OutlookForecastModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
-    expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
-    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
-    expect(viewModel).to.not.contain(lowForFive)
+    expect(JSON.stringify(outlookModel.today)).to.equal(expectedOutlookTab1)
+    expect(JSON.stringify(outlookModel.tomorrow)).to.equal(expectedOutlookTab2)
+    expect(JSON.stringify(outlookModel.outlookDays)).to.equal(expectedOutlookTab3)
+    expect(outlookModel).to.not.contain(lowForFive)
   })
 
   it('should set the trends', async () => {
@@ -117,12 +117,12 @@ describe('Model - Outlook Tabs', () => {
       isScotlandOrNorthernIreland: false
     }
 
-    const viewModel = new OutlookTabsModel(outlook, place)
+    const outlookModel = new OutlookForecastModel(outlook, place)
 
-    expect(viewModel.trend[0]).to.equal('')
-    expect(viewModel.trend[1]).to.equal('rises to')
-    expect(viewModel.trend[2]).to.equal('falls to')
-    expect(viewModel.trend[3]).to.equal('remains')
+    expect(outlookModel.trend[0]).to.equal('')
+    expect(outlookModel.trend[1]).to.equal('rises to')
+    expect(outlookModel.trend[2]).to.equal('falls to')
+    expect(outlookModel.trend[3]).to.equal('remains')
   })
 
   it('should filter and not show FGS with all alerts less than very low', async () => {
@@ -149,12 +149,12 @@ describe('Model - Outlook Tabs', () => {
       isScotlandOrNorthernIreland: false
     }
 
-    const viewModel = new OutlookTabsModel(outlook, place)
+    const outlookModel = new OutlookForecastModel(outlook, place)
 
-    expect(viewModel.tab1).to.equal({})
-    expect(viewModel.tab1).to.equal({})
-    expect(viewModel.tab1).to.equal({})
-    expect(viewModel.lowForFive).to.equal(true)
+    expect(outlookModel.today).to.equal({})
+    expect(outlookModel.today).to.equal({})
+    expect(outlookModel.today).to.equal({})
+    expect(outlookModel.lowForFive).to.equal(true)
   })
 
   it('should check flood risk is the same on day 3 and day 4 but different on day 5', async () => {
@@ -277,17 +277,17 @@ describe('Model - Outlook Tabs', () => {
       isScotlandOrNorthernIreland: false
     }
 
-    const viewModel = new OutlookTabsModel(outlook, place)
+    const outlookModel = new OutlookForecastModel(outlook, place)
 
-    expect(viewModel.dayName[2]).to.equal('Saturday and Sunday')
+    expect(outlookModel.dayName[2]).to.equal('Saturday and Sunday')
   })
 
-  it('should issue FGS as yesterday and "tab1" is populated from "day2"', async () => {
+  it('should issue FGS as yesterday and populate first outlook section from day 2', async () => {
     const outlook = data.fgs
 
     outlook.issued_at = moment().utc().subtract(1, 'days').format()
 
-    const tab1 = '{"1-i2-l2":["overflowing rivers"]}'
+    const expectedFirstSection = '{"1-i2-l2":["overflowing rivers"]}'
 
     const place = {
       name: 'Derby, Derby City',
@@ -310,18 +310,18 @@ describe('Model - Outlook Tabs', () => {
       isScotlandOrNorthernIreland: false
     }
 
-    const viewModel = new OutlookTabsModel(outlook, place)
+    const outlookModel = new OutlookForecastModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
+    expect(JSON.stringify(outlookModel.today)).to.equal(expectedFirstSection)
   })
 
-  it('should populate "tab1" from day 3 when FGS issued is > 24 but <= 48 hours', async () => {
+  it('should populate first outlook section from day 3 when FGS issued is > 24 but <= 48 hours', async () => {
     const outlook = data.fgs
 
     // outlook.issued_at = moment().utc().subtract(40, 'hours').format()
     outlook.issued_at = moment().subtract(2, 'days').format()
 
-    const tab1 = '{}'
+    const expectedFirstSection = '{}'
 
     const place = {
       name: 'Derby, Derby City',
@@ -344,9 +344,9 @@ describe('Model - Outlook Tabs', () => {
       isScotlandOrNorthernIreland: false
     }
 
-    const viewModel = new OutlookTabsModel(outlook, place)
+    const outlookModel = new OutlookForecastModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
+    expect(JSON.stringify(outlookModel.today)).to.equal(expectedFirstSection)
   })
 
   it('should capitalise source 3-i4-l2', async () => {
@@ -379,10 +379,10 @@ describe('Model - Outlook Tabs', () => {
     const expectedOutlookTab2 = '{"3-i4-l2":"Runoff from rainfall or blocked drains and overflowing rivers"}'
     const expectedOutlookTab3 = '[{}]'
 
-    const viewModel = new OutlookTabsModel(outlook, place)
+    const outlookModel = new OutlookForecastModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
-    expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
-    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
+    expect(JSON.stringify(outlookModel.today)).to.equal(expectedOutlookTab1)
+    expect(JSON.stringify(outlookModel.tomorrow)).to.equal(expectedOutlookTab2)
+    expect(JSON.stringify(outlookModel.outlookDays)).to.equal(expectedOutlookTab3)
   })
 })
