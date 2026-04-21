@@ -47,16 +47,7 @@ class ViewModel {
     }
 
     // Count stations that are 'high'
-    let hasHighLevels = false
-    for (const s in stations) {
-      if (
-        stations[s].station_type !== STATION_TYPE_COASTAL && stations[s].station_type !== STATION_TYPE_GROUNDWATER && stations[s].value && stations[s].status.toLowerCase() === 'active' &&
-        parseFloat(stations[s].value) > parseFloat(stations[s][`percentile_${HIGH_LEVEL_PERCENTILE_THRESHOLD}`])
-      ) {
-        hasHighLevels = true
-      }
-    }
-    this.hasHighLevels = hasHighLevels
+    this.hasHighLevels = stations.some(station => this.isHighLevelStation(station))
 
     // River and sea levels
     this.hasLevels = !!stations.length
@@ -118,6 +109,15 @@ class ViewModel {
     if (handler) {
       handler()
     }
+  }
+
+  isHighLevelStation (station) {
+    return this.isIncludedStationType(station) && station.value && station.status.toLowerCase() === 'active' &&
+      parseFloat(station.value) > parseFloat(station[`percentile_${HIGH_LEVEL_PERCENTILE_THRESHOLD}`])
+  }
+
+  isIncludedStationType (station) {
+    return station.station_type !== STATION_TYPE_COASTAL && station.station_type !== STATION_TYPE_GROUNDWATER
   }
 
   groupSevere (group, location) {
