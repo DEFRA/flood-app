@@ -45,12 +45,12 @@ class OutlookForecast {
     const groupByDay = groupBy(polys.polys, 'day')
 
     // Initalize groupByDayMessage 5 element array
-    const emptyMessageArray = Array(OUTLOOK_DAYS_COUNT).fill({})
+    const emptyMessageArray = new Array(OUTLOOK_DAYS_COUNT).fill({})
     let groupByDayMessage = emptyMessageArray
 
     // Initialze daily risk level array to very low
-    const dailyRisk = Array(OUTLOOK_DAYS_COUNT).fill(RISK_LEVEL_TEXT[RISK_LEVEL_VERY_LOW])
-    const dailyRiskAsNum = Array(OUTLOOK_DAYS_COUNT).fill(RISK_LEVEL_VERY_LOW)
+    const dailyRisk = new Array(OUTLOOK_DAYS_COUNT).fill(RISK_LEVEL_TEXT[RISK_LEVEL_VERY_LOW])
+    const dailyRiskAsNum = new Array(OUTLOOK_DAYS_COUNT).fill(RISK_LEVEL_VERY_LOW)
 
     // Initialze array to identify risk level trend between days.
     const trend = ['', TREND_REMAINS, TREND_REMAINS, TREND_REMAINS, TREND_REMAINS]
