@@ -11,8 +11,16 @@ const {
   RISK_LEVEL_HIGH,
   OUTLOOK_DAYS_COUNT,
   DAY_INDEX_OUTLOOK_START,
+  DAY_INDEX_3,
+  DAY_INDEX_4,
   DAYS_TO_SHIFT_YESTERDAY,
-  DAYS_TO_SHIFT_DAY_BEFORE_YESTERDAY
+  DAYS_TO_SHIFT_DAY_BEFORE_YESTERDAY,
+  TREND_REMAINS,
+  GROUP_BY_DAY_0,
+  GROUP_BY_DAY_1,
+  GROUP_BY_DAY_2,
+  GROUP_BY_DAY_3,
+  GROUP_BY_DAY_4
 } = require('../constants')
 
 const RISK_LEVEL_TEXT = {
@@ -45,7 +53,7 @@ class OutlookForecast {
     const dailyRiskAsNum = Array(OUTLOOK_DAYS_COUNT).fill(RISK_LEVEL_VERY_LOW)
 
     // Initialze array to identify risk level trend between days.
-    const trend = ['', 'remains', 'remains', 'remains', 'remains']
+    const trend = ['', TREND_REMAINS, TREND_REMAINS, TREND_REMAINS, TREND_REMAINS]
 
     // Find distinct messages for each source for each day
     for (const [day, messages] of Object.entries(groupByDay)) { // Outer loop messages
@@ -73,10 +81,10 @@ class OutlookForecast {
     // Create day name for days 2,3,4,5
     this.dayName = [
       moment(issueDate).format('dddd'), // Day 1
-      moment(issueDate).add(1, 'days').format('dddd'), // Day 2
-      moment(issueDate).add(2, 'days').format('dddd'), // Day 3
-      moment(issueDate).add(3, 'days').format('dddd'), // Day 4
-      moment(issueDate).add(4, 'days').format('dddd') // Day 5
+      moment(issueDate).add(DAYS_TO_SHIFT_YESTERDAY, 'days').format('dddd'), // Day 2
+      moment(issueDate).add(DAYS_TO_SHIFT_DAY_BEFORE_YESTERDAY, 'days').format('dddd'), // Day 3
+      moment(issueDate).add(DAY_INDEX_3, 'days').format('dddd'), // Day 4
+      moment(issueDate).add(DAY_INDEX_4, 'days').format('dddd') // Day 5
     ]
 
     // if FGS is from yesterday push 1 in to today instead of 0
@@ -111,10 +119,10 @@ class OutlookForecast {
 
   createOutlookSections (issueDateMinus1, groupByDayMessage, dailyRisk, dailyRiskAsNum, trend, issueDateMinus2) {
     if (issueDateMinus1) {
-      this.today = groupByDayMessage['1'] // Day 2
-      this.tomorrow = groupByDayMessage['2'] // Day 3
-      this.outlookDays = [groupByDayMessage['3'],
-        groupByDayMessage['4']] // Day 4, 5
+      this.today = groupByDayMessage[GROUP_BY_DAY_1] // Day 2
+      this.tomorrow = groupByDayMessage[GROUP_BY_DAY_2] // Day 3
+      this.outlookDays = [groupByDayMessage[GROUP_BY_DAY_3],
+        groupByDayMessage[GROUP_BY_DAY_4]] // Day 4, 5
 
       // dayName and daily risk arrays need to tie in with the above
       this.dayName.shift()
@@ -124,9 +132,9 @@ class OutlookForecast {
 
       // if FGS is day before yesterday push 2 in to today instead of 0
     } else if (issueDateMinus2) {
-      this.today = groupByDayMessage['2'] // Day 3
-      this.tomorrow = groupByDayMessage['3'] // Day 4
-      this.outlookDays = [groupByDayMessage['4']] // Day 5
+      this.today = groupByDayMessage[GROUP_BY_DAY_2] // Day 3
+      this.tomorrow = groupByDayMessage[GROUP_BY_DAY_3] // Day 4
+      this.outlookDays = [groupByDayMessage[GROUP_BY_DAY_4]] // Day 5
 
       // dayName and daily risk arrays need to tie in with the above
       this.dayName.splice(0, DAYS_TO_SHIFT_DAY_BEFORE_YESTERDAY)
@@ -134,9 +142,9 @@ class OutlookForecast {
       dailyRiskAsNum.splice(0, DAYS_TO_SHIFT_DAY_BEFORE_YESTERDAY)
       trend.splice(0, DAYS_TO_SHIFT_DAY_BEFORE_YESTERDAY)
     } else {
-      this.today = groupByDayMessage['0'] // Day 1
+      this.today = groupByDayMessage[GROUP_BY_DAY_0] // Day 1
 
-      this.tomorrow = groupByDayMessage['1'] // Day 2
+      this.tomorrow = groupByDayMessage[GROUP_BY_DAY_1] // Day 2
 
       // Outlook days combinations.
       //
@@ -144,26 +152,26 @@ class OutlookForecast {
       // day 3 and day 4 equal, day 5 different
       // day 4 and day 5 equal, day 3 different
       // day 3, day 4, day 5 all the same
-      const day3 = groupByDayMessage['2']
-      const day4 = groupByDayMessage['3']
-      const day5 = groupByDayMessage['4']
+      const day3 = groupByDayMessage[GROUP_BY_DAY_2]
+      const day4 = groupByDayMessage[GROUP_BY_DAY_3]
+      const day5 = groupByDayMessage[GROUP_BY_DAY_4]
 
       if (isEqual(day3, day4) && isEqual(day3, day5)) {
         this.outlookDays = [day3]
-        this.dayName[DAY_INDEX_OUTLOOK_START] = `${this.dayName[DAY_INDEX_OUTLOOK_START]}, ${this.dayName[3]} and ${this.dayName[4]}`
+        this.dayName[DAY_INDEX_OUTLOOK_START] = `${this.dayName[DAY_INDEX_OUTLOOK_START]}, ${this.dayName[DAY_INDEX_3]} and ${this.dayName[DAY_INDEX_4]}`
       } else if (isEqual(day3, day4)) {
         this.outlookDays = [day3, day5]
-        this.dayName[DAY_INDEX_OUTLOOK_START] = `${this.dayName[DAY_INDEX_OUTLOOK_START]} and ${this.dayName[3]}`
+        this.dayName[DAY_INDEX_OUTLOOK_START] = `${this.dayName[DAY_INDEX_OUTLOOK_START]} and ${this.dayName[DAY_INDEX_3]}`
 
         // Shuffle down fifth day into fourth day slot as days 3 & 4 have been merged into day 3.
         // Move associated risk values and trend descriptions as well.
-        this.dayName[3] = this.dayName[4]
-        dailyRiskAsNum[3] = dailyRiskAsNum[4]
-        trend[3] = trend[4]
-        dailyRisk[3] = dailyRisk[4]
+        this.dayName[DAY_INDEX_3] = this.dayName[DAY_INDEX_4]
+        dailyRiskAsNum[DAY_INDEX_3] = dailyRiskAsNum[DAY_INDEX_4]
+        trend[DAY_INDEX_3] = trend[DAY_INDEX_4]
+        dailyRisk[DAY_INDEX_3] = dailyRisk[DAY_INDEX_4]
       } else if (isEqual(day4, day5)) {
         this.outlookDays = [day3, day4]
-        this.dayName[3] = `${this.dayName[3]} and ${this.dayName[4]}`
+        this.dayName[DAY_INDEX_3] = `${this.dayName[DAY_INDEX_3]} and ${this.dayName[DAY_INDEX_4]}`
       } else {
         this.outlookDays = [day3, day4, day5]
       }

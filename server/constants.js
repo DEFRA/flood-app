@@ -22,6 +22,16 @@ module.exports = {
   OUTLOOK_DAYS_COUNT: 5,
   // Day index constants
   DAY_INDEX_OUTLOOK_START: 2,
+  DAY_INDEX_3: 3,
+  DAY_INDEX_4: 4,
   DAYS_TO_SHIFT_YESTERDAY: 1,
-  DAYS_TO_SHIFT_DAY_BEFORE_YESTERDAY: 2
+  DAYS_TO_SHIFT_DAY_BEFORE_YESTERDAY: 2,
+  // Trend constants
+  TREND_REMAINS: 'remains',
+  // Group by message day indices
+  GROUP_BY_DAY_0: '0',
+  GROUP_BY_DAY_1: '1',
+  GROUP_BY_DAY_2: '2',
+  GROUP_BY_DAY_3: '3',
+  GROUP_BY_DAY_4: '4'
 }
