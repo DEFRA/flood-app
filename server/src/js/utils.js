@@ -105,42 +105,29 @@ window.flood.utils = {
     document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + window.location.hostname
   },
   setGTagAnalyticsCookies: () => {
-    const script = document.createElement('script')
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.GA4_ID}`
-    script.onload = () => {
-      window.dataLayer = window.dataLayer || []
-      function gtag () { window.dataLayer.push(arguments) }
-      gtag('js', new Date())
-      gtag('config', process.env.GA4_ID, { cookie_domain: window.location.hostname })
+    const gtmAccId = window.flood && window.flood.config ? window.flood.config.gtmAccId : null
+
+    if (!gtmAccId) {
+      return
     }
 
-    const gtagManager = document.createElement('script')
-    gtagManager.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${process.env.GTM_ID}');`
+    const script = document.createElement('script')
+    script.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtmAccId}');`
 
     const noscript = document.createElement('noscript')
     const iframe = document.createElement('iframe')
-    iframe.setAttribute('src', `https://www.googletagmanager.com/ns.html?id=${process.env.GA4_ID}`)
+    iframe.setAttribute('src', `https://www.googletagmanager.com/ns.html?id=${gtmAccId}`)
     iframe.setAttribute('height', '0')
     iframe.setAttribute('width', '0')
     iframe.setAttribute('style', 'display:none;visibility:hidden')
     noscript.appendChild(iframe)
 
     const head = document.getElementsByTagName('head')[0]
-    head.insertBefore(gtagManager, head.firstChild)
-    document.head.appendChild(gtagManager)
-    document.body.appendChild(noscript)
-    document.body.appendChild(script)
+    head.insertBefore(script, head.firstChild)
+    document.body.insertBefore(noscript, document.body.firstChild)
   },
   disableGoogleAnalytics: () => {
-    const script = document.createElement('script')
-    script.text = `
-      if (!window.flood.utils.getCookie('set_cookie_usage')) {
-        window['ga-disable-${process.env.GA4_ID}'] = true;
-      } else {
-        window['ga-disable-${process.env.GA4_ID}'] = false;
-      }
-    `
-    document.head.appendChild(script)
+    // No-op for GTM: analytics is controlled by not loading the GTM snippet
   },
   // Takes a valuesobject and concatentates items using commas and 'and'.
   getSummaryList: (values) => {
