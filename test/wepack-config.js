@@ -25,9 +25,7 @@ describe('Webpack - [server/webpack-config.js]', () => {
     await sandbox.restore()
   })
 
-  it('should set plugin definitions', async () => {
-    expect(webPack.plugins[0].definitions).to.be.a.object()
-    expect(webPack.plugins[0].definitions['process.env.GA4_ID']).to.equal('"TEST_GA4_ID"')
-    expect(webPack.plugins[0].definitions['process.env.GTM_ID']).to.equal('"TEST_GTM_ID"')
+  it('should not define analytics IDs at build time', async () => {
+    expect(webPack.plugins).to.not.exist()
   })
 })
