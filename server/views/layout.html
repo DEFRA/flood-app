@@ -136,8 +136,8 @@
 {% block pageScripts %}{% endblock %}
 {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script>
-    window.flood = window.flood || {}
-    window.flood.config = {
+    globalThis.flood = globalThis.flood || {}
+    globalThis.flood.config = {
       gaFourAccId: '{{ gaFourAccId }}',
       gtmAccId: '{{ gtmAccId }}'
     }
