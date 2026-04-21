@@ -118,12 +118,7 @@ const createOutlookForecast = async (place, request) => {
   let dataError = hasDataError
 
   if (outlookData && Object.keys(outlookData).length > 0 && !dataError) {
-    if (!outlookData.issued_at) {
-      request.logger.warn({
-        situation: `Outlook FGS issued_at date error [${outlookData.issued_at}]`
-      })
-      dataError = true
-    } else {
+    if (outlookData.issued_at) {
       issueDate = moment(outlookData.issued_at).valueOf()
 
       outOfDate = (now - issueDate) > hours48
@@ -137,6 +132,11 @@ const createOutlookForecast = async (place, request) => {
         outlook.formattedIssueDate = `${formatDate(outlookData.issued_at, 'h:mma')} on ${formatDate(outlookData.issued_at, 'D MMMM YYYY')}`
         outlook.issueUTC = moment(outlookData.issued_at).tz('Europe/London').format()
       }
+    } else {
+      request.logger.warn({
+        situation: `Outlook FGS issued_at date error [${outlookData.issued_at}]`
+      })
+      dataError = true
     }
   }
   return { outlook, outOfDate, dataError }

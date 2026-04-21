@@ -113,7 +113,7 @@ class ViewModel {
 
   isHighLevelStation (station) {
     return this.isIncludedStationType(station) && station.value && station.status.toLowerCase() === 'active' &&
-      parseFloat(station.value) > parseFloat(station[`percentile_${HIGH_LEVEL_PERCENTILE_THRESHOLD}`])
+      Number.parseFloat(station.value) > Number.parseFloat(station[`percentile_${HIGH_LEVEL_PERCENTILE_THRESHOLD}`])
   }
 
   isIncludedStationType (station) {
