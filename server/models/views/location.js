@@ -93,22 +93,23 @@ class ViewModel {
       return !!item.floods // filters out any without a floods array
     })
 
-    groups.forEach((group, i) => {
-      switch (group.severity.hash) {
-        case 'severe':
-          this.groupSevere(group, location)
-          break
-        case 'warning':
-          this.groupWarning(group, location)
-          break
-        case 'alert':
-          this.groupAlert(warnings, severeWarnings, group, location)
-          break
-        case 'removed':
-          this.groupRemoved(group, location)
-          break
-      }
+    groups.forEach((group) => {
+      this.handleGroupBySeverity(group, warnings, severeWarnings, location)
     })
+  }
+
+  handleGroupBySeverity (group, warnings, severeWarnings, location) {
+    const handlers = {
+      severe: () => this.groupSevere(group, location),
+      warning: () => this.groupWarning(group, location),
+      alert: () => this.groupAlert(warnings, severeWarnings, group, location),
+      removed: () => this.groupRemoved(group, location)
+    }
+
+    const handler = handlers[group.severity.hash]
+    if (handler) {
+      handler()
+    }
   }
 
   groupSevere (group, location) {
