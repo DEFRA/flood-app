@@ -278,7 +278,7 @@ describe('Route - Location', () => {
   })
 
   describe('FGS', () => {
-    it('should 200 with no riskAreas to hide outlooktabs', async () => {
+    it('should 200 with no riskAreas to hide outlook forecast', async () => {
       const floodService = require('../../server/services/flood')
 
       const fakeIsEngland = () => {

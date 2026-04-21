@@ -2,9 +2,18 @@ const severity = require('../severity')
 const { groupBy } = require('../../util')
 const { floodFisUrl, bingKeyMaps, floodRiskUrl } = require('../../config')
 const moment = require('moment-timezone')
+const {
+  STATION_TYPE_COASTAL,
+  STATION_TYPE_GROUNDWATER,
+  SEVERITY_VALUE_REMOVED,
+  SEVERITY_VALUE_ALERT,
+  SEVERITY_VALUE_WARNING,
+  HIGH_LEVEL_PERCENTILE_THRESHOLD
+} = require('../../constants')
 
 class ViewModel {
-  constructor ({ location, place, floods, stations, impacts, tabs, outOfDate, dataError }) {
+  constructor ({ location, place, floods, stations, impacts, outlook, tabs, outOfDate, dataError }) {
+    const resolvedOutlook = outlook || tabs || {}
     const title = place.name
 
     Object.assign(this, {
@@ -14,7 +23,7 @@ class ViewModel {
       floods,
       impacts,
       floodRiskUrl,
-      tabs,
+      outlook: resolvedOutlook,
       outOfDate,
       pageTitle: `Check for flooding in ${title}`,
       metaDescription: `View current flood warnings and alerts for the ${title} area,` +
@@ -38,16 +47,7 @@ class ViewModel {
     }
 
     // Count stations that are 'high'
-    let hasHighLevels = false
-    for (const s in stations) {
-      if (
-        stations[s].station_type !== 'C' && stations[s].station_type !== 'G' && stations[s].value && stations[s].status.toLowerCase() === 'active' &&
-        parseFloat(stations[s].value) > parseFloat(stations[s].percentile_5)
-      ) {
-        hasHighLevels = true
-      }
-    }
-    this.hasHighLevels = hasHighLevels
+    this.hasHighLevels = stations.some(station => this.isHighLevelStation(station))
 
     // River and sea levels
     this.hasLevels = !!stations.length
@@ -60,23 +60,23 @@ class ViewModel {
     this.activeImpacts = impacts.filter(active => active.telemetryactive === true)
     this.hasActiveImpacts = !!this.activeImpacts.length
 
-    // Outlook tabs
+    // Outlook forecast
 
     // Expose model values for client side javascript
     this.expose = {
       hasWarnings: this.hasActiveFloods,
       mapButtonText: this.hasActiveFloods ? 'View map of flood warnings and alerts' : 'View map',
       placeBbox: this.placeBbox,
-      outlookDays: tabs.days,
+      outlookDays: resolvedOutlook.days,
       bingMaps: bingKeyMaps
     }
   }
 
   groupAndOrder (floods, hasFloods, location) {
-    const activeFloods = floods.filter(flood => flood.severity_value < 4)
-    const inactiveFloods = floods.filter(flood => flood.severity_value === 4)
-    const severeWarnings = floods.filter(flood => flood.severity_value === 3)
-    const warnings = floods.filter(flood => flood.severity_value === 2)
+    const activeFloods = floods.filter(flood => flood.severity_value < SEVERITY_VALUE_REMOVED)
+    const inactiveFloods = floods.filter(flood => flood.severity_value === SEVERITY_VALUE_REMOVED)
+    const severeWarnings = floods.filter(flood => flood.severity_value === SEVERITY_VALUE_ALERT)
+    const warnings = floods.filter(flood => flood.severity_value === SEVERITY_VALUE_WARNING)
 
     this.hasFloods = hasFloods
     this.hasActiveFloods = !!activeFloods.length
@@ -92,22 +92,32 @@ class ViewModel {
       return !!item.floods // filters out any without a floods array
     })
 
-    groups.forEach((group, i) => {
-      switch (group.severity.hash) {
-        case 'severe':
-          this.groupSevere(group, location)
-          break
-        case 'warning':
-          this.groupWarning(group, location)
-          break
-        case 'alert':
-          this.groupAlert(warnings, severeWarnings, group, location)
-          break
-        case 'removed':
-          this.groupRemoved(group, location)
-          break
-      }
+    groups.forEach((group) => {
+      this.handleGroupBySeverity(group, warnings, severeWarnings, location)
     })
+  }
+
+  handleGroupBySeverity (group, warnings, severeWarnings, location) {
+    const handlers = {
+      severe: () => this.groupSevere(group, location),
+      warning: () => this.groupWarning(group, location),
+      alert: () => this.groupAlert(warnings, severeWarnings, group, location),
+      removed: () => this.groupRemoved(group, location)
+    }
+
+    const handler = handlers[group.severity.hash]
+    if (handler) {
+      handler()
+    }
+  }
+
+  isHighLevelStation (station) {
+    return this.isIncludedStationType(station) && station.value && station.status.toLowerCase() === 'active' &&
+      Number.parseFloat(station.value) > Number.parseFloat(station[`percentile_${HIGH_LEVEL_PERCENTILE_THRESHOLD}`])
+  }
+
+  isIncludedStationType (station) {
+    return station.station_type !== STATION_TYPE_COASTAL && station.station_type !== STATION_TYPE_GROUNDWATER
   }
 
   groupSevere (group, location) {
