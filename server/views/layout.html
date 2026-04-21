@@ -138,8 +138,8 @@
   <script>
     window.flood = window.flood || {}
     window.flood.config = {
-      gaFourAccId: {{ gaFourAccId | tojson | safe }},
-      gtmAccId: {{ gtmAccId | tojson | safe }}
+      gaFourAccId: '{{ gaFourAccId }}',
+      gtmAccId: '{{ gtmAccId }}'
     }
   </script>
   <script src="{{ assetPath }}/js/core.js"></script>
