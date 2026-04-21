@@ -4,6 +4,23 @@ const formatDate = require('../util').formatDate
 const isEqual = require('lodash.isequal')
 const OutlookPolys = require('./outlook-polys')
 const OutLookTabGroupMessages = require('./outlook-tabs-group-messages')
+const {
+  RISK_LEVEL_VERY_LOW,
+  RISK_LEVEL_LOW,
+  RISK_LEVEL_MEDIUM,
+  RISK_LEVEL_HIGH,
+  OUTLOOK_DAYS_COUNT,
+  DAY_INDEX_OUTLOOK_START,
+  DAYS_TO_SHIFT_YESTERDAY,
+  DAYS_TO_SHIFT_DAY_BEFORE_YESTERDAY
+} = require('../constants')
+
+const RISK_LEVEL_TEXT = {
+  [RISK_LEVEL_VERY_LOW]: 'Very low',
+  [RISK_LEVEL_LOW]: 'Low',
+  [RISK_LEVEL_MEDIUM]: 'Medium',
+  [RISK_LEVEL_HIGH]: 'High'
+}
 
 class OutlookForecast {
   constructor (outlook, place) {
@@ -11,8 +28,8 @@ class OutlookForecast {
 
     const formattedIssueDate = `${formatDate(outlook.issued_at, 'h:mma')} on ${formatDate(outlook.issued_at, 'D MMMM YYYY')}`
     const issueUTC = moment(outlook.issued_at).tz('Europe/London').format()
-    const yesterday = moment().subtract(1, 'days')
-    const dayMinus2 = moment().subtract(2, 'days')
+    const yesterday = moment().subtract(DAYS_TO_SHIFT_YESTERDAY, 'days')
+    const dayMinus2 = moment().subtract(DAYS_TO_SHIFT_DAY_BEFORE_YESTERDAY, 'days')
 
     const polys = new OutlookPolys(outlook, place)
     // Group by day
@@ -20,45 +37,35 @@ class OutlookForecast {
     const groupByDay = groupBy(polys.polys, 'day')
 
     // Initalize groupByDayMessage 5 element array
-
-    let groupByDayMessage = [{}, {}, {}, {}, {}]
-
-    const riskLevelText = {
-      1: 'Very low',
-      2: 'Low',
-      3: 'Medium',
-      4: 'High'
-    }
+    const emptyMessageArray = Array(OUTLOOK_DAYS_COUNT).fill({})
+    let groupByDayMessage = emptyMessageArray
 
     // Initialze daily risk level array to very low
-
-    const dailyRisk = [riskLevelText[1], riskLevelText[1], riskLevelText[1], riskLevelText[1], riskLevelText[1]]
-    const dailyRiskAsNum = [1, 1, 1, 1, 1]
+    const dailyRisk = Array(OUTLOOK_DAYS_COUNT).fill(RISK_LEVEL_TEXT[RISK_LEVEL_VERY_LOW])
+    const dailyRiskAsNum = Array(OUTLOOK_DAYS_COUNT).fill(RISK_LEVEL_VERY_LOW)
 
     // Initialze array to identify risk level trend between days.
-
     const trend = ['', 'remains', 'remains', 'remains', 'remains']
 
     // Find distinct messages for each source for each day
     for (const [day, messages] of Object.entries(groupByDay)) { // Outer loop messages
-      const outLookTabGroupMessages = new OutLookTabGroupMessages(groupByDayMessage, messages, dailyRisk, riskLevelText, dailyRiskAsNum, day, trend)
+      const outLookTabGroupMessages = new OutLookTabGroupMessages(groupByDayMessage, messages, dailyRisk, RISK_LEVEL_TEXT, dailyRiskAsNum, day, trend)
       groupByDayMessage = outLookTabGroupMessages.groupByDayMessage
     }
 
     // Build content for each outlook section.
 
     // Create highest daily risk for days in the outlook section
+    const dailyRiskOutlookMax = Math.max(...dailyRiskAsNum.slice(DAY_INDEX_OUTLOOK_START))
 
-    const dailyRiskOutlookMax = Math.max(...dailyRiskAsNum.slice(2))
-
-    const dailyRiskOutlookMaxText = riskLevelText[dailyRiskOutlookMax]
+    const dailyRiskOutlookMaxText = RISK_LEVEL_TEXT[dailyRiskOutlookMax]
 
     // Create days array for use with map
-    const days = [0, 1, 2, 3, 4].map(i => {
+    const days = Array.from({ length: OUTLOOK_DAYS_COUNT }, (_, i) => {
       const date = new Date(issueDate)
       return {
         idx: i + 1,
-        level: 1,
+        level: RISK_LEVEL_VERY_LOW,
         date: new Date(date.setDate(date.getDate() + i))
       }
     })
@@ -122,10 +129,10 @@ class OutlookForecast {
       this.outlookDays = [groupByDayMessage['4']] // Day 5
 
       // dayName and daily risk arrays need to tie in with the above
-      this.dayName.splice(0, 2)
-      dailyRisk.splice(0, 2)
-      dailyRiskAsNum.splice(0, 2)
-      trend.splice(0, 2)
+      this.dayName.splice(0, DAYS_TO_SHIFT_DAY_BEFORE_YESTERDAY)
+      dailyRisk.splice(0, DAYS_TO_SHIFT_DAY_BEFORE_YESTERDAY)
+      dailyRiskAsNum.splice(0, DAYS_TO_SHIFT_DAY_BEFORE_YESTERDAY)
+      trend.splice(0, DAYS_TO_SHIFT_DAY_BEFORE_YESTERDAY)
     } else {
       this.today = groupByDayMessage['0'] // Day 1
 
@@ -143,10 +150,10 @@ class OutlookForecast {
 
       if (isEqual(day3, day4) && isEqual(day3, day5)) {
         this.outlookDays = [day3]
-        this.dayName[2] = `${this.dayName[2]}, ${this.dayName[3]} and ${this.dayName[4]}`
+        this.dayName[DAY_INDEX_OUTLOOK_START] = `${this.dayName[DAY_INDEX_OUTLOOK_START]}, ${this.dayName[3]} and ${this.dayName[4]}`
       } else if (isEqual(day3, day4)) {
         this.outlookDays = [day3, day5]
-        this.dayName[2] = `${this.dayName[2]} and ${this.dayName[3]}`
+        this.dayName[DAY_INDEX_OUTLOOK_START] = `${this.dayName[DAY_INDEX_OUTLOOK_START]} and ${this.dayName[3]}`
 
         // Shuffle down fifth day into fourth day slot as days 3 & 4 have been merged into day 3.
         // Move associated risk values and trend descriptions as well.
