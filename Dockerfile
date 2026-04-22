@@ -45,8 +45,6 @@ RUN echo -e "module.exports = { version: '$BUILD_VERSION', revision: '$GIT_COMMI
 # ------------------------------
 FROM base AS development
 
-ARG FLOOD_APP_GTM_ID
-
 # Copy test resources
 # When developing/debugging within a container locally, --chown=root:root should be replaced with --chown=node:node to provide
 # required write permissions. SonarQube cloud will raise a security issue if analysing these changes.
@@ -68,8 +66,6 @@ CMD ["nodemon", "index.js"]
 # Production stage
 # ------------------------------
 FROM base AS production
-
-ARG FLOOD_APP_GTM_ID
 
 ENV NODE_ENV=production
 
