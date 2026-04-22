@@ -2,7 +2,7 @@ const nunjucks = require('nunjucks')
 const util = require('../util')
 const config = require('../config')
 const pkg = require('../../package.json')
-const { floodFisUrl, gaFourAccId, gtmAccId } = config
+const { floodFisUrl, gtmAccId } = config
 
 module.exports = {
   plugin: require('@hapi/vision'),
@@ -49,7 +49,6 @@ module.exports = {
         audioUrl: config.webchat.audioUrl
       },
       floodFisUrl,
-      gaFourAccId,
       gtmAccId
     }
   }
