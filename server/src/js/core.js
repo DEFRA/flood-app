@@ -204,8 +204,10 @@ document.addEventListener('readystatechange', () => {
           if (useCookies[0].checked) {
             setCookie('set_cookie_usage', 'true', 30)
             calledGTag = true
-            window.flood.utils.setGTagAnalyticsCookies()
+            // Google analytics must be disabled before analytics coookies are set
+            // (see https://developers.google.com/tag-platform/security/guides/privacy#gtag.js_5)
             window.flood.utils.disableGoogleAnalytics()
+            window.flood.utils.setGTagAnalyticsCookies()
           } else {
             setCookie('set_cookie_usage', '', -1)
             deleteGA4Cookies()

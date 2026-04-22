@@ -5,6 +5,9 @@ ARG PARENT_VERSION=2.10.3-node22.21.1
 # Base stage (shared)
 # ------------------------------
 FROM defradigital/node:${PARENT_VERSION} AS base
+# The Google Tag Manager ID is required at build time and public at runtime.
+# It is non-sensitive and can be specified using a build argument accordingly.
+ARG FLOOD_APP_GTM_ID
 ARG PORT=3000
 ENV PORT=${PORT}
 
