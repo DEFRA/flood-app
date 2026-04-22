@@ -228,6 +228,8 @@ document.addEventListener('readystatechange', () => {
       if (window.flood.utils.getCookie('set_cookie_usage')) {
         calledGTag = true
         window.flood.utils.setGTagAnalyticsCookies()
+      } else {
+        window.flood.utils.disableGoogleAnalytics()
       }
     }
   }
