@@ -120,18 +120,9 @@ window.flood.utils = {
     head.insertBefore(script, head.firstChild)
     document.body.insertBefore(noscript, document.body.firstChild)
   },
-  // This function MUST be called before setGTagAnalyticsCookies
-  // (see https://developers.google.com/tag-platform/security/guides/privacy#gtag.js_5
+
   disableGoogleAnalytics: () => {
-    const script = document.createElement('script')
-    script.text = `
-      if (!window.flood.utils.getCookie('set_cookie_usage')) {
-        window['ga-disable-GA-MEASUREMENT-ID'] = true;
-      } else {
-        window['ga-disable-GA-MEASUREMENT-ID'] = false;
-      }
-    `
-    document.head.appendChild(script)
+    window.flood.utils.setCookie('google-analytics-opt-out', 'true', 30)
   },
   // Takes a valuesobject and concatentates items using commas and 'and'.
   getSummaryList: (values) => {
