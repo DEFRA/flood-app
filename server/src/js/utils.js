@@ -102,7 +102,9 @@ window.flood.utils = {
   setCookie: (name, value, days) => {
     const d = new Date()
     d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
-    document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + window.location.hostname
+    // Use parent domain (with leading dot) to match GTM cookie scope
+    const domain = window.location.hostname.includes('localhost') ? '' : '.' + window.location.hostname
+    document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + domain
   },
   setGTagAnalyticsCookies: () => {
     const script = document.createElement('script')

@@ -129,6 +129,10 @@ document.addEventListener('readystatechange', () => {
       rejectButton.addEventListener('click', function (e) {
         e.preventDefault()
         window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
+        window.flood.utils.setCookie('set_cookie_usage', '', -1)
+        window.flood.utils.setCookie('google-analytics-opt-out', 'true', 30)
+        deleteGA4Cookies()
+        window.flood.utils.disableGoogleAnalytics()
 
         document.getElementById('cookie-message').style.display = 'none'
         document.getElementById('cookie-confirmation-type').innerText = 'rejected'
@@ -184,10 +188,8 @@ document.addEventListener('readystatechange', () => {
     function deleteCookie (name) {
       try {
         const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
-        document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + window.location.hostname
-        // clears GA cookies that are set on the .defra.cloud domain by default, may be able to remove line
-        // in future once GA4 is fully rolled out to all users
-        document.cookie = name + '=; expires=' + expires + '; path=/; domain=.defra.cloud;'
+        const domain = window.location.hostname.includes('localhost') ? '' : '.' + window.location.hostname
+        document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + domain
       } catch (error) {
         console.error(`Failed to delete cookie ${name}: ${error}`)
       }
