@@ -185,6 +185,7 @@ document.addEventListener('readystatechange', () => {
       try {
         const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
         document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + window.location.hostname
+
         // clears GA cookies that are set on the .defra.cloud domain by default, may be able to remove line
         // in future once GA4 is fully rolled out to all users
         document.cookie = name + '=; expires=' + expires + '; path=/; domain=.defra.cloud;'
@@ -204,7 +205,7 @@ document.addEventListener('readystatechange', () => {
           if (useCookies[0].checked) {
             setCookie('set_cookie_usage', 'true', 30)
             calledGTag = true
-            setCookie('google-analytics-opt-out', '', -1)
+            deleteCookie('google-analytics-opt-out')
             window.flood.utils.setGTagAnalyticsCookies()
           } else {
             setCookie('set_cookie_usage', '', -1)
@@ -227,6 +228,13 @@ document.addEventListener('readystatechange', () => {
         calledGTag = true
         window.flood.utils.setGTagAnalyticsCookies()
       }
+    }
+
+    // If the user has opted out of analytics, ensure that associated cookies
+    // are removed. This is required to prevent asset retrieval frpm recreating
+    // expired cookies after the user has opted out.
+    if (window.flood.utils.getCookie('google-analytics-opt-out')) {
+      deleteGA4Cookies()
     }
   }
 })
