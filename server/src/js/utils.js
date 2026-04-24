@@ -51,6 +51,15 @@ if (!window.flood) {
   window.flood = {}
 }
 
+const getCookieDomain = () => {
+  return window.location.hostname.includes('localhost') ? '' : '.' + window.location.hostname
+}
+
+const getCookieDomainAttribute = () => {
+  const domain = getCookieDomain()
+  return domain ? ';domain=' + domain : ''
+}
+
 window.flood.utils = {
   xhr: (url, callback) => {
     const xmlhttp = new window.XMLHttpRequest()
@@ -100,17 +109,65 @@ window.flood.utils = {
     return v ? v[2] : null
   },
   setCookie: (name, value, days) => {
-    const d = new Date()
-    d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
-    // Use parent domain (with leading dot) to match GTM cookie scope
-    const domain = window.location.hostname.includes('localhost') ? '' : '.' + window.location.hostname
-    document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + domain
+    try {
+      const d = new Date()
+      d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
+      const domainAttr = getCookieDomainAttribute()
+      const cookieStr = name + '=' + value + ';path=/;expires=' + d.toGMTString() + domainAttr
+      document.cookie = cookieStr
+      console.log(`Set cookie: ${name}=${value} with domain: ${domainAttr}`)
+    } catch (error) {
+      console.error(`Failed to set cookie ${name}: ${error}`)
+    }
+  },
+  clearCookie: (name) => {
+    try {
+      const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
+      const domainAttr = getCookieDomainAttribute()
+      const cookieStr = name + '=; expires=' + expires + '; path=/' + domainAttr
+      document.cookie = cookieStr
+      console.log(`Cleared cookie: ${name} with domain: ${domainAttr}`)
+    } catch (error) {
+      console.error(`Failed to clear cookie ${name}: ${error}`)
+    }
+  },
+  markCookieBannerSeen: () => {
+    window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
+  },
+  hasSeenCookieMessage: () => {
+    return window.flood.utils.getCookie('seen_cookie_message') === 'true'
+  },
+  isAnalyticsOptedOut: () => {
+    return window.flood.utils.getCookie('google-analytics-opt-out') === 'true'
+  },
+  hasAnalyticsConsent: () => {
+    return window.flood.utils.getCookie('set_cookie_usage') === 'true' && !window.flood.utils.isAnalyticsOptedOut()
+  },
+  deleteGA4Cookies: () => {
+    try {
+      const cookies = document.cookie ? document.cookie.split(';') : []
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim()
+        const name = cookie.split('=')[0]
+        if (name.indexOf('_ga') === 0) {
+          window.flood.utils.clearCookie(name)
+        }
+      }
+    } catch (error) {
+      console.error(`Failed to delete GA4 cookies: ${error}`)
+    }
   },
   setGTagAnalyticsCookies: () => {
+    if (document.getElementById('flood-gtm-loader')) {
+      return
+    }
+
     const script = document.createElement('script')
+    script.setAttribute('id', 'flood-gtm-loader')
     script.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${process.env.GTM_ID}');`
 
     const noscript = document.createElement('noscript')
+    noscript.setAttribute('id', 'flood-gtm-noscript')
     const iframe = document.createElement('iframe')
     iframe.setAttribute('src', `https://www.googletagmanager.com/gtag/js?id=${process.env.GTM_ID}`)
     iframe.setAttribute('height', '0')
@@ -122,9 +179,35 @@ window.flood.utils = {
     head.insertBefore(script, head.firstChild)
     document.body.insertBefore(noscript, document.body.firstChild)
   },
+  removeGTagAnalyticsCookies: () => {
+    const script = document.getElementById('flood-gtm-loader')
+    if (script && script.parentNode) {
+      script.parentNode.removeChild(script)
+    }
+
+    const noscript = document.getElementById('flood-gtm-noscript')
+    if (noscript && noscript.parentNode) {
+      noscript.parentNode.removeChild(noscript)
+    }
+  },
+  setAnalyticsConsent: (accepted) => {
+    window.flood.utils.markCookieBannerSeen()
+
+    if (accepted) {
+      window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
+      window.flood.utils.clearCookie('google-analytics-opt-out')
+      window.flood.utils.setGTagAnalyticsCookies()
+      return
+    }
+
+    window.flood.utils.clearCookie('set_cookie_usage')
+    window.flood.utils.setCookie('google-analytics-opt-out', 'true', 30)
+    window.flood.utils.deleteGA4Cookies()
+    window.flood.utils.removeGTagAnalyticsCookies()
+  },
 
   disableGoogleAnalytics: () => {
-    window.flood.utils.setCookie('google-analytics-opt-out', 'true', 30)
+    window.flood.utils.setAnalyticsConsent(false)
   },
   // Takes a valuesobject and concatentates items using commas and 'and'.
   getSummaryList: (values) => {

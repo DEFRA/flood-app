@@ -78,7 +78,7 @@ document.addEventListener('readystatechange', () => {
 
     // Check not on cookie settings page
     if (elem) {
-      const seenCookieMessage = /(^|;)\s*seen_cookie_message=/.test(document.cookie)
+      const seenCookieMessage = window.flood.utils.hasSeenCookieMessage()
       // Remove banner if seen and avoid flicker
       if (seenCookieMessage) {
         elem.parentNode.removeChild(elem)
@@ -111,10 +111,8 @@ document.addEventListener('readystatechange', () => {
       // First button in banner (Accept)
       acceptButton.addEventListener('click', function (e) {
         e.preventDefault()
-        window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
-        window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
+        window.flood.utils.setAnalyticsConsent(true)
         calledGTag = true
-        window.flood.utils.setGTagAnalyticsCookies()
         document.getElementById('cookie-message').style.display = 'none'
         document.getElementById('cookie-confirmation-type').innerText = 'accepted'
         document.getElementById('cookie-confirmation').style.display = ''
@@ -128,11 +126,7 @@ document.addEventListener('readystatechange', () => {
       // Second button in banner (Reject)
       rejectButton.addEventListener('click', function (e) {
         e.preventDefault()
-        window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
-        window.flood.utils.setCookie('set_cookie_usage', '', -1)
-        window.flood.utils.setCookie('google-analytics-opt-out', 'true', 30)
-        deleteGA4Cookies()
-        window.flood.utils.disableGoogleAnalytics()
+        window.flood.utils.setAnalyticsConsent(false)
 
         document.getElementById('cookie-message').style.display = 'none'
         document.getElementById('cookie-confirmation-type').innerText = 'rejected'
@@ -155,63 +149,18 @@ document.addEventListener('readystatechange', () => {
 
     const saveButton = document.getElementById('cookies-save')
 
-    function setCookie (name, value, days) {
-      try {
-        window.flood.utils.setCookie(name, value, days)
-      } catch (error) {
-        console.error(`Failed to set cookie ${name}: ${error}`)
-      }
-    }
-
-    function deleteGA4Cookies () {
-      try {
-        const cookies = document.cookie.split(';')
-
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim()
-
-          const name = cookie.split('=')
-
-          // Check if the cookie name starts with "_ga_"
-          if (cookie.indexOf('_ga_') === 0) {
-            deleteCookie(name[0])
-          }
-          if (cookie.indexOf('_ga') === 0) {
-            deleteCookie(name[0])
-          }
-        }
-      } catch (error) {
-        console.error(`Failed to delete GA4 cookies: ${error}`)
-      }
-    }
-
-    function deleteCookie (name) {
-      try {
-        const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
-        const domain = window.location.hostname.includes('localhost') ? '' : '.' + window.location.hostname
-        document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + domain
-      } catch (error) {
-        console.error(`Failed to delete cookie ${name}: ${error}`)
-      }
-    }
-
     if (saveButton) {
       saveButton.addEventListener('click', function (e) {
         e.preventDefault()
 
         try {
           const useCookies = document.querySelectorAll('input[name="accept-analytics"]')
-          setCookie('seen_cookie_message', 'true', 30)
 
           if (useCookies[0].checked) {
-            setCookie('set_cookie_usage', 'true', 30)
+            window.flood.utils.setAnalyticsConsent(true)
             calledGTag = true
-            setCookie('google-analytics-opt-out', '', -1)
-            window.flood.utils.setGTagAnalyticsCookies()
           } else {
-            setCookie('set_cookie_usage', '', -1)
-            deleteGA4Cookies()
-            window.flood.utils.disableGoogleAnalytics()
+            window.flood.utils.setAnalyticsConsent(false)
           }
 
           const alert = document.getElementById('cookie-notification')
@@ -225,7 +174,7 @@ document.addEventListener('readystatechange', () => {
 
     if (!calledGTag) {
       // finally make Gtag page view if not before and cookie allows
-      if (window.flood.utils.getCookie('set_cookie_usage')) {
+      if (window.flood.utils.hasAnalyticsConsent()) {
         calledGTag = true
         window.flood.utils.setGTagAnalyticsCookies()
       }
