@@ -111,8 +111,13 @@ document.addEventListener('readystatechange', () => {
       // First button in banner (Accept)
       acceptButton.addEventListener('click', function (e) {
         e.preventDefault()
+        console.log('[cookie-debug] banner:accept:click')
         window.flood.utils.setAnalyticsConsent(true)
         calledGTag = true
+        console.log('[cookie-debug] banner:accept:state', {
+          setCookieUsage: window.flood.utils.getCookie('set_cookie_usage'),
+          optOut: window.flood.utils.getCookie('google-analytics-opt-out')
+        })
         document.getElementById('cookie-message').style.display = 'none'
         document.getElementById('cookie-confirmation-type').innerText = 'accepted'
         document.getElementById('cookie-confirmation').style.display = ''
@@ -126,7 +131,12 @@ document.addEventListener('readystatechange', () => {
       // Second button in banner (Reject)
       rejectButton.addEventListener('click', function (e) {
         e.preventDefault()
+        console.log('[cookie-debug] banner:reject:click')
         window.flood.utils.setAnalyticsConsent(false)
+        console.log('[cookie-debug] banner:reject:state', {
+          setCookieUsage: window.flood.utils.getCookie('set_cookie_usage'),
+          optOut: window.flood.utils.getCookie('google-analytics-opt-out')
+        })
 
         document.getElementById('cookie-message').style.display = 'none'
         document.getElementById('cookie-confirmation-type').innerText = 'rejected'
@@ -152,16 +162,29 @@ document.addEventListener('readystatechange', () => {
     if (saveButton) {
       saveButton.addEventListener('click', function (e) {
         e.preventDefault()
+        console.log('[cookie-debug] cookies-page:save:click')
 
         try {
           const useCookies = document.querySelectorAll('input[name="accept-analytics"]')
+          const acceptingAnalytics = useCookies[0] && useCookies[0].checked
+          console.log('[cookie-debug] cookies-page:save:selection', {
+            acceptingAnalytics,
+            yesChecked: useCookies[0] ? useCookies[0].checked : null,
+            noChecked: useCookies[1] ? useCookies[1].checked : null
+          })
 
-          if (useCookies[0].checked) {
+          if (acceptingAnalytics) {
             window.flood.utils.setAnalyticsConsent(true)
             calledGTag = true
           } else {
             window.flood.utils.setAnalyticsConsent(false)
           }
+
+          console.log('[cookie-debug] cookies-page:save:state', {
+            setCookieUsage: window.flood.utils.getCookie('set_cookie_usage'),
+            optOut: window.flood.utils.getCookie('google-analytics-opt-out'),
+            allCookies: document.cookie
+          })
 
           const alert = document.getElementById('cookie-notification')
           alert.removeAttribute('style')

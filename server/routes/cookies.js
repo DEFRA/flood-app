@@ -5,7 +5,7 @@ module.exports = {
   method: 'GET',
   path: '/cookies',
   handler: async (request, h) => {
-    const analyticsConsent = request.state.set_cookie_usage === 'true'
+    const analyticsCookiesSet = Object.keys(request.state).some(key => /^_ga$|^_gid$|^_gat_gtag_./g.test(key))
     let requestHeadersReferer = request.headers.referer && request.headers.referer.startsWith(siteUrl) ? encodeURI(request.headers.referer) : ''
 
     if (requestHeadersReferer) {
@@ -20,7 +20,7 @@ module.exports = {
       pageTitle: 'Cookies - Check for flooding',
       metaDescription: description,
       referer: requestHeadersReferer,
-      analyticsCookiesSet: analyticsConsent
+      analyticsCookiesSet
     })
   }
 }

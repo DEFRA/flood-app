@@ -51,13 +51,31 @@ if (!window.flood) {
   window.flood = {}
 }
 
-const getCookieDomain = () => {
-  return window.location.hostname.includes('localhost') ? '' : '.' + window.location.hostname
+const getCookieDomainAttributes = () => {
+  const attrs = ['']
+
+  if (window.location.hostname.includes('localhost')) {
+    return attrs
+  }
+
+  attrs.push(';domain=' + window.location.hostname)
+  attrs.push(';domain=.' + window.location.hostname)
+
+  return attrs
 }
 
-const getCookieDomainAttribute = () => {
-  const domain = getCookieDomain()
-  return domain ? ';domain=' + domain : ''
+const getCookieSecurityAttributes = () => {
+  let attrs = ';SameSite=Lax'
+
+  if (window.location.protocol === 'https:') {
+    attrs += ';Secure'
+  }
+
+  return attrs
+}
+
+const cookieDebug = (...args) => {
+  console.log('[cookie-debug]', ...args)
 }
 
 window.flood.utils = {
@@ -106,16 +124,26 @@ window.flood.utils = {
   },
   getCookie: (name) => {
     const v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)')
-    return v ? v[2] : null
+    const value = v ? v[2] : null
+    cookieDebug('getCookie', { name, value })
+    return value
   },
   setCookie: (name, value, days) => {
     try {
       const d = new Date()
       d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
-      const domainAttr = getCookieDomainAttribute()
-      const cookieStr = name + '=' + value + ';path=/;expires=' + d.toGMTString() + domainAttr
-      document.cookie = cookieStr
-      console.log(`Set cookie: ${name}=${value} with domain: ${domainAttr}`)
+      const securityAttrs = getCookieSecurityAttributes()
+      const domainAttrs = getCookieDomainAttributes()
+
+      cookieDebug('setCookie:start', { name, value, days, domainAttrs, securityAttrs })
+
+      for (let i = 0; i < domainAttrs.length; i++) {
+        const cookieStr = name + '=' + value + ';path=/;expires=' + d.toGMTString() + domainAttrs[i] + securityAttrs
+        document.cookie = cookieStr
+        cookieDebug('setCookie:write', { name, domainAttr: domainAttrs[i], cookieStr })
+      }
+
+      cookieDebug('setCookie:end', { name, effectiveValue: window.flood.utils.getCookie(name), allCookies: document.cookie })
     } catch (error) {
       console.error(`Failed to set cookie ${name}: ${error}`)
     }
@@ -123,10 +151,18 @@ window.flood.utils = {
   clearCookie: (name) => {
     try {
       const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
-      const domainAttr = getCookieDomainAttribute()
-      const cookieStr = name + '=; expires=' + expires + '; path=/' + domainAttr
-      document.cookie = cookieStr
-      console.log(`Cleared cookie: ${name} with domain: ${domainAttr}`)
+      const securityAttrs = getCookieSecurityAttributes()
+      const domainAttrs = getCookieDomainAttributes()
+
+      cookieDebug('clearCookie:start', { name, domainAttrs, securityAttrs })
+
+      for (let i = 0; i < domainAttrs.length; i++) {
+        const cookieStr = name + '=; expires=' + expires + '; Max-Age=0; path=/' + domainAttrs[i] + securityAttrs
+        document.cookie = cookieStr
+        cookieDebug('clearCookie:write', { name, domainAttr: domainAttrs[i], cookieStr })
+      }
+
+      cookieDebug('clearCookie:end', { name, effectiveValue: window.flood.utils.getCookie(name), allCookies: document.cookie })
     } catch (error) {
       console.error(`Failed to clear cookie ${name}: ${error}`)
     }
@@ -146,13 +182,16 @@ window.flood.utils = {
   deleteGA4Cookies: () => {
     try {
       const cookies = document.cookie ? document.cookie.split(';') : []
+      cookieDebug('deleteGA4Cookies:start', { cookieCount: cookies.length, allCookies: document.cookie })
       for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i].trim()
         const name = cookie.split('=')[0]
         if (name.indexOf('_ga') === 0) {
+          cookieDebug('deleteGA4Cookies:match', { name })
           window.flood.utils.clearCookie(name)
         }
       }
+      cookieDebug('deleteGA4Cookies:end', { allCookies: document.cookie })
     } catch (error) {
       console.error(`Failed to delete GA4 cookies: ${error}`)
     }
@@ -191,12 +230,22 @@ window.flood.utils = {
     }
   },
   setAnalyticsConsent: (accepted) => {
+    cookieDebug('setAnalyticsConsent:start', {
+      accepted,
+      currentConsent: window.flood.utils.getCookie('set_cookie_usage'),
+      currentOptOut: window.flood.utils.getCookie('google-analytics-opt-out')
+    })
     window.flood.utils.markCookieBannerSeen()
 
     if (accepted) {
       window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
       window.flood.utils.clearCookie('google-analytics-opt-out')
       window.flood.utils.setGTagAnalyticsCookies()
+      cookieDebug('setAnalyticsConsent:end', {
+        accepted,
+        finalConsent: window.flood.utils.getCookie('set_cookie_usage'),
+        finalOptOut: window.flood.utils.getCookie('google-analytics-opt-out')
+      })
       return
     }
 
@@ -204,6 +253,11 @@ window.flood.utils = {
     window.flood.utils.setCookie('google-analytics-opt-out', 'true', 30)
     window.flood.utils.deleteGA4Cookies()
     window.flood.utils.removeGTagAnalyticsCookies()
+    cookieDebug('setAnalyticsConsent:end', {
+      accepted,
+      finalConsent: window.flood.utils.getCookie('set_cookie_usage'),
+      finalOptOut: window.flood.utils.getCookie('google-analytics-opt-out')
+    })
   },
 
   disableGoogleAnalytics: () => {
