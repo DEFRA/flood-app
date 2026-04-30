@@ -37,7 +37,7 @@
     "@babel/plugin-transform-runtime": "7.29.0",
     "@babel/preset-env": "7.29.2",
     "@babel/traverse": "7.29.0",
-    "@defra/flood-webchat": "1.0.12",
+    "@defra/flood-webchat": "1.0.23",
     "@hapi/boom": "10.0.1",
     "@hapi/catbox-redis": "7.0.2",
     "@hapi/code": "9.0.3",
