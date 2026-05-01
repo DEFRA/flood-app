@@ -1,34 +1,21 @@
 # Check For Flooding Release
 
 - Version: 8.29.0
-- Proposed Release Date: 
+- Proposed Release Date: 7th May 2026
 - Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/32016/tab/release-report-all-issues
-
-## Sense Check
-
-- Note that this is the definitive release notes for WebOps. The release notes in flood-service and flood-db are for CFF dev team use only.
-- Cross check the list of Jira tickets below with those in the Jira release linked to above and update where needed
-- Add additional Jira tickets from the related release notes in the 'Release 8.29.0' PR's created in:
-  - [flood-service](https://github.com/DEFRA/flood-service)
-
-- Add any required infrastructure changes such as redirects to the infrastructure changes section below
-- Once this sense check is done, delete this section
 
 ## Tickets
 
-
-  
-- FSR-1634 | npm updates (#1145)
-  
-
+- FSR-1634 | npm updates
+- FSR-1624 | Update flood-data repository workflows to protect against npm worm attacks
+- FSR-1615 | Update FGS API access to for new API key
+- FSR-1180 | Update webchat dependencies and subsequent version in flood-app
 
 ## Instructions
 
-
-1. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
-
-
-Execute smoke tests and forward results
+1. Execute LFW_{STAGE}_MISC_JOBS/LFW_{STAGE}_99_DEPLOY_FLOOD_DATA_PIPELINE_TF
+2. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+3. Execute smoke tests and forward results
 
 ## Related Infrastructure Changes Required
 
