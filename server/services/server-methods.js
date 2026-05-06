@@ -163,7 +163,7 @@ module.exports = server => {
   server.method('flood.getStationsGeoJson', floodServices.getStationsGeoJson, {
     cache: {
       cache: cacheType,
-      expiresIn: minutes(expiresIn15),
+      expiresIn: minutes(1),
       generateTimeout: seconds(floodGetStationsGeoJsonGenerateTimeout)
     }
   })
