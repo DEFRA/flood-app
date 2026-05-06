@@ -49,7 +49,11 @@ async function createServer () {
     await server.register(require('./plugins/rate-limit'))
   }
 
+  await server.register(require('blipp'))
+
   registerServerMethods(server)
+
+  server.log('info', `Webchat enabled: ${process.env.WEBCHAT_ENABLED}`)
 
   return server
 }
