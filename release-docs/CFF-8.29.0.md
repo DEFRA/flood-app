@@ -13,8 +13,15 @@
 
 ## Instructions
 
-1. Execute LFW_{STAGE}_MISC_JOBS/LFW_{STAGE}_99_DEPLOY_FLOOD_DATA_PIPELINE_TF
+1.  Execute LFW_{STAGE}_99_DEPLOY_FLOOD_DATA_PIPELINE_TF
+
+    Ensure build parameters are set as follows:  
+   - **TERRAGRUNT_BRANCH:** `master`  
+   - **TERRAFORM_BRANCH:** `terraform-main`  
+   - **MODULE_DEPLOY:** `lambda`
+     
 2. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+   
 3. Execute smoke tests and forward results
 
 ## Related Infrastructure Changes Required
