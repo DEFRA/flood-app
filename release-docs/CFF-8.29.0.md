@@ -13,16 +13,18 @@
 
 ## Instructions
 
-1.  Execute LFW_{STAGE}_99_DEPLOY_FLOOD_DATA_PIPELINE_TF
+1. Make LFW_DATA_FGS_KEY environment variable available from AWS secrets manager to flood-data lambdas specifically fgsProcess, value is same as previous environments, ticket RITM1388743 for previous environments
+
+2.  Execute LFW_{STAGE}_99_DEPLOY_FLOOD_DATA_PIPELINE_TF
 
     Ensure build parameters are set as follows:  
    - **TERRAGRUNT_BRANCH:** `master`  
    - **TERRAFORM_BRANCH:** `terraform-main`  
    - **MODULE_DEPLOY:** `lambda`
      
-2. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+3. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
    
-3. Execute smoke tests and forward results
+4. Execute smoke tests and forward results
 
 ## Related Infrastructure Changes Required
 
