@@ -21,7 +21,6 @@ module.exports = [{
           'server/dist',
           'server/src',
           'node_modules/govuk-frontend/dist/govuk/assets',
-          'node_modules/accessible-autocomplete/dist',
           'node_modules/nunjucks/browser'
         ]
       }
