@@ -35,7 +35,7 @@ const routes = [].concat(
   require('../routes/what-happens-after-a-flood')
 )
 
-if (process.env.WEBCHAT_ENABLED === 'true') {
+if (JSON.parse(process.env.WEBCHAT_ENABLED)) {
   routes.push(require('../routes/api/webchat-availability'))
 }
 

@@ -95,7 +95,7 @@ const config = {
     projectKey: process.env.ERRBIT_PROJECT_KEY
   },
   webchat: {
-    enabled: process.env.WEBCHAT_ENABLED === 'true',
+    enabled: JSON.parse(process.env.WEBCHAT_ENABLED) === true,
     clientId: process.env.CXONE_CLIENT_ID,
     clientSecret: process.env.CXONE_CLIENT_SECRET,
     accessKey: process.env.CXONE_ACCESS_KEY,
