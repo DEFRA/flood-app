@@ -51,6 +51,11 @@ async function createServer () {
 
   registerServerMethods(server)
 
+  server.methods.flood.getOutlook = async () => {
+    return require('../server/models/5df.json')
+  }
+
+
   return server
 }
 
