@@ -1,7 +1,4 @@
 .defra-flood-tabs {
-    margin-bottom:0px;
-    & {
-        border-bottom:1px solid $govuk-border-colour;
-        margin-bottom:10px;
-    }
+  border-bottom:1px solid $govuk-border-colour;
+  margin-bottom:10px;
 }
