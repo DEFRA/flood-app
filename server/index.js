@@ -53,7 +53,7 @@ async function createServer () {
 
   registerServerMethods(server)
 
-  server.log('info', `Webchat enabled: ${process.env.WEBCHAT_ENABLED}`)
+  server.log('info', `Webchat enabled: ${config.webchat.enabled}`)
 
   return server
 }
