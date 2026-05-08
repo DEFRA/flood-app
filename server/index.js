@@ -54,6 +54,7 @@ async function createServer () {
   registerServerMethods(server)
 
   server.log('info', `Webchat enabled: ${config.webchat.enabled}`)
+  console.log(`Webchat enabled env var value: ${process.env.WEBCHAT_ENABLED}`)
 
   return server
 }
