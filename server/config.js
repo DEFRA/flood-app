@@ -132,6 +132,8 @@ value.isDev = value.env !== 'production'
 value.isProd = value.env === 'production'
 
 console.log(`process.env.WEBCHAT_ENABLED in config.js: ${process.env.WEBCHAT_ENABLED}`)
+console.log(`process.env.WEBCHAT_ENABLED (stringified) in config.js: ${JSON.stringify(process.env.WEBCHAT_ENABLED)}`)
+console.log(`process.env.WEBCHAT_ENABLED length in config.js: ${process.env.WEBCHAT_ENABLED.length}`)
 console.log(`webchat.enabled in validated config.js: ${value.webchat.enabled}`)
 
 module.exports = value
