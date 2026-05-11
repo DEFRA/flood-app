@@ -95,7 +95,7 @@ const config = {
     projectKey: process.env.ERRBIT_PROJECT_KEY
   },
   webchat: {
-    enabled: JSON.parse(process.env.WEBCHAT_ENABLED || 'false') === true,
+    enabled: process.env.WEBCHAT_ENABLED === 'true',
     clientId: process.env.CXONE_CLIENT_ID,
     clientSecret: process.env.CXONE_CLIENT_SECRET,
     accessKey: process.env.CXONE_ACCESS_KEY,
@@ -128,5 +128,8 @@ const value = result.value
 // Add some helper props
 value.isDev = value.env !== 'production'
 value.isProd = value.env === 'production'
+
+console.log(`process.env.WEBCHAT_ENABLED in config.js: ${process.env.WEBCHAT_ENABLED}`)
+console.log(`webchat.enabled in config.js: ${value.webchat.enabled}`)
 
 module.exports = value
