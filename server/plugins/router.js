@@ -30,7 +30,7 @@ const routes = [].concat(
   require('../routes/rainfall-station-csv')
 )
 
-if (JSON.parse(process.env.WEBCHAT_ENABLED || 'false')) {
+if (process.env.WEBCHAT_ENABLED === 'true') {
   routes.push(require('../routes/api/webchat-availability'))
 }
 
