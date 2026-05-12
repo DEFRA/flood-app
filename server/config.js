@@ -112,8 +112,6 @@ const config = {
   }
 }
 
-console.log(`webchat.enabled in unvalidated config.js: ${config.webchat.enabled}`)
-
 // Validate config
 const result = schema.validate(config, {
   abortEarly: false
@@ -130,10 +128,5 @@ const value = result.value
 // Add some helper props
 value.isDev = value.env !== 'production'
 value.isProd = value.env === 'production'
-
-console.log(`process.env.WEBCHAT_ENABLED in config.js: ${process.env.WEBCHAT_ENABLED}`)
-console.log(`process.env.WEBCHAT_ENABLED (stringified) in config.js: ${JSON.stringify(process.env.WEBCHAT_ENABLED)}`)
-console.log(`process.env.WEBCHAT_ENABLED length in config.js: ${process.env.WEBCHAT_ENABLED?.length || 0}`)
-console.log(`webchat.enabled in validated config.js: ${value.webchat.enabled}`)
 
 module.exports = value
