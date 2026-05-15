@@ -49,8 +49,6 @@ async function createServer () {
     await server.register(require('./plugins/rate-limit'))
   }
 
-  await server.register(require('blipp'))
-
   registerServerMethods(server)
 
   return server
