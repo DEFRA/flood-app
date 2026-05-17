@@ -70,3 +70,9 @@ jobs:
                   -Dsonar.javascript.exclusions=**/node_modules/**,**/test/**,**/test-output/**,**/mock/**,**/server/dist/**,**/server/src/**,**/service-down/**
                   -Dsonar.coverage.exclusions=**/server/routes/status.js
                   -Dsonar.branch.name=${{ github.ref_name }}
+            - name: Dependency Review
+              if: github.event_name == 'pull_request'
+              uses: actions/dependency-review-action@v4
+              with:
+                fail-on-severity: moderate
+                comment-summary-in-pr: always
