@@ -1,7 +1,20 @@
 {% if model.tabs.lowForFive %}
 <p class="govuk-body">The flood risk for the next 5 days is very low.</p>
+{% elif model.tabs.allDaysSame %}
+<div class="defra-flood-meta defra-flood-meta--p defra-flood-meta--no-border">
+  <p>Today through to {{ model.tabs.day5Name }} there's a {{ model.tabs.dailyRisk[0] | lower }} risk of flooding.</p>
+
+  {% for messageId, sources in model.tabs.tab1 %}
+  {% if messageId !== '1-i2-l2' %}
+  {% if loop.first %}<p>{% endif %}
+      {% include "partials/outlook-region-messages.html" %}
+  {% if loop.last %}</p>{% endif %}
+  {% endif %}
+  {% endfor %}
+</div>
+  <span id="map-outlook"></span>
 {% else %}
-<div class="defra-flood-meta defra-flood-meta--p">
+<div class="defra-flood-meta defra-flood-meta--p defra-flood-meta--no-border">
   <div id="today">
       <h3 class="govuk-heading-s">Today</h3>
       {% if model.tabs.tab1 %}
@@ -52,7 +65,7 @@
       {% set dayNum = loop.index + 2 %}
 
       <p> On {{ model.tabs.dayName[dayNum - 1] }} the risk of flooding {{ model.tabs.trend[dayNum - 1]}} {{ model.tabs.dailyRisk[dayNum - 1] | lower }}.</p>
-          
+
       {% for messageId, sources in day %}
       {% if messageId !== '1-i2-l2' %}
       {% if loop.first %}<p>{% endif %}
