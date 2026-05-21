@@ -95,7 +95,7 @@ class OutlookTabs {
       const allSame = isEqual(this.tab1, this.tab2) && this.tab3.every(day => isEqual(day, this.tab1))
       if (allSame) {
         this.allDaysSame = true
-        this.day5Name = this.dayName[this.dayName.length - 1]
+        this.day5Name = this.dayName.at(-1)
       }
     }
 
