@@ -91,6 +91,14 @@ class OutlookTabs {
 
     this.areTabsLow(tab3Empty)
 
+    if (!this.lowForFive) {
+      const allSame = isEqual(this.tab1, this.tab2) && this.tab3.every(day => isEqual(day, this.tab1))
+      if (allSame) {
+        this.allDaysSame = true
+        this.day5Name = this.dayName.at(-1)
+      }
+    }
+
     this.days = days
     this.issueDate = issueDate
     this.issueUTC = issueUTC

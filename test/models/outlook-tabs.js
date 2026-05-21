@@ -349,6 +349,118 @@ describe('Model - Outlook Tabs', () => {
     expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
   })
 
+  it('should set "allDaysSame" to true when all five days have the same likelihood, source and impact', async () => {
+    const outlook = {
+      id: 1342,
+      issued_at: moment().utc().format(),
+      pdf_url: 'https://s3-eu-west-1.amazonaws.com/assets.ffc-environment-agency.fgs.metoffice.gov.uk/fgs-statements/01342/fgs.pdf',
+      detailed_csv_url: 'https://s3-eu-west-1.amazonaws.com/assets.ffc-environment-agency.fgs.metoffice.gov.uk/fgs-statements/01342/detailed.csv',
+      area_of_concern_url: 'https://s3-eu-west-1.amazonaws.com/assets.ffc-environment-agency.fgs.metoffice.gov.uk/fgs-statements/01342/areaofconcern.jpg',
+      flood_risk_trend: {
+        day1: 'stable',
+        day2: 'stable',
+        day3: 'stable',
+        day4: 'stable',
+        day5: 'stable'
+      },
+      sources: [
+        { river: 'The river flood risk is LOW.' },
+        { surface: 'The surface water flood risk is VERY LOW for the next five days.' },
+        { coastal: 'The coastal/tidal flood risk is VERY LOW for the next five days.' },
+        { ground: 'The groundwater flood risk is VERY LOW for the next five days.' }
+      ],
+      headline: 'Low river flood risk.',
+      amendments: '',
+      future_forecast: '',
+      last_modified_at: moment().utc().format(),
+      next_issue_due_at: moment().utc().add(1, 'days').format(),
+      png_thumbnails_with_days_url: 'https://s3-eu-west-1.amazonaws.com/assets.ffc-environment-agency.fgs.metoffice.gov.uk/fgs-statements/01342/FGSthumbnails-with-days.png',
+      risk_areas: [{
+        id: 4000,
+        statement_id: 1342,
+        updated_at: moment().utc().format(),
+        beyond_five_days: false,
+        ordering: 1,
+        risk_area_blocks: [{
+          id: 6000,
+          days: [1, 2, 3, 4, 5],
+          risk_area_id: 4000,
+          risk_levels: {
+            river: [3, 3]
+          },
+          additional_information: 'River flooding impacts are possible.',
+          polys: [{
+            id: 9000,
+            coordinates: [[
+              [-4.174804687500001, 54.625522440842246],
+              [-3.146484643220902, 54.96247882239579],
+              [-2.531250268220902, 55.36412729483159],
+              [-2.3994143307209015, 55.65031856976615],
+              [-1.9599612057209017, 55.90980992336868],
+              [0.47141432762146, 53.83838539206968],
+              [0.21972656250000003, 53.32848623940286],
+              [-4.630237072706223, 53.13119286673744],
+              [-4.174804687500001, 54.625522440842246]
+            ]],
+            area: 8.42310580332646,
+            label_position: [-2.08465592935681, 54.1276207351252],
+            poly_type: 'inland',
+            risk_area_block_id: 6000,
+            counties: [{ name: 'Greater Manchester' }]
+          }]
+        }]
+      }],
+      aoc_maps: [],
+      public_forecast: {
+        id: 1342,
+        england_forecast: 'Test forecast.',
+        welsh_forecast: 'Test forecast.',
+        english_forecast: 'Test forecast.',
+        wales_forecast_english: 'Test forecast.',
+        wales_forecast_welsh: 'Test forecast.',
+        published_at: null
+      }
+    }
+
+    const place = {
+      name: 'Manchester, Greater Manchester',
+      center: [-2.2343759536743164, 53.480712890625],
+      bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054],
+      bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474],
+      address: 'Manchester, Greater Manchester',
+      isEngland: { is_england: true },
+      isUK: true,
+      isScotlandOrNorthernIreland: false
+    }
+
+    const viewModel = new OutlookTabsModel(outlook, place)
+
+    expect(viewModel.allDaysSame).to.equal(true)
+    expect(viewModel.day5Name).to.be.a.string()
+    expect(viewModel.lowForFive).to.be.undefined()
+  })
+
+  it('should not set "allDaysSame" when days have different likelihood, source or impact', async () => {
+    const outlook = data.fgs
+
+    outlook.issued_at = moment().utc().format()
+
+    const place = {
+      name: 'Manchester, Greater Manchester',
+      center: [-2.2343759536743164, 53.480712890625],
+      bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054],
+      bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474],
+      address: 'Manchester, Greater Manchester',
+      isEngland: { is_england: true },
+      isUK: true,
+      isScotlandOrNorthernIreland: false
+    }
+
+    const viewModel = new OutlookTabsModel(outlook, place)
+
+    expect(viewModel.allDaysSame).to.be.undefined()
+  })
+
   it('should capitalise source 3-i4-l2', async () => {
     const outlook = data.fgs3i4l2
 
