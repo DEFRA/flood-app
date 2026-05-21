@@ -231,7 +231,7 @@ document.addEventListener('readystatechange', () => {
     }
 
     // If the user has opted out of analytics, ensure that associated cookies
-    // are removed. This is required to prevent asset retrieval frpm recreating
+    // are removed. This is required to prevent asset retrieval from recreating
     // expired cookies after the user has opted out.
     if (window.flood.utils.getCookie('google-analytics-opt-out')) {
       deleteGA4Cookies()
