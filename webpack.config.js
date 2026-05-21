@@ -1,7 +1,6 @@
 const path = require('path')
 const env = process.env.NODE_ENV
 const inDev = env === 'dev' || env === 'development'
-const webpack = require('webpack')
 
 module.exports = (env, argv) => ({
   mode: !inDev ? 'production' : 'development',
@@ -38,11 +37,5 @@ module.exports = (env, argv) => ({
       }
     ]
   },
-  target: ['web', 'es5'],
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env.GA4_ID': JSON.stringify(process.env.FLOOD_APP_GA4_ID),
-      'process.env.GTM_ID': JSON.stringify(process.env.FLOOD_APP_GTM_ID)
-    })
-  ]
+  target: ['web', 'es5']
 })
