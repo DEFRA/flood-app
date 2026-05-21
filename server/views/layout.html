@@ -136,7 +136,7 @@
 {% block pageScripts %}{% endblock %}
 {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script>
-    window.flood.gtmAccId = "{{ gtmAccId }}"
+    globalThis.flood.gtmAccId = "{{ gtmAccId }}"
   </script>
   <script src="{{ assetPath }}/js/core.js"></script>
   {% if webchat.enabled %}
