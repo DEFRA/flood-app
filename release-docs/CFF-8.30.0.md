@@ -8,7 +8,9 @@
   
 - FSR-1609 | 5DF duplication removed (#1161)
   
-- FSR-1636 | FSR-1643 - webchat updates (#1160)
+- FSR-1636 | @nice-devone/nice-cxone-chat-web-sdk upgrade
+
+- FSR-1643 | webchat links and content (#1160)
   
 - FSR-1608 | removing FGS location tabs (#1156)
   
