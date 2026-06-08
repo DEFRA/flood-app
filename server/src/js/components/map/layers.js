@@ -19,6 +19,12 @@ const targetAreaPolygonsSource = new VectorSource({
   // Custom loader to only send get request if below resolution cutoff
   loader: (extent, resolution) => {
     if (resolution < window.flood.maps.liveMaxBigZoom) {
+      const taCode = window.flood.model?.targetArea?.id || 'none'
+      console.log('[targetAreaPolygonsSource] requesting flood polygons', {
+        taCode,
+        resolution,
+        extent
+      })
       xhr(`/api/ows?service=wfs&version=2.0.0&request=getFeature&typename=flood:flood_warning_alert&outputFormat=application/json&srsname=EPSG:3857&bbox=${extent.join(',')},EPSG:3857`, (err, json) => {
         if (err) {
           console.log('Error: ' + err)
