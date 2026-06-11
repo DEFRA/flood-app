@@ -10,6 +10,6 @@ jobs:
         steps:
           - name: 🛂 Enforce Jira Issue Key in Pull Request Title
             if: ${{ github.base_ref == 'development' && (startsWith(github.head_ref, 'feature') || startsWith(github.head_ref, 'fix'))}}
-            uses: ryanvade/enforce-pr-title-style-action@v1
+            uses: ryanvade/enforce-pr-title-style-action@6219de5d10b3205f0b41215bdf51a01b89bd8a1b # v1
             with:
               projectKey: FSR
