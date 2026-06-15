@@ -74,5 +74,3 @@ For DEFRA employees, examples of these environment variables are available in ou
 | FLOOD_APP_RATE_LIMIT_REQUESTS | rate limit  | no | | Number of total requests that can be made on a given path per user per period. Set to false to disable limiting requests per path per user. |  |
 | FLOOD_APP_RATE_LIMIT_EXPIRES_IN | rate limit  | no | | Time (in milliseconds) of period for number of total requests |  |
 | FLOOD_APP_RATE_LIMIT_WHITELIST | rate limit white-listed ip addresses | no | | Colon separated list of IPs to bypass rate limiting e.g. '1.1.1.1:2.2.2.2' |  |
-
-
