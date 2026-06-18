@@ -129,6 +129,8 @@ document.addEventListener('readystatechange', () => {
       rejectButton.addEventListener('click', function (e) {
         e.preventDefault()
         window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
+        // Delete GA cookies immediately on rejection
+        deleteGA4Cookies()
 
         document.getElementById('cookie-message').style.display = 'none'
         document.getElementById('cookie-confirmation-type').innerText = 'rejected'
@@ -162,18 +164,16 @@ document.addEventListener('readystatechange', () => {
     function deleteGA4Cookies () {
       try {
         const cookies = document.cookie.split(';')
+        // Match all GA cookie types: _ga, _ga_*, _gid, _gat_*, _dc_gtm_*
+        const googleCookiePattern = /^_ga$|^_ga_.*$|^_gid$|^_gat_.*$|^_dc_gtm_.*$/
 
         for (let i = 0; i < cookies.length; i++) {
           const cookie = cookies[i].trim()
+          const cookieName = cookie.split('=')[0]
 
-          const name = cookie.split('=')
-
-          // Check if the cookie name starts with "_ga_"
-          if (cookie.indexOf('_ga_') === 0) {
-            deleteCookie(name[0])
-          }
-          if (cookie.indexOf('_ga') === 0) {
-            deleteCookie(name[0])
+          // Check if the cookie matches any GA pattern
+          if (googleCookiePattern.test(cookieName)) {
+            deleteCookie(cookieName)
           }
         }
       } catch (error) {
@@ -184,11 +184,19 @@ document.addEventListener('readystatechange', () => {
     function deleteCookie (name) {
       try {
         const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
-        document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + window.location.hostname
+        const hostname = window.location.hostname
 
-        // clears GA cookies that are set on the .defra.cloud domain by default, may be able to remove line
-        // in future once GA4 is fully rolled out to all users
-        document.cookie = name + '=; expires=' + expires + '; path=/; domain=.defra.cloud;'
+        // Delete on current hostname
+        document.cookie = name + '=; expires=' + expires + '; path=/'
+
+        // Delete on all parent domain variants
+        // e.g., for 'service.example.gov.uk', try:
+        // .example.gov.uk, .gov.uk, etc.
+        const domainParts = hostname.split('.')
+        for (let i = 1; i < domainParts.length; i++) {
+          const domain = '.' + domainParts.slice(i).join('.')
+          document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + domain
+        }
       } catch (error) {
         console.error(`Failed to delete cookie ${name}: ${error}`)
       }
@@ -230,9 +238,11 @@ document.addEventListener('readystatechange', () => {
       }
     }
 
-    // If the user has opted out of analytics, ensure that associated cookies
-    // are removed. This is required to prevent asset retrieval from recreating
-    // expired cookies after the user has opted out.
+    // Legacy opt-out cookie cleanup for backwards compatibility.
+    // Users who previously rejected analytics under the old system will have
+    // a 'google-analytics-opt-out' cookie. This ensures their choice is respected
+    // by removing any GA cookies on page load. Can be removed once all users have
+    // migrated to the new consent system.
     if (window.flood.utils.getCookie('google-analytics-opt-out')) {
       deleteGA4Cookies()
     }
