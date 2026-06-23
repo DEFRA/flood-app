@@ -151,7 +151,7 @@ document.addEventListener('readystatechange', () => {
       }
     }
 
-   function deleteGA4Cookies () {
+    function deleteGA4Cookies () {
       try {
         const cookies = document.cookie.split(';')
 
