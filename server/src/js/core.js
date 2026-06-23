@@ -176,19 +176,10 @@ document.addEventListener('readystatechange', () => {
     function deleteCookie (name) {
       try {
         const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
-        const hostname = window.location.hostname
-
-        // Delete on current hostname
-        document.cookie = name + '=; expires=' + expires + '; path=/'
-
-        // Delete on all parent domain variants
-        // e.g., for 'service.example.gov.uk', try:
-        // .example.gov.uk, .gov.uk, etc.
-        const domainParts = hostname.split('.')
-        for (let i = 1; i < domainParts.length; i++) {
-          const domain = '.' + domainParts.slice(i).join('.')
-          document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + domain
-        }
+        document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + window.location.hostname
+        // clears GA cookies that are set on the .defra.cloud domain by default, may be able to remove line
+        // in future once GA4 is fully rolled out to all users
+        document.cookie = name + '=; expires=' + expires + '; path=/; domain=.defra.cloud;'
       } catch (error) {
         console.error(`Failed to delete cookie ${name}: ${error}`)
       }
