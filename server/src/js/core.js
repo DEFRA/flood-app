@@ -70,25 +70,24 @@ document.addEventListener('readystatechange', () => {
       })
     }
 
-    const elem = document.getElementById('cookie-banner')
+    const cookieBanner = document.querySelector('.govuk-cookie-banner')
     let calledGTag = false
 
     // Add tooltips
     window.flood.createTooltips()
 
     // Check not on cookie settings page
-    if (elem) {
+    if (cookieBanner) {
       const seenCookieMessage = /(^|;)\s*seen_cookie_message=/.test(document.cookie)
       // Remove banner if seen and avoid flicker
       if (seenCookieMessage) {
-        elem.parentNode.removeChild(elem)
+        cookieBanner.parentNode.removeChild(cookieBanner)
       } else {
-        elem.style.display = 'block'
+        cookieBanner.removeAttribute('hidden')
       }
     }
 
-    const cookieButtons = document.getElementById('cookie-buttons')
-    // JS/Non-JS content - We may already havea helper on live for this
+    // JS/Non-JS content - We may already have a helper on live for this
     const nonJsElements = document.getElementsByClassName('defra-no-js')
     Array.prototype.forEach.call(nonJsElements, function (element) {
       element.style.display = 'none'
@@ -98,56 +97,47 @@ document.addEventListener('readystatechange', () => {
       element.removeAttribute('style')
     })
 
-    if (cookieButtons) {
-      const settingsButton = document.getElementById('cookie-settings')
-      const acceptButton = document.createElement('button')
-      const rejectButton = document.createElement('button')
+    if (cookieBanner) {
+      const bannerMessages = cookieBanner.querySelectorAll('.govuk-cookie-banner__message')
+      const questionMessage = bannerMessages[0]
+      const acceptConfirmMessage = bannerMessages[1]
+      const rejectConfirmMessage = bannerMessages[2]
+
+      const acceptButton = cookieBanner.querySelector('button[name="cookies[additional]"][value="yes"]')
+      const rejectButton = cookieBanner.querySelector('button[name="cookies[additional]"][value="no"]')
+      const hideButtons = cookieBanner.querySelectorAll('button[name="cookies[hide]"]')
 
       // Accept button
-      acceptButton.className = 'defra-cookie-banner__button-accept'
-      acceptButton.innerText = 'Accept analytics cookies'
-      cookieButtons.insertBefore(acceptButton, cookieButtons.childNodes[0])
+      if (acceptButton) {
+        acceptButton.addEventListener('click', function (e) {
+          e.preventDefault()
+          window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
+          window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
+          calledGTag = true
+          window.flood.utils.setGTagAnalyticsCookies()
+          questionMessage.setAttribute('hidden', '')
+          if (acceptConfirmMessage) acceptConfirmMessage.removeAttribute('hidden')
+        })
+      }
 
-      // First button in banner (Accept)
-      acceptButton.addEventListener('click', function (e) {
-        e.preventDefault()
-        window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
-        window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
-        calledGTag = true
-        window.flood.utils.setGTagAnalyticsCookies()
-        document.getElementById('cookie-message').style.display = 'none'
-        document.getElementById('cookie-confirmation-type').innerText = 'accepted'
-        document.getElementById('cookie-confirmation').style.display = ''
-      })
+      // Reject button
+      if (rejectButton) {
+        rejectButton.addEventListener('click', function (e) {
+          e.preventDefault()
+          window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
+          // Delete GA cookies immediately on rejection
+          deleteGA4Cookies()
+          questionMessage.setAttribute('hidden', '')
+          if (rejectConfirmMessage) rejectConfirmMessage.removeAttribute('hidden')
+        })
+      }
 
-      // Reject Button
-      rejectButton.className = 'defra-cookie-banner__button-reject'
-      rejectButton.innerText = 'Reject analytics cookies'
-      cookieButtons.insertBefore(rejectButton, cookieButtons.childNodes[1])
-
-      // Second button in banner (Reject)
-      rejectButton.addEventListener('click', function (e) {
-        e.preventDefault()
-        window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
-        // Delete GA cookies immediately on rejection
-        deleteGA4Cookies()
-
-        document.getElementById('cookie-message').style.display = 'none'
-        document.getElementById('cookie-confirmation-type').innerText = 'rejected'
-        document.getElementById('cookie-confirmation').style.display = ''
-      })
-
-      // Third button in banner (Settings)
-      settingsButton.addEventListener('click', function (e) {
-        e.preventDefault()
-        window.location.href = settingsButton.getAttribute('href')
-      })
-
-      const hideButton = document.getElementById('cookie-hide')
-
-      hideButton.addEventListener('click', function (e) {
-        e.preventDefault()
-        document.getElementById('cookie-banner').style.display = 'none'
+      // Hide buttons (in confirmation panels)
+      hideButtons.forEach(function (hideButton) {
+        hideButton.addEventListener('click', function (e) {
+          e.preventDefault()
+          cookieBanner.setAttribute('hidden', '')
+        })
       })
     }
 
@@ -161,19 +151,21 @@ document.addEventListener('readystatechange', () => {
       }
     }
 
-    function deleteGA4Cookies () {
+   function deleteGA4Cookies () {
       try {
         const cookies = document.cookie.split(';')
-        // Match all GA cookie types: _ga, _ga_*, _gid, _gat_*, _dc_gtm_*
-        const googleCookiePattern = /^_ga$|^_ga_.*$|^_gid$|^_gat_.*$|^_dc_gtm_.*$/
 
         for (let i = 0; i < cookies.length; i++) {
           const cookie = cookies[i].trim()
-          const cookieName = cookie.split('=')[0]
 
-          // Check if the cookie matches any GA pattern
-          if (googleCookiePattern.test(cookieName)) {
-            deleteCookie(cookieName)
+          const name = cookie.split('=')
+
+          // Check if the cookie name starts with "_ga_"
+          if (cookie.indexOf('_ga_') === 0) {
+            deleteCookie(name[0])
+          }
+          if (cookie.indexOf('_ga') === 0) {
+            deleteCookie(name[0])
           }
         }
       } catch (error) {
