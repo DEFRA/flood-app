@@ -124,10 +124,12 @@ document.addEventListener('readystatechange', () => {
       if (rejectButton) {
         rejectButton.addEventListener('click', function (e) {
           e.preventDefault()
+          console.log('[Cookie Reject] User rejected analytics')
           window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
           // Persist rejection so analytics are not re-enabled on refresh.
           window.flood.utils.setCookie('set_cookie_usage', '', -1)
           window.flood.utils.disableGoogleAnalytics()
+          console.log('[Cookie Reject] After rejection - set_cookie_usage:', window.flood.utils.getCookie('set_cookie_usage'), 'google-analytics-opt-out:', window.flood.utils.getCookie('google-analytics-opt-out'))
           // Delete GA cookies immediately on rejection
           deleteGA4Cookies()
           questionMessage.setAttribute('hidden', '')
@@ -220,9 +222,13 @@ document.addEventListener('readystatechange', () => {
       // finally make Gtag page view if not before and cookie allows
       const hasUsageConsent = window.flood.utils.getCookie('set_cookie_usage')
       const hasOptOut = window.flood.utils.getCookie('google-analytics-opt-out')
+      console.log('[Analytics Startup] hasUsageConsent:', hasUsageConsent, 'hasOptOut:', hasOptOut)
       if (hasUsageConsent && !hasOptOut) {
+        console.log('[Analytics Startup] Loading GTM')
         calledGTag = true
         window.flood.utils.setGTagAnalyticsCookies()
+      } else {
+        console.log('[Analytics Startup] GTM blocked - usage consent missing or opt-out active')
       }
     }
 
@@ -232,6 +238,7 @@ document.addEventListener('readystatechange', () => {
     // by removing any GA cookies on page load. Can be removed once all users have
     // migrated to the new consent system.
     // if (window.flood.utils.getCookie('google-analytics-opt-out')) {
+    //   console.log('[Analytics Startup] Opt-out active - cleaning up GA cookies')
     //   deleteGA4Cookies()
     // }
   }

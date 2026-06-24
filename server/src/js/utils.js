@@ -96,13 +96,21 @@ window.flood.utils = {
     return v ? v[1] : null
   },
   getCookie: (name) => {
-    const v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)')
-    return v ? v[2] : null
+    // More robust regex that handles edge cases with special characters
+    const match = document.cookie.split('; ').find(row => row.startsWith(name + '='))
+    return match ? match.split('=')[1] : null
   },
   setCookie: (name, value, days) => {
     const d = new Date()
     d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
-    document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + window.location.hostname
+    const expires = d.toGMTString()
+    // Set on current hostname
+    document.cookie = name + '=' + value + ';path=/;expires=' + expires + ';domain=' + window.location.hostname
+    // Also set on .defra.cloud domain for consistency with how GA cookies may be set
+    if (window.location.hostname !== 'localhost') {
+      document.cookie = name + '=' + value + ';path=/;expires=' + expires + ';domain=.defra.cloud'
+    }
+    console.log('[setCookie]', name, '=', value, 'days:', days)
   },
   setGTagAnalyticsCookies: () => {
     const script = document.createElement('script')
