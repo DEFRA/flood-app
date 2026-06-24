@@ -226,8 +226,8 @@ document.addEventListener('readystatechange', () => {
     // a 'google-analytics-opt-out' cookie. This ensures their choice is respected
     // by removing any GA cookies on page load. Can be removed once all users have
     // migrated to the new consent system.
-    if (window.flood.utils.getCookie('google-analytics-opt-out')) {
-      deleteGA4Cookies()
-    }
+    // if (window.flood.utils.getCookie('google-analytics-opt-out')) {
+    //   deleteGA4Cookies()
+    // }
   }
 })
