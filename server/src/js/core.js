@@ -125,6 +125,9 @@ document.addEventListener('readystatechange', () => {
         rejectButton.addEventListener('click', function (e) {
           e.preventDefault()
           window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
+          // Persist rejection so analytics are not re-enabled on refresh.
+          window.flood.utils.setCookie('set_cookie_usage', '', -1)
+          window.flood.utils.disableGoogleAnalytics()
           // Delete GA cookies immediately on rejection
           deleteGA4Cookies()
           questionMessage.setAttribute('hidden', '')
@@ -215,7 +218,9 @@ document.addEventListener('readystatechange', () => {
 
     if (!calledGTag) {
       // finally make Gtag page view if not before and cookie allows
-      if (window.flood.utils.getCookie('set_cookie_usage')) {
+      const hasUsageConsent = window.flood.utils.getCookie('set_cookie_usage')
+      const hasOptOut = window.flood.utils.getCookie('google-analytics-opt-out')
+      if (hasUsageConsent && !hasOptOut) {
         calledGTag = true
         window.flood.utils.setGTagAnalyticsCookies()
       }
