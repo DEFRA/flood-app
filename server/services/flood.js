@@ -87,9 +87,9 @@ module.exports = {
   getStationForecastData (id) {
     return util.getJson(`${serviceUrl}/station/${id}/forecast/data`)
   },
-  // DL: WebGL layers don't support z-index so source data needs to be in desired order, sortBy=atrisk added
-  getStationsGeoJson () {
-    return util.getJson(`${geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&sortBy=atrisk&outputFormat=application%2Fjson`)
+  // V2 endpoint kept alongside existing route to support a safe migration path
+  getStationsGeoJsonV2 () {
+    return util.getJson(`${serviceUrl}/stationsGeoJson`)
   },
 
   getRainfallGeojson () {

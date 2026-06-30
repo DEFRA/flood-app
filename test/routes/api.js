@@ -30,22 +30,19 @@ describe('Route - API', () => {
   })
 
   describe('/warnings', () => {
-    it('should 200 with stations geojson', async () => {
-      const getStationsGeojson = () => {
-        return JSON.parse('{"type": "FeatureCollection", "features": []}')
+    it('should 200 with stations v2 geojson', async () => {
+      const getStationsGeojsonV2 = () => {
+        return []
       }
 
       const floodService = require('../../server/services/flood')
-      sandbox.stub(floodService, 'getStationsGeoJson').callsFake(getStationsGeojson)
-
-      // Fake the cached rainfall data
-      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+      sandbox.stub(floodService, 'getStationsGeoJsonV2').callsFake(getStationsGeojsonV2)
 
       const route = {
         plugin: {
           name: 'stations',
           register: (server) => {
-            server.route(require('../../server/routes/api/stations.geojson'))
+            server.route(require('../../server/routes/api/stations-v2.geojson'))
           }
         }
       }
@@ -60,13 +57,14 @@ describe('Route - API', () => {
 
       const options = {
         method: 'GET',
-        url: '/api/stations.geojson'
+        url: '/api/stations-v2.geojson'
       }
 
       const response = await server.inject(options)
 
       expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('{"type":"FeatureCollection","features":[]}')
+      expect(response.payload).to.contain('"type":"FeatureCollection"')
+      expect(response.payload).to.contain('"features":[]')
     })
 
     it('should 200 with rainfall geojson', async () => {

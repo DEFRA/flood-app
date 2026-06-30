@@ -278,20 +278,19 @@ describe('Service - Flood Endpoints', () => {
     expect(result).to.equal('ok')
   })
 
-  it('should return ok: getStationsGeoJson', async () => {
+  it('should return ok: getStationsGeoJsonV2', async () => {
     const util = require('../../server/util')
-    sandbox.stub(config, 'geoserverUrl').value('http://server1')
 
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server1/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&sortBy=atrisk&outputFormat=application%2Fjson')
+      .withArgs('http://server2/stationsGeoJson')
       .once()
       .returns('ok')
 
     const floodService = require('../../server/services/flood')
 
-    const result = await floodService.getStationsGeoJson()
+    const result = await floodService.getStationsGeoJsonV2()
 
     expect(result).to.equal('ok')
   })

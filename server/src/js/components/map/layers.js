@@ -132,7 +132,7 @@ window.flood.maps.layers = {
       source: new VectorSource({
         format: new GeoJSON(),
         projection: 'EPSG:3857',
-        url: '/api/stations.geojson'
+        url: '/api/stations-v2.geojson'
       }),
       style: window.flood.maps.styles.stations,
       visible: true,

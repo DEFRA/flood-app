@@ -13,7 +13,7 @@ const STANDARD_TIMEOUT = seconds(10)
 const expiresIn15 = 15
 const floodGetOutlookGenerateTimeout = 30
 const floodGetRainfallGeoJsonGenerateTimeout = 30
-const floodGetStationsGeoJsonGenerateTimeout = 30
+const floodGetStationsGeoJsonV2GenerateTimeout = 30
 
 // Cache method wrapper for hapi server
 // If we have any service calls we want to store in elasticache (in memory cache if localCache)
@@ -160,11 +160,11 @@ module.exports = server => {
     }
   })
 
-  server.method('flood.getStationsGeoJson', floodServices.getStationsGeoJson, {
+  server.method('flood.getStationsGeoJsonV2', floodServices.getStationsGeoJsonV2, {
     cache: {
       cache: cacheType,
       expiresIn: minutes(1),
-      generateTimeout: seconds(floodGetStationsGeoJsonGenerateTimeout)
+      generateTimeout: seconds(floodGetStationsGeoJsonV2GenerateTimeout)
     }
   })
 

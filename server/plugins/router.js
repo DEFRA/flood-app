@@ -6,7 +6,7 @@ const routes = [].concat(
   require('../routes/target-area'),
   require('../routes/station'),
   require('../routes/public'),
-  require('../routes/api/stations.geojson'),
+  require('../routes/api/stations-v2.geojson'),
   require('../routes/api/rainfall.geojson'),
   require('../routes/api/warnings.geojson'),
   require('../routes/api/warnings'),

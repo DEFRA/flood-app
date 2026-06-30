@@ -34,7 +34,7 @@ describe('Route - River and Sea Levels', () => {
       getStationById: sandbox.stub(floodService, 'getStationById'),
       getStationsWithin: sandbox.stub(floodService, 'getStationsWithin'),
       getStationsByRadius: sandbox.stub(floodService, 'getStationsByRadius'),
-      getStationsGeoJson: sandbox.stub(floodService, 'getStationsGeoJson'),
+      getStationsGeoJsonV2: sandbox.stub(floodService, 'getStationsGeoJsonV2'),
       getStationsWithinTargetArea: sandbox.stub(floodService, 'getStationsWithinTargetArea'),
       getRainfallStation: sandbox.stub(floodService, 'getRainfallStation'),
       getRiverById: sandbox.stub(floodService, 'getRiverById'),
@@ -484,11 +484,11 @@ describe('Route - River and Sea Levels', () => {
     it('should 302 with rainfall id', async () => {
       stubs.getStationsByRadius.callsFake(() => data.stationsWithinRadiusRainfallid)
       stubs.getRainfallStation.callsFake(() => data.cachedRainfallStation)
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJsonV2.callsFake(() => data.cachedRainfallStation)
 
       // Set cached stationsGeojson
       const floodService = require('../../server/services/flood')
-      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+      floodService.stationsGeojson = await floodService.getStationsGeoJsonV2()
 
       const options = {
         method: 'GET',
@@ -503,10 +503,10 @@ describe('Route - River and Sea Levels', () => {
     it('should return with radius and show coastal station in river with minus value showing', async () => {
       stubs.getStationsByRadius.callsFake(() => data.stationsWithRadiusRainfallid)
       stubs.getRainfallStation.callsFake(() => data.cachedRainfallStation)
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJsonV2.callsFake(() => data.cachedRainfallStation)
 
       const floodService = require('../../server/services/flood')
-      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+      floodService.stationsGeojson = await floodService.getStationsGeoJsonV2()
 
       const options = {
         method: 'GET',
@@ -534,10 +534,10 @@ describe('Route - River and Sea Levels', () => {
     it('should 404 with no id', async () => {
       stubs.getStationsByRadius.callsFake(() => data.stationsWithRadiusRainfallid)
       stubs.getRainfallStation.callsFake(() => data.cachedRainfallStation)
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJsonV2.callsFake(() => data.cachedRainfallStation)
 
       const floodService = require('../../server/services/flood')
-      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+      floodService.stationsGeojson = await floodService.getStationsGeoJsonV2()
 
       const options = {
         method: 'GET',
@@ -557,10 +557,10 @@ describe('Route - River and Sea Levels', () => {
         return rainfallStation.station_reference === 'GKHLETOY'
       }))
 
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJsonV2.callsFake(() => data.cachedRainfallStation)
 
       const floodService = require('../../server/services/flood')
-      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+      floodService.stationsGeojson = await floodService.getStationsGeoJsonV2()
 
       const options = {
         method: 'GET',
@@ -578,7 +578,7 @@ describe('Route - River and Sea Levels', () => {
       stubs.getTargetArea.callsFake(() => data.getTA)
 
       const floodService = require('../../server/services/flood')
-      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+      floodService.stationsGeojson = await floodService.getStationsGeoJsonV2()
 
       const options = {
         method: 'GET',
@@ -596,7 +596,7 @@ describe('Route - River and Sea Levels', () => {
       stubs.getTargetArea.callsFake(() => data.getTA)
 
       const floodService = require('../../server/services/flood')
-      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+      floodService.stationsGeojson = await floodService.getStationsGeoJsonV2()
 
       const options = {
         method: 'GET',
@@ -646,10 +646,10 @@ describe('Route - River and Sea Levels', () => {
           id: 'river-tyne'
         }
       ])
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJsonV2.callsFake(() => data.cachedRainfallStation)
 
       const floodService = require('../../server/services/flood')
-      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+      floodService.stationsGeojson = await floodService.getStationsGeoJsonV2()
 
       const options = {
         method: 'GET',
@@ -751,10 +751,10 @@ describe('Route - River and Sea Levels', () => {
           river_id: 'tetbury-avon'
         }
       ])
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJsonV2.callsFake(() => data.cachedRainfallStation)
 
       const floodService = require('../../server/services/flood')
-      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+      floodService.stationsGeojson = await floodService.getStationsGeoJsonV2()
 
       const options = {
         method: 'GET',
@@ -922,10 +922,10 @@ describe('Route - River and Sea Levels', () => {
           river_id: 'tetbury-avon'
         }
       ])
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJsonV2.callsFake(() => data.cachedRainfallStation)
 
       const floodService = require('../../server/services/flood')
-      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+      floodService.stationsGeojson = await floodService.getStationsGeoJsonV2()
 
       const options = {
         method: 'GET',
@@ -1024,11 +1024,11 @@ describe('Route - River and Sea Levels', () => {
           river_id: 'tetbury-avon'
         }
       ])
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJsonV2.callsFake(() => data.cachedRainfallStation)
 
       // Set cached stationsGeojson
       const floodService = require('../../server/services/flood')
-      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+      floodService.stationsGeojson = await floodService.getStationsGeoJsonV2()
 
       const options = {
         method: 'GET',
@@ -1098,10 +1098,10 @@ describe('Route - River and Sea Levels', () => {
           id: 'river-mersey'
         }
       ])
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJsonV2.callsFake(() => data.cachedRainfallStation)
 
       const floodService = require('../../server/services/flood')
-      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+      floodService.stationsGeojson = await floodService.getStationsGeoJsonV2()
 
       const options = {
         method: 'GET',
@@ -1371,11 +1371,11 @@ describe('Route - River and Sea Levels', () => {
       stubs.getJson.callsFake(() => data.warringtonGetJson)
       stubs.getStationsByRadius.callsFake(() => data.stationsWithinRadius)
       stubs.getStationById.callsFake(() => data.riverStation7224)
-      stubs.getStationsGeoJson.callsFake(() => data.cachedStation)
+      stubs.getStationsGeoJsonV2.callsFake(() => data.cachedStation)
       stubs.getIsEngland.callsFake(() => ({ is_england: true }))
 
       const floodService = require('../../server/services/flood')
-      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+      floodService.stationsGeojson = await floodService.getStationsGeoJsonV2()
 
       const options = {
         method: 'GET',
@@ -1392,11 +1392,11 @@ describe('Route - River and Sea Levels', () => {
       stubs.getJson.callsFake(() => data.warringtonGetJson)
       stubs.getStationsByRadius.callsFake(() => data.stationsWithinRadius)
       stubs.getStationById.callsFake(() => data.riverStation7224)
-      stubs.getStationsGeoJson.callsFake(() => data.cachedStation)
+      stubs.getStationsGeoJsonV2.callsFake(() => data.cachedStation)
       stubs.getIsEngland.callsFake(() => ({ is_england: true }))
 
       const floodService = require('../../server/services/flood')
-      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+      floodService.stationsGeojson = await floodService.getStationsGeoJsonV2()
 
       const options = {
         method: 'GET',
@@ -1418,11 +1418,11 @@ describe('Route - River and Sea Levels', () => {
       stubs.getJson.callsFake(() => data.warringtonGetJson)
       stubs.getStationsByRadius.callsFake(() => data.stationsWithinRadius)
       stubs.getStationById.callsFake(() => data.riverStation7224)
-      stubs.getStationsGeoJson.callsFake(() => data.cachedStation)
+      stubs.getStationsGeoJsonV2.callsFake(() => data.cachedStation)
       stubs.getIsEngland.callsFake(() => ({ is_england: true }))
 
       const floodService = require('../../server/services/flood')
-      floodService.stationsGeojson = await floodService.getStationsGeoJson()
+      floodService.stationsGeojson = await floodService.getStationsGeoJsonV2()
 
       const options = {
         method: 'GET',
