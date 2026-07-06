@@ -54,6 +54,10 @@
   margin-bottom: 10px;
 }
 
+.defra-cookie-settings__analytics-name-column {
+  width: 30%;
+}
+
 @include govuk-media-query($media-type: print) {
   .defra-cookie-banner {
     display: none !important;
