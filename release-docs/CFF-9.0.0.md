@@ -1,7 +1,7 @@
 # Check For Flooding Release
 
 - Version: 9.0.0
-- Proposed Release Date: 
+- Proposed Release Date: 22nd July 2026
 - Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/37414/tab/release-report-all-issues
 
 ## Sense Check
@@ -12,7 +12,7 @@
   - [flood-service](https://github.com/DEFRA/flood-service)
 
 - Add any required infrastructure changes such as redirects to the infrastructure changes section below
-- Once this sense check is done, delete this section 
+- Once this sense check is done, delete this section
 
 ## Tickets
 
