@@ -12,7 +12,7 @@
   - [flood-service](https://github.com/DEFRA/flood-service)
 
 - Add any required infrastructure changes such as redirects to the infrastructure changes section below
-- Once this sense check is done, delete this section
+- Once this sense check is done, delete this section 
 
 ## Tickets
 
