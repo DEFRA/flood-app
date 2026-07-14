@@ -34,7 +34,7 @@
 
 ## Instructions
 
-1. 2.  Execute LFW_{STAGE}_99_DEPLOY_FLOOD_DATA_PIPELINE_TF
+1. Execute LFW_{STAGE}_99_DEPLOY_FLOOD_DATA_PIPELINE_TF
 
     Ensure build parameters are set as follows:  
    - **TERRAGRUNT_BRANCH:** `master`  
