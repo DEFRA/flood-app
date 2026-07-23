@@ -98,3 +98,118 @@
         margin-bottom: 5px;
     }
 }
+
+.defra-search__input-wrapper .defra-search__button {
+    position: absolute;
+    top: 50%;
+    right: 2px;
+    transform: translateY(-50%);
+    height: 36px;
+    width: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Main layout */
+.defra-search__container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Input + search button stays grouped */
+.defra-search__input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+/* Input */
+.defra-search__input {
+    width: 100%;
+    height: 40px;
+    /* match buttons */
+    padding-right: 48px;
+    /* space for icon */
+    box-sizing: border-box;
+}
+
+.defra-search__button--search {
+    background: #1d70b8;
+    /* GOV.UK blue */
+    color: #ffffff;
+    /* icon becomes white */
+    border: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+
+/* Location button (GOV blue, white icon) */
+.defra-search__location-button {
+    background: #ffffff;
+    color: #0b0c0c;
+    border: 1px solid #b1b4b6;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease-in-out;
+    height: 40px;
+    width: 40px;
+    padding: 0;
+}
+
+/* Make SVG inherit colour */
+.defra-search__button svg,
+.defra-search__location-button svg {
+    fill: currentColor;
+}
+
+.defra-search__location-button svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+
+/* Hover */
+.defra-search__button--search:hover {
+    background: #5694ca;
+    /* darker GOV blue */
+}
+
+.defra-search__location-button:hover {
+    background: #dbdad9;
+    /* dark grey hover */
+
+}
+
+/* Focus (GOV.UK style) */
+.defra-search__button:focus,
+.defra-search__location-button:focus {
+    outline: 3px solid #ffdd00;
+    outline-offset: 0;
+}
+
+.defra-search__location-button:active {
+    background: #2b8cc4;
+}
+
+.defra-search__location-button[disabled] {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.defra-search__label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.app-show-with-js {
+    display: none !important;
+}
+
+.app-show-with-js.js-enabled {
+    display: inherit !important;
+}
