@@ -115,6 +115,7 @@
 /* Main layout */
 .defra-search__container {
     display: flex;
+    gap: 8px;
     align-items: center;
 }
 
@@ -164,6 +165,11 @@
     padding: 0;
 }
 
+.defra-search__location-button:focus {
+    outline: 3px solid $govuk-focus-colour;
+    outline-offset: 0;
+}
+
 /* Make SVG inherit colour */
 .defra-search__button svg,
 .defra-search__location-button svg {
@@ -183,6 +189,10 @@
 
 .defra-search__location-button:hover {
     background: govuk-colour('light-grey');
+}
+
+.defra-search__location-button:active {
+    background: govuk-colour('light-blue');
 }
 
 .defra-search__label {
