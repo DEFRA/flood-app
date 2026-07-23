@@ -98,3 +98,112 @@
         margin-bottom: 5px;
     }
 }
+
+.defra-search__input-wrapper .defra-search__button {
+    position: absolute;
+    top: 50%;
+    right: 2px;
+    transform: translateY(-50%);
+    height: 36px;
+    width: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Main layout */
+.defra-search__container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Legacy layout: input can still be a direct child of container */
+.defra-search__container>.defra-search__input {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+/* Input + search button stays grouped */
+.defra-search__input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+/* Input styling for the wrapped search layout */
+.defra-search__input-wrapper .defra-search__input {
+    width: 100%;
+    height: 40px;
+    /* match buttons */
+    padding-right: 48px;
+    /* space for icon */
+    box-sizing: border-box;
+}
+
+.defra-search__button--search {
+    background: govuk-colour('blue');
+    color: govuk-colour('white');
+    border: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+
+/* Location button (GOV blue, white icon) */
+.defra-search__location-button {
+    background: govuk-colour('white');
+    color: govuk-colour('black');
+    border: 1px solid govuk-colour('mid-grey');
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease-in-out;
+    height: 40px;
+    width: 40px;
+    padding: 0;
+}
+
+.defra-search__location-button:focus {
+    outline: 3px solid $govuk-focus-colour;
+    outline-offset: 0;
+}
+
+/* Make SVG inherit colour */
+.defra-search__button svg,
+.defra-search__location-button svg {
+    fill: currentColor;
+}
+
+.defra-search__location-button svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+
+/* Hover */
+.defra-search__button--search:hover {
+    background: govuk-colour('light-blue');
+}
+
+.defra-search__location-button:hover {
+    background: govuk-colour('light-grey');
+}
+
+.defra-search__location-button:active {
+    background: govuk-colour('light-blue');
+}
+
+.defra-search__label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.app-show-with-js {
+    display: none;
+}
+
+.app-show-with-js.js-enabled {
+    display: flex;
+}
