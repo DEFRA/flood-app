@@ -337,7 +337,7 @@
   window.flood.model = {{ model | dump(2) | safe }}
   window.flood.model.id = {{ model.station.id | dump | safe }}
   window.flood.model.telemetry = {{ model.telemetryRefined | dump | safe }}
-  window.flood.model.bingMaps = {{ model.bingMaps | dump | safe }}
+  window.flood.model.azureMaps = {{ model.azureMaps | dump | safe }}
 
   window.flood.model.mapButtonText = 'Map',
     window.flood.model.mapButtonClass = 'defra-link-icon-s',

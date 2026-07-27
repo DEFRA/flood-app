@@ -1,5 +1,5 @@
 // Plugin is to add some fields required by the service layout to route context object
-const { siteUrl, fakeBingCall } = require('../config')
+const { siteUrl, fakeLocationCall } = require('../config')
 const floodService = require('../services/flood')
 
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
             request.response.source.context.isDummyData = request.response.source.context.model?.isDummyData
             request.response.source.context.setCookieUsage = request.state.set_cookie_usage
             request.response.source.context.seenCookieMessage = request.state.seen_cookie_message
-            request.response.source.context.isfakeBingCall = fakeBingCall
+            request.response.source.context.isfakeLocationCall = fakeLocationCall
             if (request.response.source.context.model) {
               request.response.source.context.model.referer = requestHeadersReferer
             } else {
@@ -34,7 +34,7 @@ module.exports = {
             request.response.source.context = {
               fullUrl: encodeURI(fullUrl),
               isDummyData: false,
-              fakeBingCall: floodService.fakeBingCall,
+              fakeLocationCall: floodService.fakeLocationCall,
               model: {
                 referer: requestHeadersReferer
               }

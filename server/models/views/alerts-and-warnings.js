@@ -1,4 +1,4 @@
-const { bingKeyMaps } = require('../../config')
+const { azureMapsKey } = require('../../config')
 const config = require('../../config')
 
 class ViewModel {
@@ -39,7 +39,7 @@ class ViewModel {
       station: this.station,
       placeBbox: this.isEngland ? this.placeBbox : [],
       countFloods: this.countFloods,
-      bingMaps: bingKeyMaps
+      azureMaps: azureMapsKey
     }
   }
 }

@@ -69,8 +69,8 @@ function postJson (url, options) {
 /**
  * Convenience wrapper for HTTP GET requests expecting JSON response
  */
-function getJson (url) {
-  return get(url, { json: true })
+function getJson (url, options = {}) {
+  return get(url, { ...options, json: true })
 }
 
 module.exports = {

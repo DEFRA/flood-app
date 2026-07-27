@@ -1,6 +1,6 @@
 const moment = require('moment-timezone')
 const formatDate = require('../../util').formatDate
-const { bingKeyMaps, floodRiskUrl } = require('../../config')
+const { azureMapsKey, floodRiskUrl } = require('../../config')
 const tz = 'Europe/London'
 
 class ViewModel {
@@ -29,7 +29,7 @@ class ViewModel {
       dateUTC: moment().tz(tz).format(),
       feedback: false,
       hasWarningsRemoved: floods._groups[3].name === 4 && floods._groups[3].count > 0,
-      bingMaps: bingKeyMaps,
+      azureMaps: azureMapsKey,
       outlookTimestamp: `${formatDate(outlook._timestampOutlook, 'h:mma')} on ${formatDate(outlook._timestampOutlook, 'D MMMM YYYY')}`,
       outlookUTC: moment(outlook._timestampOutlook).tz(tz).format(),
       dataError: outlook.dataError,

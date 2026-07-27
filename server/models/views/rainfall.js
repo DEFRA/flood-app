@@ -29,7 +29,7 @@ class ViewModel {
       metaCanonical: '/',
       telemetry: rainfallStationTelemetry || [],
       floodRiskUrl: config.floodRiskUrl,
-      bingMaps: config.bingKeyMaps,
+      azureMaps: config.azureMapsKey,
       stationId: rainfallStation.station_reference,
       centroid: [rainfallStation.lon, rainfallStation.lat],
       region: rainfallStation.region,

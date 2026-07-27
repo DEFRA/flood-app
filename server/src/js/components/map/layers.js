@@ -3,7 +3,7 @@
 Initialises the window.flood.maps layers
 */
 import { Tile as TileLayer, Vector as VectorLayer, VectorImage } from 'ol/layer'
-import { BingMaps, Vector as VectorSource } from 'ol/source'
+import { XYZ, Vector as VectorSource } from 'ol/source'
 import { GeoJSON } from 'ol/format'
 
 const { xhr } = window.flood.utils
@@ -44,9 +44,8 @@ window.flood.maps.layers = {
     return new TileLayer({
       ref: 'road',
       className: 'defra-map-bg-canvas',
-      source: new BingMaps({
-        key: window.flood.model.bingMaps + '&c4w=1&cstl=rd&src=h&st=me|lv:0_trs|v:0_pt|v:0',
-        imagerySet: 'RoadOnDemand'
+      source: new XYZ({
+        url: `https://atlas.microsoft.com/map/tile?api-version=2022-08-01&tilesetId=microsoft.base.road&zoom={z}&x={x}&y={y}&subscription-key=${window.flood.model.azureMaps}`
       }),
       visible: false,
       zIndex: 0
@@ -56,9 +55,8 @@ window.flood.maps.layers = {
   road: () => {
     return new TileLayer({
       ref: 'road',
-      source: new BingMaps({
-        key: window.flood.model.bingMaps,
-        imagerySet: 'RoadOnDemand'
+      source: new XYZ({
+        url: `https://atlas.microsoft.com/map/tile?api-version=2022-08-01&tilesetId=microsoft.base.road&zoom={z}&x={x}&y={y}&subscription-key=${window.flood.model.azureMaps}`
       }),
       visible: false,
       zIndex: 0
@@ -68,9 +66,8 @@ window.flood.maps.layers = {
   satellite: () => {
     return new TileLayer({
       ref: 'satellite',
-      source: new BingMaps({
-        key: window.flood.model.bingMaps,
-        imagerySet: 'AerialWithLabelsOnDemand'
+      source: new XYZ({
+        url: `https://atlas.microsoft.com/map/tile?api-version=2022-08-01&tilesetId=microsoft.imagery&zoom={z}&x={x}&y={y}&subscription-key=${window.flood.model.azureMaps}`
       }),
       visible: false,
       zIndex: 0

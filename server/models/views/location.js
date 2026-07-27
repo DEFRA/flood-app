@@ -1,6 +1,6 @@
 const severity = require('../severity')
 const { groupBy } = require('../../util')
-const { floodFisUrl, bingKeyMaps, floodRiskUrl } = require('../../config')
+const { floodFisUrl, azureMapsKey, floodRiskUrl } = require('../../config')
 const moment = require('moment-timezone')
 
 class ViewModel {
@@ -68,7 +68,7 @@ class ViewModel {
       mapButtonText: this.hasActiveFloods ? 'View map of flood warnings and alerts' : 'View map',
       placeBbox: this.placeBbox,
       outlookDays: tabs.days,
-      bingMaps: bingKeyMaps
+      azureMaps: azureMapsKey
     }
   }
 

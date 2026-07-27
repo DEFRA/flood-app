@@ -1,6 +1,6 @@
 const severity = require('../severity')
 const moment = require('moment-timezone')
-const { bingKeyMaps, floodRiskUrl } = require('../../config')
+const { azureMapsKey, floodRiskUrl } = require('../../config')
 const getThresholdsForTargetArea = require('./lib/latest-levels')
 
 class ViewModel {
@@ -63,7 +63,7 @@ class ViewModel {
       targetArea: area.code,
       feedback: false,
       floodRiskUrl,
-      bingMaps: bingKeyMaps,
+      azureMaps: azureMapsKey,
       signUpForFloodWarnings: true,
       displayLongTermLink: true
     }, options)
