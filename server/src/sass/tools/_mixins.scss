@@ -1,4 +1,6 @@
- 
+@use "sass:math";
+@use "sass:string";
+
 /* Check there is ot already similar functinality in GOV.UK Frontend */
 
 @mixin defra-visually-hidden() {
@@ -16,10 +18,9 @@
 }
 
 @mixin high-contrast-mode-only() {
-    @media
-    screen and (forced-colors: active),
-    screen and (-ms-high-contrast: active)
-    {
+
+    @media screen and (forced-colors: active),
+    screen and (-ms-high-contrast: active) {
         @content
     }
 }
@@ -31,76 +32,83 @@
 // https://codepen.io/jakob-e/
 // https://codepen.io/tigt/post/optimizing-svgs-in-data-uris
 @function svg-url($svg){
-    //
-    // Add missing namespace
-    //
-    @if not str-index($svg,xmlns) {
-        $svg: str-replace($svg, '<svg','<svg xmlns="http://www.w3.org/2000/svg"');
-    }
-    //
-    // Chunk up string in order to avoid
-    // "stack level too deep" error
-    //
-    $encoded:'';
-    $slice: 2000;
-    $index: 0;
-    $loops: ceil(calc(str-length($svg)/$slice));
-    @for $i from 1 through $loops {
-        $chunk: str-slice($svg, $index, $index + $slice - 1);
-        //
-        // Encode
-        //
-        $chunk: str-replace($chunk, '"', '\'');
-        $chunk: str-replace($chunk, '%', '%25');
-        $chunk: str-replace($chunk, '#', '%23');
-        $chunk: str-replace($chunk, '{', '%7B');
-        $chunk: str-replace($chunk, '}', '%7D');
-        $chunk: str-replace($chunk, '<', '%3C');
-        $chunk: str-replace($chunk, '>', '%3E');
-        //
-        // The maybe list
-        //
-        // Keep size and compile time down
-        // ... only add on documented fail
-        //
-        // $chunk: str-replace($chunk, '&', '%26');
-        // $chunk: str-replace($chunk, '|', '%7C');
-        // $chunk: str-replace($chunk, '[', '%5B');
-        // $chunk: str-replace($chunk, ']', '%5D');
-        // $chunk: str-replace($chunk, '^', '%5E');
-        // $chunk: str-replace($chunk, '`', '%60');
-        // $chunk: str-replace($chunk, ';', '%3B');
-        // $chunk: str-replace($chunk, '?', '%3F');
-        // $chunk: str-replace($chunk, ':', '%3A');
-        // $chunk: str-replace($chunk, '@', '%40');
-        // $chunk: str-replace($chunk, '=', '%3D');
-        $encoded: #{$encoded}#{$chunk};
-        $index: $index + $slice;
-    }
-    @return url("data:image/svg+xml,#{$encoded}");
+
+//
+// Add missing namespace
+//
+@if not string.index($svg, xmlns) {
+    $svg: str-replace($svg, '<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
 }
+
+//
+// Chunk up string in order to avoid
+// "stack level too deep" error
+//
+$encoded: '';
+$slice: 2000;
+$index: 0;
+$loops: math.ceil(math.div(string.length($svg), $slice));
+
+@for $i from 1 through $loops {
+    $chunk: string.slice($svg, $index, $index + $slice - 1);
+    //
+    // Encode
+    //
+    $chunk: str-replace($chunk, '"', '\'');
+    $chunk: str-replace($chunk, '%', '%25');
+    $chunk: str-replace($chunk, '#', '%23');
+    $chunk: str-replace($chunk, '{', '%7B');
+    $chunk: str-replace($chunk, '}', '%7D');
+    $chunk: str-replace($chunk, '<', '%3C');
+    $chunk: str-replace($chunk, '>', '%3E');
+    //
+    // The maybe list
+    //
+    // Keep size and compile time down
+    // ... only add on documented fail
+    //
+    // $chunk: str-replace($chunk, '&', '%26');
+    // $chunk: str-replace($chunk, '|', '%7C');
+    // $chunk: str-replace($chunk, '[', '%5B');
+    // $chunk: str-replace($chunk, ']', '%5D');
+    // $chunk: str-replace($chunk, '^', '%5E');
+    // $chunk: str-replace($chunk, '`', '%60');
+    // $chunk: str-replace($chunk, ';', '%3B');
+    // $chunk: str-replace($chunk, '?', '%3F');
+    // $chunk: str-replace($chunk, ':', '%3A');
+    // $chunk: str-replace($chunk, '@', '%40');
+    // $chunk: str-replace($chunk, '=', '%3D');
+    $encoded: #{$encoded}#{$chunk};
+    $index: $index + $slice;
+}
+
+@return url("data:image/svg+xml,#{$encoded}");
+}
+
 // Background svg mixin
-@mixin background-svg($svg){
+@mixin background-svg($svg) {
     background-image: svg-url($svg);
 }
+
 // Helper function to replace characters in a string
 @function str-replace($string, $search, $replace: '') {
-    $index: str-index($string, $search);
-    @return if($index,
-    str-slice($string, 1, $index - 1) + $replace +
-    str-replace(str-slice($string, $index +
-    str-length($search)), $search, $replace),
-    $string);
+    $index: string.index($string, $search);
+
+    @if $index {
+        @return string.slice($string, 1, $index - 1)+$replace +str-replace(string.slice($string, $index + string.length($search)), $search, $replace);
+    }
+
+    @return $string;
 }
 
 // Map specific mixins
 @mixin focus($glow: 8px, $strong: 5px, $background: 2px, $inset: 0px) {
-    position:absolute;
-    content:'';
-    left:5px;
-    right:5px;
-    top:5px;
-    bottom:5px;
+    position: absolute;
+    content: '';
+    left: 5px;
+    right: 5px;
+    top: 5px;
+    bottom: 5px;
     box-shadow:
         0px 0px 0px $background white,
         inset 0px 0px 0px $inset govuk-colour('black'),

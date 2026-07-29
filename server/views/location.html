@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 
-{% block beforeContent %}
+{% block containerStart %}
 
 <div class="govuk-phase-banner">
   <p class="govuk-phase-banner__content">
@@ -8,7 +8,9 @@
       Beta
     </strong>
     <span class="govuk-phase-banner__text">
-      This is a new service – your <a class="govuk-link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965?Source={{fullUrl}}">feedback</a> will help us to improve it.
+      This is a new service – your <a class="govuk-link"
+        href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965?Source={{fullUrl}}">feedback</a> will help
+      us to improve it.
     </span>
   </p>
 </div>
@@ -35,34 +37,34 @@
   <div class="govuk-grid-column-two-thirds">
     <div class="defra-flood-status govuk-!-margin-bottom-1">
       {% if model.hasActiveFloods %}
-        {% if model.bannerSevereMainLink %}
-        <div class="defra-flood-status-item defra-flood-status-item--severe">
-          <span class="defra-flood-status-item__icon">
-            {{ model.severeIcon | safe }}
-            <span class="govuk-visually-hidden">{{model.severitySevereTitle}}</span>
-          </span>
-          <div class="defra-flood-status-item__text">
-            <strong>
-              <a href="{{ model.bannerSevereMainLink }}">{{ model.bannerSevereMainText }}</a>
-            </strong>
-            <span class="defra-flood-status-item__text-secondary">{{ model.bannerSevereSub }}</span>
-          </div>
+      {% if model.bannerSevereMainLink %}
+      <div class="defra-flood-status-item defra-flood-status-item--severe">
+        <span class="defra-flood-status-item__icon">
+          {{ model.severeIcon | safe }}
+          <span class="govuk-visually-hidden">{{model.severitySevereTitle}}</span>
+        </span>
+        <div class="defra-flood-status-item__text">
+          <strong>
+            <a href="{{ model.bannerSevereMainLink }}">{{ model.bannerSevereMainText }}</a>
+          </strong>
+          <span class="defra-flood-status-item__text-secondary">{{ model.bannerSevereSub }}</span>
         </div>
-        {% endif %}
-        {% if model.bannerMainLink%}
-        <div class="defra-flood-status-item defra-flood-status-item--{{model.severity}}">
-          <span class="defra-flood-status-item__icon">
-            {{ model.mainIcon | safe }}
-            <span class="govuk-visually-hidden">{{model.severityTitle}}</span>
-          </span>
-          <div class="defra-flood-status-item__text">
-            <strong>
-              <a href="{{ model.bannerMainLink }}">{{ model.bannerMainText }}</a>
-            </strong>
-            <span class="defra-flood-status-item__text-secondary">{{ model.bannerSub }}</span>
-          </div>
+      </div>
+      {% endif %}
+      {% if model.bannerMainLink%}
+      <div class="defra-flood-status-item defra-flood-status-item--{{model.severity}}">
+        <span class="defra-flood-status-item__icon">
+          {{ model.mainIcon | safe }}
+          <span class="govuk-visually-hidden">{{model.severityTitle}}</span>
+        </span>
+        <div class="defra-flood-status-item__text">
+          <strong>
+            <a href="{{ model.bannerMainLink }}">{{ model.bannerMainText }}</a>
+          </strong>
+          <span class="defra-flood-status-item__text-secondary">{{ model.bannerSub }}</span>
         </div>
-        {% endif %}
+      </div>
+      {% endif %}
       {% else %}
       <div class="defra-flood-status-item">
         <div class="defra-flood-status-item__text">
@@ -73,24 +75,27 @@
       </div>
       {% endif %}
     </div>
-    
+
     {% if model.hasFloods %}
-      {% if model.alerts  %}
-      <p class="govuk-body">
-        <a href="{{ model.alertsSummaryLink }}">{{ model.alertsSummaryLinkText }}</a> {{ model.alertsSummaryText }} also in the wider area, where some flooding is possible. 
-      </p>
-      {% endif %}
-      {% if model.removed  %}
-      <p class="govuk-body">
-        <a href="{{ model.removedLink }}">{{ model.removedLinkText }}</a> {{ model.removedText }}
-      </p>
-      {% endif %}
+    {% if model.alerts %}
+    <p class="govuk-body">
+      <a href="{{ model.alertsSummaryLink }}">{{ model.alertsSummaryLinkText }}</a> {{ model.alertsSummaryText }} also
+      in the wider area, where some flooding is possible.
+    </p>
+    {% endif %}
+    {% if model.removed %}
+    <p class="govuk-body">
+      <a href="{{ model.removedLink }}">{{ model.removedLinkText }}</a> {{ model.removedText }}
+    </p>
+    {% endif %}
     {% else %}
-      <p>This service tells you your risk of flooding from rivers, the sea and groundwater. <a        href="https://www.gov.uk/find-local-council">Contact your local council about surface water flooding</a> (also known as flash flooding).</p>
+    <p>This service tells you your risk of flooding from rivers, the sea and groundwater. <a
+        href="https://www.gov.uk/find-local-council">Contact your local council about surface water flooding</a> (also
+      known as flash flooding).</p>
     {% endif %}
 
     {% if model.hasActiveFloods %}
-      <span id="map-live"></span>
+    <span id="map-live"></span>
     {% endif %}
 
     {% include "partials/sign-up-for-flood-warnings.html" %}
@@ -102,12 +107,13 @@
     <h2 class="govuk-heading-m">Flood forecast for the next 5 days</h2>
     {% if model.outOfDate or model.dataError %}
     <div class="defra-service-error govuk-!-margin-bottom-3">
-      <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>
+      <h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data
+      </h2>
       <p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>
-    </div> 
+    </div>
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
     {% else %}
-      {% include "partials/outlook-region.html" %}
+    {% include "partials/outlook-region.html" %}
     {% endif %}
 
     <h2 class="govuk-heading-m">Long term flood risk</h2>
@@ -117,8 +123,10 @@
 
     <!-- River and sea levels -->
     <h2 class="govuk-heading-m">River, sea, groundwater and rainfall levels</h2>
-    <p>Measuring stations provide the latest river, sea, groundwater and rainfall levels. These levels can help you understand your flood risk now and over the next few days.</p>
-    <p><a href="/river-and-sea-levels/{{ model.place.slug }}">Find a river, sea, groundwater or rainfall level in this area</a></p>
+    <p>Measuring stations provide the latest river, sea, groundwater and rainfall levels. These levels can help you
+      understand your flood risk now and over the next few days.</p>
+    <p><a href="/river-and-sea-levels/{{ model.place.slug }}">Find a river, sea, groundwater or rainfall level in this
+        area</a></p>
     <!-- end river and sea levels -->
     {% include "partials/context-footer.html" %}
 
@@ -135,15 +143,15 @@
 {% endblock %}
 
 {% block pageScripts %}
-  <script>
-    window.flood = {}
-    window.flood.model = {{ model.expose | dump(2) | safe }}
-    window.flood.model.mapButtonText = {{ model.expose.mapButtonText | dump | safe }}
-    window.flood.model.mapButtonClass = 'defra-button-secondary govuk-!-margin-bottom-4'
-    window.flood.model.data = {
-      button: 'Location:Map view:Location - View national warning map'
-    }
-    window.flood.model.mapLayers = 'mv,ts,tw,ta',
+<script>
+  window.flood = {}
+  window.flood.model = {{ model.expose | dump(2) | safe }}
+  window.flood.model.mapButtonText = {{ model.expose.mapButtonText | dump | safe }}
+  window.flood.model.mapButtonClass = 'defra-button-secondary govuk-!-margin-bottom-4'
+  window.flood.model.data = {
+    button: 'Location:Map view:Location - View national warning map'
+  }
+  window.flood.model.mapLayers = 'mv,ts,tw,ta',
     window.flood.model.extent = window.flood.model.placeBbox
-  </script>
+</script>
 {% endblock %}

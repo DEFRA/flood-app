@@ -205,8 +205,16 @@ function getFormattedTime (station) {
   if (!station.displayData) {
     return null
   } else if (station.value_timestamp) {
-    const formattedTime = moment(station.value_timestamp).tz('Europe/London').format('h:mma')
-    const formattedDate = moment(station.value_timestamp).tz('Europe/London').format('D MMMM')
+    const normalizedTimestamp = String(station.value_timestamp).replace(/\s+/g, '')
+    const parsedTimestamp = moment(normalizedTimestamp, moment.ISO_8601, true)
+
+    if (!parsedTimestamp.isValid()) {
+      return null
+    }
+
+    const localTimestamp = parsedTimestamp.tz('Europe/London')
+    const formattedTime = localTimestamp.format('h:mma')
+    const formattedDate = localTimestamp.format('D MMMM')
     if (station.station_type === 'R') {
       return `Totals up to ${formattedTime} on ${formattedDate} `
     } else {

@@ -1,11 +1,13 @@
 $govuk-global-styles: true;
+$govuk-suppressed-warnings: (
+  "legacy-organisation-colours"
+);
 
 // DL: Tablet/desktop overide to address modern iPads 
 $govuk-breakpoints: (
-  mobile:  320px,
-  tablet:  641px,
-  desktop: 835px
-) !default;
+  mobile: 320px,
+  tablet: 641px,
+  desktop: 835px) !default;
 
 // GOV.UK Frontend
 @import "govuk-frontend/dist/govuk/index";
@@ -70,6 +72,12 @@ $govuk-breakpoints: (
 @import "components/tooltip";
 @import "components/navbar";
 @import "components/flood-levels-table";
+
+// Override govuk-frontend footer text-wrap: balance which causes the OGL
+// licence description to wrap even on wide screens
+.govuk-footer__licence-description {
+  text-wrap: unset;
+}
 
 
 // Utilities

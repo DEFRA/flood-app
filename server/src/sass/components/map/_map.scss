@@ -13,7 +13,7 @@
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
 
-  @include mq ($from: desktop) {
+  @include govuk-media-query ($from: desktop) {
     padding-right: 290px;
   }
 
@@ -74,7 +74,7 @@
   z-index: 2;
   touch-action: none;
   max-width: 100%;
-  @include mq ($from: desktop) {
+  @include govuk-media-query ($from: desktop) {
     display: block;
     right: 0px;
     top: 0px;
@@ -123,7 +123,7 @@
   span {
     vertical-align: top;
 
-    @include mq ($until: desktop) {
+    @include govuk-media-query ($until: desktop) {
       // Visually hidden
       clip: rect(0 0 0 0);
       clip-path: inset(50%);
@@ -135,7 +135,7 @@
     }
   }
 
-  @include mq ($from: desktop) {
+  @include govuk-media-query ($from: desktop) {
     width: auto;
     padding-right: 11px;
   }
@@ -188,7 +188,7 @@
   align-items: center;
   gap: 5px;
 
-  @include mq ($from: desktop) {
+  @include govuk-media-query ($from: desktop) {
     display: none;
   }
 
@@ -283,7 +283,7 @@
 // Map key
 .defra-map--key-open {
   .defra-map-key {
-    @include mq ($until: desktop) {
+    @include govuk-media-query ($until: desktop) {
       // display: block; // Safari v14 bug needs to be applied with JS
       left: 0;
       top: 0px;
@@ -291,7 +291,7 @@
       width: 290px;
     }
 
-    @include mq ($until: tablet) {
+    @include govuk-media-query ($until: tablet) {
       width: 259px;
     }
   }
@@ -299,7 +299,7 @@
   .defra-map__exit,
   .defra-map__back,
   .defra-map__open-key {
-    @include mq ($until: desktop) {
+    @include govuk-media-query ($until: desktop) {
       display: none;
     }
   }
@@ -322,7 +322,7 @@
 
 // Map controls - close key
 .defra-map-key__close {
-  @include mq ($from: desktop) {
+  @include govuk-media-query ($from: desktop) {
     display: none;
   }
 
@@ -373,7 +373,7 @@
   bottom: 0px;
   left: 0px;
 
-  @include mq ($from: desktop) {
+  @include govuk-media-query ($from: desktop) {
     right: 290px;
   }
 
@@ -436,7 +436,7 @@
 .defra-map-zoom {
   display: none;
 
-  @include mq ($from: tablet) {
+  @include govuk-media-query ($from: tablet) {
     display: block;
     float: right;
     clear: right;
@@ -532,7 +532,7 @@
   left: 0;
   right: 0px;
 
-  @include mq ($from: tablet) {
+  @include govuk-media-query ($from: tablet) {
     width: auto;
     right: 51px;
     max-width: 378px;
@@ -544,10 +544,10 @@
     outline: none;
   }
   &:focus[keyboard-focus]:after {
-    @include mq ($until: tablet) {
+    @include govuk-media-query ($until: tablet) {
       @include focus($glow: 5px, $strong: 2px, $background: 0px, $inset: 1px);
     }
-    @include mq ($from: tablet) {
+    @include govuk-media-query ($from: tablet) {
       @include focus();
     }
   }
@@ -593,7 +593,7 @@
 .defra-map--info-open .defra-map-controls__bottom {
   visibility: hidden;
 
-  @include mq ($from: tablet) {
+  @include govuk-media-query ($from: tablet) {
     visibility: visible;
   }
 }
@@ -610,7 +610,7 @@
     padding: 10px 12px;
   }
 
-  @include mq ($from: tablet) {
+  @include govuk-media-query ($from: tablet) {
     right: auto;
     width: 360px;
   }
