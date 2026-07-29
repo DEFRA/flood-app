@@ -65,7 +65,7 @@
 
   &--multi {
     margin-top: 24px;
-    @include mq($from: tablet) {
+    @include govuk-media-query($from: tablet) {
       margin-top: 19px;
     }
   }

@@ -20,7 +20,7 @@
         margin-left: -1px;
         left: 8%;
 
-        @include mq ($from: tablet) {
+        @include govuk-media-query ($from: tablet) {
             left: 4%;
         }
     }
@@ -39,7 +39,7 @@
         margin: 0;
         padding-left: 16%;
 
-        @include mq ($from: tablet) {
+        @include govuk-media-query ($from: tablet) {
             padding-left: 8%;
         }
     }
@@ -61,7 +61,7 @@
         top: 8px;
         left: 8%;
 
-        @include mq ($from: tablet) {
+        @include govuk-media-query ($from: tablet) {
             top: 11px;
             left: 4%;
         }
@@ -89,7 +89,7 @@
         padding-bottom: 10px;
         padding-right: 15%;
 
-        @include mq ($from: tablet) {
+        @include govuk-media-query ($from: tablet) {
             padding-right: 28%;
             padding-bottom: 15px;
         }
@@ -163,7 +163,7 @@
         top: -6px;
         left: 8%;
 
-        @include mq ($from: tablet) {
+        @include govuk-media-query ($from: tablet) {
             top: -4px;
             left: 4%;
         }
