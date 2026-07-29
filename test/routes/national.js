@@ -90,7 +90,7 @@ describe('Route - National', () => {
           return { ...fgs, issued_at: context.now.toISOString() }
         }
 
-        setup(fakeFloodData, fakeOutlookData)
+        await setup(fakeFloodData, fakeOutlookData)
       })
 
       it('should contain CYLTFR link taken from the floodRiskUrl config value', async () => {
@@ -148,6 +148,30 @@ describe('Route - National', () => {
       })
     })
 
+    it('should 200 and omit the no-border class when flood warnings have been removed', async () => {
+      const fakeFloodData = () => ({
+        floods: [{
+          ta_id: 1,
+          ta_code: 'TEST001',
+          ta_name: 'Test Removed Area',
+          severity_value: 4,
+          severity: 'Flood warning removed',
+          situation_changed: '2024-01-13T10:02:00.000Z',
+          severity_changed: '2024-01-13T10:02:00.000Z',
+          message_received: '2024-01-18T10:02:23.429Z',
+          geometry: null
+        }]
+      })
+      const fakeOutlookData = () => ({})
+
+      await setup(fakeFloodData, fakeOutlookData)
+
+      const response = await server.inject({ method: 'GET', url: '/' })
+
+      expect(response.statusCode).to.equal(200)
+      expect(response.payload).to.not.contain('defra-flood-meta--no-border')
+    })
+
     describe('without flood and outlook data', () => {
       beforeEach(async () => {
         const fakeFloodData = () => {
@@ -160,7 +184,7 @@ describe('Route - National', () => {
           return {}
         }
 
-        setup(fakeFloodData, fakeOutlookData)
+        await setup(fakeFloodData, fakeOutlookData)
       })
 
       it('should 200', async () => {
@@ -540,6 +564,22 @@ describe('Route - National', () => {
 
         expect(response.statusCode).to.equal(302)
         expect(response.headers.location).to.equal('/location/ashford-kent')
+      })
+
+      it('should display error message when geolocation is unavailable', async () => {
+        const options = {
+          method: 'POST',
+          url: '/',
+          payload: {
+            location: '',
+            error: '1'
+          }
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).to.equal(200)
+        expect(response.payload).to.contain('Turn on location services to use your current location, or enter a town, city or postcode in England')
       })
     })
 

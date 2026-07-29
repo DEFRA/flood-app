@@ -4,6 +4,7 @@ const { getJson } = require('../util')
 const util = require('util')
 const { find, get } = require('./lib/bing-results-parser')
 const LocationSearchError = require('../location-search-error')
+const { COORDINATE_PATTERN } = require('../constants')
 
 function bingSearchNotNeeded (searchTerm) {
   const mustNotMatch = /[<>]|^england$|^scotland$|^wales$|^united kingdom$|^northern ireland$/i
@@ -82,9 +83,9 @@ async function getLocationBySlug (locationSlug) {
 async function findLocationByQuery (locationQuery) {
   const MAX_BING_RESULTS = 3
   // determine if the query is a coordinate query (e.g. 51.5074,-0.1278) as this needs to be processed differently to a text search
-  const coordinateRegex = /^[-+]?\d+(\.\d+)?,[-+]?\d+(\.\d+)?$/
+
   const validatedQuery = validateSearchTerm(locationQuery)
-  const isCoordinateQuery = coordinateRegex.test(validatedQuery)
+  const isCoordinateQuery = COORDINATE_PATTERN.test(validatedQuery)
 
   const bingData = await getBingResponse(validatedQuery, MAX_BING_RESULTS, isCoordinateQuery)
   return find(bingData, isCoordinateQuery)
