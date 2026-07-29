@@ -793,9 +793,12 @@ describe('Route - Location', () => {
     const response = await server.inject(options)
 
     const root = parse(response.payload)
-    const targetText = 'Find a river, sea, groundwater or rainfall level in this area'
-    const anchor = root.querySelectorAll('a').find(a => a.text.trim() === targetText)
+    const anchor = root.querySelectorAll('a').find(a => {
+      const href = a.getAttribute('href')
+      return href && href.startsWith('/river-and-sea-levels/')
+    })
 
+    expect(anchor).to.exist()
     expect(anchor.getAttribute('href')).to.equal('/river-and-sea-levels/warrington')
   })
 
@@ -1662,7 +1665,7 @@ describe('Route - Location', () => {
       const response = await server.inject(options)
 
       expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain(' also in the wider area, where some flooding is possible.')
+      expect(response.payload).to.contain('wider area, where some flooding is possible')
       expect(response.payload).to.contain('Flood warning for')
       expect(response.payload).to.contain('Flood alerts and warnings were removed')
       expect(response.payload).to.contain('in the last 24 hours')

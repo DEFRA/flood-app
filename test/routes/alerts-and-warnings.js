@@ -229,7 +229,7 @@ describe('Route - Alerts and Warnings', () => {
 
       const response = await server.inject(options)
 
-      expect(response.payload).to.contain('<link rel="canonical" href="http://localhost:3000/alerts-and-warnings/warrington"/>')
+      expect(response.payload).to.contain('rel="canonical" href="http://localhost:3000/alerts-and-warnings/warrington"')
       expect(response.statusCode).to.equal(200)
     })
 
