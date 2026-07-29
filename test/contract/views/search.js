@@ -9,14 +9,23 @@ const { expect } = require('@hapi/code')
 
 const { describe, it } = exports.lab = Lab.script()
 
-function renderSearchPartial () {
+const { parse } = require('node-html-parser')
+
+function renderSearchPartial (context = {}) {
   const viewsPath = path.resolve(__dirname, '../../../server/views')
-  const env = nunjucks.configure(viewsPath, {
+
+  const govukPath = path.resolve(__dirname, '../../../node_modules/govuk-frontend/dist/govuk')
+
+  const env = nunjucks.configure([viewsPath, govukPath], {
     autoescape: true,
     noCache: true
   })
 
-  return env.render('partials/search.html', {})
+  const errorMessage = '{% from "components/error-message/macro.njk" import govukErrorMessage %}'
+  const errorSummary = '{% from "components/error-summary/macro.njk" import govukErrorSummary %}'
+
+  const templateString = `${errorMessage}${errorSummary}{% include "partials/search.html" %}`
+  return env.renderString(templateString, context)
 }
 
 describe('Contract - Views - search partial', () => {
@@ -96,25 +105,27 @@ describe('Contract - Views - search partial', () => {
     expect(submitSpy.calledOnce).to.equal(true)
   })
 
-  it('should alert the user if geolocation is unavailable', async () => {
-    const html = renderSearchPartial()
-    const dom = new JSDOM(html, {
-      runScripts: 'dangerously',
-      url: 'http://localhost'
-    })
+  it('should insert an error summary and error message if geolocation is unavailable', async () => {
+    const html = renderSearchPartial({ model: { errorMessage: 'Turn on location services to use your current location, or enter a town, city or postcode in England' } })
 
-    const { window } = dom
-    const alertSpy = sinon.spy()
+    const root = parse(html)
+    const errorSummary = root.querySelector('.govuk-error-summary')
+    const errorMessage = root.querySelector('.govuk-error-message')
 
-    window.alert = alertSpy
-    Object.defineProperty(window.navigator, 'geolocation', {
-      value: undefined,
-      configurable: true
-    })
+    expect(errorSummary).to.exist()
+    expect(errorSummary.textContent).to.contain('Turn on location services to use your current location, or enter a town, city or postcode in England')
+    expect(errorMessage).to.exist()
+    expect(errorMessage.textContent).to.contain('Turn on location services to use your current location, or enter a town, city or postcode in England')
+  })
 
-    window.document.getElementById('use-location-btn').click()
+  it('should not show the error summary or error message if there is no error', async () => {
+    const html = renderSearchPartial({ model: { errorMessage: null } })
 
-    expect(alertSpy.calledOnce).to.equal(true)
-    expect(alertSpy.firstCall.args[0]).to.equal('Geolocation is not supported by this browser.')
+    const root = parse(html)
+    const errorSummary = root.querySelector('.govuk-error-summary')
+    const errorMessage = root.querySelector('.govuk-error-message')
+
+    expect(errorSummary).to.not.exist()
+    expect(errorMessage).to.not.exist()
   })
 })
