@@ -1504,7 +1504,7 @@ describe('Service/Lib - bingResultsParser', () => {
           center: [],
           bbox2k: [],
           bbox10k: [],
-          isUK: false,
+          isUK: true,
           isEngland: { is_england: false }
         }]
 

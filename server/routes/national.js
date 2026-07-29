@@ -1,10 +1,10 @@
 const joi = require('joi')
+
+const { COORDINATE_PATTERN } = require('../constants')
 const OutlookModel = require('../models/outlook')
 const FloodsModel = require('../models/floods')
 const ViewModel = require('../models/views/national')
 const locationService = require('../services/location')
-
-const coordinatePattern = /^[-+]?\d+(\.\d+)?,[-+]?\d+(\.\d+)?$/
 
 async function getModel (request, location) {
   const floods = new FloodsModel(await request.server.methods.flood.getFloods())
@@ -23,11 +23,15 @@ async function getModel (request, location) {
   return new ViewModel(floods, outlook, location)
 }
 
+function rejectedLocation (location, geolocation, error) {
+  return (!geolocation && (location.toLowerCase() === 'england' || location === '' || error))
+}
+
 module.exports = [
   {
     method: 'GET',
     path: '/',
-    handler: async (request, h) => {
+    handler: async function (request, h) {
       const model = await getModel(request)
 
       return h.view('national', { model })
@@ -36,11 +40,17 @@ module.exports = [
   {
     method: 'POST',
     path: '/',
-    handler: async (request, h) => {
-      const { location, geolocation = null } = request.payload
+    handler: async function (request, h) {
+      const { location, error = null, geolocation = null } = request.payload
 
-      if (!geolocation && (location.toLowerCase() === 'england' || location === '')) {
+      const errorMessage = error && 'Turn on location services to use your current location, or enter a town, city or postcode in England'
+
+      if (rejectedLocation(location, geolocation, error)) {
         const model = await getModel(request, location)
+        if (error) {
+          model.errorMessage = errorMessage
+          model.pageTitle = 'Error: Turn on location services to use your current location, or enter a town, city or postcode in England'
+        }
         return h.view('national', { model })
       }
 
@@ -50,7 +60,8 @@ module.exports = [
         const searchLocation = geolocation
           ? place?.name || 'Unknown'
           : location
-        return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: searchLocation })
+
+        return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location: searchLocation, errorMessage })
       }
       return h.redirect(`/location/${encodeURIComponent(place?.slug)}`)
     },
@@ -58,7 +69,8 @@ module.exports = [
       validate: {
         payload: joi.object({
           location: joi.string().required().trim().allow(''),
-          geolocation: joi.string().optional().trim().allow('').pattern(coordinatePattern)
+          geolocation: joi.string().optional().trim().allow('').pattern(COORDINATE_PATTERN),
+          error: joi.string().optional().trim().allow('')
         })
       }
     }

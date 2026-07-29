@@ -130,7 +130,7 @@ async function find (bingResponse, isCoordinateQuery) {
   // confidence, entity type and england only. It contrasts with the get
   // function below which aims to retrieve a location based on the slugified name
 
-  const set = bingResponse.resourceSets?.[0]
+  const set = bingResponse?.resourceSets?.[0]
   const resources = Array.isArray(set?.resources) ? set.resources : []
   const hasEstimatedResults = Number(set?.estimatedTotal) > 0
 
@@ -144,7 +144,7 @@ async function find (bingResponse, isCoordinateQuery) {
       center: [],
       bbox2k: [],
       bbox10k: [],
-      isUK: false,
+      isUK: address?.countryRegionIso2 === 'GB',
       isEngland: { is_england: false }
     }]
   }
@@ -173,10 +173,9 @@ async function get (bingResponse, slug) {
   // returned from bing and look for a matching slug regardless of the confidence
   // value (we do still filter by england only and allowed entity types)
   const matchingSlugFilter = (r) => r.slug === slug
-  const set = bingResponse.resourceSets[0]
-  return set.estimatedTotal
-    ? set.resources
-      .filter(baseFilter)
+  const set = bingResponse?.resourceSets?.[0]
+  return set?.estimatedTotal
+    ? set?.resources?.filter(baseFilter)
       .sort(typesSort)
       .map(mapper)
       .filter(removeDuplicatesFilter)

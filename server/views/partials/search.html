@@ -1,13 +1,29 @@
-<div class="defra-search govuk-form-group govuk-!-margin-bottom-6">
+{% if model.errorMessage %}
+{{ govukErrorSummary({
+titleText: "There is a problem",
+errorList: [
+{
+text: model.errorMessage,
+href: "#geolocation-error"
+}
+]
+}) }}
+{% endif %}
+<div class="defra-search govuk-form-group govuk-!-margin-bottom-6  {% if model.errorMessage %}govuk-form-group--error{% endif %}">
   <form method="post" autocomplete="off">
     <label class="govuk-label defra-search__label" for="location">
       Search for a town, city or postcode in England
     </label>
+    {% if model.errorMessage %}
+    <p id="geolocation-error" class="govuk-error-message">
+      <span class="govuk-visually-hidden">Error:</span> {{ model.errorMessage }}
+    </p>
+    {% endif %}
     <div class="defra-search__container">
 
       <!-- Input + search button -->
       <div class="defra-search__input-wrapper">
-        <input class="defra-search__input" id="location" name="location" type="search" spellcheck="false" value="{{ model.location }}">
+        <input class="defra-search__input" id="location" name="location" type="search" spellcheck="false" value="{{ model.location }}" {% if model.errorMessage %}aria-describedby="geolocation-error" {% endif %}>
 
         <button class=" defra-search__button defra-search__button--search" type="submit">
           <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20"
@@ -37,21 +53,28 @@
       </button>
     </div>
     <input type="hidden" name="geolocation" id="geolocation" value="">
+    <input type="hidden" name="error" id="error" value="">
   </form>
 </div>
 
 <script>
   (function () {
-    const locationButton = document.getElementById('use-location-btn')
+    const $locationButton = document.getElementById('use-location-btn')
 
-    locationButton.classList.add('js-enabled')
-    locationButton.addEventListener('click', getLocation)
+    $locationButton.classList.add('js-enabled')
+    $locationButton.addEventListener('click', getLocation)
+
+    const geoOptions = {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    }
 
     function getLocation() {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(setPosition, showError)
+        navigator.geolocation.getCurrentPosition(setPosition, showGeolocationError, geoOptions)
       } else {
-        window.alert('Geolocation is not supported by this browser.')
+        showGeolocationError({ code: 9 })
       }
     }
 
@@ -59,24 +82,15 @@
       const lat = position.coords.latitude
       const lon = position.coords.longitude
       document.getElementById('geolocation').value = `${lat},${lon}`
-      document.getElementById('use-location-btn').form.submit()
+      $locationButton.form.submit()
     }
 
-    function showError(error) {
-      switch (error.code) {
-        case error.PERMISSION_DENIED:
-          window.alert('User denied the request for Geolocation.')
-          break
-        case error.POSITION_UNAVAILABLE:
-          window.alert('Location information is unavailable.')
-          break
-        case error.TIMEOUT:
-          window.alert('The request to get user location timed out.')
-          break
-        default:
-          window.alert('An unknown error occurred.')
-          break
+    function showGeolocationError(errorCode) {
+      if (errorCode.code) {
+        document.getElementById('error').value = errorCode.code
+        $locationButton.form.submit()
       }
     }
+
   })()
 </script>
