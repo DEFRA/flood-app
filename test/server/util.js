@@ -1,9 +1,11 @@
 const Lab = require('@hapi/lab')
 const { expect } = require('@hapi/code')
-const { describe, it } = exports.lab = Lab.script()
+const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
+const sinon = require('sinon')
 const spikeTelem = require('../data/spikeTelem.json')
 const nonSpikeTelem = require('../data/nonSpikeTelem.json')
-const { toMarked, cleanseLocation, removeSpikes } = require('../../server/util')
+const { toMarked, cleanseLocation, removeSpikes, formatElapsedTime } = require('../../server/util')
+const moment = require('moment-timezone')
 
 describe('Util', () => {
   describe('toMarked', () => {
@@ -40,6 +42,67 @@ describe('Util', () => {
     it('should return 480 values with no spikes in telem all values under 300md', async () => {
       const telem = removeSpikes(nonSpikeTelem)
       expect(telem.length).to.equal(480)
+    })
+  })
+
+  describe('formatElapsedTime', () => {
+    let clock
+
+    beforeEach(() => {
+      clock = sinon.useFakeTimers(moment.tz('2024-01-15T12:00:00', 'Europe/London').toDate())
+    })
+
+    afterEach(() => {
+      clock.restore()
+    })
+
+    it('should return null when datetime is null', async () => {
+      expect(formatElapsedTime(null)).to.equal(null)
+    })
+
+    it('should return undefined when datetime is undefined', async () => {
+      expect(formatElapsedTime(undefined)).to.equal(undefined)
+    })
+
+    it('should return empty string when datetime is empty string', async () => {
+      expect(formatElapsedTime('')).to.equal('')
+    })
+
+    it('should return pre-formatted string when datetime already ends with "ago"', async () => {
+      const preFormatted = '30 minutes ago'
+      expect(formatElapsedTime(preFormatted)).to.equal(preFormatted)
+    })
+
+    it('should return pre-formatted string when datetime ends with "ago" (case insensitive)', async () => {
+      const preFormatted = '1 hour AGO'
+      expect(formatElapsedTime(preFormatted)).to.equal(preFormatted)
+    })
+
+    it('should return original value when datetime is not valid ISO format', async () => {
+      const invalidDate = 'not-a-date'
+      expect(formatElapsedTime(invalidDate)).to.equal(invalidDate)
+    })
+
+    it('should return "X minutes ago" when datetime is less than 60 minutes old', async () => {
+      const thirtyMinutesAgo = moment.tz('2024-01-15T11:30:00', 'Europe/London').toISOString()
+      expect(formatElapsedTime(thirtyMinutesAgo)).to.equal('30 minutes ago')
+    })
+
+    it('should return "More than 1 hour ago" when datetime is 60 or more minutes old', async () => {
+      const twoHoursAgo = moment.tz('2024-01-15T10:00:00', 'Europe/London').toISOString()
+      expect(formatElapsedTime(twoHoursAgo)).to.equal('More than 1 hour ago')
+    })
+
+    it('should return "More than 1 hour ago" when datetime is exactly 1 hour old', async () => {
+      const oneHourAgo = moment.tz('2024-01-15T11:00:00', 'Europe/London').toISOString()
+      expect(formatElapsedTime(oneHourAgo)).to.equal('More than 1 hour ago')
+    })
+
+    it('should handle timestamps with whitespace in the datetime value', async () => {
+      // Note: moment.ISO_8601 strict parsing does not trim input automatically,
+      // so timestamps with leading/trailing spaces are treated as invalid
+      const invalidWithWhitespace = '  2024-01-15T11:30:00Z  '
+      expect(formatElapsedTime(invalidWithWhitespace)).to.equal(invalidWithWhitespace)
     })
   })
 })
