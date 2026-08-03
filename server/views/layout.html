@@ -100,10 +100,7 @@ homepageUrl: "https://www.gov.uk/"
 <!-- If dummy warning data is being used -->
 {% if isDummyData %}
 {{ govukWarningText({
-html: 'Dummy data is currently active on this service, please view the <a
-  href="https://flood-warning-information.service.gov.uk/warnings">production service</a> for up to date warnings data',
-iconFallbackText: "Warning"
-}) }}
+html: 'Dummy data is currently active on this service, please view the <a href="https://flood-warning-information.service.gov.uk/warnings">production service</a> for up to date warnings data', iconFallbackText: "Warning" }) }}
 {% endif %}
 
 <!-- If external http calls are being mocked -->
