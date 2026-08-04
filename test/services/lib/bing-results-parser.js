@@ -23,6 +23,18 @@ async function checkParsedResponse (resources, expectedResult, isCoordinateQuery
 describe('Service/Lib - bingResultsParser', () => {
   describe('english searches', () => {
     describe('get by slug', () => {
+      it('should return empty results when estimatedTotal is set but resources are missing', async () => {
+        const malformedResponse = {
+          resourceSets: [{
+            estimatedTotal: 1
+          }]
+        }
+
+        const result = await get(malformedResponse, 'ashford-kent')
+
+        expect(result).to.equal([])
+      })
+
       it('should find a result in the response by slug regardless of confidence level', async () => {
         const resources = [
           {
@@ -1497,21 +1509,12 @@ describe('Service/Lib - bingResultsParser', () => {
           }
         ]
 
-        const expectedResult = [{
-          name: 'Glasgow',
-          query: '',
-          slug: '',
-          center: [],
-          bbox2k: [],
-          bbox10k: [],
-          isUK: true,
-          isEngland: { is_england: false }
-        }]
+        const expectedResult = []
 
         await checkParsedResponse(resources, expectedResult, true)
       })
 
-      it('should return non-England dummy payload name from locality when district is missing', async () => {
+      it('should return empty result when district is missing for non-England coordinate query', async () => {
         const resources = [
           {
             confidence: 'High',
@@ -1529,13 +1532,10 @@ describe('Service/Lib - bingResultsParser', () => {
           }
         ]
 
-        const [result] = await find(getBingResponse(resources), true)
-
-        expect(result.name).to.equal('Edinburgh')
-        expect(result.isEngland).to.equal({ is_england: false })
+        await checkParsedResponse(resources, [], true)
       })
 
-      it('should return non-England dummy payload name as Unknown when district and locality are missing', async () => {
+      it('should return empty result when district and locality are missing for non-England coordinate query', async () => {
         const resources = [
           {
             confidence: 'High',
@@ -1553,10 +1553,7 @@ describe('Service/Lib - bingResultsParser', () => {
           }
         ]
 
-        const [result] = await find(getBingResponse(resources), true)
-
-        expect(result.name).to.equal('Unknown')
-        expect(result.isEngland).to.equal({ is_england: false })
+        await checkParsedResponse(resources, [], true)
       })
 
       it('should NOT return non-England dummy payload for non-coordinate searches', async () => {

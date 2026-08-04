@@ -1,6 +1,7 @@
 {% if model.errorMessage %}
 {{ govukErrorSummary({
 titleText: "There is a problem",
+classes: "defra-search__error-summary",
 errorList: [
 {
 text: model.errorMessage,
@@ -15,7 +16,7 @@ href: "#geolocation-error"
       Search for a town, city or postcode in England
     </label>
     {% if model.errorMessage %}
-    <p id="geolocation-error" class="govuk-error-message">
+    <p id="geolocation-error" class="govuk-error-message defra-search__error-message" role="alert">
       <span class="govuk-visually-hidden">Error:</span> {{ model.errorMessage }}
     </p>
     {% endif %}
@@ -25,7 +26,7 @@ href: "#geolocation-error"
       <div class="defra-search__input-wrapper">
         <input class="defra-search__input" id="location" name="location" type="search" spellcheck="false" value="{{ model.location }}" {% if model.errorMessage %}aria-describedby="geolocation-error" {% endif %}>
 
-        <button class=" defra-search__button defra-search__button--search" type="submit">
+        <button class="defra-search__button defra-search__button--search" type="submit">
           <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20"
             style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
             <rect x="0" y="0" width="50" height="50" style="fill:none;"></rect>
