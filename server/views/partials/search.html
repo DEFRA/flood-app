@@ -1,6 +1,7 @@
 {% if model.errorMessage %}
 {{ govukErrorSummary({
 titleText: "There is a problem",
+classes: "defra-search__error-summary",
 errorList: [
 {
 text: model.errorMessage,
@@ -15,8 +16,9 @@ href: "#geolocation-error"
       Search for a town, city or postcode in England
     </label>
     {% if model.errorMessage %}
-    <p id="geolocation-error" class="govuk-error-message">
-      <span class="govuk-visually-hidden">Error:</span> {{ model.errorMessage }}
+    <p id="geolocation-error" class="govuk-error-message defra-search__error-message" role="alert">
+      <span class="govuk-visually-hidden">Error:</span>
+      {{ model.errorMessage }}
     </p>
     {% endif %}
     <div class="defra-search__container">
@@ -25,7 +27,7 @@ href: "#geolocation-error"
       <div class="defra-search__input-wrapper">
         <input class="defra-search__input" id="location" name="location" type="search" spellcheck="false" value="{{ model.location }}" {% if model.errorMessage %}aria-describedby="geolocation-error" {% endif %}>
 
-        <button class=" defra-search__button defra-search__button--search" type="submit">
+        <button class="defra-search__button defra-search__button--search" type="submit">
           <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20"
             style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
             <rect x="0" y="0" width="50" height="50" style="fill:none;"></rect>
@@ -45,8 +47,7 @@ href: "#geolocation-error"
           <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
           <g id="SVGRepo_iconCarrier">
             <path
-              d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 17.931V17h-2v2.931A8.008 8.008 0 0 1 4.069 13H7v-2H4.069A8.008 8.008 0 0 1 11 4.069V7h2V4.069A8.007 8.007 0 0 1 19.931 11H17v2h2.931A8.008 8.008 0 0 1 13 19.931z">
-            </path>
+              d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 17.931V17h-2v2.931A8.008 8.008 0 0 1 4.069 13H7v-2H4.069A8.008 8.008 0 0 1 11 4.069V7h2V4.069A8.007 8.007 0 0 1 19.931 11H17v2h2.931A8.008 8.008 0 0 1 13 19.931z"></path>
           </g>
         </svg>
         <span class="govuk-visually-hidden">Use my current location</span>
@@ -64,15 +65,20 @@ href: "#geolocation-error"
     $locationButton.classList.add('js-enabled')
     $locationButton.addEventListener('click', getLocation)
 
+    // Multiple requests to the location services can result in a lock-out situation where the previous request is still being processed when the new request is made. This
+    // could result in a timeout or position-unavailable error.
+    // Enabling the maximumAge option allows the browser to serve a recent result if it's not more than n milliseconds old.
+    // useHighAccuracy set to false allows the browser to use less accurate but faster methods to determine the location. This is the default but set as a belt-and-braces assurance
     const geoOptions = {
-      enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: 0
+      useHighAccuracy: false,
+      maximumAge: 10000 // Allow cached position location to be used
     }
 
     function getLocation() {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(setPosition, showGeolocationError, geoOptions)
+        navigator
+          .geolocation
+          .getCurrentPosition(setPosition, showGeolocationError, geoOptions)
       } else {
         showGeolocationError({ code: 9 })
       }
@@ -88,6 +94,7 @@ href: "#geolocation-error"
     function showGeolocationError(errorCode) {
       if (errorCode.code) {
         document.getElementById('error').value = errorCode.code
+        document.getElementById('location').value = ''
         $locationButton.form.submit()
       }
     }

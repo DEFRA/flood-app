@@ -48,6 +48,7 @@ describe('Route - National', () => {
         name: 'national',
         register: (server) => {
           server.route(require('../../server/routes/national'))
+          server.route(require('../../server/routes/outside-england'))
         }
       }
     }
@@ -566,6 +567,22 @@ describe('Route - National', () => {
         expect(response.headers.location).to.equal('/location/ashford-kent')
       })
 
+      it('should redirect to location page when location is provided with error flag', async () => {
+        const options = {
+          method: 'POST',
+          url: '/',
+          payload: {
+            location: 'ashford, kent',
+            error: '1'
+          }
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).to.equal(302)
+        expect(response.headers.location).to.equal('/location/ashford-kent')
+      })
+
       it('should display error message when geolocation is unavailable', async () => {
         const options = {
           method: 'POST',
@@ -655,6 +672,22 @@ describe('Route - National', () => {
         expect(response.request.url.pathname).to.equal('/')
         expect(response.payload).to.contain("We couldn't find 'fhfhsflkh', England")
       })
+
+      it('should 200 and not redirect with an invalid postcode', async () => {
+        const options = {
+          method: 'POST',
+          url: '/',
+          payload: {
+            location: 'SW1A 9ZZ'
+          }
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).to.equal(200)
+        expect(response.request.url.pathname).to.equal('/')
+        expect(response.payload).to.contain("We couldn't find 'SW1A 9ZZ', England")
+      })
     })
 
     describe('coordinate results', () => {
@@ -687,6 +720,28 @@ describe('Route - National', () => {
         expect(response.statusCode).to.equal(400)
       })
 
+      it('should redirect to outside-england when coordinate lookup returns no match', async () => {
+        const fakeFloodData = () => { return { floods: [] } }
+        const fakeOutlookData = () => { return {} }
+        const fakeSearchData = () => { return [] }
+
+        await setup(fakeFloodData, fakeOutlookData, fakeSearchData)
+
+        const options = {
+          method: 'POST',
+          url: '/',
+          payload: {
+            location: '',
+            geolocation: '55.8609,-4.2514'
+          }
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).to.equal(302)
+        expect(response.headers.location).to.equal('/outside-england')
+      })
+
       it('should redirect to location page with encoded slug for valid coordinate location', async () => {
         const fakeFloodData = () => { return { floods: [] } }
         const fakeOutlookData = () => { return {} }
@@ -717,7 +772,7 @@ describe('Route - National', () => {
         expect(response.headers.location).to.equal('/location/name%20with%20spaces')
       })
 
-      it('should render location-not-found using coordinate-derived place name when coordinate is outside England', async () => {
+      it('should render the outside-england page when coordinate is outside England', async () => {
         const fakeFloodData = () => { return { floods: [] } }
         const fakeOutlookData = () => { return {} }
         const fakeSearchData = () => {
@@ -742,32 +797,17 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(200)
-        expect(response.request.url.pathname).to.equal('/')
-        expect(response.payload).to.contain("We couldn't find 'Glasgow', England")
-      })
+        expect(response.statusCode).to.equal(302)
+        expect(response.headers.location).to.equal('/outside-england')
 
-      it('should render location-not-found using Unknown when coordinate lookup returns no place', async () => {
-        const fakeFloodData = () => { return { floods: [] } }
-        const fakeOutlookData = () => { return {} }
-        const fakeSearchData = () => { return [] }
+        const outsideEnglandResponse = await server.inject({
+          method: 'GET',
+          url: '/outside-england'
+        })
 
-        await setup(fakeFloodData, fakeOutlookData, fakeSearchData)
-
-        const options = {
-          method: 'POST',
-          url: '/',
-          payload: {
-            location: '',
-            geolocation: '0,0'
-          }
-        }
-
-        const response = await server.inject(options)
-
-        expect(response.statusCode).to.equal(200)
-        expect(response.request.url.pathname).to.equal('/')
-        expect(response.payload).to.contain("We couldn't find 'Unknown', England")
+        expect(outsideEnglandResponse.statusCode).to.equal(200)
+        expect(outsideEnglandResponse.request.url.pathname).to.equal('/outside-england')
+        expect(outsideEnglandResponse.payload).to.contain('This service is for locations in England')
       })
     })
   })
