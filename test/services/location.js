@@ -287,7 +287,7 @@ describe('Service - Location', () => {
       expect(result[0].isEngland).to.equal({ is_england: true })
     })
 
-    it('should return non-England dummy payload for coordinate lookup', async () => {
+    it('should return an empty array for coordinate search', async () => {
       const bingCoordinateResponse = {
         statusCode: 200,
         resourceSets: [{
@@ -313,16 +313,7 @@ describe('Service - Location', () => {
 
       const result = await location.find('55.8609,-4.2514')
 
-      expect(result).to.equal([{
-        name: 'Glasgow',
-        query: '',
-        slug: '',
-        center: [],
-        bbox2k: [],
-        bbox10k: [],
-        isUK: true,
-        isEngland: { is_england: false }
-      }])
+      expect(result).to.equal([])
     })
   })
 })
