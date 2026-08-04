@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">
+      This service is for locations in England
+    </h1>
+    <p class="govuk-body">Your current location is outside England.</p>
+    <h2 class="govuk-heading-m">What you can do next</h2>
+    <p class="govuk-body">You can <a id="search-england-link" href="/">search for a town, city or postcode in England</a></p>
+    <p class="govuk-body">Or you can go to:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li><a id="scottish-flooding-link" href="https://www.sepa.org.uk/environment/water/flooding/">Scottish Environment Protection Agency</a></li>
+      <li><a id="wales-flooding-link" href="https://naturalresources.wales/flooding">Natural Resources Wales</a></li>
+      <li><a id="northern-ireland-flooding-link" href="https://www.nidirect.gov.uk/articles/check-the-risk-of-flooding-in-your-area">Northern Ireland Direct</a></li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

@@ -52,6 +52,7 @@ describe('Contract - Views - search partial', () => {
     expect(geolocationInput.getAttribute('value')).to.equal('')
 
     expect(locationButton).to.exist()
+    expect(locationButton.classList.contains('defra-search__location-button')).to.equal(true)
     expect(locationButton.classList.contains('app-show-with-js')).to.equal(true)
     expect(locationButton.classList.contains('js-enabled')).to.equal(false)
   })
@@ -65,6 +66,7 @@ describe('Contract - Views - search partial', () => {
 
     const locationButton = dom.window.document.getElementById('use-location-btn')
 
+    expect(locationButton.classList.contains('defra-search__location-button')).to.equal(true)
     expect(locationButton.classList.contains('app-show-with-js')).to.equal(true)
     expect(locationButton.classList.contains('js-enabled')).to.equal(true)
   })
@@ -109,12 +111,20 @@ describe('Contract - Views - search partial', () => {
     const html = renderSearchPartial({ model: { errorMessage: 'Turn on location services to use your current location, or enter a town, city or postcode in England' } })
 
     const root = parse(html)
+    const formGroup = root.querySelector('.defra-search')
     const errorSummary = root.querySelector('.govuk-error-summary')
+    const errorSummaryCustom = root.querySelector('.defra-search__error-summary')
     const errorMessage = root.querySelector('.govuk-error-message')
+    const errorMessageCustom = root.querySelector('.defra-search__error-message')
 
+    expect(formGroup).to.exist()
+    expect(formGroup.classNames.includes('govuk-form-group--error')).to.equal(true)
     expect(errorSummary).to.exist()
+    expect(errorSummaryCustom).to.exist()
     expect(errorSummary.textContent).to.contain('Turn on location services to use your current location, or enter a town, city or postcode in England')
     expect(errorMessage).to.exist()
+    expect(errorMessageCustom).to.exist()
+    expect(errorMessage.getAttribute('id')).to.equal('geolocation-error')
     expect(errorMessage.textContent).to.contain('Turn on location services to use your current location, or enter a town, city or postcode in England')
   })
 

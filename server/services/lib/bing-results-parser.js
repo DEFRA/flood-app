@@ -99,7 +99,7 @@ const mapper = (r) => {
   }
 }
 
-const confidenceFilter = (r) => r.confidence.toLowerCase() === 'high'
+const confidenceFilter = (r, isCoordinateQuery) => isCoordinateQuery || r.confidence.toLowerCase() === 'high'
 
 const englandOnlyFilter = (r) => {
   if (r.entityType.toLowerCase() === 'admindivision1') {
@@ -134,30 +134,30 @@ async function find (bingResponse, isCoordinateQuery) {
   const resources = Array.isArray(set?.resources) ? set.resources : []
   const hasEstimatedResults = Number(set?.estimatedTotal) > 0
 
-  if (isCoordinateQuery && hasEstimatedResults && resources.length && resources[0].address?.adminDistrict?.toLowerCase() !== 'england') {
-    const address = resources?.[0].address
-    const name = address?.district || address?.locality || 'Unknown'
-    return [{ // We need to return a result to allow the name to appear in the "not in England" message
-      name,
-      query: '',
-      slug: '',
-      center: [],
-      bbox2k: [],
-      bbox10k: [],
-      isUK: address?.countryRegionIso2 === 'GB',
-      isEngland: { is_england: false }
-    }]
-  }
-
-  return hasEstimatedResults && resources.length
+  const places = hasEstimatedResults && resources.length
     ? resources
-      .filter(confidenceFilter)
+      .filter(r => confidenceFilter(r, isCoordinateQuery)) // coordinate queries can return results which are valid but not high confidence
       .filter(r => queryTypeFilter(r, isCoordinateQuery))
       .filter(baseFilter)
       .sort(typesSort)
       .map(mapper)
       .filter(removeDuplicatesFilter)
     : []
+
+  const response = []
+
+  if (isCoordinateQuery) {
+    const geoLocated = places.length
+    if (geoLocated && !places?.[0]?.isEngland?.is_england) {
+      places[0].name = places?.[0]?.name || 'Unknown'
+    }
+  }
+
+  if (places.length) {
+    response.push(...places)
+  }
+
+  return response
 }
 
 async function get (bingResponse, slug) {
@@ -174,8 +174,10 @@ async function get (bingResponse, slug) {
   // value (we do still filter by england only and allowed entity types)
   const matchingSlugFilter = (r) => r.slug === slug
   const set = bingResponse?.resourceSets?.[0]
-  return set?.estimatedTotal
-    ? set?.resources?.filter(baseFilter)
+  const resources = Array.isArray(set?.resources) ? set.resources : []
+  const hasEstimatedResults = Number(set?.estimatedTotal) > 0
+  return hasEstimatedResults && resources.length
+    ? resources.filter(baseFilter)
       .sort(typesSort)
       .map(mapper)
       .filter(removeDuplicatesFilter)
