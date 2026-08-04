@@ -70,14 +70,30 @@ async function getBingResponse (query, maxBingResults, isCoordinateQuery) {
   return bingData
 }
 
+function processBingMapsInput (input) {
+  const cleaned = input.trim().toLowerCase()
+
+  const looksLikePostcode = /^[a-z]{1,2}[0-9]/.test(cleaned)
+
+  if (looksLikePostcode) {
+    const sectorPattern = /^([a-z]{1,2}[0-9][a-z0-9]?)-[0-9]$/
+    const match = cleaned.match(sectorPattern)
+
+    if (match) {
+      return match[1]
+    }
+  }
+  return cleaned
+}
+
 async function getLocationBySlug (locationSlug) {
   // inspection shows that for some slug searches (e.g. hoxne-eye-suffolk)
   // the desired result is not within the first 3 results so need a different
   // value. 5 seems to be an acceptable value.
   const MAX_BING_RESULTS = 5
-
-  const bingData = await getBingResponse(locationSlug, MAX_BING_RESULTS)
-  return get(bingData, locationSlug)
+  const cleanedSlug = processBingMapsInput(locationSlug)
+  const bingData = await getBingResponse(cleanedSlug, MAX_BING_RESULTS)
+  return get(bingData, cleanedSlug)
 }
 
 async function findLocationByQuery (locationQuery) {
