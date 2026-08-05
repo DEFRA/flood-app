@@ -100,13 +100,17 @@ homepageUrl: "https://www.gov.uk/"
 <!-- If dummy warning data is being used -->
 {% if isDummyData %}
 {{ govukWarningText({
-html: 'Dummy data is currently active on this service, please view the <a href="https://flood-warning-information.service.gov.uk/warnings">production service</a> for up to date warnings data', iconFallbackText: "Warning" }) }}
+html: 'Dummy data is currently active on this service, please view the <a
+  href="https://flood-warning-information.service.gov.uk/warnings">production service</a> for up to date warnings data',
+iconFallbackText: "Warning" }) }}
 {% endif %}
 
 <!-- If external http calls are being mocked -->
 {% if isMockExternalHttp %}
 {{ govukWarningText({
-html: 'External Http requests are currently being mocked on this service, please view the <a href="https://flood-warning-information.service.gov.uk/warnings">production service</a> for up to date warnings data', iconFallbackText: "Warning"
+html: 'External Http requests are currently being mocked on this service, please view the <a
+  href="https://flood-warning-information.service.gov.uk/warnings">production service</a> for up to date warnings data',
+iconFallbackText: "Warning"
 }) }}
 {% endif %}
 
@@ -171,7 +175,8 @@ html: 'External Http requests are currently being mocked on this service, please
   text: "Terms and conditions"
   }
   ],
-  html: 'Built by the <a class="govuk-footer__link" href="https://www.gov.uk/government/organisations/environment-agency">Environment Agency</a>'
+  html: 'Built by the <a class="govuk-footer__link"
+    href="https://www.gov.uk/government/organisations/environment-agency">Environment Agency</a>'
   }
   }) }}
   {% endblock %}
