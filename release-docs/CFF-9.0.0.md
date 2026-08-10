@@ -45,7 +45,20 @@
 
 3. Execute LFW_{STAGE}_03_DEPLOY_Service - Tag - 9.0.0
 
-Execute smoke tests and forward results
+4. Update smoke test config properties content setion to include:
+
+SCRIPT_REPO_URL=git@gitlab-dev.aws-int.defra.cloud:flood/flood-pipelines.git
+SCRIPT_REPO_BRANCH=feature/FSR-1629-ecs-migration
+SCRIPT_REPO_CREDENTIAL_ID=gitlab-dev
+SCRIPT_REPO_DIRECTORY=lfw
+
+# For S3 access
+LFW_TARGET_ENV_NAME=<<Change me to reflect required PRD environment example prdbldn>>ldn 
+
+# For SSM parameter store access
+SSM_PARAM_STORE_ENV=<<Change me to reflect required PRD environment example prdb/ldn>>/ldn 
+
+5. Configure git@gitlab-dev.aws-int.defra.cloud:flood/flood-pipelines.git to use branch */feature/FSR-1629-ecs-migrationExecute smoke tests and forward results
 
 ## Related Infrastructure Changes Required
 
