@@ -45,9 +45,12 @@
 
 3. Execute LFW_{STAGE}_03_DEPLOY_Service - Tag - 9.0.0
 
-
 Execute smoke tests and forward results
 
 ## Related Infrastructure Changes Required
 
-- None
+- Remove redirects for :  /find-location
+                          /plan-ahead-for-flooding
+                          /what-to-do-in-a-flood
+                          /recovering-after-a-flood
+                          /what-happens-after-a-flood
