@@ -1,7 +1,7 @@
 # Check For Flooding Release
 
 - Version: 9.0.0
-- Proposed Release Date: 22nd July 2026
+- Proposed Release Date: 12th August 2026
 - Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/37414/tab/release-report-all-issues
 
 ## Sense Check
@@ -34,7 +34,8 @@
 
 ## Instructions
 
-1. Execute LFW_{STAGE}_99_DEPLOY_FLOOD_DATA_PIPELINE_TF
+
+1. MISC folder Execute LFW_{STAGE}_99_DEPLOY_FLOOD_DATA_PIPELINE_TF
 
     Ensure build parameters are set as follows:  
    - **TERRAGRUNT_BRANCH:** `master`  
@@ -47,13 +48,13 @@
 
 4. Update smoke test config properties content setion to include:
 
-TESTS_REPO_BRANCH=release/9.0.0
-CONFIG_REPO_BRANCH=feature/FSR-1629-ecs-migration
+- TESTS_REPO_BRANCH=release/9.0.0
+- CONFIG_REPO_BRANCH=feature/FSR-1629-ecs-migration
 
-SCRIPT_REPO_URL=git@gitlab-dev.aws-int.defra.cloud:flood/flood-pipelines.git
-SCRIPT_REPO_BRANCH=feature/FSR-1629-ecs-migration
-SCRIPT_REPO_CREDENTIAL_ID=gitlab-dev
-SCRIPT_REPO_DIRECTORY=lfw
+- SCRIPT_REPO_URL=git@gitlab-dev.aws-int.defra.cloud:flood/flood-pipelines.git
+- SCRIPT_REPO_BRANCH=feature/FSR-1629-ecs-migration
+- SCRIPT_REPO_CREDENTIAL_ID=gitlab-dev
+- SCRIPT_REPO_DIRECTORY=lfw
 
 ### For S3 access
 LFW_TARGET_ENV_NAME=&lt;&lt;Change me to reflect required PRD environment example prdbldn&gt;&gt;ldn 
