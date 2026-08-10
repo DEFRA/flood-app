@@ -52,15 +52,15 @@ SCRIPT_REPO_BRANCH=feature/FSR-1629-ecs-migration
 SCRIPT_REPO_CREDENTIAL_ID=gitlab-dev
 SCRIPT_REPO_DIRECTORY=lfw
 
-# For S3 access
+### For S3 access
 LFW_TARGET_ENV_NAME=<<Change me to reflect required PRD environment example prdbldn>>ldn 
 
-# For SSM parameter store access
+### For SSM parameter store access
 SSM_PARAM_STORE_ENV=<<Change me to reflect required PRD environment example prdb/ldn>>/ldn 
 
 5. Configure git@gitlab-dev.aws-int.defra.cloud:flood/flood-pipelines.git to use branch */feature/FSR-1629-ecs-migrationExecute smoke tests and forward results
 
-## Related Infrastructure Changes Required
+### Related Infrastructure Changes Required
 
 - Remove redirects for :  /find-location
                           /plan-ahead-for-flooding
