@@ -58,7 +58,9 @@ LFW_TARGET_ENV_NAME=&lt;&lt;Change me to reflect required PRD environment exampl
 ### For SSM parameter store access
 SSM_PARAM_STORE_ENV=&lt;&lt;Change me to reflect required PRD environment example prdb/ldn&gt;&gt;/ldn 
 
-5. Configure git@gitlab-dev.aws-int.defra.cloud:flood/flood-pipelines.git to use branch */feature/FSR-1629-ecs-migrationExecute smoke tests and forward results
+5. Configure git@gitlab-dev.aws-int.defra.cloud:flood/flood-pipelines.git to use branch */feature/FSR-1629-ecs-migration
+
+Execute smoke tests and forward results
 
 ### Related Infrastructure Changes Required
 
