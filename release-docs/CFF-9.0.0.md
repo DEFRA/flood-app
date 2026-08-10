@@ -47,6 +47,9 @@
 
 4. Update smoke test config properties content setion to include:
 
+TESTS_REPO_BRANCH=release/9.0.0
+CONFIG_REPO_BRANCH=feature/FSR-1629-ecs-migration
+
 SCRIPT_REPO_URL=git@gitlab-dev.aws-int.defra.cloud:flood/flood-pipelines.git
 SCRIPT_REPO_BRANCH=feature/FSR-1629-ecs-migration
 SCRIPT_REPO_CREDENTIAL_ID=gitlab-dev
