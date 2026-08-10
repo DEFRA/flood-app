@@ -68,8 +68,9 @@ Execute smoke tests and forward results
 
 ### Related Infrastructure Changes Required
 
-- Remove redirects for :  /find-location
-                          /plan-ahead-for-flooding
-                          /what-to-do-in-a-flood
-                          /recovering-after-a-flood
-                          /what-happens-after-a-flood
+Remove redirects for : 
+-  /find-location
+-  /plan-ahead-for-flooding
+-  /what-to-do-in-a-flood
+-  /recovering-after-a-flood
+-  /what-happens-after-a-flood
