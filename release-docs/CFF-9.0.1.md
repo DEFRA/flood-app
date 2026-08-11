@@ -44,7 +44,7 @@
 
 2. Execute LFW_{STAGE}_01_DEPLOY_APPLICATION - Tag - 9.0.1
 
-3. Execute LFW_{STAGE}_03_DEPLOY_Service - Tag - 9.0.1
+3. Execute LFW_{STAGE}_03_DEPLOY_Service - Tag - 9.0.0
 
 4. Update smoke test config properties content setion to include:
 
