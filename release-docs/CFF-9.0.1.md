@@ -1,14 +1,14 @@
 # Check For Flooding Release
 
-- Version: 9.0.0
-- Proposed Release Date: 12th August 2026
+- Version: 9.0.1
+- Proposed Release Date: 13th August 2026
 - Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/37414/tab/release-report-all-issues
 
 ## Sense Check
 
 - Note that this is the definitive release notes for WebOps. The release notes in flood-service and flood-db are for CFF dev team use only.
 - Cross check the list of Jira tickets below with those in the Jira release linked to above and update where needed
-- Add additional Jira tickets from the related release notes in the 'Release 9.0.0' PR's created in:
+- Add additional Jira tickets from the related release notes in the 'Release 9.0.1' PR's created in:
   - [flood-service](https://github.com/DEFRA/flood-service)
 
 - Add any required infrastructure changes such as redirects to the infrastructure changes section below
@@ -42,13 +42,13 @@
    - **TERRAFORM_BRANCH:** `terraform-main`  
    - **MODULE_DEPLOY:** `lambda`
 
-2. Execute LFW_{STAGE}_01_DEPLOY_APPLICATION - Tag - 9.0.0
+2. Execute LFW_{STAGE}_01_DEPLOY_APPLICATION - Tag - 9.0.1
 
-3. Execute LFW_{STAGE}_03_DEPLOY_Service - Tag - 9.0.0
+3. Execute LFW_{STAGE}_03_DEPLOY_Service - Tag - 9.0.1
 
 4. Update smoke test config properties content setion to include:
 
-- TESTS_REPO_BRANCH=release/9.0.0
+- TESTS_REPO_BRANCH=master
 - CONFIG_REPO_BRANCH=feature/FSR-1629-ecs-migration
 
 - SCRIPT_REPO_URL=git@gitlab-dev.aws-int.defra.cloud:flood/flood-pipelines.git
