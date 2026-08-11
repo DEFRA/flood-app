@@ -87,7 +87,7 @@
   "devDependencies": {
     "dotenv": "17.4.2",
     "husky": "8.0.3",
-    "jsdom": "29.1.1",
+    "jsdom": "30.0.1",
     "mockdate": "3.0.5",
     "node-html-parser": "7.1.0",
     "nodemon": "3.1.14",
