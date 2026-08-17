@@ -384,8 +384,8 @@ describe('Route - Station', () => {
     expect(response.payload).to.contain('Normal')
     expect(response.payload).to.contain('Steady')
     expect(response.payload).to.contain('Normal range 0.15m to 3.50m')
-    expect(response.payload).to.contain('<a href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
+    expect(response.payload).to.contain('href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('href="/station/5122">Upstream</a>')
     expect(response.payload).to.contain('href="/station-csv/5146"')
     expect(response.payload).to.contain('Download data CSV (12KB)')
   })
@@ -524,8 +524,8 @@ describe('Route - Station', () => {
     expect(response.payload).to.contain('High')
     expect(response.payload).to.contain('Falling')
     expect(response.payload).to.contain('Latest at 1:30am')
-    expect(response.payload).to.contain('<a href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
+    expect(response.payload).to.contain('href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('href="/station/5122">Upstream</a>')
     expect(response.payload).to.not.contain('Go downstream</a>')
   })
 
@@ -663,8 +663,8 @@ describe('Route - Station', () => {
     expect(response.payload).to.contain('Low\n')
     expect(response.payload).to.contain('Rising')
     expect(response.payload).to.contain('Latest at 1:30am')
-    expect(response.payload).to.contain('<a href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
+    expect(response.payload).to.contain('href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('href="/station/5122">Upstream</a>')
   })
 
   it('should return downstream', async () => {
@@ -797,9 +797,9 @@ describe('Route - Station', () => {
     const response = await server.inject(options)
     expect(response.statusCode).to.equal(200)
     expect(response.payload).to.contain('River Avon level downstream at Lilbourne - GOV.UK')
-    expect(response.payload).to.contain('<a href="/river-and-sea-levels/rloi/2042">Nearby levels</a>')
-    expect(response.payload).to.contain('<a href="/station/2042">Upstream</a>')
-    expect(response.payload).to.contain('<a href="/station/2043">Downstream</a>')
+    expect(response.payload).to.contain('href="/river-and-sea-levels/rloi/2042">Nearby levels</a>')
+    expect(response.payload).to.contain('href="/station/2042">Upstream</a>')
+    expect(response.payload).to.contain('href="/station/2043">Downstream</a>')
   })
 
   it('should return closed station', async () => {
@@ -1479,9 +1479,9 @@ describe('Route - Station', () => {
     expect(response.payload).to.contain('This station includes an automated model')
     expect(response.payload).to.contain('level in the model is')
     expect(response.payload).to.not.contain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
-    expect(response.payload).to.contain('<a href="/station/7332">Upstream</a>')
-    expect(response.payload).to.contain('<a href="/station/7357">Downstream</a>')
-    expect(response.payload).to.contain('<a href="/river-and-sea-levels/rloi/7333">Nearby levels</a>')
+    expect(response.payload).to.contain('href="/station/7332">Upstream</a>')
+    expect(response.payload).to.contain('href="/station/7357">Downstream</a>')
+    expect(response.payload).to.contain('href="/river-and-sea-levels/rloi/7333">Nearby levels</a>')
   })
 
   it('should 200 with latest value over hour old but under 24 hours ', async () => {
@@ -1915,8 +1915,8 @@ describe('Route - Station', () => {
     expect(response.statusCode).to.equal(200)
     expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
     expect(response.payload).to.contain('This data feed was interrupted')
-    expect(response.payload).to.contain('<a href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
+    expect(response.payload).to.contain('href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('href="/station/5122">Upstream</a>')
     expect(response.payload).to.contain('href="/station-csv/5146"')
     expect(response.payload).to.contain('Download data CSV (12KB)')
   })
@@ -2185,8 +2185,8 @@ describe('Route - Station', () => {
     expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
     expect(response.payload).to.contain('Steady')
     expect(response.payload).to.not.contain('Normal range ')
-    expect(response.payload).to.contain('<a href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    expect(response.payload).to.contain('<a href="/station/5122">Upstream</a>')
+    expect(response.payload).to.contain('href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).to.contain('href="/station/5122">Upstream</a>')
   })
 
   it('should set page title and h1 as coastal river name', async () => {
@@ -2556,8 +2556,8 @@ describe('Route - Station', () => {
     })
 
     expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('<a href="/station/9382">Upstream</a>')
-    expect(response.payload).to.include('<a href="/station/9345">Downstream</a>')
+    expect(response.payload).to.include('href="/station/9382">Upstream</a>')
+    expect(response.payload).to.include('href="/station/9345">Downstream</a>')
   })
 
   it('GET /station/9382 redirects to the downstream view and shows correct navigation links for multi-reading station', async () => {
@@ -2647,8 +2647,8 @@ describe('Route - Station', () => {
     })
 
     expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('<a href="/station/9045">Upstream</a>')
-    expect(response.payload).to.include('<a href="/station/9382/downstream">Downstream</a>')
+    expect(response.payload).to.include('href="/station/9045">Upstream</a>')
+    expect(response.payload).to.include('href="/station/9382/downstream">Downstream</a>')
   })
 
   it('GET /station/9045 navigates correctly to upstream and downstream views from a single station', async () => {
@@ -2738,8 +2738,8 @@ describe('Route - Station', () => {
     })
 
     expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('<a href="/station/9382/downstream">Upstream</a>')
-    expect(response.payload).to.include('<a href="/station/8114">Downstream</a>')
+    expect(response.payload).to.include('href="/station/9382/downstream">Upstream</a>')
+    expect(response.payload).to.include('href="/station/8114">Downstream</a>')
   })
 
   it('GET /station/9382 shows correct upstream and downstream navigation links for multi to single upstream navigation', async () => {
@@ -2829,8 +2829,8 @@ describe('Route - Station', () => {
     })
 
     expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('<a href="/station/9045">Upstream</a>')
-    expect(response.payload).to.include('<a href="/station/9382/downstream">Downstream</a>')
+    expect(response.payload).to.include('href="/station/9045">Upstream</a>')
+    expect(response.payload).to.include('href="/station/9382/downstream">Downstream</a>')
   })
 
   it('GET /station/9382/downstream shows correct upstream and downstream navigation links for multi to single downstream navigation', async () => {
@@ -2920,8 +2920,8 @@ describe('Route - Station', () => {
     })
 
     expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('<a href="/station/9382">Upstream</a>')
-    expect(response.payload).to.include('<a href="/station/9345">Downstream</a>')
+    expect(response.payload).to.include('href="/station/9382">Upstream</a>')
+    expect(response.payload).to.include('href="/station/9345">Downstream</a>')
   })
 
   it('GET /station/9382/downstream switches from downstream to upstream view within the same multi-reading station', async () => {
@@ -3011,8 +3011,8 @@ describe('Route - Station', () => {
     })
 
     expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('<a href="/station/9382">Upstream</a>')
-    expect(response.payload).to.include('<a href="/station/9345">Downstream</a>')
+    expect(response.payload).to.include('href="/station/9382">Upstream</a>')
+    expect(response.payload).to.include('href="/station/9345">Downstream</a>')
   })
 
   it('GET /station/9382 switches from upstream to downstream view within the same multi-reading station', async () => {
@@ -3102,8 +3102,8 @@ describe('Route - Station', () => {
     })
 
     expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('<a href="/station/9045">Upstream</a>')
-    expect(response.payload).to.include('<a href="/station/9382/downstream">Downstream</a>')
+    expect(response.payload).to.include('href="/station/9045">Upstream</a>')
+    expect(response.payload).to.include('href="/station/9382/downstream">Downstream</a>')
   })
 
   it('GET /station/9345 navigates correctly to another multi-reading station upstream', async () => {
@@ -3193,8 +3193,8 @@ describe('Route - Station', () => {
     })
 
     expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('<a href="/station/9382/downstream">Upstream</a>')
-    expect(response.payload).to.include('<a href="/station/9345/downstream">Downstream</a>')
+    expect(response.payload).to.include('href="/station/9382/downstream">Upstream</a>')
+    expect(response.payload).to.include('href="/station/9345/downstream">Downstream</a>')
   })
 
   it('GET /station/9345/downstream navigates correctly to another multi-reading station', async () => {
@@ -3284,7 +3284,7 @@ describe('Route - Station', () => {
     })
 
     expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('<a href="/station/9345">Upstream</a>')
-    expect(response.payload).to.include('<a href="/station/8114">Downstream</a>')
+    expect(response.payload).to.include('href="/station/9345">Upstream</a>')
+    expect(response.payload).to.include('href="/station/8114">Downstream</a>')
   })
 })
