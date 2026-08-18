@@ -1,60 +1,58 @@
 {% extends "template.njk" %}
 {% set govukRebrand = true %}
 
-{% from "accordion/macro.njk"           import govukAccordion %}
-{% from "back-link/macro.njk"           import govukBackLink %}
-{% from "breadcrumbs/macro.njk"         import govukBreadcrumbs %}
-{% from "button/macro.njk"              import govukButton %}
-{% from "character-count/macro.njk"     import govukCharacterCount %}
-{% from "checkboxes/macro.njk"          import govukCheckboxes %}
-{% from "cookie-banner/macro.njk"       import govukCookieBanner %}
-{% from "date-input/macro.njk"          import govukDateInput %}
-{% from "details/macro.njk"             import govukDetails %}
-{% from "error-message/macro.njk"       import govukErrorMessage %}
-{% from "error-summary/macro.njk"       import govukErrorSummary %}
-{% from "fieldset/macro.njk"            import govukFieldset %}
-{% from "file-upload/macro.njk"         import govukFileUpload %}
-{% from "input/macro.njk"               import govukInput %}
-{% from "inset-text/macro.njk"          import govukInsetText %}
+{% from "accordion/macro.njk" import govukAccordion %}
+{% from "back-link/macro.njk" import govukBackLink %}
+{% from "breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "button/macro.njk" import govukButton %}
+{% from "character-count/macro.njk" import govukCharacterCount %}
+{% from "checkboxes/macro.njk" import govukCheckboxes %}
+{% from "cookie-banner/macro.njk" import govukCookieBanner %}
+{% from "date-input/macro.njk" import govukDateInput %}
+{% from "details/macro.njk" import govukDetails %}
+{% from "error-message/macro.njk" import govukErrorMessage %}
+{% from "error-summary/macro.njk" import govukErrorSummary %}
+{% from "fieldset/macro.njk" import govukFieldset %}
+{% from "file-upload/macro.njk" import govukFileUpload %}
+{% from "input/macro.njk" import govukInput %}
+{% from "inset-text/macro.njk" import govukInsetText %}
 {% from "notification-banner/macro.njk" import govukNotificationBanner %}
-{% from "panel/macro.njk"               import govukPanel %}
-{% from "phase-banner/macro.njk"        import govukPhaseBanner %}
-{% from "radios/macro.njk"              import govukRadios %}
-{% from "select/macro.njk"              import govukSelect %}
-{% from "skip-link/macro.njk"           import govukSkipLink %}
-{% from "summary-list/macro.njk"        import govukSummaryList %}
-{% from "table/macro.njk"               import govukTable %}
-{% from "tabs/macro.njk"                import govukTabs %}
-{% from "tag/macro.njk"                 import govukTag %}
-{% from "textarea/macro.njk"            import govukTextarea %}
-{% from "warning-text/macro.njk"        import govukWarningText %}
-{% from "footer/macro.njk"              import govukFooter %}
+{% from "panel/macro.njk" import govukPanel %}
+{% from "phase-banner/macro.njk" import govukPhaseBanner %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "select/macro.njk" import govukSelect %}
+{% from "skip-link/macro.njk" import govukSkipLink %}
+{% from "summary-list/macro.njk" import govukSummaryList %}
+{% from "table/macro.njk" import govukTable %}
+{% from "tabs/macro.njk" import govukTabs %}
+{% from "tag/macro.njk" import govukTag %}
+{% from "textarea/macro.njk" import govukTextarea %}
+{% from "warning-text/macro.njk" import govukWarningText %}
+{% from "footer/macro.njk" import govukFooter %}
 {% from "service-navigation/macro.njk" import govukServiceNavigation %}
 
 {% set metaTitle = (pageTitle or model.pageTitle or 'Check for flooding') + ' - GOV.UK' %}
 {% set metaDescription = model.metaDescription | default('Check your risk of flooding. View the latest flood warnings and alerts, get a flood forecast for the next 5 days, and check the latest river, sea, groundwater and rainfall levels.') %}
 {% set metaCanonical = model.metaCanonical %}
 {% set metaFeedback = model.feedback %}
-{% set liveServiceText = ( liveServiceText or 'use the current service') %}
-{% set liveServicePath = ( liveServicePath or '/warnings') %}
+{% set liveServiceText = (liveServiceText or 'use the current service') %}
+{% set liveServicePath = (liveServicePath or '/warnings') %}
 
 {% block pageTitle %}
   {{ metaTitle }}
 {% endblock %}
 
 {% block head %}
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="{{fullUrl}}" />
-  <meta property="og:title" content="{{metaTitle}}" />
-  <meta property="og:description" content="{{metaDescription}}" />
-  <meta name="description" content="{{metaDescription}}" />
-  <meta name="google-site-verification" content="y6LbLfoXyHHDG2k5BAGCzMw_f4l9Y4MdCsX5SELenE8" />
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="{{fullUrl}}"/>
+  <meta property="og:title" content="{{metaTitle}}"/>
+  <meta property="og:description" content="{{metaDescription}}"/>
+  <meta name="description" content="{{metaDescription}}"/>
+  <meta name="google-site-verification" content="y6LbLfoXyHHDG2k5BAGCzMw_f4l9Y4MdCsX5SELenE8"/>
   <!-- Stage: {{ env }} {{ stage }} -->
   <!-- Application version: {{ appVersion }} -->
 
-  <link href="{{ assetPath }}/stylesheets/application.css" rel="stylesheet" />
-
- 
+  <link href="{{ assetPath }}/stylesheets/application.css" rel="stylesheet"/>
 
   {% if metaCanonical %}
     <link rel="canonical" href="{{ model.canonicalUrl if model.canonicalUrl else fullUrl }}"/>
@@ -70,74 +68,107 @@
 
   <script>
     if (window.location.hash === '#webchat' && window.matchMedia('(max-width: 640px)').matches) {
-      document.body.classList.add('wc-hidden')
+      document
+        .body
+        .classList
+        .add('wc-hidden')
     }
   </script>
 
   <script src="{{ assetPath }}/javascripts/canvas-patch.js"></script>
 
+  {% if gtmAccId and cookiePolicySettings and cookiePolicySettings.analytics %}
+    {% if env === 'production' %}
+      <!-- Production: load real Google Tag Manager -->
+      <script>
+        window.dataLayer = window.dataLayer || []
+        window
+          .dataLayer
+          .push({'gtm.start': Date.now(), event: 'gtm.js'});
+        (function (d, s, l, i) {
+          var f = d.getElementsByTagName(s)[0]
+          var j = d.createElement(s)
+          var dl = l !== 'dataLayer'
+            ? '&l=' + l
+            : ''
+          j.async = true
+          j.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`
+          f
+            .parentNode
+            .insertBefore(j, f)
+        })(document, 'script', 'dataLayer', '{{ gtmAccId }}')
+      </script>
+    {% else %}
+      <!-- Dev mode: load mock GTM that creates test cookies -->
+      <script src="{{ assetPath }}/javascripts/dev-gtm.js"></script>
+    {% endif %}
+  {% endif %}
+
 {% endblock %}
 
 {% block header %}
 
-<div id="webchat-skip-link-container"></div>
+  <div id="webchat-skip-link-container"></div>
 
-{%  include "partials/cookie-banner.html" %}
+  {% if gtmAccId and cookiePolicySettings and cookiePolicySettings.analytics %}
+    <noscript>
+      <iframe title="google tag manager" src="https://www.googletagmanager.com/ns.html?id={{ gtmAccId }}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+  {% endif %}
+
+  {% include "partials/cookie-banner.html" %}
 
   {{ govukHeader({
-    homepageUrl: "https://www.gov.uk/",
-    rebrand: true 
-  }) }}
+homepageUrl: "https://www.gov.uk/",
+rebrand: true
+}) }}
   {{ govukServiceNavigation({
-    serviceName: "Check for flooding",
-    serviceUrl: "/"
-  }) }}
+serviceName: "Check for flooding",
+serviceUrl: "/"
+}) }}
 
 {% endblock %}
 
 {% block beforeContent %}
 
-
   <!-- If dummy warning data is being used -->
   {% if isDummyData %}
     {{ govukWarningText({
-      html: 'Dummy data is currently active on this service, please view the <a href="https://flood-warning-information.service.gov.uk/warnings">production service</a> for up to date warnings data',
-      iconFallbackText: "Warning"
-    }) }}
+html: 'Dummy data is currently active on this service, please view the <a href="https://flood-warning-information.service.gov.uk/warnings">production service</a> for up to date warnings data',
+iconFallbackText: "Warning"
+}) }}
   {% endif %}
 
   <!-- If external http calls are being mocked -->
   {% if isMockExternalHttp %}
     {{ govukWarningText({
-      html: 'External Http requests are currently being mocked on this service,  please view the <a href="https://flood-warning-information.service.gov.uk/warnings">production service</a> for up to date warnings data',
-      iconFallbackText: "Warning"
-    }) }}
+html: 'External Http requests are currently being mocked on this service, please view the <a href="https://flood-warning-information.service.gov.uk/warnings">production service</a> for up to date warnings data',
+iconFallbackText: "Warning"
+}) }}
   {% endif %}
 
   <div class="govuk-phase-banner">
     <p class="govuk-phase-banner__content">
       <strong class="govuk-tag govuk-phase-banner__content__tag">
-        Beta
-      </strong>
+      Beta
+    </strong>
       <span class="govuk-phase-banner__text">
-        This is a new service – your <a class="govuk-link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965?Source={{fullUrl}}">feedback</a> will help us to improve it.
-      </span>
+      This is a new service – your <a class="govuk-link" href="https://defragroup.eu.qualtrics.com/jfe/form/SV_8uMAuaH3kbJl965?Source={{fullUrl}}">feedback</a> will help us to improve it.
+    </span>
     </p>
   </div>
 
 {% endblock %}
 
-{% block content %}
-{% endblock %}
-
+{% block content %}{% endblock %}
 
 {% block bodyEnd %}
 
-{% block pageScripts %}{% endblock %}
-{# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
+  {% block pageScripts %}{% endblock %}
+  {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script>
-    globalThis.flood = globalThis.flood || {}
-    globalThis.flood.gtmAccId = "{{ gtmAccId }}"
+    window.flood = window.flood || {}
+    window.flood.gtmAccId = '{{ gtmAccId }}'
   </script>
   <script src="{{ assetPath }}/js/core.js"></script>
   {% if webchat.enabled %}
@@ -150,29 +181,28 @@
     {% include "./partials/feedback.html" %}
   {% endif %}
 
-
   {{ govukFooter({
-    meta: {
-      items: [
-        {
-          href: "/accessibility-statement",
-          text: "Accessibility statement"
-        },
-        {
-          href: "/cookies",
-          text: "Cookies"
-        },
-        {
-          href: "/privacy-notice",
-          text: "Privacy notice"
-        },
-        {
-          href: "/terms-and-conditions",
-          text: "Terms and conditions"
-        }
-      ]
-      ,
-      html: 'Built by the <a class="govuk-footer__link" href="https://www.gov.uk/government/organisations/environment-agency">Environment Agency</a>'
-    }
+  meta: {
+  items: [
+  {
+  href: "/accessibility-statement",
+  text: "Accessibility statement"
+  },
+  {
+  href: "/cookies",
+  text: "Cookies"
+  },
+  {
+  href: "/privacy-notice",
+  text: "Privacy notice"
+  },
+  {
+  href: "/terms-and-conditions",
+  text: "Terms and conditions"
+  }
+  ]
+  ,
+  html: 'Built by the <a class="govuk-footer__link" href="https://www.gov.uk/government/organisations/environment-agency">Environment Agency</a>'
+  }
   }) }}
 {% endblock %}
