@@ -1,6 +1,7 @@
 const config = require('../../config')
 const util = require('../../util')
 const { handleProxyError } = require('./lib/handle-proxy-error')
+const { HTTP_BAD_REQUEST } = require('../../constants')
 
 module.exports = {
   method: 'GET',
@@ -9,7 +10,7 @@ module.exports = {
     try {
       const bbox = request.query.bbox
       if (!bbox) {
-        return h.response({ error: 'bbox parameter required' }).code(400)
+        return h.response({ error: 'bbox parameter required' }).code(HTTP_BAD_REQUEST)
       }
       const url = `${config.serviceUrl}/flood-warning-alerts-geojson?bbox=${bbox}`
       const data = await util.getJson(url)
