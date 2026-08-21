@@ -15,6 +15,7 @@ describe('Route - API', () => {
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
     delete require.cache[require.resolve('../../server/util.js')]
     delete require.cache[require.resolve('../../server/services/location.js')]
+    delete require.cache[require.resolve('../../server/routes/api/flood-warning-alerts.js')]
 
     sandbox = await sinon.createSandbox()
 
@@ -29,7 +30,7 @@ describe('Route - API', () => {
     await sandbox.restore()
   })
 
-  describe('/warnings', () => {
+  describe('GeoJSON Endpoints', () => {
     it('should 200 with stations geojson', async () => {
       const getStationsGeojson = () => {
         return JSON.parse('{"type": "FeatureCollection", "features": []}')
@@ -67,6 +68,39 @@ describe('Route - API', () => {
 
       expect(response.statusCode).to.equal(200)
       expect(response.payload).to.contain('{"type":"FeatureCollection","features":[]}')
+    })
+
+    it('should 500 when stations geojson service call fails', async () => {
+      const floodService = require('../../server/services/flood')
+      sandbox.stub(floodService, 'getStationsGeoJson').callsFake(async () => { throw new Error('backend unavailable') })
+
+      const route = {
+        plugin: {
+          name: 'stations',
+          register: (server) => {
+            server.route(require('../../server/routes/api/stations.geojson'))
+          }
+        }
+      }
+
+      await server.register(require('../../server/plugins/logging'))
+      await server.register(require('../../server/plugins/session'))
+      await server.register(route)
+
+      const registerServerMethods = require('../../server/services/server-methods')
+      registerServerMethods(server)
+
+      await server.initialize()
+
+      const options = {
+        method: 'GET',
+        url: '/api/stations.geojson'
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).to.equal(500)
+      expect(JSON.parse(response.payload).error).to.equal('Failed to fetch stations geojson')
     })
 
     it('should 200 with rainfall geojson', async () => {
@@ -108,6 +142,139 @@ describe('Route - API', () => {
       expect(response.payload).to.contain('{"type":"FeatureCollection","features":[]}')
     })
 
+    it('should 500 when rainfall geojson service call fails', async () => {
+      const floodService = require('../../server/services/flood')
+      sandbox.stub(floodService, 'getRainfallGeojson').callsFake(async () => { throw new Error('backend unavailable') })
+
+      const route = {
+        plugin: {
+          name: 'rainfall',
+          register: (server) => {
+            server.route(require('../../server/routes/api/rainfall.geojson'))
+          }
+        }
+      }
+
+      await server.register(require('../../server/plugins/logging'))
+      await server.register(require('../../server/plugins/session'))
+      await server.register(route)
+
+      const registerServerMethods = require('../../server/services/server-methods')
+      registerServerMethods(server)
+
+      await server.initialize()
+
+      const options = {
+        method: 'GET',
+        url: '/api/rainfall.geojson'
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).to.equal(500)
+      expect(JSON.parse(response.payload).error).to.equal('Failed to fetch rainfall geojson')
+    })
+
+    // Real-world EPSG:3857 extent covering Tewkesbury, Gloucestershire (Severn/Avon
+    // confluence) in the xmin,ymin,xmax,ymax,EPSG:3857 format sent by the browser's
+    // map loader (server/src/js/components/map/layers.js) and parsed by
+    // flood-service's getBboxParams.
+    const floodWarningAlertsBbox = '-241007,6796510,-238224,6799221,EPSG:3857'
+
+    const registerFloodWarningAlertsRoute = async () => {
+      const route = {
+        plugin: {
+          name: 'flood-warning-alerts',
+          register: (server) => {
+            server.route(require('../../server/routes/api/flood-warning-alerts'))
+          }
+        }
+      }
+
+      await server.register(require('../../server/plugins/logging'))
+      await server.register(route)
+      await server.initialize()
+    }
+
+    it('should 200 with flood warning alerts geojson when bbox is provided', async () => {
+      const util = require('../../server/util')
+      sandbox.stub(util, 'getJson').callsFake(async () => ({ type: 'FeatureCollection', features: [] }))
+
+      await registerFloodWarningAlertsRoute()
+
+      const response = await server.inject({ method: 'GET', url: `/api/flood-warning-alerts-geojson?bbox=${floodWarningAlertsBbox}` })
+
+      expect(response.statusCode).to.equal(200)
+      expect(response.payload).to.contain('{"type":"FeatureCollection","features":[]}')
+    })
+
+    it('should call the backend service with the supplied bbox', async () => {
+      const util = require('../../server/util')
+      const mock = sandbox.mock(util)
+        .expects('getJson')
+        .withArgs(sinon.match(new RegExp(`/flood-warning-alerts-geojson\\?bbox=${floodWarningAlertsBbox.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1')}$`)))
+        .once()
+        .returns({ type: 'FeatureCollection', features: [] })
+
+      await registerFloodWarningAlertsRoute()
+
+      await server.inject({ method: 'GET', url: `/api/flood-warning-alerts-geojson?bbox=${floodWarningAlertsBbox}` })
+
+      mock.verify()
+    })
+
+    it('should return 400 when flood warning alerts bbox is missing', async () => {
+      await registerFloodWarningAlertsRoute()
+
+      const response = await server.inject({ method: 'GET', url: '/api/flood-warning-alerts-geojson' })
+
+      expect(response.statusCode).to.equal(400)
+      expect(JSON.parse(response.payload).error).to.equal('bbox parameter required')
+    })
+
+    it('should return 400 when flood warning alerts bbox is an empty string', async () => {
+      await registerFloodWarningAlertsRoute()
+
+      const response = await server.inject({ method: 'GET', url: '/api/flood-warning-alerts-geojson?bbox=' })
+
+      expect(response.statusCode).to.equal(400)
+      expect(JSON.parse(response.payload).error).to.equal('bbox parameter required')
+    })
+
+    it('should return 500 when the flood warning alerts backend service call fails with a generic error', async () => {
+      const util = require('../../server/util')
+      sandbox.stub(util, 'getJson').callsFake(async () => { throw new Error('service unavailable') })
+
+      await registerFloodWarningAlertsRoute()
+
+      const response = await server.inject({ method: 'GET', url: `/api/flood-warning-alerts-geojson?bbox=${floodWarningAlertsBbox}` })
+
+      expect(response.statusCode).to.equal(500)
+      expect(JSON.parse(response.payload).error).to.equal('Failed to fetch flood warning alerts')
+    })
+
+    it('should return 400 when flood-service rejects a malformed bbox', async () => {
+      // flood-service's getBboxParams throws boom.badRequest for a malformed bbox,
+      // which serialises to JSON as { statusCode: 400, error, message }. util.getJson
+      // throws this parsed payload directly on any non-200 response, so the route
+      // should propagate the real 400/message rather than masking it as a 500.
+      const malformedBbox = ' -241007, 6796510 ,EPSG:3857'
+      const util = require('../../server/util')
+
+      sandbox.stub(util, 'getJson').callsFake(async () => {
+        throw { statusCode: 400, error: 'Bad Request', message: 'Invalid bbox format. Expected: xmin,ymin,xmax,ymax,EPSG:3857' } // eslint-disable-line no-throw-literal
+      })
+
+      await registerFloodWarningAlertsRoute()
+
+      const response = await server.inject({ method: 'GET', url: `/api/flood-warning-alerts-geojson?bbox=${encodeURIComponent(malformedBbox)}` })
+
+      expect(response.statusCode).to.equal(400)
+      expect(JSON.parse(response.payload).error).to.equal('Invalid bbox format. Expected: xmin,ymin,xmax,ymax,EPSG:3857')
+    })
+  })
+
+  describe('/warnings', () => {
     it('should 200 with location query parameter', async () => {
       const floodService = require('../../server/services/flood')
 
