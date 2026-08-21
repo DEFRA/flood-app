@@ -1,5 +1,6 @@
 const config = require('../../config')
 const util = require('../../util')
+const { handleProxyError } = require('./lib/handle-proxy-error')
 
 module.exports = {
   method: 'GET',
@@ -15,7 +16,7 @@ module.exports = {
       return data
     } catch (err) {
       request.logger.error({ err }, 'Error fetching flood warning alerts geojson')
-      return h.response({ error: 'Failed to fetch flood warning alerts' }).code(500)
+      return handleProxyError(h, err, 'Failed to fetch flood warning alerts')
     }
   },
   options: {
