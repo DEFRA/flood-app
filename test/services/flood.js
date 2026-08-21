@@ -13,7 +13,7 @@ describe('Service - Flood Endpoints', () => {
     delete require.cache[require.resolve('../../server/util.js')]
 
     sandbox = sinon.createSandbox()
-    sandbox.stub(config, 'serviceUrl').value('http://server2')
+    sandbox.stub(config, 'serviceUrl').value('http://server1')
   })
 
   afterEach(async () => {
@@ -26,7 +26,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/floods')
+      .withArgs('http://server1/floods')
       .once()
       .returns('ok')
 
@@ -43,7 +43,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/floods-within/1/2/3/4')
+      .withArgs('http://server1/floods-within/1/2/3/4')
       .once()
       .returns('ok')
 
@@ -60,7 +60,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/flood-area/warning/1234w')
+      .withArgs('http://server1/flood-area/warning/1234w')
       .once()
       .returns('ok')
 
@@ -77,7 +77,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/flood-area/alert/1234a')
+      .withArgs('http://server1/flood-area/alert/1234a')
       .once()
       .returns('ok')
 
@@ -94,7 +94,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/flood-guidance-statement')
+      .withArgs('http://server1/flood-guidance-statement')
       .once()
       .returns('ok')
 
@@ -114,7 +114,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/station/1001/u')
+      .withArgs('http://server1/station/1001/u')
       .once()
       .returns('ok')
 
@@ -131,7 +131,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/stations-within/1/2/3/4')
+      .withArgs('http://server1/stations-within/1/2/3/4')
       .once()
       .returns('ok')
 
@@ -148,7 +148,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/stations-within-target-area/053FWFPUWI09')
+      .withArgs('http://server1/stations-within-target-area/053FWFPUWI09')
       .once()
       .returns('ok')
 
@@ -165,7 +165,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/warnings-alerts-within-station-buffer/1001')
+      .withArgs('http://server1/warnings-alerts-within-station-buffer/1001')
       .once()
       .returns('ok')
 
@@ -182,7 +182,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/river/sankey-brook')
+      .withArgs('http://server1/river/sankey-brook')
       .once()
       .returns('ok')
 
@@ -199,7 +199,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/river-name/tyne')
+      .withArgs('http://server1/river-name/tyne')
       .once()
       .returns('ok')
 
@@ -216,7 +216,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/river-station-by-station-id/5031/u')
+      .withArgs('http://server1/river-station-by-station-id/5031/u')
       .once()
       .returns('ok')
 
@@ -233,7 +233,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/station/7077/u/telemetry')
+      .withArgs('http://server1/station/7077/u/telemetry')
       .once()
       .returns('ok')
 
@@ -250,7 +250,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/forecast-station/2012/u')
+      .withArgs('http://server1/forecast-station/2012/u')
       .once()
       .returns('ok')
 
@@ -267,7 +267,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/station/7077/forecast/data')
+      .withArgs('http://server1/station/7077/forecast/data')
       .once()
       .returns('ok')
 
@@ -280,12 +280,11 @@ describe('Service - Flood Endpoints', () => {
 
   it('should return ok: getStationsGeoJson', async () => {
     const util = require('../../server/util')
-    sandbox.stub(config, 'geoserverUrl').value('http://server1')
 
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server1/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&sortBy=atrisk&outputFormat=application%2Fjson')
+      .withArgs('http://server1/stations-geojson')
       .once()
       .returns('ok')
 
@@ -298,12 +297,11 @@ describe('Service - Flood Endpoints', () => {
 
   it('should return ok: getRainfallGeojson', async () => {
     const util = require('../../server/util')
-    sandbox.stub(config, 'geoserverUrl').value('http://server1')
 
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server1/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:rainfall_stations&outputFormat=application%2Fjson')
+      .withArgs('http://server1/rainfall-stations-geojson')
       .once()
       .returns('ok')
 
@@ -323,7 +321,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/is-england/2/1')
+      .withArgs('http://server1/is-england/2/1')
       .once()
       .returns('ok')
 
@@ -340,7 +338,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/impacts/7077')
+      .withArgs('http://server1/impacts/7077')
       .once()
       .returns('ok')
 
@@ -357,7 +355,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/impacts-within/1/2/3/4')
+      .withArgs('http://server1/impacts-within/1/2/3/4')
       .once()
       .returns('ok')
 
@@ -374,7 +372,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/rivers')
+      .withArgs('http://server1/rivers')
       .once()
       .returns('ok')
 
@@ -391,7 +389,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/stations-overview')
+      .withArgs('http://server1/stations-overview')
       .once()
       .returns('ok')
 
@@ -408,7 +406,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2')
+      .withArgs('http://server1')
       .once()
       .returns('ok')
 
@@ -419,20 +417,18 @@ describe('Service - Flood Endpoints', () => {
     expect(result).to.equal('ok')
   })
 
-  it('should return ok: getGeoserverHealth', async () => {
-    sandbox.stub(config, 'geoserverUrl').value('http://server2')
-
+  it('should return ok: getFloodWarningAlertsHealth', async () => {
     const util = require('../../server/util')
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert&maxFeatures=1&outputFormat=application%2Fjson')
+      .withArgs('http://server1/flood-warning-alerts-geojson?bbox=-200000,6600000,-100000,6700000,EPSG:3857&maxFeatures=1')
       .once()
       .returns('ok')
 
     const floodService = require('../../server/services/flood')
 
-    const result = await floodService.getGeoserverHealth()
+    const result = await floodService.getFloodWarningAlertsHealth()
 
     expect(result).to.equal('ok')
   })
@@ -443,7 +439,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/stations-health')
+      .withArgs('http://server1/stations-health')
       .once()
       .returns('ok')
 
@@ -460,7 +456,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/telemetry-health')
+      .withArgs('http://server1/telemetry-health')
       .once()
       .returns('ok')
 
@@ -477,7 +473,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/ffoi-health')
+      .withArgs('http://server1/ffoi-health')
       .once()
       .returns('ok')
 
@@ -497,7 +493,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/stations-by-radius/1/2/8000')
+      .withArgs('http://server1/stations-by-radius/1/2/8000')
       .once()
       .returns('ok')
 
@@ -518,7 +514,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/stations-by-radius/1/2/8000')
+      .withArgs('http://server1/stations-by-radius/1/2/8000')
       .once()
       .returns('ok')
 
@@ -534,7 +530,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/error')
+      .withArgs('http://server1/error')
       .once()
       .returns('ok')
 
@@ -551,7 +547,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/rainfall-station-telemetry/E24195')
+      .withArgs('http://server1/rainfall-station-telemetry/E24195')
       .once()
       .returns('ok')
 
@@ -568,7 +564,7 @@ describe('Service - Flood Endpoints', () => {
     sandbox
       .mock(util)
       .expects('getJson')
-      .withArgs('http://server2/rainfall-station/E24195')
+      .withArgs('http://server1/rainfall-station/E24195')
       .once()
       .returns('ok')
 
