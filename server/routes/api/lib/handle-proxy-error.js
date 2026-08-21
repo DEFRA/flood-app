@@ -6,9 +6,11 @@
  * Anything else (network errors, 5xx, unrecognised shapes) is treated as a
  * generic 500 with a fixed, non-leaky message.
  */
+const { HTTP_BAD_REQUEST, INTERNAL_SERVER_ERROR } = require('../../../constants')
+
 function handleProxyError (h, err, fallbackMessage) {
-  const isClientError = typeof err?.statusCode === 'number' && err.statusCode >= 400 && err.statusCode < 500
-  const statusCode = isClientError ? err.statusCode : 500
+  const isClientError = typeof err?.statusCode === 'number' && err.statusCode >= HTTP_BAD_REQUEST && err.statusCode < INTERNAL_SERVER_ERROR
+  const statusCode = isClientError ? err.statusCode : INTERNAL_SERVER_ERROR
   const message = isClientError ? (err.message || fallbackMessage) : fallbackMessage
 
   return h.response({ error: message }).code(statusCode)
