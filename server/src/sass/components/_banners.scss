@@ -14,7 +14,7 @@
     @extend .govuk-width-container;
     position:relative;
     padding:24px 0 22px 62px;
-    @include mq ($from: tablet) {
+    @include govuk-media-query ($from: tablet) {
         padding:26px 0 24px 68px;
     }
     & {
@@ -32,7 +32,7 @@
     top:50%;
     margin-top:-31px;
     background: transparent url('#{$govuk-images-path}icon-flood-symbols-2x.png') -60px -120px no-repeat;
-    @include mq ($from: tablet) {
+    @include govuk-media-query ($from: tablet) {
         background-position: -120px -120px;
     }
     & {
@@ -59,7 +59,7 @@
     background-color:#E3000F;
     .defra-banner-warning__icon {
         background-position: -60px 0px;
-        @include mq ($from: tablet) {
+        @include govuk-media-query ($from: tablet) {
             background-position: -120px 0px;
         }
     }
@@ -68,7 +68,7 @@
     background-color:#E3000F;
     .defra-banner-warning__icon {
         background-position: -60px -60px;
-        @include mq ($from: tablet) {
+        @include govuk-media-query ($from: tablet) {
             background-position: -120px -60px;
         }
     }
