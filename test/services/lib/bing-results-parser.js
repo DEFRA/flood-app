@@ -14,9 +14,9 @@ function getBingResponse (resources = []) {
   return response
 }
 
-async function checkParsedResponse (resources, expectedResult) {
+async function checkParsedResponse (resources, expectedResult, isCoordinateQuery = false) {
   const bingResponse = getBingResponse(resources)
-  const result = await find(bingResponse)
+  const result = await find(bingResponse, isCoordinateQuery)
   expect(result).to.equal(expectedResult)
 }
 
@@ -387,7 +387,19 @@ describe('Service/Lib - bingResultsParser', () => {
 
     describe('find by query string', () => {
       it('should return empty results', async () => {
-        checkParsedResponse([], [])
+        await checkParsedResponse([], [])
+      })
+
+      it('should return empty results when estimatedTotal is set but resources are missing', async () => {
+        const malformedResponse = {
+          resourceSets: [{
+            estimatedTotal: 1
+          }]
+        }
+
+        const result = await find(malformedResponse)
+
+        expect(result).to.equal([])
       })
 
       it('should return populated result with english town location search', async () => {
@@ -459,7 +471,7 @@ describe('Service/Lib - bingResultsParser', () => {
             isEngland: { is_england: true }
           }
         ]
-        checkParsedResponse(resources, expectedResult)
+        await checkParsedResponse(resources, expectedResult)
       })
 
       it('should return ceremonial county (AdminDivision1) over administrative county (AdminDivision2) with english county search', async () => {
@@ -614,7 +626,7 @@ describe('Service/Lib - bingResultsParser', () => {
             isEngland: { is_england: true }
           }
         ]
-        checkParsedResponse(resources, expectedResult)
+        await checkParsedResponse(resources, expectedResult)
       })
 
       it('should return the ceremonial county when there are no administrative counties  withenglish county search for ceremonial county', async () => {
@@ -685,7 +697,7 @@ describe('Service/Lib - bingResultsParser', () => {
             isEngland: { is_england: true }
           }
         ]
-        checkParsedResponse(resources, expectedResult)
+        await checkParsedResponse(resources, expectedResult)
       })
 
       it('should return populated result with successful postcode search', async () => {
@@ -757,7 +769,7 @@ describe('Service/Lib - bingResultsParser', () => {
             isEngland: { is_england: true }
           }
         ]
-        checkParsedResponse(resources, expectedResult)
+        await checkParsedResponse(resources, expectedResult)
       })
 
       it('should return populated result with successful outcode search', async () => {
@@ -830,10 +842,10 @@ describe('Service/Lib - bingResultsParser', () => {
             isEngland: { is_england: true }
           }
         ]
-        checkParsedResponse(resources, expectedResult)
+        await checkParsedResponse(resources, expectedResult)
       })
 
-      it('should return empty result with successful address search', async () => {
+      it('should return empty result with high confidence address search when not a coordinate query', async () => {
         const resources = [
           {
             __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -861,7 +873,7 @@ describe('Service/Lib - bingResultsParser', () => {
               postalCode: 'LS17 7BD',
               countryRegionIso2: 'GB'
             },
-            confidence: 'Medium',
+            confidence: 'High',
             entityType: 'Address',
             geocodePoints: [
               {
@@ -892,7 +904,7 @@ describe('Service/Lib - bingResultsParser', () => {
             ]
           }
         ]
-        checkParsedResponse(resources, [])
+        await checkParsedResponse(resources, [])
       })
 
       it('should return populated result with high confidence response', async () => {
@@ -963,7 +975,7 @@ describe('Service/Lib - bingResultsParser', () => {
             isEngland: { is_england: true }
           }
         ]
-        checkParsedResponse(resources, expectedResult)
+        await checkParsedResponse(resources, expectedResult)
       })
 
       it('should return empty result with medium confidence response', async () => {
@@ -1013,7 +1025,7 @@ describe('Service/Lib - bingResultsParser', () => {
           }
         ]
         const expectedResult = []
-        checkParsedResponse(resources, expectedResult)
+        await checkParsedResponse(resources, expectedResult)
       })
 
       it('should return empty result with low confidence response', async () => {
@@ -1062,7 +1074,7 @@ describe('Service/Lib - bingResultsParser', () => {
             ]
           }
         ]
-        checkParsedResponse(resources, [])
+        await checkParsedResponse(resources, [])
       })
 
       it('should return the only high confidence result with multiple items in response', async () => {
@@ -1266,7 +1278,7 @@ describe('Service/Lib - bingResultsParser', () => {
             isEngland: { is_england: true }
           }
         ]
-        checkParsedResponse(resources, expectedResult)
+        await checkParsedResponse(resources, expectedResult)
       })
     })
   })
@@ -1318,12 +1330,11 @@ describe('Service/Lib - bingResultsParser', () => {
           ]
         }
       ]
-      const expectedResult = [
-      ]
-      checkParsedResponse(resources, expectedResult)
+      const expectedResult = []
+      await checkParsedResponse(resources, expectedResult)
     })
 
-    it('should return empty result with welsh preserved county location search', async () => {
+    it('should return an empty result when the location is a welsh preserved county', async () => {
       const resources = [
         {
           __type: 'Location:http://schemas.microsoft.com/search/local/ws/rest/v1',
@@ -1367,9 +1378,219 @@ describe('Service/Lib - bingResultsParser', () => {
           ]
         }
       ]
-      const expectedResult = [
-      ]
-      checkParsedResponse(resources, expectedResult)
+      const expectedResult = []
+      await checkParsedResponse(resources, expectedResult)
+    })
+  })
+
+  describe('Coordinate searches', () => {
+    describe('where the location is in England', () => {
+      it('should map reverse-geocode address result into the standard place payload used by views', async () => {
+        const resources = [
+          {
+            confidence: 'High',
+            entityType: 'Address',
+            name: '10 Downing Street',
+            bbox: [51.50, -0.13, 51.52, -0.11],
+            point: { coordinates: [51.51, -0.12] },
+            address: {
+              adminDistrict: 'England',
+              postalCode: 'SW1A 1AA',
+              locality: 'London',
+              district: 'Westminster',
+              countryRegionIso2: 'GB'
+            }
+          }
+        ]
+
+        const [result] = await find(getBingResponse(resources), true)
+
+        expect(result.name).to.equal('10 Downing Street')
+        expect(result.query).to.equal('SW1A 1AA')
+        expect(result.slug).to.equal('sw1a-1aa')
+        expect(result.center).to.equal([-0.12, 51.51])
+        expect(result.isUK).to.equal(true)
+        expect(result.isEngland).to.equal({ is_england: true })
+
+        const expectedBbox2k = [
+          -0.15890583262152747,
+          51.48201359292861,
+          -0.08109416737847255,
+          51.53798640707118
+        ]
+        const expectedBbox10k = [
+          -0.27452898278800336,
+          51.41006796464114,
+          0.03452898278800335,
+          51.609932035354
+        ]
+
+        result.bbox2k.forEach((value, index) => {
+          expect(value).to.be.about(expectedBbox2k[index], 1e-12)
+        })
+        result.bbox10k.forEach((value, index) => {
+          expect(value).to.be.about(expectedBbox10k[index], 1e-12)
+        })
+      })
+
+      it('should return same payload contract fields for coordinate and text searches', async () => {
+        const coordinateResources = [
+          {
+            confidence: 'High',
+            entityType: 'Address',
+            name: '10 Downing Street',
+            bbox: [51.50, -0.13, 51.52, -0.11],
+            point: { coordinates: [51.51, -0.12] },
+            address: {
+              adminDistrict: 'England',
+              postalCode: 'SW1A 1AA',
+              locality: 'London',
+              district: 'Westminster',
+              countryRegionIso2: 'GB'
+            }
+          }
+        ]
+
+        const textResources = [
+          {
+            confidence: 'High',
+            entityType: 'PopulatedPlace',
+            name: 'London',
+            bbox: [51.50, -0.13, 51.52, -0.11],
+            point: { coordinates: [51.51, -0.12] },
+            address: {
+              adminDistrict: 'England',
+              postalCode: 'SW1A 1AA',
+              locality: 'London',
+              district: 'Westminster',
+              countryRegionIso2: 'GB'
+            }
+          }
+        ]
+
+        const [coordinateResult] = await find(getBingResponse(coordinateResources), true)
+        const [textResult] = await find(getBingResponse(textResources), false)
+
+        expect(Object.keys(coordinateResult).sort()).to.equal(Object.keys(textResult).sort())
+        expect(coordinateResult.isUK).to.equal(true)
+        expect(textResult.isUK).to.equal(true)
+        expect(coordinateResult.isEngland).to.equal({ is_england: true })
+        expect(textResult.isEngland).to.equal({ is_england: true })
+      })
+    })
+    describe('where the location is not in England', () => {
+      it('should return non-England dummy payload for coordinate query with name from district', async () => {
+        const resources = [
+          {
+            confidence: 'High',
+            entityType: 'Address',
+            name: 'George Square',
+            bbox: [55.85, -4.26, 55.87, -4.24],
+            point: { coordinates: [55.86, -4.25] },
+            address: {
+              adminDistrict: 'Scotland',
+              district: 'Glasgow',
+              locality: 'Glasgow',
+              postalCode: 'G2 1DU',
+              countryRegionIso2: 'GB'
+            }
+          }
+        ]
+
+        const expectedResult = [{
+          name: 'Glasgow',
+          query: '',
+          slug: '',
+          center: [],
+          bbox2k: [],
+          bbox10k: [],
+          isUK: true,
+          isEngland: { is_england: false }
+        }]
+
+        await checkParsedResponse(resources, expectedResult, true)
+      })
+
+      it('should return non-England dummy payload name from locality when district is missing', async () => {
+        const resources = [
+          {
+            confidence: 'High',
+            entityType: 'Address',
+            name: 'Princes Street',
+            bbox: [55.94, -3.20, 55.96, -3.18],
+            point: { coordinates: [55.95, -3.19] },
+            address: {
+              adminDistrict: 'Scotland',
+              district: '',
+              locality: 'Edinburgh',
+              postalCode: 'EH2 2BY',
+              countryRegionIso2: 'GB'
+            }
+          }
+        ]
+
+        const [result] = await find(getBingResponse(resources), true)
+
+        expect(result.name).to.equal('Edinburgh')
+        expect(result.isEngland).to.equal({ is_england: false })
+      })
+
+      it('should return non-England dummy payload name as Unknown when district and locality are missing', async () => {
+        const resources = [
+          {
+            confidence: 'High',
+            entityType: 'Address',
+            name: 'Unnamed',
+            bbox: [55.94, -3.20, 55.96, -3.18],
+            point: { coordinates: [55.95, -3.19] },
+            address: {
+              adminDistrict: 'Scotland',
+              district: '',
+              locality: '',
+              postalCode: 'EH2 2BY',
+              countryRegionIso2: 'GB'
+            }
+          }
+        ]
+
+        const [result] = await find(getBingResponse(resources), true)
+
+        expect(result.name).to.equal('Unknown')
+        expect(result.isEngland).to.equal({ is_england: false })
+      })
+
+      it('should NOT return non-England dummy payload for non-coordinate searches', async () => {
+        const resources = [
+          {
+            confidence: 'High',
+            entityType: 'Address',
+            name: 'George Square',
+            bbox: [55.85, -4.26, 55.87, -4.24],
+            point: { coordinates: [55.86, -4.25] },
+            address: {
+              adminDistrict: 'Scotland',
+              district: 'Glasgow',
+              locality: 'Glasgow',
+              postalCode: 'G2 1DU',
+              countryRegionIso2: 'GB'
+            }
+          }
+        ]
+
+        await checkParsedResponse(resources, [], false)
+      })
+
+      it('should return empty results for malformed coordinate payload with missing resources', async () => {
+        const malformedResponse = {
+          resourceSets: [{
+            estimatedTotal: 1
+          }]
+        }
+
+        const result = await find(malformedResponse, true)
+
+        expect(result).to.equal([])
+      })
     })
   })
 })

@@ -4,6 +4,7 @@ const { getJson } = require('../util')
 const util = require('util')
 const { find, get } = require('./lib/bing-results-parser')
 const LocationSearchError = require('../location-search-error')
+const { COORDINATE_PATTERN } = require('../constants')
 
 function bingSearchNotNeeded (searchTerm) {
   const mustNotMatch = /[<>]|^england$|^scotland$|^wales$|^united kingdom$|^northern ireland$/i
@@ -32,16 +33,35 @@ function validateBingResponse (response) {
   }
 }
 
-async function getBingResponse (query, maxBingResults) {
-  const validatedQuery = validateSearchTerm(query)
-  const emptyBingResponse = { resourceSets: [{ estimatedTotal: 0 }] }
+function injectCoordsIntoURL (url, coords) {
+  const [base, params] = url.split('Locations?')
 
-  if (bingSearchNotNeeded(validatedQuery)) {
+  if (!params) {
+    throw new LocationSearchError('Invalid bingUrl format for coordinate searches')
+  }
+
+  const normalisedParams = params.replace(/query=%s,GB(?=&|$)/, 'query=%s')
+  return `${base}Locations/${coords}?${normalisedParams}`
+}
+
+/**
+ * Call the external Bing API to retrieve a list of locations based on the search term provided.
+ * @param {string} query already validated search term
+ * @param {number} maxBingResults
+ * @param {boolean} isCoordinateQuery
+ * @returns {Promise<Object>}
+ */
+async function getBingResponse (query, maxBingResults, isCoordinateQuery) {
+  const emptyBingResponse = { resourceSets: [{ estimatedTotal: 0 }] }
+  if (bingSearchNotNeeded(query)) {
     return emptyBingResponse
   }
 
-  const encodedQuery = encodeURIComponent(validatedQuery)
-  const url = util.format(bingUrl, encodedQuery, maxBingResults, bingKeyLocation)
+  const encodedQuery = encodeURIComponent(query)
+
+  const url = isCoordinateQuery // a coordinate query has a different URL structure
+    ? util.format(injectCoordsIntoURL(bingUrl, query), '', maxBingResults, bingKeyLocation)
+    : util.format(bingUrl, encodedQuery, maxBingResults, bingKeyLocation)
 
   let bingData
   try {
@@ -60,15 +80,20 @@ async function getLocationBySlug (locationSlug) {
   // the desired result is not within the first 3 results so need a different
   // value. 5 seems to be an acceptable value.
   const MAX_BING_RESULTS = 5
-
-  const bingData = await getBingResponse(locationSlug, MAX_BING_RESULTS)
-  return get(bingData, locationSlug)
+  const validatedSlugQuery = validateSearchTerm(locationSlug)
+  const bingData = await getBingResponse(validatedSlugQuery, MAX_BING_RESULTS, false)
+  return get(bingData, validatedSlugQuery)
 }
 
 async function findLocationByQuery (locationQuery) {
   const MAX_BING_RESULTS = 3
-  const bingData = await getBingResponse(locationQuery, MAX_BING_RESULTS)
-  return find(bingData)
+  // determine if the query is a coordinate query (e.g. 51.5074,-0.1278) as this needs to be processed differently to a text search
+
+  const validatedQuery = validateSearchTerm(locationQuery)
+  const isCoordinateQuery = COORDINATE_PATTERN.test(validatedQuery)
+
+  const bingData = await getBingResponse(validatedQuery, MAX_BING_RESULTS, isCoordinateQuery)
+  return find(bingData, isCoordinateQuery)
 }
 
 module.exports = {
