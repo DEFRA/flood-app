@@ -42,6 +42,7 @@ Go to http://localhost:3009
 When making changes to the application, bear in mind that certain aspects and components are only updated when you perform the **npm run build** stage.
 
 If your changes are not reflected in the browser/console, you should check this first.
+TEST TEST TEST
 
 # Environment variables
 
