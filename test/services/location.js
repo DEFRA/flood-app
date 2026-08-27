@@ -24,7 +24,7 @@ describe('Service - Location', () => {
 
     const config = require('../../server/config')
 
-    sinon.stub(config, 'bingUrl').value('http://bing?query=%s&maxResults=%s&key=%s')
+    sinon.stub(config, 'bingUrl').value('http://bing/Locations?query=%s&maxResults=%s&key=%s')
     sinon.stub(config, 'bingKeyLocation').value('12345')
 
     util = require('../../server/util')
@@ -104,7 +104,7 @@ describe('Service - Location', () => {
       await location.find(searchTerm)
 
       expect(context.stubs.getJson.callCount).to.equal(1)
-      expect(context.stubs.getJson.args[0][0]).to.equal(`http://bing?query=${searchTerm}&maxResults=3&key=12345`)
+      expect(context.stubs.getJson.args[0][0]).to.equal(`http://bing/Locations?query=${searchTerm}&maxResults=3&key=12345`)
     })
 
     it('should not query Bing if search term is longer than 60 characters', async () => {
@@ -205,7 +205,124 @@ describe('Service - Location', () => {
       const slug = 'ashford-slug'
       await location.get(slug)
       expect(context.stubs.getJson.callCount).to.equal(1)
-      expect(context.stubs.getJson.args[0][0]).to.equal(`http://bing?query=${slug}&maxResults=5&key=12345`)
+      expect(context.stubs.getJson.args[0][0]).to.equal(`http://bing/Locations?query=${slug}&maxResults=5&key=12345`)
+    })
+  })
+
+  describe('find by coordinates', () => {
+    it('should query Bing using coordinate path format and 3 maxResults', async () => {
+      // location.js destructures config on module load, so reload with the coordinate URL template.
+      await sinon.restore()
+      flushAppRequireCache()
+
+      const config = require('../../server/config')
+      sinon.stub(config, 'bingUrl').value('http://bing/REST/v1/Locations?query=%s&maxResults=%s&key=%s')
+      sinon.stub(config, 'bingKeyLocation').value('12345')
+
+      util = require('../../server/util')
+      context = {
+        stubs: {
+          getJson: sinon.stub(util, 'getJson')
+        }
+      }
+
+      location = require('../../server/services/location')
+
+      const bingCoordinateResponse = {
+        statusCode: 200,
+        resourceSets: [{
+          estimatedTotal: 1,
+          resources: [{
+            confidence: 'High',
+            entityType: 'Address',
+            name: '10 Downing Street',
+            bbox: [-0.13, 51.50, -0.11, 51.52],
+            point: { coordinates: [51.51, -0.12] },
+            address: {
+              adminDistrict: 'England',
+              postalCode: 'SW1A 1AA',
+              countryRegionIso2: 'GB'
+            }
+          }]
+        }]
+      }
+
+      context.stubs.getJson.onFirstCall().returns(bingCoordinateResponse)
+
+      await location.find('51.5007,-0.1246')
+
+      expect(context.stubs.getJson.callCount).to.equal(1)
+      expect(context.stubs.getJson.args[0][0]).to.equal('http://bing/REST/v1/Locations/51.5007,-0.1246?query=&maxResults=3&key=12345')
+    })
+
+    it('should return mapped location for England coordinate lookup', async () => {
+      const bingCoordinateResponse = {
+        statusCode: 200,
+        resourceSets: [{
+          estimatedTotal: 1,
+          resources: [{
+            confidence: 'High',
+            entityType: 'Address',
+            name: '10 Downing Street',
+            bbox: [-0.13, 51.50, -0.11, 51.52],
+            point: { coordinates: [51.51, -0.12] },
+            address: {
+              adminDistrict: 'England',
+              postalCode: 'SW1A 1AA',
+              countryRegionIso2: 'GB'
+            }
+          }]
+        }]
+      }
+
+      context.stubs.getJson.onFirstCall().returns(bingCoordinateResponse)
+
+      const result = await location.find('51.5007,-0.1246')
+
+      expect(result.length).to.equal(1)
+      expect(result[0].name).to.equal('10 Downing Street')
+      expect(result[0].query).to.equal('SW1A 1AA')
+      expect(result[0].slug).to.equal('sw1a-1aa')
+      expect(result[0].isUK).to.equal(true)
+      expect(result[0].isEngland).to.equal({ is_england: true })
+    })
+
+    it('should return non-England dummy payload for coordinate lookup', async () => {
+      const bingCoordinateResponse = {
+        statusCode: 200,
+        resourceSets: [{
+          estimatedTotal: 1,
+          resources: [{
+            confidence: 'High',
+            entityType: 'Address',
+            name: 'George Square',
+            bbox: [-4.26, 55.85, -4.24, 55.87],
+            point: { coordinates: [55.86, -4.25] },
+            address: {
+              adminDistrict: 'Scotland',
+              district: 'Glasgow',
+              locality: 'Glasgow',
+              postalCode: 'G2 1DU',
+              countryRegionIso2: 'GB'
+            }
+          }]
+        }]
+      }
+
+      context.stubs.getJson.onFirstCall().returns(bingCoordinateResponse)
+
+      const result = await location.find('55.8609,-4.2514')
+
+      expect(result).to.equal([{
+        name: 'Glasgow',
+        query: '',
+        slug: '',
+        center: [],
+        bbox2k: [],
+        bbox10k: [],
+        isUK: false,
+        isEngland: { is_england: false }
+      }])
     })
   })
 })

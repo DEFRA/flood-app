@@ -32,7 +32,18 @@ function validateBingResponse (response) {
   }
 }
 
-async function getBingResponse (query, maxBingResults) {
+function injectCoordsIntoURL (url, coords) {
+  const [base, params] = url.split('Locations?')
+
+  if (!params) {
+    throw new LocationSearchError('Invalid bingUrl format for coordinate searches')
+  }
+
+  const normalisedParams = params.replace(/query=%s,GB(?=&|$)/, 'query=%s')
+  return `${base}Locations/${coords}?${normalisedParams}`
+}
+
+async function getBingResponse (query, maxBingResults, isCoordinateQuery) {
   const validatedQuery = validateSearchTerm(query)
   const emptyBingResponse = { resourceSets: [{ estimatedTotal: 0 }] }
 
@@ -41,7 +52,10 @@ async function getBingResponse (query, maxBingResults) {
   }
 
   const encodedQuery = encodeURIComponent(validatedQuery)
-  const url = util.format(bingUrl, encodedQuery, maxBingResults, bingKeyLocation)
+
+  const url = isCoordinateQuery // a coordinate query has a different URL structure
+    ? util.format(injectCoordsIntoURL(bingUrl, validatedQuery), '', maxBingResults, bingKeyLocation)
+    : util.format(bingUrl, encodedQuery, maxBingResults, bingKeyLocation)
 
   let bingData
   try {
@@ -67,8 +81,13 @@ async function getLocationBySlug (locationSlug) {
 
 async function findLocationByQuery (locationQuery) {
   const MAX_BING_RESULTS = 3
-  const bingData = await getBingResponse(locationQuery, MAX_BING_RESULTS)
-  return find(bingData)
+  // determine if the query is a coordinate query (e.g. 51.5074,-0.1278) as this needs to be processed differently to a text search
+  const coordinateRegex = /^[-+]?\d+(\.\d+)?,[-+]?\d+(\.\d+)?$/
+  const validatedQuery = validateSearchTerm(locationQuery)
+  const isCoordinateQuery = coordinateRegex.test(validatedQuery)
+
+  const bingData = await getBingResponse(validatedQuery, MAX_BING_RESULTS, isCoordinateQuery)
+  return find(bingData, isCoordinateQuery)
 }
 
 module.exports = {
