@@ -16,13 +16,6 @@ jobs:
       - name: Display inputs
         run: echo "${{ github.event.inputs.version }}"
 
-      - name: Check PAT token is still valid
-        run: |
-          gh workflow list --repo "$GITHUB_REPOSITORY_OWNER/flood-service"
-        env:
-          # if this fails the create/regenerate classic PAT and then populate it using `gh secret set GH_WORKFLOW`
-          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
-
       - name: Checkout code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # 4.3.1
         with:
@@ -65,8 +58,7 @@ jobs:
             prCheck flood-service master
             prCheck flood-service development
         env:
-          # create classic PAT and then run `gh secret set GH_WORKFLOW`
-          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
         run: npm ci --engine-strict --ignore-scripts
@@ -80,20 +72,18 @@ jobs:
           git merge --no-edit $RELEASE_BRANCH
           git push origin master
 
-      - name: Create GitHub Release
-        run: gh release create $TAG_VERSION --title "Release $VERSION" --notes "[release notes](/$RELEASE_NOTES_FILE)"
-        env:
-          # create classic PAT and then run `gh secret set GH_WORKFLOW`
-          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
-
       - name: Merge release branch into development
         run: |
           git switch development
           git merge --no-edit $RELEASE_BRANCH
           git push origin development
 
+      - name: Create GitHub Release
+        run: gh release create $TAG_VERSION --title "Release $VERSION" --notes "[release notes](/$RELEASE_NOTES_FILE)"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Trigger Merge Release Branch for flood-service
         run: gh workflow run --repo  "$GITHUB_REPOSITORY_OWNER/flood-service" merge.yml -f version="$VERSION"
         env:
-          # use PAT token with repo scope (github.token didn't work)
-          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
