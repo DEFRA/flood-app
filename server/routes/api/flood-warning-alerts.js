@@ -12,7 +12,10 @@ module.exports = {
       if (!bbox) {
         return h.response({ error: 'bbox parameter required' }).code(HTTP_BAD_REQUEST)
       }
-      const url = `${config.serviceUrl}/flood-warning-alerts-geojson?bbox=${bbox}`
+      // Encode bbox as a single query parameter value so it cannot be split into
+      // additional backend query parameters (e.g. via an encoded '&' in the input)
+      const query = new URLSearchParams({ bbox })
+      const url = `${config.serviceUrl}/flood-warning-alerts-geojson?${query}`
       const data = await util.getJson(url)
       return data
     } catch (err) {
