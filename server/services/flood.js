@@ -1,5 +1,5 @@
 const util = require('../util')
-const { serviceUrl, geoserverUrl } = require('../config')
+const { serviceUrl } = require('../config')
 
 // cached flood data
 // const Floods = require('../models/floods')
@@ -89,11 +89,11 @@ module.exports = {
   },
   // DL: WebGL layers don't support z-index so source data needs to be in desired order, sortBy=atrisk added
   getStationsGeoJson () {
-    return util.getJson(`${geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:stations&sortBy=atrisk&outputFormat=application%2Fjson`)
+    return util.getJson(`${serviceUrl}/stations-geojson`)
   },
 
   getRainfallGeojson () {
-    return util.getJson(`${geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:rainfall_stations&outputFormat=application%2Fjson`)
+    return util.getJson(`${serviceUrl}/rainfall-stations-geojson`)
   },
 
   getIsEngland (lng, lat) {
@@ -121,8 +121,12 @@ module.exports = {
     return util.getJson(serviceUrl)
   },
 
-  getGeoserverHealth () {
-    return util.getJson(`${geoserverUrl}/geoserver/flood/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=flood:flood_warning_alert&maxFeatures=1&outputFormat=application%2Fjson`)
+  getFloodWarningAlertsHealth () {
+    // Health check for flood warning/alert geospatial endpoint
+    // Tests the new flood-service endpoint instead of GeoServer
+    // Tewkesbury area (EPSG:3857) - known UK flooding location for consistent testing
+    const bbox = '-200000,6600000,-100000,6700000,EPSG:3857'
+    return util.getJson(`${serviceUrl}/flood-warning-alerts-geojson?bbox=${bbox}&maxFeatures=1`)
   },
 
   getStationsHealth () {
