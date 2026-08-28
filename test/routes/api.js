@@ -212,13 +212,44 @@ describe('Route - API', () => {
       const util = require('../../server/util')
       const mock = sandbox.mock(util)
         .expects('getJson')
-        .withArgs(sinon.match(new RegExp(`/flood-warning-alerts-geojson\\?bbox=${floodWarningAlertsBbox.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1')}$`)))
+        .withArgs(sinon.match(url => {
+          const parsed = new URL(url)
+          return parsed.pathname.endsWith('/flood-warning-alerts-geojson') &&
+            parsed.searchParams.get('bbox') === floodWarningAlertsBbox &&
+            [...parsed.searchParams.keys()].length === 1
+        }))
         .once()
         .returns({ type: 'FeatureCollection', features: [] })
 
       await registerFloodWarningAlertsRoute()
 
       await server.inject({ method: 'GET', url: `/api/flood-warning-alerts-geojson?bbox=${floodWarningAlertsBbox}` })
+
+      mock.verify()
+    })
+
+    it('should not allow an encoded delimiter in bbox to inject extra backend query parameters', async () => {
+      // Regression test: bbox must be forwarded as a single opaque query parameter value.
+      // Previously, an encoded '&' in the bbox value was decoded by Hapi's query parser
+      // and then re-inserted verbatim into the backend URL via string concatenation,
+      // allowing a caller to smuggle an additional query parameter (e.g. maxFeatures)
+      // into the flood-service request.
+      const smugglingBbox = `${floodWarningAlertsBbox}&maxFeatures=999999999`
+      const util = require('../../server/util')
+      const mock = sandbox.mock(util)
+        .expects('getJson')
+        .withArgs(sinon.match(url => {
+          const parsed = new URL(url)
+          return parsed.searchParams.get('bbox') === smugglingBbox &&
+            parsed.searchParams.get('maxFeatures') === null &&
+            [...parsed.searchParams.keys()].length === 1
+        }))
+        .once()
+        .returns({ type: 'FeatureCollection', features: [] })
+
+      await registerFloodWarningAlertsRoute()
+
+      await server.inject({ method: 'GET', url: `/api/flood-warning-alerts-geojson?bbox=${encodeURIComponent(smugglingBbox)}` })
 
       mock.verify()
     })
