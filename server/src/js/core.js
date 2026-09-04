@@ -70,171 +70,178 @@ document.addEventListener('readystatechange', () => {
       })
     }
 
-    const elem = document.getElementById('cookie-banner')
-    let calledGTag = false
-
     // Add tooltips
     window.flood.createTooltips()
 
-    // Check not on cookie settings page
-    if (elem) {
-      const seenCookieMessage = /(^|;)\s*seen_cookie_message=/.test(document.cookie)
-      // Remove banner if seen and avoid flicker
-      if (seenCookieMessage) {
-        elem.parentNode.removeChild(elem)
-      } else {
-        elem.style.display = 'block'
+    // Strip cookie_choice_made from URL so the confirmation doesn't re-appear on refresh
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.has('cookie_choice_made')) {
+      urlParams.delete('cookie_choice_made')
+      const newSearch = urlParams.toString()
+      window.history.replaceState(null, '', window.location.pathname + (newSearch ? '?' + newSearch : '') + window.location.hash)
+    }
+
+    // POST-redirect confirmation banner: intercept "Hide cookie message" link to hide without navigating
+    const cookieBanner = document.getElementById('cookie-banner')
+    if (cookieBanner) {
+      cookieBanner.querySelectorAll('.govuk-cookie-banner__message[role="alert"]:not([hidden]) .govuk-button-group a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault()
+          cookieBanner.style.display = 'none'
+        })
+      })
+    }
+
+    const deleteCookie = (name) => {
+      const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
+      document.cookie = `${name}=; expires=${expires}; path=/` // Clear host-only cookie
+
+      // Google Analytics' cookie_domain "auto" setting can store cookies on a parent
+      // domain rather than the exact hostname, so clear every possible parent domain too
+      const parts = window.location.hostname.split('.')
+      for (let i = 1; i < parts.length - 1; i++) {
+        document.cookie = `${name}=; expires=${expires}; path=/; domain=.${parts.slice(i).join('.')}`
       }
     }
 
-    const cookieButtons = document.getElementById('cookie-buttons')
-    // JS/Non-JS content - We may already havea helper on live for this
-    const nonJsElements = document.getElementsByClassName('defra-no-js')
-    Array.prototype.forEach.call(nonJsElements, function (element) {
-      element.style.display = 'none'
-    })
-    const jsElements = document.getElementsByClassName('defra-js')
-    Array.prototype.forEach.call(jsElements, function (element) {
-      element.removeAttribute('style')
-    })
-
-    if (cookieButtons) {
-      const settingsButton = document.getElementById('cookie-settings')
-      const acceptButton = document.createElement('button')
-      const rejectButton = document.createElement('button')
-
-      // Accept button
-      acceptButton.className = 'defra-cookie-banner__button-accept'
-      acceptButton.innerText = 'Accept analytics cookies'
-      cookieButtons.insertBefore(acceptButton, cookieButtons.childNodes[0])
-
-      // First button in banner (Accept)
-      acceptButton.addEventListener('click', function (e) {
-        e.preventDefault()
-        window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
-        window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
-        calledGTag = true
-        window.flood.utils.setGTagAnalyticsCookies()
-        document.getElementById('cookie-message').style.display = 'none'
-        document.getElementById('cookie-confirmation-type').innerText = 'accepted'
-        document.getElementById('cookie-confirmation').style.display = ''
-      })
-
-      // Reject Button
-      rejectButton.className = 'defra-cookie-banner__button-reject'
-      rejectButton.innerText = 'Reject analytics cookies'
-      cookieButtons.insertBefore(rejectButton, cookieButtons.childNodes[1])
-
-      // Second button in banner (Reject)
-      rejectButton.addEventListener('click', function (e) {
-        e.preventDefault()
-        window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
-
-        document.getElementById('cookie-message').style.display = 'none'
-        document.getElementById('cookie-confirmation-type').innerText = 'rejected'
-        document.getElementById('cookie-confirmation').style.display = ''
-      })
-
-      // Third button in banner (Settings)
-      settingsButton.addEventListener('click', function (e) {
-        e.preventDefault()
-        window.location.href = settingsButton.getAttribute('href')
-      })
-
-      const hideButton = document.getElementById('cookie-hide')
-
-      hideButton.addEventListener('click', function (e) {
-        e.preventDefault()
-        document.getElementById('cookie-banner').style.display = 'none'
-      })
-    }
-
-    const saveButton = document.getElementById('cookies-save')
-
-    function setCookie (name, value, days) {
-      try {
-        window.flood.utils.setCookie(name, value, days)
-      } catch (error) {
-        console.error(`Failed to set cookie ${name}: ${error}`)
-      }
-    }
-
-    function deleteGA4Cookies () {
-      try {
-        const cookies = document.cookie.split(';')
-
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim()
-
-          const name = cookie.split('=')
-
-          // Check if the cookie name starts with "_ga_"
-          if (cookie.indexOf('_ga_') === 0) {
-            deleteCookie(name[0])
-          }
-          if (cookie.indexOf('_ga') === 0) {
-            deleteCookie(name[0])
-          }
+    const deleteAnalyticsCookies = () => {
+      const cookies = document.cookie.split(';')
+      cookies.forEach(cookieString => {
+        const cookie = cookieString.trim()
+        const name = cookie.split('=')[0]
+        if (/^_ga($|_.*)|^_gid$|^_gat($|_.*)/.test(name)) {
+          deleteCookie(name)
         }
-      } catch (error) {
-        console.error(`Failed to delete GA4 cookies: ${error}`)
+      })
+    }
+
+    const isGtmLoaded = () => {
+      return !!document.querySelector('script[src*="googletagmanager.com/gtm.js"]')
+    }
+
+    const loadAnalyticsClientSide = () => {
+      const gtmAccId = window.flood && window.flood.gtmAccId
+      if (!gtmAccId || isGtmLoaded()) {
+        return
+      }
+
+      window.dataLayer = window.dataLayer || []
+      window.dataLayer.push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      })
+
+      const firstScript = document.getElementsByTagName('script')[0]
+      const script = document.createElement('script')
+      script.async = true
+      script.src = `https://www.googletagmanager.com/gtm.js?id=${gtmAccId}`
+      firstScript.parentNode.insertBefore(script, firstScript)
+    }
+
+    const showBannerConfirmation = (choice, banner) => {
+      if (!banner) {
+        return
+      }
+
+      // Messages: 0 = initial prompt, 1 = accept confirmation, 2 = reject confirmation
+      const messages = banner.querySelectorAll('.govuk-cookie-banner__message')
+      if (messages.length < 3) {
+        return
+      }
+
+      messages[0].setAttribute('hidden', '')
+
+      const confirmation = choice === 'accept' ? messages[1] : messages[2]
+      confirmation.removeAttribute('hidden')
+
+      const hideButton = confirmation.querySelector('.govuk-button')
+      if (hideButton) {
+        hideButton.addEventListener('click', (event) => {
+          event.preventDefault()
+          banner.style.display = 'none'
+        })
       }
     }
 
-    function deleteCookie (name) {
-      try {
-        const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
-        document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + window.location.hostname
-
-        // clears GA cookies that are set on the .defra.cloud domain by default, may be able to remove line
-        // in future once GA4 is fully rolled out to all users
-        document.cookie = name + '=; expires=' + expires + '; path=/; domain=.defra.cloud;'
-      } catch (error) {
-        console.error(`Failed to delete cookie ${name}: ${error}`)
+    const showCookieSettingsConfirmation = () => {
+      const alert = document.getElementById('cookie-notification')
+      if (alert) {
+        alert.removeAttribute('hidden')
+        alert.focus()
       }
     }
 
-    if (saveButton) {
-      saveButton.addEventListener('click', function (e) {
-        e.preventDefault()
+    const cookiePreferenceForms = document.querySelectorAll('form[action="/cookie-preferences"]')
+    cookiePreferenceForms.forEach(form => {
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault()
 
         try {
-          const useCookies = document.querySelectorAll('input[name="accept-analytics"]')
-          setCookie('seen_cookie_message', 'true', 30)
+          const submitter = event.submitter
+          const formData = new FormData(form)
 
-          if (useCookies[0].checked) {
-            setCookie('set_cookie_usage', 'true', 30)
-            calledGTag = true
-            deleteCookie('google-analytics-opt-out')
-            window.flood.utils.setGTagAnalyticsCookies()
-          } else {
-            setCookie('set_cookie_usage', '', -1)
-            deleteGA4Cookies()
-            window.flood.utils.disableGoogleAnalytics()
+          if (submitter && submitter.name && submitter.value && !formData.get(submitter.name)) {
+            formData.set(submitter.name, submitter.value)
           }
 
-          const alert = document.getElementById('cookie-notification')
-          alert.removeAttribute('style')
-          alert.focus()
+          const selected = formData.get('analytics-consent')
+
+          if (selected !== 'accept' && selected !== 'reject') {
+            if (form.requestSubmit && submitter) {
+              form.requestSubmit(submitter)
+            } else {
+              form.submit()
+            }
+            return
+          }
+
+          const response = await window.fetch(form.getAttribute('action'), {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'X-Requested-With': 'XMLHttpRequest',
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            },
+            body: new URLSearchParams(formData).toString(),
+            credentials: 'same-origin'
+          })
+
+          if (!response.ok) {
+            if (form.requestSubmit && submitter) {
+              form.requestSubmit(submitter)
+            } else {
+              form.submit()
+            }
+            return
+          }
+
+          const result = await response.json()
+
+          if (result.choice === 'accept') {
+            loadAnalyticsClientSide()
+          }
+
+          if (result.choice === 'reject') {
+            deleteAnalyticsCookies()
+          }
+
+          const banner = form.querySelector('.govuk-cookie-banner')
+          if (banner) {
+            showBannerConfirmation(result.choice, banner)
+          }
+
+          if (window.location.pathname === '/cookies') {
+            showCookieSettingsConfirmation()
+          }
         } catch (error) {
-          console.error(`An error occurred when handling the save button click event: ${error}`)
+          const submitter = event.submitter
+          if (form.requestSubmit && submitter) {
+            form.requestSubmit(submitter)
+          } else {
+            form.submit()
+          }
         }
       })
-    }
-
-    if (!calledGTag) {
-      // finally make Gtag page view if not before and cookie allows
-      if (window.flood.utils.getCookie('set_cookie_usage')) {
-        calledGTag = true
-        window.flood.utils.setGTagAnalyticsCookies()
-      }
-    }
-
-    // If the user has opted out of analytics, ensure that associated cookies
-    // are removed. This is required to prevent asset retrieval from recreating
-    // expired cookies after the user has opted out.
-    if (window.flood.utils.getCookie('google-analytics-opt-out')) {
-      deleteGA4Cookies()
-    }
+    })
   }
 })
