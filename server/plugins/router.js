@@ -41,9 +41,7 @@ if (process.env.WEBCHAT_ENABLED === 'true') {
 
 // Non production end points
 if (process.env.NODE_ENV !== 'production') {
-  routes.push(
-    require('../routes/status')
-  )
+  routes.push(require('../routes/status'))
 }
 
 module.exports = {
