@@ -5,7 +5,7 @@
   & {
     margin: 7px -15px 10px -15px;
   }
-  @include mq ($from: tablet) {
+  @include govuk-media-query ($from: tablet) {
     @include govuk-font($size: 16);
     margin-bottom: 15px;
   }
@@ -19,7 +19,7 @@
     -webkit-overflow-scrolling: touch;
   }
   &:before {
-    @include mq ($until: tablet) {
+    @include govuk-media-query ($until: tablet) {
       position: absolute;
       content: '';
       height: 100%;
@@ -81,7 +81,7 @@
   // Overides
   .defra-link-icon-s {
     @include govuk-font($size: 19);
-    @include mq ($from: tablet) {
+    @include govuk-media-query ($from: tablet) {
       @include govuk-font($size: 16);
     }
     & {
@@ -102,16 +102,16 @@
   // Modifiers
   &--search-categories {
     margin: 17px -15px 0px -15px;
-    // @include mq ($from: tablet) {
+    // @include govuk-media-query ($from: tablet) {
     //   margin-left: 0px;
     //   margin-right: 0px;
     // }
     border-bottom: 1px solid $govuk-border-colour;
-    @include mq ($from: tablet) {
+    @include govuk-media-query ($from: tablet) {
       border-bottom: 0px;
     }
     &:after {
-      @include mq ($from: tablet) {
+      @include govuk-media-query ($from: tablet) {
         content: '';
         position: absolute;
         left:0px;
@@ -125,7 +125,7 @@
     }
     .defra-navbar__inner {
       padding-bottom: 0px;
-      @include mq ($from: tablet) {
+      @include govuk-media-query ($from: tablet) {
         padding-bottom: 1px;
       }
     }
@@ -134,7 +134,7 @@
     }
     .defra-button-secondary {
       @include govuk-font($size: 19);
-      @include mq ($from: tablet) {
+      @include govuk-media-query ($from: tablet) {
         @include govuk-font($size: 16);
       }
       & {

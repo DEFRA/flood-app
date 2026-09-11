@@ -13,7 +13,7 @@
       text-decoration: none;
       margin-top: 10px;
       margin-bottom: 15px;
-      @include mq ($from: tablet) {
+      @include govuk-media-query ($from: tablet) {
           display: none;
       }
   }
@@ -42,7 +42,7 @@
       -moz-clip-path: none !important;
       -ms-clip-path: none !important;
       border: 0px !important;
-      @include mq ($from: tablet) {
+      @include govuk-media-query ($from: tablet) {
           top: 25px;
       }
   }
@@ -143,13 +143,13 @@
   &__header,
   &__close,
   &__filter-results {
-      @include mq ($from: tablet) {
+      @include govuk-media-query ($from: tablet) {
           display: none;
       }
   }
   &__container {
       display: none;
-      @include mq ($from: tablet) {
+      @include govuk-media-query ($from: tablet) {
           display: block;
       }
       & {
@@ -175,7 +175,7 @@
   }
 }
 .js-enabled .defra-facets__footer {
-  @include mq ($until: tablet) {
+  @include govuk-media-query ($until: tablet) {
       position: fixed;
       left: 0px;
       bottom: 0px;

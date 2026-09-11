@@ -2,7 +2,7 @@
   border-top: 2px solid govuk-colour("blue");
   padding-top: govuk-spacing(2);
   margin-top: 20px;
-  @include mq ($from: tablet) {
+  @include govuk-media-query ($from: tablet) {
     margin-top: 0px;
   }
 }

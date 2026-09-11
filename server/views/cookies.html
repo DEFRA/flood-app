@@ -1,16 +1,15 @@
 {% extends 'layout.html' %}
 {% from "service-navigation/macro.njk" import govukServiceNavigation %}
 
-{% block header %}
-  {{ govukHeader({
-    homepageUrl: "https://www.gov.uk/",
-    containerClasses: "govuk-width-container",
-    rebrand: true
-  }) }}
-  {{ govukServiceNavigation({
-    serviceName: serviceName,
-    serviceUrl: "/"
-  }) }}
+{% block govukHeader %}
+{{ govukHeader({
+homepageUrl: "https://www.gov.uk/",
+containerClasses: "govuk-width-container"
+}) }}
+{{ govukServiceNavigation({
+serviceName: serviceName,
+serviceUrl: "/"
+}) }}
 {% endblock %}
 {% block content %}
 <div class="govuk-grid-row">
@@ -67,11 +66,12 @@
             <td class="govuk-table__cell" style="word-break: break-all">AWSALBTGCORS</td>
             <td class="govuk-table__cell">Supports requests between different parts of the service so pages load properly</td>
             <td class="govuk-table__cell">When you close your browser</td>
-          </tr>          
+          </tr>
         </tbody>
       </table>
       <h2 class="govuk-heading-m" id="analytics-cookies-label">Analytics cookies (optional)</h2>
-      <p>With your permission, we use Google Analytics to collect data about how you use the service. This information helps us to improve our service.</p>
+      <p>With your permission, we use Google Analytics to collect data about how you use the service. This information
+        helps us to improve our service.</p>
       <p>Google is not allowed to use or share our analytics data with anyone.</p>
       <p>Google Analytics stores anonymised information about:</p>
       <ul class="govuk-list govuk-list--bullet">
@@ -123,13 +123,15 @@
             </legend>
             <div class="govuk-radios govuk-radios--inline">
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="accept-analytics-yes" name="accept-analytics" type="radio" {{ "checked" if analyticsCookiesSet }}>
+                <input class="govuk-radios__input" id="accept-analytics-yes" name="accept-analytics" type="radio"
+                  {{ "checked" if analyticsCookiesSet }}>
                 <label class="govuk-label govuk-radios__label" for="accept-analytics-yes">
                   Yes
                 </label>
               </div>
               <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="accept-analytics-no" name="accept-analytics" type="radio" {{ "checked" if not analyticsCookiesSet }}>
+                <input class="govuk-radios__input" id="accept-analytics-no" name="accept-analytics" type="radio"
+                  {{ "checked" if not analyticsCookiesSet }}>
                 <label class="govuk-label govuk-radios__label" for="accept-analytics-no">
                   No
                 </label>
@@ -137,7 +139,8 @@
             </div>
           </fieldset>
         </div>
-        <button class="govuk-button govuk-!-margin-top-4 govuk-!-margin-left-0" id="cookies-save" data-module="govuk-button">Save cookie settings</button>
+        <button class="govuk-button govuk-!-margin-top-4 govuk-!-margin-left-0" id="cookies-save"
+          data-module="govuk-button">Save cookie settings</button>
       </div>
     </div>
   </div>

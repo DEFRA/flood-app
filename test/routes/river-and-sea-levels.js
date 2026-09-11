@@ -220,7 +220,7 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.payload).to.contain('<link rel="canonical" href="http://localhost:3000/river-and-sea-levels/warrington"/>')
+      expect(response.payload).to.contain('rel="canonical" href="http://localhost:3000/river-and-sea-levels/warrington"')
       expect(response.statusCode).to.equal(200)
     })
 

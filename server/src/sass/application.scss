@@ -1,11 +1,13 @@
 $govuk-global-styles: true;
+$govuk-suppressed-warnings: (
+  "legacy-organisation-colours"
+);
 
 // DL: Tablet/desktop overide to address modern iPads 
 $govuk-breakpoints: (
-  mobile:  320px,
-  tablet:  641px,
-  desktop: 835px
-) !default;
+  mobile: 320px,
+  tablet: 641px,
+  desktop: 835px) !default;
 
 // GOV.UK Frontend
 @import "govuk-frontend/dist/govuk/index";
@@ -71,6 +73,12 @@ $govuk-breakpoints: (
 @import "components/navbar";
 @import "components/flood-levels-table";
 
+// Override govuk-frontend footer text-wrap: balance which causes the OGL
+// licence description to wrap even on wide screens
+.govuk-footer__licence-description {
+  text-wrap: unset;
+}
+
 
 // Utilities
 @import "utilities/details";
@@ -79,3 +87,14 @@ $govuk-breakpoints: (
 // Datatables
 @import "../../../node_modules/datatables.net-dt/css/dataTables.dataTables";
 @import "../../../node_modules/datatables.net-buttons-dt/css/buttons.dataTables";
+
+// Keep header branding consistent when generic visited-link rules are loaded
+// later in the stylesheet from third-party imports.
+.govuk-header__link:link,
+.govuk-header__link:visited,
+.govuk-header__homepage-link:link,
+.govuk-header__homepage-link:visited,
+.govuk-header__link--homepage:link,
+.govuk-header__link--homepage:visited {
+  color: #fff;
+}

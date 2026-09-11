@@ -77,11 +77,11 @@
     width:2px;
     top:6px;
     bottom:12px;
-    @include mq ($from: tablet) {
+    @include govuk-media-query ($from: tablet) {
         bottom:11px;
     }
     left:62px;
-    @include mq ($from: tablet) {
+    @include govuk-media-query ($from: tablet) {
         left:80px;
         bottom:20px;
     }
@@ -91,7 +91,7 @@
 .defra-level-list__item {
     position:relative;
     padding-left:85px;
-    @include mq ($from: tablet) {
+    @include govuk-media-query ($from: tablet) {
         padding-left:115px;
     }
     & {
@@ -108,7 +108,7 @@
     top:0px;
     bottom:0px;
     left:62px;
-    @include mq ($from: tablet) {
+    @include govuk-media-query ($from: tablet) {
         left:80px;
     }
     & {
@@ -129,7 +129,7 @@
     height:8px;
     bottom:3px;
     left:58px;
-    @include mq ($from: tablet) {
+    @include govuk-media-query ($from: tablet) {
         left:76px;
         bottom:5px;
     }
@@ -155,7 +155,7 @@
     top:50%;
     margin-top:-9px;
     left:54px;
-    @include mq ($from: tablet) {
+    @include govuk-media-query ($from: tablet) {
         left:72px;
     }
     & {
@@ -179,7 +179,7 @@
     @extend .govuk-body-s;
     position:absolute;
     left:1px;
-    @include mq ($from: tablet) {
+    @include govuk-media-query ($from: tablet) {
         left:2px;
         margin-top:-9px;
     }
@@ -204,7 +204,7 @@
     left:58px;
     border-radius: 100%;
     margin-top:-3px;
-    @include mq ($from: tablet) {
+    @include govuk-media-query ($from: tablet) {
         left:76px;
     }
     & {

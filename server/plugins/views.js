@@ -23,8 +23,6 @@ module.exports = {
           env.addFilter('toFixed', util.toFixed)
           env.addFilter('toMarked', util.toMarked)
 
-          env.addGlobal('govukRebrand', true)
-
           return next()
         }
       }
