@@ -2,7 +2,7 @@ import { Feature } from 'ol'
 import { fromExtent } from 'ol/geom/Polygon'
 import GeoJSON from 'ol/format/GeoJSON'
 
-import { polygon, multiPolygon } from '@turf/helpers'
+import { polygon, multiPolygon, featureCollection } from '@turf/helpers'
 import simplify from '@turf/simplify'
 import intersect from '@turf/intersect'
 
@@ -71,7 +71,7 @@ const mergePolygons = (features, extent) => {
       ? simplify(multiPolygon(coordinates), options)
       : simplify(polygon(coordinates), options)
     // Clip polygons to extent
-    const clippedPolygon = intersect(turfPolygon, turfExtentPolygon)
+    const clippedPolygon = intersect(featureCollection([turfPolygon, turfExtentPolygon]))
     if (!clippedPolygon) return
     feature.setGeometry(new GeoJSON().readFeature(clippedPolygon).getGeometry())
 
