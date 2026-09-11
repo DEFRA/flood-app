@@ -19,11 +19,17 @@ const targetAreaPolygonsSource = new VectorSource({
   // Custom loader to only send get request if below resolution cutoff
   loader: (extent, resolution) => {
     if (resolution < window.flood.maps.liveMaxBigZoom) {
-      xhr(`/api/ows?service=wfs&version=2.0.0&request=getFeature&typename=flood:flood_warning_alert&outputFormat=application/json&srsname=EPSG:3857&bbox=${extent.join(',')},EPSG:3857`, (err, json) => {
+      xhr(`/api/flood-warning-alerts-geojson?bbox=${extent.join(',')},EPSG:3857`, (err, json) => {
         if (err) {
           console.log('Error: ' + err)
         } else {
-          targetAreaPolygonsSource.addFeatures(new GeoJSON().readFeatures(json))
+          // flood-service returns geometry in EPSG:4326; reproject to the
+          // map's EPSG:3857 projection (other layers get this via VectorSource's
+          // `projection` option, but this custom loader must do it explicitly)
+          targetAreaPolygonsSource.addFeatures(new GeoJSON().readFeatures(json, {
+            dataProjection: 'EPSG:4326',
+            featureProjection: 'EPSG:3857'
+          }))
         }
       })
     }
