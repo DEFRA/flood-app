@@ -165,4 +165,19 @@ describe('Model - Location', () => {
     expect(Result.floods.length).to.equal(0)
     expect(Result.hasHighLevels).to.be.true()
   })
+
+  it('should show alert summary link when a flood alert accompanies a flood warning', async () => {
+    const alertWithWarning = {
+      ...data.floodAlert,
+      floods: [
+        ...data.floodAlert.floods,
+        { ...data.floodWarning.floods[0], ta_code: 'WARN001' }
+      ]
+    }
+    const viewModel = new ViewModel(alertWithWarning)
+
+    expect(viewModel.alerts).to.equal(1)
+    expect(viewModel.alertsSummaryLinkText).to.equal('1 flood alert')
+    expect(viewModel.alertsSummaryText).to.equal('is')
+  })
 })

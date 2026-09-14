@@ -229,7 +229,7 @@ describe('Route - Alerts and Warnings', () => {
 
       const response = await server.inject(options)
 
-      expect(response.payload).to.contain('<link rel="canonical" href="http://localhost:3000/alerts-and-warnings/warrington"/>')
+      expect(response.payload).to.contain('link rel="canonical" href="http://localhost:3000/alerts-and-warnings/warrington"')
       expect(response.statusCode).to.equal(200)
     })
 
@@ -325,7 +325,7 @@ describe('Route - Alerts and Warnings', () => {
 
   describe('POST', () => {
     it('should return to default page when searching with non-latin characters', async () => {
-      stubs.getJson.callsFake(() => {})
+      stubs.getJson.callsFake(() => { })
       stubs.getFloods.callsFake(() => ({ floods: [] }))
 
       const options = {

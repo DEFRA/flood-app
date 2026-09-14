@@ -29,6 +29,7 @@ const routes = [].concat(
   require('../routes/rainfall-station'),
   require('../routes/rainfall-station-csv'),
   require('../routes/find-location'),
+  require('../routes/outside-england'),
   require('../routes/plan-ahead-for-flooding'),
   require('../routes/what-to-do-in-a-flood'),
   require('../routes/recovering-after-a-flood'),
@@ -41,9 +42,7 @@ if (process.env.WEBCHAT_ENABLED === 'true') {
 
 // Non production end points
 if (process.env.NODE_ENV !== 'production') {
-  routes.push(
-    require('../routes/status')
-  )
+  routes.push(require('../routes/status'))
 }
 
 module.exports = {
