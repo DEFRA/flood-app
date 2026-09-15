@@ -2,6 +2,7 @@ const hapi = require('@hapi/hapi')
 const CatboxRedis = require('@hapi/catbox-redis')
 const config = require('./config')
 const registerServerMethods = require('./services/server-methods')
+const { registerPlugins, registerCookieStates, registerLifecycleHooks } = require('./lib/server-helpers')
 let cache
 
 if (!config.localCache) {
@@ -37,19 +38,22 @@ async function createServer () {
   })
 
   // Register the plugins
-  await server.register(require('@hapi/inert'))
-  await server.register(require('@hapi/h2o2'))
-  await server.register(require('./plugins/views'))
-  await server.register(require('./plugins/router'))
-  await server.register(require('./plugins/error-pages'))
-  await server.register(require('./plugins/on-post-handler'))
-  await server.register(require('./plugins/session'))
-  await server.register(require('./plugins/logging'))
-  if (config.rateLimitEnabled) {
-    await server.register(require('./plugins/rate-limit'))
-  }
+  await registerPlugins(server)
 
+  // Register cookie states
+  const consentCookieOptions = {
+    isSecure: config.siteUrl.startsWith('https'),
+    isHttpOnly: false,
+    path: '/',
+    isSameSite: 'Lax',
+    clearInvalid: true,
+    strictHeader: false
+  }
+  registerCookieStates(server, consentCookieOptions)
+
+  // Register server methods and lifecycle hooks
   registerServerMethods(server)
+  registerLifecycleHooks(server)
 
   return server
 }

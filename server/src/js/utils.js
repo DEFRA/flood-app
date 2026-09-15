@@ -104,26 +104,6 @@ window.flood.utils = {
     d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
     document.cookie = name + '=' + value + ';path=/;expires=' + d.toGMTString() + ';domain=' + window.location.hostname
   },
-  setGTagAnalyticsCookies: () => {
-    const script = document.createElement('script')
-    script.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${window.flood.gtmAccId}');`
-
-    const noscript = document.createElement('noscript')
-    const iframe = document.createElement('iframe')
-    iframe.setAttribute('src', `https://www.googletagmanager.com/gtag/js?id=${window.flood.gtmAccId}`)
-    iframe.setAttribute('height', '0')
-    iframe.setAttribute('width', '0')
-    iframe.setAttribute('style', 'display:none;visibility:hidden')
-    noscript.appendChild(iframe)
-
-    const head = document.getElementsByTagName('head')[0]
-    head.insertBefore(script, head.firstChild)
-    document.body.insertBefore(noscript, document.body.firstChild)
-  },
-
-  disableGoogleAnalytics: () => {
-    window.flood.utils.setCookie('google-analytics-opt-out', 'true', 30)
-  },
   // Takes a valuesobject and concatentates items using commas and 'and'.
   getSummaryList: (values) => {
     const lines = []
