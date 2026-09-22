@@ -1,4 +1,4 @@
-/* eslint-env browser */
+/* global HTMLCanvasElement */
 
 // Monkey-patch to suppress Canvas2D getImageData warning
 const origGetContext = HTMLCanvasElement.prototype.getContext
