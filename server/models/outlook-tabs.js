@@ -5,24 +5,49 @@ const isEqual = require('lodash.isequal')
 const OutlookPolys = require('./outlook-polys')
 const OutLookTabGroupMessages = require('./outlook-tabs-group-messages')
 
+const FORECAST_DAYS = 5
+
 class OutlookTabs {
   constructor (outlook, place) {
     const issueDate = moment(outlook.issued_at)
-
-    const formattedIssueDate = `${formatDate(outlook.issued_at, 'h:mma')} on ${formatDate(outlook.issued_at, 'D MMMM YYYY')}`
-    const issueUTC = moment(outlook.issued_at).tz('Europe/London').format()
     const yesterday = moment().subtract(1, 'days')
     const dayMinus2 = moment().subtract(2, 'days')
 
     const polys = new OutlookPolys(outlook, place)
-    // Group by day
-
     const groupByDay = groupBy(polys.polys, 'day')
 
-    // Initalize groupByDayMessage 5 element array
+    const { riskLevelText, dailyRisk, dailyRiskAsNum, trend } = this.initializeRiskData()
+    const groupByDayMessage = this.processMessages(groupByDay, dailyRisk, riskLevelText, dailyRiskAsNum, trend)
 
-    let groupByDayMessage = [{}, {}, {}, {}, {}]
+    this.dayName = this.initializeDayNames(issueDate)
+    const offset = this.calculateOffset(issueDate, yesterday, dayMinus2)
 
+    const { activeMessages, labels, activeDailyRiskAsNum, activeTrend } = this.prepareActiveData(groupByDayMessage, offset, dailyRiskAsNum, trend)
+
+    // Trim all daily risk arrays to match active days (stale FGS offset)
+    const activeDailyRisk = Array.from({ length: activeDailyRiskAsNum.length }, (_, i) => riskLevelText[activeDailyRiskAsNum[i]])
+    const activeTrendArray = activeTrend
+
+    this.groups = this.groupAdjacentDays(activeMessages, labels, activeDailyRiskAsNum, activeTrend, riskLevelText)
+    this.assignSpecialCases()
+
+    const days = this.createDaysArray(issueDate)
+    const dailyRiskOutlookMax = Math.max(...dailyRiskAsNum.slice(2))
+
+    const propertiesData = {
+      days,
+      issueDate,
+      outlook,
+      dailyRisk: activeDailyRisk,
+      dailyRiskAsNum: activeDailyRiskAsNum,
+      dailyRiskOutlookMax,
+      riskLevelText,
+      trend: activeTrendArray
+    }
+    this.assignProperties(propertiesData)
+  }
+
+  initializeRiskData () {
     const riskLevelText = {
       1: 'Very low',
       2: 'Low',
@@ -30,31 +55,74 @@ class OutlookTabs {
       4: 'High'
     }
 
-    // Initialze daily risk level array to very low
+    const dailyRisk = Array.from({ length: FORECAST_DAYS }, () => riskLevelText[1])
+    const dailyRiskAsNum = Array.from({ length: FORECAST_DAYS }, () => 1)
+    const trend = Array.from({ length: FORECAST_DAYS }, (_, i) => i === 0 ? '' : 'remains')
 
-    const dailyRisk = [riskLevelText[1], riskLevelText[1], riskLevelText[1], riskLevelText[1], riskLevelText[1]]
-    const dailyRiskAsNum = [1, 1, 1, 1, 1]
+    return { riskLevelText, dailyRisk, dailyRiskAsNum, trend }
+  }
 
-    // Initialze array to identify risk level trend between days.
-
-    const trend = ['', 'remains', 'remains', 'remains', 'remains']
-
-    // Find distinct messages for each source for each day
-    for (const [day, messages] of Object.entries(groupByDay)) { // Outer loop messages
+  processMessages (groupByDay, dailyRisk, riskLevelText, dailyRiskAsNum, trend) {
+    let groupByDayMessage = Array.from({ length: FORECAST_DAYS }, () => ({}))
+    for (const [day, messages] of Object.entries(groupByDay)) {
       const outLookTabGroupMessages = new OutLookTabGroupMessages(groupByDayMessage, messages, dailyRisk, riskLevelText, dailyRiskAsNum, day, trend)
       groupByDayMessage = outLookTabGroupMessages.groupByDayMessage
     }
+    return groupByDayMessage
+  }
 
-    // Build content for each outlook tab.
+  initializeDayNames (issueDate) {
+    return Array.from({ length: FORECAST_DAYS }, (_, i) => {
+      return moment(issueDate).add(i, 'days').format('dddd')
+    })
+  }
 
-    // Create highest daily risk for days in the Outlook tab
+  calculateOffset (issueDate, yesterday, dayMinus2) {
+    const issueDateMinus1 = moment(issueDate).isSame(yesterday, 'day')
+    const issueDateMinus2 = moment(issueDate).isSame(dayMinus2, 'day')
 
-    const dailyRiskOutlookMax = Math.max(...dailyRiskAsNum.slice(2))
+    let offset
+    if (issueDateMinus1) {
+      offset = 1
+    } else if (issueDateMinus2) {
+      offset = 2
+    } else {
+      offset = 0
+    }
+    return offset
+  }
 
-    const dailyRiskOutlookMaxText = riskLevelText[dailyRiskOutlookMax]
+  prepareActiveData (groupByDayMessage, offset, dailyRiskAsNum, trend) {
+    const activeMessages = groupByDayMessage.slice(offset)
+    const activeDayName = this.dayName.slice(offset)
+    const activeDailyRiskAsNum = dailyRiskAsNum.slice(offset)
+    const activeTrend = trend.slice(offset)
 
-    // Create days array for use with map
-    const days = [0, 1, 2, 3, 4].map(i => {
+    const labels = activeDayName.map((name, index) => {
+      if (index === 0) { return 'Today' }
+      if (index === 1) { return 'Tomorrow' }
+      return name
+    })
+
+    return { activeMessages, labels, activeDailyRiskAsNum, activeTrend }
+  }
+
+  assignSpecialCases () {
+    const isSingleGroup = this.groups.length === 1
+    const isSingleGroupEmpty = isSingleGroup && Object.keys(this.groups[0].message).length === 0
+
+    if (isSingleGroupEmpty) {
+      this.lowForFive = true
+    } else if (isSingleGroup) {
+      this.allDaysSame = true
+      this.day5Name = this.dayName.at(-1)
+    } else {
+      // Neither condition met - no action required
+    }
+  }
+
+  createDaysArray (issueDate) {
+    return Array.from({ length: FORECAST_DAYS }, (_, i) => {
       const date = new Date(issueDate)
       return {
         idx: i + 1,
@@ -62,42 +130,13 @@ class OutlookTabs {
         date: new Date(date.setDate(date.getDate() + i))
       }
     })
+  }
 
-    // Create day name for days 2,3,4,5
-    this.dayName = [
-      moment(issueDate).format('dddd'), // Day 1
-      moment(issueDate).add(1, 'days').format('dddd'), // Day 2
-      moment(issueDate).add(2, 'days').format('dddd'), // Day 3
-      moment(issueDate).add(3, 'days').format('dddd'), // Day 4
-      moment(issueDate).add(4, 'days').format('dddd') // Day 5
-    ]
-
-    // if FGS is from yesterday push 1 in to tab1 instead of 0
-
-    const issueDateMinus1 = moment(issueDate).isSame(yesterday, 'day')
-    const issueDateMinus2 = (moment(issueDate).isSame(dayMinus2, 'day'))
-
-    this.createTabs(issueDateMinus1, groupByDayMessage, dailyRisk, dailyRiskAsNum, trend, issueDateMinus2)
-
-    // Check if all tabs have no data
-
-    // Tab 3 may have up to 3 days content
-    let tab3Empty = true
-    this.tab3.forEach(item => {
-      if (Object.keys(item).length !== 0) {
-        tab3Empty = false
-      }
-    })
-
-    this.areTabsLow(tab3Empty)
-
-    if (!this.lowForFive) {
-      const allSame = isEqual(this.tab1, this.tab2) && this.tab3.every(day => isEqual(day, this.tab1))
-      if (allSame) {
-        this.allDaysSame = true
-        this.day5Name = this.dayName.at(-1)
-      }
-    }
+  assignProperties (data) {
+    const { days, issueDate, outlook, dailyRisk, dailyRiskAsNum, dailyRiskOutlookMax, riskLevelText, trend } = data
+    const formattedIssueDate = `${formatDate(outlook.issued_at, 'h:mma')} on ${formatDate(outlook.issued_at, 'D MMMM YYYY')}`
+    const issueUTC = moment(outlook.issued_at).tz('Europe/London').format()
+    const dailyRiskOutlookMaxText = riskLevelText[dailyRiskOutlookMax]
 
     this.days = days
     this.issueDate = issueDate
@@ -110,73 +149,42 @@ class OutlookTabs {
     this.trend = trend
   }
 
-  createTabs (issueDateMinus1, groupByDayMessage, dailyRisk, dailyRiskAsNum, trend, issueDateMinus2) {
-    if (issueDateMinus1) {
-      this.tab1 = groupByDayMessage['1'] // Day 2
-      this.tab2 = groupByDayMessage['2'] // Day 3
-      this.tab3 = [groupByDayMessage['3'],
-        groupByDayMessage['4']] // Day 4, 5
+  // Groups adjacent days that share identical impact, likelihood and source content.
+  groupAdjacentDays (messages, labels, dailyRiskAsNum, trend, riskLevelText) {
+    const groups = []
+    let start = 0
 
-      // dayName and daily risk arrays need to tie in with the above
-      this.dayName.shift()
-      dailyRisk.shift()
-      dailyRiskAsNum.shift()
-      trend.shift()
-
-      // if FGS is day before yesterday push 2 in to tab1 instead of 0
-    } else if (issueDateMinus2) {
-      this.tab1 = groupByDayMessage['2'] // Day 3
-      this.tab2 = groupByDayMessage['3'] // Day 4
-      this.tab3 = [groupByDayMessage['4']] // Day 5
-
-      // dayName and daily risk arrays need to tie in with the above
-      this.dayName.splice(0, 2)
-      dailyRisk.splice(0, 2)
-      dailyRiskAsNum.splice(0, 2)
-      trend.splice(0, 2)
-    } else {
-      this.tab1 = groupByDayMessage['0'] // Day 1
-
-      this.tab2 = groupByDayMessage['1'] // Day 2
-
-      // Tab 3 day combinations.
-      //
-      // day 3, day 4, day 5 messageIds all different
-      // day 3 and day 4 equal, day 5 different
-      // day 4 and day 5 equal, day 3 different
-      // day 3, day 4, day 5 all the same
-      const day3 = groupByDayMessage['2']
-      const day4 = groupByDayMessage['3']
-      const day5 = groupByDayMessage['4']
-
-      if (isEqual(day3, day4) && isEqual(day3, day5)) {
-        this.tab3 = [day3]
-        this.dayName[2] = `${this.dayName[2]}, ${this.dayName[3]} and ${this.dayName[4]}`
-      } else if (isEqual(day3, day4)) {
-        this.tab3 = [day3, day5]
-        this.dayName[2] = `${this.dayName[2]} and ${this.dayName[3]}`
-
-        // Shuffle down fifth day into fourth day slot as days 3 & 4 have been merged into day 3.
-        // Move associated risk values and trend descriptions as well.
-        this.dayName[3] = this.dayName[4]
-        dailyRiskAsNum[3] = dailyRiskAsNum[4]
-        trend[3] = trend[4]
-        dailyRisk[3] = dailyRisk[4]
-      } else if (isEqual(day4, day5)) {
-        this.tab3 = [day3, day4]
-        this.dayName[3] = `${this.dayName[3]} and ${this.dayName[4]}`
-      } else {
-        this.tab3 = [day3, day4, day5]
+    while (start < messages.length) {
+      let end = start
+      while (end + 1 < messages.length && isEqual(messages[end + 1], messages[start])) {
+        end++
       }
+
+      groups.push({
+        heading: this.buildGroupHeading(labels, start, end),
+        message: messages[start],
+        isEmpty: Object.keys(messages[start]).length === 0,
+        dailyRisk: riskLevelText[dailyRiskAsNum[start]],
+        trend: trend[start],
+        isFirst: start === 0
+      })
+
+      start = end + 1
     }
+
+    return groups
   }
 
-  areTabsLow (tab3Empty) {
-    if (Object.keys(this.tab1).length === 0 &&
-      Object.keys(this.tab2).length === 0 &&
-      tab3Empty) {
-      this.lowForFive = true
+  // D25: two adjacent days are joined with "and". D26: three or more adjacent
+  // days show only the first and last day name, joined with "through to".
+  buildGroupHeading (labels, start, end) {
+    if (start === end) {
+      return labels[start]
     }
+    if (end - start === 1) {
+      return `${labels[start]} and ${labels[end]}`
+    }
+    return `${labels[start]} through to ${labels[end]}`
   }
 }
 
