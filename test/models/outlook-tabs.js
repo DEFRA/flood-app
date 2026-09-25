@@ -8,21 +8,38 @@ const data = require('../data')
 const moment = require('moment')
 const formatDate = require('../../server/util').formatDate
 
+// Helper function to derive expected heading from fixture date and group indices
+function getExpectedHeading (issueDate, startIdx, endIdx) {
+  const dayNames = Array.from({ length: 5 }, (_, i) => {
+    return moment(issueDate).add(i, 'days').format('dddd')
+  })
+  const labels = dayNames.map((name, index) => {
+    if (index === 0) return 'Today'
+    if (index === 1) return 'Tomorrow'
+    return name
+  })
+  if (startIdx === endIdx) {
+    return labels[startIdx]
+  }
+  if (endIdx - startIdx === 1) {
+    return `${labels[startIdx]} and ${labels[endIdx]}`
+  }
+  return `${labels[startIdx]} through to ${labels[endIdx]}`
+}
+
 describe('Model - Outlook Tabs', () => {
-  it('should return the expected tabs', async () => {
+  it('should return the expected groups, merging adjacent days with matching content', async () => {
     const outlook = data.fgs
 
     const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true, isScotlandOrNorthernIreland: false }
 
-    const expectedOutlookTab1 = '{"3-i3-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]}'
-    const expectedOutlookTab2 = '{"3-i3-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]}'
-    const expectedOutlookTab3 = '[{"3-i3-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]},{"2-i2-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]}]'
-
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
-    expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
-    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
+    expect(viewModel.groups).to.have.length(2)
+    expect(viewModel.groups[0].heading).to.equal(getExpectedHeading(outlook.issued_at, 0, 2))
+    expect(JSON.stringify(viewModel.groups[0].message)).to.equal('{"3-i3-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]}')
+    expect(viewModel.groups[1].heading).to.equal(getExpectedHeading(outlook.issued_at, 3, 4))
+    expect(JSON.stringify(viewModel.groups[1].message)).to.equal('{"2-i2-l4":["overflowing rivers"],"1-i2-l2":["runoff from rainfall or blocked drains"]}')
   })
 
   it('should return that coastal poly aren\'t failing in turf', async () => {
@@ -30,15 +47,15 @@ describe('Model - Outlook Tabs', () => {
 
     const place = { name: 'Manchester, Greater Manchester', center: [-2.2343759536743164, 53.480712890625], bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054], bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474], address: 'Manchester, Greater Manchester', isEngland: { is_england: true }, isUK: true, isScotlandOrNorthernIreland: false }
 
-    const expectedOutlookTab1 = '{"2-i2-l4":"runoff from rainfall or blocked drains and overflowing rivers","1-i2-l2":["high tides or large waves"]}'
-    const expectedOutlookTab2 = '{"1-i2-l2":"runoff from rainfall or blocked drains, overflowing rivers and high tides or large waves"}'
-    const expectedOutlookTab3 = '[{}]'
-
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
-    expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
-    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
+    expect(viewModel.groups).to.have.length(3)
+    expect(viewModel.groups[0].heading).to.equal(getExpectedHeading(outlook.issued_at, 0, 0))
+    expect(JSON.stringify(viewModel.groups[0].message)).to.equal('{"2-i2-l4":"runoff from rainfall or blocked drains and overflowing rivers","1-i2-l2":["high tides or large waves"]}')
+    expect(viewModel.groups[1].heading).to.equal(getExpectedHeading(outlook.issued_at, 1, 1))
+    expect(JSON.stringify(viewModel.groups[1].message)).to.equal('{"1-i2-l2":"runoff from rainfall or blocked drains, overflowing rivers and high tides or large waves"}')
+    expect(viewModel.groups[2].heading).to.equal(getExpectedHeading(outlook.issued_at, 2, 4))
+    expect(viewModel.groups[2].isEmpty).to.equal(true)
   })
 
   it('should format the date correctly and set"outOfDate" as false for FGS created today', async () => {
@@ -57,9 +74,9 @@ describe('Model - Outlook Tabs', () => {
 
   it('should not intersect any polygons', async () => {
     const outlook = data.fgs
+    outlook.issued_at = '2019-11-09T15:30:00Z'
 
     const place = {
-      name: 'Leeds, West Yorkshire',
       center: [-1.549103021621704, 53.79969024658203],
       bbox2k: [
         -1.8271425769371719,
@@ -79,18 +96,14 @@ describe('Model - Outlook Tabs', () => {
       isScotlandOrNorthernIreland: false
     }
 
-    const expectedOutlookTab1 = '{}'
-    const expectedOutlookTab2 = '{}'
-    const expectedOutlookTab3 = '[{"1-i2-l2":"runoff from rainfall or blocked drains and overflowing rivers"}]'
-
-    const lowForFive = true
-
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
-    expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
-    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
-    expect(viewModel).to.not.contain(lowForFive)
+    expect(viewModel.groups).to.have.length(2)
+    expect(viewModel.groups[0].heading).to.equal(getExpectedHeading(outlook.issued_at, 0, 1))
+    expect(viewModel.groups[0].isEmpty).to.equal(true)
+    expect(viewModel.groups[1].heading).to.equal(getExpectedHeading(outlook.issued_at, 2, 4))
+    expect(JSON.stringify(viewModel.groups[1].message)).to.equal('{"1-i2-l2":"runoff from rainfall or blocked drains and overflowing rivers"}')
+    expect(viewModel.lowForFive).to.be.undefined()
   })
 
   it('should set the trends', async () => {
@@ -151,13 +164,12 @@ describe('Model - Outlook Tabs', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(viewModel.tab1).to.equal({})
-    expect(viewModel.tab1).to.equal({})
-    expect(viewModel.tab1).to.equal({})
+    expect(viewModel.groups).to.have.length(1)
+    expect(viewModel.groups[0].isEmpty).to.equal(true)
     expect(viewModel.lowForFive).to.equal(true)
   })
 
-  it('should check flood risk is the same on day 3 and day 4 but different on day 5', async () => {
+  it('should merge all adjacent empty days together, keeping the day with content separate', async () => {
     const outlook = {
       id: 1107,
       issued_at: '2019-08-08T09:30:00Z',
@@ -279,15 +291,16 @@ describe('Model - Outlook Tabs', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(viewModel.dayName[2]).to.equal('Saturday and Sunday')
+    expect(viewModel.groups).to.have.length(2)
+    expect(viewModel.groups[0].heading).to.equal(getExpectedHeading(outlook.issued_at, 0, 3))
+    expect(viewModel.groups[0].isEmpty).to.equal(true)
+    expect(viewModel.groups[1].heading).to.equal(getExpectedHeading(outlook.issued_at, 4, 4))
   })
 
-  it('should issue FGS as yesterday and "tab1" is populated from "day2"', async () => {
+  it('should issue FGS as yesterday and the first group is populated from "day2"', async () => {
     const outlook = data.fgs
 
     outlook.issued_at = moment().utc().subtract(1, 'days').format()
-
-    const tab1 = '{"1-i2-l2":["overflowing rivers"]}'
 
     const place = {
       name: 'Derby, Derby City',
@@ -312,17 +325,16 @@ describe('Model - Outlook Tabs', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
+    expect(viewModel.groups[0].heading).to.equal('Today')
+    expect(JSON.stringify(viewModel.groups[0].message)).to.equal('{"1-i2-l2":["overflowing rivers"]}')
   })
 
-  it('should populate "tab1" from day 3 when FGS issued is > 24 but <= 48 hours', async () => {
+  it('should populate the first group from day 3 when FGS issued is > 24 but <= 48 hours', async () => {
     const outlook = data.fgs
 
     // outlook.issued_at = moment().utc().subtract(40, 'hours').format()
     outlook.issued_at = moment().subtract(2, 'days').format()
 
-    const tab1 = '{}'
-
     const place = {
       name: 'Derby, Derby City',
       center: [-1.4756419658660889, 52.921897888183594],
@@ -346,7 +358,8 @@ describe('Model - Outlook Tabs', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
+    expect(viewModel.groups).to.have.length(1)
+    expect(viewModel.groups[0].isEmpty).to.equal(true)
   })
 
   it('should set "allDaysSame" to true when all five days have the same likelihood, source and impact', async () => {
@@ -487,14 +500,160 @@ describe('Model - Outlook Tabs', () => {
       isScotlandOrNorthernIreland: false
     }
 
-    const expectedOutlookTab1 = '{"3-i4-l2":"Runoff from rainfall or blocked drains and overflowing rivers"}'
-    const expectedOutlookTab2 = '{"3-i4-l2":"Runoff from rainfall or blocked drains and overflowing rivers"}'
-    const expectedOutlookTab3 = '[{}]'
-
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
-    expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
-    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
+    expect(viewModel.groups).to.have.length(2)
+    expect(viewModel.groups[0].heading).to.equal('Today and Tomorrow')
+    expect(JSON.stringify(viewModel.groups[0].message)).to.equal('{"3-i4-l2":"Runoff from rainfall or blocked drains and overflowing rivers"}')
+    expect(viewModel.groups[1].isEmpty).to.equal(true)
+  })
+
+  function buildOutlookWithBlocks (blocks) {
+    return {
+      id: 1343,
+      issued_at: moment().utc().format(),
+      pdf_url: 'https://s3-eu-west-1.amazonaws.com/assets.ffc-environment-agency.fgs.metoffice.gov.uk/fgs-statements/01343/fgs.pdf',
+      detailed_csv_url: 'https://s3-eu-west-1.amazonaws.com/assets.ffc-environment-agency.fgs.metoffice.gov.uk/fgs-statements/01343/detailed.csv',
+      area_of_concern_url: 'https://s3-eu-west-1.amazonaws.com/assets.ffc-environment-agency.fgs.metoffice.gov.uk/fgs-statements/01343/areaofconcern.jpg',
+      flood_risk_trend: {
+        day1: 'stable',
+        day2: 'stable',
+        day3: 'stable',
+        day4: 'stable',
+        day5: 'stable'
+      },
+      sources: [
+        { river: 'The river flood risk varies over the next five days.' }
+      ],
+      headline: 'Varying river flood risk.',
+      amendments: '',
+      future_forecast: '',
+      last_modified_at: moment().utc().format(),
+      next_issue_due_at: moment().utc().add(1, 'days').format(),
+      png_thumbnails_with_days_url: 'https://s3-eu-west-1.amazonaws.com/assets.ffc-environment-agency.fgs.metoffice.gov.uk/fgs-statements/01343/FGSthumbnails-with-days.png',
+      risk_areas: [{
+        id: 4001,
+        statement_id: 1343,
+        updated_at: moment().utc().format(),
+        beyond_five_days: false,
+        ordering: 1,
+        risk_area_blocks: blocks.map((block, index) => ({
+          id: 6001 + index,
+          days: block.days,
+          risk_area_id: 4001,
+          risk_levels: { river: block.riskLevels },
+          additional_information: 'River flooding impacts are possible.',
+          polys: [{
+            id: 9001 + index,
+            coordinates: [[
+              [-4.174804687500001, 54.625522440842246],
+              [-3.146484643220902, 54.96247882239579],
+              [-2.531250268220902, 55.36412729483159],
+              [-2.3994143307209015, 55.65031856976615],
+              [-1.9599612057209017, 55.90980992336868],
+              [0.47141432762146, 53.83838539206968],
+              [0.21972656250000003, 53.32848623940286],
+              [-4.630237072706223, 53.13119286673744],
+              [-4.174804687500001, 54.625522440842246]
+            ]],
+            area: 8.42310580332646,
+            label_position: [-2.08465592935681, 54.1276207351252],
+            poly_type: 'inland',
+            risk_area_block_id: 6001 + index,
+            counties: [{ name: 'Greater Manchester' }]
+          }]
+        }))
+      }],
+      aoc_maps: [],
+      public_forecast: {
+        id: 1343,
+        england_forecast: 'Test forecast.',
+        welsh_forecast: 'Test forecast.',
+        english_forecast: 'Test forecast.',
+        wales_forecast_english: 'Test forecast.',
+        wales_forecast_welsh: 'Test forecast.',
+        published_at: null
+      }
+    }
+  }
+
+  const manchesterPlace = {
+    name: 'Manchester, Greater Manchester',
+    center: [-2.2343759536743164, 53.480712890625],
+    bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054],
+    bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474],
+    address: 'Manchester, Greater Manchester',
+    isEngland: { is_england: true },
+    isUK: true,
+    isScotlandOrNorthernIreland: false
+  }
+
+  it('should merge days 1 and 2, and separately merge days 3 and 4, keeping day 5 on its own', async () => {
+    const outlook = buildOutlookWithBlocks([
+      { days: [1, 2], riskLevels: [2, 3] },
+      { days: [3, 4], riskLevels: [3, 3] },
+      { days: [5], riskLevels: [4, 4] }
+    ])
+
+    const day5Name = moment().add(4, 'days').format('dddd')
+
+    const viewModel = new OutlookTabsModel(outlook, manchesterPlace)
+
+    expect(viewModel.groups).to.have.length(3)
+    expect(viewModel.groups[0].heading).to.equal('Today and Tomorrow')
+    expect(viewModel.groups[1].heading).to.equal(`${moment().add(2, 'days').format('dddd')} and ${moment().add(3, 'days').format('dddd')}`)
+    expect(viewModel.groups[2].heading).to.equal(day5Name)
+    expect(viewModel.allDaysSame).to.be.undefined()
+    expect(viewModel.lowForFive).to.be.undefined()
+  })
+
+  it('should merge days 4 and 5, keeping day 3 on its own', async () => {
+    const outlook = buildOutlookWithBlocks([
+      { days: [1, 2], riskLevels: [2, 3] },
+      { days: [3], riskLevels: [4, 4] },
+      { days: [4, 5], riskLevels: [3, 3] }
+    ])
+
+    const day3Name = moment().add(2, 'days').format('dddd')
+
+    const viewModel = new OutlookTabsModel(outlook, manchesterPlace)
+
+    expect(viewModel.groups).to.have.length(3)
+    expect(viewModel.groups[0].heading).to.equal('Today and Tomorrow')
+    expect(viewModel.groups[1].heading).to.equal(day3Name)
+    expect(viewModel.groups[2].heading).to.equal(`${moment().add(3, 'days').format('dddd')} and ${moment().add(4, 'days').format('dddd')}`)
+    expect(viewModel.allDaysSame).to.be.undefined()
+    expect(viewModel.lowForFive).to.be.undefined()
+  })
+
+  it('should keep days 3, 4 and 5 as separate groups when all three differ', async () => {
+    const outlook = buildOutlookWithBlocks([
+      { days: [1, 2], riskLevels: [2, 3] },
+      { days: [3], riskLevels: [4, 4] },
+      { days: [4], riskLevels: [3, 3] },
+      { days: [5], riskLevels: [2, 3] }
+    ])
+
+    const viewModel = new OutlookTabsModel(outlook, manchesterPlace)
+
+    expect(viewModel.groups).to.have.length(4)
+    expect(viewModel.groups[0].heading).to.equal('Today and Tomorrow')
+    expect(viewModel.groups[1].heading).to.equal(moment().add(2, 'days').format('dddd'))
+    expect(viewModel.groups[2].heading).to.equal(moment().add(3, 'days').format('dddd'))
+    expect(viewModel.groups[3].heading).to.equal(moment().add(4, 'days').format('dddd'))
+    expect(viewModel.allDaysSame).to.be.undefined()
+    expect(viewModel.lowForFive).to.be.undefined()
+  })
+
+  it('should merge 3 or more adjacent equal days into a single "through to" heading', async () => {
+    const outlook = buildOutlookWithBlocks([
+      { days: [1, 2, 3, 4, 5], riskLevels: [3, 3] }
+    ])
+
+    const viewModel = new OutlookTabsModel(outlook, manchesterPlace)
+
+    expect(viewModel.groups).to.have.length(1)
+    expect(viewModel.groups[0].heading).to.equal(`Today through to ${moment().add(4, 'days').format('dddd')}`)
+    expect(viewModel.allDaysSame).to.equal(true)
   })
 })
