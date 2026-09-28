@@ -48,6 +48,7 @@ describe('Route - National', () => {
         name: 'national',
         register: (server) => {
           server.route(require('../../server/routes/national'))
+          server.route(require('../../server/routes/outside-england'))
         }
       }
     }
@@ -90,7 +91,7 @@ describe('Route - National', () => {
           return { ...fgs, issued_at: context.now.toISOString() }
         }
 
-        setup(fakeFloodData, fakeOutlookData)
+        await setup(fakeFloodData, fakeOutlookData)
       })
 
       it('should contain CYLTFR link taken from the floodRiskUrl config value', async () => {
@@ -148,6 +149,30 @@ describe('Route - National', () => {
       })
     })
 
+    it('should 200 and omit the no-border class when flood warnings have been removed', async () => {
+      const fakeFloodData = () => ({
+        floods: [{
+          ta_id: 1,
+          ta_code: 'TEST001',
+          ta_name: 'Test Removed Area',
+          severity_value: 4,
+          severity: 'Flood warning removed',
+          situation_changed: '2024-01-13T10:02:00.000Z',
+          severity_changed: '2024-01-13T10:02:00.000Z',
+          message_received: '2024-01-18T10:02:23.429Z',
+          geometry: null
+        }]
+      })
+      const fakeOutlookData = () => ({})
+
+      await setup(fakeFloodData, fakeOutlookData)
+
+      const response = await server.inject({ method: 'GET', url: '/' })
+
+      expect(response.statusCode).to.equal(200)
+      expect(response.payload).to.not.contain('defra-flood-meta--no-border')
+    })
+
     describe('without flood and outlook data', () => {
       beforeEach(async () => {
         const fakeFloodData = () => {
@@ -160,7 +185,7 @@ describe('Route - National', () => {
           return {}
         }
 
-        setup(fakeFloodData, fakeOutlookData)
+        await setup(fakeFloodData, fakeOutlookData)
       })
 
       it('should 200', async () => {
@@ -402,6 +427,52 @@ describe('Route - National', () => {
       expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>')
       expect(response.payload).to.contain('<p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>')
     })
+
+    it('should 200 when outlook service throws and render data problem message', async () => {
+      const fakeFloodData = () => {
+        return {
+          floods: []
+        }
+      }
+
+      const fakeOutlookData = () => {
+        throw new Error('Outlook service unavailable')
+      }
+
+      const floodService = require('../../server/services/flood')
+
+      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+
+      const locationPlugin = {
+        plugin: {
+          name: 'national',
+          register: (server) => {
+            server.route(require('../../server/routes/national'))
+          }
+        }
+      }
+
+      await server.register(require('../../server/plugins/views'))
+      await server.register(require('../../server/plugins/session'))
+      await server.register(require('../../server/plugins/logging'))
+      await server.register(locationPlugin)
+
+      const registerServerMethods = require('../../server/services/server-methods')
+      registerServerMethods(server)
+
+      await server.initialize()
+
+      const options = {
+        method: 'GET',
+        url: '/'
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).to.equal(200)
+      expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+    })
   })
 
   describe('POST', () => {
@@ -433,7 +504,7 @@ describe('Route - National', () => {
           ]
         }
 
-        setup(fakeFloodData, fakeOutlookData, fakeSearchData)
+        await setup(fakeFloodData, fakeOutlookData, fakeSearchData)
       })
 
       it('should 200 and not redirect with an empty location', async () => {
@@ -495,6 +566,38 @@ describe('Route - National', () => {
         expect(response.statusCode).to.equal(302)
         expect(response.headers.location).to.equal('/location/ashford-kent')
       })
+
+      it('should redirect to location page when location is provided with error flag', async () => {
+        const options = {
+          method: 'POST',
+          url: '/',
+          payload: {
+            location: 'ashford, kent',
+            error: '1'
+          }
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).to.equal(302)
+        expect(response.headers.location).to.equal('/location/ashford-kent')
+      })
+
+      it('should display error message when geolocation is unavailable', async () => {
+        const options = {
+          method: 'POST',
+          url: '/',
+          payload: {
+            location: '',
+            error: '1'
+          }
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).to.equal(200)
+        expect(response.payload).to.contain('Turn on location services to use your current location, or enter a town, city or postcode in England')
+      })
     })
 
     describe('scottish results', () => {
@@ -525,7 +628,7 @@ describe('Route - National', () => {
           ]
         }
 
-        setup(fakeFloodData, fakeOutlookData, fakeSearchData)
+        await setup(fakeFloodData, fakeOutlookData, fakeSearchData)
       })
 
       it('should 200 and not redirect with a scottish location', async () => {
@@ -551,7 +654,7 @@ describe('Route - National', () => {
         const fakeOutlookData = () => { return {} }
         const fakeSearchData = () => { return [] }
 
-        setup(fakeFloodData, fakeOutlookData, fakeSearchData)
+        await setup(fakeFloodData, fakeOutlookData, fakeSearchData)
       })
 
       it('should 200 and not redirect with a non-match location', async () => {
@@ -568,6 +671,143 @@ describe('Route - National', () => {
         expect(response.statusCode).to.equal(200)
         expect(response.request.url.pathname).to.equal('/')
         expect(response.payload).to.contain("We couldn't find 'fhfhsflkh', England")
+      })
+
+      it('should 200 and not redirect with an invalid postcode', async () => {
+        const options = {
+          method: 'POST',
+          url: '/',
+          payload: {
+            location: 'SW1A 9ZZ'
+          }
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).to.equal(200)
+        expect(response.request.url.pathname).to.equal('/')
+        expect(response.payload).to.contain("We couldn't find 'SW1A 9ZZ', England")
+      })
+    })
+
+    describe('coordinate results', () => {
+      it('should 400 with invalid geolocation payload format', async () => {
+        const fakeFloodData = () => { return { floods: [] } }
+        const fakeOutlookData = () => { return {} }
+        const fakeSearchData = () => {
+          return [
+            {
+              name: 'Test Place',
+              slug: 'test-place',
+              isEngland: { is_england: true }
+            }
+          ]
+        }
+
+        await setup(fakeFloodData, fakeOutlookData, fakeSearchData)
+
+        const options = {
+          method: 'POST',
+          url: '/',
+          payload: {
+            location: '',
+            geolocation: 'invalid-coordinates'
+          }
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).to.equal(400)
+      })
+
+      it('should redirect to outside-england when coordinate lookup returns no match', async () => {
+        const fakeFloodData = () => { return { floods: [] } }
+        const fakeOutlookData = () => { return {} }
+        const fakeSearchData = () => { return [] }
+
+        await setup(fakeFloodData, fakeOutlookData, fakeSearchData)
+
+        const options = {
+          method: 'POST',
+          url: '/',
+          payload: {
+            location: '',
+            geolocation: '55.8609,-4.2514'
+          }
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).to.equal(302)
+        expect(response.headers.location).to.equal('/outside-england')
+      })
+
+      it('should redirect to location page with encoded slug for valid coordinate location', async () => {
+        const fakeFloodData = () => { return { floods: [] } }
+        const fakeOutlookData = () => { return {} }
+        const fakeSearchData = () => {
+          return [
+            {
+              name: 'Test Place',
+              slug: 'name with spaces',
+              isEngland: { is_england: true }
+            }
+          ]
+        }
+
+        await setup(fakeFloodData, fakeOutlookData, fakeSearchData)
+
+        const options = {
+          method: 'POST',
+          url: '/',
+          payload: {
+            location: '',
+            geolocation: '51.5007,-0.1246'
+          }
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).to.equal(302)
+        expect(response.headers.location).to.equal('/location/name%20with%20spaces')
+      })
+
+      it('should render the outside-england page when coordinate is outside England', async () => {
+        const fakeFloodData = () => { return { floods: [] } }
+        const fakeOutlookData = () => { return {} }
+        const fakeSearchData = () => {
+          return [
+            {
+              name: 'Glasgow',
+              isEngland: { is_england: false }
+            }
+          ]
+        }
+
+        await setup(fakeFloodData, fakeOutlookData, fakeSearchData)
+
+        const options = {
+          method: 'POST',
+          url: '/',
+          payload: {
+            location: '',
+            geolocation: '55.8609,-4.2514'
+          }
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).to.equal(302)
+        expect(response.headers.location).to.equal('/outside-england')
+
+        const outsideEnglandResponse = await server.inject({
+          method: 'GET',
+          url: '/outside-england'
+        })
+
+        expect(outsideEnglandResponse.statusCode).to.equal(200)
+        expect(outsideEnglandResponse.request.url.pathname).to.equal('/outside-england')
+        expect(outsideEnglandResponse.payload).to.contain('This service is for locations in England')
       })
     })
   })
