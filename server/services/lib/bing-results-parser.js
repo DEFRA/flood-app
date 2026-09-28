@@ -62,8 +62,7 @@ const allowedTypes = [
   'admindivision1',
   'admindivision2',
   'populatedplace',
-  'neighborhood',
-  'address' // returned by coordinate query
+  'neighborhood'
 ]
 
 const distanceInMetres = {
@@ -83,7 +82,7 @@ const mapper = (r) => {
   // This causes problems with validity checking
   // Retained both name and query for display purposes for post codes
   // (even though name and query are the are the same for non-postcodes)
-  const query = ['postcode1', 'postcode3', 'address'].includes(r.entityType.toLowerCase())
+  const query = ['postcode1', 'postcode3'].includes(r.entityType.toLowerCase())
     ? r.address.postalCode
     : name
 
@@ -99,7 +98,7 @@ const mapper = (r) => {
   }
 }
 
-const confidenceFilter = (r, isCoordinateQuery) => isCoordinateQuery || r.confidence.toLowerCase() === 'high'
+const confidenceFilter = (r) => r.confidence.toLowerCase() === 'high'
 
 const englandOnlyFilter = (r) => {
   if (r.entityType.toLowerCase() === 'admindivision1') {
@@ -112,9 +111,6 @@ const englandOnlyFilter = (r) => {
 const allowedTypesFilter = (r) =>
   allowedTypes.includes(r.entityType.toLowerCase())
 
-const queryTypeFilter = (r, isCoordinateQuery) =>
-  isCoordinateQuery || r.entityType.toLowerCase() !== 'address'
-
 const baseFilter = (r) =>
   allowedTypesFilter(r) && englandOnlyFilter(r)
 
@@ -125,39 +121,19 @@ const typesSort = (a, b) =>
 const removeDuplicatesFilter = (place, index, self) =>
   self.findIndex(p => p.slug === place.slug) === index
 
-async function find (bingResponse, isCoordinateQuery) {
+async function find (bingResponse) {
   // This function is for processing all query results returned by Bing filtered by
   // confidence, entity type and england only. It contrasts with the get
   // function below which aims to retrieve a location based on the slugified name
-
-  const set = bingResponse?.resourceSets?.[0]
-  const resources = Array.isArray(set?.resources) ? set.resources : []
-  const hasEstimatedResults = Number(set?.estimatedTotal) > 0
-
-  const places = hasEstimatedResults && resources.length
-    ? resources
-      .filter(r => confidenceFilter(r, isCoordinateQuery)) // coordinate queries can return results which are valid but not high confidence
-      .filter(r => queryTypeFilter(r, isCoordinateQuery))
+  const set = bingResponse.resourceSets[0]
+  return set.estimatedTotal
+    ? set.resources
+      .filter(confidenceFilter)
       .filter(baseFilter)
       .sort(typesSort)
       .map(mapper)
       .filter(removeDuplicatesFilter)
     : []
-
-  const response = []
-
-  if (isCoordinateQuery) {
-    const geoLocated = places.length
-    if (geoLocated && !places?.[0]?.isEngland?.is_england) {
-      places[0].name = places?.[0]?.name || 'Unknown'
-    }
-  }
-
-  if (places.length) {
-    response.push(...places)
-  }
-
-  return response
 }
 
 async function get (bingResponse, slug) {
@@ -173,11 +149,10 @@ async function get (bingResponse, slug) {
   // returned from bing and look for a matching slug regardless of the confidence
   // value (we do still filter by england only and allowed entity types)
   const matchingSlugFilter = (r) => r.slug === slug
-  const set = bingResponse?.resourceSets?.[0]
-  const resources = Array.isArray(set?.resources) ? set.resources : []
-  const hasEstimatedResults = Number(set?.estimatedTotal) > 0
-  return hasEstimatedResults && resources.length
-    ? resources.filter(baseFilter)
+  const set = bingResponse.resourceSets[0]
+  return set.estimatedTotal
+    ? set.resources
+      .filter(baseFilter)
       .sort(typesSort)
       .map(mapper)
       .filter(removeDuplicatesFilter)

@@ -1,6 +1,4 @@
 const joi = require('joi')
-
-const { COORDINATE_PATTERN } = require('../constants')
 const OutlookModel = require('../models/outlook')
 const FloodsModel = require('../models/floods')
 const ViewModel = require('../models/views/national')
@@ -23,37 +21,11 @@ async function getModel (request, location) {
   return new ViewModel(floods, outlook, location)
 }
 
-function rejectedLocation (location, geolocation) {
-  return (!geolocation && (location.toLowerCase() === 'england' || location === ''))
-}
-
-function isGeolocationError (location, geolocation, error) {
-  return Boolean(error && !geolocation && location === '')
-}
-
-function getMessageText (geolocationError) {
-  return geolocationError
-    ? 'Turn on location services to use your current location, or enter a town, city or postcode in England'
-    : ''
-}
-
-function getRedirectPath (place, geolocation) {
-  if (geolocation) {
-    return place?.isEngland?.is_england
-      ? '/location/' + encodeURIComponent(place?.slug)
-      : '/outside-england'
-  }
-
-  return place?.isEngland?.is_england
-    ? '/location/' + encodeURIComponent(place?.slug)
-    : null
-}
-
 module.exports = [
   {
     method: 'GET',
     path: '/',
-    handler: async function (request, h) {
+    handler: async (request, h) => {
       const model = await getModel(request)
 
       return h.view('national', { model })
@@ -62,35 +34,22 @@ module.exports = [
   {
     method: 'POST',
     path: '/',
-    handler: async function (request, h) {
-      const { location, error = null, geolocation = null } = request.payload
-      const geolocationError = isGeolocationError(location, geolocation, error)
-      const messageText = getMessageText(geolocationError)
-
-      if (rejectedLocation(location, geolocation)) {
+    handler: async (request, h) => {
+      const { location } = request.payload
+      if (location.toLowerCase() === 'england' || location === '') {
         const model = await getModel(request, location)
-        if (geolocationError) {
-          model.errorMessage = messageText
-          model.pageTitle = `Error: ${messageText}`
-        }
         return h.view('national', { model })
       }
-
-      const [place] = await locationService.find(geolocation || location)
-      const redirect = getRedirectPath(place, geolocation)
-
-      if (redirect) {
-        return h.redirect(redirect)
+      const [place] = await locationService.find(location)
+      if (!place?.name || !place.isEngland.is_england) {
+        return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location })
       }
-
-      return h.view('location-not-found', { pageTitle: 'Error: Find location - Check for flooding', location, messageText })
+      return h.redirect(`/location/${encodeURIComponent(place?.slug)}`)
     },
     options: {
       validate: {
         payload: joi.object({
-          location: joi.string().required().trim().allow(''),
-          geolocation: joi.string().optional().trim().allow('').pattern(COORDINATE_PATTERN),
-          error: joi.string().optional().trim().allow('')
+          location: joi.string().required().trim().allow('')
         })
       }
     }
