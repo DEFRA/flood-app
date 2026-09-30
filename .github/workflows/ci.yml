@@ -19,7 +19,7 @@ jobs:
               uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # 4.4.0
               with:
                 node-version-file: '.nvmrc'
-            
+
             - name: Install node dependencies
               run: npm ci --engine-strict --ignore-scripts && npm run build
 
@@ -50,7 +50,7 @@ jobs:
                   -Dsonar.exclusions=**/node_modules/**,**/test/**,**/test-output/**
                   -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
                   -Dsonar.javascript.exclusions=**/node_modules/**,**/test/**,**/test-output/**,**/mock/**,**/server/dist/**,**/server/src/**,**/service-down/**
-                  -Dsonar.coverage.exclusions=**/server/routes/status.js
+                  -Dsonar.coverage.exclusions=**/server/routes/status.js,eslint.config.js
                   -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
                   -Dsonar.pullrequest.branch=${{ github.head_ref }}
                   -Dsonar.pullrequest.base=${{ github.base_ref }}
@@ -68,7 +68,7 @@ jobs:
                   -Dsonar.exclusions=**/node_modules/**,**/test/**,**/test-output/**
                   -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
                   -Dsonar.javascript.exclusions=**/node_modules/**,**/test/**,**/test-output/**,**/mock/**,**/server/dist/**,**/server/src/**,**/service-down/**
-                  -Dsonar.coverage.exclusions=**/server/routes/status.js
+                  -Dsonar.coverage.exclusions=**/server/routes/status.js,eslint.config.js
                   -Dsonar.branch.name=${{ github.ref_name }}
             - name: Dependency Review
               if: github.event_name == 'pull_request'
