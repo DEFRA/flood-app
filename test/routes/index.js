@@ -99,6 +99,7 @@ describe('Route - Index', () => {
 
     expect(response.statusCode).to.equal(200)
     expect(response.payload).to.include('cookies')
+    expect(response.payload.match(/class="govuk-service-navigation__service-name"/g)).to.have.length(1)
     expect(response.headers['content-type']).to.include('text/html')
   })
 
