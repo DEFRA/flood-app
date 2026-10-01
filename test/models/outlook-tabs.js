@@ -497,4 +497,144 @@ describe('Model - Outlook Tabs', () => {
     expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
     expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
   })
+
+  function buildOutlookWithBlocks (blocks) {
+    return {
+      id: 1343,
+      issued_at: moment().utc().format(),
+      pdf_url: 'https://s3-eu-west-1.amazonaws.com/assets.ffc-environment-agency.fgs.metoffice.gov.uk/fgs-statements/01343/fgs.pdf',
+      detailed_csv_url: 'https://s3-eu-west-1.amazonaws.com/assets.ffc-environment-agency.fgs.metoffice.gov.uk/fgs-statements/01343/detailed.csv',
+      area_of_concern_url: 'https://s3-eu-west-1.amazonaws.com/assets.ffc-environment-agency.fgs.metoffice.gov.uk/fgs-statements/01343/areaofconcern.jpg',
+      flood_risk_trend: {
+        day1: 'stable',
+        day2: 'stable',
+        day3: 'stable',
+        day4: 'stable',
+        day5: 'stable'
+      },
+      sources: [
+        { river: 'The river flood risk varies over the next five days.' }
+      ],
+      headline: 'Varying river flood risk.',
+      amendments: '',
+      future_forecast: '',
+      last_modified_at: moment().utc().format(),
+      next_issue_due_at: moment().utc().add(1, 'days').format(),
+      png_thumbnails_with_days_url: 'https://s3-eu-west-1.amazonaws.com/assets.ffc-environment-agency.fgs.metoffice.gov.uk/fgs-statements/01343/FGSthumbnails-with-days.png',
+      risk_areas: [{
+        id: 4001,
+        statement_id: 1343,
+        updated_at: moment().utc().format(),
+        beyond_five_days: false,
+        ordering: 1,
+        risk_area_blocks: blocks.map((block, index) => ({
+          id: 6001 + index,
+          days: block.days,
+          risk_area_id: 4001,
+          risk_levels: { river: block.riskLevels },
+          additional_information: 'River flooding impacts are possible.',
+          polys: [{
+            id: 9001 + index,
+            coordinates: [[
+              [-4.174804687500001, 54.625522440842246],
+              [-3.146484643220902, 54.96247882239579],
+              [-2.531250268220902, 55.36412729483159],
+              [-2.3994143307209015, 55.65031856976615],
+              [-1.9599612057209017, 55.90980992336868],
+              [0.47141432762146, 53.83838539206968],
+              [0.21972656250000003, 53.32848623940286],
+              [-4.630237072706223, 53.13119286673744],
+              [-4.174804687500001, 54.625522440842246]
+            ]],
+            area: 8.42310580332646,
+            label_position: [-2.08465592935681, 54.1276207351252],
+            poly_type: 'inland',
+            risk_area_block_id: 6001 + index,
+            counties: [{ name: 'Greater Manchester' }]
+          }]
+        }))
+      }],
+      aoc_maps: [],
+      public_forecast: {
+        id: 1343,
+        england_forecast: 'Test forecast.',
+        welsh_forecast: 'Test forecast.',
+        english_forecast: 'Test forecast.',
+        wales_forecast_english: 'Test forecast.',
+        wales_forecast_welsh: 'Test forecast.',
+        published_at: null
+      }
+    }
+  }
+
+  const manchesterPlace = {
+    name: 'Manchester, Greater Manchester',
+    center: [-2.2343759536743164, 53.480712890625],
+    bbox2k: [-3.216968300327545, 53.11623436652925, -1.2803249596532866, 53.840428045393054],
+    bbox10k: [-3.322971089502337, 53.05355679509522, -1.1735137703389709, 53.903467893179474],
+    address: 'Manchester, Greater Manchester',
+    isEngland: { is_england: true },
+    isUK: true,
+    isScotlandOrNorthernIreland: false
+  }
+
+  it('should merge days 3 and 4 into tab3 when they match and keep day 5 separate', async () => {
+    const outlook = buildOutlookWithBlocks([
+      { days: [1, 2], riskLevels: [2, 3] },
+      { days: [3, 4], riskLevels: [3, 3] },
+      { days: [5], riskLevels: [4, 4] }
+    ])
+
+    const day3Name = moment().add(2, 'days').format('dddd')
+    const day4Name = moment().add(3, 'days').format('dddd')
+    const day5Name = moment().add(4, 'days').format('dddd')
+
+    const viewModel = new OutlookTabsModel(outlook, manchesterPlace)
+
+    const expectedTab3 = '[{"3-i3-l3":["overflowing rivers"]},{"4-i4-l4":["overflowing rivers"]}]'
+
+    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedTab3)
+    expect(viewModel.dayName[2]).to.equal(`${day3Name} and ${day4Name}`)
+    expect(viewModel.dayName[3]).to.equal(day5Name)
+    expect(viewModel.allDaysSame).to.be.undefined()
+    expect(viewModel.lowForFive).to.be.undefined()
+  })
+
+  it('should merge days 4 and 5 into tab3 when they match and keep day 3 separate', async () => {
+    const outlook = buildOutlookWithBlocks([
+      { days: [1, 2], riskLevels: [2, 3] },
+      { days: [3], riskLevels: [4, 4] },
+      { days: [4, 5], riskLevels: [3, 3] }
+    ])
+
+    const day4Name = moment().add(3, 'days').format('dddd')
+    const day5Name = moment().add(4, 'days').format('dddd')
+
+    const viewModel = new OutlookTabsModel(outlook, manchesterPlace)
+
+    const expectedTab3 = '[{"4-i4-l4":["overflowing rivers"]},{"3-i3-l3":["overflowing rivers"]}]'
+
+    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedTab3)
+    expect(viewModel.dayName[3]).to.equal(`${day4Name} and ${day5Name}`)
+    expect(viewModel.allDaysSame).to.be.undefined()
+    expect(viewModel.lowForFive).to.be.undefined()
+  })
+
+  it('should keep days 3, 4 and 5 separate in tab3 when all three differ', async () => {
+    const outlook = buildOutlookWithBlocks([
+      { days: [1, 2], riskLevels: [2, 3] },
+      { days: [3], riskLevels: [4, 4] },
+      { days: [4], riskLevels: [3, 3] },
+      { days: [5], riskLevels: [2, 3] }
+    ])
+
+    const viewModel = new OutlookTabsModel(outlook, manchesterPlace)
+
+    const expectedTab3 = '[{"4-i4-l4":["overflowing rivers"]},{"3-i3-l3":["overflowing rivers"]},{"2-i2-l3":["overflowing rivers"]}]'
+
+    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedTab3)
+    expect(viewModel.tab3).to.have.length(3)
+    expect(viewModel.allDaysSame).to.be.undefined()
+    expect(viewModel.lowForFive).to.be.undefined()
+  })
 })
