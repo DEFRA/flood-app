@@ -43,7 +43,7 @@
             left:-42px;
             background-size: 32px 32px;
             top:-1px;
-            @include mq ($from: tablet) {
+            @include govuk-media-query ($from: tablet) {
                 top:0px;
             }
         }
@@ -51,7 +51,7 @@
     &__items--levels {
         padding-left:40px;
         dt {
-            @include mq ($from: tablet) {
+            @include govuk-media-query ($from: tablet) {
                 display: table-cell;
                 width:50%;
             }
@@ -66,7 +66,7 @@
             background-color:white;
             top:4px;
             left:-33px;
-            @include mq ($from: tablet) {
+            @include govuk-media-query ($from: tablet) {
                 top:7px;
             }
         }
@@ -80,12 +80,12 @@
             border:2px solid govuk-colour('light-blue');
             border-radius: 100%;
             background-color: govuk-colour('light-blue');
-            @include mq ($from: tablet) {
+            @include govuk-media-query ($from: tablet) {
                 top:8px;
             }
         }
         dd {
-            @include mq ($from: tablet) {
+            @include govuk-media-query ($from: tablet) {
                 @include govuk-font($size: 16);
                 display: table-cell;
                 padding-left:1em;
@@ -94,7 +94,7 @@
         }
         .defra-flood-list__item {
             padding-left:0px;
-            @include mq ($from: tablet) {
+            @include govuk-media-query ($from: tablet) {
                 display: table;
                 width:100%;
             }
@@ -104,7 +104,7 @@
         position:absolute;
         content:'';
         top:4px;    
-        @include mq ($from: tablet) {
+        @include govuk-media-query ($from: tablet) {
             top:7px;
         }
         & {
@@ -129,7 +129,7 @@
         padding-bottom:10px;
         padding-left:40px;
         margin-bottom:0px;
-        @include mq ($from: tablet) {
+        @include govuk-media-query ($from: tablet) {
             position:relative;
             padding-bottom:15px;
             margin-bottom:0px;
@@ -138,7 +138,7 @@
             padding-top:10px;
             border-bottom:1px solid $govuk-border-colour;
         }
-        @include mq ($from: tablet) {
+        @include govuk-media-query ($from: tablet) {
             padding-top:15px;
         }
         &:last-child {
@@ -163,7 +163,7 @@
     &__item-meta {
         /*
         div {
-            @include mq ($from: tablet) {
+            @include govuk-media-query ($from: tablet) {
                 display: inline;
             }
         }
@@ -182,7 +182,7 @@
         }
         /*
         dd:after {
-            @include mq ($from: tablet) {
+            @include govuk-media-query ($from: tablet) {
                 content:',';
             }
         }
@@ -213,7 +213,7 @@
             background-image: svg-url('<svg width="32" height="32" viewBox="0 0 32 32" style="fill-rule:evenodd;clip-rule:evenodd;stroke-miterlimit:1.5;"><path d="M21.178,3.5L28.5,10.822L28.5,21.178L21.178,28.5L10.822,28.5L3.5,21.178L3.5,10.822L10.822,3.5L21.178,3.5Z" style="fill:rgb(181,136,64);stroke:white;stroke-width:1px;"/><path d="M8.929,11.87C10.721,11.87 10.639,13.333 12.464,13.333C14.29,13.333 14.175,11.875 16,11.87C17.71,11.865 17.862,13.374 19.536,13.333C21.36,13.289 21.279,11.87 23.071,11.87" style="fill:none;stroke:white;stroke-width:1.25px;stroke-linecap:round;"/><path d="M8.929,19.241C10.721,19.241 10.639,20.704 12.464,20.704C14.29,20.704 14.175,19.246 16,19.241C17.71,19.236 17.862,20.745 19.536,20.704C21.36,20.66 21.279,19.241 23.071,19.241" style="fill:none;stroke:white;stroke-width:1.25px;stroke-linecap:round;"/><path d="M8.929,15.555C10.721,15.555 10.639,17.019 12.464,17.019C14.29,17.019 14.175,15.561 16,15.555C17.71,15.55 17.862,17.059 19.536,17.019C21.36,16.975 21.279,15.555 23.071,15.555" style="fill:none;stroke:white;stroke-width:1.25px;stroke-linecap:round;"/></svg>');
             background-size: 32px 32px;
             top:-1px;
-            @include mq ($from: tablet) {
+            @include govuk-media-query ($from: tablet) {
                 top:0px;
             }
         }
