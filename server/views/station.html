@@ -42,16 +42,16 @@
           <ul class="defra-navbar__list">
             {% if model.navigationLink.upstream %}
             <li class="defra-navbar__item">
-              <a href="/station/{{model.navigationLink.upstream}}">Upstream</a>
+              <a class="govuk-link govuk-link--no-visited-state" href="/station/{{model.navigationLink.upstream}}">Upstream</a>
             </li>
             {% endif %}
             {% if model.navigationLink.downstream %}
             <li class="defra-navbar__item">
-              <a href="/station/{{model.navigationLink.downstream}}">Downstream</a>
+              <a class="govuk-link govuk-link--no-visited-state" href="/station/{{model.navigationLink.downstream}}">Downstream</a>
             </li>
             {% endif %}
             <li class="defra-navbar__item">
-              <a href="/river-and-sea-levels/rloi/{{model.station.id}}">Nearby levels</a>
+              <a class="govuk-link govuk-link--no-visited-state" href="/river-and-sea-levels/rloi/{{model.station.id}}">Nearby levels</a>
             </li>
           </ul>
         </div>
@@ -339,15 +339,17 @@
   window.flood.model.telemetry = {{ model.telemetryRefined | dump | safe }}
   window.flood.model.bingMaps = {{ model.bingMaps | dump | safe }}
 
-  window.flood.model.mapButtonText = 'Map',
-    window.flood.model.mapButtonClass = 'defra-link-icon-s',
-    window.flood.model.mapButtonType = 'link',
-    window.flood.model.mapLayers = 'mv,ri,ti,gr,rf'
+  window.flood.model.mapButtonText = 'Map'
+  window.flood.model.mapButtonClass = 'defra-link-icon-s govuk-link govuk-link--no-visited-state'
+  window.flood.model.mapButtonType = 'link'
+  window.flood.model.mapLayers = 'mv,ri,ti,gr,rf'
+
   window.flood.model.data = {
     button: 'Station:Map View:Station - View map',
     checkBox: 'Station:Map interaction:Map - Layer interaction',
     aerial: 'Station:Map interaction:View-satelite-basemap'
   }
+  
   window.flood.model.centre = window.flood.model.centre.split(','),
     window.flood.model.selectedId = 'stations.' + window.flood.model.id +
     (window.location.pathname.includes('/downstream') ? '/downstream' : ''),

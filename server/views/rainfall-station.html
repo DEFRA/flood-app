@@ -54,7 +54,7 @@
             <div class="defra-navbar__group">
               <ul class="defra-navbar__list">
                 <li class="defra-navbar__item">
-                  <a href="/river-and-sea-levels/rainfall/{{model.stationId }}">Nearby levels</a>
+                  <a class="govuk-link govuk-link--no-visited-state" href="/river-and-sea-levels/rainfall/{{model.stationId }}">Nearby levels</a>
                 </li>
               </ul>
             </div>
@@ -142,7 +142,7 @@
   window.flood.model.zoom = 14
   window.flood.model.selectedId = `rainfall_stations.${window.flood.model.id}`
   window.flood.model.mapButtonText = 'Map',
-  window.flood.model.mapButtonClass = 'defra-link-icon-s',
+  window.flood.model.mapButtonClass = 'defra-link-icon-s govuk-link govuk-link--no-visited-state',
   window.flood.model.mapButtonType = 'link',
   window.flood.model.mapLayers = 'mv,rf',
   window.flood.model.data = {

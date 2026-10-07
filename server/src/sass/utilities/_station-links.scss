@@ -1,0 +1,8 @@
+.govuk-link--no-visited-state {
+  color: govuk-colour("blue");
+  text-decoration: underline;
+
+  &:visited {
+    color: govuk-colour("blue")!important;
+  }
+}
