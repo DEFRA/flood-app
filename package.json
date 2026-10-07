@@ -32,7 +32,7 @@
   "license": "ISC",
   "dependencies": {
     "@airbrake/node": "2.1.9",
-    "@babel/cli": "7.28.6",
+    "@babel/cli": "8.0.4",
     "@babel/core": "7.29.7",
     "@babel/preset-env": "7.29.5",
     "@defra/flood-webchat": "1.0.24",
