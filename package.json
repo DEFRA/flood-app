@@ -65,7 +65,7 @@
     "joi": "18.2.3",
     "jquery": "4.0.0",
     "lodash.isequal": "4.5.0",
-    "moment-timezone": "0.6.2",
+    "moment-timezone": "0.6.3",
     "nunjucks": "3.2.4",
     "ol": "10.9.0",
     "pino": "10.3.1",
