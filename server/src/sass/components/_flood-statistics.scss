@@ -13,7 +13,7 @@
         padding-right: 10px;
         float:left;
         min-width: 6em;
-        @include mq ($from: desktop) {
+        @include govuk-media-query ($from: desktop) {
             width: 25%;
         }
     }
@@ -42,7 +42,7 @@
         border-top: 1px solid $govuk-border-colour;
         border-bottom: 1px solid $govuk-border-colour;
         padding-bottom: 15px; 
-        @include mq ($from: tablet) {
+        @include govuk-media-query ($from: tablet) {
             padding-bottom: 20px;
         }
     }

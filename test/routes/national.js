@@ -110,6 +110,15 @@ describe('Route - National', () => {
         expect(link.getAttribute('href')).to.equal('http://server/cyltfr')
       })
 
+      it('should display the service name once', async () => {
+        const response = await server.inject({ method: 'GET', url: '/' })
+
+        expect(response.statusCode).to.equal(200)
+
+        const root = parse(response.payload)
+        expect(root.querySelectorAll('.govuk-service-navigation__service-name')).to.have.length(1)
+      })
+
       it('should display updated time and date for flood warnings', async () => {
         const options = {
           method: 'GET',
