@@ -115,31 +115,34 @@
         </ul>
       </div>
       <div class="defra-js" style="display: none;">
-        <div class="govuk-form-group">
-          <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-              <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Do you want to accept analytics cookies?</h3>
-            </legend>
-            <div class="govuk-radios govuk-radios--inline">
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="accept-analytics-yes" name="accept-analytics" type="radio"
-                  {{ "checked" if analyticsCookiesSet }}>
-                <label class="govuk-label govuk-radios__label" for="accept-analytics-yes">
-                  Yes
-                </label>
+        <form action="/cookie-preferences" method="POST">
+          <input type="hidden" name="returnUrl" value="/cookies{{ ('?referer=' + (referer | urlencode)) if referer }}">
+          <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Do you want to accept analytics cookies?</h3>
+              </legend>
+              <div class="govuk-radios govuk-radios--inline">
+                <div class="govuk-radios__item">
+                  <input class="govuk-radios__input" id="accept-analytics-yes" name="analytics-consent" type="radio"
+                    value="accept" {{ "checked" if analyticsCookiesSet }}>
+                  <label class="govuk-label govuk-radios__label" for="accept-analytics-yes">
+                    Yes
+                  </label>
+                </div>
+                <div class="govuk-radios__item">
+                  <input class="govuk-radios__input" id="accept-analytics-no" name="analytics-consent" type="radio"
+                    value="reject" {{ "checked" if not analyticsCookiesSet }}>
+                  <label class="govuk-label govuk-radios__label" for="accept-analytics-no">
+                    No
+                  </label>
+                </div>
               </div>
-              <div class="govuk-radios__item">
-                <input class="govuk-radios__input" id="accept-analytics-no" name="accept-analytics" type="radio"
-                  {{ "checked" if not analyticsCookiesSet }}>
-                <label class="govuk-label govuk-radios__label" for="accept-analytics-no">
-                  No
-                </label>
-              </div>
-            </div>
-          </fieldset>
-        </div>
-        <button class="govuk-button govuk-!-margin-top-4 govuk-!-margin-left-0" id="cookies-save"
-          data-module="govuk-button">Save cookie settings</button>
+            </fieldset>
+          </div>
+          <button class="govuk-button govuk-!-margin-top-4 govuk-!-margin-left-0" id="cookies-save" type="submit"
+            data-module="govuk-button">Save cookie settings</button>
+        </form>
       </div>
     </div>
   </div>
