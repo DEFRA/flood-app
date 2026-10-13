@@ -5,7 +5,7 @@
     @extend .govuk-body;
     margin-bottom: 30px;
 
-    @include mq ($from: tablet) {
+    @include govuk-media-query ($from: tablet) {
       margin-bottom: 40px;
     }
 
@@ -28,7 +28,7 @@
   height: 300px;
   width: 100%;
 
-  @include mq ($from: desktop) {
+  @include govuk-media-query ($from: desktop) {
     height: 450px;
   }
 
