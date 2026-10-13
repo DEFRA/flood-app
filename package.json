@@ -30,6 +30,9 @@
   },
   "author": "defra",
   "license": "ISC",
+  "overrides": {
+    "joi": "18.2.9"
+  },
   "dependencies": {
     "@airbrake/node": "2.1.9",
     "@babel/cli": "7.28.6",
@@ -37,7 +40,7 @@
     "@babel/preset-env": "7.29.5",
     "@defra/flood-webchat": "1.0.28",
     "@hapi/boom": "10.0.1",
-    "@hapi/catbox-redis": "7.0.2",
+    "@hapi/catbox-redis": "7.1.0",
     "@hapi/code": "9.0.3",
     "@hapi/h2o2": "10.0.4",
     "@hapi/hapi": "21.4.9",

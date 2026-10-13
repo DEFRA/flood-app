@@ -100,11 +100,14 @@
     homepageUrl: "https://www.gov.uk/",
     rebrand: true
   }) }}
-  {{ govukServiceNavigation({
-    serviceName: "Check for flooding",
-    serviceUrl: "/"
-  }) }}
 
+{% endblock %}
+
+{% block govukServiceNavigation %}
+  {{ govukServiceNavigation({
+    serviceName: serviceName,
+    serviceUrl: serviceUrl
+  }) }}
 {% endblock %}
 
 {% block containerStart %}
