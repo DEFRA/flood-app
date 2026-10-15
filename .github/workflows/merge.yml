@@ -86,4 +86,4 @@ jobs:
       - name: Trigger Merge Release Branch for flood-service
         run: gh workflow run --repo  "$GITHUB_REPOSITORY_OWNER/flood-service" merge.yml -f version="$VERSION"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
