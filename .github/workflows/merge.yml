@@ -16,6 +16,13 @@ jobs:
       - name: Display inputs
         run: echo "${{ github.event.inputs.version }}"
 
+      - name: Check PAT token is still valid
+        run: |
+          gh workflow list --repo "$GITHUB_REPOSITORY_OWNER/flood-service"
+        env:
+          # if this fails then create/regenerate classic PAT and then populate it using `gh secret set GH_WORKFLOW`
+          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
+
       - name: Checkout code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # 4.3.1
         with:
@@ -86,4 +93,4 @@ jobs:
       - name: Trigger Merge Release Branch for flood-service
         run: gh workflow run --repo  "$GITHUB_REPOSITORY_OWNER/flood-service" merge.yml -f version="$VERSION"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_WORKFLOW }}
