@@ -1,33 +1,28 @@
 # Check For Flooding Release
 
 - Version: 9.1.0
-- Proposed Release Date: 
+- Proposed Release Date: 22/10/2026
 - Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/48009/tab/release-report-all-issues
 
-## Sense Check
-
-- Note that this is the definitive release notes for WebOps. The release notes in flood-service and flood-db are for CFF dev team use only.
-- Cross check the list of Jira tickets below with those in the Jira release linked to above and update where needed
-- Add additional Jira tickets from the related release notes in the 'Release 9.1.0' PR's created in:
-  - [flood-service](https://github.com/DEFRA/flood-service)
-
-- Add any required infrastructure changes such as redirects to the infrastructure changes section below
-- Once this sense check is done, delete this section
 
 ## Tickets
 
+- FSR-1693 | Upgrade Gov uk Front end v6.4.0
 
-  
-- FSR-1723 | Use GH_WORKFLOW token to dispatch flood-service release workflow (#1252)
-  
-- FSR-1701 | merge-to-development-then-release (#1237)
+- FSR-1694 | Update Webchat
+
+- FSR-1675 | Bring cookies inline with defra standards
+
+- FSR-1660 | Update map link colour
   
 
 
 ## Instructions
 
 
-1. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+1. Execute LFW_{STAGE}_01_DEPLOY_APPLICATION - Tag - 9.1.0
+
+2. Execute LFW_{STAGE}_03_DEPLOY_Service - Tag - 9.1.0
 
 
 Execute smoke tests and forward results
