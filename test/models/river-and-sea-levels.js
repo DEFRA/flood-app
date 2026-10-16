@@ -141,6 +141,52 @@ describe('Model - River and Sea Levels', () => {
   })
 
   describe('riverViewModel', () => {
+    const baseStation = {
+      status: 'Active',
+      value: 1.2,
+      value_erred: false,
+      iswales: true,
+      lon: 0,
+      lat: 0,
+      external_name: 'Test Station',
+      station_type: 'S',
+      river_qualified_name: 'Test River',
+      trend: 'steady',
+      percentile_5: '1.0',
+      percentile_95: '0.5',
+      value_timestamp: '2022-03-30T12:00:00Z'
+    }
+
+    it('should return "Totals up to" formatted time for rainfall stations', async () => {
+      const stations = [{ ...baseStation, station_type: 'R' }]
+      const result = riverViewModel('testRiverId', stations, 'river')
+      expect(result.stations[0].latestDatetime).to.match(/^Totals up to \d+:\d+[ap]m on \d+ \w+ $/)
+    })
+
+    it('should return "Latest at" formatted time for non-rainfall stations', async () => {
+      const stations = [{ ...baseStation, station_type: 'S' }]
+      const result = riverViewModel('testRiverId', stations, 'river')
+      expect(result.stations[0].latestDatetime).to.match(/^Latest at \d+:\d+[ap]m on \d+ \w+ $/)
+    })
+
+    it('should not set latestDatetime when station is suspended', async () => {
+      const stations = [{ ...baseStation, status: 'Suspended' }]
+      const result = riverViewModel('testRiverId', stations, 'river')
+      expect(result.stations[0].latestDatetime).to.be.undefined()
+    })
+
+    it('should not set latestDatetime when value_timestamp is missing', async () => {
+      const stations = [{ ...baseStation, value_timestamp: null }]
+      const result = riverViewModel('testRiverId', stations, 'river')
+      expect(result.stations[0].latestDatetime).to.be.undefined()
+    })
+
+    it('should not set latestDatetime when value_timestamp is invalid', async () => {
+      const stations = [{ ...baseStation, value_timestamp: 'not-a-date' }]
+      const result = riverViewModel('testRiverId', stations, 'river')
+      expect(result.stations[0].latestDatetime).to.be.undefined()
+    })
+
     it('should set displayData to true for active Welsh stations', async () => {
       const stations = [{
         status: 'Active',

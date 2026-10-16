@@ -15,6 +15,222 @@ import './components/toggle-list-display'
 import './components/toggletip'
 import './components/tooltip'
 
+const deleteCookie = (name) => {
+  const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
+  document.cookie = `${name}=; expires=${expires}; path=/`
+
+  const parts = window.location.hostname.split('.')
+  for (let i = 1; i < parts.length - 1; i++) {
+    document.cookie = `${name}=; expires=${expires}; path=/; domain=.${parts.slice(i).join('.')}`
+  }
+}
+
+const deleteAnalyticsCookies = () => {
+  const analyticsCookieNames = document.cookie
+    .split(';')
+    .map(cookie => cookie.trim().split('=')[0])
+    .filter(name => name === '_ga' || name.startsWith('_ga_'))
+
+  for (const name of analyticsCookieNames) {
+    // The GA4 opt out flag is keyed on the measurement id, which is the _ga_<id> cookie suffix
+    if (name.startsWith('_ga_')) {
+      window[`ga-disable-G-${name.slice('_ga_'.length)}`] = true
+    }
+
+    deleteCookie(name)
+  }
+}
+
+// Tells any already-running GTM tags to stop reading/writing cookies. Needed because
+// GA4's periodic engagement pings keep refreshing _ga cookies as long as its tags stay
+// active, so a one-off cookie delete alone doesn't stop them recreating it moments later
+const revokeAnalyticsConsent = () => {
+  if (typeof window.gtag === 'function') {
+    window.gtag('consent', 'update', { analytics_storage: 'denied', ad_storage: 'denied' })
+  }
+}
+
+const isGtmLoaded = () => {
+  return !!document.querySelector('script[src*="googletagmanager.com/gtm.js"]')
+}
+
+const loadAnalyticsClientSide = () => {
+  const gtmAccId = window?.flood.gtmAccId
+  if (!gtmAccId || isGtmLoaded()) {
+    return
+  }
+
+  window.dataLayer = window.dataLayer || []
+  window.dataLayer.push({
+    'gtm.start': Date.now(),
+    event: 'gtm.js'
+  })
+
+  const firstScript = document.getElementsByTagName('script')[0]
+  const script = document.createElement('script')
+  script.async = true
+  script.src = `https://www.googletagmanager.com/gtm.js?id=${gtmAccId}`
+  firstScript.parentNode.insertBefore(script, firstScript)
+}
+
+const showBannerConfirmation = (choice, banner) => {
+  if (!banner) {
+    return
+  }
+
+  // Messages: 0 = initial prompt, 1 = accept confirmation, 2 = reject confirmation
+  const messages = banner.querySelectorAll('.govuk-cookie-banner__message')
+  if (messages.length < 3) {
+    return
+  }
+
+  messages[0].setAttribute('hidden', '')
+
+  const confirmation = choice === 'accept' ? messages[1] : messages[2]
+  confirmation.removeAttribute('hidden')
+
+  const hideButton = confirmation.querySelector('.govuk-button')
+  if (hideButton) {
+    hideButton.addEventListener('click', (event) => {
+      event.preventDefault()
+      banner.style.display = 'none'
+    })
+  }
+}
+
+const showCookieSettingsConfirmation = () => {
+  const alert = document.getElementById('cookie-notification')
+  if (alert) {
+    alert.removeAttribute('hidden')
+    alert.focus()
+  }
+}
+
+// Stops the confirmation re-appearing on refresh
+const stripCookieChoiceParam = () => {
+  const urlParams = new URLSearchParams(window.location.search)
+  if (!urlParams.has('cookie_choice_made')) {
+    return
+  }
+
+  urlParams.delete('cookie_choice_made')
+  const newSearch = urlParams.toString()
+  window.history.replaceState(null, '', window.location.pathname + (newSearch ? '?' + newSearch : '') + window.location.hash)
+}
+
+// POST-redirect confirmation banner: hide the message without navigating
+const initCookieBannerHideLinks = () => {
+  const cookieBanner = document.getElementById('cookie-banner')
+  if (!cookieBanner) {
+    return
+  }
+
+  cookieBanner.querySelectorAll('.govuk-cookie-banner__message[role="alert"]:not([hidden]) .govuk-button-group a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault()
+      cookieBanner.style.display = 'none'
+    })
+  })
+}
+
+const applyConsentChoice = (choice, form) => {
+  if (choice === 'accept') {
+    loadAnalyticsClientSide()
+  }
+
+  showBannerConfirmation(choice, form.querySelector('.govuk-cookie-banner'))
+
+  if (window.location.pathname === '/cookies') {
+    showCookieSettingsConfirmation()
+  }
+}
+
+const initCookiePreferenceForm = (form) => {
+  // IE11 has no Element.closest, so look for the control that was clicked
+  const findSubmitControl = (node) => {
+    let el = node
+    while (el && el !== form) {
+      const tagName = el.tagName ? el.tagName.toLowerCase() : null
+      if (tagName === 'button' || (tagName === 'input' && (el.type === 'submit' || el.type === 'image'))) {
+        return el
+      }
+      el = el.parentNode
+    }
+    return null
+  }
+
+  // event.submitter is unsupported in IE11 and older Safari, so track the button that started the submission
+  let lastClickedSubmitter = null
+  form.addEventListener('click', (event) => {
+    lastClickedSubmitter = findSubmitControl(event.target)
+  }, true)
+
+  // Bypasses this submit handler so the browser performs an ordinary, non JavaScript post
+  const submitNatively = (submitter) => {
+    if (submitter?.name && submitter.value) {
+      const hiddenInput = document.createElement('input')
+      hiddenInput.type = 'hidden'
+      hiddenInput.name = submitter.name
+      hiddenInput.value = submitter.value
+      form.appendChild(hiddenInput)
+    }
+
+    window.HTMLFormElement.prototype.submit.call(form)
+  }
+
+  const postChoice = (formData) => {
+    return window.fetch(form.getAttribute('action'), {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+      },
+      body: new URLSearchParams(formData).toString(),
+      credentials: 'same-origin'
+    })
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault()
+
+    const submitter = event.submitter || lastClickedSubmitter
+
+    try {
+      const formData = new FormData(form)
+
+      if (submitter?.name && submitter.value && !formData.get(submitter.name)) {
+        formData.set(submitter.name, submitter.value)
+      }
+
+      const selected = formData.get('analytics-consent')
+      const response = (selected === 'accept' || selected === 'reject') ? await postChoice(formData) : null
+
+      if (!response?.ok) {
+        submitNatively(submitter)
+        return
+      }
+
+      const result = await response.json()
+
+      if (result.choice === 'reject') {
+        revokeAnalyticsConsent()
+        deleteAnalyticsCookies()
+
+        // Force a full navigation so any already-running GTM tags (and their
+        // periodic engagement pings) are destroyed rather than left running in
+        // the current page, where they could silently recreate the cookies
+        window.location.href = result.redirectUrl
+        return
+      }
+
+      applyConsentChoice(result.choice, form)
+    } catch {
+      submitNatively(submitter)
+    }
+  })
+}
+
 document.addEventListener('readystatechange', () => {
   if (document.readyState === 'interactive') {
     createAll(SkipLink)
@@ -70,171 +286,17 @@ document.addEventListener('readystatechange', () => {
       })
     }
 
-    const elem = document.getElementById('cookie-banner')
-    let calledGTag = false
-
     // Add tooltips
     window.flood.createTooltips()
 
-    // Check not on cookie settings page
-    if (elem) {
-      const seenCookieMessage = /(^|;)\s*seen_cookie_message=/.test(document.cookie)
-      // Remove banner if seen and avoid flicker
-      if (seenCookieMessage) {
-        elem.parentNode.removeChild(elem)
-      } else {
-        elem.style.display = 'block'
-      }
+    stripCookieChoiceParam()
+    initCookieBannerHideLinks()
+
+    // Consent is persisted server side, so analytics has to be started again on every subsequent page
+    if (window.flood.analyticsConsent) {
+      loadAnalyticsClientSide()
     }
 
-    const cookieButtons = document.getElementById('cookie-buttons')
-    // JS/Non-JS content - We may already havea helper on live for this
-    const nonJsElements = document.getElementsByClassName('defra-no-js')
-    Array.prototype.forEach.call(nonJsElements, function (element) {
-      element.style.display = 'none'
-    })
-    const jsElements = document.getElementsByClassName('defra-js')
-    Array.prototype.forEach.call(jsElements, function (element) {
-      element.removeAttribute('style')
-    })
-
-    if (cookieButtons) {
-      const settingsButton = document.getElementById('cookie-settings')
-      const acceptButton = document.createElement('button')
-      const rejectButton = document.createElement('button')
-
-      // Accept button
-      acceptButton.className = 'defra-cookie-banner__button-accept'
-      acceptButton.innerText = 'Accept analytics cookies'
-      cookieButtons.insertBefore(acceptButton, cookieButtons.childNodes[0])
-
-      // First button in banner (Accept)
-      acceptButton.addEventListener('click', function (e) {
-        e.preventDefault()
-        window.flood.utils.setCookie('set_cookie_usage', 'true', 30)
-        window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
-        calledGTag = true
-        window.flood.utils.setGTagAnalyticsCookies()
-        document.getElementById('cookie-message').style.display = 'none'
-        document.getElementById('cookie-confirmation-type').innerText = 'accepted'
-        document.getElementById('cookie-confirmation').style.display = ''
-      })
-
-      // Reject Button
-      rejectButton.className = 'defra-cookie-banner__button-reject'
-      rejectButton.innerText = 'Reject analytics cookies'
-      cookieButtons.insertBefore(rejectButton, cookieButtons.childNodes[1])
-
-      // Second button in banner (Reject)
-      rejectButton.addEventListener('click', function (e) {
-        e.preventDefault()
-        window.flood.utils.setCookie('seen_cookie_message', 'true', 30)
-
-        document.getElementById('cookie-message').style.display = 'none'
-        document.getElementById('cookie-confirmation-type').innerText = 'rejected'
-        document.getElementById('cookie-confirmation').style.display = ''
-      })
-
-      // Third button in banner (Settings)
-      settingsButton.addEventListener('click', function (e) {
-        e.preventDefault()
-        window.location.href = settingsButton.getAttribute('href')
-      })
-
-      const hideButton = document.getElementById('cookie-hide')
-
-      hideButton.addEventListener('click', function (e) {
-        e.preventDefault()
-        document.getElementById('cookie-banner').style.display = 'none'
-      })
-    }
-
-    const saveButton = document.getElementById('cookies-save')
-
-    function setCookie (name, value, days) {
-      try {
-        window.flood.utils.setCookie(name, value, days)
-      } catch (error) {
-        console.error(`Failed to set cookie ${name}: ${error}`)
-      }
-    }
-
-    function deleteGA4Cookies () {
-      try {
-        const cookies = document.cookie.split(';')
-
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim()
-
-          const name = cookie.split('=')
-
-          // Check if the cookie name starts with "_ga_"
-          if (cookie.indexOf('_ga_') === 0) {
-            deleteCookie(name[0])
-          }
-          if (cookie.indexOf('_ga') === 0) {
-            deleteCookie(name[0])
-          }
-        }
-      } catch (error) {
-        console.error(`Failed to delete GA4 cookies: ${error}`)
-      }
-    }
-
-    function deleteCookie (name) {
-      try {
-        const expires = 'Thu, 01 Jan 1970 00:00:00 UTC'
-        document.cookie = name + '=; expires=' + expires + '; path=/; domain=' + window.location.hostname
-
-        // clears GA cookies that are set on the .defra.cloud domain by default, may be able to remove line
-        // in future once GA4 is fully rolled out to all users
-        document.cookie = name + '=; expires=' + expires + '; path=/; domain=.defra.cloud;'
-      } catch (error) {
-        console.error(`Failed to delete cookie ${name}: ${error}`)
-      }
-    }
-
-    if (saveButton) {
-      saveButton.addEventListener('click', function (e) {
-        e.preventDefault()
-
-        try {
-          const useCookies = document.querySelectorAll('input[name="accept-analytics"]')
-          setCookie('seen_cookie_message', 'true', 30)
-
-          if (useCookies[0].checked) {
-            setCookie('set_cookie_usage', 'true', 30)
-            calledGTag = true
-            deleteCookie('google-analytics-opt-out')
-            window.flood.utils.setGTagAnalyticsCookies()
-          } else {
-            setCookie('set_cookie_usage', '', -1)
-            deleteGA4Cookies()
-            window.flood.utils.disableGoogleAnalytics()
-          }
-
-          const alert = document.getElementById('cookie-notification')
-          alert.removeAttribute('style')
-          alert.focus()
-        } catch (error) {
-          console.error(`An error occurred when handling the save button click event: ${error}`)
-        }
-      })
-    }
-
-    if (!calledGTag) {
-      // finally make Gtag page view if not before and cookie allows
-      if (window.flood.utils.getCookie('set_cookie_usage')) {
-        calledGTag = true
-        window.flood.utils.setGTagAnalyticsCookies()
-      }
-    }
-
-    // If the user has opted out of analytics, ensure that associated cookies
-    // are removed. This is required to prevent asset retrieval from recreating
-    // expired cookies after the user has opted out.
-    if (window.flood.utils.getCookie('google-analytics-opt-out')) {
-      deleteGA4Cookies()
-    }
+    document.querySelectorAll('form[action="/cookie-preferences"]').forEach(initCookiePreferenceForm)
   }
 })

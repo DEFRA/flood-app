@@ -8,8 +8,22 @@ function formatDate (value, format = 'D/M/YY h:mma') {
 }
 
 function formatElapsedTime (datetime) {
+  if (!datetime) {
+    return datetime
+  }
+
+  if (typeof datetime === 'string' && /\bago$/i.test(datetime.trim())) {
+    return datetime
+  }
+
+  const parsedDateTime = moment(String(datetime), moment.ISO_8601, true)
+
+  if (!parsedDateTime.isValid()) {
+    return datetime
+  }
+
   const now = moment.tz(timezone)
-  const diffMinutes = now.diff(moment.tz(datetime, timezone), 'minutes')
+  const diffMinutes = now.diff(parsedDateTime.tz(timezone), 'minutes')
 
   if (diffMinutes < 60) {
     return `${diffMinutes} minutes ago`
