@@ -11,9 +11,6 @@
 - Add additional Jira tickets from the related release notes in the 'Release 9.1.1' PR's created in:
   - [flood-service](https://github.com/DEFRA/flood-service)
 
-- Add any required infrastructure changes such as redirects to the infrastructure changes section below
-- Once this sense check is done, delete this section
-
 ## Tickets
 
 
@@ -24,11 +21,17 @@
 
 ## Instructions
 
+1. Disable LFW_{STAGE}_08_SMOKE_TESTS temporarily to ensure that smoke tests do not run until the new deploments of flood-app and flood-service have become operational
 
-1. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+2. Execute LFW_{STAGE}_01_DEPLOY_APPLICATION - Tag - 9.1.1
 
+3. Execute LFW_{STAGE}_03_DEPLOY_Service - Tag - 9.1.1
 
-Execute smoke tests and forward results
+4. Wait for 60 seconds
+
+5. Enable LFW_{STAGE}_08_SMOKE_TESTS
+
+6. Execute smoke tests and forward results
 
 ## Related Infrastructure Changes Required
 
