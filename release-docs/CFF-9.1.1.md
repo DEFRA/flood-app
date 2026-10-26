@@ -6,15 +6,17 @@
 
 ## Sense Check
 
-- Note that this is the definitive release notes for WebOps. The release notes in flood-service and flood-db are for CFF dev team use only.
+- Note that this is the definitive release notes for WebOps. The release notes in flood-service and flood-data are for CFF dev team use only.
 - Cross check the list of Jira tickets below with those in the Jira release linked to above and update where needed
 - Add additional Jira tickets from the related release notes in the 'Release 9.1.1' PR's created in:
   - [flood-service](https://github.com/DEFRA/flood-service)
+  - [flood-data](https://github.com/DEFRA/flood-data)
 
 ## Tickets
 
 - FSR-1729 | upgrade-nodejs-parent-image (#1256)
-
+- FSR-1738 | flood-data dependency updates (flood-data #237)
+- FSR-1663 | Add GitHub Co-pilot exclusions to application repositories (flood-data #201)
 
 
 ## Instructions
