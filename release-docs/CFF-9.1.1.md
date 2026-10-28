@@ -37,7 +37,10 @@
 
 6. Enable LFW_{STAGE}_08_SMOKE_TESTS
 
-7. Execute smoke tests and forward results - Branch - master
+7. Execute smoke tests and forward results
+
+   TESTS_REPO_BRANCH: master
+
 
 ## Related Infrastructure Changes Required
 
