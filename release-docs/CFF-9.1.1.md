@@ -29,9 +29,9 @@
 
 2. Disable LFW_{STAGE}_08_SMOKE_TESTS temporarily to ensure that smoke tests do not run until the new deploments of flood-app and flood-service have become operational
 
-3. Execute LFW_{STAGE}_01_DEPLOY_APPLICATION - Tag - 9.1.1
+3. Execute LFW_{STAGE}_01_DEPLOY_APPLICATION - Tag - v9.1.1
 
-4. Execute LFW_{STAGE}_03_DEPLOY_Service - Tag - 9.1.1
+4. Execute LFW_{STAGE}_03_DEPLOY_Service - Tag - v9.1.1
 
 5. Wait for 60 seconds
 
