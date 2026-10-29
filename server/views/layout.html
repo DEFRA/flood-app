@@ -87,6 +87,20 @@
   </script>
 
   <script src="{{ assetPath }}/javascripts/canvas-patch.js"></script>
+  <script>
+    (function () {
+      window.addEventListener('DOMContentLoaded', () => {
+        // clean up the URL if the user has clicked the error summary
+        if (window.location.hash === '#geolocation-error') {
+          window.history.replaceState(
+            null,
+            document.title,
+            window.location.pathname + window.location.search
+          )
+        }
+      })
+    })()
+  </script>
 
 {% endblock %}
 
