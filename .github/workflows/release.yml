@@ -83,6 +83,8 @@ jobs:
           FLOOD_APP_SESSION_PASSWORD: "${{ secrets.FLOOD_APP_SESSION_PASSWORD }}"
 
       - name: Create release notes from template (if it exists)
+        env:
+          FORMATTED_DATE: ${{ inputs.proposed_release_date || 'TBC' }}
         run: |
           template_file="release-docs/template.njk"
           if [ -e "$template_file" ]; then
