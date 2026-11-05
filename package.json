@@ -31,7 +31,7 @@
   "author": "defra",
   "license": "ISC",
   "overrides": {
-    "joi": "18.2.9"
+    "joi": "18.3.1"
   },
   "dependencies": {
     "@airbrake/node": "2.1.9",
@@ -65,7 +65,7 @@
     "govuk-frontend": "6.4.0",
     "hapi-pino": "13.0.0",
     "hapi-rate-limit": "8.0.0",
-    "joi": "18.2.9",
+    "joi": "18.3.1",
     "jquery": "4.0.0",
     "lodash.isequal": "4.5.0",
     "moment-timezone": "0.6.2",
