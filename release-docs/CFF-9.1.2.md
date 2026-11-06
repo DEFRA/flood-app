@@ -1,7 +1,7 @@
 # Check For Flooding Release
 
 - Version: 9.1.2
-- Proposed Release Date: 
+- Proposed Release Date: Wednesday 11th November 2026
 - Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/48008/tab/release-report-all-issues
 
 ## Sense Check
@@ -17,17 +17,28 @@
 ## Tickets
 
 
-  
+
 - FSR-1698 | Upgrade to neostandard (#1243)
-  
+
 - FSR-1667 | use my location outside england (#1242)
-  
+
 
 
 ## Instructions
 
 
-1. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+1. Execute LFW_{STAGE}_01_DEPLOY_APPLICATION - Tag - v9.1.2
+
+2. Execute LFW_{STAGE}_03_DEPLOY_Service - Tag - v9.1.2
+
+3. Wait for 60 seconds
+
+4. Enable LFW_{STAGE}_08_SMOKE_TESTS
+
+5. Execute smoke tests and forward results
+
+   TESTS_REPO_BRANCH: master
+
 
 
 Execute smoke tests and forward results
