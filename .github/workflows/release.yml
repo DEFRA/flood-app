@@ -8,7 +8,7 @@ on:
         description: id of release in Jira (from URL)
       proposed_release_date:
         type: string
-        description: Proposed release date (dd/mm/yyyy)
+        description: Proposed release date (dd/mm/yyyy; e.g. 03/06/2026 will display as Wednesday 3rd June 2026 in release notes)
       db_changes:
         type: boolean
         description: Release includes DB changes?

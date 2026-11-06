@@ -3,6 +3,32 @@ const nunjucks = require('nunjucks')
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 
+function formatReleaseDate (date) {
+  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(date)
+  if (!match) {
+    return date
+  }
+
+  const [, day, month, year] = match
+  const parsedDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)))
+  if (parsedDate.getUTCDate() !== Number(day) ||
+      parsedDate.getUTCMonth() !== Number(month) - 1 ||
+      parsedDate.getUTCFullYear() !== Number(year)) {
+    throw new Error(`Invalid release date: ${date}`)
+  }
+
+  const dayNumber = Number(day)
+  const ordinal = dayNumber % 100 >= 11 && dayNumber % 100 <= 13
+    ? 'th'
+    : ({ 1: 'st', 2: 'nd', 3: 'rd' }[dayNumber % 10] || 'th')
+  const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const weekday = weekdays[parsedDate.getUTCDay()]
+  const monthName = months[parsedDate.getUTCMonth()]
+
+  return `${weekday} ${dayNumber}${ordinal} ${monthName} ${year}`
+}
+
 function main () {
   const options = yargs(hideBin(process.argv))
     .option('f', {
@@ -55,7 +81,7 @@ function main () {
 
   const context = {
     version: options.release,
-    date: options.date,
+    date: formatReleaseDate(options.date),
     id: options.id,
     dbChanges: options.dbChanges,
     tickets
@@ -75,4 +101,4 @@ if (require.main === module) {
 }
 /* $lab:coverage:on$ */
 
-module.exports = { main }
+module.exports = { main, formatReleaseDate }
