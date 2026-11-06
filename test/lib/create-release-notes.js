@@ -129,6 +129,47 @@ FSR-789 Add new feature
     expect(output).to.contain('- FSR-789 Add new feature')
   })
 
+  it('should format a proposed release date for release notes', async () => {
+    const outputFile = path.join(testDir, 'release-notes-formatted-date.md')
+    const args = [
+      '-f', path.join(fixturesDir, 'test-commits.txt'),
+      '-o', outputFile,
+      '-d', '03/06/2026',
+      '-r', '8.26.0',
+      '-i', '12345',
+      '-t', path.join(fixturesDir, 'test-template.njk')
+    ]
+
+    const result = await executeCreateReleaseNotes(args)
+    expect(result.success).to.be.true()
+
+    const output = fs.readFileSync(outputFile, 'utf8')
+    expect(output).to.contain('Date: Wednesday 3rd June 2026')
+  })
+
+  it('should include versioned standard deployment instructions', async () => {
+    const outputFile = path.join(testDir, 'release-notes-deployment-instructions.md')
+    const args = [
+      '-f', path.join(fixturesDir, 'test-commits.txt'),
+      '-o', outputFile,
+      '-d', '03/06/2026',
+      '-r', '9.1.2',
+      '-i', '12345',
+      '-t', path.join(__dirname, '..', '..', 'release-docs', 'template.njk')
+    ]
+
+    const result = await executeCreateReleaseNotes(args)
+    expect(result.success).to.be.true()
+
+    const output = fs.readFileSync(outputFile, 'utf8')
+    expect(output).to.contain('1. Execute LFW_{STAGE}_01_DEPLOY_APPLICATION - Tag - v9.1.2')
+    expect(output).to.contain('2. Execute LFW_{STAGE}_03_DEPLOY_Service - Tag - v9.1.2')
+    expect(output).to.contain('3. Wait for 60 seconds')
+    expect(output).to.contain('4. Enable LFW_{STAGE}_08_SMOKE_TESTS')
+    expect(output).to.contain('5. Execute smoke tests and forward results')
+    expect(output).to.contain('TESTS_REPO_BRANCH: master')
+  })
+
   it('should include database changes text when dbChanges flag is set', async () => {
     const outputFile = path.join(testDir, 'release-notes-2.md')
     const args = [
