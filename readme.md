@@ -9,10 +9,9 @@ This is the front end application to check the flooding service
 ### Prerequisites
 
 Running flood-db: https://github.com/DEFRA/flood-db
-Running flood-gis: https://github.com/DEFRA/flood-gis
 Running flood-service: https://github.com/DEFRA/flood-service
 
-Node.js v24.x.x
+Node.js v24
 
 ### Testing the application
 
@@ -20,7 +19,7 @@ Before running tests, ensure that your environment variables are set.
 
 
 ```
-$ npm i
+$ npm ci
 $ npm run test
 ```
 
@@ -57,7 +56,6 @@ For DEFRA employees, examples of these environment variables are available in ou
 | FLOOD_APP_BING_KEY_MAP   | MS Bing Key  |    yes    |         |                             | For location search |
 | FLOOD_APP_BING_KEY_LOCATION   | MS Bing Key  |    yes    |         |                             | For location search |
 | FLOOD_APP_BING_URL   | MS Bing Location Search  |    yes    |         |                             | For location search |
-| FLOOD_APP_GEOSERVER_URL   | Geoserver  |    yes    |         |                             | For maps ows |
 | FLOOD_APP_SERVICE_URL   | flood-service  |    yes    |         |                             | For flood api |
 | FLOOD_APP_GTM_ID   | Google Tag Manager Id |    no    |         |                             |  |
 | FLOOD_APP_NRW_STATION_URL | NRW station search  | yes | https://rivers-and-seas.naturalresources.wales/Station/ | |

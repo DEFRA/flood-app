@@ -28,11 +28,11 @@ module.exports = {
       durationMs: servicems
     } = await getDataWithDefaultAndDuration(floodService.getServiceHealth)
 
-    // test geoserver
+    // test flood warning alerts geospatial endpoint
     const {
-      result: geoserver,
-      durationMs: geoserverms
-    } = await getDataWithDefaultAndDuration(floodService.getGeoserverHealth)
+      result: floodWarningAlerts,
+      durationMs: floodWarningAlertsms
+    } = await getDataWithDefaultAndDuration(floodService.getFloodWarningAlertsHealth)
 
     // station health
     const {
@@ -74,14 +74,14 @@ module.exports = {
       locationService: place ? 'Successful' : 'Failed',
       locationServicems: locationEnd - locationStart,
       service: service ? 'Successful' : 'Failed',
-      geoserver: geoserver ? 'Successful' : 'Failed',
+      floodWarningAlerts: floodWarningAlerts ? 'Successful' : 'Failed',
       database: stations ? 'Successful' : 'Failed',
       databasems: stationsms,
       stationsTimestamp: new Date(parseInt(stations.timestamp) * 1000),
       stationsAgeDays: parseInt((new Date() - new Date(parseInt(stations.timestamp) * 1000)) / (1000 * 60 * 60 * 24)),
       stationsCount: stations.count || 0,
       servicems,
-      geoserverms,
+      floodWarningAlertsms,
       telemetry,
       ffoi
     })
