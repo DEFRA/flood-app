@@ -24,7 +24,7 @@ DB_NAME=floodprdb
 
 3. Execute LFW_{STAGE}_01_DEPLOY_APPLICATION - Tag - v9.2.0
 
-4. Execute LFW_{STAGE}_03_DEPLOY_Service - Tag - v9.2.0
+4. Execute LFW_{STAGE}_03_DEPLOY_SERVICE - Tag - v9.2.0
 
 5. Wait for 60 seconds
 
