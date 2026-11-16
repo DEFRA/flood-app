@@ -28,9 +28,7 @@ DB_NAME=floodprdb
 
 5. Wait for 60 seconds
 
-6. Enable LFW_{STAGE}_08_SMOKE_TESTS
-
-7. Execute smoke tests and forward results
+6. Execute smoke tests and forward results
 
 TESTS_REPO_BRANCH: master
 
