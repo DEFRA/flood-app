@@ -1,29 +1,39 @@
 # Check For Flooding Release
 
 - Version: 9.2.0
-- Proposed Release Date: 
+- Proposed Release Date: 18th November 2026
 - Jira Release Overview: https://eaflood.atlassian.net/projects/FSR/versions/48167/tab/release-report-all-issues
 
-## Sense Check
-
-- Note that this is the definitive release notes for WebOps. The release notes in flood-service and flood-db are for CFF dev team use only.
-- Cross check the list of Jira tickets below with those in the Jira release linked to above and update where needed
-- Add additional Jira tickets from the related release notes in the 'Release 9.2.0' PR's created in:
-  - [flood-service](https://github.com/DEFRA/flood-service)
-
-- Add any required infrastructure changes such as redirects to the infrastructure changes section below
-- Once this sense check is done, delete this section
 
 ## Tickets
 
 
-No flood-app feature tickets included in this release
+- FSR-1717 | Target Area Update 
 
 
 ## Instructions
 
+1. Update LFW_{STAGE}_99_LOAD_FLOOD_ALERT_AREAS jenkins job with the following properties update for the updated database name for production:
 
-1. Execute LFW_{STAGE}_04_UPDATE_FLOOD_APP_AND_SERVICE_PIPELINE
+DB_NAME=floodprdg
+OR
+
+DB_NAME=floodprdb
+
+2. Execute LFW_{STAGE}_99_LOAD_FLOOD_ALERT_AREAS ##NOTE if above property update not made this job will fail.
+
+3. Execute LFW_{STAGE}_01_DEPLOY_APPLICATION - Tag - v9.2.0
+
+4. Execute LFW_{STAGE}_03_DEPLOY_Service - Tag - v9.2.0
+
+5. Wait for 60 seconds
+
+6. Enable LFW_{STAGE}_08_SMOKE_TESTS
+
+7. Execute smoke tests and forward results
+
+TESTS_REPO_BRANCH: master
+
 
 
 Execute smoke tests and forward results
