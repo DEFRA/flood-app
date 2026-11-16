@@ -33,9 +33,6 @@ DB_NAME=floodprdb
 TESTS_REPO_BRANCH: master
 
 
-
-Execute smoke tests and forward results
-
 ## Related Infrastructure Changes Required
 
 - None
