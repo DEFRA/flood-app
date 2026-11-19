@@ -1,14 +1,8 @@
 'use strict'
 
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
-const sinon = require('sinon')
 const Outlook = require('../../server/models/outlook')
 
 describe('Model - Outlook', () => {
-  let sandbox
-
   const outlookFakeData = {
     id: 1107,
     issued_at: '2019-08-08T09:30:00Z',
@@ -23,19 +17,20 @@ describe('Model - Outlook', () => {
       day4: 'increasing',
       day5: 'increasing'
     },
-    sources:
-      [{ surface: 'The surface water flood risk is LOW.\n\nSignificant surface water flooding impacts are possible but not expected across many parts of England and Wales on Friday due to widespread rain and heavy showers. Significant surface water flooding impacts are possible but not expected from thunderstorms on Saturday and Sunday across parts of the north of England.\n\nMinor surface water flooding impacts are possible but not expected from heavy showers on Monday across parts of the north of England and Wales.' },
-        { river: 'The river flood risk is LOW.\n\nSignificant river flooding impacts are possible but not expected across parts of the north Midlands and the north of England on Friday due to widespread rain and heavy showers. Significant river flooding impacts are possible but not expected from thunderstorms on Saturday and Sunday across parts of the north of England. Urban watercourses and small, fast responding river catchments are most at risk.\n\nMinor river flooding impacts are possible but not expected from heavy showers on Monday across parts of the north of England and Wales.\n\nThe ongoing situation at Toddbrook Reservoir is being managed by the relevant agencies to minimise the risk of flooding and has not been specifically shown on this product.' },
-        { coastal: 'The coastal/tidal flood risk is VERY LOW for the next five days.' },
-        { ground: 'The groundwater flood risk is VERY LOW for the next five days.' }],
+    sources: [
+      { surface: 'The surface water flood risk is LOW.\n\nSignificant surface water flooding impacts are possible but not expected across many parts of England and Wales on Friday due to widespread rain and heavy showers. Significant surface water flooding impacts are possible but not expected from thunderstorms on Saturday and Sunday across parts of the north of England.\n\nMinor surface water flooding impacts are possible but not expected from heavy showers on Monday across parts of the north of England and Wales.' },
+      { river: 'The river flood risk is LOW.\n\nSignificant river flooding impacts are possible but not expected across parts of the north Midlands and the north of England on Friday due to widespread rain and heavy showers. Significant river flooding impacts are possible but not expected from thunderstorms on Saturday and Sunday across parts of the north of England. Urban watercourses and small, fast responding river catchments are most at risk.\n\nMinor river flooding impacts are possible but not expected from heavy showers on Monday across parts of the north of England and Wales.\n\nThe ongoing situation at Toddbrook Reservoir is being managed by the relevant agencies to minimise the risk of flooding and has not been specifically shown on this product.' },
+      { coastal: 'The coastal/tidal flood risk is VERY LOW for the next five days.' },
+      { ground: 'The groundwater flood risk is VERY LOW for the next five days.' }
+    ],
     headline: 'Significant surface water and river flooding impacts are possible but not expected across parts of England and Wales on Friday, and across parts of the north of England on Saturday and Sunday. The overall flood risk is LOW.',
     amendments: '',
     future_forecast: '',
     last_modified_at: '2019-08-08T09:27:22Z',
     next_issue_due_at: '2019-08-09T09:30:00Z',
     png_thumbnails_with_days_url: 'https://s3-eu-west-1.amazonaws.com/assets.ffc-environment-agency.fgs.metoffice.gov.uk/fgs-statements/01107-2019-08-08_1030/FGSthumbnails-with-days.png',
-    risk_areas:
-      [{
+    risk_areas: [
+      {
         id: 1950,
         statement_id: 1105,
         updated_at: '2019-08-06T09:22:29Z',
@@ -84,9 +79,9 @@ describe('Model - Outlook', () => {
           }
         ]
       }
-      ],
-    aoc_maps:
-      [{
+    ],
+    aoc_maps: [
+      {
         id: 1183,
         title: 'Specific Areas of Concern Map 3 - Sunday 11 August',
         ordering: 2,
@@ -94,7 +89,8 @@ describe('Model - Outlook', () => {
         ratio: [Array],
         statement_id: 1107,
         polys: [Array]
-      }],
+      }
+    ],
     public_forecast:
     {
       id: 1107,
@@ -107,23 +103,23 @@ describe('Model - Outlook', () => {
     }
   }
 
-  beforeEach(async () => {
-    sandbox = await sinon.createSandbox()
-  })
-
-  afterEach(async () => {
-    await sandbox.restore()
-  })
-
   it('should return outlook data', () => {
     const outlook = new Outlook(outlookFakeData)
 
-    expect(JSON.stringify(outlook.issueDate)).to.be.equal('"2019-08-08T09:30:00.000Z"')
-    expect(outlook.timestampOutlook).to.be.equal(1565256600000)
-    expect(outlook.hasOutlookConcern).to.be.equal(true)
-    expect(outlook.riskLevels).to.be.equal([0, 0, 0, 0, 1])
-    expect(outlook.days[0].idx).to.be.equal(1)
-    expect(outlook.days[0].level).to.be.equal(0)
+    expect(JSON.stringify(outlook.issueDate)).toEqual('"2019-08-08T09:30:00.000Z"')
+    expect(outlook.timestampOutlook).toEqual(1565256600000)
+    expect(outlook.hasOutlookConcern).toEqual(true)
+    expect(outlook.riskLevels).toEqual([0, 0, 0, 0, 1])
+    expect(outlook.days[0].idx).toEqual(1)
+    expect(outlook.days[0].level).toEqual(0)
+  })
+
+  it('should expose the outlook geoJson and outOfDate flag', () => {
+    const outlook = new Outlook(outlookFakeData)
+
+    expect(outlook.geoJson.type).toBe('FeatureCollection')
+    expect(outlook.geoJson.features).not.toBeEmpty()
+    expect(outlook.outOfDate).toBeTrue()
   })
 
   it('should condense multiple lines to single', () => {
@@ -136,7 +132,7 @@ describe('Model - Outlook', () => {
       'Properties may flood and there may be travel disruption.'
     ]
 
-    expect(outlook.full).to.be.equal(fullOutput)
+    expect(outlook.full).toEqual(fullOutput)
   })
 
   it('should set "hasOutlookConcern" to false', () => {
@@ -154,19 +150,20 @@ describe('Model - Outlook', () => {
         day4: 'increasing',
         day5: 'increasing'
       },
-      sources:
-        [{ surface: 'The surface water flood risk is LOW.\n\nSignificant surface water flooding impacts are possible but not expected across many parts of England and Wales on Friday due to widespread rain and heavy showers. Significant surface water flooding impacts are possible but not expected from thunderstorms on Saturday and Sunday across parts of the north of England.\n\nMinor surface water flooding impacts are possible but not expected from heavy showers on Monday across parts of the north of England and Wales.' },
-          { river: 'The river flood risk is LOW.\n\nSignificant river flooding impacts are possible but not expected across parts of the north Midlands and the north of England on Friday due to widespread rain and heavy showers. Significant river flooding impacts are possible but not expected from thunderstorms on Saturday and Sunday across parts of the north of England. Urban watercourses and small, fast responding river catchments are most at risk.\n\nMinor river flooding impacts are possible but not expected from heavy showers on Monday across parts of the north of England and Wales.\n\nThe ongoing situation at Toddbrook Reservoir is being managed by the relevant agencies to minimise the risk of flooding and has not been specifically shown on this product.' },
-          { coastal: 'The coastal/tidal flood risk is VERY LOW for the next five days.' },
-          { ground: 'The groundwater flood risk is VERY LOW for the next five days.' }],
+      sources: [
+        { surface: 'The surface water flood risk is LOW.\n\nSignificant surface water flooding impacts are possible but not expected across many parts of England and Wales on Friday due to widespread rain and heavy showers. Significant surface water flooding impacts are possible but not expected from thunderstorms on Saturday and Sunday across parts of the north of England.\n\nMinor surface water flooding impacts are possible but not expected from heavy showers on Monday across parts of the north of England and Wales.' },
+        { river: 'The river flood risk is LOW.\n\nSignificant river flooding impacts are possible but not expected across parts of the north Midlands and the north of England on Friday due to widespread rain and heavy showers. Significant river flooding impacts are possible but not expected from thunderstorms on Saturday and Sunday across parts of the north of England. Urban watercourses and small, fast responding river catchments are most at risk.\n\nMinor river flooding impacts are possible but not expected from heavy showers on Monday across parts of the north of England and Wales.\n\nThe ongoing situation at Toddbrook Reservoir is being managed by the relevant agencies to minimise the risk of flooding and has not been specifically shown on this product.' },
+        { coastal: 'The coastal/tidal flood risk is VERY LOW for the next five days.' },
+        { ground: 'The groundwater flood risk is VERY LOW for the next five days.' }
+      ],
       headline: 'Significant surface water and river flooding impacts are possible but not expected across parts of England and Wales on Friday, and across parts of the north of England on Saturday and Sunday. The overall flood risk is LOW.',
       amendments: '',
       future_forecast: '',
       last_modified_at: '2019-08-08T09:27:22Z',
       next_issue_due_at: '2019-08-09T09:30:00Z',
       png_thumbnails_with_days_url: 'https://s3-eu-west-1.amazonaws.com/assets.ffc-environment-agency.fgs.metoffice.gov.uk/fgs-statements/01107-2019-08-08_1030/FGSthumbnails-with-days.png',
-      risk_areas:
-        [{
+      risk_areas: [
+        {
           id: 1950,
           statement_id: 1105,
           updated_at: '2019-08-06T09:22:29Z',
@@ -211,9 +208,9 @@ describe('Model - Outlook', () => {
             }
           ]
         }
-        ],
-      aoc_maps:
-        [{
+      ],
+      aoc_maps: [
+        {
           id: 1183,
           title: 'Specific Areas of Concern Map 3 - Sunday 11 August',
           ordering: 2,
@@ -221,9 +218,9 @@ describe('Model - Outlook', () => {
           ratio: [Array],
           statement_id: 1107,
           polys: [Array]
-        }],
-      public_forecast:
-      {
+        }
+      ],
+      public_forecast: {
         id: 1107,
         england_forecast: 'Local flooding from surface water and rivers is possible but not expected in places across much of the north of England on Friday due to widespread rain and heavy showers. Local flooding from rivers is possible, and flooding from surface water possible but not expected, across Wales and much of central and southern England on Friday.\n\nFurther local flooding from surface water and rivers is possible but not expected on Saturday and Sunday in parts of northern England due to heavy, thundery showers.\n\nLocal minor river and surface water flooding impacts are possible but not expected in parts of the north of England on Monday.\n\nProperties may flood and there may be travel disruption.',
         welsh_forecast: 'Mae llifogydd lleol o ddŵr wyneb ac afonydd yn bosibl ond nid yn ddisgwyliedig mewn mannau ar draws rhan fwyaf o ogledd Lloegr ar ddydd Gwener, o ganlyniad i law eang a chawodydd trwm. Mae llifogydd lleol o afonydd yn bosibl, a llifogydd o ddŵr wyneb yn bosibl ond heb eu disgwyl, ar draws Cymru a llawer o Ganolbarth a De Lloegr ar ddydd Gwener.\n\nMae\'n bosibl bydd llifogydd lleol pellach o ddŵr wyneb ac afonydd, ond heb eu disgwyl, ar ddydd Sadwrn a dydd Sul mewn rhannau o ogledd Lloegr oherwydd cawodydd trwm a stormydd. \n\nBydd siawns o effaith lifogydd o afonydd a dwr wyneb lleol mewn rhannau o Ogledd Lloegr ar Ddydd Llun ond nid yw hyn yn ddisgwyliedig. \n\nGall eiddo orlifo ac mae \'n bosibl y bydd tarfu ar deithio.',
@@ -236,7 +233,7 @@ describe('Model - Outlook', () => {
 
     const outlook = new Outlook(outlookFakeData2)
 
-    expect(outlook._hasOutlookConcern).to.be.equal(false)
+    expect(outlook._hasOutlookConcern).toBe(false)
   })
 
   it('should convert coastal area (linestring) to a polygon', () => {
@@ -247,7 +244,8 @@ describe('Model - Outlook', () => {
       detailed_csv_url: 'detailed.csv',
       area_of_concern_url: 'areaofconcern.jpg',
       flood_risk_trend: { day1: 'stable', day2: 'stable', day3: 'stable', day4: 'stable', day5: 'stable' },
-      sources: [{ river: 'The river flood risk is VERY LOW' },
+      sources: [
+        { river: 'The river flood risk is VERY LOW' },
         { coastal: 'The coastal/tidal flood risk is VERY LOW' },
         { ground: 'The groundwater flood risk is VERY LOW' },
         { surface: 'The surface water flood risk is VERY LOW' }
@@ -326,6 +324,6 @@ describe('Model - Outlook', () => {
 
     const outlook = new Outlook(outlookWithCoastal)
 
-    expect(outlook._geoJson.features[0].geometry.type).to.be.equal('Polygon')
+    expect(outlook._geoJson.features[0].geometry.type).toBe('Polygon')
   })
 })

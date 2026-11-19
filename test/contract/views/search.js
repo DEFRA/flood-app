@@ -3,11 +3,6 @@
 const path = require('path')
 const nunjucks = require('nunjucks')
 const { JSDOM } = require('jsdom')
-const Lab = require('@hapi/lab')
-const sinon = require('sinon')
-const { expect } = require('@hapi/code')
-
-const { describe, it } = exports.lab = Lab.script()
 
 const { parse } = require('node-html-parser')
 
@@ -39,22 +34,22 @@ describe('Contract - Views - search partial', () => {
     const locationButton = document.getElementById('use-location-btn')
     const geolocationInput = document.getElementById('geolocation')
 
-    expect(form).to.exist()
-    expect(form.getAttribute('method')).to.equal('post')
-    expect(form.getAttribute('autocomplete')).to.equal('off')
+    expect(form).toBeDefined()
+    expect(form.getAttribute('method')).toBe('post')
+    expect(form.getAttribute('autocomplete')).toBe('off')
 
-    expect(searchButton).to.exist()
-    expect(searchButton.getAttribute('type')).to.equal('submit')
+    expect(searchButton).toBeDefined()
+    expect(searchButton.getAttribute('type')).toBe('submit')
 
-    expect(geolocationInput).to.exist()
-    expect(geolocationInput.getAttribute('type')).to.equal('hidden')
-    expect(geolocationInput.getAttribute('name')).to.equal('geolocation')
-    expect(geolocationInput.getAttribute('value')).to.equal('')
+    expect(geolocationInput).toBeDefined()
+    expect(geolocationInput.getAttribute('type')).toBe('hidden')
+    expect(geolocationInput.getAttribute('name')).toBe('geolocation')
+    expect(geolocationInput.getAttribute('value')).toBe('')
 
-    expect(locationButton).to.exist()
-    expect(locationButton.classList.contains('defra-search__location-button')).to.equal(true)
-    expect(locationButton.classList.contains('app-show-with-js')).to.equal(true)
-    expect(locationButton.classList.contains('js-enabled')).to.equal(false)
+    expect(locationButton).toBeDefined()
+    expect(locationButton.classList.contains('defra-search__location-button')).toBe(true)
+    expect(locationButton.classList.contains('app-show-with-js')).toBe(true)
+    expect(locationButton.classList.contains('js-enabled')).toBe(false)
   })
 
   it('should make the location button JS-enabled when JavaScript runs', async () => {
@@ -66,9 +61,9 @@ describe('Contract - Views - search partial', () => {
 
     const locationButton = dom.window.document.getElementById('use-location-btn')
 
-    expect(locationButton.classList.contains('defra-search__location-button')).to.equal(true)
-    expect(locationButton.classList.contains('app-show-with-js')).to.equal(true)
-    expect(locationButton.classList.contains('js-enabled')).to.equal(true)
+    expect(locationButton.classList.contains('defra-search__location-button')).toBe(true)
+    expect(locationButton.classList.contains('app-show-with-js')).toBe(true)
+    expect(locationButton.classList.contains('js-enabled')).toBe(true)
   })
 
   it('should call geolocation and submit the form when use-location button is pressed', async () => {
@@ -83,10 +78,10 @@ describe('Contract - Views - search partial', () => {
     const form = document.querySelector('form')
     const geolocationInput = document.getElementById('geolocation')
 
-    const submitSpy = sinon.spy()
+    const submitSpy = jest.fn()
     form.submit = submitSpy
 
-    const geolocationStub = sinon.stub().callsFake((onSuccess) => {
+    const geolocationStub = jest.fn((onSuccess) => {
       onSuccess({
         coords: {
           latitude: 51.5007,
@@ -102,9 +97,9 @@ describe('Contract - Views - search partial', () => {
 
     document.getElementById('use-location-btn').click()
 
-    expect(geolocationStub.calledOnce).to.equal(true)
-    expect(geolocationInput.value).to.equal('51.5007,-0.1246')
-    expect(submitSpy.calledOnce).to.equal(true)
+    expect(geolocationStub).toHaveBeenCalledOnce()
+    expect(geolocationInput.value).toBe('51.5007,-0.1246')
+    expect(submitSpy).toHaveBeenCalledOnce()
   })
 
   it('should insert an error summary and error message if geolocation is unavailable', async () => {
@@ -117,15 +112,15 @@ describe('Contract - Views - search partial', () => {
     const errorMessage = root.querySelector('.govuk-error-message')
     const errorMessageCustom = root.querySelector('.defra-search__error-message')
 
-    expect(formGroup).to.exist()
-    expect(formGroup.classNames.includes('govuk-form-group--error')).to.equal(true)
-    expect(errorSummary).to.exist()
-    expect(errorSummaryCustom).to.exist()
-    expect(errorSummary.textContent).to.contain('Turn on location services to use your current location, or enter a town, city or postcode in England')
-    expect(errorMessage).to.exist()
-    expect(errorMessageCustom).to.exist()
-    expect(errorMessage.getAttribute('id')).to.equal('geolocation-error')
-    expect(errorMessage.textContent).to.contain('Turn on location services to use your current location, or enter a town, city or postcode in England')
+    expect(formGroup).toBeDefined()
+    expect(formGroup.classNames.includes('govuk-form-group--error')).toBe(true)
+    expect(errorSummary).toBeDefined()
+    expect(errorSummaryCustom).not.toBeNil()
+    expect(errorSummary.textContent).toContain('Turn on location services to use your current location, or enter a town, city or postcode in England')
+    expect(errorMessage).not.toBeNil()
+    expect(errorMessageCustom).not.toBeNil()
+    expect(errorMessage.getAttribute('id')).toBe('geolocation-error')
+    expect(errorMessage.textContent).toContain('Turn on location services to use your current location, or enter a town, city or postcode in England')
   })
 
   it('should not show the error summary or error message if there is no error', async () => {
@@ -135,7 +130,7 @@ describe('Contract - Views - search partial', () => {
     const errorSummary = root.querySelector('.govuk-error-summary')
     const errorMessage = root.querySelector('.govuk-error-message')
 
-    expect(errorSummary).to.not.exist()
-    expect(errorMessage).to.not.exist()
+    expect(errorSummary).toBeNil()
+    expect(errorMessage).toBeNil()
   })
 })

@@ -1,23 +1,16 @@
 'use strict'
 
 const Hapi = require('@hapi/hapi')
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const sinon = require('sinon')
-const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const { siteUrl } = require('../../server/config')
 // Referer checks compare against the request's own host, so these tests set it explicitly to match siteUrl
 const siteUrlHost = new URL(siteUrl).host
 
 describe('Route - Cookies', () => {
-  let sandbox
   let server
 
   beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/plugins/on-post-handler.js')]
-
-    sandbox = await sinon.createSandbox()
 
     server = Hapi.server({
       port: 3009,
@@ -27,7 +20,6 @@ describe('Route - Cookies', () => {
 
   afterEach(async () => {
     await server.stop()
-    await sandbox.restore()
   })
 
   const cookiesPlugin = {
@@ -47,7 +39,7 @@ describe('Route - Cookies', () => {
 
   const setupGetServer = async (server, { cookiePolicyEncoding = 'base64json' } = {}) => {
     const floodService = require('../../server/services/flood')
-    sandbox.stub(floodService, 'getFloods').callsFake(() => ({ floods: [{ isDummyData: false }] }))
+    jest.spyOn(floodService, 'getFloods').mockImplementation(() => ({ floods: [{ isDummyData: false }] }))
     floodService.floods = await floodService.getFloods()
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/on-post-handler'))
@@ -76,7 +68,7 @@ describe('Route - Cookies', () => {
 
     const floodService = require('../../server/services/flood')
 
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodsData)
+    jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodsData)
 
     floodService.floods = await floodService.getFloods()
 
@@ -112,14 +104,14 @@ describe('Route - Cookies', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('cookies')
-    expect(response.headers['content-type']).to.include('text/html')
-    expect(response.request.headers.referer).to.equal(`${siteUrl}" onclick="alert(10);`)
-    expect(response.payload).to.not.include('Go back to the page you were looking at')
-    expect(response.request.state.seen_cookie_message).to.equal('true')
-    expect(response.request.state.set_cookie_usage).to.equal('true')
-    expect(response.request.state._ga).to.equal('GA1.1.1682777723.1629978783')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('cookies')
+    expect(response.headers['content-type']).toContain('text/html')
+    expect(response.request.headers.referer).toBe(`${siteUrl}" onclick="alert(10);`)
+    expect(response.payload).not.toContain('Go back to the page you were looking at')
+    expect(response.request.state.seen_cookie_message).toBe('true')
+    expect(response.request.state.set_cookie_usage).toBe('true')
+    expect(response.request.state._ga).toBe('GA1.1.1682777723.1629978783')
   })
 
   it('should set cookie preferences with corrupt referer', async () => {
@@ -129,7 +121,7 @@ describe('Route - Cookies', () => {
 
     const floodService = require('../../server/services/flood')
 
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodsData)
+    jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodsData)
 
     floodService.floods = await floodService.getFloods()
 
@@ -164,13 +156,13 @@ describe('Route - Cookies', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('cookies')
-    expect(response.payload).to.not.include('Go back to the page you were looking at')
-    expect(response.headers['content-type']).to.include('text/html')
-    expect(response.request.state.seen_cookie_message).to.equal('true')
-    expect(response.request.state.set_cookie_usage).to.equal('true')
-    expect(response.request.state._ga).to.equal('GA1.1.1682777723.1629978783')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('cookies')
+    expect(response.payload).not.toContain('Go back to the page you were looking at')
+    expect(response.headers['content-type']).toContain('text/html')
+    expect(response.request.state.seen_cookie_message).toBe('true')
+    expect(response.request.state.set_cookie_usage).toBe('true')
+    expect(response.request.state._ga).toBe('GA1.1.1682777723.1629978783')
   })
 
   it('should set cookie preferences with valid referer', async () => {
@@ -180,7 +172,7 @@ describe('Route - Cookies', () => {
 
     const floodService = require('../../server/services/flood')
 
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodsData)
+    jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodsData)
 
     floodService.floods = await floodService.getFloods()
 
@@ -216,13 +208,13 @@ describe('Route - Cookies', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('cookies')
-    expect(response.payload).to.include('Go back to the page you were looking at')
-    expect(response.headers['content-type']).to.include('text/html')
-    expect(response.request.state.seen_cookie_message).to.equal('true')
-    expect(response.request.state.set_cookie_usage).to.equal('true')
-    expect(response.request.state._ga).to.equal('GA1.1.1682777723.1629978783')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('cookies')
+    expect(response.payload).toContain('Go back to the page you were looking at')
+    expect(response.headers['content-type']).toContain('text/html')
+    expect(response.request.state.seen_cookie_message).toBe('true')
+    expect(response.request.state.set_cookie_usage).toBe('true')
+    expect(response.request.state._ga).toBe('GA1.1.1682777723.1629978783')
   })
 
   it('GET /cookies - reads cookie_policy object { analytics: true } and pre-selects Yes', async () => {
@@ -232,8 +224,8 @@ describe('Route - Cookies', () => {
       url: '/cookies',
       headers: { cookie: `cookie_policy=${encodePolicy({ analytics: true })}` }
     })
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('value="accept" checked')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('value="accept" checked')
   })
 
   it('GET /cookies - reads cookie_policy object { analytics: false } and pre-selects No', async () => {
@@ -243,8 +235,8 @@ describe('Route - Cookies', () => {
       url: '/cookies',
       headers: { cookie: `cookie_policy=${encodePolicy({ analytics: false })}` }
     })
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('value="reject" checked')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('value="reject" checked')
   })
 
   it('GET /cookies - falls back to set_cookie_usage=true when no cookie_policy present', async () => {
@@ -254,15 +246,15 @@ describe('Route - Cookies', () => {
       url: '/cookies',
       headers: { cookie: 'set_cookie_usage=true' }
     })
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('value="accept" checked')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('value="accept" checked')
   })
 
   it('GET /cookies - defaults to analytics off when no consent cookies present', async () => {
     await setupGetServer(server)
     const response = await server.inject({ method: 'GET', url: '/cookies' })
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('value="reject" checked')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('value="reject" checked')
   })
 
   it('GET /cookies - reads cookie_policy as a JSON string when encoding is none', async () => {
@@ -272,8 +264,8 @@ describe('Route - Cookies', () => {
       url: '/cookies',
       headers: { cookie: 'cookie_policy={"analytics":true}' }
     })
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('value="accept" checked')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('value="accept" checked')
   })
 
   it('GET /cookies - clears referer when path after siteUrl has no leading slash', async () => {
@@ -283,8 +275,8 @@ describe('Route - Cookies', () => {
       url: '/cookies',
       headers: { referer: `${siteUrl}no-leading-slash`, host: siteUrlHost }
     })
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.not.include('Go back to the page you were looking at')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).not.toContain('Go back to the page you were looking at')
   })
 
   it('POST /cookie-preferences accept - redirects with cookie_choice_made=accept', async () => {
@@ -295,8 +287,8 @@ describe('Route - Cookies', () => {
       payload: 'analytics-consent=accept&returnUrl=/',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
-    expect(response.statusCode).to.equal(302)
-    expect(response.headers.location).to.equal('/?cookie_choice_made=accept')
+    expect(response.statusCode).toBe(302)
+    expect(response.headers.location).toBe('/?cookie_choice_made=accept')
   })
 
   it('POST /cookie-preferences accept - sets cookie_policy, seen_cookie_message and set_cookie_usage', async () => {
@@ -307,9 +299,9 @@ describe('Route - Cookies', () => {
       payload: 'analytics-consent=accept&returnUrl=/',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
-    expect(cookieIsSet(response, 'cookie_policy')).to.be.true()
-    expect(cookieIsSet(response, 'seen_cookie_message')).to.be.true()
-    expect(cookieIsSet(response, 'set_cookie_usage')).to.be.true()
+    expect(cookieIsSet(response, 'cookie_policy')).toBe(true)
+    expect(cookieIsSet(response, 'seen_cookie_message')).toBe(true)
+    expect(cookieIsSet(response, 'set_cookie_usage')).toBe(true)
   })
 
   it('POST /cookie-preferences accept - clears google-analytics-opt-out', async () => {
@@ -323,7 +315,7 @@ describe('Route - Cookies', () => {
         cookie: 'google-analytics-opt-out=true'
       }
     })
-    expect(cookieIsCleared(response, 'google-analytics-opt-out')).to.be.true()
+    expect(cookieIsCleared(response, 'google-analytics-opt-out')).toBe(true)
   })
 
   it('POST /cookie-preferences reject - redirects with cookie_choice_made=reject', async () => {
@@ -334,8 +326,8 @@ describe('Route - Cookies', () => {
       payload: 'analytics-consent=reject&returnUrl=/',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
-    expect(response.statusCode).to.equal(302)
-    expect(response.headers.location).to.equal('/?cookie_choice_made=reject')
+    expect(response.statusCode).toBe(302)
+    expect(response.headers.location).toBe('/?cookie_choice_made=reject')
   })
 
   it('POST /cookie-preferences reject - clears analytics cookies on every parent domain as well as host only', async () => {
@@ -355,17 +347,17 @@ describe('Route - Cookies', () => {
     const clearedDynamicGa = setCookies(response).filter(c => c.startsWith('_ga_ABC123=;'))
 
     // Host only plus each parent domain level
-    expect(clearedGa).to.have.length(5)
-    expect(clearedDynamicGa).to.have.length(5)
+    expect(clearedGa).toHaveLength(5)
+    expect(clearedDynamicGa).toHaveLength(5)
 
     const domains = clearedGa.map(c => (/Domain=([^;]+)/.exec(c) || [])[1])
-    expect(domains).to.contain([
+    expect(domains).toEqual(expect.arrayContaining([
       undefined,
       '.www.check-for-flooding.service.gov.uk',
       '.check-for-flooding.service.gov.uk',
       '.service.gov.uk',
       '.gov.uk'
-    ])
+    ]))
   })
 
   it('POST /cookie-preferences reject - sets google-analytics-opt-out and clears set_cookie_usage', async () => {
@@ -376,8 +368,8 @@ describe('Route - Cookies', () => {
       payload: 'analytics-consent=reject&returnUrl=/',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
-    expect(cookieIsSet(response, 'google-analytics-opt-out')).to.be.true()
-    expect(cookieIsCleared(response, 'set_cookie_usage')).to.be.true()
+    expect(cookieIsSet(response, 'google-analytics-opt-out')).toBe(true)
+    expect(cookieIsCleared(response, 'set_cookie_usage')).toBe(true)
   })
 
   it('POST /cookie-preferences reject - clears GA cookies present on the request', async () => {
@@ -391,8 +383,8 @@ describe('Route - Cookies', () => {
         cookie: '_ga=GA1.1.123.456; _gid=GA1.1.111.222'
       }
     })
-    expect(cookieIsCleared(response, '_ga')).to.be.true()
-    expect(cookieIsCleared(response, '_gid')).to.be.true()
+    expect(cookieIsCleared(response, '_ga')).toBe(true)
+    expect(cookieIsCleared(response, '_gid')).toBe(true)
   })
 
   it('POST /cookie-preferences reject on .defra.cloud - adds domain-scoped clear for GA cookies', async () => {
@@ -408,7 +400,7 @@ describe('Route - Cookies', () => {
       }
     })
     const hasDefraCloudClear = setCookies(response).some(c => c.startsWith('_ga=;') && c.includes('defra.cloud'))
-    expect(hasDefraCloudClear).to.be.true()
+    expect(hasDefraCloudClear).toBe(true)
   })
 
   it('POST /cookie-preferences - invalid choice is treated as reject', async () => {
@@ -419,8 +411,8 @@ describe('Route - Cookies', () => {
       payload: 'analytics-consent=invalid&returnUrl=/',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
-    expect(response.statusCode).to.equal(302)
-    expect(response.headers.location).to.equal('/?cookie_choice_made=reject')
+    expect(response.statusCode).toBe(302)
+    expect(response.headers.location).toBe('/?cookie_choice_made=reject')
   })
 
   it('POST /cookie-preferences - uses valid relative returnUrl in redirect', async () => {
@@ -431,7 +423,7 @@ describe('Route - Cookies', () => {
       payload: 'analytics-consent=accept&returnUrl=/some-page',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
-    expect(response.headers.location).to.equal('/some-page?cookie_choice_made=accept')
+    expect(response.headers.location).toBe('/some-page?cookie_choice_made=accept')
   })
 
   it('POST /cookie-preferences - sanitises external returnUrl to /', async () => {
@@ -442,7 +434,7 @@ describe('Route - Cookies', () => {
       payload: 'analytics-consent=accept&returnUrl=http://evil.com',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
-    expect(response.headers.location).to.equal('/?cookie_choice_made=accept')
+    expect(response.headers.location).toBe('/?cookie_choice_made=accept')
   })
 
   it('POST /cookie-preferences - sanitises protocol-relative returnUrl to /', async () => {
@@ -453,7 +445,7 @@ describe('Route - Cookies', () => {
       payload: 'analytics-consent=accept&returnUrl=//evil.com',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
-    expect(response.headers.location).to.equal('/?cookie_choice_made=accept')
+    expect(response.headers.location).toBe('/?cookie_choice_made=accept')
   })
 
   it('POST /cookie-preferences - defaults returnUrl to / when missing', async () => {
@@ -464,7 +456,7 @@ describe('Route - Cookies', () => {
       payload: 'analytics-consent=accept',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
-    expect(response.headers.location).to.equal('/?cookie_choice_made=accept')
+    expect(response.headers.location).toBe('/?cookie_choice_made=accept')
   })
 
   it('POST /cookie-preferences - returns JSON for AJAX accept (X-Requested-With)', async () => {
@@ -478,11 +470,11 @@ describe('Route - Cookies', () => {
         'x-requested-with': 'XMLHttpRequest'
       }
     })
-    expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).toBe(200)
     const result = JSON.parse(response.payload)
-    expect(result.choice).to.equal('accept')
-    expect(result.redirectUrl).to.equal('/?cookie_choice_made=accept')
-    expect(cookieIsSet(response, 'cookie_policy')).to.be.true()
+    expect(result.choice).toBe('accept')
+    expect(result.redirectUrl).toBe('/?cookie_choice_made=accept')
+    expect(cookieIsSet(response, 'cookie_policy')).toBe(true)
   })
 
   it('POST /cookie-preferences - returns JSON for AJAX reject (Accept: application/json)', async () => {
@@ -496,11 +488,11 @@ describe('Route - Cookies', () => {
         accept: 'application/json'
       }
     })
-    expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).toBe(200)
     const result = JSON.parse(response.payload)
-    expect(result.choice).to.equal('reject')
-    expect(result.redirectUrl).to.equal('/?cookie_choice_made=reject')
-    expect(cookieIsSet(response, 'google-analytics-opt-out')).to.be.true()
+    expect(result.choice).toBe('reject')
+    expect(result.redirectUrl).toBe('/?cookie_choice_made=reject')
+    expect(cookieIsSet(response, 'google-analytics-opt-out')).toBe(true)
   })
 
   // ---- GET /cookies - referer sanitisation ----
@@ -512,8 +504,8 @@ describe('Route - Cookies', () => {
       url: '/cookies',
       headers: { referer: siteUrl, host: siteUrlHost }
     })
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include(`href="${siteUrl}"`)
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain(`href="${siteUrl}"`)
   })
 
   it('GET /cookies - carries the referer through the save form', async () => {
@@ -524,8 +516,8 @@ describe('Route - Cookies', () => {
       url: '/cookies',
       headers: { referer: levelsUrl, host: siteUrlHost }
     })
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include(`name="returnUrl" value="/cookies?referer=${encodeURIComponent(levelsUrl)}"`)
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain(`name="returnUrl" value="/cookies?referer=${encodeURIComponent(levelsUrl)}"`)
   })
 
   it('GET /cookies - prefers the carried referer over the header after a save reloads the page', async () => {
@@ -536,8 +528,8 @@ describe('Route - Cookies', () => {
       url: `/cookies?referer=${encodeURIComponent(levelsUrl)}&cookie_choice_made=reject`,
       headers: { referer: siteUrl + '/cookies', host: siteUrlHost }
     })
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include(`href="${levelsUrl}"`)
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain(`href="${levelsUrl}"`)
   })
 
   it('GET /cookies - ignores a referer pointing back at the cookies page', async () => {
@@ -547,8 +539,8 @@ describe('Route - Cookies', () => {
       url: '/cookies',
       headers: { referer: siteUrl + '/cookies', host: siteUrlHost }
     })
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.not.include('Go back to the page you were looking at')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).not.toContain('Go back to the page you were looking at')
   })
 
   it('GET /cookies - ignores an off site referer', async () => {
@@ -558,8 +550,8 @@ describe('Route - Cookies', () => {
       url: '/cookies',
       headers: { referer: 'https://evil.example.com/page' }
     })
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.not.include('Go back to the page you were looking at')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).not.toContain('Go back to the page you were looking at')
   })
 
   it('GET /cookies - ignores an off site referer supplied as a query parameter', async () => {
@@ -568,15 +560,15 @@ describe('Route - Cookies', () => {
       method: 'GET',
       url: `/cookies?referer=${encodeURIComponent('https://evil.example.com/page')}`
     })
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.not.include('href="https://evil.example.com')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).not.toContain('href="https://evil.example.com')
   })
 
   it('GET /cookies - offers no link back when there is no referer', async () => {
     await setupGetServer(server)
     const response = await server.inject({ method: 'GET', url: '/cookies' })
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.not.include('Go back to the page you were looking at')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).not.toContain('Go back to the page you were looking at')
   })
 
   it('GET /cookies - ignores a repeated referer query parameter', async () => {
@@ -586,8 +578,8 @@ describe('Route - Cookies', () => {
       url: `/cookies?referer=${encodeURIComponent(siteUrl)}&referer=${encodeURIComponent(siteUrl + '/levels')}`,
       headers: { host: siteUrlHost }
     })
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.not.include('Go back to the page you were looking at')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).not.toContain('Go back to the page you were looking at')
   })
 
   it('POST /cookie-preferences - keeps a fragment at the end of the redirect url', async () => {
@@ -598,7 +590,7 @@ describe('Route - Cookies', () => {
       payload: 'analytics-consent=accept&returnUrl=' + encodeURIComponent('/river-and-sea-levels#map'),
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
-    expect(response.headers.location).to.equal('/river-and-sea-levels?cookie_choice_made=accept#map')
+    expect(response.headers.location).toBe('/river-and-sea-levels?cookie_choice_made=accept#map')
   })
 
   it('POST /cookie-preferences - keeps the carried referer on the redirect back to the cookies page', async () => {
@@ -610,7 +602,7 @@ describe('Route - Cookies', () => {
       payload: 'analytics-consent=reject&returnUrl=' + encodeURIComponent(returnUrl),
       headers: { 'content-type': 'application/x-www-form-urlencoded', host: siteUrlHost }
     })
-    expect(response.headers.location).to.equal(`${returnUrl}&cookie_choice_made=reject`)
+    expect(response.headers.location).toBe(`${returnUrl}&cookie_choice_made=reject`)
   })
 
   // ---- POST /cookie-preferences - payload edge cases ----
@@ -621,9 +613,9 @@ describe('Route - Cookies', () => {
       method: 'POST',
       url: '/cookie-preferences'
     })
-    expect(response.statusCode).to.equal(302)
-    expect(response.headers.location).to.equal('/?cookie_choice_made=reject')
-    expect(cookieIsSet(response, 'google-analytics-opt-out')).to.be.true()
+    expect(response.statusCode).toBe(302)
+    expect(response.headers.location).toBe('/?cookie_choice_made=reject')
+    expect(cookieIsSet(response, 'google-analytics-opt-out')).toBe(true)
   })
 
   it('POST /cookie-preferences - defaults the redirect when returnUrl is missing', async () => {
@@ -634,8 +626,8 @@ describe('Route - Cookies', () => {
       payload: 'analytics-consent=accept',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }
     })
-    expect(response.statusCode).to.equal(302)
-    expect(response.headers.location).to.equal('/?cookie_choice_made=accept')
+    expect(response.statusCode).toBe(302)
+    expect(response.headers.location).toBe('/?cookie_choice_made=accept')
   })
 
   it('POST /cookie-preferences - defaults the redirect when returnUrl is not a string', async () => {
@@ -646,7 +638,7 @@ describe('Route - Cookies', () => {
       payload: { 'analytics-consent': 'accept', returnUrl: 123 },
       headers: { 'content-type': 'application/json' }
     })
-    expect(response.statusCode).to.equal(302)
-    expect(response.headers.location).to.equal('/?cookie_choice_made=accept')
+    expect(response.statusCode).toBe(302)
+    expect(response.headers.location).toBe('/?cookie_choice_made=accept')
   })
 })

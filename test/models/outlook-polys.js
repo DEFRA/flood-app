@@ -1,8 +1,5 @@
 'use strict'
 
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const { describe, it } = exports.lab = Lab.script()
 const OutlookPolys = require('../../server/models/outlook-polys')
 const outlookOverlaping = require('../data/fgsOverlaping.json')
 const outlook = require('../data/fgs.json')
@@ -132,7 +129,7 @@ describe('Model - Outlook Polys', () => {
       ]
     }
 
-    expect(result).to.equal(expected)
+    expect(result).toEqual(expected)
   })
 
   it('should produce surface and river over two days', () => {
@@ -197,7 +194,7 @@ describe('Model - Outlook Polys', () => {
       ]
     }
 
-    expect(result).to.equal(expected)
+    expect(result).toEqual(expected)
   })
 
   it('should produce an empty array from a given location', () => {
@@ -207,6 +204,6 @@ describe('Model - Outlook Polys', () => {
       polys: []
     }
 
-    expect(result).to.equal(expected)
+    expect(result).toEqual(expected)
   })
 })

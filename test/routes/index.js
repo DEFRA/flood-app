@@ -1,18 +1,11 @@
 'use strict'
 
 const Hapi = require('@hapi/hapi')
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const sinon = require('sinon')
-const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 
 describe('Route - Index', () => {
-  let sandbox
   let server
 
   beforeEach(async () => {
-    sandbox = await sinon.createSandbox()
-
     server = Hapi.server({
       port: 3009,
       host: 'localhost'
@@ -21,7 +14,6 @@ describe('Route - Index', () => {
 
   afterEach(async () => {
     await server.stop()
-    await sandbox.restore()
   })
 
   it('should redirect when visiting: /start-page', async () => {
@@ -45,7 +37,7 @@ describe('Route - Index', () => {
     }
 
     const response = await server.inject(options)
-    expect(response.statusCode).to.equal(301)
+    expect(response.statusCode).toBe(301)
   })
 
   it('should 200 when visiting: /sms-auto-opt-in-info', async () => {
@@ -70,9 +62,9 @@ describe('Route - Index', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('This phone number has been automatically opted-in to receive flood warnings')
-    expect(response.headers['content-type']).to.include('text/html')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('This phone number has been automatically opted-in to receive flood warnings')
+    expect(response.headers['content-type']).toContain('text/html')
   })
 
   it('should 200 when visiting: /cookies', async () => {
@@ -97,10 +89,10 @@ describe('Route - Index', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('cookies')
-    expect(response.payload.match(/class="govuk-service-navigation__service-name"/g)).to.have.length(1)
-    expect(response.headers['content-type']).to.include('text/html')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('cookies')
+    expect(response.payload.match(/class="govuk-service-navigation__service-name"/g)).toHaveLength(1)
+    expect(response.headers['content-type']).toContain('text/html')
   })
 
   it('should 200 when visiting: /terms-and-conditions', async () => {
@@ -125,9 +117,9 @@ describe('Route - Index', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('terms and conditions')
-    expect(response.headers['content-type']).to.include('text/html')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('terms and conditions')
+    expect(response.headers['content-type']).toContain('text/html')
   })
 
   it('should 200 when visiting: /privacy-notice', async () => {
@@ -152,9 +144,9 @@ describe('Route - Index', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('Privacy notice')
-    expect(response.headers['content-type']).to.include('text/html')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('Privacy notice')
+    expect(response.headers['content-type']).toContain('text/html')
   })
 
   it('should 200 when visiting: /how-we-measure-river-sea-groundwater-levels', async () => {
@@ -179,9 +171,9 @@ describe('Route - Index', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('How we measure river, sea and groundwater levels')
-    expect(response.headers['content-type']).to.include('text/html')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('How we measure river, sea and groundwater levels')
+    expect(response.headers['content-type']).toContain('text/html')
   })
 
   it('should 200 when visiting: /accessibility-statement', async () => {
@@ -206,9 +198,9 @@ describe('Route - Index', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('<h1 class="govuk-heading-xl">Accessibility statement for Check for flooding</h1>')
-    expect(response.headers['content-type']).to.include('text/html')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('<h1 class="govuk-heading-xl">Accessibility statement for Check for flooding</h1>')
+    expect(response.headers['content-type']).toContain('text/html')
   })
 
   it('should 200 when visiting: /api/places.geojson', async () => {
@@ -233,6 +225,6 @@ describe('Route - Index', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).toBe(200)
   })
 })

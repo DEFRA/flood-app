@@ -1,26 +1,19 @@
 'use strict'
 
-const Lab = require('@hapi/lab')
 const Hapi = require('@hapi/hapi')
 const boom = require('@hapi/boom')
-const { expect } = require('@hapi/code')
-const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
-const sinon = require('sinon')
 
 describe('Plugin - Error Pages', () => {
-  let sandbox
   let server
   let logSpies
   let fakeResponse
 
   beforeEach(async () => {
     logSpies = {
-      error: sinon.spy(),
-      debug: sinon.spy(),
-      warn: sinon.spy()
+      error: jest.fn(),
+      debug: jest.fn(),
+      warn: jest.fn()
     }
-
-    sandbox = await sinon.createSandbox()
 
     server = Hapi.server({
       port: 3000,
@@ -53,7 +46,6 @@ describe('Plugin - Error Pages', () => {
 
   afterEach(async () => {
     await server.stop()
-    await sandbox.restore()
   })
 
   it('should handle 404', async () => {
@@ -65,9 +57,9 @@ describe('Plugin - Error Pages', () => {
     fakeResponse = boom.notFound('something went wrong')
 
     const response = await server.inject(options)
-    expect(logSpies.debug.called).to.equal(true)
-    expect(response.statusCode).to.equal(404)
-    expect(response.payload).to.include('Page not found')
+    expect(logSpies.debug).toHaveBeenCalled()
+    expect(response.statusCode).toBe(404)
+    expect(response.payload).toContain('Page not found')
   })
 
   it('should move 400s with the message \'Invalid request params input\' to 404 pages', async () => {
@@ -80,9 +72,9 @@ describe('Plugin - Error Pages', () => {
 
     const response = await server.inject(options)
 
-    expect(logSpies.debug.called).to.equal(true)
-    expect(response.statusCode).to.equal(404)
-    expect(response.payload).to.include('Page not found')
+    expect(logSpies.debug).toHaveBeenCalled()
+    expect(response.statusCode).toBe(404)
+    expect(response.payload).toContain('Page not found')
   })
 
   it('should handle rate limited requests', async () => {
@@ -95,9 +87,9 @@ describe('Plugin - Error Pages', () => {
 
     const response = await server.inject(options)
 
-    expect(logSpies.warn.called).to.equal(true)
-    expect(response.statusCode).to.equal(429)
-    expect(response.payload).to.include('Too many requests made for this page')
+    expect(logSpies.warn).toHaveBeenCalled()
+    expect(response.statusCode).toBe(429)
+    expect(response.payload).toContain('Too many requests made for this page')
   })
 
   it('should handle 5xx errors', async () => {
@@ -110,8 +102,8 @@ describe('Plugin - Error Pages', () => {
 
     const response = await server.inject(options)
 
-    expect(logSpies.error.called).to.equal(true)
-    expect(response.statusCode).to.equal(500)
-    expect(response.payload).to.include('Sorry, there is a problem with the service')
+    expect(logSpies.error).toHaveBeenCalled()
+    expect(response.statusCode).toBe(500)
+    expect(response.payload).toContain('Sorry, there is a problem with the service')
   })
 })

@@ -1,10 +1,5 @@
 'use strict'
 
-const Lab = require('@hapi/lab')
-const { describe, it, beforeEach } = exports.lab = Lab.script()
-const { expect } = require('@hapi/code')
-const sinon = require('sinon')
-
 describe('Server initialization functions - [server/lib/server-helpers.js]', () => {
   const { registerCookieStates, registerLifecycleHooks } = require('../../server/lib/server-helpers')
   const { THIRTY_DAYS_MS, FOUR_HUNDRED_DAYS_MS } = require('../../server/constants')
@@ -12,8 +7,8 @@ describe('Server initialization functions - [server/lib/server-helpers.js]', () 
 
   beforeEach(() => {
     mockServer = {
-      state: sinon.spy(),
-      ext: sinon.spy()
+      state: jest.fn(),
+      ext: jest.fn()
     }
   })
 
@@ -30,7 +25,7 @@ describe('Server initialization functions - [server/lib/server-helpers.js]', () 
 
       registerCookieStates(mockServer, consentCookieOptions)
 
-      expect(mockServer.state.callCount).to.equal(7)
+      expect(mockServer.state.mock.calls.length).toBe(7)
     })
 
     it('registers set_cookie_usage with correct options', () => {
@@ -45,10 +40,10 @@ describe('Server initialization functions - [server/lib/server-helpers.js]', () 
 
       registerCookieStates(mockServer, consentCookieOptions)
 
-      const setCookieUsageCall = mockServer.state.getCalls().find(call => call.args[0] === 'set_cookie_usage')
-      expect(setCookieUsageCall).to.exist()
-      expect(setCookieUsageCall.args[1].ttl).to.equal(THIRTY_DAYS_MS)
-      expect(setCookieUsageCall.args[1].encoding).to.equal('none')
+      const setCookieUsageCall = mockServer.state.mock.calls.find(args => args[0] === 'set_cookie_usage')
+      expect(setCookieUsageCall).not.toBeNil()
+      expect(setCookieUsageCall[1].ttl).toEqual(THIRTY_DAYS_MS)
+      expect(setCookieUsageCall[1].encoding).toBe('none')
     })
 
     it('registers cookie_policy with base64json encoding', () => {
@@ -63,10 +58,10 @@ describe('Server initialization functions - [server/lib/server-helpers.js]', () 
 
       registerCookieStates(mockServer, consentCookieOptions)
 
-      const cookiePolicyCall = mockServer.state.getCalls().find(call => call.args[0] === 'cookie_policy')
-      expect(cookiePolicyCall).to.exist()
-      expect(cookiePolicyCall.args[1].encoding).to.equal('base64json')
-      expect(cookiePolicyCall.args[1].ttl).to.equal(THIRTY_DAYS_MS)
+      const cookiePolicyCall = mockServer.state.mock.calls.find(args => args[0] === 'cookie_policy')
+      expect(cookiePolicyCall).not.toBeNil()
+      expect(cookiePolicyCall[1].encoding).toBe('base64json')
+      expect(cookiePolicyCall[1].ttl).toEqual(THIRTY_DAYS_MS)
     })
 
     it('registers seen_cookie_message with FOUR_HUNDRED_DAYS_MS TTL', () => {
@@ -81,9 +76,9 @@ describe('Server initialization functions - [server/lib/server-helpers.js]', () 
 
       registerCookieStates(mockServer, consentCookieOptions)
 
-      const seenMessageCall = mockServer.state.getCalls().find(call => call.args[0] === 'seen_cookie_message')
-      expect(seenMessageCall).to.exist()
-      expect(seenMessageCall.args[1].ttl).to.equal(FOUR_HUNDRED_DAYS_MS)
+      const seenMessageCall = mockServer.state.mock.calls.find(args => args[0] === 'seen_cookie_message')
+      expect(seenMessageCall).not.toBeNil()
+      expect(seenMessageCall[1].ttl).toEqual(FOUR_HUNDRED_DAYS_MS)
     })
 
     it('registers google-analytics-opt-out cookie', () => {
@@ -98,8 +93,8 @@ describe('Server initialization functions - [server/lib/server-helpers.js]', () 
 
       registerCookieStates(mockServer, consentCookieOptions)
 
-      const optOutCall = mockServer.state.getCalls().find(call => call.args[0] === 'google-analytics-opt-out')
-      expect(optOutCall).to.exist()
+      const optOutCall = mockServer.state.mock.calls.find(args => args[0] === 'google-analytics-opt-out')
+      expect(optOutCall).not.toBeNil()
     })
 
     it('registers _ga, _gid, and _gat analytics cookies', () => {
@@ -114,10 +109,10 @@ describe('Server initialization functions - [server/lib/server-helpers.js]', () 
 
       registerCookieStates(mockServer, consentCookieOptions)
 
-      const stateNames = mockServer.state.getCalls().map(call => call.args[0])
-      expect(stateNames).to.include('_ga')
-      expect(stateNames).to.include('_gid')
-      expect(stateNames).to.include('_gat')
+      const stateNames = mockServer.state.mock.calls.map(args => args[0])
+      expect(stateNames).toContain('_ga')
+      expect(stateNames).toContain('_gid')
+      expect(stateNames).toContain('_gat')
     })
 
     it('passes secure flag from consentCookieOptions to all states', () => {
@@ -133,8 +128,8 @@ describe('Server initialization functions - [server/lib/server-helpers.js]', () 
       registerCookieStates(mockServer, consentCookieOptions)
 
       // Check that isSecure is passed to consent-related cookies
-      const setCookieUsageCall = mockServer.state.getCalls().find(call => call.args[0] === 'set_cookie_usage')
-      expect(setCookieUsageCall.args[1].isSecure).to.equal(true)
+      const setCookieUsageCall = mockServer.state.mock.calls.find(args => args[0] === 'set_cookie_usage')
+      expect(setCookieUsageCall[1].isSecure).toEqual(true)
     })
   })
 
@@ -142,129 +137,154 @@ describe('Server initialization functions - [server/lib/server-helpers.js]', () 
     it('registers onPreResponse lifecycle hook', () => {
       registerLifecycleHooks(mockServer)
 
-      expect(mockServer.ext.calledWith('onPreResponse')).to.be.true()
+      expect(mockServer.ext).toHaveBeenCalledWith('onPreResponse', expect.anything())
     })
 
     it('registers hook with a function handler', () => {
       registerLifecycleHooks(mockServer)
 
-      const extCall = mockServer.ext.getCall(0)
-      expect(extCall.args[1]).to.be.a.function()
+      const extCall = mockServer.ext.mock.calls[0]
+      expect(extCall[1]).toBeFunction()
     })
 
     it('hook does not clear cookies when analytics consent is not set', () => {
       registerLifecycleHooks(mockServer)
 
-      const handler = mockServer.ext.getCall(0).args[1]
+      const handler = mockServer.ext.mock.calls[0][1]
       const request = {
         state: {},
-        response: { isBoom: false, unstate: sinon.spy() },
+        response: { isBoom: false, unstate: jest.fn() },
         info: { hostname: 'example.com' }
       }
       const h = { continue: 'continue' }
 
       handler(request, h)
 
-      expect(request.response.unstate.called).to.be.false()
+      expect(request.response.unstate).not.toHaveBeenCalled()
     })
 
     it('hook does not clear cookies when analytics consent is true', () => {
       registerLifecycleHooks(mockServer)
 
-      const handler = mockServer.ext.getCall(0).args[1]
+      const handler = mockServer.ext.mock.calls[0][1]
       const request = {
         state: { cookie_policy: { analytics: true }, _ga: 'value' },
-        response: { isBoom: false, unstate: sinon.spy() },
+        response: { isBoom: false, unstate: jest.fn() },
         info: { hostname: 'example.com' }
       }
       const h = { continue: 'continue' }
 
       handler(request, h)
 
-      expect(request.response.unstate.called).to.be.false()
+      expect(request.response.unstate).not.toHaveBeenCalled()
     })
 
     it('hook clears cookies when analytics consent is false and cookies exist', () => {
       registerLifecycleHooks(mockServer)
 
-      const handler = mockServer.ext.getCall(0).args[1]
+      const handler = mockServer.ext.mock.calls[0][1]
       const request = {
         state: { cookie_policy: { analytics: false }, _ga: 'value', _gid: 'value2' },
-        response: { isBoom: false, unstate: sinon.spy(), header: sinon.spy() },
+        response: { isBoom: false, unstate: jest.fn(), header: jest.fn() },
         info: { hostname: 'example.com' }
       }
       const h = { continue: 'continue' }
 
       handler(request, h)
 
-      expect(request.response.unstate.called).to.be.true()
+      expect(request.response.unstate).toHaveBeenCalled()
       // One appended header per analytics cookie and parent domain combination
-      expect(request.response.header.callCount).to.equal(2)
-      expect(request.response.header.getCall(0).args[1]).to.contain('Domain=.example.com')
-      expect(request.response.header.getCall(0).args[2]).to.equal({ append: true })
+      expect(request.response.header).toHaveBeenCalledTimes(2)
+      expect(request.response.header.mock.calls[0][1]).toContain('Domain=.example.com')
+      expect(request.response.header.mock.calls[0][2]).toEqual({ append: true })
     })
 
     it('hook does not clear cookies if response is an error', () => {
       registerLifecycleHooks(mockServer)
 
-      const handler = mockServer.ext.getCall(0).args[1]
+      const handler = mockServer.ext.mock.calls[0][1]
       const request = {
         state: { cookie_policy: { analytics: false }, _ga: 'value' },
-        response: { isBoom: true, unstate: sinon.spy() },
+        response: { isBoom: true, unstate: jest.fn() },
         info: { hostname: 'example.com' }
       }
       const h = { continue: 'continue' }
 
       handler(request, h)
 
-      expect(request.response.unstate.called).to.be.false()
+      expect(request.response.unstate).not.toHaveBeenCalled()
     })
 
     it('hook handles null request.state gracefully', () => {
       registerLifecycleHooks(mockServer)
 
-      const handler = mockServer.ext.getCall(0).args[1]
+      const handler = mockServer.ext.mock.calls[0][1]
       const request = {
         state: null,
-        response: { isBoom: false, unstate: sinon.spy() },
+        response: { isBoom: false, unstate: jest.fn() },
         info: { hostname: 'example.com' }
       }
       const h = { continue: 'continue' }
 
-      expect(() => handler(request, h)).to.not.throw()
-      expect(request.response.unstate.called).to.be.false()
+      expect(() => handler(request, h)).not.toThrow()
+      expect(request.response.unstate).not.toHaveBeenCalled()
     })
 
     it('hook returns h.continue', () => {
       registerLifecycleHooks(mockServer)
 
-      const handler = mockServer.ext.getCall(0).args[1]
+      const handler = mockServer.ext.mock.calls[0][1]
       const request = {
         state: {},
-        response: { isBoom: false, unstate: sinon.spy() },
+        response: { isBoom: false, unstate: jest.fn() },
         info: { hostname: 'example.com' }
       }
       const h = { continue: 'continue' }
 
       const result = handler(request, h)
 
-      expect(result).to.equal(h.continue)
+      expect(result).toEqual(h.continue)
     })
 
     it('hook does not clear cookies if no analytics cookies exist in request state', () => {
       registerLifecycleHooks(mockServer)
 
-      const handler = mockServer.ext.getCall(0).args[1]
+      const handler = mockServer.ext.mock.calls[0][1]
       const request = {
         state: { cookie_policy: { analytics: false }, other_cookie: 'value' },
-        response: { isBoom: false, unstate: sinon.spy() },
+        response: { isBoom: false, unstate: jest.fn() },
         info: { hostname: 'example.com' }
       }
       const h = { continue: 'continue' }
 
       handler(request, h)
 
-      expect(request.response.unstate.called).to.be.false()
+      expect(request.response.unstate).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('registerPlugins', () => {
+    const { registerPlugins } = require('../../server/lib/server-helpers')
+    const config = require('../../server/config')
+
+    it('registers the core plugins without rate limiting', async () => {
+      jest.replaceProperty(config, 'rateLimitEnabled', false)
+      mockServer.register = jest.fn().mockResolvedValue(undefined)
+
+      await registerPlugins(mockServer)
+
+      expect(mockServer.register).toHaveBeenCalledTimes(9)
+      expect(mockServer.register.mock.calls.map(([p]) => p.plugin?.pkg?.name)).not.toContain('hapi-rate-limit')
+    })
+
+    it('registers the rate limit plugin when enabled', async () => {
+      jest.replaceProperty(config, 'rateLimitEnabled', true)
+      mockServer.register = jest.fn().mockResolvedValue(undefined)
+
+      await registerPlugins(mockServer)
+
+      expect(mockServer.register).toHaveBeenCalledTimes(10)
+      expect(mockServer.register.mock.calls[9][0].plugin.pkg.name).toBe('hapi-rate-limit')
     })
   })
 })

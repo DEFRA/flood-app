@@ -1,16 +1,12 @@
 'use strict'
 
 const Hapi = require('@hapi/hapi')
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
 const moment = require('moment-timezone')
-const sinon = require('sinon')
-const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const data = require('../data')
 
 describe('Route - Station', () => {
-  let sandbox
   let server
+  let createdServers
 
   beforeEach(async () => {
     delete require.cache[require.resolve('../../server/util.js')]
@@ -20,7 +16,14 @@ describe('Route - Station', () => {
     delete require.cache[require.resolve('../../server/routes/location.js')]
     delete require.cache[require.resolve('../../server/routes/station.js')]
 
-    sandbox = await sinon.createSandbox()
+    // Some tests create their own server, so track every server to stop them all
+    createdServers = []
+    const createServer = Hapi.server
+    jest.spyOn(Hapi, 'server').mockImplementation((...args) => {
+      const created = createServer(...args)
+      createdServers.push(created)
+      return created
+    })
 
     server = Hapi.server({
       port: 3000,
@@ -29,8 +32,7 @@ describe('Route - Station', () => {
   })
 
   afterEach(async () => {
-    await server.stop()
-    await sandbox.restore()
+    await Promise.all(createdServers.map(created => created.stop()))
   })
 
   it('should show error banner with suspended ffoi station', async () => {
@@ -212,14 +214,14 @@ describe('Route - Station', () => {
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getStationForecastData').callsFake(fakeStationForecastData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockImplementation(fakeRiverData)
+    jest.spyOn(floodService, 'getStationForecastData').mockImplementation(fakeStationForecastData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeWarningsAlertsData)
 
     const stationPlugin = {
       plugin: {
@@ -246,8 +248,8 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.not.contain('<h2 class="defra-service-error__title" id="error-station-offline">This measuring station is offline</h2>')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).not.toContain('<h2 class="defra-service-error__title" id="error-station-offline">This measuring station is offline</h2>')
   })
 
   it('should return river level: Normal', async () => {
@@ -346,13 +348,13 @@ describe('Route - Station', () => {
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockImplementation(fakeRiverData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeTargetAreasData)
 
     const stationPlugin = {
       plugin: {
@@ -379,15 +381,15 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    expect(response.payload).to.contain('Normal')
-    expect(response.payload).to.contain('Steady')
-    expect(response.payload).to.contain('Normal range 0.15m to 3.50m')
-    expect(response.payload).to.contain('href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    expect(response.payload).to.contain('href="/station/5122">Upstream</a>')
-    expect(response.payload).to.contain('href="/station-csv/5146"')
-    expect(response.payload).to.contain('Download data CSV (12KB)')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).toContain('Normal')
+    expect(response.payload).toContain('Steady')
+    expect(response.payload).toContain('Normal range 0.15m to 3.50m')
+    expect(response.payload).toContain('href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).toContain('href="/station/5122">Upstream</a>')
+    expect(response.payload).toContain('href="/station-csv/5146"')
+    expect(response.payload).toContain('Download data CSV (12KB)')
   })
 
   it('should return river level: High', async () => {
@@ -486,13 +488,13 @@ describe('Route - Station', () => {
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockImplementation(fakeRiverData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeWarningsAlertsData)
 
     const stationPlugin = {
       plugin: {
@@ -519,14 +521,14 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    expect(response.payload).to.contain('High')
-    expect(response.payload).to.contain('Falling')
-    expect(response.payload).to.contain('Latest at 1:30am')
-    expect(response.payload).to.contain('href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    expect(response.payload).to.contain('href="/station/5122">Upstream</a>')
-    expect(response.payload).to.not.contain('Go downstream</a>')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).toContain('High')
+    expect(response.payload).toContain('Falling')
+    expect(response.payload).toContain('Latest at 1:30am')
+    expect(response.payload).toContain('href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).toContain('href="/station/5122">Upstream</a>')
+    expect(response.payload).not.toContain('Go downstream</a>')
   })
 
   it('should return river level: Low ', async () => {
@@ -625,13 +627,13 @@ describe('Route - Station', () => {
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockImplementation(fakeRiverData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeWarningsAlertsData)
 
     const stationPlugin = {
       plugin: {
@@ -658,13 +660,13 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    expect(response.payload).to.contain('Low\n')
-    expect(response.payload).to.contain('Rising')
-    expect(response.payload).to.contain('Latest at 1:30am')
-    expect(response.payload).to.contain('href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    expect(response.payload).to.contain('href="/station/5122">Upstream</a>')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).toContain('Low\n')
+    expect(response.payload).toContain('Rising')
+    expect(response.payload).toContain('Latest at 1:30am')
+    expect(response.payload).toContain('href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).toContain('href="/station/5122">Upstream</a>')
   })
 
   it('should return downstream', async () => {
@@ -763,13 +765,13 @@ describe('Route - Station', () => {
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockImplementation(fakeRiverData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeWarningsAlertsData)
 
     const stationPlugin = {
       plugin: {
@@ -795,11 +797,11 @@ describe('Route - Station', () => {
     }
 
     const response = await server.inject(options)
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.contain('River Avon level downstream at Lilbourne - GOV.UK')
-    expect(response.payload).to.contain('href="/river-and-sea-levels/rloi/2042">Nearby levels</a>')
-    expect(response.payload).to.contain('href="/station/2042">Upstream</a>')
-    expect(response.payload).to.contain('href="/station/2043">Downstream</a>')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('River Avon level downstream at Lilbourne - GOV.UK')
+    expect(response.payload).toContain('href="/river-and-sea-levels/rloi/2042">Nearby levels</a>')
+    expect(response.payload).toContain('href="/station/2042">Upstream</a>')
+    expect(response.payload).toContain('href="/station/2043">Downstream</a>')
   })
 
   it('should return closed station', async () => {
@@ -860,13 +862,13 @@ describe('Route - Station', () => {
     const fakeRiverStationData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverStationData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeWarningsAlertsData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockImplementation(fakeRiverStationData)
 
     const stationPlugin = {
       plugin: {
@@ -893,10 +895,10 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    expect(response.payload).to.contain('This measuring station is closed')
-    expect(response.payload).to.contain('No data is available')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).toContain('This measuring station is closed')
+    expect(response.payload).toContain('No data is available')
   })
 
   it('should return coastal station', async () => {
@@ -995,13 +997,13 @@ describe('Route - Station', () => {
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockImplementation(fakeRiverData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeWarningsAlertsData)
 
     const stationPlugin = {
       plugin: {
@@ -1028,10 +1030,10 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.contain('Sea level at Bude - GOV.UK')
-    expect(response.payload).to.contain('Latest at 6:00am')
-    expect(response.payload).to.contain('3.59m')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('Sea level at Bude - GOV.UK')
+    expect(response.payload).toContain('Latest at 6:00am')
+    expect(response.payload).toContain('3.59m')
   })
 
   it('should 200 with FFOI: no max value ', async () => {
@@ -1214,14 +1216,14 @@ describe('Route - Station', () => {
     const fakeWarningsAlertsData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getStationForecastData').callsFake(fakeStationForecastData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockImplementation(fakeRiverData)
+    jest.spyOn(floodService, 'getStationForecastData').mockImplementation(fakeStationForecastData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeWarningsAlertsData)
 
     const stationPlugin = {
       plugin: {
@@ -1248,10 +1250,10 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.not.contain('The highest level in the forecast is')
-    expect(response.payload).to.not.contain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
-    expect(response.payload).to.contain('Download data CSV (16KB)')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).not.toContain('The highest level in the forecast is')
+    expect(response.payload).not.toContain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
+    expect(response.payload).toContain('Download data CSV (16KB)')
   })
 
   it('should 200 with FFOI: max value ', async () => {
@@ -1441,14 +1443,14 @@ describe('Route - Station', () => {
     fakeStationForecastData().SetofValues[0].Value[0].$.date = moment().utc().add(1, 'hours').format('YYYY-MM-DD')
     fakeStationForecastData().SetofValues[0].Value[0].$.time = moment().utc().add(1, 'hours').format('HH:mm:ss')
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getStationForecastData').callsFake(fakeStationForecastData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeWarningsAlertsData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockImplementation(fakeRiverData)
+    jest.spyOn(floodService, 'getStationForecastData').mockImplementation(fakeStationForecastData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeWarningsAlertsData)
 
     const stationPlugin = {
       plugin: {
@@ -1475,13 +1477,13 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.contain('This station includes an automated model')
-    expect(response.payload).to.contain('level in the model is')
-    expect(response.payload).to.not.contain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
-    expect(response.payload).to.contain('href="/station/7332">Upstream</a>')
-    expect(response.payload).to.contain('href="/station/7357">Downstream</a>')
-    expect(response.payload).to.contain('href="/river-and-sea-levels/rloi/7333">Nearby levels</a>')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('This station includes an automated model')
+    expect(response.payload).toContain('level in the model is')
+    expect(response.payload).not.toContain('<button class="defra-button-text govuk-!-margin-bottom-2" aria-controls="impact-list">Show historical events</button>')
+    expect(response.payload).toContain('href="/station/7332">Upstream</a>')
+    expect(response.payload).toContain('href="/station/7357">Downstream</a>')
+    expect(response.payload).toContain('href="/river-and-sea-levels/rloi/7333">Nearby levels</a>')
   })
 
   it('should 200 with latest value over hour old but under 24 hours ', async () => {
@@ -1583,13 +1585,13 @@ describe('Route - Station', () => {
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockImplementation(fakeRiverData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeTargetAreasData)
 
     const stationPlugin = {
       plugin: {
@@ -1616,9 +1618,9 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.contain('We take measurements more often')
-    expect(response.payload).to.contain('risk of flooding increases')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('We take measurements more often')
+    expect(response.payload).toContain('risk of flooding increases')
   })
 
   it('should redirect to new page ', async () => {
@@ -1671,7 +1673,7 @@ describe('Route - Station', () => {
       }
     }
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
 
     const stationPlugin = {
       plugin: {
@@ -1698,7 +1700,7 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(302)
+    expect(response.statusCode).toBe(302)
   })
 
   it('should redirect if upstream is specified ', async () => {
@@ -1751,7 +1753,7 @@ describe('Route - Station', () => {
       }
     }
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
 
     const stationPlugin = {
       plugin: {
@@ -1778,7 +1780,7 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(302)
+    expect(response.statusCode).toBe(302)
   })
 
   it('should return showing time data as interrupted', async () => {
@@ -1879,13 +1881,13 @@ describe('Route - Station', () => {
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockImplementation(fakeRiverData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeTargetAreasData)
 
     const stationPlugin = {
       plugin: {
@@ -1912,13 +1914,13 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    expect(response.payload).to.contain('This data feed was interrupted')
-    expect(response.payload).to.contain('href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    expect(response.payload).to.contain('href="/station/5122">Upstream</a>')
-    expect(response.payload).to.contain('href="/station-csv/5146"')
-    expect(response.payload).to.contain('Download data CSV (12KB)')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).toContain('This data feed was interrupted')
+    expect(response.payload).toContain('href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).toContain('href="/station/5122">Upstream</a>')
+    expect(response.payload).toContain('href="/station-csv/5146"')
+    expect(response.payload).toContain('Download data CSV (12KB)')
   })
 
   it('should not show IMTD thresholds if not present with "Normal" river level', async () => {
@@ -2015,13 +2017,13 @@ describe('Route - Station', () => {
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => { return {} }
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockImplementation(fakeRiverData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeTargetAreasData)
 
     const stationPlugin = {
       plugin: {
@@ -2048,9 +2050,9 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.not.contain('Low lying land flooding is possible above this level. One or more flood alerts may be issued')
-    expect(response.payload).to.not.contain('Property flooding is possible above this level. One or more flood warnings may be issued')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).not.toContain('Low lying land flooding is possible above this level. One or more flood alerts may be issued')
+    expect(response.payload).not.toContain('Property flooding is possible above this level. One or more flood warnings may be issued')
   })
 
   it('should return with missing percentile', async () => {
@@ -2148,13 +2150,13 @@ describe('Route - Station', () => {
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockImplementation(fakeRiverData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeTargetAreasData)
 
     const stationPlugin = {
       plugin: {
@@ -2181,12 +2183,12 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.contain('River Ribble level at Walton-Le-Dale - GOV.UK')
-    expect(response.payload).to.contain('Steady')
-    expect(response.payload).to.not.contain('Normal range ')
-    expect(response.payload).to.contain('href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
-    expect(response.payload).to.contain('href="/station/5122">Upstream</a>')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('River Ribble level at Walton-Le-Dale - GOV.UK')
+    expect(response.payload).toContain('Steady')
+    expect(response.payload).not.toContain('Normal range ')
+    expect(response.payload).toContain('href="/river-and-sea-levels/rloi/5146">Nearby levels</a>')
+    expect(response.payload).toContain('href="/station/5122">Upstream</a>')
   })
 
   it('should set page title and h1 as coastal river name', async () => {
@@ -2291,13 +2293,13 @@ describe('Route - Station', () => {
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockImplementation(fakeRiverData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeTargetAreasData)
 
     const stationPlugin = {
       plugin: {
@@ -2324,9 +2326,9 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.match(/<h1 class="govuk-heading-xl govuk-!-margin-bottom-0">\s*River Itchen\s*level\s*at Woolston\s*<\/h1>/)
-    expect(response.payload).to.match(/<title>\s*River Itchen level at Woolston - GOV.UK\s*<\/title>/)
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toMatch(/<h1 class="govuk-heading-xl govuk-!-margin-bottom-0">\s*River Itchen\s*level\s*at Woolston\s*<\/h1>/)
+    expect(response.payload).toMatch(/<title>\s*River Itchen level at Woolston - GOV.UK\s*<\/title>/)
   })
 
   it('should set page title and h1 as coastal river name', async () => {
@@ -2431,13 +2433,13 @@ describe('Route - Station', () => {
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(fakeRiverData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockImplementation(fakeRiverData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeTargetAreasData)
 
     const stationPlugin = {
       plugin: {
@@ -2464,9 +2466,9 @@ describe('Route - Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.match(/<h1 class="govuk-heading-xl govuk-!-margin-bottom-0">\s*River Itchen\s*level\s*at Woolston\s*<\/h1>/)
-    expect(response.payload).to.match(/<title>\s*River Itchen level at Woolston - GOV.UK\s*<\/title>/)
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toMatch(/<h1 class="govuk-heading-xl govuk-!-margin-bottom-0">\s*River Itchen\s*level\s*at Woolston\s*<\/h1>/)
+    expect(response.payload).toMatch(/<title>\s*River Itchen level at Woolston - GOV.UK\s*<\/title>/)
   })
 
   it('GET /station/9382/downstream shows correct upstream and downstream navigation links within same multi-reading station', async () => {
@@ -2523,13 +2525,13 @@ describe('Route - Station', () => {
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.multiStationDownstreamData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockReturnValue(data.fakeRiverData.multiStationDownstreamData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeTargetAreasData)
 
     // Set up the Hapi server
     const server = Hapi.server()
@@ -2555,9 +2557,9 @@ describe('Route - Station', () => {
       url: '/station/9382/downstream'
     })
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('href="/station/9382">Upstream</a>')
-    expect(response.payload).to.include('href="/station/9345">Downstream</a>')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('href="/station/9382">Upstream</a>')
+    expect(response.payload).toContain('href="/station/9345">Downstream</a>')
   })
 
   it('GET /station/9382 redirects to the downstream view and shows correct navigation links for multi-reading station', async () => {
@@ -2614,13 +2616,13 @@ describe('Route - Station', () => {
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.multiStationUpstreamData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockReturnValue(data.fakeRiverData.multiStationUpstreamData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeTargetAreasData)
 
     // Set up the Hapi server
     const server = Hapi.server()
@@ -2646,9 +2648,9 @@ describe('Route - Station', () => {
       url: '/station/9382'
     })
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('href="/station/9045">Upstream</a>')
-    expect(response.payload).to.include('href="/station/9382/downstream">Downstream</a>')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('href="/station/9045">Upstream</a>')
+    expect(response.payload).toContain('href="/station/9382/downstream">Downstream</a>')
   })
 
   it('GET /station/9045 navigates correctly to upstream and downstream views from a single station', async () => {
@@ -2705,13 +2707,13 @@ describe('Route - Station', () => {
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.singleStationData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockReturnValue(data.fakeRiverData.singleStationData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeTargetAreasData)
 
     // Set up the Hapi server
     const server = Hapi.server()
@@ -2737,9 +2739,9 @@ describe('Route - Station', () => {
       url: '/station/9045'
     })
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('href="/station/9382/downstream">Upstream</a>')
-    expect(response.payload).to.include('href="/station/8114">Downstream</a>')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('href="/station/9382/downstream">Upstream</a>')
+    expect(response.payload).toContain('href="/station/8114">Downstream</a>')
   })
 
   it('GET /station/9382 shows correct upstream and downstream navigation links for multi to single upstream navigation', async () => {
@@ -2796,13 +2798,13 @@ describe('Route - Station', () => {
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.multiStationUpstreamData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockReturnValue(data.fakeRiverData.multiStationUpstreamData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeTargetAreasData)
 
     // Set up the Hapi server
     const server = Hapi.server()
@@ -2828,9 +2830,9 @@ describe('Route - Station', () => {
       url: '/station/9382'
     })
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('href="/station/9045">Upstream</a>')
-    expect(response.payload).to.include('href="/station/9382/downstream">Downstream</a>')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('href="/station/9045">Upstream</a>')
+    expect(response.payload).toContain('href="/station/9382/downstream">Downstream</a>')
   })
 
   it('GET /station/9382/downstream shows correct upstream and downstream navigation links for multi to single downstream navigation', async () => {
@@ -2887,13 +2889,13 @@ describe('Route - Station', () => {
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.multiStationDownstreamData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockReturnValue(data.fakeRiverData.multiStationDownstreamData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeTargetAreasData)
 
     // Set up the Hapi server
     const server = Hapi.server()
@@ -2919,9 +2921,9 @@ describe('Route - Station', () => {
       url: '/station/9382/downstream'
     })
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('href="/station/9382">Upstream</a>')
-    expect(response.payload).to.include('href="/station/9345">Downstream</a>')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('href="/station/9382">Upstream</a>')
+    expect(response.payload).toContain('href="/station/9345">Downstream</a>')
   })
 
   it('GET /station/9382/downstream switches from downstream to upstream view within the same multi-reading station', async () => {
@@ -2978,13 +2980,13 @@ describe('Route - Station', () => {
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.multiStationDownstreamData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockReturnValue(data.fakeRiverData.multiStationDownstreamData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeTargetAreasData)
 
     // Set up the Hapi server
     const server = Hapi.server()
@@ -3010,9 +3012,9 @@ describe('Route - Station', () => {
       url: '/station/9382/downstream'
     })
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('href="/station/9382">Upstream</a>')
-    expect(response.payload).to.include('href="/station/9345">Downstream</a>')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('href="/station/9382">Upstream</a>')
+    expect(response.payload).toContain('href="/station/9345">Downstream</a>')
   })
 
   it('GET /station/9382 switches from upstream to downstream view within the same multi-reading station', async () => {
@@ -3069,13 +3071,13 @@ describe('Route - Station', () => {
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.multiStationUpstreamData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockReturnValue(data.fakeRiverData.multiStationUpstreamData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeTargetAreasData)
 
     // Set up the Hapi server
     const server = Hapi.server()
@@ -3101,9 +3103,9 @@ describe('Route - Station', () => {
       url: '/station/9382'
     })
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('href="/station/9045">Upstream</a>')
-    expect(response.payload).to.include('href="/station/9382/downstream">Downstream</a>')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('href="/station/9045">Upstream</a>')
+    expect(response.payload).toContain('href="/station/9382/downstream">Downstream</a>')
   })
 
   it('GET /station/9345 navigates correctly to another multi-reading station upstream', async () => {
@@ -3160,13 +3162,13 @@ describe('Route - Station', () => {
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.multiToMultiUpstreamData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockReturnValue(data.fakeRiverData.multiToMultiUpstreamData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeTargetAreasData)
 
     // Set up the Hapi server
     const server = Hapi.server()
@@ -3192,9 +3194,9 @@ describe('Route - Station', () => {
       url: '/station/9345'
     })
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('href="/station/9382/downstream">Upstream</a>')
-    expect(response.payload).to.include('href="/station/9345/downstream">Downstream</a>')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('href="/station/9382/downstream">Upstream</a>')
+    expect(response.payload).toContain('href="/station/9345/downstream">Downstream</a>')
   })
 
   it('GET /station/9345/downstream navigates correctly to another multi-reading station', async () => {
@@ -3251,13 +3253,13 @@ describe('Route - Station', () => {
     const fakeTargetAreasData = () => []
     const fakeStationThresholdData = () => []
 
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getRiverStationByStationId').returns(data.fakeRiverData.multiToMultiDownstreamData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(fakeTelemetryData)
-    sandbox.stub(floodService, 'getImpactData').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(fakeStationThresholdData)
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(fakeTargetAreasData)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockReturnValue(data.fakeRiverData.multiToMultiDownstreamData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(fakeTelemetryData)
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(fakeStationThresholdData)
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(fakeTargetAreasData)
 
     // Set up the Hapi server
     const server = Hapi.server()
@@ -3283,8 +3285,85 @@ describe('Route - Station', () => {
       url: '/station/9345/downstream'
     })
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.include('href="/station/9345">Upstream</a>')
-    expect(response.payload).to.include('href="/station/8114">Downstream</a>')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('href="/station/9345">Upstream</a>')
+    expect(response.payload).toContain('href="/station/8114">Downstream</a>')
+  })
+
+  describe('redirects and missing data', () => {
+    const closedStation = (overrides = {}) => ({
+      rloi_id: 5146,
+      station_type: 'S',
+      qualifier: 'u',
+      wiski_id: '713030',
+      region: 'North West',
+      agency_name: 'Walton-Le-Dale',
+      external_name: 'Walton-Le-Dale',
+      location_info: 'Preston',
+      wiski_river_name: 'River Ribble',
+      status: 'Closed',
+      status_reason: '',
+      status_date: null,
+      coordinates: '{"type":"Point","coordinates":[-2.68044442027032,53.7529105624953]}',
+      ...overrides
+    })
+
+    const mockFloodService = (station) => {
+      const floodService = require('../../server/services/flood')
+      return {
+        getStationById: jest.spyOn(floodService, 'getStationById').mockResolvedValue(station),
+        getStationTelemetry: jest.spyOn(floodService, 'getStationTelemetry').mockResolvedValue([]),
+        getImpactData: jest.spyOn(floodService, 'getImpactData').mockResolvedValue([]),
+        getForecastFlag: jest.spyOn(floodService, 'getForecastFlag').mockResolvedValue({}),
+        getStationImtdThresholds: jest.spyOn(floodService, 'getStationImtdThresholds').mockResolvedValue([]),
+        getWarningsAlertsWithinStationBuffer: jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockResolvedValue([]),
+        getRiverStationByStationId: jest.spyOn(floodService, 'getRiverStationByStationId').mockResolvedValue([])
+      }
+    }
+
+    const startServer = async () => {
+      await server.register(require('../../server/plugins/views'))
+      await server.register(require('../../server/plugins/session'))
+      await server.register({
+        plugin: {
+          name: 'station',
+          register: (srv) => srv.route(require('../../server/routes/station'))
+        }
+      })
+      require('../../server/services/server-methods')(server)
+      await server.initialize()
+    }
+
+    it.each([4162, 4170, 4173, 4174, 4176])('should redirect additional Welsh station %i to Natural Resources Wales without calling the flood service', async (id) => {
+      const floodService = mockFloodService(closedStation())
+      await startServer()
+      const { nrwStationUrl } = require('../../server/config')
+
+      const response = await server.inject({ method: 'GET', url: `/station/${id}` })
+
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe(`${nrwStationUrl}${id}?parameterType=1`)
+      expect(floodService.getStationById).not.toHaveBeenCalled()
+    })
+
+    it('should return 404 when the flood service finds no station', async () => {
+      mockFloodService(null)
+      await startServer()
+
+      const response = await server.inject({ method: 'GET', url: '/station/5146' })
+
+      expect(response.statusCode).toBe(404)
+      expect(JSON.parse(response.payload).message).toBe('No station found')
+    })
+
+    it('should show the station page rather than redirect to Wales when the station has no region', async () => {
+      mockFloodService(closedStation({ region: null }))
+      await startServer()
+
+      const response = await server.inject({ method: 'GET', url: '/station/5146' })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('This measuring station is closed')
+    })
   })
 })

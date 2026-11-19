@@ -1,13 +1,8 @@
 'use strict'
 
 const Hapi = require('@hapi/hapi')
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const sinon = require('sinon')
 const moment = require('moment-timezone')
 const { parse } = require('node-html-parser')
-
-const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 
 const config = require('../../server/config')
 const flushAppRequireCache = require('../lib/flush-app-require-cache')
@@ -20,28 +15,27 @@ function formatDate (date) {
 }
 
 describe('Route - National (formatDate)', () => {
-  it('before midday', async () => { expect(formatDate(new Date('2024-04-10T09:00:00'))).to.equal('9:00am on 10 April 2024') })
-  it('midday', async () => { expect(formatDate(new Date('2024-04-10T12:00:00'))).to.equal('12:00pm on 10 April 2024') })
-  it('after midday', async () => { expect(formatDate(new Date('2024-04-10T19:00:00'))).to.equal('7:00pm on 10 April 2024') })
-  it('midnight', async () => { expect(formatDate(new Date('2024-04-10T00:00:00'))).to.equal('12:00am on 10 April 2024') })
-  it('invalid date (documenting conterintuitive js date handling)', async () => { expect(formatDate(new Date('2024-04-31T00:00:00'))).to.equal('12:00am on 1 May 2024') })
+  it('before midday', async () => { expect(formatDate(new Date('2024-04-10T09:00:00'))).toBe('9:00am on 10 April 2024') })
+  it('midday', async () => { expect(formatDate(new Date('2024-04-10T12:00:00'))).toBe('12:00pm on 10 April 2024') })
+  it('after midday', async () => { expect(formatDate(new Date('2024-04-10T19:00:00'))).toBe('7:00pm on 10 April 2024') })
+  it('midnight', async () => { expect(formatDate(new Date('2024-04-10T00:00:00'))).toBe('12:00am on 10 April 2024') })
+  it('invalid date (documenting conterintuitive js date handling)', async () => { expect(formatDate(new Date('2024-04-31T00:00:00'))).toBe('12:00am on 1 May 2024') })
 })
 
 describe('Route - National', () => {
-  let sandbox
   let server
 
   async function setup (fakeFloodData, fakeOutlookData, fakeSearchData) {
     flushAppRequireCache()
 
-    sandbox.stub(config, 'floodRiskUrl').value('http://server/cyltfr')
+    jest.replaceProperty(config, 'floodRiskUrl', 'http://server/cyltfr')
 
     const floodService = require('../../server/services/flood')
     const locationService = require('../../server/services/location')
 
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
-    sandbox.stub(locationService, 'find').callsFake(fakeSearchData)
+    jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
+    jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
+    jest.spyOn(locationService, 'find').mockImplementation(fakeSearchData)
 
     const nationalPlugin = {
       plugin: {
@@ -66,8 +60,6 @@ describe('Route - National', () => {
   }
 
   beforeEach(async () => {
-    sandbox = await sinon.createSandbox()
-
     server = Hapi.server({
       port: 3000,
       host: 'localhost'
@@ -75,8 +67,8 @@ describe('Route - National', () => {
   })
 
   afterEach(async () => {
+    jest.restoreAllMocks()
     await server.stop()
-    await sandbox.restore()
   })
 
   describe('GET', () => {
@@ -102,22 +94,22 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(200)
+        expect(response.statusCode).toBe(200)
 
         const root = parse(response.payload)
         const link = root.querySelectorAll('a').find(a => a.text.trim() === 'Check your long term flood risk')
 
-        expect(link).to.exist()
-        expect(link.getAttribute('href')).to.equal('http://server/cyltfr')
+        expect(link).not.toBeNil()
+        expect(link.getAttribute('href')).toBe('http://server/cyltfr')
       })
 
       it('should display the service name once', async () => {
         const response = await server.inject({ method: 'GET', url: '/' })
 
-        expect(response.statusCode).to.equal(200)
+        expect(response.statusCode).toBe(200)
 
         const root = parse(response.payload)
-        expect(root.querySelectorAll('.govuk-service-navigation__service-name')).to.have.length(1)
+        expect(root.querySelectorAll('.govuk-service-navigation__service-name')).toHaveLength(1)
       })
 
       it('should display updated time and date for flood warnings', async () => {
@@ -128,15 +120,15 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(200)
+        expect(response.statusCode).toBe(200)
 
         const root = parse(response.payload)
         const updateParagraphs = root.querySelectorAll('p.defra-flood-meta')
 
-        expect(updateParagraphs.length).to.equal(2)
+        expect(updateParagraphs.length).toBe(2)
         // note: it is possible for the expectation below to fail if the minute ticks over between to setting of
         // context.now and the use of moment() within the code to set the flood update string
-        expect(updateParagraphs[0].text).to.contain(`Updated at ${formatDate(context.now)}`)
+        expect(updateParagraphs[0].text).toContain(`Updated at ${formatDate(context.now)}`)
       })
 
       it('should display updated time and date for outlook', async () => {
@@ -147,14 +139,14 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(200)
+        expect(response.statusCode).toBe(200)
 
         const root = parse(response.payload)
         const updateParagraphs = root.querySelectorAll('p.defra-flood-meta')
 
-        expect(updateParagraphs.length).to.equal(2)
-        expect(updateParagraphs[1].text).to.contain(`Updated at ${formatDate(context.now)}`)
-        expect(updateParagraphs[1].text).to.contain('Produced by the Met Office and Environment Agency')
+        expect(updateParagraphs.length).toBe(2)
+        expect(updateParagraphs[1].text).toContain(`Updated at ${formatDate(context.now)}`)
+        expect(updateParagraphs[1].text).toContain('Produced by the Met Office and Environment Agency')
       })
     })
 
@@ -178,8 +170,8 @@ describe('Route - National', () => {
 
       const response = await server.inject({ method: 'GET', url: '/' })
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.not.contain('defra-flood-meta--no-border')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).not.toContain('defra-flood-meta--no-border')
     })
 
     describe('without flood and outlook data', () => {
@@ -205,8 +197,8 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(200)
-        expect(response.payload).to.contain('No flood alerts or warnings')
+        expect(response.statusCode).toBe(200)
+        expect(response.payload).toContain('No flood alerts or warnings')
       })
 
       it('should not contain CYLTFR link', async () => {
@@ -218,8 +210,8 @@ describe('Route - National', () => {
         const response = await server.inject(options)
         const root = parse(response.payload)
 
-        expect(response.statusCode).to.equal(200)
-        expect(root.querySelectorAll('.defra-related-items a').find(a => a.text.trim() === 'Check your long term flood risk')).to.not.exist()
+        expect(response.statusCode).toBe(200)
+        expect(root.querySelectorAll('.defra-related-items a').find(a => a.text.trim() === 'Check your long term flood risk')).toBeNil()
       })
     })
 
@@ -237,8 +229,8 @@ describe('Route - National', () => {
 
       const floodService = require('../../server/services/flood')
 
-      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
       const locationPlugin = {
         plugin: {
@@ -266,9 +258,9 @@ describe('Route - National', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('No flood alerts or warnings')
-      expect(response.payload).to.contain('Contact Floodline for advice')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('No flood alerts or warnings')
+      expect(response.payload).toContain('Contact Floodline for advice')
     })
 
     it('should 200 with valid json but incorrect format', async () => {
@@ -284,8 +276,8 @@ describe('Route - National', () => {
 
       const floodService = require('../../server/services/flood')
 
-      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
       const locationPlugin = {
         plugin: {
@@ -313,9 +305,9 @@ describe('Route - National', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('No flood alerts or warnings')
-      expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('No flood alerts or warnings')
+      expect(response.payload).toContain('Sorry, there is currently a problem with the data')
     })
 
     it('should 200 with valid FGS but no risk_areas', async () => {
@@ -352,8 +344,8 @@ describe('Route - National', () => {
 
       const floodService = require('../../server/services/flood')
 
-      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
       const locationPlugin = {
         plugin: {
@@ -381,9 +373,9 @@ describe('Route - National', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('No flood alerts or warnings')
-      expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('No flood alerts or warnings')
+      expect(response.payload).toContain('Sorry, there is currently a problem with the data')
     })
 
     it('should 200 view with FGS stale data warning', async () => {
@@ -403,8 +395,8 @@ describe('Route - National', () => {
 
       const floodService = require('../../server/services/flood')
 
-      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
       const locationPlugin = {
         plugin: {
@@ -432,9 +424,9 @@ describe('Route - National', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>')
-      expect(response.payload).to.contain('<p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('<h2 class="defra-service-error__title" id="error-summary-title">Sorry, there is currently a problem with the data</h2>')
+      expect(response.payload).toContain('<p class="govuk-body govuk-!-margin-bottom-0">There is no recent data.</p>')
     })
 
     it('should 200 when outlook service throws and render data problem message', async () => {
@@ -450,8 +442,8 @@ describe('Route - National', () => {
 
       const floodService = require('../../server/services/flood')
 
-      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
       const locationPlugin = {
         plugin: {
@@ -479,8 +471,8 @@ describe('Route - National', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('Sorry, there is currently a problem with the data')
     })
   })
 
@@ -527,8 +519,8 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(200)
-        expect(response.request.url.pathname).to.equal('/')
+        expect(response.statusCode).toBe(200)
+        expect(response.request.url.pathname).toBe('/')
       })
 
       it('should 200 and not redirect with "england" location', async () => {
@@ -542,8 +534,8 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(200)
-        expect(response.request.url.pathname).to.equal('/')
+        expect(response.statusCode).toBe(200)
+        expect(response.request.url.pathname).toBe('/')
       })
 
       it('should 200 and not redirect with "england" (with spaces)', async () => {
@@ -557,8 +549,8 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(200)
-        expect(response.request.url.pathname).to.equal('/')
+        expect(response.statusCode).toBe(200)
+        expect(response.request.url.pathname).toBe('/')
       })
 
       it('should redirect to location page on valid location', async () => {
@@ -572,8 +564,8 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(302)
-        expect(response.headers.location).to.equal('/location/ashford-kent')
+        expect(response.statusCode).toBe(302)
+        expect(response.headers.location).toBe('/location/ashford-kent')
       })
 
       it('should redirect to location page when location is provided with error flag', async () => {
@@ -588,8 +580,8 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(302)
-        expect(response.headers.location).to.equal('/location/ashford-kent')
+        expect(response.statusCode).toBe(302)
+        expect(response.headers.location).toBe('/location/ashford-kent')
       })
 
       it('should display error message when geolocation is unavailable', async () => {
@@ -604,8 +596,8 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(200)
-        expect(response.payload).to.contain('Turn on location services to use your current location, or enter a town, city or postcode in England')
+        expect(response.statusCode).toBe(200)
+        expect(response.payload).toContain('Turn on location services to use your current location, or enter a town, city or postcode in England')
       })
     })
 
@@ -651,9 +643,9 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(200)
-        expect(response.request.url.pathname).to.equal('/')
-        expect(response.payload).to.contain("We couldn't find 'glasgow', England")
+        expect(response.statusCode).toBe(200)
+        expect(response.request.url.pathname).toBe('/')
+        expect(response.payload).toContain("We couldn't find 'glasgow', England")
       })
     })
 
@@ -677,9 +669,9 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(200)
-        expect(response.request.url.pathname).to.equal('/')
-        expect(response.payload).to.contain("We couldn't find 'fhfhsflkh', England")
+        expect(response.statusCode).toBe(200)
+        expect(response.request.url.pathname).toBe('/')
+        expect(response.payload).toContain("We couldn't find 'fhfhsflkh', England")
       })
 
       it('should 200 and not redirect with an invalid postcode', async () => {
@@ -693,9 +685,9 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(200)
-        expect(response.request.url.pathname).to.equal('/')
-        expect(response.payload).to.contain("We couldn't find 'SW1A 9ZZ', England")
+        expect(response.statusCode).toBe(200)
+        expect(response.request.url.pathname).toBe('/')
+        expect(response.payload).toContain("We couldn't find 'SW1A 9ZZ', England")
       })
     })
 
@@ -726,7 +718,7 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(400)
+        expect(response.statusCode).toBe(400)
       })
 
       it('should redirect to outside-england when coordinate lookup returns no match', async () => {
@@ -747,8 +739,8 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(302)
-        expect(response.headers.location).to.equal('/outside-england')
+        expect(response.statusCode).toBe(302)
+        expect(response.headers.location).toBe('/outside-england')
       })
 
       it('should redirect to location page with encoded slug for valid coordinate location', async () => {
@@ -777,8 +769,8 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(302)
-        expect(response.headers.location).to.equal('/location/name%20with%20spaces')
+        expect(response.statusCode).toBe(302)
+        expect(response.headers.location).toBe('/location/name%20with%20spaces')
       })
 
       it('should render the outside-england page when coordinate is outside England', async () => {
@@ -806,17 +798,17 @@ describe('Route - National', () => {
 
         const response = await server.inject(options)
 
-        expect(response.statusCode).to.equal(302)
-        expect(response.headers.location).to.equal('/outside-england')
+        expect(response.statusCode).toBe(302)
+        expect(response.headers.location).toBe('/outside-england')
 
         const outsideEnglandResponse = await server.inject({
           method: 'GET',
           url: '/outside-england'
         })
 
-        expect(outsideEnglandResponse.statusCode).to.equal(200)
-        expect(outsideEnglandResponse.request.url.pathname).to.equal('/outside-england')
-        expect(outsideEnglandResponse.payload).to.contain('This service is for locations in England')
+        expect(outsideEnglandResponse.statusCode).toBe(200)
+        expect(outsideEnglandResponse.request.url.pathname).toBe('/outside-england')
+        expect(outsideEnglandResponse.payload).toContain('This service is for locations in England')
       })
     })
   })

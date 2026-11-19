@@ -1,6 +1,3 @@
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const { describe, it } = exports.lab = Lab.script()
 const responseTemplate = require('./bing-results-template.json')
 
 const { find, get } = require('../../../server/services/lib/bing-results-parser')
@@ -17,7 +14,7 @@ function getBingResponse (resources = []) {
 async function checkParsedResponse (resources, expectedResult, isCoordinateQuery = false) {
   const bingResponse = getBingResponse(resources)
   const result = await find(bingResponse, isCoordinateQuery)
-  expect(result).to.equal(expectedResult)
+  expect(result).toEqual(expectedResult)
 }
 
 describe('Service/Lib - bingResultsParser', () => {
@@ -32,7 +29,7 @@ describe('Service/Lib - bingResultsParser', () => {
 
         const result = await get(malformedResponse, 'ashford-kent')
 
-        expect(result).to.equal([])
+        expect(result).toEqual([])
       })
 
       it('should find a result in the response by slug regardless of confidence level', async () => {
@@ -234,7 +231,7 @@ describe('Service/Lib - bingResultsParser', () => {
             isEngland: { is_england: true }
           }
         ]
-        expect(result).to.equal(expectedResult)
+        expect(result).toEqual(expectedResult)
       })
 
       it('should find a result in the response by slug even when name has been de-duplicated', async () => {
@@ -393,7 +390,7 @@ describe('Service/Lib - bingResultsParser', () => {
             isEngland: { is_england: true }
           }
         ]
-        expect(result).to.equal(expectedResult)
+        expect(result).toEqual(expectedResult)
       })
     })
 
@@ -411,7 +408,7 @@ describe('Service/Lib - bingResultsParser', () => {
 
         const result = await find(malformedResponse)
 
-        expect(result).to.equal([])
+        expect(result).toEqual([])
       })
 
       it('should return populated result with english town location search', async () => {
@@ -1417,12 +1414,12 @@ describe('Service/Lib - bingResultsParser', () => {
 
         const [result] = await find(getBingResponse(resources), true)
 
-        expect(result.name).to.equal('10 Downing Street')
-        expect(result.query).to.equal('SW1A 1AA')
-        expect(result.slug).to.equal('sw1a-1aa')
-        expect(result.center).to.equal([-0.12, 51.51])
-        expect(result.isUK).to.equal(true)
-        expect(result.isEngland).to.equal({ is_england: true })
+        expect(result.name).toBe('10 Downing Street')
+        expect(result.query).toBe('SW1A 1AA')
+        expect(result.slug).toBe('sw1a-1aa')
+        expect(result.center).toEqual([-0.12, 51.51])
+        expect(result.isUK).toEqual(true)
+        expect(result.isEngland).toEqual({ is_england: true })
 
         const expectedBbox2k = [
           -0.15890583262152747,
@@ -1438,10 +1435,10 @@ describe('Service/Lib - bingResultsParser', () => {
         ]
 
         result.bbox2k.forEach((value, index) => {
-          expect(value).to.be.about(expectedBbox2k[index], 1e-12)
+          expect(Math.abs(value - expectedBbox2k[index])).toBeLessThanOrEqual(1e-12)
         })
         result.bbox10k.forEach((value, index) => {
-          expect(value).to.be.about(expectedBbox10k[index], 1e-12)
+          expect(Math.abs(value - expectedBbox10k[index])).toBeLessThanOrEqual(1e-12)
         })
       })
 
@@ -1483,11 +1480,11 @@ describe('Service/Lib - bingResultsParser', () => {
         const [coordinateResult] = await find(getBingResponse(coordinateResources), true)
         const [textResult] = await find(getBingResponse(textResources), false)
 
-        expect(Object.keys(coordinateResult).sort()).to.equal(Object.keys(textResult).sort())
-        expect(coordinateResult.isUK).to.equal(true)
-        expect(textResult.isUK).to.equal(true)
-        expect(coordinateResult.isEngland).to.equal({ is_england: true })
-        expect(textResult.isEngland).to.equal({ is_england: true })
+        expect(Object.keys(coordinateResult).sort()).toEqual(Object.keys(textResult).sort())
+        expect(coordinateResult.isUK).toEqual(true)
+        expect(textResult.isUK).toEqual(true)
+        expect(coordinateResult.isEngland).toEqual({ is_england: true })
+        expect(textResult.isEngland).toEqual({ is_england: true })
       })
     })
     describe('where the location is not in England', () => {
@@ -1586,7 +1583,7 @@ describe('Service/Lib - bingResultsParser', () => {
 
         const result = await find(malformedResponse, true)
 
-        expect(result).to.equal([])
+        expect(result).toEqual([])
       })
     })
   })

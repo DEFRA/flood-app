@@ -68,6 +68,8 @@ function Forecast (data, isCoastal, latestObserved) {
   }
 
   this.hasWarnings = this.warnings[1] > 0 || this.warnings[2] > 0 || this.warnings[3] > 0
+  // Unreachable while this.warnings is hard-coded to zeros above
+  /* istanbul ignore if */
   if (this.hasWarnings) {
     if (this.warnings[3] === 1) {
       this.warningMessage = 'A severe flood warning is in place nearby.'

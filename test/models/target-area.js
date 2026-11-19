@@ -1,10 +1,5 @@
 'use strict'
 
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const { describe, it } = exports.lab = Lab.script()
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
 const moment = require('moment-timezone')
 const {
   getAlert,
@@ -28,7 +23,7 @@ function getTargetAreaAndWarning (targetAreaValues, floodWarningValues) {
 describe('Model - Target Area', () => {
   describe('metadata', () => {
     it('should populate meta details', () => {
-      const ViewModel = proxyquire('../../server/models/views/target-area', {})
+      const ViewModel = require('../../server/models/views/target-area')
 
       const targetAreaValues = {
         code: 'ABCDW001',
@@ -44,7 +39,7 @@ describe('Model - Target Area', () => {
 
       const viewModel = new ViewModel(options)
 
-      expect(viewModel).to.include({
+      expect(viewModel).toMatchObject({
         metaDescription: 'Flooding information and advice for the area: A description.',
         metaCanonical: '/target-area/ABCDW001',
         pageTitle: 'Flood warning for TA #1'
@@ -52,11 +47,7 @@ describe('Model - Target Area', () => {
     })
 
     it('should remove spaces and terminate description with a single full stop', () => {
-      // note: although this is functionally the same as
-      // require('../../server/models/views/target-area')
-      // choose to use this as proxyquire doesn't cache unlike require
-      // and therefore we don't need to flush the require cache
-      const ViewModel = proxyquire('../../server/models/views/target-area', {})
+      const ViewModel = require('../../server/models/views/target-area')
 
       const targetAreaValues = {
         code: 'ABCDW001',
@@ -69,13 +60,13 @@ describe('Model - Target Area', () => {
 
       const viewModel = new ViewModel(options)
 
-      expect(viewModel).to.include({
+      expect(viewModel).toMatchObject({
         areaDescription: 'Flood warning area: A description.'
       })
     })
 
     it('should add a full stop to the end of the description when one is not present', () => {
-      const ViewModel = proxyquire('../../server/models/views/target-area', {})
+      const ViewModel = require('../../server/models/views/target-area')
 
       const targetAreaValues = {
         code: 'ABCDW001',
@@ -88,14 +79,14 @@ describe('Model - Target Area', () => {
 
       const viewModel = new ViewModel(options)
 
-      expect(viewModel).to.include({
+      expect(viewModel).toMatchObject({
         areaDescription: 'Flood warning area: A description.'
       })
     })
   })
 
   describe('parentTargetArea', () => {
-    const ViewModel = proxyquire('../../server/models/views/target-area', {})
+    const ViewModel = require('../../server/models/views/target-area')
 
     it('should set "parentAreaAlert" to false when no parent TA exists', () => {
       const targetAreaValues = {
@@ -118,9 +109,9 @@ describe('Model - Target Area', () => {
 
       const viewModel = new ViewModel(options)
 
-      expect(viewModel).to.not.be.undefined()
-      expect(viewModel).to.be.an.instanceof(ViewModel)
-      expect(viewModel).to.include({ parentAreaAlert: false })
+      expect(viewModel).toBeDefined()
+      expect(viewModel).toBeInstanceOf(ViewModel)
+      expect(viewModel).toMatchObject({ parentAreaAlert: false })
     })
 
     it('should set "parentAreaAlert" to false when severity of warning for the child TA  is not "removed" even if a parent TA exists', () => {
@@ -155,9 +146,9 @@ describe('Model - Target Area', () => {
 
       const viewModel = new ViewModel(options)
 
-      expect(viewModel).to.not.be.undefined()
-      expect(viewModel).to.be.an.instanceof(ViewModel)
-      expect(viewModel).to.include({ parentAreaAlert: false })
+      expect(viewModel).toBeDefined()
+      expect(viewModel).toBeInstanceOf(ViewModel)
+      expect(viewModel).toMatchObject({ parentAreaAlert: false })
     })
 
     it('should set "parentAreaAlert" to true when severity of warning for the child TA is "removed" and the warning for the parent TA is active', () => {
@@ -192,9 +183,9 @@ describe('Model - Target Area', () => {
 
       const viewModel = new ViewModel(options)
 
-      expect(viewModel).to.not.be.undefined()
-      expect(viewModel).to.be.an.instanceof(ViewModel)
-      expect(viewModel).to.include({ parentAreaAlert: true })
+      expect(viewModel).toBeDefined()
+      expect(viewModel).toBeInstanceOf(ViewModel)
+      expect(viewModel).toMatchObject({ parentAreaAlert: true })
     })
   })
 
@@ -203,8 +194,13 @@ describe('Model - Target Area', () => {
       floodRiskUrl: 'http://cyltfr.org.uk'
     }
 
-    const ViewModel = proxyquire('../../server/models/views/target-area', {
-      '../../../server/config': configValues
+    let ViewModel
+    jest.isolateModules(() => {
+      jest.doMock('../../server/config', () => ({
+        ...jest.requireActual('../../server/config'),
+        ...configValues
+      }))
+      ViewModel = require('../../server/models/views/target-area')
     })
 
     const targetAreaValues = {
@@ -228,16 +224,16 @@ describe('Model - Target Area', () => {
     const viewModel = new ViewModel(options)
 
     it('should return return a populated model class', () => {
-      expect(viewModel).to.not.be.undefined()
-      expect(viewModel).to.be.an.instanceof(ViewModel)
-      expect(viewModel).to.include({
+      expect(viewModel).toBeDefined()
+      expect(viewModel).toBeInstanceOf(ViewModel)
+      expect(viewModel).toMatchObject({
         // TODO: add further included values
         placeName: 'Riverside View, Newtown'
       })
     })
 
     it('should return CYLTFR link values', () => {
-      expect(viewModel).to.include({
+      expect(viewModel).toMatchObject({
         displayLongTermLink: true,
         floodRiskUrl: 'http://cyltfr.org.uk'
       })
@@ -245,7 +241,7 @@ describe('Model - Target Area', () => {
   })
 
   describe('severity level', () => {
-    const ViewModel = proxyquire('../../server/models/views/target-area', {})
+    const ViewModel = require('../../server/models/views/target-area')
 
     it('should populate the severity level details from the warning', () => {
       const targetAreaValues = {
@@ -268,14 +264,14 @@ describe('Model - Target Area', () => {
 
       const viewModel = new ViewModel(options)
 
-      expect(viewModel.severity).to.include({ title: 'Flood warning' })
-      expect(viewModel).to.include({ pageTitle: 'Flood warning for Riverside View, Newtown' })
+      expect(viewModel.severity).toMatchObject({ title: 'Flood warning' })
+      expect(viewModel).toMatchObject({ pageTitle: 'Flood warning for Riverside View, Newtown' })
     })
   })
 
   describe('situation Changed', () => {
     it('should populate the situation changed from the flood warning details', () => {
-      const ViewModel = proxyquire('../../server/models/views/target-area', {})
+      const ViewModel = require('../../server/models/views/target-area')
 
       const targetAreaValues = {
         id: 1,
@@ -297,15 +293,13 @@ describe('Model - Target Area', () => {
 
       const viewModel = new ViewModel(options)
 
-      expect(viewModel).to.include({ situationChanged: 'Updated 7:23pm on 5 August 2020' })
+      expect(viewModel).toMatchObject({ situationChanged: 'Updated 7:23pm on 5 August 2020' })
     })
 
     it('should populate the situation changed with an "updated" message if flood warning no longer exists', () => {
-      const ViewModel = proxyquire('../../server/models/views/target-area', {
-        'moment-timezone': {
-          tz: sinon.stub().returns(moment.tz('2022-09-15T16:13:00.000Z', 'Europe/London'))
-        }
-      })
+      const ViewModel = require('../../server/models/views/target-area')
+      const fixedTime = moment.tz('2022-09-15T16:13:00.000Z', 'Europe/London')
+      jest.spyOn(moment, 'tz').mockReturnValue(fixedTime)
 
       const area = getTargetArea({
         id: 1,
@@ -322,15 +316,13 @@ describe('Model - Target Area', () => {
 
       const viewModel = new ViewModel(options)
 
-      expect(viewModel).to.include({ situationChanged: 'Up to date as of 5:13pm on 15 September 2022' })
+      expect(viewModel).toMatchObject({ situationChanged: 'Up to date as of 5:13pm on 15 September 2022' })
     })
 
     it('should populate the situation changed with a "removed" message if flood warning removed', () => {
-      const ViewModel = proxyquire('../../server/models/views/target-area', {
-        'moment-timezone': {
-          tz: sinon.stub().returns(moment.tz('2022-09-15T16:13:00.000Z', 'Europe/London'))
-        }
-      })
+      const ViewModel = require('../../server/models/views/target-area')
+      const fixedTime = moment.tz('2022-09-15T16:13:00.000Z', 'Europe/London')
+      jest.spyOn(moment, 'tz').mockReturnValue(fixedTime)
 
       const area = getTargetArea({
         id: 1,
@@ -355,11 +347,11 @@ describe('Model - Target Area', () => {
 
       const viewModel = new ViewModel(options)
 
-      expect(viewModel).to.include({ situationChanged: 'Removed 5:13pm on 15 September 2022' })
+      expect(viewModel).toMatchObject({ situationChanged: 'Removed 5:13pm on 15 September 2022' })
     })
 
     // it('should revert to fallbackText when Warning situation string is blank', async () => {
-    //   const ViewModel = proxyquire('../../server/models/views/target-area', {})
+    //   const ViewModel = require('../../server/models/views/target-area')
 
     //   const targetAreaValues = {
     //     code: 'ABCDW001'
@@ -373,13 +365,13 @@ describe('Model - Target Area', () => {
 
     //   const viewModel = new ViewModel(options)
 
-    //   expect(viewModel).to.include({
+    //   expect(viewModel).toMatchObject({
     //     situation: '<p>We\'ll update this page when there\'s a flood warning in the area.</p><p>A flood warning means flooding to some property is expected. A severe flood warning means there\'s a danger to life.</p>'
     //   })
     // })
 
     // it('should revert to fallbackText when Alert situation string is blank', async () => {
-    //   const ViewModel = proxyquire('../../server/models/views/target-area', {})
+    //   const ViewModel = require('../../server/models/views/target-area')
 
     //   const targetAreaValues = {
     //     code: 'ABCDA001'
@@ -393,7 +385,7 @@ describe('Model - Target Area', () => {
 
     //   const viewModel = new ViewModel(options)
 
-    //   expect(viewModel).to.include({
+    //   expect(viewModel).toMatchObject({
     //     situation: '<p>We\'ll update this page when there\'s a flood alert in the area, which means flooding to low lying land is possible.</p>'
     //   })
     // })

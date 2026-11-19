@@ -1,10 +1,5 @@
 'use strict'
 
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-
-const proxyquire = require('proxyquire').noCallThru()
-const { describe, it, before } = exports.lab = Lab.script()
 const { URL } = require('url')
 
 const HOST = 'https://example.gov.uk'
@@ -12,10 +7,11 @@ const HOST = 'https://example.gov.uk'
 describe('Plugin - Request Logging', () => {
   let loggingPlugin
 
-  before(() => {
-    loggingPlugin = proxyquire('../../server/plugins/logging', {
-      '../lib/logging/pino': {},
-      'hapi-pino': {}
+  beforeAll(() => {
+    jest.isolateModules(() => {
+      jest.doMock('../../server/lib/logging/pino', () => ({}))
+      jest.doMock('hapi-pino', () => ({}))
+      loggingPlugin = require('../../server/plugins/logging')
     })
   })
 
@@ -30,7 +26,7 @@ describe('Plugin - Request Logging', () => {
 
     const actual = loggingPlugin.options.serializers.req(req)
 
-    expect(actual).to.equal({
+    expect(actual).toEqual({
       url: '/some/url',
       method: 'GET',
       query: {
@@ -51,7 +47,7 @@ describe('Plugin - Request Logging', () => {
 
     const actual = loggingPlugin.options.serializers.req(req)
 
-    expect(actual).to.equal({
+    expect(actual).toEqual({
       url: '/some/url',
       method: 'GET',
       query: undefined
@@ -69,7 +65,7 @@ describe('Plugin - Request Logging', () => {
 
     const actual = loggingPlugin.options.serializers.req(req)
 
-    expect(actual).to.equal({
+    expect(actual).toEqual({
       url: '/some/url',
       method: 'GET',
       query: undefined
@@ -88,7 +84,7 @@ describe('Plugin - Request Logging', () => {
 
     const actual = loggingPlugin.options.serializers.res(res)
 
-    expect(actual).to.equal({ statusCode: 200 })
+    expect(actual).toEqual({ statusCode: 200 })
   })
 
   it('should serialize err', async () => {
@@ -97,7 +93,7 @@ describe('Plugin - Request Logging', () => {
 
     const actual = loggingPlugin.options.serializers.err(err)
 
-    expect(actual).to.equal({
+    expect(actual).toEqual({
       name: 'TypeError',
       message: 'Something went boom',
       stack: err.stack,

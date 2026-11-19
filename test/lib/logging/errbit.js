@@ -1,45 +1,32 @@
 'use strict'
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const { describe, it, beforeEach, afterEach, after } = exports.lab = Lab.script()
-const { stub } = require('sinon')
-const proxyquire = require('proxyquire')
 const { once } = require('node:events')
 
-const stubs = {
-  Errbit: stub(),
-  send: stub(),
-  close: stub(),
-  consoleError: stub(console, 'error'),
-  Notifier: stub(),
-  notify: stub(),
-  flush: stub()
-}
-
-const Errbit = proxyquire('../../../server/lib/logging/errbit', {
-  '@airbrake/node': { Notifier: stubs.Notifier }
-})
-
-const errbitTransport = proxyquire('../../../server/lib/logging/errbit-transport', {
-  './errbit': stubs.Errbit
-})
-
 describe('Logging - Errbit', () => {
+  let Errbit
+  let notify
+  let flush
+  let addFilter
+
   beforeEach(() => {
-    stubs.Notifier.callsFake(() => ({
-      notify: stubs.notify,
-      addFilter: stubs.addFilter,
-      flush: stubs.flush
+    jest.resetModules()
+    notify = jest.fn().mockResolvedValue()
+    flush = jest.fn().mockResolvedValue()
+    addFilter = jest.fn()
+
+    jest.doMock('@airbrake/node', () => ({
+      Notifier: jest.fn().mockImplementation(() => ({
+        notify,
+        addFilter,
+        flush
+      }))
     }))
 
-    stubs.flush.callsFake(() => Promise.resolve())
-    stubs.notify.callsFake(() => Promise.resolve())
+    Errbit = require('../../../server/lib/logging/errbit')
   })
 
   afterEach(() => {
-    for (const stub of Object.values(stubs)) {
-      stub.reset()
-    }
+    jest.restoreAllMocks()
+    jest.resetModules()
   })
 
   it('should not send notices to airbrake when enable is false', async () => {
@@ -64,7 +51,7 @@ describe('Logging - Errbit', () => {
       }
     })
 
-    expect(stubs.notify.called).to.equal(false)
+    expect(notify).not.toHaveBeenCalled()
   })
 
   it('should send notices to airbrake when enable is true', async () => {
@@ -89,7 +76,7 @@ describe('Logging - Errbit', () => {
       }
     })
 
-    expect(stubs.notify.called).to.equal(true)
+    expect(notify).toHaveBeenCalledTimes(1)
   })
 
   it('should remain unflushed (airbrake) when enable is false and close is called', async () => {
@@ -107,7 +94,7 @@ describe('Logging - Errbit', () => {
 
     await errbit.close()
 
-    expect(stubs.flush.called).to.equal(false)
+    expect(flush).not.toHaveBeenCalled()
   })
 
   it('should be flushed (airbrake) when enable is true and close is called', async () => {
@@ -125,7 +112,7 @@ describe('Logging - Errbit', () => {
 
     await errbit.close()
 
-    expect(stubs.flush.called).to.equal(true)
+    expect(flush).toHaveBeenCalledTimes(1)
   })
 
   it('should format the error when incoming data contains an err key', async () => {
@@ -150,7 +137,7 @@ describe('Logging - Errbit', () => {
       }
     })
 
-    expect(stubs.notify.lastCall.args[0].error).to.equal({
+    expect(notify.mock.calls[0][0].error).toEqual({
       name: 'some-name',
       message: 'some-message',
       stack: 'some-stack',
@@ -190,9 +177,9 @@ describe('Logging - Errbit', () => {
       }
     })
 
-    expect(stubs.notify.lastCall.args[0].context.httpMethod).to.equal('GET')
-    expect(stubs.notify.lastCall.args[0].context.route).to.equal('/some/path')
-    expect(stubs.notify.lastCall.args[0].params).to.equal({
+    expect(notify.mock.calls[0][0].context.httpMethod).toBe('GET')
+    expect(notify.mock.calls[0][0].context.route).toBe('/some/path')
+    expect(notify.mock.calls[0][0].params).toEqual({
       request: {
         url: '/some/path',
         method: 'GET',
@@ -228,32 +215,37 @@ describe('Logging - Errbit', () => {
       }
     })
 
-    expect(stubs.notify.lastCall.args[0].context.version).to.equal('0.0.0')
-    expect(stubs.notify.lastCall.args[0].context.environment).to.equal('unit-test')
-    expect(stubs.notify.lastCall.args[0].context.severity).to.equal('comical')
+    expect(notify.mock.calls[0][0].context.version).toBe('0.0.0')
+    expect(notify.mock.calls[0][0].context.environment).toBe('unit-test')
+    expect(notify.mock.calls[0][0].context.severity).toBe('comical')
   })
 })
 
 describe('Logging - Errbit Transport', () => {
+  let errbitTransport
+  let send
+  let close
+  let consoleError
+
   beforeEach(() => {
-    stubs.Errbit.callsFake(() => ({
-      send: stubs.send,
-      close: stubs.close
-    }))
+    jest.resetModules()
+    send = jest.fn()
+    close = jest.fn()
+    consoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
+
+    jest.doMock('../../../server/lib/logging/errbit', () => {
+      return jest.fn().mockImplementation(() => ({
+        send,
+        close
+      }))
+    })
+
+    errbitTransport = require('../../../server/lib/logging/errbit-transport')
   })
 
   afterEach(() => {
-    for (const stub of Object.values(stubs)) {
-      stub.reset()
-    }
-  })
-
-  after(() => {
-    for (const stub of Object.values(stubs)) {
-      if (stub.restore) {
-        stub.restore()
-      }
-    }
+    jest.restoreAllMocks()
+    jest.resetModules()
   })
 
   it('should send messages containing an err', async () => {
@@ -267,8 +259,8 @@ describe('Logging - Errbit Transport', () => {
       version: '0.0.0'
     })
 
-    stubs.send.resolves()
-    stubs.close.resolves()
+    send.mockResolvedValue()
+    close.mockResolvedValue()
 
     stream.write(JSON.stringify({
       err: {
@@ -283,9 +275,8 @@ describe('Logging - Errbit Transport', () => {
 
     await once(stream, 'close')
 
-    expect(stubs.send.callCount).to.equal(1)
-
-    expect(stubs.send.lastCall.args[0]).to.equal({
+    expect(send).toHaveBeenCalledTimes(1)
+    expect(send.mock.calls[0][0]).toEqual({
       err: {
         name: 'some-name',
         message: 'some-message',
@@ -306,8 +297,8 @@ describe('Logging - Errbit Transport', () => {
       version: '0.0.0'
     })
 
-    stubs.send.rejects(new Error('not sent'))
-    stubs.close.resolves()
+    send.mockRejectedValue(new Error('not sent'))
+    close.mockResolvedValue()
 
     let err
 
@@ -328,8 +319,8 @@ describe('Logging - Errbit Transport', () => {
 
     await once(stream, 'close')
 
-    expect(err).to.equal(undefined)
-    expect(stubs.consoleError.lastCall.args[0]).to.equal(new Error('not sent'))
+    expect(err).toBeUndefined()
+    expect(consoleError.mock.calls[0][0]).toEqual(new Error('not sent'))
   })
 
   it('should skip messages not containing an err key', async () => {
@@ -343,8 +334,8 @@ describe('Logging - Errbit Transport', () => {
       version: '0.0.0'
     })
 
-    stubs.send.resolves()
-    stubs.close.resolves()
+    send.mockResolvedValue()
+    close.mockResolvedValue()
 
     stream.write(JSON.stringify({
       message: 'Hello Worlds'
@@ -354,7 +345,7 @@ describe('Logging - Errbit Transport', () => {
 
     await once(stream, 'close')
 
-    expect(stubs.send.callCount).to.equal(0)
+    expect(send).not.toHaveBeenCalled()
   })
 
   it('should close successfully when errbit is closed', async () => {
@@ -368,12 +359,12 @@ describe('Logging - Errbit Transport', () => {
       version: '0.0.0'
     })
 
-    stubs.close.resolves()
+    close.mockResolvedValue()
 
     stream.end()
     await once(stream, 'close')
 
-    expect(stubs.close.callCount).to.equal(1)
+    expect(close).toHaveBeenCalledTimes(1)
   })
 
   it('should error on errbit close failure', async () => {
@@ -387,7 +378,7 @@ describe('Logging - Errbit Transport', () => {
       version: '0.0.0'
     })
 
-    stubs.close.rejects(new Error('bang!'))
+    close.mockRejectedValue(new Error('bang!'))
 
     let err
 
@@ -399,7 +390,7 @@ describe('Logging - Errbit Transport', () => {
 
     await once(stream, 'close')
 
-    expect(err).to.equal(undefined)
-    expect(stubs.consoleError.lastCall.args[0]).to.equal(new Error('bang!'))
+    expect(err).toBeUndefined()
+    expect(consoleError.mock.calls[0][0]).toEqual(new Error('bang!'))
   })
 })

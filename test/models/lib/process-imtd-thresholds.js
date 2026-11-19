@@ -1,7 +1,3 @@
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const { describe, it } = exports.lab = Lab.script()
-
 const data = require('../../data')
 const processImtdThresholds = require('../../../server/models/views/lib/process-imtd-thresholds')
 
@@ -9,9 +5,9 @@ const alertExpectedText = { id: 'alertThreshold', description: 'Low-lying land f
 const warningExpectedText = { id: 'warningThreshold', description: 'Property flooding is possible above this level', shortname: 'Possible flood warnings' }
 
 function expectThresholds (thresholds, warningThreshold, alertThreshold) {
-  expect(thresholds.length).to.equal(2)
-  expect(thresholds[0]).to.equal({ ...warningExpectedText, value: warningThreshold })
-  expect(thresholds[1]).to.equal({ ...alertExpectedText, value: alertThreshold })
+  expect(thresholds.length).toBe(2)
+  expect(thresholds[0]).toEqual({ ...warningExpectedText, value: warningThreshold })
+  expect(thresholds[1]).toEqual({ ...alertExpectedText, value: alertThreshold })
 }
 
 describe('Model/Lib - Process IMTD Thresholds', () => {
@@ -25,20 +21,20 @@ describe('Model/Lib - Process IMTD Thresholds', () => {
     it('should not be return single null thresholds', async () => {
       const thresholds = processImtdThresholds({ alert: 1.1, warning: null }, 0, 0, false)
 
-      expect(thresholds.length).to.equal(1)
-      expect(thresholds[0]).to.equal({ ...alertExpectedText, value: '1.10' })
+      expect(thresholds.length).toBe(1)
+      expect(thresholds[0]).toEqual({ ...alertExpectedText, value: '1.10' })
     })
 
     it('then both null thresholds should not return double null thresholds', async () => {
       const thresholds = processImtdThresholds({ alert: null, warning: null }, 0, 0, false)
 
-      expect(thresholds).to.equal([])
+      expect(thresholds).toEqual([])
     })
 
     it('should not cause an error when thresholds are empty', async () => {
       const thresholds = processImtdThresholds({}, 0, 0, false)
 
-      expect(thresholds).to.equal([])
+      expect(thresholds).toEqual([])
     })
   })
 

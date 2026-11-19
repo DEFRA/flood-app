@@ -1,13 +1,8 @@
 'use strict'
 const Hapi = require('@hapi/hapi')
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const sinon = require('sinon')
-const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const data = require('../data')
 
 describe('Route - API', () => {
-  let sandbox
   let server
 
   beforeEach(async () => {
@@ -15,8 +10,6 @@ describe('Route - API', () => {
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
     delete require.cache[require.resolve('../../server/util.js')]
     delete require.cache[require.resolve('../../server/services/location.js')]
-
-    sandbox = await sinon.createSandbox()
 
     server = Hapi.server({
       port: 3000,
@@ -26,7 +19,6 @@ describe('Route - API', () => {
 
   afterEach(async () => {
     await server.stop()
-    await sandbox.restore()
   })
 
   describe('/warnings', () => {
@@ -36,7 +28,7 @@ describe('Route - API', () => {
       }
 
       const floodService = require('../../server/services/flood')
-      sandbox.stub(floodService, 'getStationsGeoJson').callsFake(getStationsGeojson)
+      jest.spyOn(floodService, 'getStationsGeoJson').mockImplementation(getStationsGeojson)
 
       // Fake the cached rainfall data
       floodService.stationsGeojson = await floodService.getStationsGeoJson()
@@ -65,8 +57,8 @@ describe('Route - API', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('{"type":"FeatureCollection","features":[]}')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('{"type":"FeatureCollection","features":[]}')
     })
 
     it('should 200 with rainfall geojson', async () => {
@@ -76,7 +68,7 @@ describe('Route - API', () => {
 
       const floodService = require('../../server/services/flood')
 
-      sandbox.stub(floodService, 'getRainfallGeojson').callsFake(getRainfallGeojson)
+      jest.spyOn(floodService, 'getRainfallGeojson').mockImplementation(getRainfallGeojson)
 
       floodService.rainfallGeojson = await floodService.getRainfallGeojson()
 
@@ -104,8 +96,8 @@ describe('Route - API', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('{"type":"FeatureCollection","features":[]}')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('{"type":"FeatureCollection","features":[]}')
     })
 
     it('should 200 with location query parameter', async () => {
@@ -117,14 +109,14 @@ describe('Route - API', () => {
 
       const fakeFloodsData = () => data.fakeFloodsData
 
-      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+      jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+      jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
 
       const fakeGetJson = () => data.warringtonGetJson
 
       const util = require('../../server/util')
 
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       const warningsPlugin = {
         plugin: {
@@ -151,12 +143,12 @@ describe('Route - API', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
+      expect(response.statusCode).toBe(200)
 
       const payload = JSON.parse(response.payload)
 
-      expect(payload.severity).to.equal(3)
-      expect(payload.message).to.equal('There are currently one severe flood warning, one flood warning and 3 flood alerts in force at this location.')
+      expect(payload.severity).toBe(3)
+      expect(payload.message).toBe('There are currently one severe flood warning, one flood warning and 3 flood alerts in force at this location.')
     })
 
     it('should 200 with no location', async () => {
@@ -185,7 +177,7 @@ describe('Route - API', () => {
         }
       }
 
-      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+      jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
 
       const warningsPlugin = {
         plugin: {
@@ -212,11 +204,11 @@ describe('Route - API', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
+      expect(response.statusCode).toBe(200)
 
       const payload = JSON.parse(response.payload)
-      expect(payload.severity).to.equal(2)
-      expect(payload.message).to.equal('There is currently one flood warning in force.')
+      expect(payload.severity).toBe(2)
+      expect(payload.message).toBe('There is currently one flood warning in force.')
     })
 
     it('should 400 with an invalid query parameter', async () => {
@@ -228,14 +220,14 @@ describe('Route - API', () => {
 
       const fakeFloodsData = () => data.fakeFloodsData
 
-      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
+      jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+      jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
 
       const fakeGetJson = () => data.warringtonGetJson
 
       const util = require('../../server/util')
 
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       const warningsPlugin = {
         plugin: {
@@ -262,7 +254,7 @@ describe('Route - API', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(400)
+      expect(response.statusCode).toBe(400)
     })
 
     it('should 200 with no warnings', async () => {
@@ -274,7 +266,7 @@ describe('Route - API', () => {
         }
       }
 
-      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+      jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
 
       const warningsPlugin = {
         plugin: {
@@ -301,12 +293,12 @@ describe('Route - API', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
+      expect(response.statusCode).toBe(200)
 
       const payload = JSON.parse(response.payload)
 
-      expect(payload.severity).to.equal(5)
-      expect(payload.message).to.equal('There are currently no flood warnings or alerts in force.')
+      expect(payload.severity).toBe(5)
+      expect(payload.message).toBe('There are currently no flood warnings or alerts in force.')
     })
 
     it('should 200 with no location, returning one alert', async () => {
@@ -335,7 +327,7 @@ describe('Route - API', () => {
         }
       }
 
-      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+      jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
 
       const warningsPlugin = {
         plugin: {
@@ -362,12 +354,12 @@ describe('Route - API', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
+      expect(response.statusCode).toBe(200)
 
       const payload = JSON.parse(response.payload)
 
-      expect(payload.severity).to.equal(1)
-      expect(payload.message).to.equal('There is currently one flood alert in force.')
+      expect(payload.severity).toBe(1)
+      expect(payload.message).toBe('There is currently one flood alert in force.')
     })
 
     it('should 200 with no location, returning one severe warning', async () => {
@@ -396,7 +388,7 @@ describe('Route - API', () => {
         }
       }
 
-      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
+      jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
 
       const warningsPlugin = {
         plugin: {
@@ -423,12 +415,12 @@ describe('Route - API', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
+      expect(response.statusCode).toBe(200)
 
       const payload = JSON.parse(response.payload)
 
-      expect(payload.severity).to.equal(3)
-      expect(payload.message).to.equal('There is currently one severe flood warning in force.')
+      expect(payload.severity).toBe(3)
+      expect(payload.message).toBe('There is currently one severe flood warning in force.')
     })
   })
 
@@ -483,8 +475,8 @@ describe('Route - API', () => {
         ]
       )
 
-      sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-      sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
+      jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
+      jest.spyOn(floodService, 'getTargetAreaThresholds').mockImplementation(fakeTAThresholdsData)
 
       const latestLevelsPlugin = {
         plugin: {
@@ -512,14 +504,14 @@ describe('Route - API', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
+      expect(response.statusCode).toBe(200)
 
       const payload = JSON.parse(response.payload)
 
-      expect(payload.severity).to.equal('severe')
-      expect(payload.levels.length).to.equal(1)
-      expect(payload.levels[0].river_name).to.equal('Groundwater')
-      expect(payload.levels[0].isGroundwater).to.equal(true)
+      expect(payload.severity).toBe('severe')
+      expect(payload.levels.length).toBe(1)
+      expect(payload.levels[0].river_name).toBe('Groundwater')
+      expect(payload.levels[0].isGroundwater).toEqual(true)
     })
   })
 
@@ -528,7 +520,7 @@ describe('Route - API', () => {
       const getAvailability = async () => ({ availability: 'AVAILABLE', date: new Date('2022-09-25T00:00:00.000Z') })
 
       const webchatService = require('../../server/services/webchat')
-      sandbox.stub(webchatService, 'getAvailability').callsFake(getAvailability)
+      jest.spyOn(webchatService, 'getAvailability').mockImplementation(getAvailability)
 
       const route = {
         plugin: {
@@ -554,8 +546,8 @@ describe('Route - API', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('{"availability":"AVAILABLE","date":"2022-09-25T00:00:00.000Z"}')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('{"availability":"AVAILABLE","date":"2022-09-25T00:00:00.000Z"}')
     })
   })
 })

@@ -1,9 +1,5 @@
 'use strict'
 
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const { describe, it } = exports.lab = Lab.script()
-
 async function executeNpmScript (scriptName) {
   const util = require('util')
   const exec = util.promisify(require('child_process').exec)
@@ -25,7 +21,7 @@ describe('scripts.js', () => {
 
     // yargs v18 with proper API outputs help to stdout
     const output = stdout || stderr
-    expect(output).to.contain('--file')
-    expect(output).to.contain('--output')
+    expect(output).toContain('--file')
+    expect(output).toContain('--output')
   })
 })

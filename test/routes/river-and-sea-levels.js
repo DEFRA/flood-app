@@ -1,21 +1,16 @@
 'use strict'
 
 const Hapi = require('@hapi/hapi')
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const sinon = require('sinon')
 const { parse } = require('node-html-parser')
-
-const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 
 const data = require('../data')
 
 describe('Route - River and Sea Levels', () => {
-  let sandbox
   let server
   let stubs
 
   beforeEach(async () => {
+    jest.resetModules()
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
     delete require.cache[require.resolve('../../server/routes/river-and-sea-levels.js')]
     delete require.cache[require.resolve('../../server/services/location.js')]
@@ -25,21 +20,19 @@ describe('Route - River and Sea Levels', () => {
     const floodService = require('../../server/services/flood')
     const util = require('../../server/util')
 
-    sandbox = await sinon.createSandbox()
-
     stubs = {
-      getJson: sandbox.stub(util, 'getJson'),
-      getIsEngland: sandbox.stub(floodService, 'getIsEngland'),
-      getStations: sandbox.stub(floodService, 'getStations'),
-      getStationById: sandbox.stub(floodService, 'getStationById'),
-      getStationsWithin: sandbox.stub(floodService, 'getStationsWithin'),
-      getStationsByRadius: sandbox.stub(floodService, 'getStationsByRadius'),
-      getStationsGeoJson: sandbox.stub(floodService, 'getStationsGeoJson'),
-      getStationsWithinTargetArea: sandbox.stub(floodService, 'getStationsWithinTargetArea'),
-      getRainfallStation: sandbox.stub(floodService, 'getRainfallStation'),
-      getRiverById: sandbox.stub(floodService, 'getRiverById'),
-      getRiversByName: sandbox.stub(floodService, 'getRiversByName'),
-      getTargetArea: sandbox.stub(floodService, 'getTargetArea')
+      getJson: jest.spyOn(util, 'getJson').mockReturnValue(undefined),
+      getIsEngland: jest.spyOn(floodService, 'getIsEngland').mockReturnValue(undefined),
+      getStations: jest.spyOn(floodService, 'getStations').mockReturnValue(undefined),
+      getStationById: jest.spyOn(floodService, 'getStationById').mockReturnValue(undefined),
+      getStationsWithin: jest.spyOn(floodService, 'getStationsWithin').mockReturnValue(undefined),
+      getStationsByRadius: jest.spyOn(floodService, 'getStationsByRadius').mockReturnValue(undefined),
+      getStationsGeoJson: jest.spyOn(floodService, 'getStationsGeoJson').mockReturnValue(undefined),
+      getStationsWithinTargetArea: jest.spyOn(floodService, 'getStationsWithinTargetArea').mockReturnValue(undefined),
+      getRainfallStation: jest.spyOn(floodService, 'getRainfallStation').mockReturnValue(undefined),
+      getRiverById: jest.spyOn(floodService, 'getRiverById').mockReturnValue(undefined),
+      getRiversByName: jest.spyOn(floodService, 'getRiversByName').mockReturnValue(undefined),
+      getTargetArea: jest.spyOn(floodService, 'getTargetArea').mockReturnValue(undefined)
     }
 
     server = Hapi.server({
@@ -74,7 +67,8 @@ describe('Route - River and Sea Levels', () => {
   })
 
   afterEach(async () => {
-    await sandbox.restore()
+    jest.restoreAllMocks()
+    jest.resetModules()
     await server.stop()
 
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
@@ -86,9 +80,9 @@ describe('Route - River and Sea Levels', () => {
 
   describe('GET', () => {
     it('should redirect with legacy query parameter', async () => {
-      stubs.getJson.callsFake(() => data.warringtonGetJson)
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [])
+      stubs.getJson.mockImplementation(() => data.warringtonGetJson)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [])
 
       const options = {
         method: 'GET',
@@ -97,14 +91,14 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(301)
-      expect(response.headers.location).to.equal('/river-and-sea-levels/warrington')
+      expect(response.statusCode).toBe(301)
+      expect(response.headers.location).toBe('/river-and-sea-levels/warrington')
     })
 
     it('should 404 with legacy query parameter invalid location', async () => {
-      stubs.getJson.callsFake(() => data.nonLocationGetJson)
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [])
+      stubs.getJson.mockImplementation(() => data.nonLocationGetJson)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [])
 
       const options = {
         method: 'GET',
@@ -113,14 +107,14 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(404)
-      expect(response.headers.location).to.equal(undefined)
+      expect(response.statusCode).toBe(404)
+      expect(response.headers.location).toEqual(undefined)
     })
 
     it('should 301 redirect with legacy query parameter: postcode', async () => {
-      stubs.getJson.callsFake(() => data.warringtonGetJson)
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [])
+      stubs.getJson.mockImplementation(() => data.warringtonGetJson)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [])
 
       const options = {
         method: 'GET',
@@ -129,13 +123,13 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(301)
+      expect(response.statusCode).toBe(301)
     })
 
     it('should 302 with with legacy query parameter: "england"', async () => {
-      stubs.getJson.callsFake(() => data.nonLocationGetJson)
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [])
+      stubs.getJson.mockImplementation(() => data.nonLocationGetJson)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [])
 
       const options = {
         method: 'GET',
@@ -144,14 +138,14 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(302)
-      expect(response.headers.location).to.equal('/river-and-sea-levels')
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/river-and-sea-levels')
     })
 
     it('should 404 with legacy query parameter: valid non-england location', async () => {
-      stubs.getJson.callsFake(() => data.scotlandGetJson)
-      stubs.getIsEngland.callsFake(() => ({ is_england: false }))
-      stubs.getRiversByName.callsFake(() => [])
+      stubs.getJson.mockImplementation(() => data.scotlandGetJson)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: false }))
+      stubs.getRiversByName.mockImplementation(() => [])
 
       const options = {
         method: 'GET',
@@ -160,13 +154,13 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(404)
+      expect(response.statusCode).toBe(404)
     })
 
     it('should 301 redirect with legacy query parameter: invalid characters', async () => {
-      stubs.getJson.callsFake(() => data.warringtonGetJson)
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [])
+      stubs.getJson.mockImplementation(() => data.warringtonGetJson)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [])
 
       const options = {
         method: 'GET',
@@ -175,15 +169,15 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(301)
-      expect(response.headers.location).to.equal('/river-and-sea-levels/warrington')
+      expect(response.statusCode).toBe(301)
+      expect(response.headers.location).toBe('/river-and-sea-levels/warrington')
     })
 
     it('should 200 with valid location', async () => {
-      stubs.getJson.callsFake(() => data.warringtonGetJson)
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [])
-      stubs.getStationsWithin.callsFake(() => [])
+      stubs.getJson.mockImplementation(() => data.warringtonGetJson)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [])
+      stubs.getStationsWithin.mockImplementation(() => [])
 
       const options = {
         method: 'GET',
@@ -192,11 +186,11 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
+      expect(response.statusCode).toBe(200)
     })
 
     it('should 404 with invalid location', async () => {
-      stubs.getJson.callsFake(() => data.nonLocationGetJson)
+      stubs.getJson.mockImplementation(() => data.nonLocationGetJson)
 
       const options = {
         method: 'GET',
@@ -205,13 +199,14 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(404)
+      expect(response.statusCode).toBe(404)
     })
 
     it('should set the canonical url', async () => {
-      stubs.getJson.callsFake(() => data.warringtonGetJson)
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [])
+      stubs.getJson.mockImplementation(() => data.warringtonGetJson)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [])
+      stubs.getStationsWithin.mockImplementation(() => [])
 
       const options = {
         method: 'GET',
@@ -220,14 +215,14 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.payload).to.contain('rel="canonical" href="http://localhost:3000/river-and-sea-levels/warrington"')
-      expect(response.statusCode).to.equal(200)
+      expect(response.payload).toContain('rel="canonical" href="http://localhost:3000/river-and-sea-levels/warrington"')
+      expect(response.statusCode).toBe(200)
     })
 
     it('should redirect to default page with parameter: "england"', async () => {
-      stubs.getJson.callsFake(() => data.nonLocationGetJson)
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [])
+      stubs.getJson.mockImplementation(() => data.nonLocationGetJson)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [])
 
       const options = {
         method: 'GET',
@@ -236,14 +231,14 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(302)
-      expect(response.headers.location).to.equal('/river-and-sea-levels')
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/river-and-sea-levels')
     })
 
     it('should 404 when accessing non-England location directly', async () => {
       // Stub locationService.get to return a non-England place (bypassing Bing parser filter)
       const locationService = require('../../server/services/location')
-      const locationServiceGetStub = sandbox.stub(locationService, 'get')
+      const locationServiceGetStub = jest.spyOn(locationService, 'get').mockReturnValue(undefined)
 
       const scotlandPlace = {
         name: 'Kinghorn, Fife',
@@ -255,8 +250,8 @@ describe('Route - River and Sea Levels', () => {
         isUK: true,
         isEngland: { is_england: false }
       }
-      locationServiceGetStub.returns([scotlandPlace])
-      stubs.getIsEngland.callsFake(() => ({ is_england: false }))
+      locationServiceGetStub.mockReturnValue([scotlandPlace])
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: false }))
 
       const options = {
         method: 'GET',
@@ -265,14 +260,14 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(404)
-      expect(response.result.message).to.contain('Location kinghorn not found')
+      expect(response.statusCode).toBe(404)
+      expect(response.result.message).toContain('Location kinghorn not found')
     })
 
     it('should redirect with query parameters', async () => {
-      stubs.getJson.callsFake(() => data.warringtonGetJson)
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [])
+      stubs.getJson.mockImplementation(() => data.warringtonGetJson)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [])
 
       const options = {
         method: 'GET',
@@ -281,15 +276,15 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(301)
-      expect(response.headers.location).to.equal('/river-and-sea-levels/warrington?riverId=123')
+      expect(response.statusCode).toBe(301)
+      expect(response.headers.location).toBe('/river-and-sea-levels/warrington?riverId=123')
     })
 
     it('should return only groundwater stations', async () => {
-      stubs.getJson.callsFake(() => data.warringtonGetJson)
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [])
-      stubs.getStationsWithin.callsFake(() => [
+      stubs.getJson.mockImplementation(() => data.warringtonGetJson)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [])
+      stubs.getStationsWithin.mockImplementation(() => [
         {
           river_id: 'Groundwater Levels',
           river_name: 'Groundwater Levels',
@@ -327,18 +322,18 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('href="/river-and-sea-levels/warrington?group=river" data-group-type="river">River (0)</a>')
-      expect(response.payload).to.contain('href="/river-and-sea-levels/warrington?group=sea" data-group-type="sea">Sea (0)</a>')
-      expect(response.payload).to.contain('href="/river-and-sea-levels/warrington?group=rainfall" data-group-type="rainfall">Rainfall (0)</a>')
-      expect(response.payload).to.contain('href="/river-and-sea-levels/warrington?group=groundwater" data-group-type="groundwater">Groundwater (1)</a>')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('href="/river-and-sea-levels/warrington?group=river" data-group-type="river">River (0)</a>')
+      expect(response.payload).toContain('href="/river-and-sea-levels/warrington?group=sea" data-group-type="sea">Sea (0)</a>')
+      expect(response.payload).toContain('href="/river-and-sea-levels/warrington?group=rainfall" data-group-type="rainfall">Rainfall (0)</a>')
+      expect(response.payload).toContain('href="/river-and-sea-levels/warrington?group=groundwater" data-group-type="groundwater">Groundwater (1)</a>')
     })
 
     it('should return only rainfall stations', async () => {
-      stubs.getJson.callsFake(() => data.warringtonGetJson)
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [])
-      stubs.getStationsWithin.callsFake(() => ([
+      stubs.getJson.mockImplementation(() => data.warringtonGetJson)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [])
+      stubs.getStationsWithin.mockImplementation(() => ([
         {
           river_id: 'rainfall-Thames',
           river_name: 'Rainfall Thames',
@@ -410,10 +405,10 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('href="/river-and-sea-levels/warrington?group=river" data-group-type="river">River (0)</a>')
-      expect(response.payload).to.contain('href="/river-and-sea-levels/warrington?group=sea" data-group-type="sea">Sea (0)</a>')
-      expect(response.payload).to.contain('href="/river-and-sea-levels/warrington?group=rainfall" data-group-type="rainfall">Rainfall (2)</a>')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('href="/river-and-sea-levels/warrington?group=river" data-group-type="river">River (0)</a>')
+      expect(response.payload).toContain('href="/river-and-sea-levels/warrington?group=sea" data-group-type="sea">Sea (0)</a>')
+      expect(response.payload).toContain('href="/river-and-sea-levels/warrington?group=rainfall" data-group-type="rainfall">Rainfall (2)</a>')
     })
 
     it('should handle funny latest value', async () => {
@@ -423,9 +418,9 @@ describe('Route - River and Sea Levels', () => {
       // if the 2 numbers were of a different factor of 10
       // ie in this example '8.9' < '10.1' returns false
       // fix use parseFloat on each value to ensure it returns true.
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [])
-      stubs.getStations.callsFake(() => [
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [])
+      stubs.getStations.mockImplementation(() => [
         {
           river_id: 'sankey-brook',
           river_name: 'Sankey Brook',
@@ -455,7 +450,7 @@ describe('Route - River and Sea Levels', () => {
           lat: 53.4253300018109
         }
       ])
-      stubs.getJson.callsFake(() => {
+      stubs.getJson.mockImplementation(() => {
         return {
           authenticationResultCode: 'ValidCredentials',
           brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
@@ -478,13 +473,13 @@ describe('Route - River and Sea Levels', () => {
       }
 
       const response = await server.inject(options)
-      expect(response.statusCode).to.equal(200)
+      expect(response.statusCode).toBe(200)
     })
 
     it('should 302 with rainfall id', async () => {
-      stubs.getStationsByRadius.callsFake(() => data.stationsWithinRadiusRainfallid)
-      stubs.getRainfallStation.callsFake(() => data.cachedRainfallStation)
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsByRadius.mockImplementation(() => data.stationsWithinRadiusRainfallid)
+      stubs.getRainfallStation.mockImplementation(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJson.mockImplementation(() => data.cachedRainfallStation)
 
       // Set cached stationsGeojson
       const floodService = require('../../server/services/flood')
@@ -496,14 +491,14 @@ describe('Route - River and Sea Levels', () => {
       }
 
       const response = await server.inject(options)
-      expect(response.statusCode).to.equal(302)
-      expect(response.headers.location).to.equal('/river-and-sea-levels/rainfall/E24195')
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/river-and-sea-levels/rainfall/E24195')
     })
 
     it('should return with radius and show coastal station in river with minus value showing', async () => {
-      stubs.getStationsByRadius.callsFake(() => data.stationsWithRadiusRainfallid)
-      stubs.getRainfallStation.callsFake(() => data.cachedRainfallStation)
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsByRadius.mockImplementation(() => data.stationsWithRadiusRainfallid)
+      stubs.getRainfallStation.mockImplementation(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJson.mockImplementation(() => data.cachedRainfallStation)
 
       const floodService = require('../../server/services/flood')
       floodService.stationsGeojson = await floodService.getStationsGeoJson()
@@ -524,17 +519,17 @@ describe('Route - River and Sea Levels', () => {
       const numericSpans = root.querySelectorAll('span.defra-flood-levels-table-numeric')
       const hasNegativeValue = numericSpans.some(span => /^-\d/.test(span.text.trim()))
 
-      expect(hasNegativeValue).to.be.true()
-      expect(response.statusCode).to.equal(200)
-      expect(h1).to.equal('Find river, sea, groundwater and rainfall levels')
-      expect(searchBoxValue).to.equal('')
-      expect(paragraphs).to.be.true()
+      expect(hasNegativeValue).toBeTrue()
+      expect(response.statusCode).toBe(200)
+      expect(h1).toBe('Find river, sea, groundwater and rainfall levels')
+      expect(searchBoxValue).toBe('')
+      expect(paragraphs).toBeTrue()
     })
 
     it('should 404 with no id', async () => {
-      stubs.getStationsByRadius.callsFake(() => data.stationsWithRadiusRainfallid)
-      stubs.getRainfallStation.callsFake(() => data.cachedRainfallStation)
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsByRadius.mockImplementation(() => data.stationsWithRadiusRainfallid)
+      stubs.getRainfallStation.mockImplementation(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJson.mockImplementation(() => data.cachedRainfallStation)
 
       const floodService = require('../../server/services/flood')
       floodService.stationsGeojson = await floodService.getStationsGeoJson()
@@ -546,18 +541,18 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.result.statusCode).to.equal(404)
-      expect(response.result.message).to.equal('Not Found')
+      expect(response.result.statusCode).toBe(404)
+      expect(response.result.message).toBe('Not Found')
     })
 
     it('should 404 with rainfall gauge', async () => {
-      stubs.getStationsByRadius.callsFake(() => data.stationsWithinRadius)
+      stubs.getStationsByRadius.mockImplementation(() => data.stationsWithinRadius)
 
-      stubs.getRainfallStation.callsFake(() => data.rainfallStation.find(function (rainfallStation) {
+      stubs.getRainfallStation.mockImplementation(() => data.rainfallStation.find(function (rainfallStation) {
         return rainfallStation.station_reference === 'GKHLETOY'
       }))
 
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJson.mockImplementation(() => data.cachedRainfallStation)
 
       const floodService = require('../../server/services/flood')
       floodService.stationsGeojson = await floodService.getStationsGeoJson()
@@ -569,13 +564,13 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.result.statusCode).to.equal(404)
-      expect(response.result.message).to.equal('Rainfall Gauge "GKHLETOY" not found')
+      expect(response.result.statusCode).toBe(404)
+      expect(response.result.message).toBe('Rainfall Gauge "GKHLETOY" not found')
     })
 
     it('should redirect with query parameter: target-area', async () => {
-      stubs.getStationsWithinTargetArea.callsFake(() => data.stationsWithinTa)
-      stubs.getTargetArea.callsFake(() => data.getTA)
+      stubs.getStationsWithinTargetArea.mockImplementation(() => data.stationsWithinTa)
+      stubs.getTargetArea.mockImplementation(() => data.getTA)
 
       const floodService = require('../../server/services/flood')
       floodService.stationsGeojson = await floodService.getStationsGeoJson()
@@ -587,13 +582,13 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(302)
-      expect(response.headers.location).to.equal('/river-and-sea-levels/target-area/011FWFNC6KC')
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/river-and-sea-levels/target-area/011FWFNC6KC')
     })
 
     it('should return stations within target area radius', async () => {
-      stubs.getStationsWithinTargetArea.callsFake(() => data.stationsWithinTa)
-      stubs.getTargetArea.callsFake(() => data.getTA)
+      stubs.getStationsWithinTargetArea.mockImplementation(() => data.stationsWithinTa)
+      stubs.getTargetArea.mockImplementation(() => data.getTA)
 
       const floodService = require('../../server/services/flood')
       floodService.stationsGeojson = await floodService.getStationsGeoJson()
@@ -605,13 +600,13 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('River (8)')
-      expect(response.payload).to.contain('Showing levels within 5 miles of Keswick Campsite.')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('River (8)')
+      expect(response.payload).toContain('Showing levels within 5 miles of Keswick Campsite.')
     })
 
     it('should return river list', async () => {
-      stubs.getJson.callsFake(() => {
+      stubs.getJson.mockImplementation(() => {
         return {
           authenticationResultCode: 'ValidCredentials',
           brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
@@ -627,9 +622,9 @@ describe('Route - River and Sea Levels', () => {
           traceId: 'trace-id'
         }
       })
-      stubs.getStations.callsFake(() => [])
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [
+      stubs.getStations.mockImplementation(() => [])
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [
         {
           name: 'River North Tyne',
           qualified_name: 'River North Tyne',
@@ -646,7 +641,7 @@ describe('Route - River and Sea Levels', () => {
           id: 'river-tyne'
         }
       ])
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJson.mockImplementation(() => data.cachedRainfallStation)
 
       const floodService = require('../../server/services/flood')
       floodService.stationsGeojson = await floodService.getStationsGeoJson()
@@ -658,16 +653,16 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.payload).to.contain('Tyne')
-      expect(response.payload).to.contain('<mark>Tyne</mark>')
-      expect(response.payload).to.contain('Rivers')
-      expect(response.payload).to.contain('More than one match was found for your location.')
-      expect(response.statusCode).to.equal(200)
+      expect(response.payload).toContain('Tyne')
+      expect(response.payload).toContain('<mark>Tyne</mark>')
+      expect(response.payload).toContain('Rivers')
+      expect(response.payload).toContain('More than one match was found for your location.')
+      expect(response.statusCode).toBe(200)
     })
 
     it('should return multiple choice page', async () => {
-      stubs.getJson.callsFake(() => data.avonGetJson)
-      stubs.getStationsWithin.callsFake(() => [{
+      stubs.getJson.mockImplementation(() => data.avonGetJson)
+      stubs.getStationsWithin.mockImplementation(() => [{
         river_id: 'river-alne',
         river_name: 'River Alne',
         river_qualified_name: 'River Alne',
@@ -700,8 +695,8 @@ describe('Route - River and Sea Levels', () => {
         one_hr_total: null,
         id: '610'
       }])
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [
         {
           local_name: 'Little Avon River',
           qualified_name: 'Little Avon River',
@@ -751,7 +746,7 @@ describe('Route - River and Sea Levels', () => {
           river_id: 'tetbury-avon'
         }
       ])
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJson.mockImplementation(() => data.cachedRainfallStation)
 
       const floodService = require('../../server/services/flood')
       floodService.stationsGeojson = await floodService.getStationsGeoJson()
@@ -768,17 +763,17 @@ describe('Route - River and Sea Levels', () => {
       const metaDescription = root
         .querySelectorAll('[name="description"]')
 
-      expect(metaDescription[0]._attrs.content).to.equal('Find river, sea, groundwater and rainfall levels in England. Check the last updated height, trend and state recorded by the measuring station.')
-      expect(response.payload).to.contain('avon - Find river, sea, groundwater and rainfall levels - GOV.UK')
-      expect(response.payload).to.contain('Levels near')
-      expect(response.payload).to.contain('Rivers')
-      expect(response.payload).to.contain('More than one match was found for your location.')
-      expect(response.payload).to.contain('<a href="/river-and-sea-levels?q=Stratford-upon-Avon, Warwickshire">')
-      expect(response.statusCode).to.equal(200)
+      expect(metaDescription[0]._attrs.content).toBe('Find river, sea, groundwater and rainfall levels in England. Check the last updated height, trend and state recorded by the measuring station.')
+      expect(response.payload).toContain('avon - Find river, sea, groundwater and rainfall levels - GOV.UK')
+      expect(response.payload).toContain('Levels near')
+      expect(response.payload).toContain('Rivers')
+      expect(response.payload).toContain('More than one match was found for your location.')
+      expect(response.payload).toContain('<a href="/river-and-sea-levels?q=Stratford-upon-Avon, Warwickshire">')
+      expect(response.statusCode).toBe(200)
     })
 
     it('should set url to query parameter location', async () => {
-      stubs.getJson.callsFake(() => (
+      stubs.getJson.mockImplementation(() => (
         {
           authenticationResultCode: 'ValidCredentials',
           brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
@@ -838,7 +833,7 @@ describe('Route - River and Sea Levels', () => {
           traceId: 'trace-id'
         }
       ))
-      stubs.getStationsWithin.callsFake(() => [{
+      stubs.getStationsWithin.mockImplementation(() => [{
         river_id: 'river-alne',
         river_name: 'River Alne',
         river_qualified_name: 'River Alne',
@@ -871,8 +866,8 @@ describe('Route - River and Sea Levels', () => {
         one_hr_total: null,
         id: '610'
       }])
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [
         {
           local_name: 'Little Avon River',
           qualified_name: 'Little Avon River',
@@ -922,7 +917,7 @@ describe('Route - River and Sea Levels', () => {
           river_id: 'tetbury-avon'
         }
       ])
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJson.mockImplementation(() => data.cachedRainfallStation)
 
       const floodService = require('../../server/services/flood')
       floodService.stationsGeojson = await floodService.getStationsGeoJson()
@@ -934,13 +929,13 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('href="/river-and-sea-levels/Avon">')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('href="/river-and-sea-levels/Avon">')
     })
 
     it('should return multiple choice locations if place outside of england', async () => {
-      stubs.getJson.callsFake(() => data.scotlandGetJson)
-      stubs.getStationsWithin.callsFake(() => [{
+      stubs.getJson.mockImplementation(() => data.scotlandGetJson)
+      stubs.getStationsWithin.mockImplementation(() => [{
         river_id: 'river-alne',
         river_name: 'River Alne',
         river_qualified_name: 'River Alne',
@@ -973,8 +968,8 @@ describe('Route - River and Sea Levels', () => {
         one_hr_total: null,
         id: '610'
       }])
-      stubs.getIsEngland.callsFake(() => ({ is_england: false }))
-      stubs.getRiversByName.callsFake(() => [
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: false }))
+      stubs.getRiversByName.mockImplementation(() => [
         {
           local_name: 'Little Avon River',
           qualified_name: 'Little Avon River',
@@ -1024,7 +1019,7 @@ describe('Route - River and Sea Levels', () => {
           river_id: 'tetbury-avon'
         }
       ])
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJson.mockImplementation(() => data.cachedRainfallStation)
 
       // Set cached stationsGeojson
       const floodService = require('../../server/services/flood')
@@ -1037,12 +1032,12 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.not.contain('Levels near')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).not.toContain('Levels near')
     })
 
     it('should 302 with a river query parameter', async () => {
-      stubs.getJson.callsFake(() => {
+      stubs.getJson.mockImplementation(() => {
         return {
           authenticationResultCode: 'ValidCredentials',
           brandLogoUri: 'http://dev.virtualearth.net/Branding/logo_powered_by.png',
@@ -1058,7 +1053,7 @@ describe('Route - River and Sea Levels', () => {
           traceId: 'trace-id'
         }
       })
-      stubs.getStationsWithin.callsFake(() => [{
+      stubs.getStationsWithin.mockImplementation(() => [{
         river_id: 'river-alne',
         river_name: 'River Alne',
         navigable: true,
@@ -1090,15 +1085,15 @@ describe('Route - River and Sea Levels', () => {
         one_hr_total: null,
         id: '610'
       }])
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [
         {
           name: 'River Mersey',
           qualified_name: 'River Mersey',
           id: 'river-mersey'
         }
       ])
-      stubs.getStationsGeoJson.callsFake(() => data.cachedRainfallStation)
+      stubs.getStationsGeoJson.mockImplementation(() => data.cachedRainfallStation)
 
       const floodService = require('../../server/services/flood')
       floodService.stationsGeojson = await floodService.getStationsGeoJson()
@@ -1110,13 +1105,13 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(302)
-      expect(response.headers.location).to.equal('/river-and-sea-levels/river/river-mersey')
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/river-and-sea-levels/river/river-mersey')
     })
 
     it('should 404 with non-latin query parameter ', async () => {
-      stubs.getStations.callsFake(() => [])
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+      stubs.getStations.mockImplementation(() => [])
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
 
       const options = {
         method: 'GET',
@@ -1125,14 +1120,14 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(404)
+      expect(response.statusCode).toBe(404)
     })
   })
 
   describe('POST', () => {
     it('should 302 with no location', async () => {
-      stubs.getStations.callsFake(() => [])
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+      stubs.getStations.mockImplementation(() => [])
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
 
       const options = {
         method: 'POST',
@@ -1141,13 +1136,13 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(302)
-      expect(response.payload).to.not.contain('No results for')
+      expect(response.statusCode).toBe(302)
+      expect(response.payload).not.toContain('No results for')
     })
 
     it('should 200 with empty', async () => {
-      stubs.getStations.callsFake(() => [])
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+      stubs.getStations.mockImplementation(() => [])
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
 
       const options = {
         method: 'POST',
@@ -1157,15 +1152,15 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.not.contain('No results for')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).not.toContain('No results for')
     })
 
     it('should 301 redirect when search a location', async () => {
-      stubs.getJson.callsFake(() => data.warringtonGetJson)
-      stubs.getStations.callsFake(() => [])
-      stubs.getRiversByName.callsFake(() => [])
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+      stubs.getJson.mockImplementation(() => data.warringtonGetJson)
+      stubs.getStations.mockImplementation(() => [])
+      stubs.getRiversByName.mockImplementation(() => [])
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
 
       const options = {
         method: 'POST',
@@ -1175,15 +1170,15 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(301)
-      expect(response.headers.location).to.equal('/river-and-sea-levels/warrington')
+      expect(response.statusCode).toBe(301)
+      expect(response.headers.location).toBe('/river-and-sea-levels/warrington')
     })
 
     it('should 302 to default page when searching: "england"', async () => {
-      stubs.getJson.callsFake(() => data.nonLocationGetJson)
-      stubs.getStations.callsFake(() => [])
-      stubs.getRiversByName.callsFake(() => [])
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+      stubs.getJson.mockImplementation(() => data.nonLocationGetJson)
+      stubs.getStations.mockImplementation(() => [])
+      stubs.getRiversByName.mockImplementation(() => [])
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
 
       const options = {
         method: 'POST',
@@ -1195,13 +1190,13 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(302)
-      expect(response.headers.location).to.equal('/river-and-sea-levels')
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/river-and-sea-levels')
     })
 
     it('should 404 with special charcters', async () => {
-      stubs.getJson.callsFake(() => [])
-      stubs.getIsEngland.callsFake(() => ({ is_england: false }))
+      stubs.getJson.mockImplementation(() => [])
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: false }))
 
       const options = {
         method: 'POST',
@@ -1213,13 +1208,13 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(404)
-      expect(response.result.message).to.equal('Not Found')
+      expect(response.statusCode).toBe(404)
+      expect(response.result.message).toBe('Not Found')
     })
 
     it('should 200 to default page when searching with: non-latin characters', async () => {
-      stubs.getStations.callsFake(() => [])
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+      stubs.getStations.mockImplementation(() => [])
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
 
       const options = {
         method: 'POST',
@@ -1231,14 +1226,14 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
+      expect(response.statusCode).toBe(200)
     })
 
     it('should redirect when POST returns disambiguation results (PRG pattern)', async () => {
-      stubs.getJson.callsFake(() => data.avonGetJson)
-      stubs.getStationsWithin.callsFake(() => [])
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [
+      stubs.getJson.mockImplementation(() => data.avonGetJson)
+      stubs.getStationsWithin.mockImplementation(() => [])
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [
         {
           id: 'river-devon',
           qualified_name: 'River Devon'
@@ -1255,14 +1250,14 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(302)
-      expect(response.headers.location).to.equal('/river-and-sea-levels?q=devon')
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/river-and-sea-levels?q=devon')
     })
 
     it('should redirect to river when POST returns only rivers and no places', async () => {
-      stubs.getJson.callsFake(() => data.nonLocationGetJson)
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [
+      stubs.getJson.mockImplementation(() => data.nonLocationGetJson)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [
         {
           id: 'river-thames',
           qualified_name: 'River Thames'
@@ -1279,14 +1274,14 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(302)
-      expect(response.headers.location).to.equal('/river-and-sea-levels/river/river-thames')
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/river-and-sea-levels/river/river-thames')
     })
 
     it('should show location not found page when POST with no results', async () => {
-      stubs.getJson.callsFake(() => data.nonLocationGetJson)
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
-      stubs.getRiversByName.callsFake(() => [])
+      stubs.getJson.mockImplementation(() => data.nonLocationGetJson)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
+      stubs.getRiversByName.mockImplementation(() => [])
 
       const options = {
         method: 'POST',
@@ -1298,14 +1293,14 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain("We couldn't find 'nonexistentplace', England")
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain("We couldn't find 'nonexistentplace', England")
     })
 
     it('should show location not found page when POST returns single place outside England', async () => {
       // Stub locationService.find to return a non-England place (bypassing Bing parser filter)
       const locationService = require('../../server/services/location')
-      const locationServiceFindStub = sandbox.stub(locationService, 'find')
+      const locationServiceFindStub = jest.spyOn(locationService, 'find').mockReturnValue(undefined)
 
       const scotlandPlace = {
         name: 'Edinburgh',
@@ -1317,9 +1312,9 @@ describe('Route - River and Sea Levels', () => {
         isUK: true,
         isEngland: { is_england: false }
       }
-      locationServiceFindStub.returns([scotlandPlace])
-      stubs.getIsEngland.callsFake(() => ({ is_england: false }))
-      stubs.getRiversByName.callsFake(() => [])
+      locationServiceFindStub.mockReturnValue([scotlandPlace])
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: false }))
+      stubs.getRiversByName.mockImplementation(() => [])
 
       const options = {
         method: 'POST',
@@ -1331,14 +1326,14 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain("We couldn't find 'edinburgh', England")
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain("We couldn't find 'edinburgh', England")
     })
 
     it('should show location not found page when GET query returns single place outside England', async () => {
       // Stub locationService.find to return a non-England place (bypassing Bing parser filter)
       const locationService = require('../../server/services/location')
-      const locationServiceFindStub = sandbox.stub(locationService, 'find')
+      const locationServiceFindStub = jest.spyOn(locationService, 'find').mockReturnValue(undefined)
 
       const scotlandPlace = {
         name: 'Edinburgh',
@@ -1350,9 +1345,9 @@ describe('Route - River and Sea Levels', () => {
         isUK: true,
         isEngland: { is_england: false }
       }
-      locationServiceFindStub.returns([scotlandPlace])
-      stubs.getIsEngland.callsFake(() => ({ is_england: false }))
-      stubs.getRiversByName.callsFake(() => [])
+      locationServiceFindStub.mockReturnValue([scotlandPlace])
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: false }))
+      stubs.getRiversByName.mockImplementation(() => [])
 
       const options = {
         method: 'GET',
@@ -1361,18 +1356,18 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(301)
-      expect(response.headers.location).to.equal('/river-and-sea-levels/edinburgh')
+      expect(response.statusCode).toBe(301)
+      expect(response.headers.location).toBe('/river-and-sea-levels/edinburgh')
     })
   })
 
   describe('RLOI Id', () => {
     it('should 302 with rloi id', async () => {
-      stubs.getJson.callsFake(() => data.warringtonGetJson)
-      stubs.getStationsByRadius.callsFake(() => data.stationsWithinRadius)
-      stubs.getStationById.callsFake(() => data.riverStation7224)
-      stubs.getStationsGeoJson.callsFake(() => data.cachedStation)
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+      stubs.getJson.mockImplementation(() => data.warringtonGetJson)
+      stubs.getStationsByRadius.mockImplementation(() => data.stationsWithinRadius)
+      stubs.getStationById.mockImplementation(() => data.riverStation7224)
+      stubs.getStationsGeoJson.mockImplementation(() => data.cachedStation)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
 
       const floodService = require('../../server/services/flood')
       floodService.stationsGeojson = await floodService.getStationsGeoJson()
@@ -1384,16 +1379,16 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(302)
-      expect(response.headers.location).to.equal('/river-and-sea-levels/rloi/7224')
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/river-and-sea-levels/rloi/7224')
     })
 
     it('should 200 with rloi id', async () => {
-      stubs.getJson.callsFake(() => data.warringtonGetJson)
-      stubs.getStationsByRadius.callsFake(() => data.stationsWithinRadius)
-      stubs.getStationById.callsFake(() => data.riverStation7224)
-      stubs.getStationsGeoJson.callsFake(() => data.cachedStation)
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+      stubs.getJson.mockImplementation(() => data.warringtonGetJson)
+      stubs.getStationsByRadius.mockImplementation(() => data.stationsWithinRadius)
+      stubs.getStationById.mockImplementation(() => data.riverStation7224)
+      stubs.getStationsGeoJson.mockImplementation(() => data.cachedStation)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
 
       const floodService = require('../../server/services/flood')
       floodService.stationsGeojson = await floodService.getStationsGeoJson()
@@ -1405,21 +1400,21 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
+      expect(response.statusCode).toBe(200)
 
-      expect(response.payload).to.contain('River (9)')
-      expect(response.payload).to.contain('Grants Bridge')
-      expect(response.payload).to.contain('Showing levels within 5 miles of Grants Bridge.')
+      expect(response.payload).toContain('River (9)')
+      expect(response.payload).toContain('Grants Bridge')
+      expect(response.payload).toContain('Showing levels within 5 miles of Grants Bridge.')
     })
   })
 
   describe('River Id', () => {
     it('should 302 with river id', async () => {
-      stubs.getJson.callsFake(() => data.warringtonGetJson)
-      stubs.getStationsByRadius.callsFake(() => data.stationsWithinRadius)
-      stubs.getStationById.callsFake(() => data.riverStation7224)
-      stubs.getStationsGeoJson.callsFake(() => data.cachedStation)
-      stubs.getIsEngland.callsFake(() => ({ is_england: true }))
+      stubs.getJson.mockImplementation(() => data.warringtonGetJson)
+      stubs.getStationsByRadius.mockImplementation(() => data.stationsWithinRadius)
+      stubs.getStationById.mockImplementation(() => data.riverStation7224)
+      stubs.getStationsGeoJson.mockImplementation(() => data.cachedStation)
+      stubs.getIsEngland.mockImplementation(() => ({ is_england: true }))
 
       const floodService = require('../../server/services/flood')
       floodService.stationsGeojson = await floodService.getStationsGeoJson()
@@ -1431,12 +1426,12 @@ describe('Route - River and Sea Levels', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(302)
-      expect(response.headers.location).to.equal('/river-and-sea-levels/river/river-nidd')
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/river-and-sea-levels/river/river-nidd')
     })
 
     it('should 200 with river id', async () => {
-      stubs.getRiverById.callsFake(() => data.riverNiddStations)
+      stubs.getRiverById.mockImplementation(() => data.riverNiddStations)
 
       const options = {
         method: 'GET',
@@ -1449,9 +1444,42 @@ describe('Route - River and Sea Levels', () => {
       const searchBoxValue = root.querySelectorAll('input.defra-search__input#location')[0].attributes.value
       const riversTab = root.querySelectorAll('ul#filter.defra-navbar__list li.defra-navbar__item--selected')[0].text.trim()
 
-      expect(response.statusCode).to.equal(200)
-      expect(searchBoxValue).to.equal('River Nidd')
-      expect(riversTab).to.equal('River (6)')
+      expect(response.statusCode).toBe(200)
+      expect(searchBoxValue).toBe('River Nidd')
+      expect(riversTab).toBe('River (6)')
+    })
+  })
+
+  describe('Not found and validation', () => {
+    it('should 404 when the target area has no name', async () => {
+      stubs.getTargetArea.mockResolvedValue({})
+
+      const response = await server.inject({ method: 'GET', url: '/river-and-sea-levels/target-area/011FWFNC6KC' })
+
+      expect(response.statusCode).toBe(404)
+      expect(stubs.getStationsWithinTargetArea).not.toHaveBeenCalled()
+    })
+
+    it('should 404 when the river has no stations', async () => {
+      stubs.getRiverById.mockResolvedValue([])
+
+      const response = await server.inject({ method: 'GET', url: '/river-and-sea-levels/river/unknown-river' })
+
+      expect(response.statusCode).toBe(404)
+    })
+
+    it('should show the location not found page when the search query is too long', async () => {
+      const response = await server.inject({ method: 'GET', url: `/river-and-sea-levels?q=${'a'.repeat(201)}` })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('Error: Find location - Check for flooding - GOV.UK')
+    })
+
+    it('should redirect to the default page when the location page query is invalid', async () => {
+      const response = await server.inject({ method: 'GET', url: '/river-and-sea-levels/warrington?riverId=1&riverId=2' })
+
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('river-and-sea-levels')
     })
   })
 })

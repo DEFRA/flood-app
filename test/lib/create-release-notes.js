@@ -1,8 +1,5 @@
 'use strict'
 
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const { describe, it, before, after } = exports.lab = Lab.script()
 const fs = require('fs')
 const path = require('path')
 const { spawn } = require('child_process')
@@ -54,7 +51,7 @@ function testMainFunction (args) {
 }
 
 describe('create-release-notes.js', () => {
-  before(() => {
+  beforeAll(() => {
     // Create test output directory if it doesn't exist
     if (!fs.existsSync(testDir)) {
       fs.mkdirSync(testDir, { recursive: true })
@@ -92,7 +89,7 @@ FSR-789 Add new feature
     fs.writeFileSync(path.join(fixturesDir, 'whitespace-commits.txt'), '   \n\n   \n')
   })
 
-  after(() => {
+  afterAll(() => {
     // Clean up test files
     if (fs.existsSync(testDir)) {
       fs.rmSync(testDir, { recursive: true, force: true })
@@ -114,19 +111,19 @@ FSR-789 Add new feature
     ]
 
     const result = await executeCreateReleaseNotes(args)
-    expect(result.success).to.be.true()
+    expect(result.success).toBeTrue()
 
     // Check that output file was created
-    expect(fs.existsSync(outputFile)).to.be.true()
+    expect(fs.existsSync(outputFile)).toBeTrue()
 
     // Check output content
     const output = fs.readFileSync(outputFile, 'utf8')
-    expect(output).to.contain('Release 8.26.0')
-    expect(output).to.contain('Date: 2024-03-15')
-    expect(output).to.contain('ID: 12345')
-    expect(output).to.contain('- FSR-123 Fix flood warning display')
-    expect(output).to.contain('- FSR-456 Update station data')
-    expect(output).to.contain('- FSR-789 Add new feature')
+    expect(output).toContain('Release 8.26.0')
+    expect(output).toContain('Date: 2024-03-15')
+    expect(output).toContain('ID: 12345')
+    expect(output).toContain('- FSR-123 Fix flood warning display')
+    expect(output).toContain('- FSR-456 Update station data')
+    expect(output).toContain('- FSR-789 Add new feature')
   })
 
   it('should include database changes text when dbChanges flag is set', async () => {
@@ -142,10 +139,10 @@ FSR-789 Add new feature
     ]
 
     const result = await executeCreateReleaseNotes(args)
-    expect(result.success).to.be.true()
+    expect(result.success).toBeTrue()
 
     const output = fs.readFileSync(outputFile, 'utf8')
-    expect(output).to.contain('Database changes included')
+    expect(output).toContain('Database changes included')
   })
 
   it('should not include database changes text when dbChanges flag is not set', async () => {
@@ -160,10 +157,10 @@ FSR-789 Add new feature
     ]
 
     const result = await executeCreateReleaseNotes(args)
-    expect(result.success).to.be.true()
+    expect(result.success).toBeTrue()
 
     const output = fs.readFileSync(outputFile, 'utf8')
-    expect(output).to.not.contain('Database changes included')
+    expect(output).not.toContain('Database changes included')
   })
 
   it('should filter out empty lines from commit list', async () => {
@@ -178,11 +175,11 @@ FSR-789 Add new feature
     ]
 
     const result = await executeCreateReleaseNotes(args)
-    expect(result.success).to.be.true()
+    expect(result.success).toBeTrue()
 
     const output = fs.readFileSync(outputFile, 'utf8')
     const lines = output.split('\n').filter(line => line.trim().startsWith('-'))
-    expect(lines).to.have.length(3) // Only 3 actual tickets, not 4 (empty line filtered)
+    expect(lines).toHaveLength(3) // Only 3 actual tickets, not 4 (empty line filtered)
   })
 
   it('should handle empty commit list', async () => {
@@ -197,13 +194,13 @@ FSR-789 Add new feature
     ]
 
     const result = await executeCreateReleaseNotes(args)
-    expect(result.success).to.be.true()
+    expect(result.success).toBeTrue()
 
     const output = fs.readFileSync(outputFile, 'utf8')
-    expect(output).to.contain('Release 8.26.0')
+    expect(output).toContain('Release 8.26.0')
     // Should not contain any ticket items
     const lines = output.split('\n').filter(line => line.trim().startsWith('-'))
-    expect(lines).to.have.length(0)
+    expect(lines).toHaveLength(0)
   })
 
   it('should handle commit list with only whitespace', async () => {
@@ -218,11 +215,11 @@ FSR-789 Add new feature
     ]
 
     const result = await executeCreateReleaseNotes(args)
-    expect(result.success).to.be.true()
+    expect(result.success).toBeTrue()
 
     const output = fs.readFileSync(outputFile, 'utf8')
     const lines = output.split('\n').filter(line => line.trim().startsWith('-'))
-    expect(lines).to.have.length(0) // All whitespace lines should be filtered
+    expect(lines).toHaveLength(0) // All whitespace lines should be filtered
   })
 
   it('should use short aliases for parameters', async () => {
@@ -238,10 +235,10 @@ FSR-789 Add new feature
     ]
 
     const result = await executeCreateReleaseNotes(args)
-    expect(result.success).to.be.true()
+    expect(result.success).toBeTrue()
 
     const output = fs.readFileSync(outputFile, 'utf8')
-    expect(output).to.contain('Database changes included')
+    expect(output).toContain('Database changes included')
   })
 
   it('should fail when required file parameter is missing', async () => {
@@ -255,8 +252,8 @@ FSR-789 Add new feature
     ]
 
     const result = await executeCreateReleaseNotes(args)
-    expect(result.success).to.be.false()
-    expect(result.stderr).to.contain('file')
+    expect(result.success).toBeFalse()
+    expect(result.stderr).toContain('file')
   })
 
   it('should fail when required output parameter is missing', async () => {
@@ -269,8 +266,8 @@ FSR-789 Add new feature
     ]
 
     const result = await executeCreateReleaseNotes(args)
-    expect(result.success).to.be.false()
-    expect(result.stderr).to.contain('output')
+    expect(result.success).toBeFalse()
+    expect(result.stderr).toContain('output')
   })
 
   it('should fail when required date parameter is missing', async () => {
@@ -284,8 +281,8 @@ FSR-789 Add new feature
     ]
 
     const result = await executeCreateReleaseNotes(args)
-    expect(result.success).to.be.false()
-    expect(result.stderr).to.contain('date')
+    expect(result.success).toBeFalse()
+    expect(result.stderr).toContain('date')
   })
 
   it('should fail when required release parameter is missing', async () => {
@@ -299,8 +296,8 @@ FSR-789 Add new feature
     ]
 
     const result = await executeCreateReleaseNotes(args)
-    expect(result.success).to.be.false()
-    expect(result.stderr).to.contain('release')
+    expect(result.success).toBeFalse()
+    expect(result.stderr).toContain('release')
   })
 
   it('should fail when required id parameter is missing', async () => {
@@ -314,8 +311,8 @@ FSR-789 Add new feature
     ]
 
     const result = await executeCreateReleaseNotes(args)
-    expect(result.success).to.be.false()
-    expect(result.stderr).to.contain('id')
+    expect(result.success).toBeFalse()
+    expect(result.stderr).toContain('id')
   })
 
   it('should fail when required template parameter is missing', async () => {
@@ -329,8 +326,8 @@ FSR-789 Add new feature
     ]
 
     const result = await executeCreateReleaseNotes(args)
-    expect(result.success).to.be.false()
-    expect(result.stderr).to.contain('template')
+    expect(result.success).toBeFalse()
+    expect(result.stderr).toContain('template')
   })
 
   it('should display help with --help flag', async () => {
@@ -338,13 +335,13 @@ FSR-789 Add new feature
 
     // In yargs v18, help is output to stdout, not stderr
     const output = result.stdout || result.stderr
-    expect(output).to.contain('--file')
-    expect(output).to.contain('--output')
-    expect(output).to.contain('--date')
-    expect(output).to.contain('--release')
-    expect(output).to.contain('--id')
-    expect(output).to.contain('--template')
-    expect(output).to.contain('--dbChanges')
+    expect(output).toContain('--file')
+    expect(output).toContain('--output')
+    expect(output).toContain('--date')
+    expect(output).toContain('--release')
+    expect(output).toContain('--id')
+    expect(output).toContain('--template')
+    expect(output).toContain('--dbChanges')
   })
 
   // Direct function tests using require and process.argv mocking (for coverage)
@@ -360,9 +357,9 @@ FSR-789 Add new feature
         '-t', path.join(fixturesDir, 'test-template.njk')
       ])
 
-      expect(fs.existsSync(outputFile)).to.be.true()
-      expect(result).to.contain('Release 8.26.0')
-      expect(result).to.contain('Date: 2024-03-15')
+      expect(fs.existsSync(outputFile)).toBeTrue()
+      expect(result).toContain('Release 8.26.0')
+      expect(result).toContain('Date: 2024-03-15')
     })
 
     it('should include database changes when flag is set', () => {
@@ -377,7 +374,7 @@ FSR-789 Add new feature
         '--dbChanges'
       ])
 
-      expect(result).to.contain('Database changes included')
+      expect(result).toContain('Database changes included')
     })
 
     it('should filter empty lines and process tickets correctly', () => {
@@ -391,9 +388,9 @@ FSR-789 Add new feature
         '-t', path.join(fixturesDir, 'test-template.njk')
       ])
 
-      expect(result).to.contain('- FSR-123')
-      expect(result).to.contain('- FSR-456')
-      expect(result).to.contain('- FSR-789')
+      expect(result).toContain('- FSR-123')
+      expect(result).toContain('- FSR-456')
+      expect(result).toContain('- FSR-789')
     })
 
     it('should handle empty commit list', () => {
@@ -407,9 +404,9 @@ FSR-789 Add new feature
         '-t', path.join(fixturesDir, 'test-template.njk')
       ])
 
-      expect(result).to.contain('Release 8.26.0')
+      expect(result).toContain('Release 8.26.0')
       const ticketLines = result.split('\n').filter(line => line.trim().startsWith('-'))
-      expect(ticketLines).to.have.length(0)
+      expect(ticketLines).toHaveLength(0)
     })
   })
 })
