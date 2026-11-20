@@ -1,13 +1,10 @@
 const hapi = require('@hapi/hapi')
 const config = require('../server/config')
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const { describe, it, before, after } = exports.lab = Lab.script()
 
 describe('404 - [server/404.js]', () => {
   let server
 
-  before(async () => {
+  beforeAll(async () => {
     server = await hapi.server({
       port: config.port,
       routes: {
@@ -38,7 +35,7 @@ describe('404 - [server/404.js]', () => {
   })
 
   // Stop server after the tests.
-  after(async () => {
+  afterAll(async () => {
     await server.stop()
   })
 
@@ -49,7 +46,7 @@ describe('404 - [server/404.js]', () => {
     }
 
     const response = await server.inject(options)
-    expect(response.statusCode).to.equal(404)
-    expect(response.headers['content-type']).to.include('text/html')
+    expect(response.statusCode).toBe(404)
+    expect(response.headers['content-type']).toContain('text/html')
   })
 })

@@ -2,11 +2,6 @@
 
 const path = require('path')
 const nunjucks = require('nunjucks')
-const Lab = require('@hapi/lab')
-
-const { expect } = require('@hapi/code')
-
-const { describe, it, before } = exports.lab = Lab.script()
 
 const { parse } = require('node-html-parser')
 
@@ -31,127 +26,127 @@ describe('Contract - Views - Cookie Banner', () => {
   describe('when no cookie policy is set', () => {
     let root
 
-    before(() => {
+    beforeAll(() => {
       root = parse(renderPartial({ currentUrl: '/current-page' }))
     })
 
     it('renders the outer banner container as a labelled landmark', () => {
       const banner = root.querySelector('#cookie-banner')
-      expect(banner).to.exist()
+      expect(banner).toBeDefined()
       // a section with an accessible name is an implicit role="region"
-      expect(banner.tagName).to.equal('SECTION')
-      expect(banner.getAttribute('aria-label')).to.equal('Cookies on Check for flooding')
+      expect(banner.tagName).toBe('SECTION')
+      expect(banner.getAttribute('aria-label')).toBe('Cookies on Check for flooding')
     })
 
     it('wraps the banner in a form that POSTs to /cookie-preferences', () => {
       const form = root.querySelector('#cookie-banner form')
-      expect(form.getAttribute('action')).to.equal('/cookie-preferences')
-      expect(form.getAttribute('method')).to.equal('POST')
+      expect(form.getAttribute('action')).toBe('/cookie-preferences')
+      expect(form.getAttribute('method')).toBe('POST')
     })
 
     it('includes a hidden returnUrl input populated from context', () => {
       const input = root.querySelector('input[name="returnUrl"]')
-      expect(input.getAttribute('type')).to.equal('hidden')
-      expect(input.getAttribute('value')).to.equal('/current-page')
+      expect(input.getAttribute('type')).toBe('hidden')
+      expect(input.getAttribute('value')).toBe('/current-page')
     })
 
     it('renders the accept button with the correct name, value and type', () => {
       const btn = root.querySelector('button[value="accept"]')
-      expect(btn).to.exist()
-      expect(btn.getAttribute('type')).to.equal('submit')
-      expect(btn.getAttribute('name')).to.equal('analytics-consent')
-      expect(btn.text.trim()).to.equal('Accept analytics cookies')
+      expect(btn).toBeDefined()
+      expect(btn.getAttribute('type')).toBe('submit')
+      expect(btn.getAttribute('name')).toBe('analytics-consent')
+      expect(btn.text.trim()).toBe('Accept analytics cookies')
     })
 
     it('renders the reject button with the correct name, value and type', () => {
       const btn = root.querySelector('button[value="reject"]')
-      expect(btn).to.exist()
-      expect(btn.getAttribute('type')).to.equal('submit')
-      expect(btn.getAttribute('name')).to.equal('analytics-consent')
-      expect(btn.text.trim()).to.equal('Reject analytics cookies')
+      expect(btn).toBeDefined()
+      expect(btn.getAttribute('type')).toBe('submit')
+      expect(btn.getAttribute('name')).toBe('analytics-consent')
+      expect(btn.text.trim()).toBe('Reject analytics cookies')
     })
 
     it('renders a View cookies link pointing to /cookies', () => {
       const link = root.querySelectorAll('a').find(a => a.text.trim() === 'View cookies')
-      expect(link).to.exist()
-      expect(link.getAttribute('href')).to.equal('/cookies')
+      expect(link).toBeDefined()
+      expect(link.getAttribute('href')).toBe('/cookies')
     })
 
     it('does not render the confirmation notification banner', () => {
-      expect(root.querySelector('.govuk-notification-banner')).to.not.exist()
+      expect(root.querySelector('.govuk-notification-banner')).toBeNull()
     })
   })
 
   describe('when cookie policy has already been set (hasCookiePolicy = true)', () => {
     let root
 
-    before(() => {
+    beforeAll(() => {
       root = parse(renderPartial({ hasCookiePolicy: true }))
     })
 
     it('does not render the cookie banner', () => {
-      expect(root.querySelector('#cookie-banner')).to.not.exist()
+      expect(root.querySelector('#cookie-banner')).toBeNull()
     })
 
     it('does not render the confirmation notification banner', () => {
-      expect(root.querySelector('.govuk-notification-banner')).to.not.exist()
+      expect(root.querySelector('.govuk-notification-banner')).toBeNull()
     })
   })
 
   describe('when cookieChoiceMade is accept', () => {
     let root
 
-    before(() => {
+    beforeAll(() => {
       root = parse(renderPartial({ hasCookiePolicy: true, cookieChoiceMade: 'accept' }))
     })
 
     it('reveals the accept confirmation message and hides the prompt', () => {
       const messages = root.querySelectorAll('.govuk-cookie-banner__message')
-      expect(messages.length).to.equal(3)
-      expect(messages[0].hasAttribute('hidden')).to.be.true()
-      expect(messages[1].hasAttribute('hidden')).to.be.false()
-      expect(messages[1].getAttribute('role')).to.equal('alert')
-      expect(messages[2].hasAttribute('hidden')).to.be.true()
+      expect(messages.length).toBe(3)
+      expect(messages[0].hasAttribute('hidden')).toBe(true)
+      expect(messages[1].hasAttribute('hidden')).toBe(false)
+      expect(messages[1].getAttribute('role')).toBe('alert')
+      expect(messages[2].hasAttribute('hidden')).toBe(true)
     })
 
     it('confirms the user accepted analytics cookies', () => {
       const messages = root.querySelectorAll('.govuk-cookie-banner__message')
-      expect(messages[1].text).to.include('accepted analytics cookies')
+      expect(messages[1].text).toInclude('accepted analytics cookies')
     })
 
     it('includes a link to change cookie settings', () => {
       const link = root.querySelectorAll('a').find(a => a.text.trim() === 'change your cookie settings')
-      expect(link).to.exist()
-      expect(link.getAttribute('href')).to.equal('/cookies')
+      expect(link).toBeDefined()
+      expect(link.getAttribute('href')).toBe('/cookies')
     })
   })
 
   describe('when cookieChoiceMade is reject', () => {
     let root
 
-    before(() => {
+    beforeAll(() => {
       root = parse(renderPartial({ hasCookiePolicy: true, cookieChoiceMade: 'reject' }))
     })
 
     it('confirms the user rejected analytics cookies', () => {
       const messages = root.querySelectorAll('.govuk-cookie-banner__message')
-      expect(messages[2].hasAttribute('hidden')).to.be.false()
-      expect(messages[2].text).to.include('rejected analytics cookies')
+      expect(messages[2].hasAttribute('hidden')).toBe(false)
+      expect(messages[2].text).toInclude('rejected analytics cookies')
     })
   })
 
   describe('when cookieChoiceMade is stale (cookies cleared but query param still present)', () => {
     let root
 
-    before(() => {
+    beforeAll(() => {
       root = parse(renderPartial({ hasCookiePolicy: false, cookieChoiceMade: 'accept' }))
     })
 
     it('shows the prompt to make a choice and hides both confirmation messages', () => {
       const messages = root.querySelectorAll('.govuk-cookie-banner__message')
-      expect(messages[0].hasAttribute('hidden')).to.be.false()
-      expect(messages[1].hasAttribute('hidden')).to.be.true()
-      expect(messages[2].hasAttribute('hidden')).to.be.true()
+      expect(messages[0].hasAttribute('hidden')).toBe(false)
+      expect(messages[1].hasAttribute('hidden')).toBe(true)
+      expect(messages[2].hasAttribute('hidden')).toBe(true)
     })
   })
 })

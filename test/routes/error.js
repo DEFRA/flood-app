@@ -1,20 +1,13 @@
 'use strict'
 const Hapi = require('@hapi/hapi')
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const sinon = require('sinon')
-const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 const errorPages = require('../../server/plugins/error-pages')
 const boom = require('@hapi/boom')
 
 describe('Route - Error', () => {
-  let sandbox
   let server
 
   beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
-
-    sandbox = await sinon.createSandbox()
 
     server = Hapi.server({
       port: 3000,
@@ -24,7 +17,6 @@ describe('Route - Error', () => {
 
   afterEach(async () => {
     await server.stop()
-    await sandbox.restore()
   })
 
   it('should 400 when visiting the page', async () => {
@@ -34,7 +26,7 @@ describe('Route - Error', () => {
 
     const floodService = require('../../server/services/flood')
 
-    sandbox.stub(floodService, 'getError').callsFake(getError)
+    jest.spyOn(floodService, 'getError').mockImplementation(getError)
 
     const route = {
       plugin: {
@@ -59,7 +51,7 @@ describe('Route - Error', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(400)
-    expect(response.payload).to.contain('Sorry, there is a problem with the service')
+    expect(response.statusCode).toBe(400)
+    expect(response.payload).toContain('Sorry, there is a problem with the service')
   })
 })

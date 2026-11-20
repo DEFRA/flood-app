@@ -1,8 +1,5 @@
 'use strict'
 
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const { describe, it } = exports.lab = Lab.script()
 const ViewModel = require('../../server/models/views/location')
 const data = require('../data')
 
@@ -13,11 +10,11 @@ describe('Model - Location', () => {
 
     const Result = await viewModel
 
-    expect(Result.floods[0].severitydescription).to.equal('Flood Warning')
-    expect(Result.place.name).to.equal('Keswick, Cumbria')
-    expect(Result.bannerMainText).to.equal('Flood warning for Keswick Campsite')
-    expect(Result.bannerMainLink).to.equal('/target-area/011FWFNC6KC')
-    expect(Result.bannerSub).to.equal('Flooding is expected')
+    expect(Result.floods[0].severitydescription).toBe('Flood Warning')
+    expect(Result.place.name).toBe('Keswick, Cumbria')
+    expect(Result.bannerMainText).toBe('Flood warning for Keswick Campsite')
+    expect(Result.bannerMainLink).toBe('/target-area/011FWFNC6KC')
+    expect(Result.bannerSub).toBe('Flooding is expected')
   })
 
   it('should return a flood alert', async () => {
@@ -26,11 +23,11 @@ describe('Model - Location', () => {
 
     const Result = await viewModel
 
-    expect(Result.floods[0].severitydescription).to.equal('Flood Alert')
-    expect(Result.place.name).to.equal('Keswick, Cumbria')
-    expect(Result.bannerMainText).to.equal('There is a flood alert in this area')
-    expect(Result.bannerMainLink).to.equal('/target-area/011FWFNC6KC')
-    expect(Result.bannerSub).to.equal('Some flooding is possible')
+    expect(Result.floods[0].severitydescription).toBe('Flood Alert')
+    expect(Result.place.name).toBe('Keswick, Cumbria')
+    expect(Result.bannerMainText).toBe('There is a flood alert in this area')
+    expect(Result.bannerMainLink).toBe('/target-area/011FWFNC6KC')
+    expect(Result.bannerSub).toBe('Some flooding is possible')
   })
 
   it('should return a Severe flood warning alert', async () => {
@@ -38,12 +35,12 @@ describe('Model - Location', () => {
     const viewModel = new ViewModel(fakeSevereFloodWarning)
 
     const Result = await viewModel
-    expect(Result.floods[0].severitydescription).to.equal('Severe Flood Warning')
-    expect(Result.place.name).to.equal('Stonethwaite Beck')
-    expect(Result.bannerSevereMainText).to.equal('Severe flood warning for Upper River Derwent, Stonethwaite Beck and Derwent Water')
-    expect(Result.bannerSevereMainLink).to.equal('/target-area/011WAFDW')
-    expect(Result.bannerSevereSub).to.equal('There is a danger to life')
-    expect(Result.floods.length).to.equal(1)
+    expect(Result.floods[0].severitydescription).toBe('Severe Flood Warning')
+    expect(Result.place.name).toBe('Stonethwaite Beck')
+    expect(Result.bannerSevereMainText).toBe('Severe flood warning for Upper River Derwent, Stonethwaite Beck and Derwent Water')
+    expect(Result.bannerSevereMainLink).toBe('/target-area/011WAFDW')
+    expect(Result.bannerSevereSub).toBe('There is a danger to life')
+    expect(Result.floods.length).toBe(1)
   })
 
   it('should return no warnings or alerts', async () => {
@@ -52,7 +49,7 @@ describe('Model - Location', () => {
 
     const Result = await viewModel
 
-    expect(Result.floods.length).to.equal(0)
+    expect(Result.floods.length).toBe(0)
   })
 
   it('should return with a blank alert', async () => {
@@ -61,7 +58,7 @@ describe('Model - Location', () => {
 
     const Result = await viewModel
 
-    expect(Result.floods.length).to.equal(0)
+    expect(Result.floods.length).toBe(0)
   })
 
   it('should return with multiple Flood Alerts', async () => {
@@ -69,11 +66,11 @@ describe('Model - Location', () => {
     const viewModel = new ViewModel(multipleFloodAlerts)
 
     const Result = await viewModel
-    expect(Result.floods[0].severitydescription).to.equal('Flood Alert')
-    expect(Result.place.name).to.equal('Keswick, Cumbria')
-    expect(Result.bannerMainText).to.equal('2 flood alerts in this area')
-    expect(Result.bannerMainLink).to.equal('/alerts-and-warnings?q=Keswick#alerts')
-    expect(Result.bannerSub).to.equal('Some flooding is possible')
+    expect(Result.floods[0].severitydescription).toBe('Flood Alert')
+    expect(Result.place.name).toBe('Keswick, Cumbria')
+    expect(Result.bannerMainText).toBe('2 flood alerts in this area')
+    expect(Result.bannerMainLink).toBe('/alerts-and-warnings?q=Keswick#alerts')
+    expect(Result.bannerSub).toBe('Some flooding is possible')
   })
 
   it('should return with multiple Flood Warnings', async () => {
@@ -82,11 +79,11 @@ describe('Model - Location', () => {
 
     const Result = await viewModel
 
-    expect(Result.floods[0].severitydescription).to.equal('Flood Warning')
-    expect(Result.place.name).to.equal('Keswick, Cumbria')
-    expect(Result.bannerMainText).to.equal('3 flood warnings in this area')
-    expect(Result.bannerMainLink).to.equal('/alerts-and-warnings?q=Keswick#warnings')
-    expect(Result.bannerSub).to.equal('Flooding is expected')
+    expect(Result.floods[0].severitydescription).toBe('Flood Warning')
+    expect(Result.place.name).toBe('Keswick, Cumbria')
+    expect(Result.bannerMainText).toBe('3 flood warnings in this area')
+    expect(Result.bannerMainLink).toBe('/alerts-and-warnings?q=Keswick#warnings')
+    expect(Result.bannerSub).toBe('Flooding is expected')
   })
 
   it('should return with multiple Severe Flood Warnings', async () => {
@@ -95,11 +92,11 @@ describe('Model - Location', () => {
 
     const Result = await viewModel
 
-    expect(Result.floods[0].severitydescription).to.equal('Severe Flood Warning')
-    expect(Result.place.name).to.equal('Keswick, Cumbria')
-    expect(Result.bannerSevereMainText).to.equal('2 severe flood warnings in this area')
-    expect(Result.bannerSevereMainLink).to.equal('/alerts-and-warnings?q=Keswick#severe')
-    expect(Result.bannerSevereSub).to.equal('There is a danger to life')
+    expect(Result.floods[0].severitydescription).toBe('Severe Flood Warning')
+    expect(Result.place.name).toBe('Keswick, Cumbria')
+    expect(Result.bannerSevereMainText).toBe('2 severe flood warnings in this area')
+    expect(Result.bannerSevereMainLink).toBe('/alerts-and-warnings?q=Keswick#severe')
+    expect(Result.bannerSevereSub).toBe('There is a danger to life')
   })
 
   it('should return Flood Warning with Coastal Station', async () => {
@@ -107,11 +104,11 @@ describe('Model - Location', () => {
     const viewModel = new ViewModel(floodWarningCoastal)
 
     const Result = await viewModel
-    expect(Result.floods[0].severitydescription).to.equal('Flood Warning')
-    expect(Result.place.name).to.equal('Station, Coastal')
-    expect(Result.bannerMainText).to.equal('Flood warning for Coastal Station')
-    expect(Result.bannerMainLink).to.equal('/target-area/011TESTC6KC')
-    expect(Result.bannerSub).to.equal('Flooding is expected')
+    expect(Result.floods[0].severitydescription).toBe('Flood Warning')
+    expect(Result.place.name).toBe('Station, Coastal')
+    expect(Result.bannerMainText).toBe('Flood warning for Coastal Station')
+    expect(Result.bannerMainLink).toBe('/target-area/011TESTC6KC')
+    expect(Result.bannerSub).toBe('Flooding is expected')
   })
 
   it('should return flood expected when a Station level is High', async () => {
@@ -119,11 +116,11 @@ describe('Model - Location', () => {
     const viewModel = new ViewModel(floodWarningStationHigh)
 
     const Result = await viewModel
-    expect(Result.floods[0].severitydescription).to.equal('Flood Warning')
-    expect(Result.place.name).to.equal('Station, Coastal')
-    expect(Result.bannerMainText).to.equal('Flood warning for High level Station')
-    expect(Result.bannerMainLink).to.equal('/target-area/011TESTC6KC')
-    expect(Result.bannerSub).to.equal('Flooding is expected')
+    expect(Result.floods[0].severitydescription).toBe('Flood Warning')
+    expect(Result.place.name).toBe('Station, Coastal')
+    expect(Result.bannerMainText).toBe('Flood warning for High level Station')
+    expect(Result.bannerMainLink).toBe('/target-area/011TESTC6KC')
+    expect(Result.bannerSub).toBe('Flooding is expected')
   })
 
   it('should return no warnings and no high level stations', async () => {
@@ -132,8 +129,8 @@ describe('Model - Location', () => {
 
     const Result = await viewModel
 
-    expect(Result.floods.length).to.equal(0)
-    expect(Result.hasHighLevels).to.be.false()
+    expect(Result.floods.length).toBe(0)
+    expect(Result.hasHighLevels).toBe(false)
   })
 
   it('should return no warnings and high level stations', async () => {
@@ -142,8 +139,8 @@ describe('Model - Location', () => {
 
     const Result = await viewModel
 
-    expect(Result.floods.length).to.equal(0)
-    expect(Result.hasHighLevels).to.be.true()
+    expect(Result.floods.length).toBe(0)
+    expect(Result.hasHighLevels).toBe(true)
   })
 
   it('should return no warnings and high levels on inactive stations', async () => {
@@ -152,8 +149,8 @@ describe('Model - Location', () => {
 
     const Result = await viewModel
 
-    expect(Result.floods.length).to.equal(0)
-    expect(Result.hasHighLevels).to.be.false()
+    expect(Result.floods.length).toBe(0)
+    expect(Result.hasHighLevels).toBe(false)
   })
 
   it('should return no warnings and high levels with variety of station types', async () => {
@@ -162,8 +159,8 @@ describe('Model - Location', () => {
 
     const Result = await viewModel
 
-    expect(Result.floods.length).to.equal(0)
-    expect(Result.hasHighLevels).to.be.true()
+    expect(Result.floods.length).toBe(0)
+    expect(Result.hasHighLevels).toBe(true)
   })
 
   it('should show alert summary link when a flood alert accompanies a flood warning', async () => {
@@ -176,8 +173,8 @@ describe('Model - Location', () => {
     }
     const viewModel = new ViewModel(alertWithWarning)
 
-    expect(viewModel.alerts).to.equal(1)
-    expect(viewModel.alertsSummaryLinkText).to.equal('1 flood alert')
-    expect(viewModel.alertsSummaryText).to.equal('is')
+    expect(viewModel.alerts).toBe(1)
+    expect(viewModel.alertsSummaryLinkText).toBe('1 flood alert')
+    expect(viewModel.alertsSummaryText).toBe('is')
   })
 })

@@ -1,8 +1,5 @@
 'use strict'
 
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const { describe, it } = exports.lab = Lab.script()
 const OutlookTabsModel = require('../../server/models/outlook-tabs')
 const data = require('../data')
 const moment = require('moment')
@@ -20,9 +17,9 @@ describe('Model - Outlook Tabs', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
-    expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
-    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
+    expect(JSON.stringify(viewModel.tab1)).toBe(expectedOutlookTab1)
+    expect(JSON.stringify(viewModel.tab2)).toBe(expectedOutlookTab2)
+    expect(JSON.stringify(viewModel.tab3)).toBe(expectedOutlookTab3)
   })
 
   it('should return that coastal poly aren\'t failing in turf', async () => {
@@ -36,9 +33,9 @@ describe('Model - Outlook Tabs', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
-    expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
-    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
+    expect(JSON.stringify(viewModel.tab1)).toBe(expectedOutlookTab1)
+    expect(JSON.stringify(viewModel.tab2)).toBe(expectedOutlookTab2)
+    expect(JSON.stringify(viewModel.tab3)).toBe(expectedOutlookTab3)
   })
 
   it('should format the date correctly and set"outOfDate" as false for FGS created today', async () => {
@@ -52,7 +49,7 @@ describe('Model - Outlook Tabs', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(viewModel.formattedIssueDate).to.equal(formattedIssueDate)
+    expect(viewModel.formattedIssueDate).toBe(formattedIssueDate)
   })
 
   it('should not intersect any polygons', async () => {
@@ -83,14 +80,12 @@ describe('Model - Outlook Tabs', () => {
     const expectedOutlookTab2 = '{}'
     const expectedOutlookTab3 = '[{"1-i2-l2":"runoff from rainfall or blocked drains and overflowing rivers"}]'
 
-    const lowForFive = true
-
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
-    expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
-    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
-    expect(viewModel).to.not.contain(lowForFive)
+    expect(JSON.stringify(viewModel.tab1)).toBe(expectedOutlookTab1)
+    expect(JSON.stringify(viewModel.tab2)).toBe(expectedOutlookTab2)
+    expect(JSON.stringify(viewModel.tab3)).toBe(expectedOutlookTab3)
+    expect(viewModel).not.toHaveProperty('lowForFive')
   })
 
   it('should set the trends', async () => {
@@ -119,10 +114,10 @@ describe('Model - Outlook Tabs', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(viewModel.trend[0]).to.equal('')
-    expect(viewModel.trend[1]).to.equal('rises to')
-    expect(viewModel.trend[2]).to.equal('falls to')
-    expect(viewModel.trend[3]).to.equal('remains')
+    expect(viewModel.trend[0]).toBe('')
+    expect(viewModel.trend[1]).toBe('rises to')
+    expect(viewModel.trend[2]).toBe('falls to')
+    expect(viewModel.trend[3]).toBe('remains')
   })
 
   it('should filter and not show FGS with all alerts less than very low', async () => {
@@ -151,10 +146,11 @@ describe('Model - Outlook Tabs', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(viewModel.tab1).to.equal({})
-    expect(viewModel.tab1).to.equal({})
-    expect(viewModel.tab1).to.equal({})
-    expect(viewModel.lowForFive).to.equal(true)
+    expect(viewModel.tab1).toEqual({})
+    expect(viewModel.tab1).toEqual({})
+    expect(viewModel.tab1).toEqual({})
+
+    expect(viewModel.lowForFive).toBe(true)
   })
 
   it('should check flood risk is the same on day 3 and day 4 but different on day 5', async () => {
@@ -172,19 +168,20 @@ describe('Model - Outlook Tabs', () => {
         day4: 'increasing',
         day5: 'increasing'
       },
-      sources:
-        [{ surface: 'The surface water flood risk is LOW.\n\nSignificant surface water flooding impacts are possible but not expected across many parts of England and Wales on Friday due to widespread rain and heavy showers. Significant surface water flooding impacts are possible but not expected from thunderstorms on Saturday and Sunday across parts of the north of England.\n\nMinor surface water flooding impacts are possible but not expected from heavy showers on Monday across parts of the north of England and Wales.\n' },
-          { river: 'The river flood risk is LOW.\n\nSignificant river flooding impacts are possible but not expected across parts of the north Midlands and the north of England on Friday due to widespread rain and heavy showers. Significant river flooding impacts are possible but not expected from thunderstorms on Saturday and Sunday across parts of the north of England. Urban watercourses and small, fast responding river catchments are most at risk.\n\nMinor river flooding impacts are possible but not expected from heavy showers on Monday across parts of the north of England and Wales.\n\nThe ongoing situation at Toddbrook Reservoir is being managed by the relevant agencies to minimise the risk of flooding and has not been specifically shown on this product.' },
-          { coastal: 'The coastal/tidal flood risk is VERY LOW for the next five days.' },
-          { ground: 'The groundwater flood risk is VERY LOW for the next five days.' }],
+      sources: [
+        { surface: 'The surface water flood risk is LOW.\n\nSignificant surface water flooding impacts are possible but not expected across many parts of England and Wales on Friday due to widespread rain and heavy showers. Significant surface water flooding impacts are possible but not expected from thunderstorms on Saturday and Sunday across parts of the north of England.\n\nMinor surface water flooding impacts are possible but not expected from heavy showers on Monday across parts of the north of England and Wales.\n' },
+        { river: 'The river flood risk is LOW.\n\nSignificant river flooding impacts are possible but not expected across parts of the north Midlands and the north of England on Friday due to widespread rain and heavy showers. Significant river flooding impacts are possible but not expected from thunderstorms on Saturday and Sunday across parts of the north of England. Urban watercourses and small, fast responding river catchments are most at risk.\n\nMinor river flooding impacts are possible but not expected from heavy showers on Monday across parts of the north of England and Wales.\n\nThe ongoing situation at Toddbrook Reservoir is being managed by the relevant agencies to minimise the risk of flooding and has not been specifically shown on this product.' },
+        { coastal: 'The coastal/tidal flood risk is VERY LOW for the next five days.' },
+        { ground: 'The groundwater flood risk is VERY LOW for the next five days.' }
+      ],
       headline: 'Significant surface water and river flooding impacts are possible but not expected across parts of England and Wales on Friday, and across parts of the north of England on Saturday and Sunday. The overall flood risk is LOW.',
       amendments: '',
       future_forecast: '',
       last_modified_at: '2019-08-08T09:27:22Z',
       next_issue_due_at: '2019-08-09T09:30:00Z',
       png_thumbnails_with_days_url: 'https://s3-eu-west-1.amazonaws.com/assets.ffc-environment-agency.fgs.metoffice.gov.uk/fgs-statements/01107-2019-08-08_1030/FGSthumbnails-with-days.png',
-      risk_areas:
-        [{
+      risk_areas: [
+        {
           id: 1950,
           statement_id: 1105,
           updated_at: '2019-08-06T09:22:29Z',
@@ -233,7 +230,7 @@ describe('Model - Outlook Tabs', () => {
             }
           ]
         }
-        ],
+      ],
       aoc_maps:
         [{
           id: 1183,
@@ -279,7 +276,7 @@ describe('Model - Outlook Tabs', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(viewModel.dayName[2]).to.equal('Saturday and Sunday')
+    expect(viewModel.dayName[2]).toBe('Saturday and Sunday')
   })
 
   it('should issue FGS as yesterday and "tab1" is populated from "day2"', async () => {
@@ -312,7 +309,7 @@ describe('Model - Outlook Tabs', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
+    expect(JSON.stringify(viewModel.tab1)).toBe(tab1)
   })
 
   it('should populate "tab1" from day 3 when FGS issued is > 24 but <= 48 hours', async () => {
@@ -346,7 +343,7 @@ describe('Model - Outlook Tabs', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(tab1)
+    expect(JSON.stringify(viewModel.tab1)).toBe(tab1)
   })
 
   it('should set "allDaysSame" to true when all five days have the same likelihood, source and impact', async () => {
@@ -435,9 +432,9 @@ describe('Model - Outlook Tabs', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(viewModel.allDaysSame).to.equal(true)
-    expect(viewModel.day5Name).to.be.a.string()
-    expect(viewModel.lowForFive).to.be.undefined()
+    expect(viewModel.allDaysSame).toBe(true)
+    expect(viewModel.day5Name).toBeString()
+    expect(viewModel.lowForFive).toBe(undefined)
   })
 
   it('should not set "allDaysSame" when days have different likelihood, source or impact', async () => {
@@ -458,7 +455,7 @@ describe('Model - Outlook Tabs', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(viewModel.allDaysSame).to.be.undefined()
+    expect(viewModel.allDaysSame).toBe(undefined)
   })
 
   it('should capitalise source 3-i4-l2', async () => {
@@ -493,8 +490,8 @@ describe('Model - Outlook Tabs', () => {
 
     const viewModel = new OutlookTabsModel(outlook, place)
 
-    expect(JSON.stringify(viewModel.tab1)).to.equal(expectedOutlookTab1)
-    expect(JSON.stringify(viewModel.tab2)).to.equal(expectedOutlookTab2)
-    expect(JSON.stringify(viewModel.tab3)).to.equal(expectedOutlookTab3)
+    expect(JSON.stringify(viewModel.tab1)).toBe(expectedOutlookTab1)
+    expect(JSON.stringify(viewModel.tab2)).toBe(expectedOutlookTab2)
+    expect(JSON.stringify(viewModel.tab3)).toBe(expectedOutlookTab3)
   })
 })
