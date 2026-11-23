@@ -80,7 +80,7 @@ jobs:
           build-args: |
             GIT_COMMIT=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
             BUILD_VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
-          push: true
+          push: false # Temporary: build and report the image without pushing to ECR.
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
 
@@ -89,9 +89,20 @@ jobs:
       # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary
       - name: Generate job summary
         id: summary
+        env:
+          DOCKER_TAGS: ${{ steps.meta.outputs.tags }}
         run: |
+          if [ -z "$DOCKER_TAGS" ]; then
+            echo "Error: no Docker image tags were generated." >&2
+            exit 1
+          fi
           {
             echo "### Docker Image details"
+            echo "**Dry run:** image built but not pushed to ECR."
+            echo "Intended image tags:"
+            echo '```'
+            printf '%s\n' "$DOCKER_TAGS"
+            echo '```'
             echo "The tag is **${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}**"
             echo "| Label      | Value |"
             echo "| ---------- | ----- |"
