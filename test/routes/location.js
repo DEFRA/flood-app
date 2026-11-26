@@ -1,33 +1,27 @@
 'use strict'
 
 const Hapi = require('@hapi/hapi')
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const sinon = require('sinon')
 const moment = require('moment')
 const { parse } = require('node-html-parser')
-
-const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 
 const data = require('../data')
 const LocationSearchError = require('../../server/location-search-error')
 
 describe('Route - Location', () => {
-  let sandbox
   let server
 
   async function setup (fakeIsEngland, fakeFloodsData, fakeStationsData, fakeImpactsData, fakeOutlookData, fakeGetJson) {
     const floodService = require('../../server/services/flood')
 
-    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+    jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+    jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+    jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+    jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+    jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
     const locationPlugin = {
       plugin: {
@@ -51,13 +45,13 @@ describe('Route - Location', () => {
   }
 
   beforeEach(async () => {
+    jest.restoreAllMocks()
+    jest.resetModules()
     delete require.cache[require.resolve('../../server/util.js')]
     delete require.cache[require.resolve('../../server/services/location.js')]
     delete require.cache[require.resolve('../../server/routes/location.js')]
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
-
-    sandbox = await sinon.createSandbox()
 
     server = Hapi.server({
       port: 3000,
@@ -75,7 +69,6 @@ describe('Route - Location', () => {
 
   afterEach(async () => {
     await server.stop()
-    await sandbox.restore()
   })
 
   describe('Legacy', () => {
@@ -98,7 +91,7 @@ describe('Route - Location', () => {
       }
 
       const util = require('../../server/util')
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       const locationPlugin = {
         plugin: {
@@ -127,7 +120,7 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(404)
+      expect(response.statusCode).toBe(404)
     })
 
     it('should 301 redirect with valid location', async () => {
@@ -178,7 +171,7 @@ describe('Route - Location', () => {
       }
 
       const util = require('../../server/util')
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       const locationPlugin = {
         plugin: {
@@ -207,8 +200,8 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(301)
-      expect(response.headers.location).to.equal('/location/coxwold-north-yorkshire')
+      expect(response.statusCode).toBe(301)
+      expect(response.headers.location).toBe('/location/coxwold-north-yorkshire')
     })
   })
 
@@ -221,7 +214,7 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(404)
+      expect(response.statusCode).toBe(404)
     })
 
     it('should 404 when entering a query containing angle brackets', async () => {
@@ -232,7 +225,7 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(404)
+      expect(response.statusCode).toBe(404)
     })
   })
 
@@ -262,7 +255,7 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(404)
+      expect(response.statusCode).toBe(404)
     })
 
     it('should 404 with location: Scotland', async () => {
@@ -273,7 +266,7 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(404)
+      expect(response.statusCode).toBe(404)
     })
   })
 
@@ -342,17 +335,17 @@ describe('Route - Location', () => {
         return outlook
       }
 
-      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-      sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-      sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+      jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+      jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+      jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
       const fakeGetJson = () => data.warringtonGetJson
 
       const util = require('../../server/util')
 
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       floodService.outlook = await floodService.getOutlook()
 
@@ -382,8 +375,8 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('<p class="govuk-body">The flood risk for the next 5 days is very low.</p>')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('<p class="govuk-body">The flood risk for the next 5 days is very low.</p>')
     })
 
     it('should 200 with error message on empty data', async () => {
@@ -404,17 +397,17 @@ describe('Route - Location', () => {
         return {}
       }
 
-      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-      sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-      sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+      jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+      jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+      jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
       const fakeGetJson = () => data.warringtonGetJson
 
       const util = require('../../server/util')
 
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       floodService.outlook = await floodService.getOutlook()
 
@@ -444,8 +437,8 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('Sorry, there is currently a problem with the data')
     })
 
     it('should 200 with error message on valid json but incorrect format', async () => {
@@ -467,17 +460,17 @@ describe('Route - Location', () => {
         return outlook.statement
       }
 
-      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-      sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-      sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+      jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+      jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+      jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
       const fakeGetJson = () => data.warringtonGetJson
 
       const util = require('../../server/util')
 
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       floodService.outlook = await floodService.getOutlook()
 
@@ -507,8 +500,8 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('Sorry, there is currently a problem with the data')
     })
 
     it('should 200 with error message on invalid json', async () => {
@@ -529,17 +522,17 @@ describe('Route - Location', () => {
         return ''
       }
 
-      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-      sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-      sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+      jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+      jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+      jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
       const fakeGetJson = () => data.warringtonGetJson
 
       const util = require('../../server/util')
 
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       floodService.outlook = await floodService.getOutlook()
 
@@ -569,8 +562,8 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('Sorry, there is currently a problem with the data')
     })
 
     it('should 200 with error message on valid json but missing "issue_date" and other fields', async () => {
@@ -612,17 +605,17 @@ describe('Route - Location', () => {
         return outlook
       }
 
-      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-      sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-      sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+      jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+      jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+      jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
       const fakeGetJson = () => data.warringtonGetJson
 
       const util = require('../../server/util')
 
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       floodService.outlook = await floodService.getOutlook()
 
@@ -651,8 +644,8 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('Sorry, there is currently a problem with the data')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('Sorry, there is currently a problem with the data')
     })
 
     it('should 200 with error message on valid json but empty "risk_areas"', async () => {
@@ -694,17 +687,17 @@ describe('Route - Location', () => {
         return outlook
       }
 
-      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-      sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-      sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+      jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+      jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+      jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
       const fakeGetJson = () => data.warringtonGetJson
 
       const util = require('../../server/util')
 
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       floodService.outlook = await floodService.getOutlook()
 
@@ -734,8 +727,8 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('The flood risk for the next 5 days is very low.')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('The flood risk for the next 5 days is very low.')
     })
   })
 
@@ -754,17 +747,17 @@ describe('Route - Location', () => {
     const fakeImpactsData = () => []
     const fakeOutlookData = () => []
 
-    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+    jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+    jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+    jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+    jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+    jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
     const locationPlugin = {
       plugin: {
@@ -798,8 +791,8 @@ describe('Route - Location', () => {
       return href && href.startsWith('/river-and-sea-levels/')
     })
 
-    expect(anchor).to.exist()
-    expect(anchor.getAttribute('href')).to.equal('/river-and-sea-levels/warrington')
+    expect(anchor).not.toBeNil()
+    expect(anchor.getAttribute('href')).toBe('/river-and-sea-levels/warrington')
   })
 
   it('should 302 with no query parameters', async () => {
@@ -830,8 +823,8 @@ describe('Route - Location', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(302)
-    expect(response.headers.location).to.equal('/')
+    expect(response.statusCode).toBe(302)
+    expect(response.headers.location).toBe('/')
   })
 
   it('should 404 with invalid location', async () => {
@@ -853,7 +846,7 @@ describe('Route - Location', () => {
     }
 
     const util = require('../../server/util')
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+    jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
     const locationPlugin = {
       plugin: {
@@ -882,8 +875,8 @@ describe('Route - Location', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(404)
-    expect(response.payload).to.contain('Page not found')
+    expect(response.statusCode).toBe(404)
+    expect(response.payload).toContain('Page not found')
   })
 
   it('should 200 with known and unknown query parameters', async () => {
@@ -901,17 +894,17 @@ describe('Route - Location', () => {
     const fakeImpactsData = () => []
     const fakeOutlookData = () => []
 
-    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+    jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+    jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+    jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+    jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+    jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
     const locationPlugin = {
       plugin: {
@@ -939,7 +932,7 @@ describe('Route - Location', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).toBe(200)
   })
 
   it('should 500 with no response from Bing', async () => {
@@ -949,7 +942,7 @@ describe('Route - Location', () => {
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+    jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
     const locationPlugin = {
       plugin: {
@@ -978,8 +971,8 @@ describe('Route - Location', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(500)
-    expect(response.payload).to.contain('<h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Sorry, there is a problem with the search</h1>')
+    expect(response.statusCode).toBe(500)
+    expect(response.payload).toContain('<h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Sorry, there is a problem with the search</h1>')
   })
 
   it('should 404 if not in England', async () => {
@@ -994,17 +987,17 @@ describe('Route - Location', () => {
     const fakeImpactsData = () => []
     const fakeOutlookData = () => { }
 
-    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+    jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+    jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+    jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+    jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
     const fakeGetJson = () => data.scotlandGetJson
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+    jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
     const locationPlugin = {
       plugin: {
@@ -1032,7 +1025,7 @@ describe('Route - Location', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(404)
+    expect(response.statusCode).toBe(404)
   })
 
   it('should 200 with location-1sw-2w-1a', async () => {
@@ -1047,17 +1040,17 @@ describe('Route - Location', () => {
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
 
-    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-    sandbox.stub(floodService, 'getOutlook').callsFake(() => { })
+    jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+    jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+    jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+    jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+    jest.spyOn(floodService, 'getOutlook').mockImplementation(() => { })
 
     const fakeGetJson = () => data.warringtonGetJson
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+    jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
     const locationPlugin = {
       plugin: {
@@ -1085,11 +1078,11 @@ describe('Route - Location', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.contain('There is a danger to life')
-    expect(response.payload).to.contain('Severe flood warning for ')
-    expect(response.payload).to.contain('2 flood warnings')
-    expect(response.payload).to.contain('1 flood alert')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('There is a danger to life')
+    expect(response.payload).toContain('Severe flood warning for ')
+    expect(response.payload).toContain('2 flood warnings')
+    expect(response.payload).toContain('1 flood alert')
   })
 
   it('should redirect to default page with parameter: England', async () => {
@@ -1106,16 +1099,16 @@ describe('Route - Location', () => {
     const fakeStationsData = () => []
     const fakeImpactsData = () => []
 
-    sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-    sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-    sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-    sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
+    jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+    jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+    jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+    jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
 
     const fakeGetJson = () => data.warringtonGetJson
 
     const util = require('../../server/util')
 
-    sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+    jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
     const locationPlugin = {
       plugin: {
@@ -1140,8 +1133,8 @@ describe('Route - Location', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(302)
-    expect(response.headers.location).to.equal('/')
+    expect(response.statusCode).toBe(302)
+    expect(response.headers.location).toBe('/')
   })
 
   describe('Alerts and Warnings', () => {
@@ -1162,15 +1155,15 @@ describe('Route - Location', () => {
       const fakeImpactsData = () => []
       const fakeOutlookData = () => { }
 
-      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-      sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-      sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+      jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+      jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+      jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
       const util = require('../../server/util')
 
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       const locationPlugin = {
         plugin: {
@@ -1198,14 +1191,14 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).not.to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/sign-up-for-flood-warnings">\s*Get flood warnings by phone, text or email\s*<\/a>/)
-      expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/prepare-for-flooding">\s*Prepare for flooding\s*<\/a>/)
-      expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/help-during-flood">\s*What to do before or during a flood\s*<\/a>/)
-      expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/after-flood">\s*What to do after a flood\s*<\/a>/)
-      expect(response.payload).not.to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/check-long-term-flood-risk">\s*Check your long term flood risk\s*<\/a>/)
-      expect(response.payload).to.match(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/report-flood-cause">\s*Report a flood\s*<\/a>/)
-      expect(response.payload).to.contain('There are no flood warnings or alerts in this area.')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).not.toMatch(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/sign-up-for-flood-warnings">\s*Get flood warnings by phone, text or email\s*<\/a>/)
+      expect(response.payload).toMatch(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/prepare-for-flooding">\s*Prepare for flooding\s*<\/a>/)
+      expect(response.payload).toMatch(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/help-during-flood">\s*What to do before or during a flood\s*<\/a>/)
+      expect(response.payload).toMatch(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/after-flood">\s*What to do after a flood\s*<\/a>/)
+      expect(response.payload).not.toMatch(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/check-long-term-flood-risk">\s*Check your long term flood risk\s*<\/a>/)
+      expect(response.payload).toMatch(/<div class="defra-related-items">[\s\S]*?<a class="govuk-link" href="https:\/\/www\.gov\.uk\/report-flood-cause">\s*Report a flood\s*<\/a>/)
+      expect(response.payload).toContain('There are no flood warnings or alerts in this area.')
     })
 
     it('should return 1 alert 1 nlif (with station data)', async () => {
@@ -1258,17 +1251,17 @@ describe('Route - Location', () => {
 
       const fakeImpactsData = () => []
 
-      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-      sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-      sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(() => { })
+      jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+      jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+      jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+      jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(() => { })
 
       const fakeGetJson = () => data.warringtonGetJson
 
       const util = require('../../server/util')
 
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       const locationPlugin = {
         plugin: {
@@ -1295,10 +1288,10 @@ describe('Route - Location', () => {
       }
 
       const response = await server.inject(options)
-      expect(response.statusCode).to.equal(200)
+      expect(response.statusCode).toBe(200)
 
-      expect(response.payload).to.contain('Flooding is expected')
-      expect(response.payload).to.contain('<time datetime="">Up to date as of ')
+      expect(response.payload).toContain('Flooding is expected')
+      expect(response.payload).toContain('<time datetime="">Up to date as of ')
     })
 
     it('should return 1 alert 1 nlif (with floods data)', async () => {
@@ -1359,11 +1352,11 @@ describe('Route - Location', () => {
       const fakeImpactsData = () => []
       const fakeOutlookData = () => { }
 
-      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-      sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-      sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+      jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+      jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+      jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
       const fakeGetJson = () => {
         return {
@@ -1412,7 +1405,7 @@ describe('Route - Location', () => {
       }
 
       const util = require('../../server/util')
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       const locationPlugin = {
         plugin: {
@@ -1439,7 +1432,7 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
+      expect(response.statusCode).toBe(200)
     })
 
     it('should return 1 alert 1 nlif', async () => {
@@ -1484,17 +1477,17 @@ describe('Route - Location', () => {
       const fakeImpactsData = () => []
       const fakeOutlookData = () => { }
 
-      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-      sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-      sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+      jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+      jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+      jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
       const fakeGetJson = () => data.warringtonGetJson
 
       const util = require('../../server/util')
 
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       const locationPlugin = {
         plugin: {
@@ -1522,10 +1515,10 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('Some flooding is possible')
-      expect(response.payload).to.contain('There is a flood alert in this area')
-      expect(response.payload).to.contain('<a href="/target-area/053WAF117BED">1 flood alert or warning was removed </a> in the last 24 hours.')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('Some flooding is possible')
+      expect(response.payload).toContain('There is a flood alert in this area')
+      expect(response.payload).toContain('<a href="/target-area/053WAF117BED">1 flood alert or warning was removed </a> in the last 24 hours.')
     })
 
     it('should return 1 warning 2 alerts 2 nlif', async () => {
@@ -1626,17 +1619,17 @@ describe('Route - Location', () => {
       const fakeImpactsData = () => []
       const fakeOutlookData = () => { }
 
-      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-      sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-      sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+      jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+      jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+      jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
       const fakeGetJson = () => data.warringtonGetJson
 
       const util = require('../../server/util')
 
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       const locationPlugin = {
         plugin: {
@@ -1664,11 +1657,11 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('wider area, where some flooding is possible')
-      expect(response.payload).to.contain('Flood warning for')
-      expect(response.payload).to.contain('Flood alerts and warnings were removed')
-      expect(response.payload).to.contain('in the last 24 hours')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('wider area, where some flooding is possible')
+      expect(response.payload).toContain('Flood warning for')
+      expect(response.payload).toContain('Flood alerts and warnings were removed')
+      expect(response.payload).toContain('in the last 24 hours')
     })
 
     it('should return no warnings', async () => {
@@ -1725,17 +1718,17 @@ describe('Route - Location', () => {
 
       const fakeImpactsData = () => []
 
-      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-      sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-      sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(() => { })
+      jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+      jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+      jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+      jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(() => { })
 
       const fakeGetJson = () => data.warringtonGetJson
 
       const util = require('../../server/util')
 
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       const locationPlugin = {
         plugin: {
@@ -1763,8 +1756,8 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('There are no flood warnings or alerts in this area but some')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('There are no flood warnings or alerts in this area but some')
     })
 
     it('should return 2 severe warnings', async () => {
@@ -1817,17 +1810,17 @@ describe('Route - Location', () => {
       const fakeImpactsData = () => []
       const fakeOutlookData = () => { }
 
-      sandbox.stub(floodService, 'getIsEngland').callsFake(fakeIsEngland)
-      sandbox.stub(floodService, 'getFloodsWithin').callsFake(fakeFloodsData)
-      sandbox.stub(floodService, 'getStationsWithin').callsFake(fakeStationsData)
-      sandbox.stub(floodService, 'getImpactsWithin').callsFake(fakeImpactsData)
-      sandbox.stub(floodService, 'getOutlook').callsFake(fakeOutlookData)
+      jest.spyOn(floodService, 'getIsEngland').mockImplementation(fakeIsEngland)
+      jest.spyOn(floodService, 'getFloodsWithin').mockImplementation(fakeFloodsData)
+      jest.spyOn(floodService, 'getStationsWithin').mockImplementation(fakeStationsData)
+      jest.spyOn(floodService, 'getImpactsWithin').mockImplementation(fakeImpactsData)
+      jest.spyOn(floodService, 'getOutlook').mockImplementation(fakeOutlookData)
 
       const fakeGetJson = () => data.warringtonGetJson
 
       const util = require('../../server/util')
 
-      sandbox.stub(util, 'getJson').callsFake(fakeGetJson)
+      jest.spyOn(util, 'getJson').mockImplementation(fakeGetJson)
 
       const locationPlugin = {
         plugin: {
@@ -1855,9 +1848,55 @@ describe('Route - Location', () => {
 
       const response = await server.inject(options)
 
-      expect(response.statusCode).to.equal(200)
-      expect(response.payload).to.contain('2 severe flood warnings')
-      expect(response.payload).to.contain('There is a danger to life')
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('2 severe flood warnings')
+      expect(response.payload).toContain('There is a danger to life')
+    })
+  })
+
+  describe('Additional branches', () => {
+    const englandGetJson = () => data.warringtonGetJson
+    const noFloods = () => ({ floods: [] })
+    const empty = () => []
+    const isEngland = () => ({ is_england: true })
+
+    it('should 404 when the location service returns a non-England place', async () => {
+      await setup(isEngland, noFloods, empty, empty, () => ({}), englandGetJson)
+      const locationService = require('../../server/services/location')
+      jest.spyOn(locationService, 'get').mockResolvedValue([{ slug: 'kinghorn', isEngland: { is_england: false } }])
+
+      const response = await server.inject({ method: 'GET', url: '/location/kinghorn' })
+
+      expect(response.statusCode).toBe(404)
+    })
+
+    it('should show the location not found page when the query is invalid', async () => {
+      await setup(isEngland, noFloods, empty, empty, () => ({}), englandGetJson)
+
+      const response = await server.inject({ method: 'GET', url: '/location?q=warrington&cz=1&cz=2' })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('Error: Find location - Check for flooding - GOV.UK')
+    })
+
+    it('should show the outlook tabs when the outlook is current and has risk areas', async () => {
+      const outlook = () => ({ ...data.fgs, issued_at: moment().utc().format() })
+      await setup(isEngland, noFloods, empty, empty, outlook, englandGetJson)
+
+      const response = await server.inject({ method: 'GET', url: '/location/warrington' })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).not.toContain('Sorry, there is currently a problem with the data')
+    })
+
+    it('should show a data error when the outlook cannot be retrieved', async () => {
+      const outlook = () => { throw new Error('outlook unavailable') }
+      await setup(isEngland, noFloods, empty, empty, outlook, englandGetJson)
+
+      const response = await server.inject({ method: 'GET', url: '/location/warrington' })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.payload).toContain('Sorry, there is currently a problem with the data')
     })
   })
 })

@@ -1,32 +1,27 @@
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-
-const { describe, it, before, afterEach } = exports.lab = Lab.script()
-
 const mocks = {
-  wreckGet: sinon.stub(),
-  wreckPost: sinon.stub()
+  wreckGet: jest.fn(),
+  wreckPost: jest.fn()
 }
 
 describe('Util - Request / outbound request helpers', () => {
   let httpUtils
 
-  before(() => {
-    httpUtils = proxyquire('../../server/http-utils', {
-      '@hapi/wreck': {
+  beforeAll(() => {
+    jest.isolateModules(() => {
+      jest.doMock('@hapi/wreck', () => ({
+        ...jest.requireActual('@hapi/wreck'),
         defaults: () => ({
           get: mocks.wreckGet,
           post: mocks.wreckPost
         })
-      }
+      }))
+      httpUtils = require('../../server/http-utils')
     })
   })
 
   afterEach(() => {
     for (const stub of Object.values(mocks)) {
-      stub.reset()
+      stub.mockReset()
     }
   })
 
@@ -40,8 +35,8 @@ describe('Util - Request / outbound request helpers', () => {
         }
       }
       const mockResponse = { res: { statusCode: 200, headers: {} }, payload: { ok: true } }
-      mocks.wreckGet.resolves(mockResponse)
-      mocks.wreckPost.resolves(mockResponse)
+      mocks.wreckGet.mockResolvedValue(mockResponse)
+      mocks.wreckPost.mockResolvedValue(mockResponse)
 
       const [
         getResult,
@@ -51,13 +46,13 @@ describe('Util - Request / outbound request helpers', () => {
         httpUtils.request('post', postUrl, requestOptions)
       ])
 
-      expect(mocks.wreckGet.callCount).to.equal(1)
-      expect(mocks.wreckGet.firstCall.args).to.equal([getUrl, requestOptions])
-      expect(getResult).to.equal(mockResponse.payload)
+      expect(mocks.wreckGet).toHaveBeenCalledTimes(1)
+      expect(mocks.wreckGet.mock.calls[0]).toEqual([getUrl, requestOptions])
+      expect(getResult).toEqual(mockResponse.payload)
 
-      expect(mocks.wreckPost.callCount).to.equal(1)
-      expect(mocks.wreckPost.firstCall.args).to.equal([postUrl, requestOptions])
-      expect(postResult).to.equal(mockResponse.payload)
+      expect(mocks.wreckPost).toHaveBeenCalledTimes(1)
+      expect(mocks.wreckPost.mock.calls[0]).toEqual([postUrl, requestOptions])
+      expect(postResult).toEqual(mockResponse.payload)
     })
 
     it('should not add the method and url to non-request errors', async () => {
@@ -69,7 +64,7 @@ describe('Util - Request / outbound request helpers', () => {
         }
       }
       const requestError = new Error('some other error')
-      mocks.wreckGet.rejects(requestError)
+      mocks.wreckGet.mockRejectedValue(requestError)
 
       let err
       try {
@@ -78,7 +73,7 @@ describe('Util - Request / outbound request helpers', () => {
         err = e
       }
 
-      expect(err.message).to.equal('some other error')
+      expect(err.message).toBe('some other error')
     })
   })
 
@@ -86,33 +81,63 @@ describe('Util - Request / outbound request helpers', () => {
     it('should successfully get data from a URL', async () => {
       const mockPayload = { data: 'test data' }
 
-      mocks.wreckGet.resolves({
+      mocks.wreckGet.mockResolvedValue({
         res: { statusCode: 200, headers: {} },
         payload: mockPayload
       })
 
       const result = await httpUtils.get('https://example.com/api', { option: 'value' })
 
-      expect(result).to.equal(mockPayload)
-      expect(mocks.wreckGet.calledOnce).to.be.true()
-      expect(mocks.wreckGet.firstCall.args[0]).to.equal('https://example.com/api')
-      expect(mocks.wreckGet.firstCall.args[1]).to.equal({ option: 'value' })
+      expect(result).toEqual(mockPayload)
+      expect(mocks.wreckGet).toHaveBeenCalledTimes(1)
+      expect(mocks.wreckGet.mock.calls[0][0]).toBe('https://example.com/api')
+      expect(mocks.wreckGet.mock.calls[0][1]).toEqual({ option: 'value' })
     })
 
     it('should handle JSON responses with getJson', async () => {
       const mockPayload = { data: 'test data' }
 
-      mocks.wreckGet.resolves({
+      mocks.wreckGet.mockResolvedValue({
         res: { statusCode: 200, headers: {} },
         payload: mockPayload
       })
 
       const result = await httpUtils.getJson('https://example.com/api')
 
-      expect(result).to.equal(mockPayload)
-      expect(mocks.wreckGet.calledOnce).to.be.true()
-      expect(mocks.wreckGet.firstCall.args[0]).to.equal('https://example.com/api')
-      expect(mocks.wreckGet.firstCall.args[1]).to.equal({ json: true })
+      expect(result).toEqual(mockPayload)
+      expect(mocks.wreckGet).toHaveBeenCalledTimes(1)
+      expect(mocks.wreckGet.mock.calls[0][0]).toBe('https://example.com/api')
+      expect(mocks.wreckGet.mock.calls[0][1]).toEqual({ json: true })
+    })
+  })
+
+  describe('post and postJson', () => {
+    it('should post data to a URL', async () => {
+      const mockPayload = { ok: true }
+      mocks.wreckPost.mockResolvedValue({ res: { statusCode: 200, headers: {} }, payload: mockPayload })
+
+      const result = await httpUtils.post('https://example.com/api', { payload: 'data' })
+
+      expect(result).toEqual(mockPayload)
+      expect(mocks.wreckPost).toHaveBeenCalledWith('https://example.com/api', { payload: 'data' })
+    })
+
+    it('should post with the json option set', async () => {
+      const mockPayload = { ok: true }
+      mocks.wreckPost.mockResolvedValue({ res: { statusCode: 200, headers: {} }, payload: mockPayload })
+
+      const result = await httpUtils.postJson('https://example.com/api', { payload: { a: 1 } })
+
+      expect(result).toEqual(mockPayload)
+      expect(mocks.wreckPost).toHaveBeenCalledWith('https://example.com/api', { payload: { a: 1 }, json: true })
+    })
+
+    it('should default the options when posting json without options', async () => {
+      mocks.wreckPost.mockResolvedValue({ res: { statusCode: 200, headers: {} }, payload: {} })
+
+      await httpUtils.postJson('https://example.com/api')
+
+      expect(mocks.wreckPost).toHaveBeenCalledWith('https://example.com/api', { json: true })
     })
   })
 
@@ -120,7 +145,7 @@ describe('Util - Request / outbound request helpers', () => {
     it('should throw error for invalid URLs', async () => {
       const invalidUrl = 'not-a-url'
 
-      await expect(httpUtils.get(invalidUrl)).to.reject(`Invalid URL: ${invalidUrl}`)
+      await expect(httpUtils.get(invalidUrl)).rejects.toThrow(new Error(`Invalid URL: ${invalidUrl}`))
     })
 
     it('should throw error object from payload when response status code is not 200', async () => {
@@ -130,7 +155,7 @@ describe('Util - Request / outbound request helpers', () => {
         code: 'NOT_FOUND'
       }
 
-      mocks.wreckGet.resolves({
+      mocks.wreckGet.mockResolvedValue({
         res: { statusCode: 404, headers: {} },
         payload: errorPayload
       })
@@ -142,20 +167,20 @@ describe('Util - Request / outbound request helpers', () => {
         err = e
       }
 
-      expect(err).to.equal(errorPayload)
+      expect(err).toEqual(errorPayload)
     })
 
     it('should throw "Unknown error" when response status code is not 200 with falsy payload', async () => {
-      mocks.wreckGet.resolves({
+      mocks.wreckGet.mockResolvedValue({
         res: { statusCode: 500, headers: {} },
         payload: null
       })
 
-      await expect(httpUtils.get('https://example.com/api')).to.reject('Unknown error')
+      await expect(httpUtils.get('https://example.com/api')).rejects.toThrow(new Error('Unknown error'))
     })
 
     it('should throw LocationSearchError when x-ms-bm-ws-info header is 1', async () => {
-      mocks.wreckGet.resolves({
+      mocks.wreckGet.mockResolvedValue({
         res: {
           statusCode: 200,
           headers: { 'x-ms-bm-ws-info': '1' }
@@ -170,15 +195,15 @@ describe('Util - Request / outbound request helpers', () => {
         err = e
       }
 
-      expect(err.name).to.equal('LocationSearchError')
-      expect(err.message).to.equal('Empty location search response indicated by header check of x-ms-bm-ws-info')
+      expect(err.name).toBe('LocationSearchError')
+      expect(err.message).toBe('Empty location search response indicated by header check of x-ms-bm-ws-info')
     })
 
     it('should add method and URL info to request errors', async () => {
       const error = new Error('Response Error: Connection refused')
-      mocks.wreckGet.rejects(error)
+      mocks.wreckGet.mockRejectedValue(error)
 
-      await expect(httpUtils.get('https://example.com/api?param=value')).to.reject('Response Error: Connection refused on GET https://example.com/api')
+      await expect(httpUtils.get('https://example.com/api?param=value')).rejects.toThrow(new Error('Response Error: Connection refused on GET https://example.com/api'))
     })
 
     it('should remove query parameters from URL in error messages', async () => {
@@ -198,10 +223,10 @@ describe('Util - Request / outbound request helpers', () => {
       ]
 
       for (const testCase of testUrls) {
-        mocks.wreckGet.reset()
-        mocks.wreckGet.rejects(new Error('Response Error: Connection refused'))
+        mocks.wreckGet.mockReset()
+        mocks.wreckGet.mockRejectedValue(new Error('Response Error: Connection refused'))
 
-        await expect(httpUtils.get(testCase.input)).to.reject(`Response Error: Connection refused on GET ${testCase.expected}`)
+        await expect(httpUtils.get(testCase.input)).rejects.toThrow(new Error(`Response Error: Connection refused on GET ${testCase.expected}`))
       }
     })
   })

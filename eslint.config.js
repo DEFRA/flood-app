@@ -1,7 +1,9 @@
 const globals = require('globals')
 
 module.exports = [
-  ...require('neostandard')({}),
+  ...require('neostandard')({
+    env: ['jest']
+  }),
   {
     languageOptions: {
       parserOptions: {

@@ -1,29 +1,23 @@
 'use strict'
 
-const Lab = require('@hapi/lab')
 const Hapi = require('@hapi/hapi')
-const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
-const { expect } = require('@hapi/code')
-const sinon = require('sinon')
-const config = require('../../server/config')
 
 describe('Plugin - Rate Limit', () => {
-  let sandbox
   let server
+  let config
 
   beforeEach(async () => {
+    config = require('../../server/config')
     const floodService = require('../../server/services/flood')
-
-    sandbox = await sinon.createSandbox()
 
     server = Hapi.server({
       port: 3000,
       host: 'localhost'
     })
 
-    sandbox.stub(config, 'rateLimitExpiresIn').value(1)
-    sandbox.stub(config, 'rateLimitRequests').value(1)
-    sandbox.stub(config, 'rateLimitWhitelist').value(['1.1.1.1', '2.2.2.2'])
+    jest.replaceProperty(config, 'rateLimitExpiresIn', 1)
+    jest.replaceProperty(config, 'rateLimitRequests', 1)
+    jest.replaceProperty(config, 'rateLimitWhitelist', ['1.1.1.1', '2.2.2.2'])
 
     const fakeStationData = () => {
       return {
@@ -81,13 +75,13 @@ describe('Plugin - Rate Limit', () => {
       }
     }
 
-    sandbox.stub(floodService, 'getForecastFlag').callsFake(fakeForecastFlag)
-    sandbox.stub(floodService, 'getStationById').callsFake(fakeStationData)
-    sandbox.stub(floodService, 'getStationTelemetry').callsFake(() => [])
-    sandbox.stub(floodService, 'getStationImtdThresholds').callsFake(() => [])
-    sandbox.stub(floodService, 'getImpactData').callsFake(() => [])
-    sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer').callsFake(() => [])
-    sandbox.stub(floodService, 'getRiverStationByStationId').callsFake(() => [])
+    jest.spyOn(floodService, 'getForecastFlag').mockImplementation(fakeForecastFlag)
+    jest.spyOn(floodService, 'getStationById').mockImplementation(fakeStationData)
+    jest.spyOn(floodService, 'getStationTelemetry').mockImplementation(() => [])
+    jest.spyOn(floodService, 'getStationImtdThresholds').mockImplementation(() => [])
+    jest.spyOn(floodService, 'getImpactData').mockImplementation(() => [])
+    jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockImplementation(() => [])
+    jest.spyOn(floodService, 'getRiverStationByStationId').mockImplementation(() => [])
 
     await server.register(require('../../server/plugins/views'))
     await server.register(require('../../server/plugins/session'))
@@ -95,15 +89,14 @@ describe('Plugin - Rate Limit', () => {
   })
 
   afterEach(async () => {
-    delete require.cache[require.resolve('../../server/plugins/rate-limit.js')]
+    jest.resetModules()
 
     await server.stop()
-    await sandbox.restore()
   })
 
   it('should GET station page exceeding rate-limit', async () => {
-    sandbox.stub(config, 'localCache').value(true)
-    sandbox.stub(config, 'rateLimitEnabled').value(true)
+    jest.replaceProperty(config, 'localCache', true)
+    jest.replaceProperty(config, 'rateLimitEnabled', true)
 
     await server.register(require('../../server/plugins/rate-limit'))
 
@@ -127,16 +120,16 @@ describe('Plugin - Rate Limit', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).toBe(200)
 
     const response2 = await server.inject(options)
 
-    expect(response2.statusCode).to.equal(429)
+    expect(response2.statusCode).toBe(429)
   })
 
   it('should GET station page with rate-limit disabled', async () => {
-    sandbox.stub(config, 'localCache').value(true)
-    sandbox.stub(config, 'rateLimitEnabled').value(false)
+    jest.replaceProperty(config, 'localCache', true)
+    jest.replaceProperty(config, 'rateLimitEnabled', false)
 
     await server.register(require('../../server/plugins/error-pages'))
 
@@ -160,19 +153,19 @@ describe('Plugin - Rate Limit', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).toBe(200)
 
     const response2 = await server.inject(options)
 
-    expect(response2.statusCode).to.equal(200)
+    expect(response2.statusCode).toBe(200)
   })
 
   it('should set the cache setting "userPathCache"', async () => {
-    sandbox.stub(config, 'localCache').value(false)
-    sandbox.stub(config, 'rateLimitEnabled').value(true)
+    jest.replaceProperty(config, 'localCache', false)
+    jest.replaceProperty(config, 'rateLimitEnabled', true)
 
     const rateLimit = require('../../server/plugins/rate-limit.js')
 
-    expect(rateLimit.options.userCache.cache).to.equal('redis_cache')
+    expect(rateLimit.options.userCache.cache).toBe('redis_cache')
   })
 })

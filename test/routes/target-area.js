@@ -1,25 +1,17 @@
 'use strict'
 
 const Hapi = require('@hapi/hapi')
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const sinon = require('sinon')
 const { parse } = require('node-html-parser')
-
-const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
 
 const fakeTargetAreaFloodData = require('../data/fakeTargetAreaFloodData.json')
 
 describe('Route - Target Area', () => {
-  let sandbox
   let server
 
   beforeEach(async () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
     delete require.cache[require.resolve('../../server/routes/target-area.js')]
-
-    sandbox = await sinon.createSandbox()
 
     server = Hapi.server({
       port: 3000,
@@ -37,7 +29,6 @@ describe('Route - Target Area', () => {
 
   afterEach(async () => {
     await server.stop()
-    await sandbox.restore()
   })
 
   it('should 404 with no query parameters', async () => {
@@ -62,8 +53,8 @@ describe('Route - Target Area', () => {
     const response = await server.inject(options)
     const payload = JSON.parse(response.payload)
 
-    expect(response.statusCode).to.equal(404)
-    expect(payload.message).to.equal('Not Found')
+    expect(response.statusCode).toBe(404)
+    expect(payload.message).toBe('Not Found')
   })
 
   it('should 200 and set the correct heading and links with target-area: "011WAFDW"', async () => {
@@ -81,9 +72,9 @@ describe('Route - Target Area', () => {
 
     const fakeTAThresholdsData = () => [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
 
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
-    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
+    jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
+    jest.spyOn(floodService, 'getFloodArea').mockImplementation(fakeFloodArea)
+    jest.spyOn(floodService, 'getTargetAreaThresholds').mockImplementation(fakeTAThresholdsData)
 
     const targetAreaPlugin = {
       plugin: {
@@ -118,9 +109,9 @@ describe('Route - Target Area', () => {
       a.attributes.href === '/river-and-sea-levels/target-area/011WAFDW'
     )
 
-    expect(response.statusCode).to.equal(200)
-    expect(h1).to.equal('Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water')
-    expect(anchor).to.be.true()
+    expect(response.statusCode).toBe(200)
+    expect(h1).toBe('Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water')
+    expect(anchor).toBeTrue()
   })
 
   it('should 200 with blank situation text', async () => {
@@ -140,9 +131,9 @@ describe('Route - Target Area', () => {
 
     const fakeTAThresholdsData = () => [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
 
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
-    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
+    jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
+    jest.spyOn(floodService, 'getFloodArea').mockImplementation(fakeFloodArea)
+    jest.spyOn(floodService, 'getTargetAreaThresholds').mockImplementation(fakeTAThresholdsData)
 
     const targetAreaPlugin = {
       plugin: {
@@ -169,7 +160,7 @@ describe('Route - Target Area', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).toBe(200)
   })
 
   it('should 200 with unknown query parameter e.g. facebook click id', async () => {
@@ -187,9 +178,9 @@ describe('Route - Target Area', () => {
 
     const fakeTAThresholdsData = () => [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
 
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
-    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
+    jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
+    jest.spyOn(floodService, 'getFloodArea').mockImplementation(fakeFloodArea)
+    jest.spyOn(floodService, 'getTargetAreaThresholds').mockImplementation(fakeTAThresholdsData)
 
     const targetAreaPlugin = {
       plugin: {
@@ -216,7 +207,7 @@ describe('Route - Target Area', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
+    expect(response.statusCode).toBe(200)
   })
 
   it('should 200 and return flood severity banner "be prepared"', async () => {
@@ -234,9 +225,9 @@ describe('Route - Target Area', () => {
 
     const fakeTAThresholdsData = () => [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
 
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
-    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
+    jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
+    jest.spyOn(floodService, 'getFloodArea').mockImplementation(fakeFloodArea)
+    jest.spyOn(floodService, 'getTargetAreaThresholds').mockImplementation(fakeTAThresholdsData)
 
     const targetAreaPlugin = {
       plugin: {
@@ -265,8 +256,8 @@ describe('Route - Target Area', () => {
 
     const bannerText = parse(response.payload).querySelector('.defra-flood-status-item__text .govuk-link').textContent
 
-    expect(response.statusCode).to.equal(200)
-    expect(bannerText).to.equal('be prepared')
+    expect(response.statusCode).toBe(200)
+    expect(bannerText).toBe('be prepared')
   })
 
   it('should 200 and return flood severity banner "act now"', async () => {
@@ -287,9 +278,9 @@ describe('Route - Target Area', () => {
 
     const fakeTAThresholdsData = () => [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
 
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
-    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
+    jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
+    jest.spyOn(floodService, 'getFloodArea').mockImplementation(fakeFloodArea)
+    jest.spyOn(floodService, 'getTargetAreaThresholds').mockImplementation(fakeTAThresholdsData)
 
     const targetAreaPlugin = {
       plugin: {
@@ -317,8 +308,8 @@ describe('Route - Target Area', () => {
     const response = await server.inject(options)
     const bannerText = parse(response.payload).querySelector('.defra-flood-status-item__text .govuk-link').textContent
 
-    expect(response.statusCode).to.equal(200)
-    expect(bannerText).to.equal('act now')
+    expect(response.statusCode).toBe(200)
+    expect(bannerText).toBe('act now')
   })
 
   it('should 200 with no active flood alerts', async () => {
@@ -336,9 +327,9 @@ describe('Route - Target Area', () => {
 
     const fakeTAThresholdsData = () => [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
 
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
-    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
+    jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
+    jest.spyOn(floodService, 'getFloodArea').mockImplementation(fakeFloodArea)
+    jest.spyOn(floodService, 'getTargetAreaThresholds').mockImplementation(fakeTAThresholdsData)
 
     const targetAreaPlugin = {
       plugin: {
@@ -373,9 +364,9 @@ describe('Route - Target Area', () => {
       a.attributes.href === '/river-and-sea-levels/target-area/011WAFDW'
     )
 
-    expect(response.statusCode).to.equal(200)
-    expect(h1).to.equal('Upper River Derwent, Stonethwaite Beck and Derwent Water flood alert area')
-    expect(anchor).to.be.true()
+    expect(response.statusCode).toBe(200)
+    expect(h1).toBe('Upper River Derwent, Stonethwaite Beck and Derwent Water flood alert area')
+    expect(anchor).toBeTrue()
   })
 
   it('should 200 with severe flood alerts active', async () => {
@@ -393,9 +384,9 @@ describe('Route - Target Area', () => {
 
     const fakeTAThresholdsData = () => [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
 
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
-    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
+    jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
+    jest.spyOn(floodService, 'getFloodArea').mockImplementation(fakeFloodArea)
+    jest.spyOn(floodService, 'getTargetAreaThresholds').mockImplementation(fakeTAThresholdsData)
 
     const targetAreaPlugin = {
       plugin: {
@@ -428,9 +419,9 @@ describe('Route - Target Area', () => {
       a.attributes.href === '/river-and-sea-levels/target-area/011WAFDW'
     )
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload).to.contain('Severe flood warning for Upper River Derwent, Stonethwaite Beck and Derwent Water')
-    expect(anchor).to.be.true()
+    expect(response.statusCode).toBe(200)
+    expect(response.payload).toContain('Severe flood warning for Upper River Derwent, Stonethwaite Beck and Derwent Water')
+    expect(anchor).toBeTrue()
   })
 
   it('should return no floods alerts but a flood alert in the wider area message in banner', async () => {
@@ -448,9 +439,9 @@ describe('Route - Target Area', () => {
 
     const fakeTAThresholdsData = () => [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
 
-    sandbox.stub(floodService, 'getFloods').callsFake(fakeFloodData)
-    sandbox.stub(floodService, 'getFloodArea').callsFake(fakeFloodArea)
-    sandbox.stub(floodService, 'getTargetAreaThresholds').callsFake(fakeTAThresholdsData)
+    jest.spyOn(floodService, 'getFloods').mockImplementation(fakeFloodData)
+    jest.spyOn(floodService, 'getFloodArea').mockImplementation(fakeFloodArea)
+    jest.spyOn(floodService, 'getTargetAreaThresholds').mockImplementation(fakeTAThresholdsData)
 
     const targetAreaPlugin = {
       plugin: {
@@ -477,7 +468,7 @@ describe('Route - Target Area', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(200)
-    expect(response.payload.replace(/\s+/g, ' ')).to.contain('There are no flood warnings in this area, but there is <a href="/target-area/123WAF984">a flood alert in the wider area</a>')
+    expect(response.statusCode).toBe(200)
+    expect(response.payload.replace(/\s+/g, ' ')).toContain('There are no flood warnings in this area, but there is <a href="/target-area/123WAF984">a flood alert in the wider area</a>')
   })
 })

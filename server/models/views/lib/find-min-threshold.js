@@ -12,7 +12,7 @@ function findMinValueByLogic (arr, type) {
     return getMinFromType(arr, 'FW RES FAL') ||
       getMinFromType(arr, 'FW ACT FAL') ||
       getMinFromType(arr, 'FW ACTCON FAL')
-  } else if (type === 'W') {
+  } else /* istanbul ignore else: only ever called with 'A' or 'W' */ if (type === 'W') {
     // Logic for Type W
     return getMinFromType(arr, 'FW RES FW') ||
       getMinFromType(arr, 'FW ACT FW') ||

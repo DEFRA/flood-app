@@ -1,9 +1,5 @@
 'use strict'
 
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const { describe, it, beforeEach } = exports.lab = Lab.script()
-
 const outsideEnglandRouteMethods = require('../../server/routes/outside-england')
 
 describe('Outside England route', () => {
@@ -16,12 +12,12 @@ describe('Outside England route', () => {
   })
 
   it('should have a GET handler function', () => {
-    expect(getMethod).to.exist()
-    expect(getMethod.handler).to.be.a.function()
+    expect(getMethod).not.toBeNil()
+    expect(getMethod.handler).toBeFunction()
   })
 
   it('should service the /outside-england route', () => {
-    expect(getMethod.path).to.equal('/outside-england')
+    expect(getMethod.path).toBe('/outside-england')
   })
 
   it('should set the pageTitle in the context model', () => {
@@ -32,8 +28,8 @@ describe('Outside England route', () => {
       }
     }
     getMethod.handler({}, mockH)
-    expect(viewName).to.equal('outside-england')
-    expect(context.model.pageTitle).to.exist()
-    expect(context.model.pageTitle).to.equal('Error: Find location - Check for flooding') // ` - GOV.UK` is added by the layout.njk template
+    expect(viewName).toBe('outside-england')
+    expect(context.model.pageTitle).not.toBeNil()
+    expect(context.model.pageTitle).toBe('Error: Find location - Check for flooding') // ` - GOV.UK` is added by the layout.njk template
   })
 })

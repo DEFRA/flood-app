@@ -1,12 +1,7 @@
 'use strict'
 
 const Hapi = require('@hapi/hapi')
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const sinon = require('sinon')
-const { describe, it, beforeEach } = exports.lab = Lab.script()
 const { parse } = require('node-html-parser')
-const proxyquire = require('proxyquire')
 
 const { getWarning, getTargetArea } = require('../lib/helpers/data-builders')
 
@@ -24,15 +19,17 @@ describe('Route - Target Area 2', () => {
     // -      }
     // -    }
     // but using a function allows us to make it a spy to do later assertions on
-    const FakeViewModel = sinon.spy(function (options) {
+    const FakeViewModel = jest.fn(function (options) {
       Object.assign(this, {
         ...values,
         ...options
       })
     })
 
-    const targetAreaRoute = proxyquire('../../server/routes/target-area', {
-      '../../server/models/views/target-area': FakeViewModel
+    let targetAreaRoute
+    jest.isolateModules(() => {
+      jest.doMock('../../server/models/views/target-area', () => FakeViewModel)
+      targetAreaRoute = require('../../server/routes/target-area')
     })
 
     const targetAreaPlugin = {
@@ -81,9 +78,9 @@ describe('Route - Target Area 2', () => {
     const warning = getWarning({ ta_code: '011WAFDW' })
     const latestLevels = [{ station_threshold_id: '1746074', station_id: '2138', fwis_code: '034FWFDEDERWATER', fwis_type: 'W', direction: 'u', value: '0.535', threshold_type: 'FW RES FW', river_id: 'river-derwent-derbyshire', river_name: 'River Derwent', river_qualified_name: 'River Derwent (Derbyshire)', navigable: true, view_rank: 1, rank: '5', rloi_id: 2138, up: 2103, down: 2130, telemetry_id: '4085', region: 'Midlands', catchment: 'Derbyshire Derwent', wiski_river_name: 'River Derwent', agency_name: 'Derby St Marys', external_name: 'Derby City', station_type: 'S', status: 'Active', qualifier: 'u', iswales: false, value_timestamp: '2024-08-08T17:45:00.000Z', value_erred: false, trend: 'steady', percentile_5: '1.85', percentile_95: '0.583', centroid: '0101000020E61000004B9C1B3B719BF7BFF845A5CDB0764A40', lon: -1.4754497822666675, lat: 52.92727060861574, day_total: null, six_hr_total: null, one_hr_total: null, id: '2114', threshold_value: '3.3', latest_level: '0.535' }]
 
-    server.method('flood.getTargetAreaThresholds', sinon.stub().resolves(latestLevels))
-    server.method('flood.getFloodArea', sinon.stub().resolves(area))
-    server.method('flood.getFloods', sinon.stub().resolves({ floods: [warning] }))
+    server.method('flood.getTargetAreaThresholds', jest.fn().mockResolvedValue(latestLevels))
+    server.method('flood.getFloodArea', jest.fn().mockResolvedValue(area))
+    server.method('flood.getFloods', jest.fn().mockResolvedValue({ floods: [warning] }))
   })
 
   it('should pass area and flood warning to view model constructor', async () => {
@@ -95,16 +92,16 @@ describe('Route - Target Area 2', () => {
 
     await getResponse(AREA_CODE)
 
-    expect(FakeViewModel.calledOnce).to.be.true()
-    expect(FakeViewModel.firstCall.args.length).to.equal(1)
+    expect(FakeViewModel).toHaveBeenCalledTimes(1)
+    expect(FakeViewModel.mock.calls[0]).toHaveLength(1)
 
-    const argument = FakeViewModel.firstCall.args[0]
+    const argument = FakeViewModel.mock.calls[0][0]
 
-    expect(Object.keys(argument)).to.equal(['area', 'flood', 'parentFlood', 'thresholds'])
+    expect(Object.keys(argument)).toEqual(['area', 'flood', 'parentFlood', 'thresholds'])
 
-    expect(argument.area.code).to.equal(AREA_CODE)
-    expect(argument.flood.ta_code).to.equal(AREA_CODE)
-    expect(argument.parentFlood).to.be.undefined()
+    expect(argument.area.code).toEqual(AREA_CODE)
+    expect(argument.flood.ta_code).toEqual(AREA_CODE)
+    expect(argument.parentFlood).toBeUndefined()
   })
 
   it('should set page title as H1', async () => {
@@ -120,7 +117,7 @@ describe('Route - Target Area 2', () => {
 
     const h1 = root.querySelector('h1').textContent.trim()
 
-    expect(h1).to.equal('Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water')
+    expect(h1).toBe('Flood alert for Upper River Derwent, Stonethwaite Beck and Derwent Water')
   })
 
   it('should display river levels link', async () => {
@@ -137,8 +134,8 @@ describe('Route - Target Area 2', () => {
 
     const anchor = root.querySelectorAll('a').find(a => a.textContent.trim() === 'Find a river, sea, groundwater or rainfall level in this area')
 
-    expect(response.statusCode).to.equal(200)
-    expect(anchor.getAttribute('href')).to.equal(`/river-and-sea-levels/target-area/${AREA_CODE}`)
+    expect(response.statusCode).toBe(200)
+    expect(anchor.getAttribute('href')).toBe(`/river-and-sea-levels/target-area/${AREA_CODE}`)
   })
 
   it('should 404 if no code provided', async () => {
@@ -151,6 +148,6 @@ describe('Route - Target Area 2', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(404)
+    expect(response.statusCode).toBe(404)
   })
 })

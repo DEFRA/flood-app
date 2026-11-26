@@ -1,15 +1,9 @@
 'use strict'
 
 const Hapi = require('@hapi/hapi')
-const Lab = require('@hapi/lab')
-const { expect } = require('@hapi/code')
-const sinon = require('sinon')
 const moment = require('moment-timezone')
 
-const { describe, it, beforeEach, afterEach } = exports.lab = Lab.script()
-
 describe('Route - Rainfall Station', () => {
-  let sandbox
   let server
 
   beforeEach(async () => {
@@ -17,8 +11,6 @@ describe('Route - Rainfall Station', () => {
     delete require.cache[require.resolve('../../server/services/flood.js')]
     delete require.cache[require.resolve('../../server/services/server-methods.js')]
     delete require.cache[require.resolve('../../server/routes/rainfall-station.js')]
-
-    sandbox = await sinon.createSandbox()
 
     server = Hapi.server({
       port: 3000,
@@ -36,7 +28,6 @@ describe('Route - Rainfall Station', () => {
 
   afterEach(async () => {
     await server.stop()
-    await sandbox.restore()
   })
 
   it('should 200 with valid data', async () => {
@@ -83,8 +74,8 @@ describe('Route - Rainfall Station', () => {
       type: 'R'
     })
 
-    sandbox.stub(floodService, 'getRainfallStationTelemetry').callsFake(fakeRainfallStationTelemetryData)
-    sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeRainfallStationData)
+    jest.spyOn(floodService, 'getRainfallStationTelemetry').mockImplementation(fakeRainfallStationTelemetryData)
+    jest.spyOn(floodService, 'getRainfallStation').mockImplementation(fakeRainfallStationData)
 
     const rainfallPlugin = {
       plugin: {
@@ -111,11 +102,11 @@ describe('Route - Rainfall Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.payload).to.contain('15.00mm')
-    expect(response.payload).to.contain('55.00mm')
-    expect(response.payload).to.contain('65.27mm')
-    expect(response.payload).to.contain('Lavenham')
-    expect(response.statusCode).to.equal(200)
+    expect(response.payload).toContain('15.00mm')
+    expect(response.payload).toContain('55.00mm')
+    expect(response.payload).toContain('65.27mm')
+    expect(response.payload).toContain('Lavenham')
+    expect(response.statusCode).toBe(200)
   })
 
   it('should 404', async () => {
@@ -131,8 +122,8 @@ describe('Route - Rainfall Station', () => {
 
     const fakeRainfallStationData = () => {}
 
-    sandbox.stub(floodService, 'getRainfallStationTelemetry').callsFake(fakeRainfallStationTelemetryData)
-    sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeRainfallStationData)
+    jest.spyOn(floodService, 'getRainfallStationTelemetry').mockImplementation(fakeRainfallStationTelemetryData)
+    jest.spyOn(floodService, 'getRainfallStation').mockImplementation(fakeRainfallStationData)
 
     const rainfallPlugin = {
       plugin: {
@@ -159,7 +150,7 @@ describe('Route - Rainfall Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.statusCode).to.equal(404)
+    expect(response.statusCode).toBe(404)
   })
 
   it('should return a problem with measurements error', async () => {
@@ -191,8 +182,8 @@ describe('Route - Rainfall Station', () => {
       type: 'R'
     })
 
-    sandbox.stub(floodService, 'getRainfallStationTelemetry').callsFake(fakeRainfallStationTelemetryData)
-    sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeRainfallStationData)
+    jest.spyOn(floodService, 'getRainfallStationTelemetry').mockImplementation(fakeRainfallStationTelemetryData)
+    jest.spyOn(floodService, 'getRainfallStation').mockImplementation(fakeRainfallStationData)
 
     const rainfallPlugin = {
       plugin: {
@@ -219,7 +210,7 @@ describe('Route - Rainfall Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">There\'s a problem with the latest measurement</h2>')
+    expect(response.payload).toContain('<h2 class="defra-service-error__title" id="error-summary-title">There\'s a problem with the latest measurement</h2>')
   })
 
   it('should return an offline error', async () => {
@@ -251,8 +242,8 @@ describe('Route - Rainfall Station', () => {
       type: 'R'
     })
 
-    sandbox.stub(floodService, 'getRainfallStationTelemetry').callsFake(fakeRainfallStationTelemetryData)
-    sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeRainfallStationData)
+    jest.spyOn(floodService, 'getRainfallStationTelemetry').mockImplementation(fakeRainfallStationTelemetryData)
+    jest.spyOn(floodService, 'getRainfallStation').mockImplementation(fakeRainfallStationData)
 
     const rainfallPlugin = {
       plugin: {
@@ -279,7 +270,7 @@ describe('Route - Rainfall Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is offline</h2>')
+    expect(response.payload).toContain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is offline</h2>')
   })
 
   it('should return a closed error', async () => {
@@ -311,8 +302,8 @@ describe('Route - Rainfall Station', () => {
       type: 'R'
     })
 
-    sandbox.stub(floodService, 'getRainfallStationTelemetry').callsFake(fakeRainfallStationTelemetryData)
-    sandbox.stub(floodService, 'getRainfallStation').callsFake(fakeRainfallStationData)
+    jest.spyOn(floodService, 'getRainfallStationTelemetry').mockImplementation(fakeRainfallStationTelemetryData)
+    jest.spyOn(floodService, 'getRainfallStation').mockImplementation(fakeRainfallStationData)
 
     const rainfallPlugin = {
       plugin: {
@@ -339,6 +330,26 @@ describe('Route - Rainfall Station', () => {
 
     const response = await server.inject(options)
 
-    expect(response.payload).to.contain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is closed</h2>')
+    expect(response.payload).toContain('<h2 class="defra-service-error__title" id="error-summary-title">This measuring station is closed</h2>')
+  })
+
+  it('should 404 when there is no rainfall station telemetry', async () => {
+    const route = require('../../server/routes/rainfall-station')
+    const request = {
+      params: { id: 'E24195' },
+      server: {
+        methods: {
+          flood: {
+            getRainfallStation: jest.fn().mockResolvedValue({ station_reference: 'E24195' }),
+            getRainfallStationTelemetry: jest.fn().mockResolvedValue(null)
+          }
+        }
+      }
+    }
+
+    const response = await route.handler(request, {})
+
+    expect(response.output.statusCode).toBe(404)
+    expect(response.message).toBe('No rainfall station telemetry data found')
   })
 })

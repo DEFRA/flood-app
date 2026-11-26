@@ -1,12 +1,8 @@
 const Hapi = require('@hapi/hapi')
-const Lab = require('@hapi/lab')
-const { createSandbox } = require('sinon')
 const { parse } = require('node-html-parser')
 const util = require('../server/util')
 const floodService = require('../server/services/flood')
 const { formatNumberToFixed, formatRainfallTelemetry } = require('../server/util')
-const { expect } = require('@hapi/code')
-const { describe, it } = exports.lab = Lab.script()
 
 module.exports.getPageTitle = (payload) => {
   return parse(payload).removeWhitespace().querySelector('title')?.text.trim()
@@ -50,42 +46,39 @@ module.exports.initServer = async ({ name, route }) => {
 }
 
 module.exports.initStubs = () => {
-  const sandbox = createSandbox()
-
   return {
-    sandbox,
-    getJson: sandbox.stub(util, 'getJson'),
-    getFloods: sandbox.stub(floodService, 'getFloods'),
-    getOutlook: sandbox.stub(floodService, 'getOutlook'),
-    getIsEngland: sandbox.stub(floodService, 'getIsEngland'),
-    getStationById: sandbox.stub(floodService, 'getStationById'),
-    getFloodsWithin: sandbox.stub(floodService, 'getFloodsWithin'),
-    getImpactsWithin: sandbox.stub(floodService, 'getImpactsWithin'),
-    getStationsWithin: sandbox.stub(floodService, 'getStationsWithin'),
-    getWarningsAlertsWithinStationBuffer: sandbox.stub(floodService, 'getWarningsAlertsWithinStationBuffer'),
-    getRiversByName: sandbox.stub(floodService, 'getRiversByName')
+    getJson: jest.spyOn(util, 'getJson').mockReturnValue(undefined),
+    getFloods: jest.spyOn(floodService, 'getFloods').mockReturnValue(undefined),
+    getOutlook: jest.spyOn(floodService, 'getOutlook').mockReturnValue(undefined),
+    getIsEngland: jest.spyOn(floodService, 'getIsEngland').mockReturnValue(undefined),
+    getStationById: jest.spyOn(floodService, 'getStationById').mockReturnValue(undefined),
+    getFloodsWithin: jest.spyOn(floodService, 'getFloodsWithin').mockReturnValue(undefined),
+    getImpactsWithin: jest.spyOn(floodService, 'getImpactsWithin').mockReturnValue(undefined),
+    getStationsWithin: jest.spyOn(floodService, 'getStationsWithin').mockReturnValue(undefined),
+    getWarningsAlertsWithinStationBuffer: jest.spyOn(floodService, 'getWarningsAlertsWithinStationBuffer').mockReturnValue(undefined),
+    getRiversByName: jest.spyOn(floodService, 'getRiversByName').mockReturnValue(undefined)
   }
 }
 
 describe('formatNumberToFixed', () => {
   it('formats a number to 1 decimal place by default', () => {
-    expect(formatNumberToFixed(1.234)).to.equal('1.2')
-    expect(formatNumberToFixed(2)).to.equal('2.0')
+    expect(formatNumberToFixed(1.234)).toBe('1.2')
+    expect(formatNumberToFixed(2)).toBe('2.0')
   })
 
   it('formats a number to specified decimal places', () => {
-    expect(formatNumberToFixed(1.236, 2)).to.equal('1.24')
-    expect(formatNumberToFixed(1.236, 3)).to.equal('1.236')
+    expect(formatNumberToFixed(1.236, 2)).toBe('1.24')
+    expect(formatNumberToFixed(1.236, 3)).toBe('1.236')
   })
 
   it('returns null for NaN or null input', () => {
-    expect(formatNumberToFixed(NaN)).to.be.null()
-    expect(formatNumberToFixed(null)).to.be.null()
+    expect(formatNumberToFixed(NaN)).toBeNull()
+    expect(formatNumberToFixed(null)).toBeNull()
   })
 
   it('handles string numbers', () => {
-    expect(formatNumberToFixed('3.456')).to.equal('3.5')
-    expect(formatNumberToFixed('3.456', 2)).to.equal('3.46')
+    expect(formatNumberToFixed('3.456')).toBe('3.5')
+    expect(formatNumberToFixed('3.456', 2)).toBe('3.46')
   })
 })
 
@@ -98,7 +91,7 @@ describe('formatRainfallTelemetry', () => {
       }
     ], 60, 2)
 
-    expect(values).to.have.length(120)
-    expect(Number.isNaN(values[values.length - 1].value)).to.be.true()
+    expect(values).toHaveLength(120)
+    expect(Number.isNaN(values[values.length - 1].value)).toBeTrue()
   })
 })
